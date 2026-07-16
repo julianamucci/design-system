@@ -34,7 +34,7 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import { LanguageSwitcher } from "@/components/product/LanguageSwitcher";
 import uiTranslations from "@/i18n/ui.json";
@@ -739,7 +739,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             dontPreview: (
               <div className="min-h-[200px] flex items-center justify-center rounded-lg border border-destructive/30 bg-destructive/5 p-4">
                 <p className="text-xs text-destructive text-center">
-                  <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(tContent("doDont.pair1.dont")) }} />
+                  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tContent("doDont.pair1.dont")) }} />
                 </p>
               </div>
             ),

@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSwitch } from '@/components/ui/switch';
 import { createButton } from '@/components/ui/button';
@@ -851,12 +851,12 @@ export type SwitchOptions = {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear
-            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom não expõe prop <code>size</code>; o tamanho <code>sm</code> é alcançado via <code>class</code> (<code>h-4 w-7</code>) + ajuste do thumb. Também não há prop <code>name</code>; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom não expõe prop <code>size</code>; o tamanho <code>sm</code> é alcançado via <code>class</code> (<code>h-4 w-7</code>) + ajuste do thumb. Também não há prop <code>name</code>; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
           ],
         });
 

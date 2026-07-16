@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createPagination } from '@/components/ui/pagination';
 import uiTranslations from '@/i18n/ui.json';
@@ -169,7 +169,7 @@ export function createPaginationDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6].map(i => sanitizeHtml(t(`anatomy.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -179,7 +179,7 @@ export function createPaginationDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4].map(i => sanitizeHtml(t(`usage.guidelines.item${i}`))),
+            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -215,7 +215,7 @@ export function createPaginationDocs(): HTMLElement {
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3, 4].map(i => sanitizeHtml(t(`usage.dont.item${i}`))),
+            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
           },
         });
 
@@ -644,7 +644,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
         return createDocsAccessibility({
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6].map(i => sanitizeHtml(t(`accessibility.items.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))      },
@@ -667,7 +667,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
       case 'notas':
         return createDocsNotes({
           title: t('notes.title'),
-          items: [1, 2, 3, 4].map(i => ({ title: '', content: sanitizeHtml(t(`notes.item${i}`)) })),
+          items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':

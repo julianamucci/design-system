@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
   import { Card } from '@/components/ui/card';
 
@@ -21,7 +21,7 @@
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
                 {i + 1}
               </span>
-              <span>{@html sanitizeHtml(item)}</span>
+              <span>{@html DOMPurify.sanitize(item)}</span>
             </li>
           {/each}
         </ol>

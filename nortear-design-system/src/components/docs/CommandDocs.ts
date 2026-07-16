@@ -1,6 +1,6 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCommand } from '@/components/ui/command';
@@ -290,8 +290,8 @@ export function createCommandDocs(): HTMLElement {
                 hint.dataset.spacing = 'xs';
                 hint.style.padding = '0.375rem 0.75rem';
                 hint.innerHTML = `
-                  <span class="nds-flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
+                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 return outer;
@@ -354,7 +354,7 @@ export function createCommandDocs(): HTMLElement {
                 trigger.dataset.justify = 'between';
                 trigger.style.width = '12rem';
                 trigger.style.padding = '0.375rem 0.75rem';
-                trigger.innerHTML = `<span>${sanitizeHtml(t('demonstration.labels.selectPlaceholder'))}</span><span class="nds-text-muted-foreground">▼</span>`;
+                trigger.innerHTML = `<span>${DOMPurify.sanitize(t('demonstration.labels.selectPlaceholder'))}</span><span class="nds-text-muted-foreground">▼</span>`;
                 const popover = document.createElement('div');
                 popover.className = 'nds-border-default nds-rounded-md nds-shadow-md nds-mt-1';
                 popover.style.width = '12rem';
@@ -387,8 +387,8 @@ export function createCommandDocs(): HTMLElement {
                 hint.style.padding = '0.375rem 0.75rem';
                 hint.innerHTML = `
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                  <span class="nds-flex-1">${sanitizeHtml(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${sanitizeHtml(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
+                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 const dialog = document.createElement('div');

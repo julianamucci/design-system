@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import hoverCardTranslations from "@shared/content/hover-card/translations.json";
@@ -217,7 +217,7 @@ interface HoverCardContentProps {
             style={{ contain: "layout", minHeight: 100, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.userProfile"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.userProfile"))}
             </p>
             <HoverCard openDelay={50} closeDelay={50} defaultOpen>
               <HoverCardTrigger asChild>
@@ -246,7 +246,7 @@ interface HoverCardContentProps {
             style={{ contain: "layout", minHeight: 100, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.linkPreview"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.linkPreview"))}
             </p>
             <HoverCard openDelay={50} closeDelay={50} defaultOpen>
               <HoverCardTrigger asChild>
@@ -272,7 +272,7 @@ interface HoverCardContentProps {
             style={{ contain: "layout", minHeight: 100, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.definitionTooltip"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.definitionTooltip"))}
             </p>
             <HoverCard openDelay={50} closeDelay={50} defaultOpen>
               <HoverCardTrigger asChild>
@@ -295,7 +295,7 @@ interface HoverCardContentProps {
             style={{ contain: "layout", minHeight: 100, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.metricExplainer"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.metricExplainer"))}
             </p>
             <HoverCard openDelay={50} closeDelay={50} defaultOpen>
               <HoverCardTrigger asChild>
@@ -423,8 +423,8 @@ interface HoverCardContentProps {
                 <div className="text-xs text-muted-foreground italic">apenas hover (touch users perdem)</div>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -435,8 +435,8 @@ interface HoverCardContentProps {
             dontPreview: (
               <div className="text-sm font-mono">openDelay={`{0}`}</div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -684,49 +684,49 @@ interface HoverCardContentProps {
                 type: tContent("props.table.open.type"),
                 defaultValue: tContent("props.table.open.default"),
                 required: tContent("props.table.open.required"),
-                description: sanitizeHtml(tContent("props.table.open.description")),
+                description: DOMPurify.sanitize(tContent("props.table.open.description")),
               },
               {
                 name: "onOpenChange",
                 type: tContent("props.table.onOpenChange.type"),
                 defaultValue: tContent("props.table.onOpenChange.default"),
                 required: tContent("props.table.onOpenChange.required"),
-                description: sanitizeHtml(tContent("props.table.onOpenChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
               },
               {
                 name: "defaultOpen",
                 type: tContent("props.table.defaultOpen.type"),
                 defaultValue: tContent("props.table.defaultOpen.default"),
                 required: tContent("props.table.defaultOpen.required"),
-                description: sanitizeHtml(tContent("props.table.defaultOpen.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
               },
               {
                 name: "openDelay",
                 type: tContent("props.table.openDelay.type"),
                 defaultValue: tContent("props.table.openDelay.default"),
                 required: tContent("props.table.openDelay.required"),
-                description: sanitizeHtml(tContent("props.table.openDelay.description")),
+                description: DOMPurify.sanitize(tContent("props.table.openDelay.description")),
               },
               {
                 name: "closeDelay",
                 type: tContent("props.table.closeDelay.type"),
                 defaultValue: tContent("props.table.closeDelay.default"),
                 required: tContent("props.table.closeDelay.required"),
-                description: sanitizeHtml(tContent("props.table.closeDelay.description")),
+                description: DOMPurify.sanitize(tContent("props.table.closeDelay.description")),
               },
               {
                 name: "side",
                 type: tContent("props.table.side.type"),
                 defaultValue: tContent("props.table.side.default"),
                 required: tContent("props.table.side.required"),
-                description: sanitizeHtml(tContent("props.table.side.description")),
+                description: DOMPurify.sanitize(tContent("props.table.side.description")),
               },
               {
                 name: "align",
                 type: tContent("props.table.align.type"),
                 defaultValue: tContent("props.table.align.default"),
                 required: tContent("props.table.align.required"),
-                description: sanitizeHtml(tContent("props.table.align.description")),
+                description: DOMPurify.sanitize(tContent("props.table.align.description")),
               },
             ],
           },
@@ -854,7 +854,7 @@ interface HoverCardContentProps {
         items={[
           {
             event: "hover_card_open / hover_card_close",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, location, label",
           },
         ]}

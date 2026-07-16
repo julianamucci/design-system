@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
   interface DocsNoteItem { title: string; content: string }
@@ -33,7 +33,7 @@
           {#if item.title}
             <AlertTitle>{item.title}</AlertTitle>
           {/if}
-          <AlertDescription>{@html sanitizeHtml(item.content)}</AlertDescription>
+          <AlertDescription>{@html DOMPurify.sanitize(item.content)}</AlertDescription>
         </Alert>
       </div>
     {/each}

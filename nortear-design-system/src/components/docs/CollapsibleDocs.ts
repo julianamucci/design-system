@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCollapsible } from '@/components/ui/collapsible';
 import uiTranslations from '@/i18n/ui.json';
@@ -288,9 +288,9 @@ export function createCollapsibleDocs(): HTMLElement {
         return createDocsAnatomy({
           title: t('anatomy.title'),
           items: [
-            sanitizeHtml(t('anatomy.item1')),
-            sanitizeHtml(t('anatomy.item2')),
-            sanitizeHtml(t('anatomy.item3')),
+            DOMPurify.sanitize(t('anatomy.item1')),
+            DOMPurify.sanitize(t('anatomy.item2')),
+            DOMPurify.sanitize(t('anatomy.item3')),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -302,7 +302,7 @@ export function createCollapsibleDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4].map(i => sanitizeHtml(t(`usage.guidelines.item${i}`))),
+            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -323,7 +323,7 @@ export function createCollapsibleDocs(): HTMLElement {
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3].map(i => sanitizeHtml(t(`usage.dont.item${i}`))),
+            items: [1, 2, 3].map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
           },
         });
 
@@ -652,13 +652,13 @@ export function createCollapsibleDocs(): HTMLElement {
       case 'acessibilidade':
         return createDocsAccessibility({
           title: t('accessibility.title'),
-          summary: sanitizeHtml(t('accessibility.summary')),
+          summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
-            sanitizeHtml(t('accessibility.item1')),
-            sanitizeHtml(t('accessibility.item2')),
-            sanitizeHtml(t('accessibility.item3')),
-            sanitizeHtml(t('accessibility.item4')),
-            sanitizeHtml(t('accessibility.item5')),
+            DOMPurify.sanitize(t('accessibility.item1')),
+            DOMPurify.sanitize(t('accessibility.item2')),
+            DOMPurify.sanitize(t('accessibility.item3')),
+            DOMPurify.sanitize(t('accessibility.item4')),
+            DOMPurify.sanitize(t('accessibility.item5')),
           ],
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
@@ -686,9 +686,9 @@ export function createCollapsibleDocs(): HTMLElement {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.tip1')) },
-            { title: '', content: sanitizeHtml(t('notes.tip2')) },
-            { title: '', content: sanitizeHtml(t('notes.tip3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip3')) },
           ],
         });
 

@@ -7,7 +7,7 @@ import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
@@ -163,7 +163,7 @@ export function IconsDocs() {
             {(['rule1', 'rule2', 'rule3', 'rule4'] as const).map((rule) => (
               <li key={rule} className="flex gap-2 items-start list-none">
                 <span className="text-primary mt-0.5 shrink-0">✓</span>
-                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t(`accessibility.${rule}`)) }} />
+                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t(`accessibility.${rule}`)) }} />
               </li>
             ))}
           </ul>

@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createComponentDemo } from '@/components/ComponentDemo';
 import { createCard } from '@/components/ui/card';
 
@@ -31,7 +31,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
     li.dataset.align = 'start';
     li.innerHTML = `
       <span class="nds-pill" data-tone="primary">${i + 1}</span>
-      <span>${sanitizeHtml(item)}</span>`;
+      <span>${DOMPurify.sanitize(item)}</span>`;
     ol.appendChild(li);
   });
 

@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
 
 export interface DocsNoteItem { title: string; content: string }
@@ -42,7 +42,7 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
     }
     const alertDescription = createAlertDescription();
     const p = document.createElement('p');
-    p.innerHTML = sanitizeHtml(item.content);
+    p.innerHTML = DOMPurify.sanitize(item.content);
     alertDescription.appendChild(p);
     alert.appendChild(alertDescription);
 

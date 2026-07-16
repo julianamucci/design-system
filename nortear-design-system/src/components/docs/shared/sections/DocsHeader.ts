@@ -1,6 +1,6 @@
 import { createBadge } from '@/components/ui/badge';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsHeaderProps {
   title: string;
@@ -49,7 +49,7 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
     const installRow = document.createElement('div');
     installRow.className = 'nds-cluster nds-text-body nds-text-muted-foreground';
     installRow.dataset.spacing = 'sm';
-    installRow.innerHTML = `<span class="nds-cluster" data-spacing="xs"><code class="nds-code-inline">${sanitizeHtml(props.installNote)}</code></span>`;
+    installRow.innerHTML = `<span class="nds-cluster" data-spacing="xs"><code class="nds-code-inline">${DOMPurify.sanitize(props.installNote)}</code></span>`;
     header.appendChild(installRow);
   }
 

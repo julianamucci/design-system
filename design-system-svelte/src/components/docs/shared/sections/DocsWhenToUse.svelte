@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
@@ -25,7 +25,7 @@
           <h3 class="font-medium text-sm">{guidelines.title}</h3>
           <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             {#each guidelines.items as item}
-              <li>{@html sanitizeHtml(item)}</li>
+              <li>{@html DOMPurify.sanitize(item)}</li>
             {/each}
           </ul>
       </Card>
@@ -104,7 +104,7 @@
             </h3>
             <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
               {#each doBlock.items as item}
-                <li>{@html sanitizeHtml(item)}</li>
+                <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}
             </ul>
         </Card>
@@ -115,7 +115,7 @@
             </h3>
             <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
               {#each dontBlock.items as item}
-                <li>{@html sanitizeHtml(item)}</li>
+                <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}
             </ul>
         </Card>

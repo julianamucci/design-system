@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import drawerTranslations from "@shared/content/drawer/translations.json";
@@ -242,7 +242,7 @@ interface DrawerProps {
               style={{ contain: "layout", minHeight: 80, position: "relative" }}
             >
               <p className="text-xs font-medium text-muted-foreground">
-                {sanitizeHtml(tContent(`demonstration.labels.${dir}`))}
+                {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
               </p>
               <Drawer direction={dir}>
                 <DrawerTrigger asChild>
@@ -254,11 +254,11 @@ interface DrawerProps {
                   <DrawerHeader>
                     <DrawerTitle className="capitalize">{dir}</DrawerTitle>
                     <DrawerDescription>
-                      {sanitizeHtml(tContent(`demonstration.labels.${dir}`))}
+                      {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
                     </DrawerDescription>
                   </DrawerHeader>
                   <div className="px-4 pb-2 text-sm text-muted-foreground">
-                    {sanitizeHtml(tContent(`variants.styles.${dir}`))}
+                    {DOMPurify.sanitize(tContent(`variants.styles.${dir}`))}
                   </div>
                   <DrawerFooter>
                     <DrawerClose asChild>
@@ -393,8 +393,8 @@ interface DrawerProps {
                 <div>screen reader silencioso</div>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -411,8 +411,8 @@ interface DrawerProps {
                 <div className="text-destructive">focus trap quebra</div>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -726,42 +726,42 @@ interface DrawerProps {
                 type: tContent("props.table.open.type"),
                 defaultValue: tContent("props.table.open.default"),
                 required: tContent("props.table.open.required"),
-                description: sanitizeHtml(tContent("props.table.open.description")),
+                description: DOMPurify.sanitize(tContent("props.table.open.description")),
               },
               {
                 name: "onOpenChange",
                 type: tContent("props.table.onOpenChange.type"),
                 defaultValue: tContent("props.table.onOpenChange.default"),
                 required: tContent("props.table.onOpenChange.required"),
-                description: sanitizeHtml(tContent("props.table.onOpenChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
               },
               {
                 name: "defaultOpen",
                 type: tContent("props.table.defaultOpen.type"),
                 defaultValue: tContent("props.table.defaultOpen.default"),
                 required: tContent("props.table.defaultOpen.required"),
-                description: sanitizeHtml(tContent("props.table.defaultOpen.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
               },
               {
                 name: "direction",
                 type: tContent("props.table.direction.type"),
                 defaultValue: tContent("props.table.direction.default"),
                 required: tContent("props.table.direction.required"),
-                description: sanitizeHtml(tContent("props.table.direction.description")),
+                description: DOMPurify.sanitize(tContent("props.table.direction.description")),
               },
               {
                 name: "modal",
                 type: tContent("props.table.modal.type"),
                 defaultValue: tContent("props.table.modal.default"),
                 required: tContent("props.table.modal.required"),
-                description: sanitizeHtml(tContent("props.table.modal.description")),
+                description: DOMPurify.sanitize(tContent("props.table.modal.description")),
               },
               {
                 name: "dismissible",
                 type: tContent("props.table.dismissible.type"),
                 defaultValue: tContent("props.table.dismissible.default"),
                 required: tContent("props.table.dismissible.required"),
-                description: sanitizeHtml(tContent("props.table.dismissible.description")),
+                description: DOMPurify.sanitize(tContent("props.table.dismissible.description")),
               },
             ],
           },
@@ -884,7 +884,7 @@ interface DrawerProps {
         items={[
           {
             event: "drawer_open / drawer_close",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, label, location",
           },
         ]}

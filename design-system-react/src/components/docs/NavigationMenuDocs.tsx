@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import navigationMenuTranslations from "@shared/content/navigation-menu/translations.json";
@@ -238,7 +238,7 @@ interface NavigationMenuLinkProps
           {/* Demo 1: simple link */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.simpleLink"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.simpleLink"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain}>
               <NavigationMenuList>
@@ -258,7 +258,7 @@ interface NavigationMenuLinkProps
           {/* Demo 2: with dropdown */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withDropdown"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withDropdown"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="produtos">
               <NavigationMenuList>
@@ -291,7 +291,7 @@ interface NavigationMenuLinkProps
           {/* Demo 3: with grid */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withGrid"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withGrid"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="solucoes">
               <NavigationMenuList>
@@ -349,7 +349,7 @@ interface NavigationMenuLinkProps
           {/* Demo 4: featured card */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withFeatured"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withFeatured"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="recursos">
               <NavigationMenuList>
@@ -506,8 +506,8 @@ interface NavigationMenuLinkProps
                 role=navigation (sozinho)
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -522,8 +522,8 @@ interface NavigationMenuLinkProps
                 30+ links sem grupo
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -825,42 +825,42 @@ interface NavigationMenuLinkProps
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: sanitizeHtml(tContent("props.table.value.description")),
+                description: DOMPurify.sanitize(tContent("props.table.value.description")),
               },
               {
                 name: "onValueChange",
                 type: tContent("props.table.onValueChange.type"),
                 defaultValue: tContent("props.table.onValueChange.default"),
                 required: tContent("props.table.onValueChange.required"),
-                description: sanitizeHtml(tContent("props.table.onValueChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onValueChange.description")),
               },
               {
                 name: "defaultValue",
                 type: tContent("props.table.defaultValue.type"),
                 defaultValue: tContent("props.table.defaultValue.default"),
                 required: tContent("props.table.defaultValue.required"),
-                description: sanitizeHtml(tContent("props.table.defaultValue.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultValue.description")),
               },
               {
                 name: "delayDuration",
                 type: tContent("props.table.delayDuration.type"),
                 defaultValue: tContent("props.table.delayDuration.default"),
                 required: tContent("props.table.delayDuration.required"),
-                description: sanitizeHtml(tContent("props.table.delayDuration.description")),
+                description: DOMPurify.sanitize(tContent("props.table.delayDuration.description")),
               },
               {
                 name: "skipDelayDuration",
                 type: tContent("props.table.skipDelayDuration.type"),
                 defaultValue: tContent("props.table.skipDelayDuration.default"),
                 required: tContent("props.table.skipDelayDuration.required"),
-                description: sanitizeHtml(tContent("props.table.skipDelayDuration.description")),
+                description: DOMPurify.sanitize(tContent("props.table.skipDelayDuration.description")),
               },
               {
                 name: "orientation",
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: sanitizeHtml(tContent("props.table.orientation.description")),
+                description: DOMPurify.sanitize(tContent("props.table.orientation.description")),
               },
             ],
           },
@@ -995,7 +995,7 @@ interface NavigationMenuLinkProps
         items={[
           {
             event: "nav_menu_open / nav_link_click",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, label, destination",
           },
         ]}

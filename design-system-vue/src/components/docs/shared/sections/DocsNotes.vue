@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface DocsNoteItem { title: string; content: string }
@@ -40,7 +40,7 @@ function trackId(i: number): string | undefined {
           <AlertTitle v-if="item.title">
             {{ item.title }}
           </AlertTitle>
-          <AlertDescription v-html="sanitizeHtml(item.content)" />
+          <AlertDescription v-html="DOMPurify.sanitize(item.content)" />
         </Alert>
       </div>
     </div>

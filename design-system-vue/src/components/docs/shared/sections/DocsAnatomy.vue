@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import ComponentDemo from '@/components/ComponentDemo.vue';
 import { Card } from '@/components/ui/card';
 
@@ -27,7 +27,7 @@ defineProps<{
             <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
               {{ i + 1 }}
             </span>
-            <span v-html="sanitizeHtml(item)" />
+            <span v-html="DOMPurify.sanitize(item)" />
           </li>
         </ol>
         <Card class="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">

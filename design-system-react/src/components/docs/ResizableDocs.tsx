@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import resizableTranslations from "@shared/content/resizable/translations.json";
@@ -477,8 +477,8 @@ interface PanelResizeHandleProps {
                 </ResizablePanelGroup>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -493,8 +493,8 @@ interface PanelResizeHandleProps {
                 aria-label=&quot;Handle&quot;
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -645,49 +645,49 @@ interface PanelResizeHandleProps {
                 type: tContent("props.table.direction.type"),
                 defaultValue: tContent("props.table.direction.default"),
                 required: tContent("props.table.direction.required"),
-                description: sanitizeHtml(tContent("props.table.direction.description")),
+                description: DOMPurify.sanitize(tContent("props.table.direction.description")),
               },
               {
                 name: "defaultSize",
                 type: tContent("props.table.defaultSize.type"),
                 defaultValue: tContent("props.table.defaultSize.default"),
                 required: tContent("props.table.defaultSize.required"),
-                description: sanitizeHtml(tContent("props.table.defaultSize.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultSize.description")),
               },
               {
                 name: "minSize",
                 type: tContent("props.table.minSize.type"),
                 defaultValue: tContent("props.table.minSize.default"),
                 required: tContent("props.table.minSize.required"),
-                description: sanitizeHtml(tContent("props.table.minSize.description")),
+                description: DOMPurify.sanitize(tContent("props.table.minSize.description")),
               },
               {
                 name: "maxSize",
                 type: tContent("props.table.maxSize.type"),
                 defaultValue: tContent("props.table.maxSize.default"),
                 required: tContent("props.table.maxSize.required"),
-                description: sanitizeHtml(tContent("props.table.maxSize.description")),
+                description: DOMPurify.sanitize(tContent("props.table.maxSize.description")),
               },
               {
                 name: "id",
                 type: tContent("props.table.id.type"),
                 defaultValue: tContent("props.table.id.default"),
                 required: tContent("props.table.id.required"),
-                description: sanitizeHtml(tContent("props.table.id.description")),
+                description: DOMPurify.sanitize(tContent("props.table.id.description")),
               },
               {
                 name: "withHandle",
                 type: tContent("props.table.withHandle.type"),
                 defaultValue: tContent("props.table.withHandle.default"),
                 required: tContent("props.table.withHandle.required"),
-                description: sanitizeHtml(tContent("props.table.withHandle.description")),
+                description: DOMPurify.sanitize(tContent("props.table.withHandle.description")),
               },
               {
                 name: "onLayout",
                 type: tContent("props.table.onLayout.type"),
                 defaultValue: tContent("props.table.onLayout.default"),
                 required: tContent("props.table.onLayout.required"),
-                description: sanitizeHtml(tContent("props.table.onLayout.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onLayout.description")),
               },
             ],
           },

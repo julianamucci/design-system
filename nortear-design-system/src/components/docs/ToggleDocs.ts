@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { Bold, Italic, Underline, List, Eye, AlignLeft } from 'lucide';
 import { createToggle, type ToggleOptions, type ToggleSize, type ToggleVariant } from '@/components/ui/toggle';
@@ -798,12 +798,12 @@ export type ToggleOptions = {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear
-            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code>; é não-controlado (<code>pressed</code> é só estado inicial); <code>aria-label</code> não é prop do options — aplique via <code>setAttribute</code> no <code>&lt;button&gt;</code> retornado. O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code>; é não-controlado (<code>pressed</code> é só estado inicial); <code>aria-label</code> não é prop do options — aplique via <code>setAttribute</code> no <code>&lt;button&gt;</code> retornado. O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
           ],
         });
 

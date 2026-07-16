@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createButton } from '@/components/ui/button';
 
@@ -35,7 +35,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   if (props.description) {
     const p = document.createElement('p');
     p.className = 'nds-text-muted-foreground nds-mb-4';
-    p.innerHTML = sanitizeHtml(props.description);
+    p.innerHTML = DOMPurify.sanitize(props.description);
     section.appendChild(p);
   }
 
@@ -48,8 +48,8 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
 
     const info = document.createElement('div');
     info.innerHTML = `
-      <h3 class="nds-text-body nds-font-semibold nds-m-0">${sanitizeHtml(item.name)}</h3>
-      <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">${sanitizeHtml(item.description)}</p>`;
+      <h3 class="nds-text-body nds-font-semibold nds-m-0">${DOMPurify.sanitize(item.name)}</h3>
+      <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">${DOMPurify.sanitize(item.description)}</p>`;
 
     const previewWrap = document.createElement('div');
     previewWrap.className = 'nds-cluster';

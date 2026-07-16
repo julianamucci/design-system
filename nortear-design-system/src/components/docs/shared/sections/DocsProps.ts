@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -95,7 +95,7 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
     if (props.extensibilityNotes) {
       const extNotes = document.createElement('div');
       extNotes.className = 'nds-text-body nds-text-muted-foreground nds-leading-relaxed';
-      extNotes.innerHTML = sanitizeHtml(props.extensibilityNotes);
+      extNotes.innerHTML = DOMPurify.sanitize(props.extensibilityNotes);
       extBlock.appendChild(extNotes);
     }
     if (props.extensibilityCode) {

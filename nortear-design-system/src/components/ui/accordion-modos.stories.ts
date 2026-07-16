@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -101,7 +101,7 @@ export const Controlled: Story = {
 
     const setIndicator = (val: string | string[]) => {
       const display = Array.isArray(val) ? val.join(', ') : val || '(nenhum)';
-      indicator.innerHTML = sanitizeHtml(`Item ativo: <code class="font-mono">${display}</code>`);
+      indicator.innerHTML = DOMPurify.sanitize(`Item ativo: <code class="font-mono">${display}</code>`);
     };
     setIndicator('item-1');
 

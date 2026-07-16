@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,8 +60,8 @@ export function createButton(options: ButtonOptions): HTMLButtonElement {
 
   if (children) {
     if (typeof children === 'string') {
-      // PATCH: security — sanitizeHtml obrigatório em innerHTML (ver guideline 09-seguranca-xss.md)
-      el.innerHTML = sanitizeHtml(children);
+      // PATCH: security — DOMPurify.sanitize obrigatório em innerHTML (ver guideline 09-seguranca-xss.md)
+      el.innerHTML = DOMPurify.sanitize(children);
     } else {
       el.appendChild(children);
     }

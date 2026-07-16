@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 
 export interface DocsDoDontPair {
@@ -42,7 +42,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
     doCol.innerHTML = `
       <div class="nds-cluster nds-text-success" data-spacing="sm">
         <span class="nds-pill" data-tone="success">✓</span>
-        <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${sanitizeHtml(pair.doLabel)}</span>
+        <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${DOMPurify.sanitize(pair.doLabel)}</span>
       </div>`;
     const doBox = createCard({ className: 'nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4' });
     doBox.appendChild(pair.doPreviewFactory());
@@ -58,7 +58,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
     dontCol.innerHTML = `
       <div class="nds-cluster nds-text-destructive" data-spacing="sm">
         <span class="nds-pill" data-tone="destructive">✗</span>
-        <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${sanitizeHtml(pair.dontLabel)}</span>
+        <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${DOMPurify.sanitize(pair.dontLabel)}</span>
       </div>`;
     const dontBox = createCard({ className: 'nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4' });
     dontBox.appendChild(pair.dontPreviewFactory());

@@ -4,7 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createAccordion } from '@/components/ui/accordion';
 import { createBadge } from '@/components/ui/badge';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import uiTranslations from '@/i18n/ui.json';
 import accordionTranslations from '@shared/content/accordion/translations.json';
 
@@ -461,7 +461,7 @@ export function createAccordionDocs(): HTMLElement {
           `  ],\n` +
           `});\n` +
           `const layout = accordion.querySelector('[data-content-for="layout"] div');\n` +
-          `if (layout) layout.innerHTML = sanitizeHtml(richLayoutHtml);`;
+          `if (layout) layout.innerHTML = DOMPurify.sanitize(richLayoutHtml);`;
 
         const codeFAQ =
           `const wrapper = document.createElement('div');\n` +
@@ -574,9 +574,9 @@ export function createAccordionDocs(): HTMLElement {
                     <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-base</code><span>16px — títulos de seção</span></li>
                   </ul>`;
                 const layoutContent = accordion.querySelector<HTMLElement>('[data-content-for="layout"] div');
-                if (layoutContent) layoutContent.innerHTML = sanitizeHtml(layoutHtml);
+                if (layoutContent) layoutContent.innerHTML = DOMPurify.sanitize(layoutHtml);
                 const tipoContent = accordion.querySelector<HTMLElement>('[data-content-for="tipografia"] div');
-                if (tipoContent) tipoContent.innerHTML = sanitizeHtml(tipoHtml);
+                if (tipoContent) tipoContent.innerHTML = DOMPurify.sanitize(tipoHtml);
                 root.appendChild(accordion);
                 return root;
               },

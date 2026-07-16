@@ -4,7 +4,7 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
@@ -454,10 +454,10 @@ interface ScrollAreaRootProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'type',            type: $tStore('props.table.type_prop.type'),        defaultValue: $tStore('props.table.type_prop.default'),        required: $tStore('props.table.type_prop.required'),        description: sanitizeHtml($tStore('props.table.type_prop.description'))        },
-          { name: 'scrollHideDelay', type: $tStore('props.table.scrollHideDelay.type'),  defaultValue: $tStore('props.table.scrollHideDelay.default'),  required: $tStore('props.table.scrollHideDelay.required'),  description: sanitizeHtml($tStore('props.table.scrollHideDelay.description'))  },
+          { name: 'type',            type: $tStore('props.table.type_prop.type'),        defaultValue: $tStore('props.table.type_prop.default'),        required: $tStore('props.table.type_prop.required'),        description: DOMPurify.sanitize($tStore('props.table.type_prop.description'))        },
+          { name: 'scrollHideDelay', type: $tStore('props.table.scrollHideDelay.type'),  defaultValue: $tStore('props.table.scrollHideDelay.default'),  required: $tStore('props.table.scrollHideDelay.required'),  description: DOMPurify.sanitize($tStore('props.table.scrollHideDelay.description'))  },
           { name: 'orientation',     type: '"vertical" | "horizontal" | "both"',         defaultValue: '"vertical"',                                    required: 'Não',                                            description: 'Direção do scroll suportada — controla quais ScrollBars o wrapper renderiza.' },
-          { name: 'class',           type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: sanitizeHtml($tStore('props.table.className.description'))        },
+          { name: 'class',           type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: DOMPurify.sanitize($tStore('props.table.className.description'))        },
           { name: 'children',        type: 'Snippet',                                    defaultValue: '—',                                             required: 'Sim',                                            description: 'Conteúdo renderizado dentro do Viewport.' },
         ],
       },

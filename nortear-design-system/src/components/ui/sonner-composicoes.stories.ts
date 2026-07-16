@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { injectToastStyles } from './sonner';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ function buildToastEl(opts: {
     const iconWrap = document.createElement('span');
     iconWrap.className = 'nds-shrink-0';
     iconWrap.style.marginTop = '0.125rem';
-    iconWrap.innerHTML = sanitizeHtml(icon);
+    iconWrap.innerHTML = DOMPurify.sanitize(icon);
     toastEl.appendChild(iconWrap);
   }
 

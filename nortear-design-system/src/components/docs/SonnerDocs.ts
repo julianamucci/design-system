@@ -5,7 +5,7 @@ import { injectToastStyles } from '@/components/ui/sonner';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 
 import {
@@ -93,7 +93,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
     const iconWrap = document.createElement('span');
     iconWrap.className = 'nds-shrink-0';
     iconWrap.style.marginTop = 'var(--spacing-0-5)';
-    iconWrap.innerHTML = sanitizeHtml(icon);
+    iconWrap.innerHTML = DOMPurify.sanitize(icon);
     toastEl.appendChild(iconWrap);
   }
 
@@ -326,7 +326,7 @@ export function createSonnerDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7].map(i => sanitizeHtml(t(`anatomy.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -336,7 +336,7 @@ export function createSonnerDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4, 5].map(i => sanitizeHtml(t(`usage.guidelines.item${i}`))),
+            items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -372,7 +372,7 @@ export function createSonnerDocs(): HTMLElement {
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3].map(i => sanitizeHtml(t(`usage.dont.item${i}`))),
+            items: [1, 2, 3].map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
           },
         });
 
@@ -473,7 +473,7 @@ export function createSonnerDocs(): HTMLElement {
           },
           {
             label:       t('states.items.withAction.label'),
-            description: stripHtml(sanitizeHtml(t('states.items.withAction.description'))),
+            description: stripHtml(DOMPurify.sanitize(t('states.items.withAction.description'))),
             code:         `toast('Item excluído.', {\n  action: { label: 'Desfazer', onClick: () => restoreItem() },\n});`,
             previewFactory: () => buildLocalToast('default', t('demonstration.labels.withAction'), {
               actionLabel: t('demonstration.labels.withActionLabel'),
@@ -488,7 +488,7 @@ export function createSonnerDocs(): HTMLElement {
           },
           {
             label:       t('states.items.persistent.label'),
-            description: stripHtml(sanitizeHtml(t('states.items.persistent.description'))),
+            description: stripHtml(DOMPurify.sanitize(t('states.items.persistent.description'))),
             code:         `toast.error('Falha crítica no servidor.', {\n  duration: Infinity,\n  dismissible: true,\n});`,
             previewFactory: () => buildLocalToast('error', t('demonstration.labels.persistent')),
           },
@@ -608,8 +608,8 @@ export interface ToastOptions {
       case 'acessibilidade':
         return createDocsAccessibility({
           title: t('accessibility.title'),
-          summary: sanitizeHtml(t('accessibility.summary')),
-          items: [1, 2, 3, 4, 5].map(i => sanitizeHtml(t(`accessibility.item${i}`))),
+          summary: DOMPurify.sanitize(t('accessibility.summary')),
+          items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
             { key: 'Tab',    description: t('accessibility.keyboard.tab')         },
@@ -635,7 +635,7 @@ export interface ToastOptions {
           title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({
             title:   '',
-            content: sanitizeHtml(t(`notes.item${i}`)),
+            content: DOMPurify.sanitize(t(`notes.item${i}`)),
           })),
         });
 

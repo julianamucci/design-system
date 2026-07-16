@@ -74,21 +74,19 @@ SVGs podem conter `<script>`, `<foreignObject>` e event handlers:
 
 ---
 
-## Função `sanitizeHtml` — Implementação Obrigatória
+## Sanitização — `DOMPurify.sanitize` direto no call site (obrigatório)
 
-Localização: `src/lib/sanitize-html.ts` em cada stack.
-
-A implementação é um **wrapper fino sobre o [DOMPurify](https://github.com/cure53/DOMPurify)** — o sanitizador de referência do ecossistema (mantido pela Cure53, auditado, usado por Google e Microsoft, reconhecido pelas ferramentas SAST como sanitizador de taint):
+Todo HTML dinâmico injetado no DOM passa por **[DOMPurify](https://github.com/cure53/DOMPurify)** (Cure53 — o sanitizador de referência do ecossistema), chamado **diretamente no ponto de uso**:
 
 ```typescript
 import DOMPurify from 'dompurify';
 
-export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html);
-}
+el.innerHTML = DOMPurify.sanitize(t('anatomy.item1'));
 ```
 
-**Nunca chame `DOMPurify.sanitize` diretamente nos componentes** — sempre via `sanitizeHtml`, pra manter um único ponto de configuração por stack.
+**Por que direto, sem wrapper local**: ferramentas de análise estática (Qwiet, CodeQL) reconhecem `DOMPurify.sanitize` como sanitizador de taint **apenas quando a chamada aparece no próprio call site**. Um wrapper (`sanitizeHtml()`) esconde o sanitizador da análise — o fluxo `dado → wrapper desconhecido → innerHTML` continua sendo reportado como XSS, gerando dezenas de falsos positivos permanentes. Já existiu um wrapper neste projeto; foi removido por esse motivo.
+
+Se um dia for necessária configuração custom (allowlist própria), use `DOMPurify.setConfig()` uma única vez no bootstrap da stack — os call sites continuam chamando `DOMPurify.sanitize()` direto.
 
 ### O que o perfil default do DOMPurify garante
 

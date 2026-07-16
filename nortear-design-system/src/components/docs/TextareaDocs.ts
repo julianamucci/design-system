@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createTextarea } from '@/components/ui/textarea';
 import { createButton } from '@/components/ui/button';
@@ -952,12 +952,12 @@ export type TextareaOptions = {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear
-            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — o factory custom é um wrapper enxuto de <code>&lt;textarea&gt;</code> e <em>não</em> expõe props <code>onChange</code>, <code>readOnly</code>, <code>maxLength</code> nem <code>aria-invalid</code>. Aplique todos via API DOM nativa após a criação (<code>addEventListener</code>, <code>textarea.readOnly = true</code>, <code>textarea.maxLength = 500</code>, <code>setAttribute</code>). Para contador acessível, escute o evento <code>input</code> e atualize um <code>&lt;span&gt;</code> com <code>aria-live=&quot;polite&quot;</code> + <code>aria-label</code>.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom é um wrapper enxuto de <code>&lt;textarea&gt;</code> e <em>não</em> expõe props <code>onChange</code>, <code>readOnly</code>, <code>maxLength</code> nem <code>aria-invalid</code>. Aplique todos via API DOM nativa após a criação (<code>addEventListener</code>, <code>textarea.readOnly = true</code>, <code>textarea.maxLength = 500</code>, <code>setAttribute</code>). Para contador acessível, escute o evento <code>input</code> e atualize um <code>&lt;span&gt;</code> com <code>aria-live=&quot;polite&quot;</code> + <code>aria-label</code>.') },
           ],
         });
 

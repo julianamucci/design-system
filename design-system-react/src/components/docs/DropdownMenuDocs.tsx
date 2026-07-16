@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import dropdownMenuTranslations from "@shared/content/dropdown-menu/translations.json";
@@ -239,7 +239,7 @@ interface DropdownMenuItemProps {
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.basic"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.basic"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -263,7 +263,7 @@ interface DropdownMenuItemProps {
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withCheckbox"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withCheckbox"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -300,7 +300,7 @@ interface DropdownMenuItemProps {
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withRadio"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withRadio"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -324,7 +324,7 @@ interface DropdownMenuItemProps {
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withSubmenu"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withSubmenu"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -467,8 +467,8 @@ interface DropdownMenuItemProps {
                 10+ items planos sem agrupamento
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -485,8 +485,8 @@ interface DropdownMenuItemProps {
                 <div className="text-muted-foreground text-xs">Item normal sem aviso</div>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -750,42 +750,42 @@ interface DropdownMenuItemProps {
                 type: tContent("props.table.open.type"),
                 defaultValue: tContent("props.table.open.default"),
                 required: tContent("props.table.open.required"),
-                description: sanitizeHtml(tContent("props.table.open.description")),
+                description: DOMPurify.sanitize(tContent("props.table.open.description")),
               },
               {
                 name: "onOpenChange",
                 type: tContent("props.table.onOpenChange.type"),
                 defaultValue: tContent("props.table.onOpenChange.default"),
                 required: tContent("props.table.onOpenChange.required"),
-                description: sanitizeHtml(tContent("props.table.onOpenChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
               },
               {
                 name: "defaultOpen",
                 type: tContent("props.table.defaultOpen.type"),
                 defaultValue: tContent("props.table.defaultOpen.default"),
                 required: tContent("props.table.defaultOpen.required"),
-                description: sanitizeHtml(tContent("props.table.defaultOpen.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
               },
               {
                 name: "modal",
                 type: tContent("props.table.modal.type"),
                 defaultValue: tContent("props.table.modal.default"),
                 required: tContent("props.table.modal.required"),
-                description: sanitizeHtml(tContent("props.table.modal.description")),
+                description: DOMPurify.sanitize(tContent("props.table.modal.description")),
               },
               {
                 name: "side",
                 type: tContent("props.table.side.type"),
                 defaultValue: tContent("props.table.side.default"),
                 required: tContent("props.table.side.required"),
-                description: sanitizeHtml(tContent("props.table.side.description")),
+                description: DOMPurify.sanitize(tContent("props.table.side.description")),
               },
               {
                 name: "align",
                 type: tContent("props.table.align.type"),
                 defaultValue: tContent("props.table.align.default"),
                 required: tContent("props.table.align.required"),
-                description: sanitizeHtml(tContent("props.table.align.description")),
+                description: DOMPurify.sanitize(tContent("props.table.align.description")),
               },
             ],
           },
@@ -920,7 +920,7 @@ interface DropdownMenuItemProps {
         items={[
           {
             event: "dropdown_menu_open / dropdown_menu_close / dropdown_menu_item_select",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, location, label",
           },
         ]}

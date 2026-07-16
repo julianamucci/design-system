@@ -1,6 +1,6 @@
 import { ComponentDemo } from '@/components/ComponentDemo';
 import { Card } from '@/components/ui/card';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsAnatomyProps {
   title: string;
@@ -21,7 +21,7 @@ export function DocsAnatomy({ title, items, structureCode, structureLabel }: Doc
                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
                   {i + 1}
                 </span>
-                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
+                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               </li>
             ))}
           </ol>

@@ -17,7 +17,7 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import menubarTranslations from "@shared/content/menubar/translations.json";
@@ -245,7 +245,7 @@ interface MenubarItemProps {
           {/* Menu Arquivo (com submenu) */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.fileMenu"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.fileMenu"))}
             </p>
             <Menubar>
               <MenubarMenu defaultOpen>
@@ -273,7 +273,7 @@ interface MenubarItemProps {
           {/* Menu Editar (com shortcuts) */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.editMenu"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.editMenu"))}
             </p>
             <Menubar>
               <MenubarMenu defaultOpen>
@@ -300,7 +300,7 @@ interface MenubarItemProps {
           {/* Menu Exibir (com checkbox) */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.viewMenu"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.viewMenu"))}
             </p>
             <Menubar>
               <MenubarMenu defaultOpen>
@@ -326,7 +326,7 @@ interface MenubarItemProps {
           {/* Menu Ferramentas (com radio) */}
           <div className="space-y-2" style={wrapperStyle}>
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.toolsMenu"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.toolsMenu"))}
             </p>
             <Menubar>
               <MenubarMenu defaultOpen>
@@ -462,8 +462,8 @@ interface MenubarItemProps {
                 Menu único
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -478,8 +478,8 @@ interface MenubarItemProps {
                 Sub &gt; Sub &gt; Sub
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -774,42 +774,42 @@ interface MenubarItemProps {
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: sanitizeHtml(tContent("props.table.value.description")),
+                description: DOMPurify.sanitize(tContent("props.table.value.description")),
               },
               {
                 name: "onValueChange",
                 type: tContent("props.table.onValueChange.type"),
                 defaultValue: tContent("props.table.onValueChange.default"),
                 required: tContent("props.table.onValueChange.required"),
-                description: sanitizeHtml(tContent("props.table.onValueChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onValueChange.description")),
               },
               {
                 name: "defaultValue",
                 type: tContent("props.table.defaultValue.type"),
                 defaultValue: tContent("props.table.defaultValue.default"),
                 required: tContent("props.table.defaultValue.required"),
-                description: sanitizeHtml(tContent("props.table.defaultValue.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultValue.description")),
               },
               {
                 name: "loop",
                 type: tContent("props.table.loop.type"),
                 defaultValue: tContent("props.table.loop.default"),
                 required: tContent("props.table.loop.required"),
-                description: sanitizeHtml(tContent("props.table.loop.description")),
+                description: DOMPurify.sanitize(tContent("props.table.loop.description")),
               },
               {
                 name: "side",
                 type: tContent("props.table.side.type"),
                 defaultValue: tContent("props.table.side.default"),
                 required: tContent("props.table.side.required"),
-                description: sanitizeHtml(tContent("props.table.side.description")),
+                description: DOMPurify.sanitize(tContent("props.table.side.description")),
               },
               {
                 name: "align",
                 type: tContent("props.table.align.type"),
                 defaultValue: tContent("props.table.align.default"),
                 required: tContent("props.table.align.required"),
-                description: sanitizeHtml(tContent("props.table.align.description")),
+                description: DOMPurify.sanitize(tContent("props.table.align.description")),
               },
             ],
           },
@@ -946,7 +946,7 @@ interface MenubarItemProps {
         items={[
           {
             event: "menubar_menu_open / menubar_item_select / menubar_shortcut_invoke",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, menu, label",
           },
         ]}

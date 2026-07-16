@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import scrollAreaTranslations from "@shared/content/scroll-area/translations.json";
@@ -411,8 +411,8 @@ interface ScrollBarProps {
                 </ScrollArea>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -443,8 +443,8 @@ interface ScrollBarProps {
                 </ScrollArea>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -573,35 +573,35 @@ interface ScrollBarProps {
                 type: tContent("props.table.type_prop.type"),
                 defaultValue: tContent("props.table.type_prop.default"),
                 required: tContent("props.table.type_prop.required"),
-                description: sanitizeHtml(tContent("props.table.type_prop.description")),
+                description: DOMPurify.sanitize(tContent("props.table.type_prop.description")),
               },
               {
                 name: "scrollHideDelay",
                 type: tContent("props.table.scrollHideDelay.type"),
                 defaultValue: tContent("props.table.scrollHideDelay.default"),
                 required: tContent("props.table.scrollHideDelay.required"),
-                description: sanitizeHtml(tContent("props.table.scrollHideDelay.description")),
+                description: DOMPurify.sanitize(tContent("props.table.scrollHideDelay.description")),
               },
               {
                 name: "orientation",
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: sanitizeHtml(tContent("props.table.orientation.description")),
+                description: DOMPurify.sanitize(tContent("props.table.orientation.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: sanitizeHtml(tContent("props.table.className.description")),
+                description: DOMPurify.sanitize(tContent("props.table.className.description")),
               },
               {
                 name: "children",
                 type: tContent("props.table.children.type"),
                 defaultValue: tContent("props.table.children.default"),
                 required: tContent("props.table.children.required"),
-                description: sanitizeHtml(tContent("props.table.children.description")),
+                description: DOMPurify.sanitize(tContent("props.table.children.description")),
               },
             ],
           },

@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSelect } from '@/components/ui/select';
 import uiTranslations from '@/i18n/ui.json';
@@ -889,10 +889,10 @@ export type SelectOptions = {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2') + ' <strong>Nortear</strong>: o factory é um wrapper de <code>&lt;select&gt;</code> nativo — não há portal customizado; o dropdown é o popup nativo do navegador.') },
-            { title: '', content: sanitizeHtml(t('notes.item3') + ' <strong>Nortear</strong>: type-ahead é gerenciado pelo próprio <code>&lt;select&gt;</code> do navegador.') },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2') + ' <strong>Nortear</strong>: o factory é um wrapper de <code>&lt;select&gt;</code> nativo — não há portal customizado; o dropdown é o popup nativo do navegador.') },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3') + ' <strong>Nortear</strong>: type-ahead é gerenciado pelo próprio <code>&lt;select&gt;</code> do navegador.') },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
           ],
         });
 

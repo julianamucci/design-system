@@ -11,7 +11,7 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import inputOtpTranslations from "@shared/content/input-otp/translations.json";
@@ -262,7 +262,7 @@ interface InputOTPProps {
           {/* 6 dígitos */}
           <div className="space-y-2">
             <label htmlFor="demo-six" className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.sixDigits"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.sixDigits"))}
             </label>
             <InputOTP
               id="demo-six"
@@ -284,7 +284,7 @@ interface InputOTPProps {
           {/* 4 dígitos */}
           <div className="space-y-2">
             <label htmlFor="demo-four" className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.fourDigits"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.fourDigits"))}
             </label>
             <InputOTP
               id="demo-four"
@@ -306,7 +306,7 @@ interface InputOTPProps {
           {/* Com Separator */}
           <div className="space-y-2">
             <label htmlFor="demo-sep" className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.withSeparator"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.withSeparator"))}
             </label>
             <InputOTP
               id="demo-sep"
@@ -334,7 +334,7 @@ interface InputOTPProps {
           {/* Alfanumérico */}
           <div className="space-y-2">
             <label htmlFor="demo-alpha" className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.alphanumeric"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.alphanumeric"))}
             </label>
             <InputOTP
               id="demo-alpha"
@@ -470,8 +470,8 @@ interface InputOTPProps {
                 (sem autoComplete)
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -482,8 +482,8 @@ interface InputOTPProps {
             dontPreview: (
               <div className="text-xs italic text-muted-foreground">(sem label)</div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -742,49 +742,49 @@ interface InputOTPProps {
                 type: tContent("props.table.maxLength.type"),
                 defaultValue: tContent("props.table.maxLength.default"),
                 required: tContent("props.table.maxLength.required"),
-                description: sanitizeHtml(tContent("props.table.maxLength.description")),
+                description: DOMPurify.sanitize(tContent("props.table.maxLength.description")),
               },
               {
                 name: "value",
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: sanitizeHtml(tContent("props.table.value.description")),
+                description: DOMPurify.sanitize(tContent("props.table.value.description")),
               },
               {
                 name: "onChange",
                 type: tContent("props.table.onChange.type"),
                 defaultValue: tContent("props.table.onChange.default"),
                 required: tContent("props.table.onChange.required"),
-                description: sanitizeHtml(tContent("props.table.onChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onChange.description")),
               },
               {
                 name: "onComplete",
                 type: tContent("props.table.onComplete.type"),
                 defaultValue: tContent("props.table.onComplete.default"),
                 required: tContent("props.table.onComplete.required"),
-                description: sanitizeHtml(tContent("props.table.onComplete.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onComplete.description")),
               },
               {
                 name: "pattern",
                 type: tContent("props.table.pattern.type"),
                 defaultValue: tContent("props.table.pattern.default"),
                 required: tContent("props.table.pattern.required"),
-                description: sanitizeHtml(tContent("props.table.pattern.description")),
+                description: DOMPurify.sanitize(tContent("props.table.pattern.description")),
               },
               {
                 name: "disabled",
                 type: tContent("props.table.disabled.type"),
                 defaultValue: tContent("props.table.disabled.default"),
                 required: tContent("props.table.disabled.required"),
-                description: sanitizeHtml(tContent("props.table.disabled.description")),
+                description: DOMPurify.sanitize(tContent("props.table.disabled.description")),
               },
               {
                 name: "autoFocus",
                 type: tContent("props.table.autoFocus.type"),
                 defaultValue: tContent("props.table.autoFocus.default"),
                 required: tContent("props.table.autoFocus.required"),
-                description: sanitizeHtml(tContent("props.table.autoFocus.description")),
+                description: DOMPurify.sanitize(tContent("props.table.autoFocus.description")),
               },
             ],
           },
@@ -912,7 +912,7 @@ interface InputOTPProps {
         items={[
           {
             event: "otp_complete / otp_paste / otp_resend",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "component, location, length",
           },
         ]}

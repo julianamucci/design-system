@@ -7,7 +7,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsPropItem {
   name: string;
@@ -82,7 +82,7 @@ export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, ex
             {extensibilityNotes && (
               <div
                 className="text-sm text-muted-foreground leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(extensibilityNotes) }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(extensibilityNotes) }}
               />
             )}
           </div>

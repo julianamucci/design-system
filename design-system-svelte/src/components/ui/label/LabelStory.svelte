@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Label } from '@/components/ui/label';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
 
   let {
     class: className = '',
@@ -18,7 +18,7 @@
 </script>
 
 <Label for={htmlFor} class={className} {...rest}>
-  {@html sanitizeHtml(labelText)}
+  {@html DOMPurify.sanitize(labelText)}
   {#if required}
     <span class="text-destructive" aria-hidden="true">*</span>
   {/if}

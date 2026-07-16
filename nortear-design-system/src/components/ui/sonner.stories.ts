@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { injectToastStyles } from './sonner';
 import { createSonnerDocs } from '@/components/docs/SonnerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -120,7 +120,7 @@ function fireLocalToast(
     iconWrap.className = 'nds-shrink-0';
     iconWrap.style.marginTop = '0.125rem';
     iconWrap.setAttribute('aria-hidden', 'true');
-    iconWrap.innerHTML = sanitizeHtml(ICONS[type]);
+    iconWrap.innerHTML = DOMPurify.sanitize(ICONS[type]);
     toastEl.appendChild(iconWrap);
   }
 

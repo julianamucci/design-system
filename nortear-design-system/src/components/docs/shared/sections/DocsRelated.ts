@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 export interface DocsRelatedProps {
@@ -46,8 +46,8 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
     }
     a.setAttribute('data-track-label', item.name);
     a.innerHTML = `
-      <span class="nds-related-card-title">${sanitizeHtml(item.name)}</span>
-      <span class="nds-related-card-description">${sanitizeHtml(item.description)}</span>`;
+      <span class="nds-related-card-title">${DOMPurify.sanitize(item.name)}</span>
+      <span class="nds-related-card-description">${DOMPurify.sanitize(item.description)}</span>`;
     grid.appendChild(a);
   });
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from './index';
   import { Button } from '@/components/ui/button';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
 
   interface Props {
     label?: string;
@@ -31,7 +31,7 @@
     <CollapsibleTrigger
       class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      {@html sanitizeHtml(label)}
+      {@html DOMPurify.sanitize(label)}
     </CollapsibleTrigger>
     <CollapsibleContent>
       <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2">

@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSeparator } from '@/components/ui/separator';
 import uiTranslations from '@/i18n/ui.json';
@@ -295,9 +295,9 @@ export function createSeparatorDocs(): HTMLElement {
         return createDocsAnatomy({
           title: t('anatomy.title'),
           items: [
-            sanitizeHtml(t('anatomy.item1')),
-            sanitizeHtml(t('anatomy.item2')),
-            sanitizeHtml(t('anatomy.item3')),
+            DOMPurify.sanitize(t('anatomy.item1')),
+            DOMPurify.sanitize(t('anatomy.item2')),
+            DOMPurify.sanitize(t('anatomy.item3')),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -309,11 +309,11 @@ export function createSeparatorDocs(): HTMLElement {
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
-              sanitizeHtml(t('usage.guidelines.item1')),
-              sanitizeHtml(t('usage.guidelines.item2')),
-              sanitizeHtml(t('usage.guidelines.item3')),
-              sanitizeHtml(t('usage.guidelines.item4')),
-              sanitizeHtml(t('usage.guidelines.item5')),
+              DOMPurify.sanitize(t('usage.guidelines.item1')),
+              DOMPurify.sanitize(t('usage.guidelines.item2')),
+              DOMPurify.sanitize(t('usage.guidelines.item3')),
+              DOMPurify.sanitize(t('usage.guidelines.item4')),
+              DOMPurify.sanitize(t('usage.guidelines.item5')),
             ],
           },
           scenarios: {
@@ -450,13 +450,13 @@ export function createSeparatorDocs(): HTMLElement {
           items: [
             {
               name: t('variants.items.horizontal'),
-              description: sanitizeHtml(t('variants.styles.horizontal')),
+              description: DOMPurify.sanitize(t('variants.styles.horizontal')),
               code: codeHorizontal,
               previewFactory: () => buildHorizontalDemo(t('variants.items.horizontal')),
             },
             {
               name: t('variants.items.vertical'),
-              description: sanitizeHtml(t('variants.styles.vertical')),
+              description: DOMPurify.sanitize(t('variants.styles.vertical')),
               code: codeVertical,
               previewFactory: () => buildVerticalDemo(t('variants.items.vertical')),
             },
@@ -479,12 +479,12 @@ export function createSeparatorDocs(): HTMLElement {
             {
               label: t('states.items.decorative'),
               trigger: 'decorative={true}',
-              behavior: sanitizeHtml(t('states.descriptions.decorative')),
+              behavior: DOMPurify.sanitize(t('states.descriptions.decorative')),
             },
             {
               label: t('states.items.semantic'),
               trigger: 'decorative={false}',
-              behavior: sanitizeHtml(t('states.descriptions.semantic')),
+              behavior: DOMPurify.sanitize(t('states.descriptions.semantic')),
             },
           ],
         });
@@ -572,11 +572,11 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
-            sanitizeHtml(t('accessibility.items.item1')),
-            sanitizeHtml(t('accessibility.items.item2')),
-            sanitizeHtml(t('accessibility.items.item3')),
-            sanitizeHtml(t('accessibility.items.item4')),
-            sanitizeHtml(t('accessibility.items.item5')),
+            DOMPurify.sanitize(t('accessibility.items.item1')),
+            DOMPurify.sanitize(t('accessibility.items.item2')),
+            DOMPurify.sanitize(t('accessibility.items.item3')),
+            DOMPurify.sanitize(t('accessibility.items.item4')),
+            DOMPurify.sanitize(t('accessibility.items.item5')),
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
@@ -600,10 +600,10 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
           ],
         });
 
@@ -618,7 +618,7 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
           items: [
             {
               event: '—',
-              trigger: sanitizeHtml(t('analytics.description')),
+              trigger: DOMPurify.sanitize(t('analytics.description')),
               payload: '—',
             },
           ],

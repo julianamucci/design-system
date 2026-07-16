@@ -2,7 +2,7 @@
   import type { Snippet } from 'svelte';
   import { Card } from '@/components/ui/card';
   import { Button } from '@/components/ui/button';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
 
   interface DocsVariantItem {
     name: string;
@@ -43,7 +43,7 @@
       <Card class="p-4 gap-2">
         <div>
           <p class="text-sm font-semibold">{item.name}</p>
-          <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">{@html sanitizeHtml(item.description)}</p>
+          <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">{@html DOMPurify.sanitize(item.description)}</p>
         </div>
         <div class="flex items-center justify-center">
           {@render item.preview()}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
@@ -39,7 +39,7 @@ const props = defineProps<{
           <li
             v-for="(item, i) in guidelines.items"
             :key="i"
-            v-html="sanitizeHtml(item)"
+            v-html="DOMPurify.sanitize(item)"
           />
         </ul>
       </Card>
@@ -153,7 +153,7 @@ const props = defineProps<{
             <li
               v-for="(item, i) in props.do.items"
               :key="i"
-              v-html="sanitizeHtml(item)"
+              v-html="DOMPurify.sanitize(item)"
             />
           </ul>
         </Card>
@@ -166,7 +166,7 @@ const props = defineProps<{
             <li
               v-for="(item, i) in props.dont.items"
               :key="i"
-              v-html="sanitizeHtml(item)"
+              v-html="DOMPurify.sanitize(item)"
             />
           </ul>
         </Card>

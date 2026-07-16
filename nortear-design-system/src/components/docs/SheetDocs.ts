@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSheet, type SheetSide } from '@/components/ui/sheet';
 import { createButton } from '@/components/ui/button';
@@ -216,7 +216,7 @@ export function createSheetDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => sanitizeHtml(t(`anatomy.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -226,7 +226,7 @@ export function createSheetDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4].map(i => sanitizeHtml(t(`usage.guidelines.item${i}`))),
+            items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -682,7 +682,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
         return createDocsAccessibility({
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
-          items: [1, 2, 3, 4, 5, 6, 7].map(i => sanitizeHtml(t(`accessibility.items.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: t('accessibility.keyboard.tab')      },
@@ -707,12 +707,12 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear — camada 1 (notes) do padrão 3-layer.
-            { title: '', content: sanitizeHtml('<strong>Divergência Nortear</strong>: a factory <code>createSheet</code> não expõe props <code>open</code>/<code>defaultOpen</code>/<code>showCloseButton</code>. Para abertura programática, mantenha referência ao <code>trigger</code> e chame <code>trigger.click()</code>. O X embutido sempre é renderizado.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Divergência Nortear</strong>: a factory <code>createSheet</code> não expõe props <code>open</code>/<code>defaultOpen</code>/<code>showCloseButton</code>. Para abertura programática, mantenha referência ao <code>trigger</code> e chame <code>trigger.click()</code>. O X embutido sempre é renderizado.') },
           ],
         });
 

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 interface DocsVariantItem {
   name: string;
@@ -55,7 +55,7 @@ function trackId(name: string): string | undefined {
           </p>
           <p
             class="text-xs text-muted-foreground mt-0.5 leading-relaxed"
-            v-html="sanitizeHtml(item.description)"
+            v-html="DOMPurify.sanitize(item.description)"
           />
         </div>
         <div class="flex items-center justify-center">

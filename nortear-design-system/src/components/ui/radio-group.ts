@@ -4,7 +4,7 @@
 // Estado controlado via aria-checked + display do .nds-radio-indicator.
 // Native <input type="radio"> presente em cada item para participação em forms.
 
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 const RADIO_INDICATOR_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" ' +
@@ -69,7 +69,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
 
     // SVG parseado e anexado (não innerHTML em elemento do fluxo).
     const wrap = document.createElement('span');
-    wrap.innerHTML = sanitizeHtml(RADIO_INDICATOR_SVG);
+    wrap.innerHTML = DOMPurify.sanitize(RADIO_INDICATOR_SVG);
     const svg = wrap.firstElementChild;
     if (svg) indicatorSpan.appendChild(svg);
     itemBtn.appendChild(indicatorSpan);

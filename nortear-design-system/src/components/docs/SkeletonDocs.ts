@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSkeleton } from '@/components/ui/skeleton';
 import uiTranslations from '@/i18n/ui.json';
@@ -303,9 +303,9 @@ export function createSkeletonDocs(): HTMLElement {
         return createDocsAnatomy({
           title: t('anatomy.title'),
           items: [
-            sanitizeHtml(t('anatomy.item1')),
-            sanitizeHtml(t('anatomy.item2')),
-            sanitizeHtml(t('anatomy.item3')),
+            DOMPurify.sanitize(t('anatomy.item1')),
+            DOMPurify.sanitize(t('anatomy.item2')),
+            DOMPurify.sanitize(t('anatomy.item3')),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -317,11 +317,11 @@ export function createSkeletonDocs(): HTMLElement {
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
-              sanitizeHtml(t('usage.guidelines.item1')),
-              sanitizeHtml(t('usage.guidelines.item2')),
-              sanitizeHtml(t('usage.guidelines.item3')),
-              sanitizeHtml(t('usage.guidelines.item4')),
-              sanitizeHtml(t('usage.guidelines.item5')),
+              DOMPurify.sanitize(t('usage.guidelines.item1')),
+              DOMPurify.sanitize(t('usage.guidelines.item2')),
+              DOMPurify.sanitize(t('usage.guidelines.item3')),
+              DOMPurify.sanitize(t('usage.guidelines.item4')),
+              DOMPurify.sanitize(t('usage.guidelines.item5')),
             ],
           },
           scenarios: {
@@ -433,19 +433,19 @@ export function createSkeletonDocs(): HTMLElement {
           items: [
             {
               name: t('variants.items.rectangle'),
-              description: sanitizeHtml(t('variants.styles.rectangle')),
+              description: DOMPurify.sanitize(t('variants.styles.rectangle')),
               code: codeRect,
               previewFactory: () => buildRectangleVariant(),
             },
             {
               name: t('variants.items.circle'),
-              description: sanitizeHtml(t('variants.styles.circle')),
+              description: DOMPurify.sanitize(t('variants.styles.circle')),
               code: codeCircle,
               previewFactory: () => buildCircleVariant(),
             },
             {
               name: t('variants.items.line'),
-              description: sanitizeHtml(t('variants.styles.line')),
+              description: DOMPurify.sanitize(t('variants.styles.line')),
               code: codeLine,
               previewFactory: () => buildLineVariant(),
             },
@@ -468,12 +468,12 @@ export function createSkeletonDocs(): HTMLElement {
             {
               label: t('states.items.default'),
               trigger: 'animate-pulse',
-              behavior: sanitizeHtml(t('states.descriptions.default')),
+              behavior: DOMPurify.sanitize(t('states.descriptions.default')),
             },
             {
               label: t('states.items.motionReduced'),
               trigger: 'prefers-reduced-motion',
-              behavior: sanitizeHtml(t('states.descriptions.motionReduced')),
+              behavior: DOMPurify.sanitize(t('states.descriptions.motionReduced')),
             },
           ],
         });
@@ -542,11 +542,11 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
-            sanitizeHtml(t('accessibility.items.item1')),
-            sanitizeHtml(t('accessibility.items.item2')),
-            sanitizeHtml(t('accessibility.items.item3')),
-            sanitizeHtml(t('accessibility.items.item4')),
-            sanitizeHtml(t('accessibility.items.item5')),
+            DOMPurify.sanitize(t('accessibility.items.item1')),
+            DOMPurify.sanitize(t('accessibility.items.item2')),
+            DOMPurify.sanitize(t('accessibility.items.item3')),
+            DOMPurify.sanitize(t('accessibility.items.item4')),
+            DOMPurify.sanitize(t('accessibility.items.item5')),
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
@@ -570,11 +570,11 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
-            { title: '', content: sanitizeHtml(t('notes.item5')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item5')) },
           ],
         });
 
@@ -589,7 +589,7 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
           items: [
             {
               event: '—',
-              trigger: sanitizeHtml(t('analytics.description')),
+              trigger: DOMPurify.sanitize(t('analytics.description')),
               payload: '—',
             },
           ],

@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Checkbox — Vanilla factory standalone ──────────────────────────────────
 //
@@ -63,7 +63,7 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   indicator.className = 'nds-checkbox-indicator';
   indicator.style.display = checked ? '' : 'none';
   // CHECK_SVG é constante literal interna; sanitize por convenção do projeto.
-  indicator.innerHTML = sanitizeHtml(CHECK_SVG);
+  indicator.innerHTML = DOMPurify.sanitize(CHECK_SVG);
 
   wrapper.append(indicator);
   // Note: nativeInput é mantido referenciado para sincronização de estado

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import {
   createSidebarProvider,
   createSidebar,
@@ -47,7 +47,7 @@ function makeIcon(path: string): SVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.innerHTML = sanitizeHtml(path);
+  svg.innerHTML = DOMPurify.sanitize(path);
   return svg;
 }
 
@@ -234,7 +234,7 @@ export const ComSubMenu: Story = {
     chevron.setAttribute('stroke-linecap', 'round');
     chevron.setAttribute('stroke-linejoin', 'round');
     chevron.setAttribute('aria-hidden', 'true');
-    chevron.innerHTML = sanitizeHtml('<path d="m6 9 6 6 6-6"/>');
+    chevron.innerHTML = DOMPurify.sanitize('<path d="m6 9 6 6 6-6"/>');
     chevron.style.marginLeft = 'auto';
     chevron.style.transition = 'transform 200ms';
     parentBtn.appendChild(chevron);

@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 
 export interface DocsKeyboardItem { key: string; description: string }
@@ -26,13 +26,13 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   summaryBlock.className = 'nds-stack';
   summaryBlock.dataset.spacing = 'md';
   summaryBlock.innerHTML = `
-    <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">${sanitizeHtml(props.summary)}</p>
+    <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">${DOMPurify.sanitize(props.summary)}</p>
     <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
-      ${props.items.map(item => `<li class="nds-leading-relaxed">${sanitizeHtml(item)}</li>`).join('')}
+      ${props.items.map(item => `<li class="nds-leading-relaxed">${DOMPurify.sanitize(item)}</li>`).join('')}
     </ul>`;
 
   const keyboardBlock = document.createElement('div');
-  keyboardBlock.innerHTML = `<h3 class="nds-text-base nds-font-semibold nds-mb-4">${sanitizeHtml(props.keyboardTitle)}</h3>`;
+  keyboardBlock.innerHTML = `<h3 class="nds-text-base nds-font-semibold nds-mb-4">${DOMPurify.sanitize(props.keyboardTitle)}</h3>`;
   const kbGrid = document.createElement('div');
   kbGrid.className = 'nds-grid';
   kbGrid.dataset.cols = '2';

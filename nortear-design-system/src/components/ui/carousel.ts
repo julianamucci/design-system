@@ -2,7 +2,7 @@
 // Visual: classes .nds-carousel-* (zero Tailwind/basecoat-css).
 // Comportamento: setas + ArrowLeft/Right + autoplay opcional (pausa no hover).
 
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,13 +64,13 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   prevBtn.setAttribute('aria-label', 'Previous slide');
   prevBtn.setAttribute('aria-disabled', 'true');
   prevBtn.disabled = true;
-  prevBtn.innerHTML = sanitizeHtml(CHEVRON_LEFT);
+  prevBtn.innerHTML = DOMPurify.sanitize(CHEVRON_LEFT);
 
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
   nextBtn.className = 'nds-carousel-button nds-carousel-button-next';
   nextBtn.setAttribute('aria-label', 'Next slide');
-  nextBtn.innerHTML = sanitizeHtml(CHEVRON_RIGHT);
+  nextBtn.innerHTML = DOMPurify.sanitize(CHEVRON_RIGHT);
 
   root.appendChild(prevBtn);
   root.appendChild(nextBtn);

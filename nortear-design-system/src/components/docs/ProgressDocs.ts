@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createProgress } from '@/components/ui/progress';
 import uiTranslations from '@/i18n/ui.json';
@@ -282,11 +282,11 @@ export function createProgressDocs(): HTMLElement {
         return createDocsAnatomy({
           title: t('anatomy.title'),
           items: [
-            sanitizeHtml(t('anatomy.item1')),
-            sanitizeHtml(t('anatomy.item2')),
-            sanitizeHtml(t('anatomy.item3')),
-            sanitizeHtml(t('anatomy.item4')),
-            sanitizeHtml(t('anatomy.item5')),
+            DOMPurify.sanitize(t('anatomy.item1')),
+            DOMPurify.sanitize(t('anatomy.item2')),
+            DOMPurify.sanitize(t('anatomy.item3')),
+            DOMPurify.sanitize(t('anatomy.item4')),
+            DOMPurify.sanitize(t('anatomy.item5')),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -298,10 +298,10 @@ export function createProgressDocs(): HTMLElement {
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
-              sanitizeHtml(t('usage.guidelines.item1')),
-              sanitizeHtml(t('usage.guidelines.item2')),
-              sanitizeHtml(t('usage.guidelines.item3')),
-              sanitizeHtml(t('usage.guidelines.item4')),
+              DOMPurify.sanitize(t('usage.guidelines.item1')),
+              DOMPurify.sanitize(t('usage.guidelines.item2')),
+              DOMPurify.sanitize(t('usage.guidelines.item3')),
+              DOMPurify.sanitize(t('usage.guidelines.item4')),
             ],
           },
           scenarios: {
@@ -344,10 +344,10 @@ export function createProgressDocs(): HTMLElement {
           dont: {
             title: t('usage.dont.title'),
             items: [
-              sanitizeHtml(t('usage.dont.item1')),
-              sanitizeHtml(t('usage.dont.item2')),
-              sanitizeHtml(t('usage.dont.item3')),
-              sanitizeHtml(t('usage.dont.item4')),
+              DOMPurify.sanitize(t('usage.dont.item1')),
+              DOMPurify.sanitize(t('usage.dont.item2')),
+              DOMPurify.sanitize(t('usage.dont.item3')),
+              DOMPurify.sanitize(t('usage.dont.item4')),
             ],
           },
         });
@@ -414,19 +414,19 @@ export function createProgressDocs(): HTMLElement {
           items: [
             {
               name: t('variants.items.determinate'),
-              description: sanitizeHtml(t('variants.styles.determinate')),
+              description: DOMPurify.sanitize(t('variants.styles.determinate')),
               code: codeDeterminate,
               previewFactory: () => buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
             },
             {
               name: t('variants.items.indeterminate'),
-              description: sanitizeHtml(t('variants.styles.indeterminate')),
+              description: DOMPurify.sanitize(t('variants.styles.indeterminate')),
               code: codeIndeterminate,
               previewFactory: () => buildIndeterminate(t('demonstration.labels.indeterminate')),
             },
             {
               name: t('variants.items.withLabel'),
-              description: sanitizeHtml(t('variants.styles.withLabel')),
+              description: DOMPurify.sanitize(t('variants.styles.withLabel')),
               code: codeWithLabel,
               previewFactory: () =>
                 buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), ariaLabel: t('demonstration.labels.upload') }),
@@ -447,10 +447,10 @@ export function createProgressDocs(): HTMLElement {
           title: t('states.title'),
           cols,
           items: [
-            { label: t('states.items.default'),       trigger: 'value=0',     behavior: sanitizeHtml(t('states.descriptions.default'))       },
-            { label: t('states.items.loading'),       trigger: '0<value<100', behavior: sanitizeHtml(t('states.descriptions.loading'))       },
-            { label: t('states.items.complete'),      trigger: 'value=100',   behavior: sanitizeHtml(t('states.descriptions.complete'))      },
-            { label: t('states.items.indeterminate'), trigger: 'value=null',  behavior: sanitizeHtml(t('states.descriptions.indeterminate')) },
+            { label: t('states.items.default'),       trigger: 'value=0',     behavior: DOMPurify.sanitize(t('states.descriptions.default'))       },
+            { label: t('states.items.loading'),       trigger: '0<value<100', behavior: DOMPurify.sanitize(t('states.descriptions.loading'))       },
+            { label: t('states.items.complete'),      trigger: 'value=100',   behavior: DOMPurify.sanitize(t('states.descriptions.complete'))      },
+            { label: t('states.items.indeterminate'), trigger: 'value=null',  behavior: DOMPurify.sanitize(t('states.descriptions.indeterminate')) },
           ],
         });
       }
@@ -502,7 +502,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: sanitizeHtml(t('props.table.className.description')),
+                  description: DOMPurify.sanitize(t('props.table.className.description')),
                 },
                 {
                   name: 'aria-label',
@@ -546,12 +546,12 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
-            sanitizeHtml(t('accessibility.items.item1')),
-            sanitizeHtml(t('accessibility.items.item2')),
-            sanitizeHtml(t('accessibility.items.item3')),
-            sanitizeHtml(t('accessibility.items.item4')),
-            sanitizeHtml(t('accessibility.items.item5')),
-            sanitizeHtml(t('accessibility.items.item6')),
+            DOMPurify.sanitize(t('accessibility.items.item1')),
+            DOMPurify.sanitize(t('accessibility.items.item2')),
+            DOMPurify.sanitize(t('accessibility.items.item3')),
+            DOMPurify.sanitize(t('accessibility.items.item4')),
+            DOMPurify.sanitize(t('accessibility.items.item5')),
+            DOMPurify.sanitize(t('accessibility.items.item6')),
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
@@ -575,10 +575,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Nortear-specific divergences
             { title: '', content: 'DIVERGÊNCIA Nortear: a factory custom <code>createProgress</code> não aceita <code>value=null</code> nem expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>. Componha manualmente Label/Value via DOM nativo e simule indeterminate removendo <code>aria-valuenow</code> + adicionando <code>animate-indeterminate</code> no indicador.' },
             { title: '', content: 'DIVERGÊNCIA Nortear: <code>aria-label</code> não é parâmetro da factory — a aplicação deve setá-lo via <code>el.setAttribute(\'aria-label\', ...)</code> imediatamente após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },

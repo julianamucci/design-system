@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import {
   createSidebarProvider,
   createSidebar,
@@ -45,7 +45,7 @@ function makeIcon(path: string): SVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.innerHTML = sanitizeHtml(path);
+  svg.innerHTML = DOMPurify.sanitize(path);
   return svg;
 }
 

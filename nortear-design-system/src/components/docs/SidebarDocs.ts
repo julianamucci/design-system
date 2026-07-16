@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import {
   createSidebarProvider,
@@ -69,7 +69,7 @@ function makeIcon(path: string, size = 16): SVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin','round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.innerHTML = sanitizeHtml(path);
+  svg.innerHTML = DOMPurify.sanitize(path);
   return svg;
 }
 
@@ -294,7 +294,7 @@ export function createSidebarDocs(): HTMLElement {
         return createDocsAnatomy({
           title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(i =>
-            sanitizeHtml(t(`anatomy.item${i}`)),
+            DOMPurify.sanitize(t(`anatomy.item${i}`)),
           ),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -307,7 +307,7 @@ export function createSidebarDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4, 5].map(i => sanitizeHtml(t(`usage.guidelines.item${i}`))),
+            items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -328,7 +328,7 @@ export function createSidebarDocs(): HTMLElement {
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3].map(i => sanitizeHtml(t(`usage.dont.item${i}`))),
+            items: [1, 2, 3].map(i => DOMPurify.sanitize(t(`usage.dont.item${i}`))),
           },
         });
 
@@ -411,7 +411,7 @@ export function createSidebarDocs(): HTMLElement {
                 wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground';
                 wrap.dataset.spacing = 'sm';
                 wrap.dataset.align = 'center';
-                wrap.innerHTML = sanitizeHtml('<span class="nds-font-mono">lg:hidden</span><span>SidebarTrigger</span>');
+                wrap.innerHTML = DOMPurify.sanitize('<span class="nds-font-mono">lg:hidden</span><span>SidebarTrigger</span>');
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -420,7 +420,7 @@ export function createSidebarDocs(): HTMLElement {
                 wrap.dataset.spacing = 'sm';
                 wrap.dataset.align = 'center';
                 wrap.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
-                wrap.innerHTML = sanitizeHtml('<span class="nds-font-mono">block</span><span>SidebarTrigger no desktop</span>');
+                wrap.innerHTML = DOMPurify.sanitize('<span class="nds-font-mono">block</span><span>SidebarTrigger no desktop</span>');
                 return wrap;
               },
             },
@@ -1020,7 +1020,7 @@ export function createSidebarDocs(): HTMLElement {
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: sanitizeHtml(t('props.extensibility')),
+          extensibilityNotes: DOMPurify.sanitize(t('props.extensibility')),
         });
       }
 
@@ -1070,8 +1070,8 @@ export function createSidebarDocs(): HTMLElement {
       case 'acessibilidade':
         return createDocsAccessibility({
           title: t('accessibility.title'),
-          summary: sanitizeHtml(t('accessibility.summary')),
-          items: [1, 2, 3, 4, 5, 6, 7].map(i => sanitizeHtml(t(`accessibility.item${i}`))),
+          summary: DOMPurify.sanitize(t('accessibility.summary')),
+          items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
           keyboardTitle: 'Atalhos de teclado',
           keyboardItems: [
             { key: 'Tab',        description: t('accessibility.keyboard.tab') },
@@ -1103,7 +1103,7 @@ export function createSidebarDocs(): HTMLElement {
       case 'notas':
         return createDocsNotes({
           title: t('notes.title'),
-          items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: sanitizeHtml(t(`notes.tip${i}`)) })),
+          items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.tip${i}`)) })),
         });
 
       // ── Analytics ─────────────────────────────────────────────────────────

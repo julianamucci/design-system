@@ -1,5 +1,5 @@
 import { DocsVariants, type DocsVariantItem } from './DocsVariants';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsCompositionItem extends DocsVariantItem {
   /** Situação de uso recomendada — renderizada após "Quando usar:" abaixo da descrição. */
@@ -36,7 +36,7 @@ export function DocsCompositions({
     if (!item.useWhen) return item;
     return {
       ...item,
-      description: sanitizeHtml(
+      description: DOMPurify.sanitize(
         `${item.description}<br><br><strong>${useWhenLabel}</strong> ${item.useWhen}`,
       ),
     };

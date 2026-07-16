@@ -9,7 +9,7 @@
  * Cada seção pode ter: `title`, `subtitle`, `body`, `audience`, `note`,
  * `items` (objeto/array), `rows` (objeto/array), `cols` (cabeçalho de tabela),
  * `rules` (objeto/array), `keys` (objeto/array). Strings com HTML inline
- * (<code>, <strong>, <em>, <kbd>) são renderizadas via sanitizeHtml.
+ * (<code>, <strong>, <em>, <kbd>) são renderizadas via DOMPurify.sanitize.
  *
  * Páginas com renderização visual adicional (tipografia, spacing, elevação,
  * motion) passam `extraSection` para acrescentar specimens ao topo.
@@ -29,7 +29,7 @@ import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -71,7 +71,7 @@ function HtmlText({
   return (
     <As
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
     />
   );
 }

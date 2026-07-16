@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import {
   createTable,
@@ -392,7 +392,7 @@ export function createTableDocs(): HTMLElement {
           items: [
             {
               name: t('variants.basic.label'),
-              description: sanitizeHtml(t('variants.basic.description')),
+              description: DOMPurify.sanitize(t('variants.basic.description')),
               code: codeBasica,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -421,7 +421,7 @@ export function createTableDocs(): HTMLElement {
             },
             {
               name: t('variants.withFooter.label'),
-              description: sanitizeHtml(t('variants.withFooter.description')),
+              description: DOMPurify.sanitize(t('variants.withFooter.description')),
               code: codeRodape,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -458,7 +458,7 @@ export function createTableDocs(): HTMLElement {
             },
             {
               name: t('variants.withSrOnlyCaption.label'),
-              description: sanitizeHtml(t('variants.withSrOnlyCaption.description')),
+              description: DOMPurify.sanitize(t('variants.withSrOnlyCaption.description')),
               code: codeSrOnly,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -487,7 +487,7 @@ export function createTableDocs(): HTMLElement {
             },
             {
               name: t('variants.withInlineActions.label'),
-              description: sanitizeHtml(t('variants.withInlineActions.description')),
+              description: DOMPurify.sanitize(t('variants.withInlineActions.description')),
               code: codeAcoes,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -725,29 +725,29 @@ container.appendChild(pagination);`;
           items: [
             {
               name: t('variants.compositions.filterableToolbar.name'),
-              description: sanitizeHtml(t('variants.compositions.filterableToolbar.description')),
-              useWhen: sanitizeHtml(t('variants.compositions.filterableToolbar.use')),
+              description: DOMPurify.sanitize(t('variants.compositions.filterableToolbar.description')),
+              useWhen: DOMPurify.sanitize(t('variants.compositions.filterableToolbar.use')),
               code: codeFilterableToolbar,
               previewFactory: buildFilterableToolbarPreview,
             },
             {
               name: t('variants.compositions.sortableHeaders.name'),
-              description: sanitizeHtml(t('variants.compositions.sortableHeaders.description')),
-              useWhen: sanitizeHtml(t('variants.compositions.sortableHeaders.use')),
+              description: DOMPurify.sanitize(t('variants.compositions.sortableHeaders.description')),
+              useWhen: DOMPurify.sanitize(t('variants.compositions.sortableHeaders.use')),
               code: codeSortableHeaders,
               previewFactory: buildSortableHeadersPreview,
             },
             {
               name: t('variants.compositions.selectableRows.name'),
-              description: sanitizeHtml(t('variants.compositions.selectableRows.description')),
-              useWhen: sanitizeHtml(t('variants.compositions.selectableRows.use')),
+              description: DOMPurify.sanitize(t('variants.compositions.selectableRows.description')),
+              useWhen: DOMPurify.sanitize(t('variants.compositions.selectableRows.use')),
               code: codeSelectableRows,
               previewFactory: buildSelectableRowsPreview,
             },
             {
               name: t('variants.compositions.withPagination.name'),
-              description: sanitizeHtml(t('variants.compositions.withPagination.description')),
-              useWhen: sanitizeHtml(t('variants.compositions.withPagination.use')),
+              description: DOMPurify.sanitize(t('variants.compositions.withPagination.description')),
+              useWhen: DOMPurify.sanitize(t('variants.compositions.withPagination.use')),
               code: codeWithPagination,
               previewFactory: buildWithPaginationPreview,
             },
@@ -767,17 +767,17 @@ container.appendChild(pagination);`;
             {
               label: t('states.empty.label'),
               trigger: t('states.empty.trigger'),
-              behavior: sanitizeHtml(t('states.empty.behavior')),
+              behavior: DOMPurify.sanitize(t('states.empty.behavior')),
             },
             {
               label: t('states.selected.label'),
-              trigger: sanitizeHtml(t('states.selected.trigger')),
-              behavior: sanitizeHtml(t('states.selected.behavior')),
+              trigger: DOMPurify.sanitize(t('states.selected.trigger')),
+              behavior: DOMPurify.sanitize(t('states.selected.behavior')),
             },
             {
               label: t('states.loading.label'),
-              trigger: sanitizeHtml(t('states.loading.trigger')),
-              behavior: sanitizeHtml(t('states.loading.behavior')),
+              trigger: DOMPurify.sanitize(t('states.loading.trigger')),
+              behavior: DOMPurify.sanitize(t('states.loading.behavior')),
             },
           ],
         });
@@ -828,7 +828,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
               items: [
                 { name: 'text',       type: 'string', defaultValue: '—', required: 'Sim', description: t('props.items.children') },
                 { name: 'extraClass', type: 'string', defaultValue: '—', required: 'Não', description: t('props.items.className') },
-                { name: 'scope',      type: '"col"',  defaultValue: '—', required: 'Sim', description: sanitizeHtml(t('props.items.scope')) },
+                { name: 'scope',      type: '"col"',  defaultValue: '—', required: 'Sim', description: DOMPurify.sanitize(t('props.items.scope')) },
               ],
             },
             {
@@ -846,7 +846,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
               cols: propsCols,
               items: [
                 { name: 'extraClass',  type: 'string',    defaultValue: '—', required: 'Não', description: t('props.items.className') },
-                { name: 'data-state',  type: '"selected"', defaultValue: '—', required: 'Não', description: sanitizeHtml(t('props.items.dataState')) },
+                { name: 'data-state',  type: '"selected"', defaultValue: '—', required: 'Não', description: DOMPurify.sanitize(t('props.items.dataState')) },
               ],
             },
             {
@@ -860,7 +860,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: sanitizeHtml(t('props.extensibility')),
+          extensibilityNotes: DOMPurify.sanitize(t('props.extensibility')),
         });
       }
 
@@ -875,14 +875,14 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
             description: t('tokens.table.description'),
           },
           items: [
-            { token: 'border-b',                        value: 'TableHeader / TableBody rows', description: sanitizeHtml(t('tokens.items.borderB')) },
-            { token: 'bg-muted/50',                     value: 'TableFooter / TableRow hover', description: sanitizeHtml(t('tokens.items.bgMuted')) },
-            { token: 'data-[state=selected]:bg-muted',  value: 'TableRow selected',            description: sanitizeHtml(t('tokens.items.bgMutedSelected')) },
-            { token: 'text-muted-foreground',           value: 'TableCaption / empty state',   description: sanitizeHtml(t('tokens.items.textMuted')) },
-            { token: 'font-medium',                     value: 'TableHead / TableFooter',      description: sanitizeHtml(t('tokens.items.fontMedium')) },
-            { token: 'h-10',                            value: 'TableHead',                    description: sanitizeHtml(t('tokens.items.h10')) },
-            { token: 'p-2',                             value: 'TableCell',                    description: sanitizeHtml(t('tokens.items.p2')) },
-            { token: 'caption-bottom',                  value: 'TableCaption',                 description: sanitizeHtml(t('tokens.items.captionBottom')) },
+            { token: 'border-b',                        value: 'TableHeader / TableBody rows', description: DOMPurify.sanitize(t('tokens.items.borderB')) },
+            { token: 'bg-muted/50',                     value: 'TableFooter / TableRow hover', description: DOMPurify.sanitize(t('tokens.items.bgMuted')) },
+            { token: 'data-[state=selected]:bg-muted',  value: 'TableRow selected',            description: DOMPurify.sanitize(t('tokens.items.bgMutedSelected')) },
+            { token: 'text-muted-foreground',           value: 'TableCaption / empty state',   description: DOMPurify.sanitize(t('tokens.items.textMuted')) },
+            { token: 'font-medium',                     value: 'TableHead / TableFooter',      description: DOMPurify.sanitize(t('tokens.items.fontMedium')) },
+            { token: 'h-10',                            value: 'TableHead',                    description: DOMPurify.sanitize(t('tokens.items.h10')) },
+            { token: 'p-2',                             value: 'TableCell',                    description: DOMPurify.sanitize(t('tokens.items.p2')) },
+            { token: 'caption-bottom',                  value: 'TableCaption',                 description: DOMPurify.sanitize(t('tokens.items.captionBottom')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -892,13 +892,13 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
       case 'acessibilidade':
         return createDocsAccessibility({
           title: t('accessibility.title'),
-          summary: sanitizeHtml(t('accessibility.summary')),
+          summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
-            sanitizeHtml(t('accessibility.aria.scope')),
-            sanitizeHtml(t('accessibility.aria.caption')),
-            sanitizeHtml(t('accessibility.aria.ariaLabel')),
-            sanitizeHtml(t('accessibility.aria.ariaSort')),
-            sanitizeHtml(t('accessibility.aria.tabIndex')),
+            DOMPurify.sanitize(t('accessibility.aria.scope')),
+            DOMPurify.sanitize(t('accessibility.aria.caption')),
+            DOMPurify.sanitize(t('accessibility.aria.ariaLabel')),
+            DOMPurify.sanitize(t('accessibility.aria.ariaSort')),
+            DOMPurify.sanitize(t('accessibility.aria.tabIndex')),
           ],
           keyboardTitle: t('accessibility.title'),
           keyboardItems: [
@@ -925,11 +925,11 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.tip1')) },
-            { title: '', content: sanitizeHtml(t('notes.tip2')) },
-            { title: '', content: sanitizeHtml(t('notes.tip3')) },
-            { title: '', content: sanitizeHtml(t('notes.tip4')) },
-            { title: '', content: sanitizeHtml(t('notes.tip5')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip5')) },
           ],
         });
 

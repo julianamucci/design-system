@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import {
   HoverCard,
   HoverCardContent,
@@ -400,7 +400,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('demonstration.labels.userProfile'))"
+            v-html="DOMPurify.sanitize(tContent('demonstration.labels.userProfile'))"
           />
           <HoverCard
             :open-delay="50"
@@ -442,7 +442,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('demonstration.labels.linkPreview'))"
+            v-html="DOMPurify.sanitize(tContent('demonstration.labels.linkPreview'))"
           />
           <HoverCard
             :open-delay="50"
@@ -476,7 +476,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('demonstration.labels.definitionTooltip'))"
+            v-html="DOMPurify.sanitize(tContent('demonstration.labels.definitionTooltip'))"
           />
           <HoverCard
             :open-delay="50"
@@ -507,7 +507,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('demonstration.labels.metricExplainer'))"
+            v-html="DOMPurify.sanitize(tContent('demonstration.labels.metricExplainer'))"
           />
           <HoverCard
             :open-delay="50"

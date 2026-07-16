@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsNoteItem {
   title: string;
@@ -32,7 +32,7 @@ export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
               <Alert variant="default">
                 {item.title && <AlertTitle>{item.title}</AlertTitle>}
                 <AlertDescription
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content) }}
                 />
               </Alert>
             </div>

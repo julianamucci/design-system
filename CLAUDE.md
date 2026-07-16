@@ -78,7 +78,7 @@ Each stack has these files in `src/lib/`:
 - `use-seo.ts` — `useSeoEffect` / `applySeo`. Detects iframe context and writes meta tags into the parent (Storybook manager). Title is `${title} · Design System` — **do not include the suffix in `seo.title` in translations.json**.
 - `use-active-section.{ts,svelte.ts}` — IntersectionObserver wrapper. `onActive` (highlight) fires immediately; `onDwell` (analytics `docs_section_viewed`) fires only after 2s continuous visibility, suppressing false positives during programmatic scroll from nav clicks.
 - `analytics.ts` — `track(event, params)`. GA4 lives in `manager-head.html` (not the iframe) with `send_page_view:false`; `track()` calls `window.top.gtag`.
-- `sanitize-html.ts` — required for any `dangerouslySetInnerHTML` / `v-html` / `{@html}` / `innerHTML` rendering of translated content.
+- Sanitização: qualquer `dangerouslySetInnerHTML` / `v-html` / `{@html}` / `innerHTML` de conteúdo dinâmico usa `DOMPurify.sanitize()` **direto no call site** (`import DOMPurify from 'dompurify'`) — sem wrapper local, para que SAST reconheça o sanitizador (ver guideline 09).
 
 ### Cross-stack translation strategy
 

@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCheckbox } from '@/components/ui/checkbox';
 import uiTranslations from '@/i18n/ui.json';
@@ -331,8 +331,8 @@ export function createCheckboxDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: sanitizeHtml(t('doDont.pair2.do')),
-              dontCaption: sanitizeHtml(t('doDont.pair2.dont')),
+              doCaption: DOMPurify.sanitize(t('doDont.pair2.do')),
+              dontCaption: DOMPurify.sanitize(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildFieldset('Notificações', [
                 'Receber novidades por email',
                 'Receber notificações push',
@@ -369,7 +369,7 @@ label.textContent = 'Aceito os termos e condições';`,
         return createDocsVariants({
           id: 'variantes',
           title: t('variants.title'),
-          description: sanitizeHtml(note),
+          description: DOMPurify.sanitize(note),
           items: [
             {
               name: 'default',

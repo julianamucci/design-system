@@ -7,7 +7,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsWhenToUseScenario {
   s: string;
@@ -53,7 +53,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
           <h3 className="font-medium text-sm mb-3">{guidelines.title}</h3>
           <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
             {guidelines.items.map((item, i) => (
-              <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
+              <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
             ))}
           </ul>
         </Card>
@@ -132,7 +132,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
             </h3>
             <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
               {doBlock.items.map((item, i) => (
-                <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
+                <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               ))}
             </ul>
           </Card>
@@ -143,7 +143,7 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
             </h3>
             <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
               {dontBlock.items.map((item, i) => (
-                <li key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }} />
+                <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               ))}
             </ul>
           </Card>

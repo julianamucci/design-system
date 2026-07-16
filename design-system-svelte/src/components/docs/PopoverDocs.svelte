@@ -13,7 +13,7 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
@@ -885,7 +885,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 </DocsPageLayout>
 
-<!-- sanitizeHtml available para uso futuro em {@html} dinâmico -->
+<!-- DOMPurify.sanitize available para uso futuro em {@html} dinâmico -->
 {#if false}
-  {@html sanitizeHtml('')}
+  {@html DOMPurify.sanitize('')}
 {/if}

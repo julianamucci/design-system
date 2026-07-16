@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 
 export interface DocsKeyboardItem {
   key: string;
@@ -22,14 +22,14 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
         <div className="space-y-4">
           <p
             className="text-sm text-muted-foreground leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtml(summary) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(summary) }}
           />
           <ul className="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
             {items.map((item, i) => (
               <li
                 key={i}
                 className="leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(item) }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }}
               />
             ))}
           </ul>

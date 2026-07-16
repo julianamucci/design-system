@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import tooltipTranslations from "@shared/content/tooltip/translations.json";
@@ -391,8 +391,8 @@ interface TooltipContentProps {
                   + Tooltip "Salvar"
                 </div>
               ),
-              doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-              dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+              doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+              dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
             },
             {
               doLabel: tNav("common.do"),
@@ -405,8 +405,8 @@ interface TooltipContentProps {
                   "Clique aqui para salvar o documento atual no servidor."
                 </div>
               ),
-              doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-              dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+              doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+              dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
             },
           ]}
         />
@@ -734,56 +734,56 @@ interface TooltipContentProps {
                   type: tContent("props.table.delay.type"),
                   defaultValue: tContent("props.table.delay.default"),
                   required: tContent("props.table.delay.required"),
-                  description: sanitizeHtml(tContent("props.table.delay.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.delay.description")),
                 },
                 {
                   name: "open",
                   type: tContent("props.table.open.type"),
                   defaultValue: tContent("props.table.open.default"),
                   required: tContent("props.table.open.required"),
-                  description: sanitizeHtml(tContent("props.table.open.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.open.description")),
                 },
                 {
                   name: "defaultOpen",
                   type: tContent("props.table.defaultOpen.type"),
                   defaultValue: tContent("props.table.defaultOpen.default"),
                   required: tContent("props.table.defaultOpen.required"),
-                  description: sanitizeHtml(tContent("props.table.defaultOpen.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
                 },
                 {
                   name: "onOpenChange",
                   type: tContent("props.table.onOpenChange.type"),
                   defaultValue: tContent("props.table.onOpenChange.default"),
                   required: tContent("props.table.onOpenChange.required"),
-                  description: sanitizeHtml(tContent("props.table.onOpenChange.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
                 },
                 {
                   name: "side",
                   type: tContent("props.table.side.type"),
                   defaultValue: tContent("props.table.side.default"),
                   required: tContent("props.table.side.required"),
-                  description: sanitizeHtml(tContent("props.table.side.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.side.description")),
                 },
                 {
                   name: "align",
                   type: tContent("props.table.align.type"),
                   defaultValue: tContent("props.table.align.default"),
                   required: tContent("props.table.align.required"),
-                  description: sanitizeHtml(tContent("props.table.align.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.align.description")),
                 },
                 {
                   name: "sideOffset",
                   type: tContent("props.table.sideOffset.type"),
                   defaultValue: tContent("props.table.sideOffset.default"),
                   required: tContent("props.table.sideOffset.required"),
-                  description: sanitizeHtml(tContent("props.table.sideOffset.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.sideOffset.description")),
                 },
                 {
                   name: "className",
                   type: tContent("props.table.className.type"),
                   defaultValue: tContent("props.table.className.default"),
                   required: tContent("props.table.className.required"),
-                  description: sanitizeHtml(tContent("props.table.className.description")),
+                  description: DOMPurify.sanitize(tContent("props.table.className.description")),
                 },
               ],
             },
@@ -899,8 +899,8 @@ interface TooltipContentProps {
           items={[
             {
               event: "tooltip_view",
-              trigger: sanitizeHtml(tContent("analytics.table.tooltip_view.trigger")),
-              payload: sanitizeHtml(tContent("analytics.table.tooltip_view.payload")),
+              trigger: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.trigger")),
+              payload: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.payload")),
             },
           ]}
         />

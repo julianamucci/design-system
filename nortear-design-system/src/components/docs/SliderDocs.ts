@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createSlider } from '@/components/ui/slider';
 import { createButton } from '@/components/ui/button';
@@ -876,13 +876,13 @@ export type SliderOptions = {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             {
               title: '',
-              content: sanitizeHtml(
+              content: DOMPurify.sanitize(
                 '<strong>Divergências Nortear</strong> — o factory é wrapper de <code>&lt;input type="range"&gt;</code> nativo. Não suporta <strong>range (2 thumbs)</strong> nem <strong>orientação vertical</strong> acessível; <code>value</code> é <code>number</code> (não array). Não há <code>onValueCommitted</code> — use debounce sobre <code>onValueChange</code> para analytics. <code>aria-label</code> precisa ser aplicado manualmente no <code>&lt;input&gt;</code> interno.',
               ),
             },

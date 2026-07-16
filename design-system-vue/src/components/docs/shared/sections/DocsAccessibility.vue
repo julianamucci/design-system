@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 
 interface DocsKeyboardItem { key: string; description: string }
@@ -25,14 +25,14 @@ withDefaults(defineProps<{
       <div class="space-y-4">
         <p
           class="text-sm text-muted-foreground leading-relaxed"
-          v-html="sanitizeHtml(summary)"
+          v-html="DOMPurify.sanitize(summary)"
         />
         <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
           <li
             v-for="(item, i) in items"
             :key="i"
             class="leading-relaxed"
-            v-html="sanitizeHtml(item)"
+            v-html="DOMPurify.sanitize(item)"
           />
         </ul>
       </div>

@@ -11,7 +11,7 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import paginationTranslations from "@shared/content/pagination/translations.json";
@@ -555,8 +555,8 @@ type PaginationDirectionalProps =
                 1 2 3 4 5 6 7 8 9 10 11 12
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -578,8 +578,8 @@ type PaginationDirectionalProps =
                 &lt; &nbsp;&nbsp; &gt;
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -956,7 +956,7 @@ const total = 8;
                 type: tContent("props.table.isActive.type"),
                 defaultValue: tContent("props.table.isActive.default"),
                 required: tContent("props.table.isActive.required"),
-                description: sanitizeHtml(
+                description: DOMPurify.sanitize(
                   tContent("props.table.isActive.description")
                 ),
               },
@@ -965,21 +965,21 @@ const total = 8;
                 type: tContent("props.table.size.type"),
                 defaultValue: tContent("props.table.size.default"),
                 required: tContent("props.table.size.required"),
-                description: sanitizeHtml(tContent("props.table.size.description")),
+                description: DOMPurify.sanitize(tContent("props.table.size.description")),
               },
               {
                 name: "text",
                 type: tContent("props.table.text.type"),
                 defaultValue: tContent("props.table.text.default"),
                 required: tContent("props.table.text.required"),
-                description: sanitizeHtml(tContent("props.table.text.description")),
+                description: DOMPurify.sanitize(tContent("props.table.text.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: sanitizeHtml(
+                description: DOMPurify.sanitize(
                   tContent("props.table.className.description")
                 ),
               },
@@ -988,7 +988,7 @@ const total = 8;
                 type: tContent("props.table.children.type"),
                 defaultValue: tContent("props.table.children.default"),
                 required: tContent("props.table.children.required"),
-                description: sanitizeHtml(
+                description: DOMPurify.sanitize(
                   tContent("props.table.children.description")
                 ),
               },

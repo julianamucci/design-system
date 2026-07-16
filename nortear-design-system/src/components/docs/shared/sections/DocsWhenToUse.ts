@@ -1,4 +1,4 @@
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -38,7 +38,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   guidelinesList.dataset.spacing = 'sm';
   props.guidelines.items.forEach(item => {
     const li = document.createElement('li');
-    li.innerHTML = sanitizeHtml(item);
+    li.innerHTML = DOMPurify.sanitize(item);
     guidelinesList.appendChild(li);
   });
   guidelinesBlock.appendChild(guidelinesList);
@@ -93,12 +93,12 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
     const doHead = document.createElement('th');
     doHead.className = 'nds-p-2 nds-font-semibold nds-text-success';
-    doHead.innerHTML = `<span class="nds-cluster" data-spacing="xs"><span class="nds-pill" data-tone="success">✓</span>${sanitizeHtml(ux.cols.do)}</span>`;
+    doHead.innerHTML = `<span class="nds-cluster" data-spacing="xs"><span class="nds-pill" data-tone="success">✓</span>${DOMPurify.sanitize(ux.cols.do)}</span>`;
     uxHeaderRow.appendChild(doHead);
 
     const dontHead = document.createElement('th');
     dontHead.className = 'nds-p-2 nds-font-semibold nds-text-destructive';
-    dontHead.innerHTML = `<span class="nds-cluster" data-spacing="xs"><span class="nds-pill" data-tone="destructive">✗</span>${sanitizeHtml(ux.cols.dont)}</span>`;
+    dontHead.innerHTML = `<span class="nds-cluster" data-spacing="xs"><span class="nds-pill" data-tone="destructive">✗</span>${DOMPurify.sanitize(ux.cols.dont)}</span>`;
     uxHeaderRow.appendChild(dontHead);
 
     uxThead.appendChild(uxHeaderRow);
@@ -130,13 +130,13 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const doTitle = document.createElement('h3');
   doTitle.className = 'nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster';
   doTitle.dataset.spacing = 'sm';
-  doTitle.innerHTML = `<span class="nds-pill" data-tone="success">✓</span>${sanitizeHtml(props.do.title)}`;
+  doTitle.innerHTML = `<span class="nds-pill" data-tone="success">✓</span>${DOMPurify.sanitize(props.do.title)}`;
   const doList = document.createElement('ul');
   doList.className = 'nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed';
   doList.dataset.spacing = 'sm';
   props.do.items.forEach(i => {
     const li = document.createElement('li');
-    li.innerHTML = sanitizeHtml(i);
+    li.innerHTML = DOMPurify.sanitize(i);
     doList.appendChild(li);
   });
   doCard.append(doTitle, doList);
@@ -145,13 +145,13 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
   const dontTitle = document.createElement('h3');
   dontTitle.className = 'nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster';
   dontTitle.dataset.spacing = 'sm';
-  dontTitle.innerHTML = `<span class="nds-pill" data-tone="destructive">✗</span>${sanitizeHtml(props.dont.title)}`;
+  dontTitle.innerHTML = `<span class="nds-pill" data-tone="destructive">✗</span>${DOMPurify.sanitize(props.dont.title)}`;
   const dontList = document.createElement('ul');
   dontList.className = 'nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed';
   dontList.dataset.spacing = 'sm';
   props.dont.items.forEach(i => {
     const li = document.createElement('li');
-    li.innerHTML = sanitizeHtml(i);
+    li.innerHTML = DOMPurify.sanitize(i);
     dontList.appendChild(li);
   });
   dontCard.append(dontTitle, dontList);

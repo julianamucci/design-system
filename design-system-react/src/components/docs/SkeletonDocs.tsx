@@ -4,7 +4,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import skeletonTranslations from "@shared/content/skeleton/translations.json";
@@ -171,11 +171,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Card de perfil */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.card"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.card"))}
             </p>
             <div
               aria-busy="true"
-              aria-label={sanitizeHtml(tContent("demonstration.labels.card"))}
+              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
               className="flex items-center gap-4 p-4 border rounded-md"
             >
               <Skeleton
@@ -198,11 +198,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Lista */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.list"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.list"))}
             </p>
             <div
               aria-busy="true"
-              aria-label={sanitizeHtml(tContent("demonstration.labels.list"))}
+              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
               className="space-y-3 p-4 border rounded-md"
             >
               {Array.from({ length: 5 }).map((_, i) => (
@@ -229,11 +229,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Imagem em AspectRatio */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.image"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             </p>
             <div
               aria-busy="true"
-              aria-label={sanitizeHtml(tContent("demonstration.labels.image"))}
+              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             >
               <AspectRatio ratio={16 / 9}>
                 <Skeleton
@@ -247,11 +247,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Parágrafo */}
           <div className="space-y-2">
             <p className="text-xs font-medium text-muted-foreground">
-              {sanitizeHtml(tContent("demonstration.labels.paragraph"))}
+              {DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
             </p>
             <div
               aria-busy="true"
-              aria-label={sanitizeHtml(tContent("demonstration.labels.paragraph"))}
+              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
               className="space-y-2 p-4 border rounded-md"
             >
               <Skeleton
@@ -388,8 +388,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 <Skeleton className="h-2 w-12 motion-reduce:animate-none" aria-hidden="true" />
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -410,8 +410,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 <Skeleton className="h-4 w-[160px] motion-reduce:animate-none" />
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -493,21 +493,21 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: sanitizeHtml(tContent("props.table.className.description")),
+                description: DOMPurify.sanitize(tContent("props.table.className.description")),
               },
               {
                 name: "aria-hidden",
                 type: tContent("props.table.ariaHidden.type"),
                 defaultValue: tContent("props.table.ariaHidden.default"),
                 required: tContent("props.table.ariaHidden.required"),
-                description: sanitizeHtml(tContent("props.table.ariaHidden.description")),
+                description: DOMPurify.sanitize(tContent("props.table.ariaHidden.description")),
               },
               {
                 name: "...rest",
                 type: tContent("props.table.rest.type"),
                 defaultValue: tContent("props.table.rest.default"),
                 required: tContent("props.table.rest.required"),
-                description: sanitizeHtml(tContent("props.table.rest.description")),
+                description: DOMPurify.sanitize(tContent("props.table.rest.description")),
               },
             ],
           },
@@ -617,7 +617,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         items={[
           {
             event: "—",
-            trigger: sanitizeHtml(tContent("analytics.description")),
+            trigger: DOMPurify.sanitize(tContent("analytics.description")),
             payload: "—",
           },
         ]}

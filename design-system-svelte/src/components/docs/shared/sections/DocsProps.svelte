@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
@@ -64,7 +64,7 @@
       <div class="space-y-2">
         <h3 class="text-base font-semibold">{extensibilityTitle}</h3>
         {#if extensibilityNotes}
-          <div class="text-sm text-muted-foreground leading-relaxed">{@html sanitizeHtml(extensibilityNotes)}</div>
+          <div class="text-sm text-muted-foreground leading-relaxed">{@html DOMPurify.sanitize(extensibilityNotes)}</div>
         {/if}
       </div>
     {/if}

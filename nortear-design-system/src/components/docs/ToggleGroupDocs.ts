@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import {
   AlignLeft,
@@ -1055,12 +1055,12 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.item1')) },
-            { title: '', content: sanitizeHtml(t('notes.item2')) },
-            { title: '', content: sanitizeHtml(t('notes.item3')) },
-            { title: '', content: sanitizeHtml(t('notes.item4')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // 3ª camada de divergência (notes + DocsProps + composicoes)
-            { title: '', content: sanitizeHtml('<strong>Nortear</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>); não expõe <code>orientation</code>, <code>size</code>, <code>spacing</code> nem <code>disabled</code> no grupo — aplicar via <code>setAttribute</code>/<code>classList</code>/<code>item.disabled</code>. <code>aria-label</code> no grupo e em items icon-only é OBRIGATÓRIO e deve ser aplicado manualmente via <code>setAttribute</code>. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>); não expõe <code>orientation</code>, <code>size</code>, <code>spacing</code> nem <code>disabled</code> no grupo — aplicar via <code>setAttribute</code>/<code>classList</code>/<code>item.disabled</code>. <code>aria-label</code> no grupo e em items icon-only é OBRIGATÓRIO e deve ser aplicado manualmente via <code>setAttribute</code>. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
           ],
         });
 

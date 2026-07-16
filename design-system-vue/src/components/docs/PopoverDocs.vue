@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import {
   Popover,
   PopoverContent,
@@ -446,7 +446,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('variants.items.default'))"
+            v-html="DOMPurify.sanitize(tContent('variants.items.default'))"
           />
           <Popover>
             <PopoverTrigger as-child>
@@ -475,7 +475,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('variants.items.withTitle'))"
+            v-html="DOMPurify.sanitize(tContent('variants.items.withTitle'))"
           />
           <Popover>
             <PopoverTrigger as-child>
@@ -517,7 +517,7 @@ const a11yCritCols = computed(() => ({
         >
           <p
             class="text-xs font-medium text-muted-foreground"
-            v-html="sanitizeHtml(tContent('variants.items.form'))"
+            v-html="DOMPurify.sanitize(tContent('variants.items.form'))"
           />
           <Popover>
             <PopoverTrigger as-child>

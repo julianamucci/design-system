@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
@@ -106,7 +106,7 @@ defineProps<{
         <div
           v-if="extensibilityNotes"
           class="text-sm text-muted-foreground leading-relaxed"
-          v-html="sanitizeHtml(extensibilityNotes)"
+          v-html="DOMPurify.sanitize(extensibilityNotes)"
         />
       </div>
     </div>

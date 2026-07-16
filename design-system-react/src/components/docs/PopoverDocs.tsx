@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import popoverTranslations from "@shared/content/popover/translations.json";
@@ -466,8 +466,8 @@ interface PopoverContentProps {
                 <div>{tContent("demonstration.labels.description")}</div>
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair1.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair1.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -486,8 +486,8 @@ interface PopoverContentProps {
                   : "Clique aqui"}
               </div>
             ),
-            doCaption: sanitizeHtml(tContent("doDont.pair2.do")),
-            dontCaption: sanitizeHtml(tContent("doDont.pair2.dont")),
+            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
+            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -898,49 +898,49 @@ interface PopoverContentProps {
                 type: tContent("props.table.open.type"),
                 defaultValue: tContent("props.table.open.default"),
                 required: tContent("props.table.open.required"),
-                description: sanitizeHtml(tContent("props.table.open.description")),
+                description: DOMPurify.sanitize(tContent("props.table.open.description")),
               },
               {
                 name: "defaultOpen",
                 type: tContent("props.table.defaultOpen.type"),
                 defaultValue: tContent("props.table.defaultOpen.default"),
                 required: tContent("props.table.defaultOpen.required"),
-                description: sanitizeHtml(tContent("props.table.defaultOpen.description")),
+                description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
               },
               {
                 name: "onOpenChange",
                 type: tContent("props.table.onOpenChange.type"),
                 defaultValue: tContent("props.table.onOpenChange.default"),
                 required: tContent("props.table.onOpenChange.required"),
-                description: sanitizeHtml(tContent("props.table.onOpenChange.description")),
+                description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
               },
               {
                 name: "modal",
                 type: tContent("props.table.modal.type"),
                 defaultValue: tContent("props.table.modal.default"),
                 required: tContent("props.table.modal.required"),
-                description: sanitizeHtml(tContent("props.table.modal.description")),
+                description: DOMPurify.sanitize(tContent("props.table.modal.description")),
               },
               {
                 name: "side",
                 type: tContent("props.table.side.type"),
                 defaultValue: tContent("props.table.side.default"),
                 required: tContent("props.table.side.required"),
-                description: sanitizeHtml(tContent("props.table.side.description")),
+                description: DOMPurify.sanitize(tContent("props.table.side.description")),
               },
               {
                 name: "align",
                 type: tContent("props.table.align.type"),
                 defaultValue: tContent("props.table.align.default"),
                 required: tContent("props.table.align.required"),
-                description: sanitizeHtml(tContent("props.table.align.description")),
+                description: DOMPurify.sanitize(tContent("props.table.align.description")),
               },
               {
                 name: "sideOffset",
                 type: tContent("props.table.sideOffset.type"),
                 defaultValue: tContent("props.table.sideOffset.default"),
                 required: tContent("props.table.sideOffset.required"),
-                description: sanitizeHtml(tContent("props.table.sideOffset.description")),
+                description: DOMPurify.sanitize(tContent("props.table.sideOffset.description")),
               },
             ],
           },
@@ -1063,12 +1063,12 @@ interface PopoverContentProps {
         items={[
           {
             event: "popover_open",
-            trigger: sanitizeHtml(tContent("analytics.table.popover_open.trigger")),
+            trigger: DOMPurify.sanitize(tContent("analytics.table.popover_open.trigger")),
             payload: tContent("analytics.table.popover_open.payload"),
           },
           {
             event: "popover_close",
-            trigger: sanitizeHtml(tContent("analytics.table.popover_close.trigger")),
+            trigger: DOMPurify.sanitize(tContent("analytics.table.popover_close.trigger")),
             payload: tContent("analytics.table.popover_close.payload"),
           },
         ]}

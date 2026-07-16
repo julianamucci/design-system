@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createLabel } from '@/components/ui/label';
 import { createInput } from '@/components/ui/input';
@@ -321,13 +321,13 @@ export function createLabelDocs(): HTMLElement {
           items: [
             {
               name: t('variants.default.label'),
-              description: sanitizeHtml(t('variants.default.description')),
+              description: DOMPurify.sanitize(t('variants.default.description')),
               code: codeDefault,
               previewFactory: () => buildLabelWithInput('Nome completo', 'var-default-input'),
             },
             {
               name: t('states.required.label'),
-              description: sanitizeHtml(t('states.required.behavior')),
+              description: DOMPurify.sanitize(t('states.required.behavior')),
               code: codeRequired,
               previewFactory: () => buildLabelWithInput('Email profissional', 'var-required-input', { required: true }),
             },
@@ -351,13 +351,13 @@ export function createLabelDocs(): HTMLElement {
             },
             {
               label: t('states.disabled.label'),
-              trigger: sanitizeHtml(t('states.disabled.trigger')),
-              behavior: sanitizeHtml(t('states.disabled.behavior')),
+              trigger: DOMPurify.sanitize(t('states.disabled.trigger')),
+              behavior: DOMPurify.sanitize(t('states.disabled.behavior')),
             },
             {
               label: t('states.required.label'),
               trigger: t('states.required.trigger'),
-              behavior: sanitizeHtml(t('states.required.behavior')),
+              behavior: DOMPurify.sanitize(t('states.required.behavior')),
             },
           ],
         });
@@ -381,13 +381,13 @@ export function createLabelDocs(): HTMLElement {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '""',  required: 'Não', description: t('props.table.children') },
-                { name: 'htmlFor',   type: 'string', defaultValue: '—',   required: 'Não', description: sanitizeHtml(t('props.table.htmlFor')) },
+                { name: 'htmlFor',   type: 'string', defaultValue: '—',   required: 'Não', description: DOMPurify.sanitize(t('props.table.htmlFor')) },
                 { name: 'className', type: 'string', defaultValue: '—',   required: 'Não', description: t('props.table.className') },
               ],
             },
           ],
           interfaceCode,
-          extensibilityNotes: sanitizeHtml(t('props.note')),
+          extensibilityNotes: DOMPurify.sanitize(t('props.note')),
         });
       }
 
@@ -446,9 +446,9 @@ export function createLabelDocs(): HTMLElement {
         return createDocsNotes({
           title: t('notes.title'),
           items: [
-            { title: '', content: sanitizeHtml(t('notes.tip1')) },
-            { title: '', content: sanitizeHtml(t('notes.tip2')) },
-            { title: '', content: sanitizeHtml(t('notes.tip3')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
+            { title: '', content: DOMPurify.sanitize(t('notes.tip3')) },
           ],
         });
 

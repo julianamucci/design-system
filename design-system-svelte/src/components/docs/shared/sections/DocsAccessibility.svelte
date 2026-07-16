@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
 
   interface DocsKeyboardItem { key: string; description: string }
@@ -17,10 +17,10 @@
   <h2 class="text-xl font-semibold mb-4">{title}</h2>
   <Card class="p-4 space-y-6">
     <div class="space-y-4">
-      <p class="text-sm text-muted-foreground leading-relaxed">{@html sanitizeHtml(summary)}</p>
+      <p class="text-sm text-muted-foreground leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
       <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
         {#each items as item}
-          <li class="leading-relaxed">{@html sanitizeHtml(item)}</li>
+          <li class="leading-relaxed">{@html DOMPurify.sanitize(item)}</li>
         {/each}
       </ul>
     </div>

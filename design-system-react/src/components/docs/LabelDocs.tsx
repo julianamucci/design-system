@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import labelTranslations from "@shared/content/label/translations.json";
@@ -341,7 +341,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: sanitizeHtml(tContent("props.table.htmlFor")),
+                description: DOMPurify.sanitize(tContent("props.table.htmlFor")),
               },
               {
                 name: "className",
