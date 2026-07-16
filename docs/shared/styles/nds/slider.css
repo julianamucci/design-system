@@ -88,6 +88,42 @@
   cursor: not-allowed;
 }
 
+/* ── Compat base-ui/reka/bits (estados por data-attr; input dentro do thumb) ── */
+.nds-slider[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+/* Foco por thumb individual (libs colocam o input nativo DENTRO do thumb) */
+.nds-slider-thumb:has(input:focus-visible) {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+/* ── Orientação vertical ─────────────────────────────────────────────────── */
+.nds-slider[data-vertical],
+.nds-slider[data-orientation="vertical"] {
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+  min-height: var(--spacing-40, 10rem);
+}
+.nds-slider[data-vertical] .nds-slider-track,
+.nds-slider[data-orientation="vertical"] .nds-slider-track {
+  width: 0.375rem;
+  height: 100%;
+}
+.nds-slider[data-vertical] .nds-slider-range,
+.nds-slider[data-orientation="vertical"] .nds-slider-range {
+  width: 100%;
+  height: auto;
+}
+.nds-slider[data-vertical] .nds-slider-thumb,
+.nds-slider[data-orientation="vertical"] .nds-slider-thumb {
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-slider-thumb {
     transition: none;

@@ -48,10 +48,16 @@
   opacity: 0.5;
 }
 
-/* Pressionado (on) */
-.nds-toggle[data-state="on"] {
+/* Pressionado (on) — data-state (vanilla), data-pressed/aria-pressed (base-ui e afins) */
+.nds-toggle[data-state="on"],
+.nds-toggle[data-pressed],
+.nds-toggle[aria-pressed="true"] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
+}
+
+.nds-toggle[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.4);
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */

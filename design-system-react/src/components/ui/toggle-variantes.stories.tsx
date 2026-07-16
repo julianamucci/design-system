@@ -65,8 +65,8 @@ export const Outline: Story = {
     const canvas = within(canvasElement);
     const toggle = canvas.getByRole("button", { name: "Itálico" });
 
-    await step("Toggle outline tem classe border", async () => {
-      await expect(toggle.className).toContain("border");
+    await step("Toggle outline expõe data-variant=outline (hook do CSS .nds-toggle)", async () => {
+      await expect(toggle).toHaveAttribute("data-variant", "outline");
     });
   },
 };

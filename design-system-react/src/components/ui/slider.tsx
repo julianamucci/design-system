@@ -2,6 +2,9 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
+// Estilo via .nds-slider-* (docs/shared/styles/nds/slider.css). O base-ui
+// posiciona range e thumbs via inline styles; o CSS cobre visual + estados
+// (focus por thumb, data-disabled, orientação vertical). Zero Tailwind.
 function Slider({
   className,
   defaultValue,
@@ -27,7 +30,7 @@ function Slider({
 
   return (
     <SliderPrimitive.Root
-      className={cn("data-horizontal:w-full data-vertical:h-full", className)}
+      className={className}
       data-slot="slider"
       defaultValue={defaultValue}
       value={value}
@@ -36,14 +39,14 @@ function Slider({
       thumbAlignment="edge"
       {...(rootProps as SliderPrimitive.Root.Props)}
     >
-      <SliderPrimitive.Control className="relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col">
+      <SliderPrimitive.Control className="nds-slider">
         <SliderPrimitive.Track
           data-slot="slider-track"
-          className="relative grow overflow-hidden rounded-full bg-muted select-none data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+          className="nds-slider-track"
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
-            className="bg-primary select-none data-horizontal:h-full data-vertical:w-full"
+            className="nds-slider-range"
           />
         </SliderPrimitive.Track>
         {Array.from({ length: _values.length }, (_, index) => (
@@ -58,7 +61,7 @@ function Slider({
                   ? () => ariaLabelledBy
                   : undefined
             }
-            className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+            className="nds-slider-thumb"
           />
         ))}
       </SliderPrimitive.Control>
