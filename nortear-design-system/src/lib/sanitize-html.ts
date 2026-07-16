@@ -1,22 +1,18 @@
 /**
- * Sanitizador mínimo de HTML para uso em innerHTML.
+ * Sanitizador de HTML para uso em `innerHTML` — wrapper fino sobre o DOMPurify
+ * (https://github.com/cure53/DOMPurify).
  *
- * Tags permitidas: <strong>, <em>, <b>, <i>, <code>, <a>, <br>, <span>
- * Removidos: <script>, <style>, <iframe>, <object>, <embed>, handlers on*, javascript:
+ * O conteúdo vem dos arquivos JSON de tradução e das constantes de ícone SVG
+ * das factories (controlados pelo time), mas este sanitizador garante que tags
+ * e atributos perigosos nunca cheguem ao DOM, mesmo que uma dessas fontes seja
+ * comprometida acidentalmente.
+ *
+ * O perfil default do DOMPurify cobre HTML + SVG + MathML: mantém tags
+ * semânticas (<strong>, <code>, <a>, <table>, <svg>…) e remove <script>,
+ * <iframe>, event handlers on*, URLs javascript: e demais vetores de XSS.
  */
-
-const DANGEROUS_BLOCKS_RE =
-  /<(script|style|iframe|object|embed|form)[^>]*>[\s\S]*?<\/\1>/gi;
-const DANGEROUS_VOID_RE =
-  /<(?:script|style|iframe|object|embed|form|input|link|meta)[^>]*\/?>/gi;
-const EVENT_HANDLERS_RE = /\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|\S+)/gi;
-const JAVASCRIPT_PROTOCOL_RE =
-  /(href|src|action)\s*=\s*["']?\s*javascript:/gi;
+import DOMPurify from 'dompurify';
 
 export function sanitizeHtml(html: string): string {
-  return html
-    .replace(DANGEROUS_BLOCKS_RE, '')
-    .replace(DANGEROUS_VOID_RE, '')
-    .replace(EVENT_HANDLERS_RE, '')
-    .replace(JAVASCRIPT_PROTOCOL_RE, '$1="about:blank"');
+  return DOMPurify.sanitize(html);
 }

@@ -78,57 +78,29 @@ SVGs podem conter `<script>`, `<foreignObject>` e event handlers:
 
 Localização: `src/lib/sanitize-html.ts` em cada stack.
 
-### Tags permitidas (allowlist)
+A implementação é um **wrapper fino sobre o [DOMPurify](https://github.com/cure53/DOMPurify)** — o sanitizador de referência do ecossistema (mantido pela Cure53, auditado, usado por Google e Microsoft, reconhecido pelas ferramentas SAST como sanitizador de taint):
 
 ```typescript
-const ALLOWED_TAGS = new Set([
-  'strong', 'em', 'b', 'i', 'u', 's',
-  'code', 'pre', 'kbd', 'samp',
-  'br', 'hr',
-  'p', 'span', 'div',
-  'ul', 'ol', 'li',
-  'a',
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'table', 'thead', 'tbody', 'tr', 'th', 'td',
-  'blockquote', 'abbr', 'cite',
-  'sub', 'sup', 'small',
-]);
-```
+import DOMPurify from 'dompurify';
 
-### Atributos permitidos
-
-```typescript
-const ALLOWED_ATTRS: Record<string, Set<string>> = {
-  'a':    new Set(['href', 'title', 'target', 'rel']),
-  'abbr': new Set(['title']),
-  'td':   new Set(['colspan', 'rowspan']),
-  'th':   new Set(['colspan', 'rowspan', 'scope']),
-  '*':    new Set(['class', 'id', 'lang', 'dir']),
-};
-```
-
-### Validação de URLs em `href`
-
-```typescript
-function isSafeUrl(url: string): boolean {
-  try {
-    const parsed = new URL(url, 'https://placeholder.invalid');
-    return ['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol);
-  } catch {
-    // URLs relativas (ex: #section) são seguras
-    return url.startsWith('#') || url.startsWith('/');
-  }
+export function sanitizeHtml(html: string): string {
+  return DOMPurify.sanitize(html);
 }
 ```
 
-### O que é removido
+**Nunca chame `DOMPurify.sanitize` diretamente nos componentes** — sempre via `sanitizeHtml`, pra manter um único ponto de configuração por stack.
 
-- Todas as tags não listadas em `ALLOWED_TAGS` (incluindo `<script>`, `<iframe>`, `<object>`, `<embed>`, `<form>`, `<input>`, `<svg>`, `<math>`)
-- Todos os atributos não listados em `ALLOWED_ATTRS`
-- Atributos que começam com `on` (event handlers: `onclick`, `onerror`, `onload`, etc.)
-- URLs com protocolos não seguros em `href`
-- Comentários HTML (`<!-- -->`)
-- `style` attributes (previne CSS injection)
+### O que o perfil default do DOMPurify garante
+
+- Mantém tags semânticas de conteúdo (`<strong>`, `<code>`, `<a>`, `<table>`, headings, listas) e também `<svg>`/MathML seguros (necessário para os ícones SVG das factories vanilla)
+- Remove `<script>`, `<style>`, `<iframe>`, `<object>`, `<embed>`, `<form>` e demais tags executáveis
+- Remove todos os event handlers `on*` (`onclick`, `onerror`, `onload`, …)
+- Neutraliza URLs `javascript:` (e outros protocolos perigosos) em `href`/`src`/`action`
+- Remove comentários HTML e vetores de mXSS (mutation XSS) — classe de ataque que sanitizadores regex caseiros não cobrem
+
+### Por que uma biblioteca e não regex próprio
+
+A versão anterior deste guideline especificava um sanitizador regex caseiro. Foi substituído porque: (1) regex não acompanha o parser HTML real do browser — vetores de mutation XSS passam; (2) toda mudança de allowlist vira manutenção nossa; (3) ferramentas de análise estática (Qwiet, CodeQL) reconhecem DOMPurify como sanitizador e param de acusar falso-positivo nos fluxos `dado → innerHTML`.
 
 ---
 
