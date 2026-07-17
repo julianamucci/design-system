@@ -82,8 +82,115 @@
   border-radius: var(--radius, 0.5rem);
 }
 
+/*
+ * ─── nds-tabs composite ─────────────────────────────────────────────────────
+ * Orientação via data-orientation no root; variante "line" (underline) via
+ * data-variant na list; ativo por presença de data-active (libs headless).
+ */
+
+.nds-tabs[data-orientation="horizontal"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.nds-tabs[data-orientation="vertical"] {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+/* Root composto usa gap — remove o margin-top do fluxo vanilla */
+.nds-tabs[data-orientation] .nds-tabs-content {
+  margin-top: 0;
+  flex: 1;
+}
+
+.nds-tabs[data-orientation="vertical"] .nds-tabs-list {
+  height: auto;
+  flex-direction: column;
+}
+
+.nds-tabs[data-orientation="vertical"] .nds-tabs-trigger {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Ativo por presença do attr (par do data-state="active" da vanilla) */
+.nds-tabs-trigger[data-active] {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+}
+
+.nds-tabs-trigger[aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-tabs-trigger svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-tabs-trigger svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-tabs-trigger:has([data-icon="inline-start"]) {
+  padding-inline-start: var(--spacing-1);
+}
+
+.nds-tabs-trigger:has([data-icon="inline-end"]) {
+  padding-inline-end: var(--spacing-1);
+}
+
+/* ── Variante line (underline indicator) ─────────────────────────────────── */
+.nds-tabs-list[data-variant="line"] {
+  gap: var(--spacing-1);
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger {
+  position: relative;
+  background-color: transparent;
+}
+
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active],
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-state="active"] {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger::after {
+  content: "";
+  position: absolute;
+  background-color: hsl(var(--foreground));
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+}
+
+.nds-tabs[data-orientation="horizontal"] .nds-tabs-list[data-variant="line"] .nds-tabs-trigger::after {
+  inset-inline: 0;
+  bottom: -5px;
+  height: 2px;
+}
+
+.nds-tabs[data-orientation="vertical"] .nds-tabs-list[data-variant="line"] .nds-tabs-trigger::after {
+  inset-block: 0;
+  right: calc(var(--spacing-1) * -1);
+  width: 2px;
+}
+
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active]::after,
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-state="active"]::after {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nds-tabs-trigger {
+  .nds-tabs-trigger,
+  .nds-tabs-trigger::after {
     transition: none;
   }
 }
