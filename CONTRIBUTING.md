@@ -116,6 +116,12 @@ Marcado com `continue-on-error: true` enquanto algumas stacks não estão em 100
 
 **Quando virar obrigatório**: assim que as 4 stacks atingirem 100% sustentado por ~2 semanas, remover `continue-on-error: true` em `.github/workflows/test.yml` e adicionar este workflow ao branch protection.
 
+### `codeql.yml` — segurança (SAST)
+
+CodeQL analisa JS/TS em todo PR/push + re-scan semanal. Instala as dependências antes da análise (necessário pro motor de taint resolver imports de terceiros — é assim que ele reconhece `DOMPurify.sanitize` como sanitizador e não flaga os fluxos de `innerHTML` sanitizados). Findings: aba **Security → Code scanning** + anotações no diff do PR. PR só reprova por finding **novo** vs a baseline do `main`. Falso positivo? Dismiss na aba Security com justificativa — nunca suprimir no código.
+
+Complementos de segurança fora de workflow (Settings → Security do repo): **Dependabot** (SCA — [`.github/dependabot.yml`](.github/dependabot.yml) já configura os 5 pacotes npm + actions) e **secret scanning com push protection**.
+
 ## Convenções de commit
 
 Use prefixos descritivos:
