@@ -127,7 +127,7 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        className={cn("nds-carousel", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -145,15 +145,12 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className="nds-carousel-overflow"
       data-slot="carousel-content"
     >
       <div
-        className={cn(
-          "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          className
-        )}
+        className={cn("nds-carousel-track", className)}
+        data-orientation={orientation}
         {...props}
       />
     </div>
@@ -168,11 +165,8 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
-      className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
-        className
-      )}
+      className={cn("nds-carousel-slide", className)}
+      data-orientation={orientation}
       {...props}
     />
   )
@@ -191,19 +185,14 @@ function CarouselPrevious({
       data-slot="carousel-previous"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute touch-manipulation rounded-full",
-        orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
+      className={cn("nds-carousel-arrow nds-carousel-arrow-prev", className)}
+      data-orientation={orientation}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
       <ChevronLeftIcon />
-      <span className="sr-only">Previous slide</span>
+      <span className="nds-sr-only">Previous slide</span>
     </Button>
   )
 }
@@ -221,19 +210,14 @@ function CarouselNext({
       data-slot="carousel-next"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute touch-manipulation rounded-full",
-        orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
+      className={cn("nds-carousel-arrow nds-carousel-arrow-next", className)}
+      data-orientation={orientation}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
       <ChevronRightIcon />
-      <span className="sr-only">Next slide</span>
+      <span className="nds-sr-only">Next slide</span>
     </Button>
   )
 }

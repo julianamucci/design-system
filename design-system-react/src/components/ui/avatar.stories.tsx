@@ -50,14 +50,14 @@ export const Playground: Story = {
     await step("Container circular renderizado", async () => {
       const root = canvasElement.querySelector('[data-slot="avatar"]');
       await expect(root).toBeInTheDocument();
-      await expect(root).toHaveClass("rounded-full");
+      await expect(root).toHaveClass("nds-avatar");
     });
 
     await step("Tamanho padrão aplicado via data-size + token --size-default", async () => {
       const root = canvasElement.querySelector('[data-slot="avatar"]');
       await expect(root).toHaveAttribute("data-size", "default");
       // Avatar usa size-(--size-default) — validar via data attribute em vez de classe literal
-      await expect(root).toHaveClass("rounded-full");
+      await expect(root).toHaveClass("nds-avatar");
     });
   },
 };

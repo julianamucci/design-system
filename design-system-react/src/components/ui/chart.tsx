@@ -187,7 +187,7 @@ export function ChartContainer({
     <div
       data-slot="chart"
       role="img"
-      className={cn('w-full', className)}
+      className={cn('nds-chart', className)}
       style={{ minHeight: 200, ...style }}
       {...rest}
       aria-label={ariaLabel}

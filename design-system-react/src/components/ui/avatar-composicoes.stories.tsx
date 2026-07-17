@@ -40,7 +40,7 @@ export const WithImage: Story = {
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
     await expect(root).toBeInTheDocument();
-    await expect(root).toHaveClass("rounded-full");
+    await expect(root).toHaveClass("nds-avatar");
     // Avatar sempre renderiza com alt descritivo — a imagem pode não ter
     // carregado no ambiente de teste, mas o wrapper existe com o slot correto.
     await expect(root).toHaveAttribute("data-slot", "avatar");
@@ -106,7 +106,7 @@ export const Group: Story = {
     const canvas = within(canvasElement);
     const group = canvas.getByRole("group", { name: /Participantes/i });
     await expect(group).toHaveClass("-space-x-2");
-    const avatars = group.querySelectorAll('[class*="rounded-full"]');
+    const avatars = group.querySelectorAll('[data-slot="avatar"]');
     await expect(avatars.length).toBeGreaterThanOrEqual(4);
   },
 };

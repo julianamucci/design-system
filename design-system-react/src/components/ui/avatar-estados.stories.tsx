@@ -60,7 +60,7 @@ export const Loading: Story = {
   play: async ({ canvasElement }) => {
     // Com delayMs=600 o fallback só aparece se o carregamento passar de 600ms.
     // Validamos apenas a presença do container circular — não forçamos estado.
-    const root = canvasElement.querySelector('[class*="rounded-full"]');
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
     await expect(root).toBeInTheDocument();
   },
 };

@@ -83,6 +83,57 @@
   height: var(--spacing-4);
 }
 
+/*
+ * ─── nds-carousel composite (embla-like) ────────────────────────────────────
+ * Orientação via data-orientation; track com margem negativa compensando o
+ * padding dos slides (primeiro slide flush); setas posicionadas FORA da área
+ * dos slides, compondo com .nds-button .nds-button-outline .nds-button-icon-sm.
+ */
+
+.nds-carousel-track[data-orientation="horizontal"] {
+  margin-left: calc(var(--spacing-4) * -1);       /* -16px */
+}
+
+.nds-carousel-track[data-orientation="vertical"] {
+  flex-direction: column;
+  margin-top: calc(var(--spacing-4) * -1);
+}
+
+.nds-carousel-slide[data-orientation="vertical"] {
+  padding-left: 0;
+  padding-top: var(--spacing-4);
+}
+
+.nds-carousel-arrow {
+  position: absolute;
+  touch-action: manipulation;
+  border-radius: 9999px;
+}
+
+.nds-carousel-arrow-prev[data-orientation="horizontal"] {
+  top: 50%;
+  left: calc(var(--spacing-12, 3rem) * -1);
+  transform: translateY(-50%);
+}
+
+.nds-carousel-arrow-prev[data-orientation="vertical"] {
+  top: calc(var(--spacing-12, 3rem) * -1);
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.nds-carousel-arrow-next[data-orientation="horizontal"] {
+  top: 50%;
+  right: calc(var(--spacing-12, 3rem) * -1);
+  transform: translateY(-50%);
+}
+
+.nds-carousel-arrow-next[data-orientation="vertical"] {
+  bottom: calc(var(--spacing-12, 3rem) * -1);
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-carousel-track,
   .nds-carousel-button {

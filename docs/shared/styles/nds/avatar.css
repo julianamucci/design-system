@@ -79,3 +79,87 @@
 .nds-avatar-group > .nds-avatar:first-child {
   margin-left: 0;
 }
+
+/* ── Badge de status (canto inferior direito do avatar) ──────────────────── */
+.nds-avatar-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.625rem;                                /* 10px — default */
+  height: 0.625rem;
+
+  border-radius: 9999px;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: 0 0 0 2px hsl(var(--background));
+  user-select: none;
+}
+
+.nds-avatar-badge > svg {
+  width: 0.5rem;                                  /* 8px */
+  height: 0.5rem;
+}
+
+.nds-avatar[data-size="sm"] .nds-avatar-badge {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.nds-avatar[data-size="sm"] .nds-avatar-badge > svg {
+  display: none;
+}
+
+.nds-avatar[data-size="lg"] .nds-avatar-badge {
+  width: 0.75rem;                                 /* 12px */
+  height: 0.75rem;
+}
+
+/* ── Contador do grupo (+N) ──────────────────────────────────────────────── */
+.nds-avatar-group-count {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--spacing-8);                        /* 32px — acompanha default */
+  height: var(--spacing-8);
+  margin-left: calc(var(--spacing-2) * -1);       /* overlap igual aos avatares */
+
+  border-radius: 9999px;
+  border: 2px solid hsl(var(--background));
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+}
+
+.nds-avatar-group-count > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-avatar-group:has(.nds-avatar[data-size="sm"]) .nds-avatar-group-count {
+  width: var(--spacing-6);
+  height: var(--spacing-6);
+  font-size: 0.75rem;
+}
+
+.nds-avatar-group:has(.nds-avatar[data-size="sm"]) .nds-avatar-group-count > svg {
+  width: var(--spacing-3, 0.75rem);
+  height: var(--spacing-3, 0.75rem);
+}
+
+.nds-avatar-group:has(.nds-avatar[data-size="lg"]) .nds-avatar-group-count {
+  width: var(--spacing-10);
+  height: var(--spacing-10);
+}
+
+.nds-avatar-group:has(.nds-avatar[data-size="lg"]) .nds-avatar-group-count > svg {
+  width: var(--spacing-5, 1.25rem);
+  height: var(--spacing-5, 1.25rem);
+}

@@ -34,7 +34,7 @@ export const Size6: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[class*="rounded-full"]');
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
     await expect(root).toHaveClass("h-6");
     await expect(root).toHaveClass("w-6");
   },
@@ -49,7 +49,7 @@ export const Size8: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[class*="rounded-full"]');
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
     await expect(root).toHaveClass("h-8");
     await expect(root).toHaveClass("w-8");
   },
@@ -68,7 +68,7 @@ export const Size10: Story = {
     await step("Tamanho padrão aplicado via --size-default token + data-size", async () => {
       await expect(root).toHaveAttribute("data-size", "default");
       // Avatar usa size-(--size-default) — validar via data attribute
-      await expect(root).toHaveClass("rounded-full");
+      await expect(root).toHaveClass("nds-avatar");
     });
   },
 };
@@ -82,7 +82,7 @@ export const Size12: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[class*="rounded-full"]');
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
     await expect(root).toHaveClass("h-12");
     await expect(root).toHaveClass("w-12");
   },
