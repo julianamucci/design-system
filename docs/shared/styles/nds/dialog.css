@@ -182,6 +182,42 @@
   to   { opacity: 0; transform: scale(0.95); }
 }
 
+/*
+ * ─── nds-dialog composite ───────────────────────────────────────────────────
+ * Libs headless emitem data-open / data-closed (não data-state) e fecham com
+ * o elemento ainda montado. Reaproveita as keyframes acima nesses attrs.
+ */
+
+.nds-dialog-overlay[data-closed] {
+  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
+}
+
+.nds-dialog-content[data-closed] {
+  animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
+}
+
+/* Header do composite React não é centralizado (gap 8px, alinhado à esquerda) */
+.nds-dialog-header {
+  gap: var(--spacing-2);
+}
+
+/* Links dentro da descrição */
+.nds-dialog-description a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nds-dialog-description a:hover {
+  color: hsl(var(--foreground));
+}
+
+/* Botão de fechar composto (nds-button ghost icon) — só posicionamento */
+.nds-dialog-close-position {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-dialog-overlay,
   .nds-dialog-content {

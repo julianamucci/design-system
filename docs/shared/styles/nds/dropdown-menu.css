@@ -81,8 +81,184 @@
   background-color: hsl(var(--muted));
 }
 
+/*
+ * ─── nds-dropdown-menu composite ────────────────────────────────────────────
+ * Libs headless (base-ui Menu) — portal com positioner, scroll interno,
+ * foco de teclado via data-highlighted, submenus, checkbox/radio items,
+ * variante destructive, inset, atalho, e animação por transform-origin +
+ * data-open/data-closed. Reutilizado por context-menu (sem CSS próprio).
+ */
+
+.nds-dropdown-menu-positioner {
+  isolation: isolate;
+  z-index: 50;
+  outline: 0;
+}
+
+/* Trigger do context-menu (área de clique-direito) — reusa o dropdown */
+.nds-context-menu-trigger {
+  user-select: none;
+}
+
+/* Content composto: scroll interno + dimensões do positioner + animação */
+.nds-dropdown-menu-content {
+  max-height: var(--available-height);
+  width: var(--anchor-width);
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform-origin: var(--transform-origin, center);
+}
+
+/* Sem animação de saída: manter o menu montado durante transição de
+ * fechamento deixa os focus-guards da lib visíveis pro axe (aria-hidden-focus).
+ * Menus fecham instantâneo, como na vanilla. */
+
+/* Foco de teclado (data-highlighted) — par do :focus */
+.nds-dropdown-menu-item[data-highlighted] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-dropdown-menu-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-dropdown-menu-item svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-dropdown-menu-item svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/* Item inset (alinhado quando há ícones à esquerda em outros itens) */
+.nds-dropdown-menu-item[data-inset],
+.nds-dropdown-menu-label[data-inset],
+.nds-dropdown-menu-sub-trigger[data-inset] {
+  padding-left: var(--spacing-7, 1.75rem);
+}
+
+/* Variante destructive */
+.nds-dropdown-menu-item[data-variant="destructive"] {
+  color: hsl(var(--destructive));
+}
+
+.nds-dropdown-menu-item[data-variant="destructive"]:focus,
+.nds-dropdown-menu-item[data-variant="destructive"][data-highlighted] {
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+}
+
+.nds-dropdown-menu-item[data-variant="destructive"] svg {
+  color: hsl(var(--destructive));
+}
+
+/* Label do composite usa muted em 12px medium (React) — sobrepõe o vanilla */
+.nds-dropdown-menu-label {
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* ── Sub-trigger (abre submenu) ──────────────────────────────────────────── */
+.nds-dropdown-menu-sub-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: default;
+  user-select: none;
+  outline: 0;
+}
+
+.nds-dropdown-menu-sub-trigger:focus,
+.nds-dropdown-menu-sub-trigger[data-highlighted],
+.nds-dropdown-menu-sub-trigger[data-popup-open],
+.nds-dropdown-menu-sub-trigger[data-open] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-dropdown-menu-sub-trigger svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-dropdown-menu-sub-trigger svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-dropdown-menu-sub-trigger-chevron {
+  margin-left: auto;
+}
+
+/* ── Checkbox / Radio item (indicador à direita) ─────────────────────────── */
+.nds-dropdown-menu-checkbox-item,
+.nds-dropdown-menu-radio-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-block: var(--spacing-1-5, 0.375rem);
+  padding-inline-start: var(--spacing-2);
+  padding-inline-end: var(--spacing-8);           /* espaço pro indicador */
+
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: default;
+  user-select: none;
+  outline: 0;
+}
+
+.nds-dropdown-menu-checkbox-item:focus,
+.nds-dropdown-menu-checkbox-item[data-highlighted],
+.nds-dropdown-menu-radio-item:focus,
+.nds-dropdown-menu-radio-item[data-highlighted] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-dropdown-menu-checkbox-item[data-disabled],
+.nds-dropdown-menu-radio-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-dropdown-menu-item-indicator {
+  pointer-events: none;
+  position: absolute;
+  right: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nds-dropdown-menu-item-indicator svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/* ── Shortcut (atalho à direita) ─────────────────────────────────────────── */
+.nds-dropdown-menu-shortcut {
+  margin-left: auto;
+  padding-left: var(--spacing-3);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nds-dropdown-menu-item {
+  .nds-dropdown-menu-item,
+  .nds-dropdown-menu-content {
     transition: none;
   }
 }

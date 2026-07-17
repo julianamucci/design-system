@@ -99,3 +99,78 @@
     justify-content: flex-end;
   }
 }
+
+/*
+ * ─── nds-alert-dialog composite ─────────────────────────────────────────────
+ * Animação de entrada/saída para libs headless (data-open/data-closed,
+ * reusa as keyframes de nds-dialog), variante de tamanho, bloco de mídia
+ * (ícone), e footer em grid de 2 colunas no tamanho sm.
+ */
+
+.nds-alert-dialog-overlay {
+  animation: nds-dialog-fade-in var(--duration-fast) var(--ease-entrance);
+}
+
+.nds-alert-dialog-overlay[data-closed] {
+  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
+}
+
+.nds-alert-dialog-content {
+  animation: nds-dialog-zoom-in var(--duration-fast) var(--ease-entrance);
+}
+
+.nds-alert-dialog-content[data-closed] {
+  animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
+}
+
+/* Tamanho compacto */
+.nds-alert-dialog-content[data-size="sm"] {
+  max-width: 20rem;                               /* 320px — xs */
+}
+
+/* Links na descrição */
+.nds-alert-dialog-description a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nds-alert-dialog-description a:hover {
+  color: hsl(var(--foreground));
+}
+
+/* ── Media (ícone destacado no header) ───────────────────────────────────── */
+.nds-alert-dialog-media {
+  display: inline-flex;
+  width: var(--spacing-10, 2.5rem);
+  height: var(--spacing-10, 2.5rem);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-2);
+
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  background-color: hsl(var(--muted));
+}
+
+.nds-alert-dialog-media svg:not([class*="size-"]) {
+  width: var(--spacing-6, 1.5rem);
+  height: var(--spacing-6, 1.5rem);
+}
+
+/* Header com mídia centraliza no mobile */
+.nds-alert-dialog-header:has(.nds-alert-dialog-media) {
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .nds-alert-dialog-content[data-size="default"] .nds-alert-dialog-header:has(.nds-alert-dialog-media) {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* Footer em 2 colunas no tamanho sm (botões lado a lado) */
+.nds-alert-dialog-content[data-size="sm"] .nds-alert-dialog-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

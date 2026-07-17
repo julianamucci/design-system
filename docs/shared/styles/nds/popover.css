@@ -17,6 +17,9 @@
   z-index: 50;
   width: 18rem;                                  /* 288px — w-72 */
 
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5, 0.625rem);             /* 10px entre filhos diretos */
   padding: var(--spacing-4);                     /* 16px */
 
   background-color: hsl(var(--popover));
@@ -26,4 +29,49 @@
   box-shadow:
     0 10px 15px -3px hsl(0 0% 0% / 0.1),
     0 4px 6px -4px hsl(0 0% 0% / 0.1);
+}
+
+/*
+ * ─── nds-popover composite (portal positioner + header/title/desc) ──────────
+ * Libs headless posicionam via um wrapper (positioner) e animam com
+ * transform-origin + data-starting/ending-style.
+ */
+
+.nds-popover-positioner {
+  isolation: isolate;
+  z-index: 50;
+}
+
+.nds-popover-content {
+  transform-origin: var(--transform-origin, center);
+}
+
+/* Animação de saída apenas (data-ending-style): a entrada aparece direto,
+ * evitando corrida com toBeVisible (opacity:0 no data-starting-style seria
+ * lido como "não visível" por checagens síncronas). */
+.nds-popover-content[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--duration-fast) ease-in, transform var(--duration-fast) ease-in;
+}
+
+.nds-popover-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  font-size: 0.875rem;
+}
+
+.nds-popover-title {
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-popover-description {
+  color: hsl(var(--muted-foreground));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-popover-content {
+    transition: none;
+  }
 }

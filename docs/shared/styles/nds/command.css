@@ -113,15 +113,27 @@
 }
 
 .nds-command-item:hover,
-.nds-command-item[aria-selected="true"] {
+.nds-command-item[aria-selected="true"],
+.nds-command-item[data-selected="true"] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
 
-.nds-command-item[aria-disabled="true"] {
+.nds-command-item[aria-disabled="true"],
+.nds-command-item[data-disabled="true"] {
   pointer-events: none;
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.nds-command-item svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-command-item svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
 }
 
 /* ── Empty (sem resultados) ──────────────────────────────────────────────── */
@@ -130,6 +142,62 @@
   text-align: center;
   font-size: 0.875rem;
   color: hsl(var(--muted-foreground));
+}
+
+/*
+ * ─── nds-command composite ──────────────────────────────────────────────────
+ * cmdk gera o heading do grupo com o atributo [cmdk-group-heading] (não uma
+ * classe), então o estilo do heading é aplicado por atributo. Inclui também
+ * o check de item selecionado, o separator interno e o content dentro de dialog.
+ */
+
+.nds-command-group [cmdk-group-heading] {
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-command-separator {
+  height: 1px;
+  margin-inline: calc(var(--spacing-1) * -1);
+  background-color: hsl(var(--border));
+}
+
+/* Check à direita do item (marcado) */
+.nds-command-item-check {
+  margin-left: auto;
+  opacity: 0;
+}
+
+.nds-command-item[data-checked="true"] .nds-command-item-check {
+  opacity: 1;
+}
+
+/* Esconde o check quando há atalho no item */
+.nds-command-item:has([data-slot="command-shortcut"]) .nds-command-item-check {
+  display: none;
+}
+
+/* Atalho à direita */
+.nds-command-shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Command dentro de um Dialog (paleta de comando) */
+.nds-command-dialog-content {
+  top: 33%;
+  transform: translate(-50%, 0);
+  overflow: hidden;
+  padding: 0;
+}
+
+.nds-command-dialog-content .nds-command {
+  height: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
