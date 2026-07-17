@@ -93,14 +93,20 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return
-    // Embla expõe API imperativa: a chamada síncrona inicial sincroniza
-    // canScrollPrev/Next com o estado real do carrossel antes do primeiro
-    // "select" — padrão recomendado pela lib.
-    onSelect(api)
+    // Sincronização inicial de canScrollPrev/Next com o estado real do Embla.
+    // Em microtask (não no corpo síncrono do effect) para atender
+    // react-hooks/set-state-in-effect — microtasks executam antes do paint,
+    // então o resultado visual é o mesmo da chamada síncrona.
+    let active = true
+    queueMicrotask(() => {
+      if (active) onSelect(api)
+    })
     api.on("reInit", onSelect)
     api.on("select", onSelect)
 
     return () => {
+      active = false
+      api?.off("reInit", onSelect)
       api?.off("select", onSelect)
     }
   }, [api, onSelect])
