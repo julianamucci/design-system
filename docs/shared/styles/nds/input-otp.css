@@ -80,8 +80,97 @@
   pointer-events: none;
 }
 
+/*
+ * ─── nds-input-otp composite ────────────────────────────────────────────────
+ * Variante composta para libs de OTP com input oculto: container > grupos de
+ * slots (divs) + separador entre grupos. Slot ativo via data-active; caret
+ * fake animado. Reusa .nds-input-otp-slot / .nds-input-otp-separator.
+ */
+
+.nds-input-otp-container {
+  display: flex;
+  align-items: center;
+}
+
+.nds-input-otp-container:has(input:disabled) {
+  opacity: 0.5;
+}
+
+.nds-input-otp-input:disabled {
+  cursor: not-allowed;
+}
+
+.nds-input-otp-group {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius, 0.5rem);
+}
+
+.nds-input-otp-group:has([aria-invalid="true"]) {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+}
+
+/* Slots dentro de grupo: mesmas regras de borda/radius do fluxo nativo */
+.nds-input-otp-group > .nds-input-otp-slot:first-child {
+  border-inline-start: 1px solid hsl(var(--input, var(--border)));
+  border-start-start-radius: var(--radius, 0.5rem);
+  border-end-start-radius: var(--radius, 0.5rem);
+}
+
+.nds-input-otp-group > .nds-input-otp-slot:last-child {
+  border-start-end-radius: var(--radius, 0.5rem);
+  border-end-end-radius: var(--radius, 0.5rem);
+}
+
+/* Slot ativo (data-active, para slots-div com input oculto) — par do :focus */
+.nds-input-otp-slot[data-active="true"] {
+  z-index: 1;
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+  border-color: hsl(var(--ring));
+}
+
+.nds-input-otp-slot[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+.nds-input-otp-slot[data-active="true"][aria-invalid="true"] {
+  box-shadow: 0 0 0 1px hsl(var(--destructive));
+}
+
+/* ── Caret fake (pisca enquanto o slot ativo aguarda dígito) ─────────────── */
+.nds-input-otp-caret-wrap {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nds-input-otp-caret {
+  width: 1px;
+  height: 1rem;
+  background-color: hsl(var(--foreground));
+  animation: nds-caret-blink 1.2s ease-out infinite;
+}
+
+@keyframes nds-caret-blink {
+  0%, 70%, 100% { opacity: 1; }
+  20%, 50%      { opacity: 0; }
+}
+
+.nds-input-otp-separator svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-input-otp-slot {
     transition: none;
+  }
+
+  .nds-input-otp-caret {
+    animation: none;
   }
 }

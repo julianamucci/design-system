@@ -77,3 +77,249 @@
 .nds-select > option:disabled {
   color: hsl(var(--muted-foreground));
 }
+
+/*
+ * ─── nds-select composite ───────────────────────────────────────────────────
+ * Variante composta (trigger + popup + itens) para selects customizados com
+ * listbox próprio. Estados via atributos ARIA e data-attrs (libs headless
+ * usam data-open/data-closed, data-placeholder, data-disabled, data-side).
+ */
+
+.nds-select-trigger {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-1-5, 0.375rem);
+
+  padding-block: var(--spacing-2);                /* 8px — altura via padding (WCAG 1.4.4) */
+  padding-inline-start: var(--spacing-2-5, 0.625rem);
+  padding-inline-end: var(--spacing-2);
+
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: hsl(var(--foreground));
+
+  background-color: transparent;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+
+  cursor: pointer;
+  user-select: none;
+  outline: 0;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-select-trigger[data-size="sm"] {
+  padding-block: var(--spacing-1, 0.25rem);       /* 4px — altura via padding, sem height fixo */
+  border-radius: min(var(--radius-md, calc(var(--radius) - 2px)), 10px);
+}
+
+.nds-select-positioner {
+  isolation: isolate;
+  z-index: 50;
+}
+
+.nds-select-trigger:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-select-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-select-trigger[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+}
+
+.nds-select-trigger[data-placeholder] {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-select-trigger svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-select-trigger svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+.nds-select-trigger-icon {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-select-value {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--spacing-1-5, 0.375rem);
+  text-align: left;
+  overflow: hidden;
+}
+
+/* ── Popup ───────────────────────────────────────────────────────────────── */
+.nds-select-content {
+  position: relative;
+  isolation: isolate;
+  z-index: 50;
+  min-width: 9rem;                                /* 144px — min-w-36 */
+  max-height: var(--available-height, 24rem);
+  width: var(--anchor-width, auto);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 0 0 1px hsl(var(--foreground) / 0.1),
+    0 4px 6px -1px hsl(0 0% 0% / 0.1),
+    0 2px 4px -2px hsl(0 0% 0% / 0.1);
+
+  transform-origin: var(--transform-origin, center);
+}
+
+.nds-select-content[data-open] {
+  animation: nds-select-zoom-in 100ms ease-out;
+}
+
+.nds-select-content[data-closed] {
+  animation: nds-select-zoom-out 100ms ease-in;
+}
+
+/* Alinhado ao trigger (alignItemWithTrigger): sem animação de entrada */
+.nds-select-content[data-align-trigger="true"] {
+  animation: none;
+}
+
+/* ── Group / Label ───────────────────────────────────────────────────────── */
+.nds-select-group {
+  padding: var(--spacing-1, 0.25rem);
+  scroll-margin-block: var(--spacing-1, 0.25rem);
+}
+
+.nds-select-label {
+  padding-inline: var(--spacing-1-5, 0.375rem);
+  padding-block: var(--spacing-1, 0.25rem);
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+.nds-select-item {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--spacing-1-5, 0.375rem);
+
+  padding-block: var(--spacing-1, 0.25rem);
+  padding-inline-start: var(--spacing-1-5, 0.375rem);
+  padding-inline-end: var(--spacing-8);           /* 32px — espaço pro check */
+
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  font-size: 0.875rem;
+  cursor: default;
+  user-select: none;
+  outline: 0;
+}
+
+.nds-select-item:focus,
+.nds-select-item[data-highlighted] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-select-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-select-item svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-select-item svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+.nds-select-item-text {
+  display: flex;
+  flex: 1;
+  flex-shrink: 0;
+  gap: var(--spacing-2);
+  white-space: nowrap;
+}
+
+.nds-select-item-indicator {
+  pointer-events: none;
+  position: absolute;
+  right: var(--spacing-2);
+  display: flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Separator ───────────────────────────────────────────────────────────── */
+.nds-select-separator {
+  pointer-events: none;
+  height: 1px;
+  margin-inline: calc(var(--spacing-1) * -1);
+  margin-block: var(--spacing-1);
+  background-color: hsl(var(--border));
+}
+
+/* ── Scroll buttons ──────────────────────────────────────────────────────── */
+.nds-select-scroll-button {
+  position: sticky;
+  z-index: 10;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--spacing-1, 0.25rem);
+  background-color: hsl(var(--popover));
+  cursor: default;
+}
+
+.nds-select-scroll-button[data-slot="select-scroll-up-button"] {
+  top: 0;
+}
+
+.nds-select-scroll-button[data-slot="select-scroll-down-button"] {
+  bottom: 0;
+}
+
+.nds-select-scroll-button svg:not([class*="size-"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes nds-select-zoom-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes nds-select-zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-select-content[data-open],
+  .nds-select-content[data-closed] {
+    animation: none;
+  }
+}

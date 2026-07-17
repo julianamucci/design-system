@@ -157,3 +157,319 @@
     transition: none;
   }
 }
+
+/*
+ * ─── nds-calendar composite ─────────────────────────────────────────────────
+ * Variante composta para calendários com célula-grid navegável, dropdowns de
+ * mês/ano e seleção de intervalo (range). Estados via data-attrs
+ * (data-selected, data-focused, data-range-start/-middle/-end).
+ * Célula: 2rem (32px, grid-8); sem altura fixa fora de célula quadrada.
+ */
+
+.nds-calendar-root {
+  --nds-cell-size: 2rem;                          /* 32px */
+  --nds-cell-radius: calc(var(--radius, 0.5rem) - 2px);
+
+  width: fit-content;
+  padding: var(--spacing-2);                      /* 8px */
+  background-color: hsl(var(--background));
+  user-select: none;
+}
+
+[data-slot="card-content"] .nds-calendar-root,
+[data-slot="popover-content"] .nds-calendar-root {
+  background-color: transparent;
+}
+
+.nds-calendar-months {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+@media (min-width: 768px) {
+  .nds-calendar-months {
+    flex-direction: row;
+  }
+}
+
+.nds-calendar-month {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+/* ── Nav flutuante (setas sobre o caption) ───────────────────────────────── */
+.nds-calendar-nav-overlay {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-1);
+}
+
+/* Compõe com .nds-button .nds-button-ghost — só dimensiona pra célula */
+.nds-calendar-nav-btn {
+  width: var(--nds-cell-size);
+  height: var(--nds-cell-size);
+  padding: 0;
+  user-select: none;
+}
+
+.nds-calendar-nav-btn[aria-disabled="true"] {
+  opacity: 0.5;
+}
+
+[dir="rtl"] .nds-calendar-nav-btn svg {
+  transform: rotate(180deg);
+}
+
+.nds-calendar-chevron {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ── Caption / dropdowns ─────────────────────────────────────────────────── */
+.nds-calendar-caption {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--nds-cell-size);
+  padding-inline: var(--nds-cell-size);
+}
+
+.nds-calendar-dropdowns {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1-5, 0.375rem);
+  min-height: var(--nds-cell-size);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-calendar-dropdown-root {
+  position: relative;
+  border-radius: var(--nds-cell-radius);
+}
+
+.nds-calendar-dropdown {
+  position: absolute;
+  inset: 0;
+  background-color: hsl(var(--popover));
+  opacity: 0;
+}
+
+.nds-calendar-caption-label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  user-select: none;
+}
+
+.nds-calendar-caption-label-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  border-radius: var(--nds-cell-radius);
+}
+
+.nds-calendar-caption-label-button > svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Tabela ──────────────────────────────────────────────────────────────── */
+.nds-calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nds-calendar-weekdays {
+  display: flex;
+}
+
+.nds-calendar-weekday {
+  flex: 1;
+  border-radius: var(--nds-cell-radius);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-normal, 400);
+  color: hsl(var(--muted-foreground));
+  user-select: none;
+}
+
+.nds-calendar-week {
+  display: flex;
+  width: 100%;
+  margin-top: var(--spacing-2);
+}
+
+.nds-calendar-week-number-header {
+  width: var(--nds-cell-size);
+  user-select: none;
+}
+
+.nds-calendar-week-number {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  user-select: none;
+}
+
+.nds-calendar-week-number-inner {
+  display: flex;
+  width: var(--nds-cell-size);
+  height: var(--nds-cell-size);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ── Célula do dia (td) ──────────────────────────────────────────────────── */
+.nds-calendar-day-cell {
+  position: relative;
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  border-radius: var(--nds-cell-radius);
+  text-align: center;
+  user-select: none;
+}
+
+/* Arredondamento das pontas da linha quando selecionado */
+.nds-calendar-day-cell:last-child[data-selected="true"] .nds-calendar-day-btn {
+  border-start-end-radius: var(--nds-cell-radius);
+  border-end-end-radius: var(--nds-cell-radius);
+}
+
+.nds-calendar-day-cell:first-child[data-selected="true"] .nds-calendar-day-btn,
+.nds-calendar-day-cell-wn:nth-child(2)[data-selected="true"] .nds-calendar-day-btn {
+  border-start-start-radius: var(--nds-cell-radius);
+  border-end-start-radius: var(--nds-cell-radius);
+}
+
+/* ── Range ───────────────────────────────────────────────────────────────── */
+.nds-calendar-range-start,
+.nds-calendar-range-end {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  background-color: hsl(var(--muted));
+}
+
+.nds-calendar-range-start {
+  border-start-start-radius: var(--nds-cell-radius);
+  border-end-start-radius: var(--nds-cell-radius);
+}
+
+.nds-calendar-range-start::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  width: var(--spacing-4);
+  background-color: hsl(var(--muted));
+  z-index: -1;
+}
+
+.nds-calendar-range-end {
+  border-start-end-radius: var(--nds-cell-radius);
+  border-end-end-radius: var(--nds-cell-radius);
+}
+
+.nds-calendar-range-end::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: var(--spacing-4);
+  background-color: hsl(var(--muted));
+  z-index: -1;
+}
+
+.nds-calendar-range-middle {
+  border-radius: 0;
+}
+
+/* ── Estados da célula ───────────────────────────────────────────────────── */
+.nds-calendar-today {
+  border-radius: var(--nds-cell-radius);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.nds-calendar-today[data-selected="true"] {
+  border-radius: 0;
+}
+
+.nds-calendar-outside,
+.nds-calendar-outside[aria-selected="true"] {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-calendar-disabled {
+  color: hsl(var(--muted-foreground));
+  opacity: 0.5;
+}
+
+.nds-calendar-hidden {
+  visibility: hidden;
+}
+
+/* ── Botão do dia ────────────────────────────────────────────────────────── */
+/* Compõe com .nds-button .nds-button-ghost .nds-button-icon */
+.nds-calendar-day-btn {
+  position: relative;
+  isolation: isolate;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  aspect-ratio: 1;
+  width: 100%;
+  height: auto;
+  min-width: var(--nds-cell-size);
+
+  border: 0;
+  border-radius: var(--nds-cell-radius);
+  line-height: 1;
+  font-weight: var(--font-weight-normal, 400);
+}
+
+.nds-calendar-day-btn > span {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.nds-calendar-day-cell[data-focused="true"] .nds-calendar-day-btn {
+  position: relative;
+  z-index: 10;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-calendar-day-btn[data-selected-single="true"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-calendar-day-btn[data-range-start="true"],
+.nds-calendar-day-btn[data-range-end="true"] {
+  border-radius: var(--nds-cell-radius);
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-calendar-day-btn[data-range-middle="true"] {
+  border-radius: 0;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
