@@ -64,7 +64,7 @@
     "@vitest/coverage-v8": "^4.1.5",
     "@vue/tsconfig": "^0.9.1",
     "axe-playwright": "^2.2.2",
-    "concurrently": "^9.2.1",
+    "concurrently": "^9.2.4",
     "eslint": "^9.39.4",
     "eslint-plugin-storybook": "^10.5.2",
     "eslint-plugin-unused-imports": "^4.4.1",
