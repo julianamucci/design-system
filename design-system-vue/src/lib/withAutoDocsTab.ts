@@ -1,4 +1,11 @@
-/** @jsxImportSource react */
+// HOC para Vue 3: monta o componente Vue de docs na aba "Documentação" e o
+// autodocs do Storybook na aba "API Reference".
+//
+// A UI de docs do Storybook é React mesmo em projetos Vue — por isso o React
+// aqui. Escrito com React.createElement (sem JSX) de propósito: arquivos .tsx
+// com JSX exigem configuração de parser no bundler, e o vite 8/rolldown parou
+// de habilitar JSX implicitamente em projetos sem plugin React (quebrou o
+// build). createElement é imune a config de bundler em qualquer versão.
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { createApp, type Component } from 'vue';
@@ -11,6 +18,8 @@ import {
   Stories,
 } from '@storybook/addon-docs/blocks';
 
+const h = React.createElement;
+
 type TabKey = 'docs' | 'api';
 
 function TabButton({
@@ -22,10 +31,11 @@ function TabButton({
   onClick: () => void;
   children: React.ReactNode;
 }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
+  return h(
+    'button',
+    {
+      onClick,
+      style: {
         padding: '0.625rem 1.25rem',
         fontSize: '0.8125rem',
         fontWeight: active ? 600 : 400,
@@ -38,29 +48,25 @@ function TabButton({
         outline: 'none',
         letterSpacing: '0.01em',
         whiteSpace: 'nowrap' as const,
-      }}
-    >
-      {children}
-    </button>
+      },
+    },
+    children,
   );
 }
 
 function ApiReferencePage() {
-  return (
-    <div style={{ padding: '2rem', maxWidth: '75rem', margin: '0 auto' }}>
-      <Title />
-      <Description />
-      <Primary />
-      <Controls />
-      <Stories includePrimary={false} />
-    </div>
+  return h(
+    'div',
+    { style: { padding: '2rem', maxWidth: '75rem', margin: '0 auto' } },
+    h(Title, null),
+    h(Description, null),
+    h(Primary, null),
+    h(Controls, null),
+    h(Stories, { includePrimary: false }),
   );
 }
 
 /**
- * HOC para Vue 3: monta um componente Vue na aba "Documentação"
- * e mostra o autodocs na aba "API Reference".
- *
  * @example
  * // alert.stories.ts
  * parameters: {
@@ -88,10 +94,13 @@ export function withAutoDocsTab(VueComponent: Component) {
       };
     }, [activeTab]);
 
-    return (
-      <>
-        <div
-          style={{
+    return h(
+      React.Fragment,
+      null,
+      h(
+        'div',
+        {
+          style: {
             position: 'sticky',
             top: 0,
             zIndex: 10,
@@ -100,21 +109,17 @@ export function withAutoDocsTab(VueComponent: Component) {
             borderBottom: '1px solid hsl(var(--border))',
             backgroundColor: 'hsl(var(--background))',
             paddingLeft: '0.75rem',
-          }}
-        >
-          <TabButton active={activeTab === 'docs'} onClick={() => setActiveTab('docs')}>
-            Documentação
-          </TabButton>
-          <TabButton active={activeTab === 'api'} onClick={() => setActiveTab('api')}>
-            API Reference
-          </TabButton>
-        </div>
-
-        {activeTab === 'docs' && (
-          <div ref={containerRef} style={{ flex: 1, minHeight: '100%', maxWidth: '100%', minWidth: 0 }} />
-        )}
-        {activeTab === 'api' && <ApiReferencePage />}
-      </>
+          },
+        },
+        h(TabButton, { active: activeTab === 'docs', onClick: () => setActiveTab('docs') }, 'Documentação'),
+        h(TabButton, { active: activeTab === 'api', onClick: () => setActiveTab('api') }, 'API Reference'),
+      ),
+      activeTab === 'docs' &&
+        h('div', {
+          ref: containerRef,
+          style: { flex: 1, minHeight: '100%', maxWidth: '100%', minWidth: 0 },
+        }),
+      activeTab === 'api' && h(ApiReferencePage, null),
     );
   };
 }
