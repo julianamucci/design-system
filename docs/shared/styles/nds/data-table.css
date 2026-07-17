@@ -324,6 +324,41 @@
   gap: var(--spacing-1, 0.25rem);
 }
 
+/* ── Composite (React/TanStack com primitivos compostos) ───────────────── */
+.nds-data-table-columns-btn {
+  margin-left: auto;
+}
+
+/* Menu de colunas via dropdown em portal (não o absoluto da vanilla) */
+.nds-data-table-columns-menu-content {
+  width: 16rem;
+}
+
+.nds-data-table-columns-menu-check {
+  flex: 1;
+  text-transform: capitalize;
+}
+
+.nds-data-table-pin-wrap {
+  display: flex;
+  flex-shrink: 0;
+  padding-right: var(--spacing-1, 0.25rem);
+}
+
+.nds-data-table-scroll-virtual {
+  overflow-y: auto;
+}
+
+/* Coluna fixada (sticky): fundo opaco pra não vazar conteúdo por baixo */
+.nds-data-table-th-pinned,
+.nds-data-table-td-pinned {
+  background-color: hsl(var(--background));
+}
+
+.nds-data-table-page-size > span {
+  color: hsl(var(--muted-foreground));
+}
+
 /* ── Icon classes used inside data-table SVGs ─────────────────────────── */
 .nds-dt-icon {
   width: 0.875rem;
@@ -338,4 +373,8 @@
 .nds-dt-icon-grip {
   cursor: grab;
   color: hsl(var(--muted-foreground) / 0.6);
+}
+
+.nds-dt-icon-pin {
+  transform: rotate(-45deg);
 }

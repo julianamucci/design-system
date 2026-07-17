@@ -285,25 +285,25 @@ function DataTable<TData>({
   return (
     <div
       data-slot="data-table"
-      className={cn("flex flex-col gap-3", className)}
+      className={cn("nds-data-table", className)}
     >
       {(enableGlobalFilter || enableColumnVisibility) && (
         <div
           data-slot="data-table-toolbar"
-          className="flex items-center gap-2"
+          className="nds-data-table-toolbar"
         >
           {enableGlobalFilter && (
-            <div className="relative max-w-sm flex-1">
+            <div className="nds-data-table-search">
               <Search
                 aria-hidden="true"
-                className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                className="nds-dt-icon nds-dt-icon-muted"
               />
               <Input
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
                 placeholder={globalFilterPlaceholder}
                 aria-label={globalFilterPlaceholder}
-                className="pl-8"
+                className="nds-data-table-search-input"
               />
             </div>
           )}
@@ -311,13 +311,13 @@ function DataTable<TData>({
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
-                  <Button variant="outline" size="sm" className="ml-auto">
+                  <Button variant="outline" size="sm" className="nds-data-table-columns-btn">
                     <Settings2 aria-hidden="true" />
                     Colunas
                   </Button>
                 }
               />
-              <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuContent align="end" className="nds-data-table-columns-menu-content">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -331,10 +331,10 @@ function DataTable<TData>({
                       return (
                         <div
                           key={column.id}
-                          className="flex items-center gap-1"
+                          className="nds-data-table-columns-menu-row"
                         >
                           <DropdownMenuCheckboxItem
-                            className="flex-1 capitalize"
+                            className="nds-data-table-columns-menu-check"
                             checked={column.getIsVisible()}
                             onCheckedChange={(value) =>
                               column.toggleVisibility(!!value)
@@ -343,7 +343,7 @@ function DataTable<TData>({
                             {label}
                           </DropdownMenuCheckboxItem>
                           {enableColumnPinning && (
-                            <div className="flex shrink-0 pr-1">
+                            <div className="nds-data-table-pin-wrap">
                               <button
                                 type="button"
                                 aria-label={
@@ -357,20 +357,19 @@ function DataTable<TData>({
                                   )
                                 }
                                 className={cn(
-                                  "inline-flex size-6 items-center justify-center rounded-md hover:bg-muted",
-                                  pinned === "left" &&
-                                    "text-primary"
+                                  "nds-data-table-pin-btn",
+                                  pinned === "left" && "is-active"
                                 )}
                               >
                                 {pinned === "left" ? (
                                   <PinOff
                                     aria-hidden="true"
-                                    className="size-3.5"
+                                    className="nds-dt-icon"
                                   />
                                 ) : (
                                   <Pin
                                     aria-hidden="true"
-                                    className="size-3.5 -rotate-45"
+                                    className="nds-dt-icon nds-dt-icon-pin"
                                   />
                                 )}
                               </button>
@@ -389,15 +388,15 @@ function DataTable<TData>({
       <div
         ref={scrollRef}
         className={cn(
-          "relative w-full overflow-auto rounded-md border",
-          virtualized && "overflow-y-auto"
+          "nds-data-table-scroll",
+          virtualized && "nds-data-table-scroll-virtual"
         )}
         style={virtualized ? { maxHeight } : undefined}
       >
         <Table
           className={cn(
             (enableColumnResizing || enableColumnOrdering || virtualized) &&
-              "table-fixed"
+              "nds-table-fixed"
           )}
         >
           <TableHeader>
@@ -431,8 +430,8 @@ function DataTable<TData>({
                         ...pinStyle(header.column),
                       }}
                       className={cn(
-                        "relative",
-                        header.column.getIsPinned() && "bg-background"
+                        "nds-data-table-th",
+                        header.column.getIsPinned() && "nds-data-table-th-pinned"
                       )}
                       draggable={isDraggable}
                       onDragStart={
@@ -448,18 +447,18 @@ function DataTable<TData>({
                       }
                     >
                       {header.isPlaceholder ? null : (
-                        <div className="flex items-center gap-1">
+                        <div className="nds-data-table-th-inner">
                           {isDraggable && (
                             <GripVertical
                               aria-hidden="true"
-                              className="size-3.5 cursor-grab text-muted-foreground/60"
+                              className="nds-dt-icon nds-dt-icon-grip"
                             />
                           )}
                           {canSort ? (
                             <button
                               type="button"
                               onClick={header.column.getToggleSortingHandler()}
-                              className="inline-flex flex-1 items-center gap-1.5 text-left font-medium hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-sm"
+                              className="nds-data-table-sort-btn"
                               aria-label={`Ordenar por ${label}`}
                             >
                               {flexRender(
@@ -469,22 +468,22 @@ function DataTable<TData>({
                               {sortDir === "asc" ? (
                                 <ArrowUp
                                   aria-hidden="true"
-                                  className="size-3.5"
+                                  className="nds-dt-icon"
                                 />
                               ) : sortDir === "desc" ? (
                                 <ArrowDown
                                   aria-hidden="true"
-                                  className="size-3.5"
+                                  className="nds-dt-icon"
                                 />
                               ) : (
                                 <ArrowUpDown
                                   aria-hidden="true"
-                                  className="size-3.5 text-muted-foreground"
+                                  className="nds-dt-icon nds-dt-icon-muted"
                                 />
                               )}
                             </button>
                           ) : (
-                            <div className="flex-1">
+                            <div className="nds-data-table-th-label">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext()
@@ -501,8 +500,8 @@ function DataTable<TData>({
                           aria-orientation="vertical"
                           aria-label={`Redimensionar coluna ${label}`}
                           className={cn(
-                            "absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-primary/50",
-                            header.column.getIsResizing() && "bg-primary"
+                            "nds-data-table-resize-handle",
+                            header.column.getIsResizing() && "is-resizing"
                           )}
                         />
                       )}
@@ -512,7 +511,7 @@ function DataTable<TData>({
               </TableRow>
             ))}
             {hasColumnFilters && (
-              <TableRow>
+              <TableRow className="nds-data-table-filter-row">
                 {table.getHeaderGroups()[0]?.headers.map((header) => {
                   const filterMeta = header.column.columnDef.meta?.filter
                   const canFilter = header.column.getCanFilter()
@@ -521,8 +520,7 @@ function DataTable<TData>({
                       key={`f-${header.id}`}
                       style={pinStyle(header.column)}
                       className={cn(
-                        "py-1.5",
-                        header.column.getIsPinned() && "bg-background"
+                        header.column.getIsPinned() && "nds-data-table-th-pinned"
                       )}
                     >
                       {canFilter && filterMeta ? (
@@ -565,7 +563,7 @@ function DataTable<TData>({
                         ...pinStyle(cell.column),
                       }}
                       className={cn(
-                        cell.column.getIsPinned() && "bg-background"
+                        cell.column.getIsPinned() && "nds-data-table-td-pinned"
                       )}
                     >
                       {cell.column.columnDef.meta?.editable ? (
@@ -587,7 +585,7 @@ function DataTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={visibleLeafColumns}
-                  className="h-24 text-center text-muted-foreground"
+                  className="nds-data-table-empty"
                 >
                   {emptyMessage}
                 </TableCell>
@@ -634,7 +632,7 @@ function ColumnFilter<TData, TValue>({
           column.setFilterValue(e.target.value || undefined)
         }
         aria-label={`Filtrar ${column.id}`}
-        className="h-7 w-full rounded-md border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        className="nds-data-table-filter-select"
       >
         <option value="">Todos</option>
         {meta.options?.map((opt) => (
@@ -651,7 +649,7 @@ function ColumnFilter<TData, TValue>({
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={meta.placeholder ?? "Filtrar..."}
       aria-label={`Filtrar ${column.id}`}
-      className="h-7 text-xs"
+      className="nds-data-table-filter-input"
     />
   )
 }
@@ -695,11 +693,11 @@ function EditableCell<TData, TValue>({
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className="block w-full rounded-sm px-1 py-0.5 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        className="nds-data-table-edit-btn"
         aria-label={`Editar ${context.column.id}`}
       >
         {value === "" ? (
-          <span className="text-muted-foreground">—</span>
+          <span className="nds-dt-icon-muted">—</span>
         ) : (
           value
         )}
@@ -721,7 +719,7 @@ function EditableCell<TData, TValue>({
           setEditing(false)
         }
       }}
-      className="h-7"
+      className="nds-data-table-edit-input"
     />
   )
 }
@@ -745,21 +743,21 @@ function DataTablePagination<TData>({
   return (
     <div
       data-slot="data-table-pagination"
-      className="flex flex-wrap items-center justify-between gap-3 text-sm"
+      className="nds-data-table-pagination"
     >
-      <div className="text-muted-foreground">
+      <div className="nds-data-table-pagination-count">
         {enableRowSelection
           ? `${selected} de ${total} linha(s) selecionada(s).`
           : `${total} linha(s).`}
       </div>
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2">
-          <span className="text-muted-foreground">Linhas por página</span>
+      <div className="nds-data-table-pagination-controls">
+        <div className="nds-data-table-page-size">
+          <span>Linhas por página</span>
           <select
             aria-label="Linhas por página"
             value={table.getState().pagination.pageSize}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
-            className="h-8 rounded-md border border-input bg-transparent px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="nds-data-table-page-size-select"
           >
             {pageSizeOptions.map((opt) => (
               <option key={opt} value={opt}>
@@ -768,10 +766,10 @@ function DataTablePagination<TData>({
             ))}
           </select>
         </div>
-        <div className="text-muted-foreground">
+        <div className="nds-data-table-pagination-count">
           Página {pageIndex + 1} de {Math.max(pageCount, 1)}
         </div>
-        <div className="flex items-center gap-1">
+        <div className="nds-data-table-pagination-nav">
           <Button
             variant="outline"
             size="icon"

@@ -88,3 +88,14 @@
 .nds-table tfoot tr:last-child {
   border-bottom: 0;
 }
+
+/* Célula com checkbox de seleção: sem padding à direita (encosta no conteúdo) */
+.nds-table th:has([role="checkbox"]),
+.nds-table td:has([role="checkbox"]) {
+  padding-inline-end: 0;
+}
+
+/* Linha com disclosure aberto */
+.nds-table tbody tr:has([aria-expanded="true"]) {
+  background-color: hsl(var(--muted) / 0.5);
+}
