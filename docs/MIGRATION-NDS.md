@@ -32,7 +32,7 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 2. Gap analysis: variantes/tamanhos/estados do `cva` que faltam no CSS → estender o CSS compartilhado.
 3. Trocar as strings do `cva` pelas classes `.nds-*` (base + uma classe por variante/tamanho).
 4. Rodar os testes do componente (`npx vitest run src/components/ui/<slug>*.stories.tsx` no React;
-   test-storybook filtrado nas demais).
+   `npx vitest run <arquivos>` nas demais).
 5. Conferir no Storybook local (variantes, dark mode, densidades).
 
 ## Fases
@@ -61,7 +61,7 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 - `npm run build-storybook` da stack verde.
 - Chromatic: diffs visuais esperados — revisar e aceitar em lote por categoria.
 - Ao final de cada fase: suíte completa da stack ≥ baseline atual
-  (React 87 fails vitest / Vue 67 / Svelte 113 test-storybook — nunca piorar).
+  (baselines por stack no runner vitest — nunca piorar; Nortear = 100%).
 
 ## Armadilhas conhecidas
 

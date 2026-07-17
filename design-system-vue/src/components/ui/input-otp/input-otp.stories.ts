@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   InputOTP,
   InputOTPGroup,
@@ -76,6 +76,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('1. Input interno renderizado com aria-label', async () => {
       const input = await waitFor(() =>

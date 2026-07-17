@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
@@ -83,6 +83,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Calendar está presente no DOM', async () => {
       const root = canvasElement.querySelector('[data-slot="calendar"]');

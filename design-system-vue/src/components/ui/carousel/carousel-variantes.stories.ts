@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { Card } from '@/components/ui/card';
 
@@ -41,6 +41,7 @@ export const Horizontal: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Carousel horizontal presente com role=region', async () => {
       await expect(canvas.getByRole('region', { name: /galeria de exemplos/i })).toBeInTheDocument();
@@ -72,6 +73,7 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Carousel vertical presente com role=region', async () => {
       await expect(canvas.getByRole('region', { name: /galeria vertical/i })).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   InputOTP,
   InputOTPGroup,
@@ -66,6 +66,7 @@ export const ComLabel: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const label = canvas.getByText(/Código de verificação/i);
     await expect(label).toBeVisible();
     const input = await waitFor(() => canvas.getByLabelText(/Código de verificação/i));
@@ -109,6 +110,7 @@ export const ComHelpText: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     await expect(canvas.getByText(/Enviamos por SMS/i)).toBeVisible();
     const input = await waitFor(() => canvas.getByLabelText(/Código SMS/i));
     await expect(input).toHaveAttribute('aria-describedby', 'otp-help-text');
@@ -152,6 +154,7 @@ export const ComErrorMessage: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const input = await waitFor(() => canvas.getByLabelText(/Código de verificação/i));
     await expect(input).toHaveAttribute('aria-invalid', 'true');
     await expect(canvas.getByText(/Código incorreto/i)).toBeVisible();
@@ -201,6 +204,7 @@ export const ComResendButton: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Botão Reenviar visível', async () => {
       const btn = canvas.getByRole('button', { name: /Reenviar código/i });

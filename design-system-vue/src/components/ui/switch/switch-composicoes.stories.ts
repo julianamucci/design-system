@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -62,6 +62,7 @@ export const PainelConfiguracoes: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const switches = canvas.getAllByRole('switch');
     await step('3 switches renderizados', async () => {
       await expect(switches).toHaveLength(3);
@@ -96,6 +97,7 @@ export const ListaDePreferencias: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Clicar no Label alterna o Switch correspondente', async () => {
       await userEvent.click(canvas.getByText('Notificações por email'));
       const email = canvas.getByRole('switch', { name: /Notificações por email/i });
@@ -140,6 +142,7 @@ export const EmFormulario: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Form possui campo de email e Switch', async () => {
       await expect(canvas.getByLabelText(/Email/i)).toBeInTheDocument();
       await expect(canvas.getByRole('switch')).toBeInTheDocument();
@@ -172,6 +175,7 @@ export const ItemDeMenuCompacto: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const switches = canvas.getAllByRole('switch');
     await step('Todos os switches são size=sm', async () => {
       for (const s of switches) await expect(s).toHaveAttribute('data-size', 'sm');

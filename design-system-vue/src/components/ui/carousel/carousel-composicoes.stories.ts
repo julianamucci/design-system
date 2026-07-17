@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { defineComponent, h, ref } from 'vue';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import type { CarouselApi } from './index';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { Card } from '@/components/ui/card';
@@ -99,6 +99,7 @@ export const ComDots: Story = {
     template: '<CarouselComDots />',
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Carousel com dots presente', async () => {
       await expect(canvas.getByRole('region', { name: /galeria com dots/i })).toBeInTheDocument();

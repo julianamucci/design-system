@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 
 const meta: Meta<any> = {
@@ -50,6 +50,7 @@ export const Default: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
     await step('Apenas a primeira tab tem aria-selected=true', async () => {
       await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
@@ -85,6 +86,7 @@ export const Active: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
     await step('Tab "Propriedades" tem aria-selected=true', async () => {
       await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
@@ -118,6 +120,7 @@ export const Focus: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
 
     await step('Tab ativa recebe foco via Tab key', async () => {
@@ -164,6 +167,7 @@ export const Disabled: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const tabs = canvas.getAllByRole('tab');
 
     await step('Segunda tab está desabilitada', async () => {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import {
   Accordion,
   AccordionContent,
@@ -200,6 +200,7 @@ export const FAQ: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
 
     await step('Todos os triggers estão fechados por padrão', async () => {

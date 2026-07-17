@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Pagination,
   PaginationContent,
@@ -55,6 +55,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const link = canvas.getByLabelText(/Ir para página 3/i);
     await expect(link).not.toHaveAttribute('aria-current');
   },
@@ -77,6 +78,7 @@ export const Active: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const active = canvas.getByLabelText(/Página atual, 3/i);
     await expect(active).toHaveAttribute('aria-current', 'page');
     await expect(active).toHaveAttribute('data-active', '');
@@ -107,6 +109,7 @@ export const Directional: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const prev = canvas.getByLabelText(/anterior/i);
     const next = canvas.getByLabelText(/próxima/i);
     await expect(prev).toBeVisible();

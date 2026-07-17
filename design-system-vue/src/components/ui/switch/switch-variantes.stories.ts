@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -35,6 +35,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch padrão renderiza com role=switch', async () => {
       await expect(sw).toBeInTheDocument();
@@ -63,6 +64,7 @@ export const WithDescription: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch presente no painel', async () => {
       await expect(sw).toBeInTheDocument();
@@ -85,6 +87,7 @@ export const Small: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch tem data-size=sm', async () => {
       await expect(sw).toHaveAttribute('data-size', 'sm');

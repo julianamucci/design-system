@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import {
   AlignLeft, AlignCenter, AlignRight,
@@ -46,6 +46,7 @@ export const Single: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     await step('Single tem item inicial pressionado', async () => {
       await expect(center).toHaveAttribute('aria-pressed', 'true');
@@ -76,6 +77,7 @@ export const Multiple: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const bold = canvas.getByRole('button', { name: 'Negrito' });
     const italic = canvas.getByRole('button', { name: 'Itálico' });
     const underline = canvas.getByRole('button', { name: 'Sublinhado' });
@@ -109,6 +111,7 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const grid = canvas.getByRole('button', { name: 'Grade' });
     await step('Vertical reflete orientation no DOM', async () => {
       const group = canvasElement.querySelector('[data-slot="toggle-group"]');

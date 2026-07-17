@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { Card } from '@/components/ui/card';
 import CarouselDocs from '@/components/docs/CarouselDocs.vue';
@@ -47,6 +47,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Container do Carousel tem role=region', async () => {
       const region = canvas.getByRole('region');

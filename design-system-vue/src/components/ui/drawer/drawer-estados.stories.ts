@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Drawer,
   DrawerClose,
@@ -74,6 +74,8 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
@@ -143,6 +145,8 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Click no trigger externo abre o drawer', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
@@ -194,6 +198,7 @@ export const NaoDismissible: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     // Botão Aceitar e Recusar visíveis

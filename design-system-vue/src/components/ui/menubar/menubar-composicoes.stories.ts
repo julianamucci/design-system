@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -84,6 +84,7 @@ export const ComShortcuts: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     await expect(body.getByText('⌘Z')).toBeVisible();
@@ -158,6 +159,7 @@ export const ComCheckboxItems: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const checkboxes = await body.findAllByRole('menuitemcheckbox');
     await expect(checkboxes.length).toBe(3);
     await expect(checkboxes[0]).toHaveAttribute('aria-checked', 'true');
@@ -193,6 +195,7 @@ export const ComRadioGroup: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const radios = await body.findAllByRole('menuitemradio');
     await expect(radios.length).toBe(3);
     await expect(radios[1]).toHaveAttribute('aria-checked', 'true');
@@ -253,6 +256,7 @@ export const EditorCompleto: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const menubar = canvas.getByRole('menubar');
     await expect(menubar).toBeVisible();
     const triggers = canvas.getAllByRole('menuitem');

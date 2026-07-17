@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { fn, userEvent, expect, waitFor } from 'storybook/test';
+import { within, fn, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Select,
   SelectContent,
@@ -87,6 +87,8 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Trigger renderiza com role=combobox e placeholder', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });

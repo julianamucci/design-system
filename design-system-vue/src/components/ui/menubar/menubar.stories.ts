@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -127,6 +127,8 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     const waitForClose = async () => {
       await waitFor(

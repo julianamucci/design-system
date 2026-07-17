@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { fn, userEvent, expect } from 'storybook/test';
+import { within, fn, userEvent, expect } from 'storybook/test';
 import { Loader2 } from 'lucide-vue-next';
 import { Button } from './index';
 
@@ -27,6 +27,7 @@ export const Disabled: Story = {
   }),
   parameters: { docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
   play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
 
     await step('Botão possui atributo disabled', async () => {
@@ -52,6 +53,7 @@ export const Loading: Story = {
   }),
   parameters: { docs: { description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
 
     await step('Botão tem aria-busy durante loading', async () => {
@@ -71,6 +73,7 @@ export const FocusVisible: Story = {
   }),
   parameters: { docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;
 
     await step('Botão recebe foco via teclado', async () => {
@@ -87,6 +90,7 @@ export const Invalid: Story = {
   }),
   parameters: { docs: { description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
 
     await step('Botão tem aria-invalid=true', async () => {

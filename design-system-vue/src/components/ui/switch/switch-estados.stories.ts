@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -35,6 +35,7 @@ export const Unchecked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('aria-checked=false por padrão', async () => {
       await expect(sw).toHaveAttribute('aria-checked', 'false');
@@ -54,6 +55,7 @@ export const Checked: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('aria-checked=true', async () => {
       await expect(sw).toHaveAttribute('aria-checked', 'true');
@@ -80,6 +82,7 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch recebe foco programaticamente', async () => {
       (sw as HTMLElement).focus();
@@ -100,6 +103,7 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch tem data-disabled', async () => {
       await expect(sw).toHaveAttribute('data-disabled');
@@ -133,6 +137,7 @@ export const Invalid: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
     await step('Switch tem aria-invalid=true', async () => {
       await expect(sw).toHaveAttribute('aria-invalid', 'true');

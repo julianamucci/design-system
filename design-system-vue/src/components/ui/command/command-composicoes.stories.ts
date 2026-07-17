@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import {
   Command,
   CommandDialog,
@@ -205,6 +205,7 @@ export const ComoCombobox: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('trigger é um combobox com aria-expanded=false', async () => {
       const trigger = canvas.getByRole('combobox');
@@ -287,6 +288,7 @@ export const CommandPalette: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('botão "Buscar" está presente', async () => {
       const button = canvas.getByRole('button', { name: 'Buscar' });

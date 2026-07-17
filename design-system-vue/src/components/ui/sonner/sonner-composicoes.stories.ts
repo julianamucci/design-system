@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { toast } from 'vue-sonner';
 import { Toaster } from './index';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ export const WithDescription: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Botão "Com descrição" está presente', async () => {
       await expect(canvas.getByRole('button', { name: /Com descrição/i })).toBeInTheDocument();
     });
@@ -67,6 +68,7 @@ export const WithAction: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Botão "Com ação" está presente', async () => {
       await expect(canvas.getByRole('button', { name: /Com ação/i })).toBeInTheDocument();
     });
@@ -98,6 +100,7 @@ export const WithPromise: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Botão "Com promise" está presente', async () => {
       await expect(canvas.getByRole('button', { name: /Com promise/i })).toBeInTheDocument();
     });
@@ -127,6 +130,7 @@ export const Persistent: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Botão "Persistente" está presente', async () => {
       await expect(canvas.getByRole('button', { name: /Persistente/i })).toBeInTheDocument();
     });

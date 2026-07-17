@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Separator } from './index';
 import SeparatorDocs from '@/components/docs/SeparatorDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -54,6 +54,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Separator com data-slot=separator está presente', async () => {
       const separator = canvasElement.querySelector('[data-slot="separator"]');

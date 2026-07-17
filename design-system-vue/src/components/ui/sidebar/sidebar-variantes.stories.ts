@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Sidebar,
   SidebarContent,
@@ -134,6 +134,7 @@ export const VariantSidebar: Story = {
   },
   ...makeStory('sidebar'),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('sidebar variant=sidebar renderiza nav acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();
@@ -152,6 +153,7 @@ export const VariantFloating: Story = {
   },
   ...makeStory('floating'),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('sidebar variant=floating renderiza nav acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();
@@ -170,6 +172,7 @@ export const VariantInset: Story = {
   },
   ...makeStory('inset'),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('sidebar variant=inset renderiza nav acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();
@@ -187,6 +190,7 @@ export const SideRight: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('sidebar side=right renderiza nav acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
       await expect(nav).toBeInTheDocument();

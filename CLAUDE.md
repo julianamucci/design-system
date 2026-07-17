@@ -37,7 +37,7 @@ npm run lint
 # Tests (React only has unit tests; all stacks have Storybook tests)
 npm run test               # React: vitest run
 npm run test:watch         # React: vitest watch
-npm run test-storybook     # all stacks: axe-playwright + play functions
+npm test                   # all stacks: Storybook Test (vitest browser) — play functions + axe via addon-a11y
 
 # Visual regression
 npm run chromatic

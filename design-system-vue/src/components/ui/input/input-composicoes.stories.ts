@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Input } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -34,6 +34,7 @@ export const ComLabel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Label está visível', async () => {
       const label = canvas.getByText('Nome completo');
       await expect(label).toBeVisible();
@@ -62,6 +63,7 @@ export const ComTextoDeApoio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Label, input e texto de apoio estão visíveis', async () => {
       await expect(canvas.getByLabelText('Email')).toBeVisible();
       await expect(canvas.getByText(/Usaremos este endereço/)).toBeVisible();
@@ -89,6 +91,7 @@ export const ComMensagemDeErro: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input com estado de erro está visível', async () => {
       const input = canvas.getByLabelText('Email');
       await expect(input).toHaveAttribute('aria-invalid', 'true');
@@ -123,6 +126,7 @@ export const CampoObrigatorio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input obrigatório possui aria-required="true"', async () => {
       const input = canvas.getByRole('textbox');
       await expect(input).toHaveAttribute('aria-required', 'true');

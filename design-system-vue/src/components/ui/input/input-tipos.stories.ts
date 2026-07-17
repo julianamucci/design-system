@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Input } from './index';
 
 const meta = {
@@ -28,6 +28,7 @@ export const Texto: Story = {
     template: '<div class="w-64"><Input type="text" placeholder="ex: João da Silva" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input type=text está renderizado', async () => {
       const input = canvas.getByRole('textbox');
       await expect(input).toHaveAttribute('type', 'text');

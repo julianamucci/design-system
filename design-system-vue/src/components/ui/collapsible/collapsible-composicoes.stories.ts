@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 
@@ -48,6 +48,7 @@ export const ComIconeNoTrigger: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Trigger com ícone está presente', async () => {
       const trigger = canvas.getByRole('button');
@@ -106,6 +107,7 @@ export const ComIconeGiratório: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Collapsible com painel de configurações renderizado', async () => {
       const trigger = canvas.getByRole('button');

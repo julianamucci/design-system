@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -58,6 +58,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('PanelGroup renderiza com data-slot', async () => {
       const group = canvasElement.querySelector('[data-slot="resizable-panel-group"]');

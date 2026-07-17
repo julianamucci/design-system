@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -42,6 +42,7 @@ export const Single: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('Single tem exatamente 1 thumb', async () => {
@@ -80,6 +81,7 @@ export const Range: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('Range tem exatamente 2 thumbs', async () => {
@@ -119,6 +121,7 @@ export const Vertical: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumbs = canvas.getAllByRole('slider');
 
     await step('Vertical tem 1 thumb', async () => {

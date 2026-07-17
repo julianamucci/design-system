@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Underline } from 'lucide-vue-next';
 
@@ -34,6 +34,7 @@ export const Off: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
     await step('aria-pressed=false por padrão', async () => {
       await expect(toggle).toHaveAttribute('aria-pressed', 'false');
@@ -53,6 +54,7 @@ export const On: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
     await step('aria-pressed=true (data-state=on)', async () => {
       await expect(toggle).toHaveAttribute('aria-pressed', 'true');
@@ -79,6 +81,7 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Sublinhado' });
     await step('Toggle recebe foco programaticamente', async () => {
       (toggle as HTMLElement).focus();
@@ -98,6 +101,7 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
     await step('Toggle tem disabled e data-disabled', async () => {
       await expect(toggle).toBeDisabled();
@@ -126,6 +130,7 @@ export const Invalid: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
     await step('Toggle tem aria-invalid=true', async () => {
       await expect(toggle).toHaveAttribute('aria-invalid', 'true');

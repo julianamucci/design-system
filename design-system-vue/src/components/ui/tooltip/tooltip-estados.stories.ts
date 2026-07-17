@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Tooltip,
   TooltipContent,
@@ -61,6 +61,8 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Salvar/i });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('tooltip')).not.toBeInTheDocument();
@@ -120,6 +122,8 @@ export const ComFoco: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Tab foca o trigger e abre o Tooltip', async () => {
       const trigger = canvas.getByRole('button', { name: /Salvar/i });
@@ -171,6 +175,8 @@ export const Controlado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Click no toggle externo abre o Tooltip', async () => {
       const toggle = canvas.getByRole('button', { name: /Toggle externo/i });

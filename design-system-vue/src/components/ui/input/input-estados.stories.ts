@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Input } from './index';
 
 const meta = {
@@ -28,6 +28,7 @@ export const Padrao: Story = {
     template: '<div class="w-64"><Input type="text" placeholder="ex: João da Silva" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input padrão está visível com data-slot', async () => {
       const input = canvas.getByRole('textbox');
       await expect(input).toBeVisible();
@@ -46,6 +47,7 @@ export const ComPlaceholder: Story = {
     template: '<div class="w-64"><Input type="text" placeholder="Buscar componentes..." /></div>',
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Placeholder está definido no input', async () => {
       const input = canvas.getByPlaceholderText('Buscar componentes...');
       await expect(input).toBeVisible();
@@ -59,6 +61,7 @@ export const Desabilitado: Story = {
     template: '<div class="w-64"><Input type="text" placeholder="Não disponível" disabled /></div>',
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input está desabilitado', async () => {
       const input = canvas.getByRole('textbox');
       await expect(input).toBeDisabled();
@@ -82,6 +85,7 @@ export const Erro: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Input com aria-invalid="true" está renderizado', async () => {
       const input = canvasElement.querySelector('input[aria-invalid="true"]') as HTMLInputElement;
       await expect(input).toBeTruthy();

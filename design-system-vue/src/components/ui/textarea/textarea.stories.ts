@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 import TextareaDocs from '@/components/docs/TextareaDocs.vue';
@@ -44,6 +44,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Textarea está presente no DOM', async () => {
       const textarea = canvas.getByRole('textbox');

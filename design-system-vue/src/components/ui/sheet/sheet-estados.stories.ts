@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import {
   Sheet,
   SheetClose,
@@ -80,6 +80,8 @@ export const Closed: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
@@ -150,6 +152,7 @@ export const WithCloseButtonHidden: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const closeBtn = body.queryByRole('button', { name: /^Close$/i });
@@ -194,6 +197,8 @@ export const Controlled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Clique no trigger externo abre o sheet', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });

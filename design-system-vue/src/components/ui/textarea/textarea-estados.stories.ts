@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -34,6 +34,7 @@ export const Padrao: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea padrão está visível e habilitado', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toBeVisible();
@@ -57,6 +58,7 @@ export const Preenchido: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea preenchido tem conteúdo inicial', async () => {
       const textarea = canvas.getByRole('textbox') as HTMLTextAreaElement;
       await expect(textarea.value.length).toBeGreaterThan(0);
@@ -75,6 +77,7 @@ export const Desabilitado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea está desabilitado', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toBeDisabled();
@@ -107,6 +110,7 @@ export const Invalido: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea possui aria-invalid="true"', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveAttribute('aria-invalid', 'true');
@@ -137,6 +141,7 @@ export const SomenteLeitura: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea está em modo somente leitura', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveAttribute('readonly');

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { ref } from 'vue';
 import {
   Accordion,
@@ -55,6 +55,7 @@ export const Single: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Item 1 começa aberto via defaultValue', async () => {
       const triggers = canvas.getAllByRole('button');
@@ -109,6 +110,7 @@ export const Multiple: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Abrir dois itens — ambos permanecem expandidos (modo múltiplo)', async () => {
       const triggers = canvas.getAllByRole('button');

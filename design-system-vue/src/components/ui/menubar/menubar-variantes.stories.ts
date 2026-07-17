@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Menubar,
   MenubarContent,
@@ -61,6 +61,7 @@ export const Default: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
     const items = await body.findAllByRole('menuitem');

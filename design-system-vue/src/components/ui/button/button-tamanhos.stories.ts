@@ -50,6 +50,7 @@ export const Large: Story = {
 };
 
 const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
   await step('Botão icon-only é acessível via aria-label', async () => {
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
     await expect(button).toBeInTheDocument();

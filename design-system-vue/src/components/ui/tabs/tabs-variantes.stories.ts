@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 
 const meta: Meta<any> = {
@@ -54,6 +54,7 @@ export const Default: Story = {
     },
   },
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const tablist = await canvas.findByRole('tablist');
     await expect(tablist).toHaveAttribute('aria-label', 'Seções do componente');
     const active = await canvas.findByRole('tab', { selected: true });

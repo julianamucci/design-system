@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -42,6 +42,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
     await step('Renderiza com aria-valuenow=50', async () => {
       await expect(thumb).toHaveAttribute('aria-valuenow', '50');
@@ -72,6 +73,7 @@ export const FocoVisivel: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
 
     await step('Thumb recebe foco programaticamente', async () => {
@@ -101,6 +103,7 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
 
     await step('Thumb está com data-disabled', async () => {
@@ -133,6 +136,7 @@ export const NoMin: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
     await step('aria-valuenow no mínimo', async () => {
       await expect(thumb).toHaveAttribute('aria-valuenow', '0');
@@ -163,6 +167,7 @@ export const NoMax: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const thumb = canvas.getByRole('slider');
     await step('aria-valuenow no máximo', async () => {
       await expect(thumb).toHaveAttribute('aria-valuenow', '100');

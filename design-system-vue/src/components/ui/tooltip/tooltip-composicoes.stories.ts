@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Tooltip,
   TooltipContent,
@@ -64,6 +64,7 @@ export const BotaoIconOnly: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Salvar/i });
     await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
     const tip = await waitForPortal('tooltip');
@@ -134,6 +135,7 @@ export const BarraDeAcoes: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const toolbar = canvas.getByRole('toolbar', { name: /Ações do documento/i });
     await expect(toolbar).toBeVisible();
     // Todos os botões devem ter aria-label próprio
@@ -173,6 +175,7 @@ export const AtalhoDeTeclado: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toBeVisible();
     await expect(body.getByText('Ctrl')).toBeVisible();
@@ -224,6 +227,7 @@ export const QuatroLados: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     // Devem existir 4 tooltips abertos simultaneamente
     const tips = await body.findAllByRole('tooltip');
     await expect(tips.length).toBeGreaterThanOrEqual(4);

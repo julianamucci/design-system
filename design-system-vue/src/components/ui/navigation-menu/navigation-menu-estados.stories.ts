@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -61,6 +61,7 @@ export const Fechado: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const nav = canvas.getByRole('navigation', { name: /Navegação principal/i });
     await expect(nav).toBeVisible();
     const trigger = canvas.getByRole('button', { name: /Produtos/i });
@@ -95,6 +96,7 @@ export const Aberto: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Produtos/i });
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     await expect(trigger).toHaveAttribute('data-state', 'open');
@@ -120,6 +122,7 @@ export const Ativo: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const active = canvas.getByRole('link', { name: /^Início$/i });
     await expect(active).toHaveAttribute('aria-current', 'page');
     const inactive = canvas.getByRole('link', { name: /^Sobre$/i });

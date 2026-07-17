@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import {
   Dialog,
   DialogClose,
@@ -75,6 +75,8 @@ export const Closed: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Editar perfil/i });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
@@ -145,6 +147,7 @@ export const WithCloseButtonHidden: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     // Deve haver Mais tarde, Atualizar agora, mas NÃO o Close (sr-only="Close")
@@ -190,6 +193,8 @@ export const Controlled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('Clique no trigger externo abre o diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });

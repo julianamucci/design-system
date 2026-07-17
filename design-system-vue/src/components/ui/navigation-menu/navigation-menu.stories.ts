@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -103,6 +103,8 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     await step('1. Root tem role=navigation com aria-label', async () => {
       const nav = canvas.getByRole('navigation', { name: /Navegação principal/i });

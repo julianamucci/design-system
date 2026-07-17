@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Select,
   SelectContent,
@@ -60,6 +60,8 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
     await expect(trigger).toBeVisible();
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -91,6 +93,8 @@ export const Aberto: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
     await step('Click no trigger abre o listbox', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
       await userEvent.click(trigger);
@@ -132,6 +136,7 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
     await expect(trigger).toBeDisabled();
   },
@@ -160,6 +165,7 @@ export const Invalid: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
     await expect(trigger).toHaveAttribute('aria-invalid', 'true');
   },
@@ -188,6 +194,7 @@ export const Sm: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
     await expect(trigger).toHaveAttribute('data-size', 'sm');
   },

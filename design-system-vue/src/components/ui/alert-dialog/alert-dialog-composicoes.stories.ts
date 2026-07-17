@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,6 +79,7 @@ export const Destrutiva: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Excluir conta/i });
@@ -118,6 +119,7 @@ export const Neutra: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /^Publicar$/i });

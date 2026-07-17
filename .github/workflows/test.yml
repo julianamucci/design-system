@@ -1,15 +1,12 @@
 name: Tests (informative)
 
-# test-storybook (Playwright + axe-playwright) em cada stack.
-# Atualmente INFORMATIVO: aparece no PR mas não bloqueia merge enquanto algumas
-# stacks não estão em 100%. Quando todas chegarem a 100%, flipar pra required no
-# branch protection rules.
+# Storybook Test (vitest browser mode + addon-vitest): play functions + axe
+# (via addon-a11y com `a11y: { test: 'error' }` no preview) em todas as
+# stories, sem precisar buildar/servir o Storybook.
 #
-# Estado atual (snapshot da última run local):
-#   Nortear: 100% (527/527)
-#   Vue:     87%  (467/534)
-#   React:   85%  (461/543)
-#   Svelte:  79%  (426/540)
+# Atualmente INFORMATIVO: aparece no PR mas não bloqueia merge enquanto as
+# stacks não estão em 100%. Quando todas chegarem a 100%, remover
+# continue-on-error e adicionar ao branch protection.
 
 on:
   push:
@@ -22,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-storybook:
+  storybook-test:
     name: ${{ matrix.stack.name }}
     runs-on: ubuntu-latest
     # Permite que o job falhe sem reprovar o PR — é o que torna o workflow
@@ -32,10 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         stack:
-          - { name: react,   dir: design-system-react,    port: 6006 }
-          - { name: vue,     dir: design-system-vue,      port: 6007 }
-          - { name: svelte,  dir: design-system-svelte,   port: 6008 }
-          - { name: vanilla, dir: nortear-design-system,  port: 6009 }
+          - { name: react,   dir: design-system-react }
+          - { name: vue,     dir: design-system-vue }
+          - { name: svelte,  dir: design-system-svelte }
+          - { name: vanilla, dir: nortear-design-system }
 
     defaults:
       run:
@@ -58,31 +55,21 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build Storybook
-        run: npm run build-storybook
-        env:
-          NODE_OPTIONS: --max-old-space-size=6144
+      - name: Run Storybook tests (vitest)
+        run: npm test
 
-      - name: Run test-storybook
-        run: npm run test-storybook:ci
-        env:
-          # Reduz noise de logs internos do Playwright
-          DEBUG: ''
-
-      - name: Upload test report on failure
+      - name: Upload test results on failure
         if: failure()
         uses: actions/upload-artifact@v5
         with:
-          name: test-report-${{ matrix.stack.name }}
-          path: |
-            ${{ matrix.stack.dir }}/test-results
-            ${{ matrix.stack.dir }}/playwright-report
+          name: test-results-${{ matrix.stack.name }}
+          path: ${{ matrix.stack.dir }}/test-results
           retention-days: 14
           if-no-files-found: ignore
 
   summary:
     name: Test Summary
-    needs: test-storybook
+    needs: storybook-test
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -91,8 +78,7 @@ jobs:
           echo "## Test Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Este workflow é **informativo** — falhas aqui não bloqueiam merge." >> $GITHUB_STEP_SUMMARY
-          echo "Veja cada job acima pra o resultado individual da stack." >> $GITHUB_STEP_SUMMARY
+          echo "Runner: Storybook Test (vitest + addon-vitest + addon-a11y)." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Meta: 100% de aprovação em todas as 4 stacks. Quando atingido," >> $GITHUB_STEP_SUMMARY
-          echo "remover \`continue-on-error: true\` e adicionar este workflow ao" >> $GITHUB_STEP_SUMMARY
-          echo "branch protection como check obrigatório." >> $GITHUB_STEP_SUMMARY
+          echo "Meta: 100% em todas as 4 stacks. Quando atingido, remover" >> $GITHUB_STEP_SUMMARY
+          echo "\`continue-on-error: true\` e promover a check obrigatório." >> $GITHUB_STEP_SUMMARY

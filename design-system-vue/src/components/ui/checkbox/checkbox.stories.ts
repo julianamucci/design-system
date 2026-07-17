@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { fn, userEvent, expect } from 'storybook/test';
+import { within, fn, userEvent, expect } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -66,6 +66,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox está presente e visível', async () => {

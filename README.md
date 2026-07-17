@@ -48,7 +48,7 @@ Quando uma equipe ou produto precisa entregar a mesma marca em **mais de uma sta
 | **Disclosure** | Accordion, Collapsible, Sheet, Drawer |
 | **Overlay** | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
 
-Cada componente tem **stories** (Playground + variações), **docs page** (15 seções padronizadas em 3 idiomas) e atende **WCAG 2.1 AA** verificado via axe-playwright.
+Cada componente tem **stories** (Playground + variações), **docs page** (15 seções padronizadas em 3 idiomas) e atende **WCAG 2.1 AA** verificado via axe (addon-a11y no Storybook Test).
 
 ## Foundations
 
@@ -145,21 +145,21 @@ Quando publicado (roadmap), vira `npx nortear@latest init`. Veja [`nortear-cli/R
 
 ## Qualidade
 
-| Stack | test-storybook pass rate | Status |
+| Stack | Storybook Test (vitest) pass rate | Status |
 |---|---:|:---:|
 | Nortear | **100%** (527/527) | ✅ |
-| Vue | 87% (467/534) | 🟢 |
-| React | 85% (461/543) | 🟢 |
-| Svelte | 79% (426/540) | 🟡 |
+| Vue | 87% (464/533) | 🟢 |
+| React | 84% (455/542) | 🟢 |
+| Svelte | 79% (426/539) | 🟡 |
 
-Testes rodam **axe-playwright em TODAS as stories** (`postVisit` no `test-runner.ts`). Falhas remanescentes são padrões upstream conhecidos (FocusGuard `aria-hidden + tabindex=0`) documentados em [`patches.md`](patches.md).
+Testes rodam via **Storybook Test** (vitest browser mode + `@storybook/addon-vitest`): play functions + **axe em TODAS as stories** (`@storybook/addon-a11y` com `a11y: { test: 'error' }` no preview). Falhas remanescentes são padrões upstream conhecidos (FocusGuard `aria-hidden + tabindex=0`) documentados em [`patches.md`](patches.md).
 
 **Segurança**: cada PR passa por **CodeQL** (SAST — [`.github/workflows/codeql.yml`](.github/workflows/codeql.yml)), com **Dependabot** cobrindo dependências vulneráveis ([`.github/dependabot.yml`](.github/dependabot.yml)) e **secret scanning** do GitHub. Findings aparecem como anotações no diff do PR e na aba Security; PRs só reprovam por finding novo em relação ao `main`.
 
 ```bash
 npm run storybook:<stack>          # local dev
 npm run build-storybook            # storybook estático em <stack>/storybook-static/
-npm run test-storybook:ci          # roda http-server + Playwright + axe
+npm test                           # Storybook Test: vitest browser + play functions + axe
 npm run chromatic:all              # visual regression nas 4 stacks
 ```
 

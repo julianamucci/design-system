@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.vue';
 import {
@@ -81,6 +81,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('trigger renderizado corretamente', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
@@ -159,6 +160,7 @@ export const ItemDestructive: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');

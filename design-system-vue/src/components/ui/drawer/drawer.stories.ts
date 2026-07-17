@@ -102,6 +102,8 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
 
     const waitForClose = async () => {
       await waitFor(

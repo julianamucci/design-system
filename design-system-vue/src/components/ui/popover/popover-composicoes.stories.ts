@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Popover,
   PopoverContent,
@@ -82,6 +82,7 @@ export const EditarPerfil: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Nome/i)).toBeVisible();
@@ -127,6 +128,7 @@ export const SeletorDeDimensoes: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Largura/i)).toBeVisible();
@@ -179,6 +181,7 @@ export const ConfiguracoesRapidas: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByText(/Preferências/i)).toBeVisible();
@@ -228,6 +231,7 @@ export const SeletorDeCor: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(body.getByLabelText(/Cor #0ea5e9/i)).toBeVisible();

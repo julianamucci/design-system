@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Dialog,
   DialogClose,
@@ -118,6 +118,7 @@ export const WithForm: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const nameInput = await body.findByLabelText(/Nome/i);
@@ -222,6 +223,7 @@ export const WithDestructiveAction: Story = {
     `,
   }),
   play: async () => {
+    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Remover anexo/i });

@@ -53,7 +53,7 @@ Cria, em ordem:
 3. Edite o primitivo em `<stack>/src/components/ui/<slug>.{tsx,vue,svelte,ts}`.
 4. Atualize as stories se a API mudou.
 5. Atualize `translations.json` se mudou texto descritivo.
-6. Rode `npm run build` + `npm run test-storybook:ci` na stack.
+6. Rode `npm run build` + `npm test` na stack.
 7. Se a mudança é cross-stack, replique nas outras 3 com adaptação idiomática.
 
 ### Patches upstream
@@ -84,7 +84,7 @@ Em seguida, adicione uma entrada em `patches.md` no formato do template document
 **SEMPRE**:
 - Conserte o primitivo se ele tem bug
 - Adicione `aria-label` na story se faltar contexto
-- Configuração de ferramenta (axe rules suppression para falsos-positivos conhecidos) é OK quando documentada com justificativa em `.storybook/test-runner.ts` e/ou `patches.md`
+- Configuração de ferramenta (axe rules suppression para falsos-positivos conhecidos) é OK quando documentada com justificativa em `parameters.a11y.config` da story/meta e/ou `patches.md`
 
 ### Pre-commit hook automático
 
@@ -110,7 +110,7 @@ Falha em qualquer stack reprova o check `CI Success`. Configure este check como 
 Matrix das 4 stacks em paralelo, cada uma:
 1. `npm ci` + `npx playwright install --with-deps chromium`
 2. `npm run build-storybook`
-3. `npm run test-storybook:ci` (Playwright + axe-playwright em **todas** as stories)
+3. `npm test` — Storybook Test (vitest browser): play functions + axe em **todas** as stories, sem servir o Storybook
 
 Marcado com `continue-on-error: true` enquanto algumas stacks não estão em 100% de aprovação. Aparece amarelo no PR pra dar visibilidade, mas não bloqueia merge.
 
@@ -139,7 +139,7 @@ Scope é tipicamente a stack ou área (`react`, `vue`, `svelte`, `nortear`, `fou
 ## Antes de abrir um PR
 
 - [ ] `npm run build` passa na(s) stack(s) afetada(s)
-- [ ] `npm run test-storybook:ci` passa (ou novas falhas são bugs reais documentados)
+- [ ] `npm test` passa (ou novas falhas são bugs reais documentados)
 - [ ] `npm run chromatic` (se acesso) — visual regression ok
 - [ ] Mudanças cross-stack aplicadas nas 4 stacks com paridade
 - [ ] `translations.json` atualizado se mudou texto

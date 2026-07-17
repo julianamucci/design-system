@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import { Button } from './index';
 
@@ -75,6 +75,7 @@ export const IconOnly: Story = {
   }),
   parameters: { docs: { description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Botão é acessível por aria-label', async () => {
       const button = canvas.getByRole('button', { name: 'Baixar arquivo' });
@@ -110,6 +111,7 @@ export const AsChildAsLink: Story = {
   }),
   parameters: { docs: { description: { story: 'Usando asChild com reka-ui Primitive para renderizar um <a> com estilos de botão, preservando semântica de link.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Elemento é um link, não um botão', async () => {
       const link = canvas.getByRole('link', { name: 'Ver documentação' });
@@ -126,6 +128,7 @@ export const ClickCounter: Story = {
   }),
   parameters: { docs: { description: { story: 'Exemplo interativo para validar disparo via teclado e mouse.' } } },
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const button = canvas.getByTestId('click-target') as HTMLElement;
 
     await step('Mouse click funciona', async () => {

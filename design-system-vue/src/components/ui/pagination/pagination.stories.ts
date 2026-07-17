@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { fn, userEvent, expect } from 'storybook/test';
+import { within, fn, userEvent, expect } from 'storybook/test';
 import {
   Pagination,
   PaginationContent,
@@ -127,6 +127,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('1. Pagination tem nav com aria-label', async () => {
       const nav = canvas.getByRole('navigation');

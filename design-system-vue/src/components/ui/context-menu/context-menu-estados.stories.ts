@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -72,6 +72,7 @@ export const ItemDisabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('trigger renderizado', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');
@@ -155,6 +156,7 @@ export const ItemDestructiveIsolado: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('trigger presente na tela', async () => {
       const trigger = canvas.getByText('Clique com o botão direito aqui');

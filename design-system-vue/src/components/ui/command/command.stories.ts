@@ -1,6 +1,6 @@
 // @jsxImportSource react
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { fn, userEvent, expect } from 'storybook/test';
+import { within, fn, userEvent, expect } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import CommandDocs from '@/components/docs/CommandDocs.vue';
 import {
@@ -89,6 +89,7 @@ export const Playground: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('input está presente e acessível', async () => {
       const input = canvas.getByRole('combobox');

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeDocs from '@/components/docs/BadgeDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -34,6 +34,7 @@ export const Playground: Story = {
     template: `<Badge v-bind="args">Novo</Badge>`,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Badge renderiza o texto', async () => {
       await expect(canvas.getByText('Novo')).toBeVisible();

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 
 const meta = {
@@ -79,6 +79,7 @@ export const Failed: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Fallback exibido após falha da imagem', async () => {
       await expect(await canvas.findByText('JP')).toBeVisible();
@@ -96,6 +97,7 @@ export const NoImage: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Fallback exibido imediatamente sem AvatarImage', async () => {
       await expect(canvas.getByText('JP')).toBeVisible();

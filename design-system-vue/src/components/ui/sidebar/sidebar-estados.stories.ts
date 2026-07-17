@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Sidebar,
   SidebarContent,
@@ -105,6 +105,7 @@ export const Expanded: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('sidebar expandida renderiza nav acessível', async () => {
       const nav = canvas.getByRole('navigation', { name: /navegação principal/i });

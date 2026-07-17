@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, fn, userEvent } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -71,6 +71,7 @@ export const Simple: Story = {
     `,
   }),
   play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
 
     await step('nav aria-label="breadcrumb" está presente', async () => {

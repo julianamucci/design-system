@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
@@ -34,6 +34,7 @@ export const ComLabel: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Label está visível e associado', async () => {
       const textarea = canvas.getByLabelText('Descrição');
       await expect(textarea).toBeVisible();
@@ -66,6 +67,7 @@ export const ComTextoDeApoio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea, label e texto de apoio estão visíveis', async () => {
       await expect(canvas.getByLabelText('Biografia')).toBeVisible();
       await expect(canvas.getByText(/Aparece no seu perfil/)).toBeVisible();
@@ -106,6 +108,7 @@ export const ComContador: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea tem maxlength configurado', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveAttribute('maxlength', '500');
@@ -143,6 +146,7 @@ export const ComMensagemDeErro: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea com aria-invalid="true"', async () => {
       const textarea = canvas.getByLabelText('Descrição');
       await expect(textarea).toHaveAttribute('aria-invalid', 'true');
@@ -177,6 +181,7 @@ export const CampoObrigatorio: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     await step('Textarea obrigatório tem aria-required="true"', async () => {
       const textarea = canvas.getByRole('textbox');
       await expect(textarea).toHaveAttribute('aria-required', 'true');

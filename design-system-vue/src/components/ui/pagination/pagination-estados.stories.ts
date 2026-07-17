@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   Pagination,
   PaginationContent,
@@ -53,6 +53,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const link = canvas.getByLabelText(/Ir para página 2/i);
     await expect(link).toBeVisible();
   },
@@ -93,6 +94,7 @@ export const Active: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const active = canvas.getByLabelText(/Página atual, 3/i);
     await expect(active).toHaveAttribute('aria-current', 'page');
   },
@@ -123,6 +125,7 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     const prev = canvas.getByLabelText(/anterior/i);
     // reka-ui aplica disabled/aria-disabled quando estamos na primeira página
     await expect(prev).toBeVisible();
