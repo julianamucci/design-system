@@ -1,0 +1,61 @@
+# Dependabot — SCA (dependências vulneráveis) + atualizações de segurança.
+# Substitui a parte de SCA do Qwiet AI (ver CONTRIBUTING.md).
+#
+# - Security updates: PRs automáticos assim que uma CVE é publicada para uma
+#   dependência dos lockfiles (não depende do schedule abaixo)
+# - Version updates: PRs MENSAIS agrupados, só patch/minor — cadência baixa
+#   de propósito; PRs de segurança não dependem desse schedule
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /design-system-react
+    schedule:
+      interval: monthly
+    groups:
+      react-deps:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: npm
+    directory: /design-system-vue
+    schedule:
+      interval: monthly
+    groups:
+      vue-deps:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: npm
+    directory: /design-system-svelte
+    schedule:
+      interval: monthly
+    groups:
+      svelte-deps:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: npm
+    directory: /nortear-design-system
+    schedule:
+      interval: monthly
+    groups:
+      vanilla-deps:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: npm
+    directory: /nortear-cli
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2

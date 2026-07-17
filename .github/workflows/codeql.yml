@@ -1,0 +1,69 @@
+name: CodeQL
+
+# SAST oficial do GitHub — substitui o Qwiet AI (ver CONTRIBUTING.md).
+# Gratuito e ilimitado em repositórios públicos.
+#
+# - Findings aparecem na aba Security → Code scanning e como anotações no PR
+# - PRs só reprovam por finding NOVO vs a baseline do main (diff automático)
+# - CodeQL modela DOMPurify.sanitize como sanitizador: os fluxos
+#   translations.json → DOMPurify.sanitize() → innerHTML não geram alerta
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Re-scan semanal: pega queries novas do CodeQL e CVEs recém-modeladas
+    # mesmo sem commits novos (segunda 06:00 UTC)
+    - cron: "0 6 * * 1"
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (JS/TS)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write   # publica resultados no code scanning
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      # Dependências instaladas melhoram a resolução de imports de terceiros
+      # (dompurify, cross-spawn…) na extração do CodeQL — mesma lição
+      # aprendida com o scanner anterior.
+      - name: Install dependencies
+        run: |
+          for dir in design-system-react design-system-vue design-system-svelte nortear-design-system nortear-cli; do
+            (cd "$dir" && npm ci --ignore-scripts --no-audit --no-fund)
+          done
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+          # security-extended: mais queries de segurança que o default,
+          # sem as queries de "quality" que gerariam ruído de estilo
+          queries: security-extended
+          config: |
+            paths-ignore:
+              - "**/node_modules"
+              - "**/storybook-static"
+              - "**/dist"
+              - ".backstage/skeleton/**"
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:javascript-typescript"

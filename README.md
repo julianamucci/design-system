@@ -154,7 +154,7 @@ Quando publicado (roadmap), vira `npx nortear@latest init`. Veja [`nortear-cli/R
 
 Testes rodam **axe-playwright em TODAS as stories** (`postVisit` no `test-runner.ts`). Falhas remanescentes são padrões upstream conhecidos (FocusGuard `aria-hidden + tabindex=0`) documentados em [`patches.md`](patches.md).
 
-**Segurança**: cada PR também passa por **Qwiet AI (Harness SAST + SCA)** via [`.github/workflows/shiftleft.yml`](.github/workflows/shiftleft.yml). Findings críticas viram comentários no próprio PR.
+**Segurança**: cada PR passa por **CodeQL** (SAST — [`.github/workflows/codeql.yml`](.github/workflows/codeql.yml)), com **Dependabot** cobrindo dependências vulneráveis ([`.github/dependabot.yml`](.github/dependabot.yml)) e **secret scanning** do GitHub. Findings aparecem como anotações no diff do PR e na aba Security; PRs só reprovam por finding novo em relação ao `main`.
 
 ```bash
 npm run storybook:<stack>          # local dev
