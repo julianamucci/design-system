@@ -488,7 +488,7 @@
 
 /* ── Menu button: variantes, tamanhos, colapso ───────────────────────────── */
 /* Presença de data-active (libs headless emitem attr booleano) */
-.nds-sidebar-menu-button[data-active] {
+.nds-sidebar-menu-button[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--sidebar-accent));
   color: hsl(var(--sidebar-accent-foreground));
   font-weight: var(--font-weight-medium, 500);
@@ -696,7 +696,7 @@
 }
 
 .nds-sidebar-menu-sub-button:hover,
-.nds-sidebar-menu-sub-button[data-active] {
+.nds-sidebar-menu-sub-button[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--sidebar-accent));
   color: hsl(var(--sidebar-accent-foreground));
 }

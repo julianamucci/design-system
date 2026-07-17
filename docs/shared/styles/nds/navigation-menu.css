@@ -179,12 +179,12 @@
   transform: rotate(180deg);
 }
 
-.nds-navigation-menu-link[data-active] {
+.nds-navigation-menu-link[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--accent) / 0.5);
 }
 
-.nds-navigation-menu-link[data-active]:hover,
-.nds-navigation-menu-link[data-active]:focus {
+.nds-navigation-menu-link[data-active]:not([data-active="false"]):hover,
+.nds-navigation-menu-link[data-active]:not([data-active="false"]):focus {
   background-color: hsl(var(--accent));
 }
 

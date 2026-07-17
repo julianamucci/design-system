@@ -116,7 +116,7 @@
 }
 
 /* Ativo por presença do attr (par do data-state="active" da vanilla) */
-.nds-tabs-trigger[data-active] {
+.nds-tabs-trigger[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
@@ -157,7 +157,7 @@
   background-color: transparent;
 }
 
-.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active],
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active]:not([data-active="false"]),
 .nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-state="active"] {
   background-color: transparent;
   box-shadow: none;
@@ -183,7 +183,7 @@
   width: 2px;
 }
 
-.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active]::after,
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active]:not([data-active="false"])::after,
 .nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-state="active"]::after {
   opacity: 1;
 }
