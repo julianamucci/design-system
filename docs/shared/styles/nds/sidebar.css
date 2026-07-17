@@ -232,10 +232,508 @@
   background-color: hsl(var(--sidebar-border));
 }
 
+/*
+ * ─── nds-sidebar composite ──────────────────────────────────────────────────
+ * Extensões para sidebars com modos colapsáveis (offcanvas/icon/none),
+ * variantes (sidebar/floating/inset), rail de toggle, sub-menus, actions e
+ * badges. Estados via data-attrs no root: data-state, data-collapsible,
+ * data-variant, data-side. Botões ativos: presença de data-active.
+ */
+
+/* ── Root (esconde <48rem; gap/panel cuidam do resto) ────────────────────── */
+.nds-sidebar-root {
+  display: none;
+  color: hsl(var(--sidebar-foreground));
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-root {
+    display: block;
+  }
+}
+
+/* ── Colapso do gap ──────────────────────────────────────────────────────── */
+.nds-sidebar-root[data-collapsible="offcanvas"] .nds-sidebar-gap-inner {
+  width: 0;
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-gap-inner {
+  width: var(--sidebar-width-icon);
+}
+
+.nds-sidebar-root[data-collapsible="icon"][data-variant="floating"] .nds-sidebar-gap-inner,
+.nds-sidebar-root[data-collapsible="icon"][data-variant="inset"] .nds-sidebar-gap-inner {
+  width: calc(var(--sidebar-width-icon) + var(--spacing-4));
+}
+
+/* ── Colapso do panel ────────────────────────────────────────────────────── */
+.nds-sidebar-root[data-collapsible="offcanvas"][data-side="left"] .nds-sidebar-panel {
+  left: calc(var(--sidebar-width) * -1);
+}
+
+.nds-sidebar-root[data-collapsible="offcanvas"][data-side="right"] .nds-sidebar-panel {
+  right: calc(var(--sidebar-width) * -1);
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-panel {
+  width: var(--sidebar-width-icon);
+}
+
+.nds-sidebar-root[data-variant="floating"] .nds-sidebar-panel,
+.nds-sidebar-root[data-variant="inset"] .nds-sidebar-panel {
+  padding: var(--spacing-2);
+}
+
+.nds-sidebar-root[data-collapsible="icon"][data-variant="floating"] .nds-sidebar-panel,
+.nds-sidebar-root[data-collapsible="icon"][data-variant="inset"] .nds-sidebar-panel {
+  width: calc(var(--sidebar-width-icon) + var(--spacing-4) + 2px);
+}
+
+.nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner {
+  border-radius: var(--radius, 0.5rem);
+  border: 1px solid hsl(var(--sidebar-border));
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+}
+
+/* ── Variante estática (collapsible="none") ──────────────────────────────── */
+.nds-sidebar-static {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: var(--sidebar-width);
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+}
+
+/* ── Mobile (dentro de sheet) ────────────────────────────────────────────── */
+.nds-sidebar-mobile {
+  width: var(--sidebar-width);
+  padding: 0;
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+}
+
+.nds-sidebar-mobile > button {
+  display: none;
+}
+
+.nds-sidebar-mobile-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* ── Rail (faixa clicável na borda pra toggle) ───────────────────────────── */
+.nds-sidebar-rail {
+  position: absolute;
+  inset-block: 0;
+  z-index: 20;
+  display: none;
+  width: var(--spacing-4);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  outline: 0;
+  transform: translateX(-50%);
+  transition: all var(--duration-base) linear;
+}
+
+@media (min-width: 40rem) {
+  .nds-sidebar-rail {
+    display: flex;
+  }
+}
+
+.nds-sidebar-root[data-side="left"] .nds-sidebar-rail  { right: calc(var(--spacing-4) * -1); cursor: w-resize; }
+.nds-sidebar-root[data-side="right"] .nds-sidebar-rail { left: 0; cursor: e-resize; }
+
+.nds-sidebar-root[data-side="left"][data-state="collapsed"] .nds-sidebar-rail  { cursor: e-resize; }
+.nds-sidebar-root[data-side="right"][data-state="collapsed"] .nds-sidebar-rail { cursor: w-resize; }
+
+.nds-sidebar-rail::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 2px;
+}
+
+.nds-sidebar-rail:hover::after {
+  background-color: hsl(var(--sidebar-border));
+}
+
+.nds-sidebar-root[data-collapsible="offcanvas"] .nds-sidebar-rail {
+  transform: translateX(0);
+}
+
+.nds-sidebar-root[data-collapsible="offcanvas"] .nds-sidebar-rail::after {
+  left: 100%;
+}
+
+.nds-sidebar-root[data-collapsible="offcanvas"] .nds-sidebar-rail:hover {
+  background-color: hsl(var(--sidebar));
+}
+
+.nds-sidebar-root[data-side="left"][data-collapsible="offcanvas"] .nds-sidebar-rail  { right: calc(var(--spacing-2) * -1); }
+.nds-sidebar-root[data-side="right"][data-collapsible="offcanvas"] .nds-sidebar-rail { left: calc(var(--spacing-2) * -1); }
+
+/* ── Inset main (conteúdo ao lado da sidebar inset) ──────────────────────── */
+.nds-sidebar-inset {
+  position: relative;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  background-color: hsl(var(--background));
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset {
+    margin: var(--spacing-2);
+    margin-left: 0;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  }
+
+  .nds-sidebar-root[data-variant="inset"][data-state="collapsed"] ~ .nds-sidebar-inset {
+    margin-left: var(--spacing-2);
+  }
+}
+
+/* ── Input dentro da sidebar ─────────────────────────────────────────────── */
+.nds-sidebar-input {
+  width: 100%;
+  background-color: hsl(var(--background));
+  box-shadow: none;
+}
+
+/* ── Comportamento icon-collapse do conteúdo ─────────────────────────────── */
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-content {
+  overflow: hidden;
+}
+
+.nds-sidebar-group-label {
+  transition: margin var(--duration-base) linear, opacity var(--duration-base) linear;
+}
+
+.nds-sidebar-group-label > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-group-label {
+  margin-top: calc(var(--spacing-8) * -1);
+  opacity: 0;
+}
+
+/* ── Group action (botão no canto do grupo) ──────────────────────────────── */
+.nds-sidebar-group-action {
+  position: absolute;
+  top: 0.875rem;
+  right: var(--spacing-3, 0.75rem);
+
+  display: flex;
+  aspect-ratio: 1;
+  width: var(--spacing-5, 1.25rem);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  color: hsl(var(--sidebar-foreground));
+  cursor: pointer;
+  outline: 0;
+}
+
+.nds-sidebar-group-action:hover {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+.nds-sidebar-group-action:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+}
+
+.nds-sidebar-group-action > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+/* Área de toque expandida no touch (some no desktop) */
+.nds-sidebar-group-action::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--spacing-2) * -1);
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-group-action::after {
+    display: none;
+  }
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-group-action {
+  display: none;
+}
+
+.nds-sidebar-group-content {
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+/* ── Menu button: variantes, tamanhos, colapso ───────────────────────────── */
+/* Presença de data-active (libs headless emitem attr booleano) */
+.nds-sidebar-menu-button[data-active] {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-sidebar-menu-button-outline {
+  background-color: hsl(var(--background));
+  box-shadow: 0 0 0 1px hsl(var(--sidebar-border));
+}
+
+.nds-sidebar-menu-button-outline:hover {
+  box-shadow: 0 0 0 1px hsl(var(--sidebar-accent));
+}
+
+.nds-sidebar-menu-button[data-size="sm"] {
+  font-size: 0.75rem;
+  padding-block: var(--spacing-1-5, 0.375rem);
+}
+
+.nds-sidebar-menu-button[data-size="lg"] {
+  padding-block: var(--spacing-3, 0.75rem);
+}
+
+/* Espaço pro action à direita */
+.nds-sidebar-menu-item:has([data-sidebar="menu-action"]) .nds-sidebar-menu-button {
+  padding-right: var(--spacing-8, 2rem);
+}
+
+/* Icon-collapse: botão vira quadrado 32px */
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-button {
+  width: var(--spacing-8, 2rem);
+  height: var(--spacing-8, 2rem);
+  padding: var(--spacing-2);
+  overflow: hidden;
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-button[data-size="lg"] {
+  padding: 0;
+}
+
+/* ── Menu action (botão flutuante à direita do item) ─────────────────────── */
+.nds-sidebar-menu-action {
+  position: absolute;
+  top: var(--spacing-1-5, 0.375rem);
+  right: var(--spacing-1, 0.25rem);
+
+  display: flex;
+  aspect-ratio: 1;
+  width: var(--spacing-5, 1.25rem);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  color: hsl(var(--sidebar-foreground));
+  cursor: pointer;
+  outline: 0;
+}
+
+.nds-sidebar-menu-action:hover {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+.nds-sidebar-menu-action:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+}
+
+.nds-sidebar-menu-action > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.nds-sidebar-menu-action::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--spacing-2) * -1);
+}
+
+@media (min-width: 48rem) {
+  .nds-sidebar-menu-action::after {
+    display: none;
+  }
+}
+
+.nds-sidebar-menu-button[data-size="lg"] ~ .nds-sidebar-menu-action { top: var(--spacing-2-5, 0.625rem); }
+.nds-sidebar-menu-button[data-size="sm"] ~ .nds-sidebar-menu-action { top: var(--spacing-1, 0.25rem); }
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-action {
+  display: none;
+}
+
+/* Variante show-on-hover (desktop: só aparece com hover/focus no item) */
+@media (min-width: 48rem) {
+  .nds-sidebar-menu-action-hover {
+    opacity: 0;
+  }
+
+  .nds-sidebar-menu-item:hover .nds-sidebar-menu-action-hover,
+  .nds-sidebar-menu-item:focus-within .nds-sidebar-menu-action-hover,
+  .nds-sidebar-menu-action-hover[aria-expanded="true"] {
+    opacity: 1;
+  }
+}
+
+/* ── Menu badge (contador absoluto à direita) ────────────────────────────── */
+.nds-sidebar-menu-badge {
+  pointer-events: none;
+  position: absolute;
+  top: var(--spacing-1-5, 0.375rem);
+  right: var(--spacing-1, 0.25rem);
+
+  display: flex;
+  min-width: var(--spacing-5, 1.25rem);
+  height: var(--spacing-5, 1.25rem);
+  align-items: center;
+  justify-content: center;
+
+  padding-inline: var(--spacing-1);
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium, 500);
+  font-variant-numeric: tabular-nums;
+  color: hsl(var(--sidebar-foreground));
+  user-select: none;
+}
+
+.nds-sidebar-menu-button[data-size="lg"] ~ .nds-sidebar-menu-badge { top: var(--spacing-2-5, 0.625rem); }
+.nds-sidebar-menu-button[data-size="sm"] ~ .nds-sidebar-menu-badge { top: var(--spacing-1, 0.25rem); }
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-badge {
+  display: none;
+}
+
+/* ── Menu skeleton ───────────────────────────────────────────────────────── */
+.nds-sidebar-menu-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-height: var(--spacing-8, 2rem);
+  padding-inline: var(--spacing-2);
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+}
+
+.nds-sidebar-menu-skeleton-icon {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-sidebar-menu-skeleton-text {
+  height: var(--spacing-4);
+  flex: 1;
+  max-width: var(--skeleton-width, 70%);
+}
+
+/* ── Sub-menu ────────────────────────────────────────────────────────────── */
+.nds-sidebar-menu-sub {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--spacing-1);
+
+  margin: 0;
+  margin-inline: 0.875rem;
+  padding: 0;
+  padding-inline: var(--spacing-2-5, 0.625rem);
+  padding-block: var(--spacing-0-5);
+  list-style: none;
+
+  transform: translateX(1px);
+  border-left: 1px solid hsl(var(--sidebar-border));
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-sub {
+  display: none;
+}
+
+.nds-sidebar-menu-sub-item {
+  position: relative;
+}
+
+.nds-sidebar-menu-sub-button {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-2);
+  overflow: hidden;
+
+  padding-inline: var(--spacing-2);
+  padding-block: var(--spacing-1, 0.25rem);
+  transform: translateX(-1px);
+
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  font-size: 0.875rem;
+  color: hsl(var(--sidebar-foreground));
+  text-decoration: none;
+  outline: 0;
+}
+
+.nds-sidebar-menu-sub-button[data-size="sm"] {
+  font-size: 0.75rem;
+}
+
+.nds-sidebar-menu-sub-button:hover,
+.nds-sidebar-menu-sub-button[data-active] {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+.nds-sidebar-menu-sub-button:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--sidebar-ring) / 0.5);
+}
+
+.nds-sidebar-menu-sub-button[aria-disabled="true"],
+.nds-sidebar-menu-sub-button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-sidebar-menu-sub-button > svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  flex-shrink: 0;
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+.nds-sidebar-menu-sub-button > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-sub-button {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-sidebar-gap-inner,
   .nds-sidebar-panel,
-  .nds-sidebar-menu-button {
+  .nds-sidebar-menu-button,
+  .nds-sidebar-rail,
+  .nds-sidebar-group-label {
     transition: none;
   }
 }
