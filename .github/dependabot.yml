@@ -3,16 +3,15 @@
 #
 # - Security updates: PRs automáticos assim que uma CVE é publicada para uma
 #   dependência dos lockfiles (não depende do schedule abaixo)
-# - Version updates: PRs semanais agrupados, só patch/minor, para manter as
-#   deps frescas sem enxurrada de PRs
+# - Version updates: PRs MENSAIS agrupados, só patch/minor — cadência baixa
+#   de propósito; PRs de segurança não dependem desse schedule
 
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /design-system-react
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     groups:
       react-deps:
         patterns: ["*"]
@@ -22,8 +21,7 @@ updates:
   - package-ecosystem: npm
     directory: /design-system-vue
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     groups:
       vue-deps:
         patterns: ["*"]
@@ -33,8 +31,7 @@ updates:
   - package-ecosystem: npm
     directory: /design-system-svelte
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     groups:
       svelte-deps:
         patterns: ["*"]
@@ -44,8 +41,7 @@ updates:
   - package-ecosystem: npm
     directory: /nortear-design-system
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     groups:
       vanilla-deps:
         patterns: ["*"]
@@ -55,13 +51,11 @@ updates:
   - package-ecosystem: npm
     directory: /nortear-cli
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     open-pull-requests-limit: 2
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
     open-pull-requests-limit: 2

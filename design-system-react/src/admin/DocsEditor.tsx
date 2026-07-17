@@ -211,7 +211,6 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
   const [component, setComponent] = useState(initialComponent);
   const [components, setComponents] = useState<string[]>([]);
   const [showPreview, setShowPreview] = useState(true);
-  const [previewKey, setPreviewKey] = useState(0);
   const [activeStack, setActiveStack] = useState<Stack>('react');
   const [translating, setTranslating] = useState(false);
   const [translateError, setTranslateError] = useState<string | null>(null);
@@ -251,10 +250,8 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
       .catch(() => setComponents([component]));
   }, [component]);
 
-  // Recarrega o preview quando o componente muda
-  useEffect(() => {
-    setPreviewKey((k) => k + 1);
-  }, [component]);
+  // Preview remonta quando o componente muda: key={component} direto no
+  // elemento (linha do iframe) — sem estado nem efeito intermediário.
 
   const localeData = data?.[locale] ?? {};
 
@@ -480,7 +477,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
               </div>
             </div>
             <iframe
-              key={previewKey}
+              key={component}
               ref={iframeRef}
               src={storybookUrl}
               className="flex-1 border-0 bg-background"
