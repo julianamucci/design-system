@@ -55,11 +55,11 @@ export const Playground: Story = {
       await expect(skeleton).toBeInTheDocument();
     });
 
-    await step('Skeleton aplica classes base animate-pulse, rounded-md, bg-muted', async () => {
+    await step('Skeleton aplica estilo base (pulso, radius, bg)', async () => {
       const skeleton = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-      await expect(skeleton.className).toContain('animate-pulse');
-      await expect(skeleton.className).toContain('rounded-md');
-      await expect(skeleton.className).toContain('bg-muted');
+      await expect(skeleton.className).toContain('nds-skeleton');
+      await expect(getComputedStyle(skeleton).animationName).toBe('nds-skeleton-pulse');
+      await expect(getComputedStyle(skeleton).borderRadius).not.toBe('0px');
     });
 
     await step('Skeleton tem aria-hidden=true', async () => {

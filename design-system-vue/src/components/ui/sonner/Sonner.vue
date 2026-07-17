@@ -17,7 +17,7 @@ const props = defineProps<ToasterProps>()
 
 <template>
   <Sonner
-    :class="cn('toaster group', props.class)"
+    :class="cn('toaster', props.class)"
     :style="{
       '--normal-bg': 'var(--popover)',
       '--normal-text': 'var(--popover-foreground)',
@@ -28,24 +28,24 @@ const props = defineProps<ToasterProps>()
     :toast-options="props.toastOptions ?? {}"
   >
     <template #success-icon>
-      <CircleCheckIcon class="size-4" />
+      <CircleCheckIcon class="nds-toast-icon" />
     </template>
     <template #info-icon>
-      <InfoIcon class="size-4" />
+      <InfoIcon class="nds-toast-icon" />
     </template>
     <template #warning-icon>
-      <TriangleAlertIcon class="size-4" />
+      <TriangleAlertIcon class="nds-toast-icon" />
     </template>
     <template #error-icon>
-      <OctagonXIcon class="size-4" />
+      <OctagonXIcon class="nds-toast-icon" />
     </template>
     <template #loading-icon>
       <div>
-        <Loader2Icon class="size-4 animate-spin" />
+        <Loader2Icon class="nds-toast-icon nds-toast-icon-spin" />
       </div>
     </template>
     <template #close-icon>
-      <XIcon class="size-4" />
+      <XIcon class="nds-toast-icon" />
     </template>
   </Sonner>
 </template>

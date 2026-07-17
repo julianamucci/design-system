@@ -6,12 +6,11 @@ export { default as AlertAction } from './AlertAction.vue'
 export { default as AlertDescription } from './AlertDescription.vue'
 export { default as AlertTitle } from './AlertTitle.vue'
 
-// PATCH: theme — rounded via token --radius-alert
-export const alertVariants = cva('grid gap-0.5 rounded-(--radius-alert) border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*=size-])]:size-4 group/alert relative w-full', {
+export const alertVariants = cva('nds-alert', {
   variants: {
     variant: {
-      default: 'bg-card text-card-foreground',
-      destructive: 'text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current',
+      default: '',
+      destructive: 'nds-alert-destructive',
     },
   },
   defaultVariants: {

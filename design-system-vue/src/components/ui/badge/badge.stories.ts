@@ -40,15 +40,15 @@ export const Playground: Story = {
       await expect(canvas.getByText('Novo')).toBeVisible();
     });
 
-    await step('Variante default aplica classes primary', async () => {
+    await step('Variante default aplica a classe primary', async () => {
       const badge = canvas.getByText('Novo');
-      await expect(badge).toHaveClass('bg-primary');
-      await expect(badge).toHaveClass('text-primary-foreground');
+      await expect(badge).toHaveClass('nds-badge-default');
     });
 
     await step('Badge é inline-flex', async () => {
       const badge = canvas.getByText('Novo');
-      await expect(badge).toHaveClass('inline-flex');
+      await expect(badge).toHaveClass('nds-badge');
+      await expect(getComputedStyle(badge).display).toBe('inline-flex');
     });
   },
 };

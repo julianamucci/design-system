@@ -35,9 +35,9 @@ export const Retangulo: Story = {
     await step('Skeleton retângulo aplica rounded-md e dimensões custom', async () => {
       const skeleton = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
       await expect(skeleton).toBeInTheDocument();
-      await expect(skeleton.className).toContain('rounded-md');
+      await expect(skeleton.className).toContain('nds-skeleton');
       await expect(skeleton.className).toContain('h-24');
-      await expect(skeleton.className).toContain('animate-pulse');
+      await expect(getComputedStyle(skeleton).animationName).toBe('nds-skeleton-pulse');
     });
   },
 };
