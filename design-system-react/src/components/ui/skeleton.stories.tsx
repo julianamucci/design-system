@@ -45,10 +45,11 @@ export const Playground: Story = {
       await expect(canvas).toBeTruthy();
     });
 
-    await step("Skeleton tem classes base (animate-pulse, rounded-md, bg-muted)", async () => {
-      await expect(skeleton).toHaveClass("animate-pulse");
-      await expect(skeleton).toHaveClass("rounded-md");
-      await expect(skeleton).toHaveClass("bg-muted");
+    await step("Skeleton tem estilo base (pulso, radius, bg)", async () => {
+      await expect(skeleton).toHaveClass("nds-skeleton");
+      const style = getComputedStyle(skeleton!);
+      await expect(style.animationName).toBe("nds-skeleton-pulse");
+      await expect(style.borderRadius).not.toBe("0px");
     });
 
     await step("Skeleton tem aria-hidden=true", async () => {

@@ -39,11 +39,11 @@ export const Retangulo: Story = {
     const skeleton = canvasElement.querySelector(
       "[data-slot='skeleton']"
     ) as HTMLElement | null;
-    await step("Aplica classes de retângulo (h-20 w-full rounded-md)", async () => {
+    await step("Aplica classes de retângulo (h-20 w-full + radius do componente)", async () => {
       await expect(skeleton).toBeInTheDocument();
       await expect(skeleton).toHaveClass("h-20");
       await expect(skeleton).toHaveClass("w-full");
-      await expect(skeleton).toHaveClass("rounded-md");
+      await expect(skeleton).toHaveClass("nds-skeleton");
     });
   },
 };

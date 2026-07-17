@@ -143,6 +143,29 @@
   --alert-border: hsl(var(--info) / 0.3);
 }
 
+/* ── Action (botão no canto superior direito) ─────────────────────────────── */
+.nds-alert-action {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+}
+
+.nds-alert:has(.nds-alert-action) {
+  padding-inline-end: var(--spacing-18, 4.5rem);
+}
+
+/* Links dentro de título/descrição */
+.nds-alert-title a,
+.nds-alert-description a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nds-alert-title a:hover,
+.nds-alert-description a:hover {
+  color: hsl(var(--foreground));
+}
+
 /* Descrição em qualquer variante semântica → sempre foreground.
    Garante contraste WCAG AA (4.5:1) no texto longo, mesmo sobre bg colorido. */
 .nds-alert-destructive .nds-alert-description,

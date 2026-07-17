@@ -28,7 +28,7 @@
   overflow: hidden;
 
   border: 1px solid var(--badge-border);
-  border-radius: 9999px;
+  border-radius: var(--radius-badge, 9999px);
   padding-inline: var(--spacing-2);             /* 8px */
   padding-block: var(--spacing-0-5);            /* 2px */
 
@@ -95,6 +95,36 @@
   --badge-bg: transparent;
   --badge-fg: hsl(var(--foreground));
   --badge-border: hsl(var(--border));
+}
+
+/* Ghost — transparente, ganha bg no hover (uso interativo) */
+.nds-badge-ghost {
+  --badge-bg: transparent;
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: transparent;
+}
+.nds-badge-ghost:hover {
+  --badge-bg: hsl(var(--muted));
+  --badge-fg: hsl(var(--muted-foreground));
+}
+
+/* Link — texto primary com sublinhado no hover */
+.nds-badge-link {
+  --badge-bg: transparent;
+  --badge-fg: hsl(var(--primary));
+  --badge-border: transparent;
+  text-underline-offset: 4px;
+}
+.nds-badge-link:hover {
+  text-decoration: underline;
+}
+
+/* Ícone posicional: encurta o padding do lado do ícone */
+.nds-badge:has([data-icon="inline-start"]) {
+  padding-inline-start: var(--spacing-1-5, 0.375rem);
+}
+.nds-badge:has([data-icon="inline-end"]) {
+  padding-inline-end: var(--spacing-1-5, 0.375rem);
 }
 
 /* ── Prioridade (usado em DocsTestes — tabelas funcional/visual) ──────────────

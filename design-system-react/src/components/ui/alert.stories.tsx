@@ -63,7 +63,7 @@ export const Playground: Story = {
     await step("Variante default aplica classes corretas", async () => {
       const alert = canvas.getByRole("alert");
       await expect(alert).toHaveAttribute("data-slot", "alert");
-      await expect(alert).toHaveClass("bg-card");
+      await expect(alert).toHaveClass("nds-alert");
     });
   },
 };

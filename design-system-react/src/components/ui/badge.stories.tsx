@@ -49,14 +49,15 @@ export const Playground: Story = {
 
     await step("Badge usa layout inline-flex", async () => {
       const badge = canvas.getByText(String(args.children));
-      await expect(badge).toHaveClass("inline-flex");
-      await expect(badge).toHaveClass("items-center");
+      await expect(badge).toHaveClass("nds-badge");
+      await expect(getComputedStyle(badge).display).toBe("inline-flex");
     });
 
     await step("Badge tem tipografia compacta", async () => {
       const badge = canvas.getByText(String(args.children));
-      await expect(badge).toHaveClass("text-xs");
-      await expect(badge).toHaveClass("font-medium");
+      const style = getComputedStyle(badge);
+      await expect(style.fontSize).toBe("12px");
+      await expect(Number(style.fontWeight)).toBeGreaterThanOrEqual(500);
     });
   },
 };

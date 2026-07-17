@@ -29,8 +29,45 @@
   transition: transform var(--duration-base) var(--ease-entrance);
 }
 
+/*
+ * ─── nds-progress composite ─────────────────────────────────────────────────
+ * Variante composta para libs headless que controlam a largura do indicador
+ * via style inline (width %), com label e valor opcionais.
+ *
+ *   <div class="nds-progress-root">
+ *     <span class="nds-progress-label">Enviando…</span>
+ *     <span class="nds-progress-value">40%</span>
+ *     <div class="nds-progress"><div class="nds-progress-bar"></div></div>
+ *   </div>
+ */
+
+.nds-progress-root {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3, 0.75rem);
+}
+
+.nds-progress-bar {
+  height: 100%;
+  background-color: hsl(var(--primary));
+  transition: width var(--duration-base) var(--ease-entrance);
+}
+
+.nds-progress-label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-progress-value {
+  margin-inline-start: auto;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nds-progress-indicator {
+  .nds-progress-indicator,
+  .nds-progress-bar {
     transition: none;
   }
 }
