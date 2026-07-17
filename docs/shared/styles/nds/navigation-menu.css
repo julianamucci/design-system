@@ -250,6 +250,55 @@
   overflow: hidden;
 }
 
+/* ── Variante viewport (reka): dropdown único ancorado sob a lista ───────── */
+.nds-navigation-menu-viewport-wrap {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  isolation: isolate;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+}
+
+.nds-navigation-menu-viewport-panel {
+  position: relative;
+  margin-top: var(--spacing-1-5, 0.375rem);
+  height: var(--reka-navigation-menu-viewport-height);
+  width: 100%;
+  overflow: hidden;
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+  transform-origin: top center;
+}
+
+@media (min-width: 48rem) {
+  .nds-navigation-menu-viewport-panel {
+    width: var(--reka-navigation-menu-viewport-width);
+  }
+}
+
+/* Conteúdo dentro do viewport (mobile ocupa tudo; md absoluto auto) */
+.nds-navigation-menu-viewport-content {
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--spacing-1);
+}
+
+@media (min-width: 48rem) {
+  .nds-navigation-menu-viewport-content {
+    position: absolute;
+    width: auto;
+  }
+}
+
 /* Indicador (setinha apontando pro trigger ativo) */
 .nds-navigation-menu-indicator {
   top: 100%;

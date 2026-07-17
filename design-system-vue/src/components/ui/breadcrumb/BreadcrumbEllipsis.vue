@@ -14,11 +14,11 @@ const props = defineProps<{
     data-slot="breadcrumb-ellipsis"
     role="presentation"
     aria-hidden="true"
-    :class="cn('size-5 [&>svg]:size-4 flex items-center justify-center', props.class)"
+    :class="cn('nds-breadcrumb-ellipsis', props.class)"
   >
     <slot>
       <MoreHorizontalIcon />
     </slot>
-    <span class="sr-only">More</span>
+    <span class="nds-sr-only">More</span>
   </span>
 </template>

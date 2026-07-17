@@ -28,7 +28,7 @@ const forwarded = useForwardProps(delegatedProps)
   >
     <slot>
       <ChevronsLeftIcon data-icon="inline-start" />
-      <span class="hidden sm:block">First</span>
+      <span class="nds-pagination-label">First</span>
     </slot>
   </PaginationFirst>
 </template>
