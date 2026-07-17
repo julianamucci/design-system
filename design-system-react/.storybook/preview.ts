@@ -1,3 +1,4 @@
+import '../src/lib/reload-on-chunk-error';
 import type { Preview, Decorator } from '@storybook/react-vite'
 import { useEffect, addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';

@@ -1,3 +1,4 @@
+import '../src/lib/reload-on-chunk-error';
 import type { Preview } from '@storybook/html-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { useEffect } from 'storybook/preview-api';

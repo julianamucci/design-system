@@ -1,3 +1,4 @@
+import '../src/lib/reload-on-chunk-error';
 import type { Preview, Decorator } from '@storybook/vue3';
 import { setup } from '@storybook/vue3';
 import { createPinia } from 'pinia';
