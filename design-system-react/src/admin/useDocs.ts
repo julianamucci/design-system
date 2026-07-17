@@ -30,17 +30,29 @@ export function useDocs(componentName: string): UseDocsReturn {
   const [error, setError]     = useState<string | null>(null);
   const [locale, setLocale]   = useState<Locale>('pt-BR');
 
-  // ── Carrega o JSON ao montar ────────────────────────────────────────────────
-  useEffect(() => {
+  // ── Reset síncrono quando o componente muda ─────────────────────────────────
+  // Padrão "adjust state during render" (doc do React) — substitui o antigo
+  // setLoading/setError síncronos dentro do effect (cascading render).
+  // No mount, loading já nasce true.
+  const [prevName, setPrevName] = useState(componentName);
+  if (prevName !== componentName) {
+    setPrevName(componentName);
     setLoading(true);
     setError(null);
+    setData(null);
+  }
+
+  // ── Carrega o JSON (com guarda contra resposta obsoleta) ────────────────────
+  useEffect(() => {
+    let active = true;
     fetch(`/api/docs/${componentName}`)
       .then((r) => {
         if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
         return r.json() as Promise<DocsContent>;
       })
-      .then((json) => { setData(json); setLoading(false); })
-      .catch((e: Error) => { setError(e.message); setLoading(false); });
+      .then((json) => { if (active) { setData(json); setLoading(false); } })
+      .catch((e: Error) => { if (active) { setError(e.message); setLoading(false); } });
+    return () => { active = false; };
   }, [componentName]);
 
   // ── Atualiza um campo (dot notation, ex: "anatomy.item1") ──────────────────
