@@ -27,7 +27,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      provider: 'istanbul',
+      provider: 'v8',
       reporter: ['text', 'html', 'json'],
       include: ['src/components/ui/**/*.{ts,tsx}'],
       exclude: [
