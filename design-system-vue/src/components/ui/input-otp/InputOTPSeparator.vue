@@ -17,7 +17,7 @@ const forwarded = useForwardProps(delegatedProps)
     data-slot="input-otp-separator"
     role="separator"
     v-bind="forwarded"
-    :class="cn('[&_svg:not([class*=size-])]:size-4 flex items-center', props.class)"
+    :class="cn('nds-input-otp-separator', props.class)"
   >
     <slot>
       <MinusIcon />

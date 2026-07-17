@@ -20,13 +20,13 @@ const forwardedProps = useForwardProps(delegatedProps)
     data-slot="calendar-next-button"
     :class="cn(
       buttonVariants({ variant: 'outline' }),
-      'size-7 bg-transparent p-0 opacity-50 hover:opacity-100',
+      'nds-calendar-nav-btn',
       props.class,
     )"
     v-bind="forwardedProps"
   >
     <slot>
-      <ChevronRightIcon class="cn-rtl-flip size-4" />
+      <ChevronRightIcon class="nds-calendar-chevron" />
     </slot>
   </CalendarNext>
 </template>

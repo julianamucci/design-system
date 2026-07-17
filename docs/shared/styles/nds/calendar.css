@@ -473,3 +473,73 @@
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
 }
+
+/*
+ * ─── nds-calendar composite (attrs de presença — reka e afins) ──────────────
+ * Libs que emitem data-selected/data-today/data-outside-view/data-disabled
+ * como atributos booleanos, com células em <table> real.
+ */
+
+.nds-calendar-row {
+  display: flex;
+}
+
+.nds-calendar-day-btn[data-selected] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-calendar-day-btn[data-today]:not([data-selected]) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-calendar-day-btn[data-outside-view] {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-calendar-day-btn[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.nds-calendar-day-btn[data-unavailable] {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* ── Seletores nativos de mês/ano no caption ─────────────────────────────── */
+.nds-calendar-select-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.nds-calendar-select {
+  position: relative;
+}
+
+.nds-calendar-select [data-slot="native-select-icon"] {
+  right: var(--spacing-1);
+}
+
+.nds-calendar-select-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding-left: var(--spacing-2);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.nds-calendar-select-input {
+  position: relative;
+  min-height: var(--spacing-8, 2rem);
+  padding-right: var(--spacing-6, 1.5rem);
+  padding-left: var(--spacing-2);
+  font-size: 0.75rem;
+  color: transparent;
+}

@@ -44,14 +44,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 <template>
   <DefineMonthTemplate v-slot="{ date }">
-    <div class="**:data-[slot=native-select-icon]:right-1">
-      <div class="relative">
-        <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
+    <div class="nds-calendar-select">
+      <div class="nds-calendar-select">
+        <div class="nds-calendar-select-value">
           {{ formatter.custom(toDate(date), { month: 'short' }) }}
         </div>
         <NativeSelect
           aria-label="Selecionar mês"
-          class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          class="nds-calendar-select-input"
           @change="(e: Event) => {
             placeholder = placeholder.set({
               month: Number((e?.target as any)?.value),
@@ -72,14 +72,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   </DefineMonthTemplate>
 
   <DefineYearTemplate v-slot="{ date }">
-    <div class="**:data-[slot=native-select-icon]:right-1">
-      <div class="relative">
-        <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
+    <div class="nds-calendar-select">
+      <div class="nds-calendar-select">
+        <div class="nds-calendar-select-value">
           {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
         </div>
         <NativeSelect
           aria-label="Selecionar ano"
-          class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          class="nds-calendar-select-input"
           @change="(e: Event) => {
             placeholder = placeholder.set({
               year: Number((e?.target as any)?.value),
@@ -104,10 +104,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     v-model:placeholder="placeholder"
     data-slot="calendar"
-    :class="cn('p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] group/calendar bg-background in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent', props.class)"
+    :class="cn('nds-calendar-root', props.class)"
   >
     <CalendarHeader class="pt-0">
-      <nav class="flex items-center gap-1 absolute top-0 inset-x-0 justify-between">
+      <nav class="nds-calendar-nav-overlay">
         <CalendarPrevButton>
           <slot name="calendar-prev-icon" />
         </CalendarPrevButton>
@@ -123,19 +123,19 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         :year="ReuseYearTemplate"
       >
         <template v-if="layout === 'month-and-year'">
-          <div class="flex items-center justify-center gap-1">
+          <div class="nds-calendar-select-row">
             <ReuseMonthTemplate :date="date" />
             <ReuseYearTemplate :date="date" />
           </div>
         </template>
         <template v-else-if="layout === 'month-only'">
-          <div class="flex items-center justify-center gap-1">
+          <div class="nds-calendar-select-row">
             <ReuseMonthTemplate :date="date" />
             {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
           </div>
         </template>
         <template v-else-if="layout === 'year-only'">
-          <div class="flex items-center justify-center gap-1">
+          <div class="nds-calendar-select-row">
             {{ formatter.custom(toDate(date), { month: 'short' }) }}
             <ReuseYearTemplate :date="date" />
           </div>
@@ -146,7 +146,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       </slot>
     </CalendarHeader>
 
-    <div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">
+    <div class="nds-calendar-months">
       <CalendarGrid
         v-for="month in grid"
         :key="month.value.toString()"
@@ -165,7 +165,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           <CalendarGridRow
             v-for="(weekDates, index) in month.rows"
             :key="`weekDate-${index}`"
-            class="mt-2 w-full"
+            class="nds-calendar-week"
           >
             <CalendarCell
               v-for="weekDate in weekDates"

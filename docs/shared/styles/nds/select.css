@@ -169,8 +169,10 @@
   isolation: isolate;
   z-index: 50;
   min-width: 9rem;                                /* 144px — min-w-36 */
-  max-height: var(--available-height, 24rem);
-  width: var(--anchor-width, auto);
+  /* Fallback em cadeia: base-ui usa --available-height/--anchor-width;
+   * reka-ui usa --reka-select-content-available-height/--reka-select-trigger-width */
+  max-height: var(--available-height, var(--reka-select-content-available-height, 24rem));
+  width: var(--anchor-width, var(--reka-select-trigger-width, auto));
 
   overflow-x: hidden;
   overflow-y: auto;
@@ -183,7 +185,14 @@
     0 4px 6px -1px hsl(0 0% 0% / 0.1),
     0 2px 4px -2px hsl(0 0% 0% / 0.1);
 
-  transform-origin: var(--transform-origin, center);
+  transform-origin: var(--transform-origin, var(--reka-select-content-transform-origin, center));
+}
+
+/* Viewport interno (reka): em modo popper acompanha as dimensões do trigger */
+.nds-select-viewport[data-position="popper"] {
+  height: var(--reka-select-trigger-height);
+  width: 100%;
+  min-width: var(--reka-select-trigger-width);
 }
 
 .nds-select-content[data-open] {

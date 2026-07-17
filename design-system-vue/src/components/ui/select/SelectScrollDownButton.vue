@@ -18,7 +18,7 @@ const forwardedProps = useForwardProps(delegatedProps)
   <SelectScrollDownButton
     data-slot="select-scroll-down-button"
     v-bind="forwardedProps"
-    :class="cn('bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4', props.class)"
+    :class="cn('nds-select-scroll-button', props.class)"
   >
     <slot>
       <ChevronDownIcon />
