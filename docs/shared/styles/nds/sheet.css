@@ -187,9 +187,170 @@
   to   { transform: translateY(0); }
 }
 
+/*
+ * ─── nds-sheet composite ────────────────────────────────────────────────────
+ * Libs headless animam entrada/saída por transição via data-starting-style /
+ * data-ending-style (as keyframes acima cobrem só a montagem).
+ */
+
+.nds-sheet-overlay {
+  transition: opacity var(--duration-base) ease-in-out;
+}
+
+.nds-sheet-overlay[data-starting-style],
+.nds-sheet-overlay[data-ending-style] {
+  opacity: 0;
+}
+
+.nds-sheet-content {
+  transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
+}
+
+.nds-sheet-content[data-starting-style],
+.nds-sheet-content[data-ending-style] {
+  opacity: 0;
+}
+
+.nds-sheet-content[data-side="right"][data-starting-style],
+.nds-sheet-content[data-side="right"][data-ending-style] {
+  transform: translateX(2.5rem);
+}
+
+.nds-sheet-content[data-side="left"][data-starting-style],
+.nds-sheet-content[data-side="left"][data-ending-style] {
+  transform: translateX(-2.5rem);
+}
+
+.nds-sheet-content[data-side="top"][data-starting-style],
+.nds-sheet-content[data-side="top"][data-ending-style] {
+  transform: translateY(-2.5rem);
+}
+
+.nds-sheet-content[data-side="bottom"][data-starting-style],
+.nds-sheet-content[data-side="bottom"][data-ending-style] {
+  transform: translateY(2.5rem);
+}
+
+/* Sem body explícito, o footer desce pro fim do painel */
+.nds-sheet-content:not(:has(.nds-sheet-body)) > .nds-sheet-footer {
+  margin-top: auto;
+}
+
+/* Botão de fechar composto (nds-button ghost icon) — só posicionamento */
+.nds-sheet-close-position {
+  position: absolute;
+  top: var(--spacing-3, 0.75rem);
+  right: var(--spacing-3, 0.75rem);
+}
+
+/*
+ * ─── nds-drawer (painel arrastável, lib controla o transform inline) ────────
+ * Direções via data-vaul-drawer-direction. Reusa nds-sheet-overlay/-title/
+ * -description. Handle visível só na direção bottom.
+ */
+
+.nds-drawer-content {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  height: auto;
+  flex-direction: column;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] {
+  inset-inline: 0;
+  bottom: 0;
+  margin-top: var(--spacing-24, 6rem);
+  max-height: 80vh;
+  border-top: 1px solid hsl(var(--border));
+  border-start-start-radius: 0.75rem;
+  border-start-end-radius: 0.75rem;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="top"] {
+  inset-inline: 0;
+  top: 0;
+  margin-bottom: var(--spacing-24, 6rem);
+  max-height: 80vh;
+  border-bottom: 1px solid hsl(var(--border));
+  border-end-start-radius: 0.75rem;
+  border-end-end-radius: 0.75rem;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="left"] {
+  inset-block: 0;
+  left: 0;
+  width: 75%;
+  border-right: 1px solid hsl(var(--border));
+  border-start-end-radius: 0.75rem;
+  border-end-end-radius: 0.75rem;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="right"] {
+  inset-block: 0;
+  right: 0;
+  width: 75%;
+  border-left: 1px solid hsl(var(--border));
+  border-start-start-radius: 0.75rem;
+  border-end-start-radius: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .nds-drawer-content[data-vaul-drawer-direction="left"],
+  .nds-drawer-content[data-vaul-drawer-direction="right"] {
+    max-width: 24rem;
+  }
+}
+
+.nds-drawer-handle {
+  display: none;
+  flex-shrink: 0;
+  margin-inline: auto;
+  margin-top: var(--spacing-4);
+  height: var(--spacing-1, 0.25rem);
+  width: 6.25rem;                                  /* 100px */
+  border-radius: 9999px;
+  background-color: hsl(var(--muted));
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-handle {
+  display: block;
+}
+
+.nds-drawer-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5);
+  padding: var(--spacing-4);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-header,
+.nds-drawer-content[data-vaul-drawer-direction="top"] .nds-drawer-header {
+  text-align: center;
+}
+
+@media (min-width: 48rem) {
+  .nds-drawer-content .nds-drawer-header {
+    text-align: left;
+  }
+}
+
+.nds-drawer-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-top: auto;
+  padding: var(--spacing-4);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-sheet-overlay,
   .nds-sheet-content {
     animation: none;
+    transition: none;
   }
 }

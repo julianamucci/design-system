@@ -110,10 +110,55 @@
   line-height: 1.5;
 }
 
+/*
+ * ─── nds-accordion composite ────────────────────────────────────────────────
+ * Libs headless: dois chevrons alternados por aria-expanded e animação de
+ * altura via --accordion-panel-height + data-starting/ending-style.
+ */
+
+.nds-accordion-icon-open {
+  display: none;
+}
+
+.nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon-closed {
+  display: none;
+}
+
+.nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon-open {
+  display: inline-block;
+}
+
+.nds-accordion-content-body {
+  height: var(--accordion-panel-height, auto);
+  padding-top: 0;
+  padding-bottom: var(--spacing-4);
+  line-height: 1.5;
+  transition: height var(--duration-base) ease-out;
+}
+
+.nds-accordion-content-body[data-starting-style],
+.nds-accordion-content-body[data-ending-style] {
+  height: 0;
+}
+
+.nds-accordion-content-body a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nds-accordion-content-body a:hover {
+  color: hsl(var(--foreground));
+}
+
+.nds-accordion-content-body p:not(:last-child) {
+  margin-bottom: var(--spacing-4);
+}
+
 /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .nds-accordion-trigger,
-  .nds-accordion-icon {
+  .nds-accordion-icon,
+  .nds-accordion-content-body {
     transition: none;
   }
 }
