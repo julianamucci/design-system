@@ -93,6 +93,9 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return
+    // Embla expõe API imperativa: a chamada síncrona inicial sincroniza
+    // canScrollPrev/Next com o estado real do carrossel antes do primeiro
+    // "select" — padrão recomendado pela lib.
     onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)

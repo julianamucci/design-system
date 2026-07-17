@@ -670,9 +670,14 @@ function EditableCell<TData, TValue>({
   )
   const [editing, setEditing] = React.useState(false)
 
-  React.useEffect(() => {
+  // Reseta o rascunho quando o valor da célula muda por fora (ordenação,
+  // paginação, edição externa). Padrão "adjust state during render" da doc
+  // do React — substitui o antigo useEffect+setState (cascading render).
+  const [prevInitial, setPrevInitial] = React.useState(initial)
+  if (prevInitial !== initial) {
+    setPrevInitial(initial)
     setValue(initial == null ? "" : String(initial))
-  }, [initial])
+  }
 
   function commit() {
     const isNumber = typeof initial === "number"
