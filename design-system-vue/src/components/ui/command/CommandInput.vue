@@ -7,7 +7,7 @@ import { SearchIcon } from 'lucide-vue-next'
 import { ListboxFilter, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
-import { useCommand } from '.'
+import { useCommand } from './index'
 
 defineOptions({
   inheritAttrs: false,
