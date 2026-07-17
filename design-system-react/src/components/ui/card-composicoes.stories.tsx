@@ -65,7 +65,7 @@ export const WithFooter: Story = {
     // CardFooter detectado via has-data-[slot=card-footer]:pb-0
     const footer = canvasElement.querySelector('[data-slot="card-footer"]');
     await expect(footer).toBeInTheDocument();
-    await expect(footer).toHaveClass("border-t");
+    await expect(footer).toHaveClass("nds-card-footer");
   },
   parameters: {
     docs: {
@@ -102,7 +102,7 @@ export const WithAction: Story = {
     const action = canvasElement.querySelector('[data-slot="card-action"]');
     await expect(action).toBeInTheDocument();
     // CardAction ocupa col-start-2 row-span-2 (grid slot à direita)
-    await expect(action).toHaveClass("col-start-2");
+    await expect(action).toHaveClass("nds-card-action");
   },
   parameters: {
     docs: {

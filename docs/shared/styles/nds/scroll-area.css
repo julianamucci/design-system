@@ -19,4 +19,50 @@
   height: 100%;
   overflow: auto;
   border-radius: inherit;
+  outline: 0;
+  transition: color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-scroll-area-viewport:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+/*
+ * ─── nds-scroll-area composite (scrollbar custom) ───────────────────────────
+ * Para libs headless com scrollbar próprio (track + thumb). O viewport da lib
+ * controla o overflow via style inline; aqui só aparência.
+ */
+
+.nds-scroll-area-scrollbar {
+  display: flex;
+  padding: 1px;
+  touch-action: none;
+  user-select: none;
+  transition: background-color var(--duration-fast);
+}
+
+.nds-scroll-area-scrollbar[data-orientation="vertical"] {
+  height: 100%;
+  width: 0.625rem;                                /* 10px */
+  border-left: 1px solid transparent;
+}
+
+.nds-scroll-area-scrollbar[data-orientation="horizontal"] {
+  height: 0.625rem;
+  flex-direction: column;
+  border-top: 1px solid transparent;
+}
+
+.nds-scroll-area-thumb {
+  position: relative;
+  flex: 1;
+  border-radius: 9999px;
+  background-color: hsl(var(--border));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-scroll-area-viewport,
+  .nds-scroll-area-scrollbar {
+    transition: none;
+  }
 }

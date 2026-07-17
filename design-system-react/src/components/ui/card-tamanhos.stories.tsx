@@ -48,7 +48,7 @@ export const Default: Story = {
     await expect(root).toHaveAttribute("data-size", "default");
     // Padding default: py-4 no root, px-4 no header/content
     const header = canvasElement.querySelector('[data-slot="card-header"]');
-    await expect(header).toHaveClass("px-4");
+    await expect(header).toHaveClass("nds-card-header");
   },
 };
 

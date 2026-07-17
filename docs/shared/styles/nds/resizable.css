@@ -83,6 +83,65 @@
   height: 0.625rem;
 }
 
+/*
+ * ─── nds-resizable composite (aria-orientation) ─────────────────────────────
+ * Libs de painéis expõem aria-orientation no grupo e no separator (em vez de
+ * data-direction no container). Seletores equivalentes lado a lado.
+ * O separator com aria-orientation="horizontal" é a linha de um grupo
+ * vertical (linha deitada).
+ */
+
+.nds-resizable[aria-orientation="vertical"] {
+  flex-direction: column;
+}
+
+/* Grupo sem data-direction (mundo aria): linha vertical por default */
+.nds-resizable:not([data-direction]) > .nds-resizable-handle:not([aria-orientation="horizontal"]) {
+  width: 1px;
+  cursor: col-resize;
+}
+
+.nds-resizable-handle[aria-orientation="horizontal"] {
+  width: 100%;
+  height: 1px;
+  cursor: row-resize;
+}
+
+/* Área de toque invisível de 4px sobre a linha de 1px */
+.nds-resizable-handle::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: var(--spacing-1, 0.25rem);
+  transform: translateX(-50%);
+}
+
+.nds-resizable-handle[aria-orientation="horizontal"]::after {
+  inset-block: auto;
+  inset-inline: 0;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: var(--spacing-1, 0.25rem);
+  transform: translateY(-50%);
+}
+
+/* Barra fina de alça (variante withHandle das libs de painéis) */
+.nds-resizable-grip-bar {
+  z-index: 10;
+  display: flex;
+  flex-shrink: 0;
+  width: var(--spacing-1, 0.25rem);
+  height: var(--spacing-6, 1.5rem);
+  border-radius: var(--radius, 0.5rem);
+  background-color: hsl(var(--border));
+}
+
+.nds-resizable-handle[aria-orientation="horizontal"] > .nds-resizable-grip-bar {
+  transform: rotate(90deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-resizable-handle {
     transition: none;

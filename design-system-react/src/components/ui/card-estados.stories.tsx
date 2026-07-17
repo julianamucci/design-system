@@ -152,7 +152,7 @@ export const WithFooter: Story = {
       async () => {
         const footer = canvasElement.querySelector('[data-slot="card-footer"]');
         await expect(footer).toBeInTheDocument();
-        await expect(footer).toHaveClass("border-t");
+        await expect(footer).toHaveClass("nds-card-footer");
       }
     );
 
