@@ -42,8 +42,9 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 - [x] **Fase 0.5 — Libs**: `@base-ui/react` 1.6.0 validado (mesmo resultado de
   testes que 1.4.1). `reka-ui` → 2.10.1 e `bits-ui` → 2.18.1 ao iniciar as fases 2 e 3.
 - [x] **Piloto**: `button` React (24/24 testes verdes).
-- [ ] **Fase 1 — React UI** (~50 componentes, em lotes por categoria):
+- [x] **Fase 1 — React UI** (~46 componentes, 11 lotes por categoria):
   form → feedback → display → layout → navigation → disclosure → overlay → tables.
+  Todos os primitivos ui/ do React estão em classes .nds-*.
 - [ ] **Fase 2 — Vue UI** (bump reka-ui primeiro; reaproveita 100% dos CSS já estendidos na Fase 1).
 - [ ] **Fase 3 — Svelte UI** (bump bits-ui primeiro; idem).
 - [ ] **Fase 4 — Docs pages + stories** das 3 stacks: substituir utilitários
