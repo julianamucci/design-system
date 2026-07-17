@@ -16,15 +16,11 @@ const { carouselRef, orientation } = useCarousel()
   <div
     ref="carouselRef"
     data-slot="carousel-content"
-    class="overflow-hidden"
+    class="nds-carousel-overflow"
   >
     <div
-      :class="
-        cn(
-          'flex',
-          orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col',
-          props.class,
-        )"
+      :class="cn('nds-carousel-track', props.class)"
+      :data-orientation="orientation"
       v-bind="$attrs"
     >
       <slot />

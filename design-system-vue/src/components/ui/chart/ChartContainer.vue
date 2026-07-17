@@ -85,7 +85,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => observer?.disconnect());
 
-const containerClass = computed(() => cn('w-full', props.class));
+const containerClass = computed(() => cn('nds-chart', props.class));
 const rendererName = computed(() => props.renderer ?? 'svg');
 
 const attrs = useAttrs();

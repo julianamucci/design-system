@@ -23,20 +23,15 @@ const { orientation, canScrollNext, scrollNext } = useCarousel()
   <Button
     data-slot="carousel-next"
     :disabled="!canScrollNext"
-    :class="cn(
-      'rounded-full absolute touch-manipulation',
-      orientation === 'horizontal'
-        ? 'top-1/2 -right-12 -translate-y-1/2'
-        : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
-      props.class,
-    )"
+    :data-orientation="orientation"
+    :class="cn('nds-carousel-arrow nds-carousel-arrow-next', props.class)"
     :variant="variant"
     :size="size"
     @click="scrollNext"
   >
     <slot>
-      <ChevronRightIcon class="cn-rtl-flip" />
-      <span class="sr-only">Next slide</span>
+      <ChevronRightIcon />
+      <span class="nds-sr-only">Next slide</span>
     </slot>
   </Button>
 </template>

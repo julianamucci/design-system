@@ -55,7 +55,7 @@ export const Playground: Story = {
 
     await step('Avatar aplica rounded-full + size via token --size-default', async () => {
       const root = canvasElement.querySelector('[data-slot="avatar"]');
-      await expect(root).toHaveClass('rounded-full');
+      await expect(root).toHaveClass('nds-avatar');
       // size-(--size-default) — validar via data-slot em vez de classe literal
       await expect(root).toHaveAttribute('data-slot', 'avatar');
     });
