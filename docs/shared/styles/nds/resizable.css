@@ -95,10 +95,35 @@
   flex-direction: column;
 }
 
-/* Grupo sem data-direction (mundo aria): linha vertical por default */
-.nds-resizable:not([data-direction]) > .nds-resizable-handle:not([aria-orientation="horizontal"]) {
+/* Grupo sem data-direction (mundo aria/data-panel-group): linha vertical por default */
+.nds-resizable:not([data-direction]) > .nds-resizable-handle:not([aria-orientation="horizontal"]):not([data-panel-group-direction="vertical"]) {
   width: 1px;
   cursor: col-resize;
+}
+
+/* Libs Vue de painéis emitem data-panel-group-direction em grupo e handle */
+.nds-resizable[data-panel-group-direction="vertical"] {
+  flex-direction: column;
+}
+
+.nds-resizable-handle[data-panel-group-direction="vertical"] {
+  width: 100%;
+  height: 1px;
+  cursor: row-resize;
+}
+
+.nds-resizable-handle[data-panel-group-direction="vertical"]::after {
+  inset-block: auto;
+  inset-inline: 0;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: var(--spacing-1, 0.25rem);
+  transform: translateY(-50%);
+}
+
+.nds-resizable-handle[data-panel-group-direction="vertical"] > .nds-resizable-grip-bar {
+  transform: rotate(90deg);
 }
 
 .nds-resizable-handle[aria-orientation="horizontal"] {

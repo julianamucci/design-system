@@ -19,12 +19,12 @@ const delegatedProps = reactiveOmit(props, 'class')
   <ScrollAreaRoot
     data-slot="scroll-area"
     v-bind="delegatedProps"
-    :class="cn('relative', props.class)"
+    :class="cn('nds-scroll-area', props.class)"
   >
     <ScrollAreaViewport
       data-slot="scroll-area-viewport"
       tabindex="0"
-      class="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1"
+      class="nds-scroll-area-viewport"
     >
       <slot />
     </ScrollAreaViewport>

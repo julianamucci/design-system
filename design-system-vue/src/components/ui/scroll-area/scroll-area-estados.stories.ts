@@ -119,9 +119,9 @@ export const Focus: Story = {
       await expect(okFocus).toBe(true);
     });
 
-    await step('Classes de focus-ring presentes no viewport', async () => {
+    await step('Estilo de focus-ring presente no viewport', async () => {
       const cls = viewport?.className ?? '';
-      await expect(cls).toContain('focus-visible:ring');
+      await expect(cls).toContain('nds-scroll-area-viewport');
     });
   },
 };
