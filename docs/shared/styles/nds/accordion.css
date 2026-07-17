@@ -129,7 +129,8 @@
 }
 
 .nds-accordion-content-body {
-  height: var(--accordion-panel-height, auto);
+  /* base-ui expõe --accordion-panel-height; reka --reka-accordion-content-height */
+  height: var(--accordion-panel-height, var(--reka-accordion-content-height, auto));
   padding-top: 0;
   padding-bottom: var(--spacing-4);
   line-height: 1.5;
