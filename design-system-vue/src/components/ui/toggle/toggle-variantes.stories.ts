@@ -62,7 +62,8 @@ export const Outline: Story = {
     const toggle = canvas.getByRole('button', { name: 'Itálico' });
     await step('Toggle outline renderiza com borda input', async () => {
       await expect(toggle).toBeInTheDocument();
-      await expect(toggle.className).toMatch(/border-input/);
+      await expect(toggle).toHaveAttribute('data-variant', 'outline');
+      await expect(getComputedStyle(toggle).borderStyle).toBe('solid');
     });
   },
 };

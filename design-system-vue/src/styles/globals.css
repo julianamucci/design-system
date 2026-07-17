@@ -10,6 +10,7 @@
 /* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
+@import "@shared/styles/nds/index.css";
 
 @custom-variant dark (&:is(.dark *));
 

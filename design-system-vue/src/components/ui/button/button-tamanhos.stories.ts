@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, within } from 'storybook/test';
 import { Plus } from 'lucide-vue-next';
 import { Button } from './index';
 

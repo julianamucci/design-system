@@ -30,7 +30,7 @@ const rootAttrs = computed(() => {
     data-slot="slider"
     :data-vertical="props.orientation === 'vertical' ? '' : undefined"
     :class="cn(
-      'data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col',
+      'nds-slider',
       props.class,
     )"
     v-bind="{ ...forwarded, ...rootAttrs }"
@@ -39,13 +39,13 @@ const rootAttrs = computed(() => {
       data-slot="slider-track"
       :data-horizontal="props.orientation !== 'vertical' ? '' : undefined"
       :data-vertical="props.orientation === 'vertical' ? '' : undefined"
-      class="bg-muted rounded-full data-horizontal:h-1 data-vertical:w-1 relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"
+      class="nds-slider-track"
     >
       <SliderRange
         data-slot="slider-range"
         :data-horizontal="props.orientation !== 'vertical' ? '' : undefined"
         :data-vertical="props.orientation === 'vertical' ? '' : undefined"
-        class="bg-primary absolute select-none data-horizontal:h-full data-vertical:w-full"
+        class="nds-slider-range"
       />
     </SliderTrack>
 
@@ -56,7 +56,7 @@ const rootAttrs = computed(() => {
       :data-vertical="props.orientation === 'vertical' ? '' : undefined"
       :aria-label="thumbLabel"
       :aria-labelledby="thumbLabelledBy"
-      class="border-ring ring-ring/50 relative size-3 rounded-full border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+      class="nds-slider-thumb"
     />
   </SliderRoot>
 </template>
