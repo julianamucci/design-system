@@ -14,9 +14,9 @@
 	bind:this={ref}
 	aria-hidden="true"
 	data-slot="pagination-ellipsis"
-	class={cn("size-8 items-center justify-center [&_svg:not([class*='size-'])]:size-4 flex items-center justify-center", className)}
+	class={cn("nds-pagination-ellipsis", className)}
 	{...restProps}
 >
 	<MoreHorizontalIcon  />
-	<span class="sr-only">More pages</span>
+	<span class="nds-sr-only">More pages</span>
 </span>

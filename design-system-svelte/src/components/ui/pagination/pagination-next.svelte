@@ -22,7 +22,7 @@
 	{#if children}
 		{@render children?.()}
 	{:else}
-		<span class="cn-pagination-next-text hidden sm:block">Next</span>
+		<span class="nds-pagination-label">Next</span>
 		<ChevronRightIcon data-icon="inline-end" />
 	{/if}
 </PaginationPrimitive.NextButton>

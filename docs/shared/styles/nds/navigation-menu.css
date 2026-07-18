@@ -264,7 +264,7 @@
 .nds-navigation-menu-viewport-panel {
   position: relative;
   margin-top: var(--spacing-1-5, 0.375rem);
-  height: var(--reka-navigation-menu-viewport-height);
+  height: var(--reka-navigation-menu-viewport-height, calc(var(--bits-navigation-menu-viewport-height) + 1rem));
   width: 100%;
   overflow: hidden;
 
@@ -280,7 +280,7 @@
 
 @media (min-width: 48rem) {
   .nds-navigation-menu-viewport-panel {
-    width: var(--reka-navigation-menu-viewport-width);
+    width: var(--reka-navigation-menu-viewport-width, calc(var(--bits-navigation-menu-viewport-width) + 1rem));
   }
 }
 

@@ -16,7 +16,7 @@
 	role="link"
 	aria-disabled="true"
 	aria-current="page"
-	class={cn("text-foreground font-normal", className)}
+	class={cn("nds-breadcrumb-page", className)}
 	{...restProps}
 >
 	{@render children?.()}

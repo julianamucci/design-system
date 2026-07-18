@@ -100,7 +100,7 @@ export const WithEllipsis: Story = {
     });
 
     await step('Ellipsis contém texto sr-only "More"', async () => {
-      const srOnly = canvasElement.querySelector('[data-slot="breadcrumb-ellipsis"] .sr-only');
+      const srOnly = canvasElement.querySelector('[data-slot="breadcrumb-ellipsis"] .nds-sr-only');
       await expect(srOnly).toHaveTextContent('More');
     });
   },
