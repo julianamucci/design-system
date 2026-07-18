@@ -90,9 +90,16 @@ const getNavGroups = (t: (key: string) => string) => [
 
 function SlideCard({ label, className = "" }: { label: string; className?: string }) {
   return (
-    <Card className={`h-40 shadow-none ${className}`}>
-      <CardContent className="flex h-full items-center justify-center">
-        <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
+    <Card
+      className={`nds-w-full nds-cluster nds-bg-muted-soft nds-shadow-none ${className}`}
+      data-justify="center"
+      data-align="center"
+      style={{ aspectRatio: "16 / 9" }}
+    >
+      <CardContent className="nds-cluster" data-justify="center" data-align="center">
+        <span className="nds-font-semibold nds-text-foreground" style={{ fontSize: "1.875rem" }}>
+          {label}
+        </span>
       </CardContent>
     </Card>
   );
@@ -121,8 +128,8 @@ function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slide
   }, [api]);
 
   return (
-    <div className="w-full max-w-md space-y-3">
-      <Carousel className="w-full" aria-label={ariaLabel} setApi={setApi}>
+    <div className="nds-w-full nds-max-w-md nds-stack" data-spacing="sm">
+      <Carousel className="nds-w-full" aria-label={ariaLabel} setApi={setApi}>
         <CarouselContent>
           {Array.from({ length: total }).map((_, i) => (
             <CarouselItem key={i}>
@@ -133,7 +140,7 @@ function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slide
         <CarouselPrevious aria-label={previousLabel} />
         <CarouselNext aria-label={nextLabel} />
       </Carousel>
-      <div className="flex items-center justify-center gap-2" aria-label={goToLabel}>
+      <div className="nds-cluster" data-spacing="sm" data-justify="center" aria-label={goToLabel}>
         {Array.from({ length: total }).map((_, i) => {
           const active = i === current;
           return (
@@ -143,7 +150,15 @@ function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slide
               aria-label={`${goToLabel} ${i + 1} ${ofLabel} ${total}`}
               aria-current={active ? "true" : "false"}
               onClick={() => api?.scrollTo(i)}
-              className={`h-2 w-2 rounded-full transition-colors ${active ? "bg-primary" : "bg-muted-foreground/30"}`}
+              className={`nds-rounded-full${active ? " nds-bg-primary" : ""}`}
+              style={{
+                height: "0.5rem",
+                width: "0.5rem",
+                transition: "background-color 200ms",
+                ...(active
+                  ? {}
+                  : { background: "color-mix(in oklch, var(--muted-foreground) 30%, transparent)" }),
+              }}
             />
           );
         })}
@@ -214,12 +229,12 @@ export function CarouselDocs() {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";`;
 
-  const codeHorizontal = `<Carousel className="w-full max-w-md" aria-label="Galeria de exemplos">
+  const codeHorizontal = `<Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de exemplos">
   <CarouselContent>
     {Array.from({ length: 5 }).map((_, i) => (
       <CarouselItem key={i}>
         <Card>
-          <CardContent className="flex h-40 items-center justify-center">
+          <CardContent className="nds-cluster" data-justify="center" data-align="center">
             Slide {i + 1}
           </CardContent>
         </Card>
@@ -232,14 +247,14 @@ import Autoplay from "embla-carousel-autoplay";`;
 
   const codeVertical = `<Carousel
   orientation="vertical"
-  className="w-full max-w-xs"
+  className="nds-w-full nds-max-w-xs"
   aria-label="Galeria vertical"
 >
-  <CarouselContent className="h-[200px]">
+  <CarouselContent style={{ height: "200px" }}>
     {Array.from({ length: 5 }).map((_, i) => (
-      <CarouselItem key={i} className="basis-full">
+      <CarouselItem key={i}>
         <Card>
-          <CardContent className="flex h-40 items-center justify-center">
+          <CardContent className="nds-cluster" data-justify="center" data-align="center">
             Slide {i + 1}
           </CardContent>
         </Card>
@@ -250,7 +265,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeSingle = `<Carousel className="w-full max-w-md">
+  const codeSingle = `<Carousel className="nds-w-full nds-max-w-md">
   <CarouselContent>
     <CarouselItem>...</CarouselItem>
     <CarouselItem>...</CarouselItem>
@@ -260,7 +275,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeMulti = `<Carousel className="w-full max-w-2xl">
+  const codeMulti = `<Carousel className="nds-w-full" style={{ maxWidth: "42rem" }}>
   <CarouselContent>
     {items.map((item) => (
       <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
@@ -318,9 +333,9 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex w-full items-center justify-center">
+        <div className="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            className="w-full max-w-md"
+            className="nds-w-full nds-max-w-md"
             aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
           >
             <CarouselContent>
@@ -439,7 +454,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Carousel className="w-full" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -452,7 +467,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               </Carousel>
             ),
             dontPreview: (
-              <Carousel className="w-full" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -469,7 +484,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Carousel className="w-full" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -482,7 +497,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               </Carousel>
             ),
             dontPreview: (
-              <Carousel className="w-full" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -519,7 +534,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             description: stripHtml(tContent("variants.items.horizontal")),
             code: codeHorizontal,
             preview: (
-              <Carousel className="w-full max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -539,12 +554,12 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             preview: (
               <Carousel
                 orientation="vertical"
-                className="w-full max-w-xs"
+                className="nds-w-full nds-max-w-xs"
                 aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
               >
-                <CarouselContent className="h-[200px]">
+                <CarouselContent style={{ height: "200px" }}>
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <CarouselItem key={i} className="basis-full">
+                    <CarouselItem key={i}>
                       <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
                     </CarouselItem>
                   ))}
@@ -559,7 +574,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             description: stripHtml(tContent("variants.items.single")),
             code: codeSingle,
             preview: (
-              <Carousel className="w-full max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -577,7 +592,11 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             description: stripHtml(tContent("variants.items.multi")),
             code: codeMulti,
             preview: (
-              <Carousel className="w-full max-w-2xl" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel
+                className="nds-w-full"
+                style={{ maxWidth: "42rem" }}
+                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+              >
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
                     <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
@@ -618,7 +637,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
   }, [api]);
 
   return (
-    <div className="space-y-3">
+    <div className="nds-stack" data-spacing="sm">
       <Carousel setApi={setApi} aria-label="Galeria de fotos do produto">
         <CarouselContent>
           {slides.map((s, i) => (
@@ -628,7 +647,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         <CarouselPrevious aria-label="Item anterior" />
         <CarouselNext aria-label="Próximo item" />
       </Carousel>
-      <div className="flex justify-center gap-2" aria-label="Ir para o slide">
+      <div className="nds-cluster" data-spacing="sm" data-justify="center" aria-label="Ir para o slide">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -636,7 +655,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             aria-label={\`Ir para o slide \${i + 1} de \${slides.length}\`}
             aria-current={i === current ? "true" : "false"}
             onClick={() => api?.scrollTo(i)}
-            className={\`h-2 w-2 rounded-full \${i === current ? "bg-primary" : "bg-muted-foreground/30"}\`}
+            className={\`nds-rounded-full \${i === current ? "nds-bg-primary" : ""}\`}
+            style={{ height: "0.5rem", width: "0.5rem" }}
           />
         ))}
       </div>
@@ -659,17 +679,28 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             name: tContent("variants.compositions.gallery.name"),
             description: tContent("variants.compositions.gallery.description"),
             useWhen: tContent("variants.compositions.gallery.use"),
-            code: `<Carousel className="w-full max-w-md" aria-label="Galeria de fotos do produto">
+            code: `<Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     {photos.map((photo) => (
       <CarouselItem key={photo.id}>
-        <Card className="overflow-hidden">
-          <div className="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-            <span className="text-2xl font-semibold">{photo.title}</span>
+        <Card className="nds-w-full nds-overflow-hidden">
+          <div
+            className="nds-w-full nds-cluster"
+            data-justify="center"
+            data-align="center"
+            style={{
+              aspectRatio: "16 / 9",
+              background:
+                "linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))",
+            }}
+          >
+            <span className="nds-font-semibold nds-text-foreground" style={{ fontSize: "1.5rem" }}>
+              {photo.title}
+            </span>
           </div>
-          <CardContent className="p-4">
-            <h3 className="font-semibold">{photo.title}</h3>
-            <p className="text-sm text-muted-foreground">{photo.description}</p>
+          <CardContent className="nds-p-4">
+            <h3 className="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+            <p className="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
           </CardContent>
         </Card>
       </CarouselItem>
@@ -680,7 +711,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 </Carousel>`,
             preview: (
               <Carousel
-                className="w-full max-w-md"
+                className="nds-w-full nds-max-w-md"
                 aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
               >
                 <CarouselContent>
@@ -691,13 +722,27 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                     { title: "Foto 4", description: "Praia vista do alto" },
                   ].map((photo, i) => (
                     <CarouselItem key={i}>
-                      <Card className="overflow-hidden shadow-none">
-                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-                          <span className="text-2xl font-semibold text-foreground">{photo.title}</span>
+                      <Card className="nds-w-full nds-overflow-hidden nds-shadow-none">
+                        <div
+                          className="nds-w-full nds-cluster"
+                          data-justify="center"
+                          data-align="center"
+                          style={{
+                            aspectRatio: "16 / 9",
+                            background:
+                              "linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))",
+                          }}
+                        >
+                          <span
+                            className="nds-font-semibold nds-text-foreground"
+                            style={{ fontSize: "1.5rem" }}
+                          >
+                            {photo.title}
+                          </span>
                         </div>
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold text-foreground">{photo.title}</h3>
-                          <p className="text-sm text-muted-foreground">{photo.description}</p>
+                        <CardContent className="nds-p-4">
+                          <h3 className="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+                          <p className="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
                         </CardContent>
                       </Card>
                     </CarouselItem>
@@ -729,7 +774,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 </Carousel>`,
             preview: (
               <Carousel
-                className="w-full max-w-md"
+                className="nds-w-full nds-max-w-md"
                 opts={{ loop: true }}
                 aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
               >
@@ -749,7 +794,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             name: tContent("variants.compositions.multiResponsive.name"),
             description: tContent("variants.compositions.multiResponsive.description"),
             useWhen: tContent("variants.compositions.multiResponsive.use"),
-            code: `<Carousel className="w-full max-w-2xl" aria-label="Cards de produto">
+            code: `<Carousel className="nds-w-full" style={{ maxWidth: "42rem" }} aria-label="Cards de produto">
   <CarouselContent>
     {products.map((p) => (
       <CarouselItem key={p.id} className="md:basis-1/2 lg:basis-1/3">
@@ -764,7 +809,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 </Carousel>`,
             preview: (
               <Carousel
-                className="w-full max-w-2xl"
+                className="nds-w-full"
+                style={{ maxWidth: "42rem" }}
                 aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
               >
                 <CarouselContent>

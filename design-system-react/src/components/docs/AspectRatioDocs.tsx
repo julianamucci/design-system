@@ -137,7 +137,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
   <img
     src="/hero.jpg"
     alt="Paisagem ao entardecer"
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
   />
 </AspectRatio>`;
 
@@ -145,7 +145,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
   <img
     src="/produto.jpg"
     alt="Tênis de corrida"
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
   />
 </AspectRatio>`;
 
@@ -153,7 +153,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
   <img
     src="/avatar.jpg"
     alt="Avatar de Maria Silva"
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
   />
 </AspectRatio>`;
 
@@ -161,7 +161,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
   <img
     src="/capa.jpg"
     alt="Capa do livro O Pequeno Príncipe"
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
   />
 </AspectRatio>`;
 
@@ -169,14 +169,14 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
   <img
     src="/panoramica.jpg"
     alt="Panorâmica da cordilheira"
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
   />
 </AspectRatio>`;
 
   const codeCustomizationTokens = `/* Aplicar tokens ao filho, nunca ao wrapper */
 <AspectRatio ratio={16 / 9}>
   <img
-    className="rounded-md object-cover w-full h-full"
+    className="nds-w-full nds-rounded-md" style={{ objectFit: "cover", height: "100%" }}
     src="..."
     alt="..."
   />
@@ -208,7 +208,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
         alt={alt}
         loading="lazy"
         decoding="async"
-        className="rounded-md object-cover w-full h-full"
+        className="nds-w-full nds-rounded-md"
+        style={{ objectFit: "cover", height: "100%" }}
       />
     </AspectRatio>
   );
@@ -229,32 +230,32 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+        <div className="nds-grid nds-w-full" style={{ gap: "var(--spacing-6)" }}>
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.sixteenNine")}
             </p>
             {renderRatioDemo(16 / 9, LANDSCAPE_SRC, "Paisagem ao entardecer")}
           </div>
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.fourThree")}
             </p>
             {renderRatioDemo(4 / 3, PRODUCT_SRC, "Tênis de corrida")}
           </div>
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.square")}
             </p>
-            <div className="max-w-[220px]">
+            <div style={{ maxWidth: "220px" }}>
               {renderRatioDemo(1, SQUARE_SRC, "Avatar de Maria Silva")}
             </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.threeFour")}
             </p>
-            <div className="max-w-[260px]">
+            <div style={{ maxWidth: "260px" }}>
               {renderRatioDemo(3 / 4, PORTRAIT_SRC, "Capa de retrato vertical")}
             </div>
           </div>
@@ -334,7 +335,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                   alt="Paisagem ao entardecer"
                   loading="lazy"
                   decoding="async"
-                  className="rounded-md object-cover w-full h-full"
+                  className="nds-w-full nds-rounded-md"
+                  style={{ objectFit: "cover", height: "100%" }}
                 />
               </AspectRatio>
             ),
@@ -345,7 +347,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                   alt="Paisagem ao entardecer"
                   loading="lazy"
                   decoding="async"
-                  className="rounded-md object-contain w-full h-full bg-muted"
+                  className="nds-w-full nds-rounded-md nds-bg-muted"
+                  style={{ objectFit: "contain", height: "100%" }}
                 />
               </AspectRatio>
             ),
@@ -362,18 +365,20 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                   alt="Tênis de corrida"
                   loading="lazy"
                   decoding="async"
-                  className="rounded-md object-cover w-full h-full"
+                  className="nds-w-full nds-rounded-md"
+                  style={{ objectFit: "cover", height: "100%" }}
                 />
               </AspectRatio>
             ),
             dontPreview: (
-              <AspectRatio ratio={4 / 3} className="rounded-md overflow-hidden border">
+              <AspectRatio ratio={4 / 3} className="nds-rounded-md nds-overflow-hidden">
                 <ImageWithFallback
                   src={PRODUCT_SRC}
                   alt="Tênis de corrida"
                   loading="lazy"
                   decoding="async"
-                  className="object-cover w-full h-full"
+                  className="nds-w-full"
+                  style={{ objectFit: "cover", height: "100%" }}
                 />
               </AspectRatio>
             ),
@@ -399,7 +404,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.sixteenNine"),
             code: codeSixteenNine,
             preview: (
-              <div className="w-full max-w-md">
+              <div className="nds-w-full" style={{ maxWidth: "28rem" }}>
                 {renderRatioDemo(16 / 9, LANDSCAPE_SRC, "Paisagem ao entardecer")}
               </div>
             ),
@@ -409,7 +414,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.fourThree"),
             code: codeFourThree,
             preview: (
-              <div className="w-full max-w-sm">
+              <div className="nds-w-full" style={{ maxWidth: "24rem" }}>
                 {renderRatioDemo(4 / 3, PRODUCT_SRC, "Tênis de corrida")}
               </div>
             ),
@@ -419,7 +424,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.square"),
             code: codeSquare,
             preview: (
-              <div className="w-56">
+              <div style={{ width: "14rem" }}>
                 {renderRatioDemo(1, SQUARE_SRC, "Avatar de Maria Silva")}
               </div>
             ),
@@ -429,7 +434,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.threeFour"),
             code: codeThreeFour,
             preview: (
-              <div className="w-60">
+              <div style={{ width: "15rem" }}>
                 {renderRatioDemo(3 / 4, PORTRAIT_SRC, "Capa de retrato vertical")}
               </div>
             ),
@@ -439,7 +444,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.ultraWide"),
             code: codeUltraWide,
             preview: (
-              <div className="w-full max-w-xl">
+              <div className="nds-w-full" style={{ maxWidth: "36rem" }}>
                 {renderRatioDemo(21 / 9, LANDSCAPE_SRC, "Panorâmica da cordilheira")}
               </div>
             ),

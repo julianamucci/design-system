@@ -174,7 +174,7 @@ export function DataTableDocs() {
         header: tContent("demonstration.labels.amount"),
         size: 130,
         cell: ({ row }) => (
-          <span className="font-medium tabular-nums">
+          <span className="nds-font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>
             {currency.format(row.original.amount)}
           </span>
         ),
@@ -348,7 +348,7 @@ declare module "@tanstack/react-table" {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full">
+        <div className="nds-w-full">
           <DataTable<Invoice>
             columns={demoColumns}
             data={sampleInvoices}

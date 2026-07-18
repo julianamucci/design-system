@@ -149,14 +149,14 @@ interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "nds-badge",
   {
     variants: {
       variant: {
-        default: "...",
-        secondary: "...",
-        destructive: "...",
-        outline: "...",
+        default: "nds-badge-default",
+        secondary: "nds-badge-secondary",
+        destructive: "nds-badge-destructive",
+        outline: "nds-badge-outline",
       },
     },
     defaultVariants: { variant: "default" },
@@ -179,14 +179,14 @@ const badgeVariants = cva(
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="nds-cluster" data-spacing="sm">
           <Badge variant="default">{tContent("demonstration.labels.defaultLabel")}</Badge>
           <Badge variant="secondary">{tContent("demonstration.labels.secondaryLabel")}</Badge>
           <Badge variant="destructive">{tContent("demonstration.labels.destructiveLabel")}</Badge>
           <Badge variant="outline">{tContent("demonstration.labels.outlineLabel")}</Badge>
           <Badge variant="destructive">{tContent("demonstration.labels.countLabel")}</Badge>
           <Badge variant="secondary">
-            <CheckCircle2 aria-hidden="true" className="mr-1 h-3 w-3" />
+            <CheckCircle2 aria-hidden="true" />
             {tContent("demonstration.labels.statusLabel")}
           </Badge>
         </div>
@@ -362,10 +362,10 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.withIcon.name"),
             description: tContent("variants.compositions.withIcon.description"),
             useWhen: tContent("variants.compositions.withIcon.use"),
-            code: `<Badge>\n  <Check className="h-3 w-3" aria-hidden="true" />\n  Ativo\n</Badge>`,
+            code: `<Badge>\n  <Check aria-hidden="true" />\n  Ativo\n</Badge>`,
             preview: (
               <Badge>
-                <Check className="h-3 w-3" aria-hidden="true" />
+                <Check aria-hidden="true" />
                 Ativo
               </Badge>
             ),
@@ -374,10 +374,10 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.count.name"),
             description: tContent("variants.compositions.count.description"),
             useWhen: tContent("variants.compositions.count.use"),
-            code: `<span role="status" aria-label="12 notificações não lidas" className="inline-flex items-center gap-2">\n  <Bell className="h-5 w-5" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+            code: `<span role="status" aria-label="12 notificações não lidas" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>\n  <Bell size={20} aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
             preview: (
-              <span role="status" aria-label="12 notificações não lidas" className="inline-flex items-center gap-2">
-                <Bell className="h-5 w-5" aria-hidden="true" />
+              <span role="status" aria-label="12 notificações não lidas" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
+                <Bell size={20} aria-hidden="true" />
                 <Badge variant="destructive">12</Badge>
               </span>
             ),
@@ -386,9 +386,9 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.asLink.name"),
             description: tContent("variants.compositions.asLink.description"),
             useWhen: tContent("variants.compositions.asLink.use"),
-            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" className="inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" style={{ display: 'inline-flex' }}>\n  <Badge variant="secondary">Design</Badge>\n</a>`,
             preview: (
-              <a href="#design" aria-label="Ver todos os itens da categoria Design" className="inline-flex">
+              <a href="#design" aria-label="Ver todos os itens da categoria Design" style={{ display: 'inline-flex' }}>
                 <Badge variant="secondary">Design</Badge>
               </a>
             ),
@@ -397,9 +397,9 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.asTrigger.name"),
             description: tContent("variants.compositions.asTrigger.description"),
             useWhen: tContent("variants.compositions.asTrigger.use"),
-            code: `<button type="button" aria-label="Filtrar por React" className="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">\n  <Badge variant="outline">React</Badge>\n</button>`,
+            code: `<button type="button" aria-label="Filtrar por React" className="nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ display: 'inline-flex', padding: 0, border: 0 }}>\n  <Badge variant="outline">React</Badge>\n</button>`,
             preview: (
-              <button type="button" aria-label="Filtrar por React" className="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">
+              <button type="button" aria-label="Filtrar por React" className="nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ display: 'inline-flex', padding: 0, border: 0 }}>
                 <Badge variant="outline">React</Badge>
               </button>
             ),

@@ -313,7 +313,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-start justify-center gap-6">
+        <div className="nds-cluster nds-w-full" data-justify="center">
           {previewSingle}
         </div>
       </DocsDemonstration>
@@ -507,7 +507,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   selected={date}
   onSelect={setDate}
   locale={ptBR}
-  className="rounded-md border"
+  className="nds-rounded-md nds-border-default"
 />`,
             preview: (
               <Calendar
@@ -515,7 +515,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
                 selected={singleDate}
                 onSelect={setSingleDate}
                 locale={ptBR}
-                className="rounded-md border"
+                className="nds-rounded-md nds-border-default"
               />
             ),
           },

@@ -183,7 +183,7 @@ export function CardDocs() {
     <CardTitle>Assinantes ativos</CardTitle>
   </CardHeader>
   <CardContent>
-    <p className="text-2xl font-semibold">8.742</p>
+    <p className="nds-text-h4 nds-font-semibold">8.742</p>
   </CardContent>
 </Card>`;
 
@@ -195,7 +195,7 @@ export function CardDocs() {
   <CardContent>
     <p>R$ 1.299,00</p>
   </CardContent>
-  <CardFooter className="justify-end gap-2">
+  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
     <Button variant="outline">Cancelar</Button>
     <Button>Salvar</Button>
   </CardFooter>
@@ -211,7 +211,7 @@ export function CardDocs() {
         size="icon"
         aria-label="Ações do produto Cadeira Gamer Pro"
       >
-        <MoreVertical aria-hidden="true" className="h-4 w-4" />
+        <MoreVertical aria-hidden="true" className="nds-icon" />
       </Button>
     </CardAction>
   </CardHeader>
@@ -224,7 +224,8 @@ export function CardDocs() {
   <ImageWithFallback
     src="/images/chair.jpg"
     alt="Cadeira Gamer Pro em fundo neutro"
-    className="h-40 w-full object-cover"
+    className="nds-w-full"
+    style={{ height: "10rem", objectFit: "cover" }}
   />
   <CardHeader>
     <CardTitle>Cadeira Gamer Pro</CardTitle>
@@ -262,7 +263,7 @@ interface CardProps extends React.ComponentProps<"div"> {
   // ─── Previews reutilizáveis ─────────────────────────────────────────────────
 
   const previewProductCard = (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>{productTitle}</CardTitle>
         <CardDescription>{productDescription}</CardDescription>
@@ -271,9 +272,9 @@ interface CardProps extends React.ComponentProps<"div"> {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="text-lg font-semibold">{productPrice}</p>
+        <p className="nds-text-lead nds-font-semibold">{productPrice}</p>
       </CardContent>
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
         <Button
           variant="outline"
           aria-label={`${actionEdit} ${productTitle}`}
@@ -286,14 +287,14 @@ interface CardProps extends React.ComponentProps<"div"> {
   );
 
   const previewMetricCard = (
-    <Card size="sm" className="w-full max-w-xs">
+    <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>
         <CardDescription>{metricTitle}</CardDescription>
-        <CardTitle className="text-2xl">{metricValue}</CardTitle>
+        <CardTitle className="nds-text-h4 nds-font-semibold">{metricValue}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground flex items-center gap-1">
-          <TrendingUp aria-hidden="true" className="h-3.5 w-3.5" />
+        <p className="nds-text-body nds-text-muted-foreground nds-cluster" data-spacing="xs">
+          <TrendingUp aria-hidden="true" className="nds-icon-sm" />
           {metricTrend}
         </p>
       </CardContent>
@@ -301,14 +302,14 @@ interface CardProps extends React.ComponentProps<"div"> {
   );
 
   const previewProfileCard = (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
-        <div className="flex items-center gap-3">
+        <div className="nds-cluster" data-spacing="sm">
           <Avatar>
             <AvatarImage src={DEMO_IMAGE_AVATAR} alt={`Foto de perfil de ${profileTitle}`} />
             <AvatarFallback>MR</AvatarFallback>
           </Avatar>
-          <div className="min-w-0">
+          <div className="nds-min-w-0">
             <CardTitle>{profileTitle}</CardTitle>
             <CardDescription>{profileDescription}</CardDescription>
           </div>
@@ -333,7 +334,7 @@ interface CardProps extends React.ComponentProps<"div"> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+        <div className="nds-w-full nds-grid" data-cols="2" data-spacing="md" data-min="18rem">
           {previewProductCard}
           {previewMetricCard}
           {previewProfileCard}
@@ -448,15 +449,15 @@ interface CardProps extends React.ComponentProps<"div"> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Card className="w-full">
+              <Card className="nds-w-full">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm">{productPrice}</p>
+                  <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
-                <CardFooter className="justify-end gap-2">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
                   <Button
                     variant="outline"
                     aria-label={`${actionCancel} ${productTitle}`}
@@ -470,9 +471,9 @@ interface CardProps extends React.ComponentProps<"div"> {
               </Card>
             ),
             dontPreview: (
-              <Card className="w-full">
+              <Card className="nds-w-full">
                 <CardContent>
-                  <div className="h-12" />
+                  <div style={{ height: "3rem" }} />
                 </CardContent>
               </Card>
             ),
@@ -483,12 +484,12 @@ interface CardProps extends React.ComponentProps<"div"> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Card className="w-full">
+              <Card className="nds-w-full">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productStock}</CardDescription>
                 </CardHeader>
-                <CardFooter className="justify-end gap-2">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
                   <Button
                     variant="outline"
                     aria-label={`${actionEdit} ${productTitle}`}
@@ -505,12 +506,12 @@ interface CardProps extends React.ComponentProps<"div"> {
               </Card>
             ),
             dontPreview: (
-              <Card className="w-full">
+              <Card className="nds-w-full">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productStock}</CardDescription>
                 </CardHeader>
-                <CardFooter className="justify-end gap-2">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
                   <Button variant="outline">{actionEdit}</Button>
                   <Button variant="destructive">{actionDelete}</Button>
                 </CardFooter>
@@ -540,13 +541,13 @@ interface CardProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.items.default")),
             code: codeDefault,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-base font-semibold">{productPrice}</p>
+                  <p className="nds-text-base nds-font-semibold">{productPrice}</p>
                 </CardContent>
               </Card>
             ),
@@ -556,13 +557,13 @@ interface CardProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.items.sm")),
             code: codeSmall,
             preview: (
-              <Card size="sm" className="w-full max-w-xs">
+              <Card size="sm" className="nds-w-full nds-max-w-xs">
                 <CardHeader>
                   <CardDescription>{metricTitle}</CardDescription>
-                  <CardTitle className="text-xl">{metricValue}</CardTitle>
+                  <CardTitle className="nds-text-lead nds-font-semibold">{metricValue}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs text-muted-foreground">{metricTrend}</p>
+                  <p className="nds-text-caption nds-text-muted-foreground">{metricTrend}</p>
                 </CardContent>
               </Card>
             ),
@@ -572,15 +573,15 @@ interface CardProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.items.withFooter")),
             code: codeWithFooter,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm">{productPrice}</p>
+                  <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
-                <CardFooter className="justify-end gap-2">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
                   <Button
                     variant="outline"
                     aria-label={`${actionCancel} ${productTitle}`}
@@ -599,7 +600,7 @@ interface CardProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.items.withAction")),
             code: codeWithAction,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productStock}</CardDescription>
@@ -609,12 +610,12 @@ interface CardProps extends React.ComponentProps<"div"> {
                       size="icon"
                       aria-label={`Ações do produto ${productTitle}`}
                     >
-                      <MoreVertical aria-hidden="true" className="h-4 w-4" />
+                      <MoreVertical aria-hidden="true" className="nds-icon" />
                     </Button>
                   </CardAction>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm">{productPrice}</p>
+                  <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
               </Card>
             ),
@@ -624,18 +625,19 @@ interface CardProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.items.withImage")),
             code: codeWithImage,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <ImageWithFallback
                   src={DEMO_IMAGE_PRODUCT}
                   alt={`${productTitle} em fundo neutro`}
-                  className="h-40 w-full object-cover"
+                  className="nds-w-full"
+                  style={{ height: "10rem", objectFit: "cover" }}
                 />
                 <CardHeader>
                   <CardTitle>{productTitle}</CardTitle>
                   <CardDescription>{productDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm">{productPrice}</p>
+                  <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
               </Card>
             ),
@@ -653,17 +655,17 @@ interface CardProps extends React.ComponentProps<"div"> {
             name: tContent("variants.compositions.withFooter.name"),
             description: tContent("variants.compositions.withFooter.description"),
             useWhen: tContent("variants.compositions.withFooter.use"),
-            code: `<Card className="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p className="text-lg font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter className="justify-end gap-2">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
+            code: `<Card className="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p className="nds-text-lead nds-font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>Cadeira Gamer Pro</CardTitle>
                   <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg font-semibold">R$ 1.299,00</p>
+                  <p className="nds-text-lead nds-font-semibold">R$ 1.299,00</p>
                 </CardContent>
-                <CardFooter className="justify-end gap-2">
+                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
                   <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
                   <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
                 </CardFooter>
@@ -674,9 +676,9 @@ interface CardProps extends React.ComponentProps<"div"> {
             name: tContent("variants.compositions.withAction.name"),
             description: tContent("variants.compositions.withAction.description"),
             useWhen: tContent("variants.compositions.withAction.use"),
-            code: `<Card className="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p className="text-2xl font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
+            code: `<Card className="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p className="nds-text-h4 nds-font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>Assinantes ativos</CardTitle>
                   <CardDescription>+12% no mês</CardDescription>
@@ -685,7 +687,7 @@ interface CardProps extends React.ComponentProps<"div"> {
                   </CardAction>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-semibold">8.742</p>
+                  <p className="nds-text-h4 nds-font-semibold">8.742</p>
                 </CardContent>
               </Card>
             ),
@@ -694,13 +696,14 @@ interface CardProps extends React.ComponentProps<"div"> {
             name: tContent("variants.compositions.withImage.name"),
             description: tContent("variants.compositions.withImage.description"),
             useWhen: tContent("variants.compositions.withImage.use"),
-            code: `<Card className="w-full max-w-sm">\n  <img\n    src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"\n    alt="Cadeira Gamer Pro"\n    className="w-full h-40 object-cover"\n  />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
+            code: `<Card className="nds-w-full nds-max-w-sm">\n  <img\n    src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"\n    alt="Cadeira Gamer Pro"\n    className="nds-w-full"\n    style={{ height: "10rem", objectFit: "cover" }}\n  />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <img
                   src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"
                   alt="Cadeira Gamer Pro"
-                  className="w-full h-40 object-cover"
+                  className="nds-w-full"
+                  style={{ height: "10rem", objectFit: "cover" }}
                 />
                 <CardHeader>
                   <CardTitle>Cadeira Gamer Pro</CardTitle>

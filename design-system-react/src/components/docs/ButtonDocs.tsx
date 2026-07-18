@@ -173,7 +173,7 @@ import { Plus } from "lucide-react";`;
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <div className="flex flex-wrap gap-3">
+            <div className="nds-cluster" data-spacing="sm">
               {([
                 { variant: undefined,     label: tContent("demonstration.labels.primary") },
                 { variant: "secondary",   label: tContent("demonstration.labels.secondary") },
@@ -318,13 +318,13 @@ import { Plus } from "lucide-react";`;
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <div className="flex gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Button variant="outline">Cancelar</Button>
                     <Button>Salvar</Button>
                   </div>
                 ),
                 dontPreview: (
-                  <div className="flex gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Button>Salvar</Button>
                     <Button>Enviar</Button>
                   </div>
@@ -499,9 +499,9 @@ import { Plus } from "lucide-react";`;
                 name: tContent("variants.compositions.actionPair.name"),
                 description: tContent("variants.compositions.actionPair.description"),
                 useWhen: tContent("variants.compositions.actionPair.use"),
-                code: `<div className="flex gap-2">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+                code: `<div className="nds-cluster" data-spacing="xs">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
                 preview: (
-                  <div className="flex gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Button variant="outline">Cancelar</Button>
                     <Button>Confirmar</Button>
                   </div>

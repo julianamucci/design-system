@@ -148,33 +148,34 @@ import { User } from "lucide-react";`;
 
   const codeWithIcon = `<Avatar>
   <AvatarFallback aria-label="Usuário genérico">
-    <User aria-hidden="true" className="h-5 w-5" />
+    <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
   </AvatarFallback>
 </Avatar>`;
 
-  const codeGroup = `<div className="flex -space-x-2">
-  <Avatar className="ring-2 ring-background">
+  const codeGroup = `<div style={{ display: "flex" }}>
+  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
     <AvatarImage src="/maria.jpg" alt="Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
-  <Avatar className="ring-2 ring-background">
+  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
     <AvatarFallback>JP</AvatarFallback>
   </Avatar>
-  <Avatar className="ring-2 ring-background">
+  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
     <AvatarFallback>
-      <User aria-hidden="true" className="h-5 w-5" />
+      <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
     </AvatarFallback>
   </Avatar>
 </div>`;
 
-  const codeWithStatus = `<div className="relative inline-block">
+  const codeWithStatus = `<div style={{ position: "relative", display: "inline-block" }}>
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
     <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
   <span
     aria-label="online"
-    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+    className="nds-rounded-full nds-bg-primary"
+    style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
   />
 </div>`;
 
@@ -232,8 +233,13 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-end justify-center gap-8">
-          <div className="flex flex-col items-center gap-2">
+        <div
+          className="nds-cluster"
+          data-justify="center"
+          data-spacing="xl"
+          style={{ alignItems: "flex-end", flexWrap: "wrap" }}
+        >
+          <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
             <Avatar>
               <AvatarImage
                 src={DEMO_IMAGE_MARIA}
@@ -241,66 +247,67 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
               />
               <AvatarFallback delayMs={600}>MR</AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.withImage")}
             </span>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
+          <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
             <Avatar>
               <AvatarFallback>
                 {tContent("demonstration.labels.withFallbackInitials")}
               </AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.withFallback")}
             </span>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
+          <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
             <Avatar>
               <AvatarFallback aria-label={tContent("demonstration.labels.withIcon")}>
-                <User aria-hidden="true" className="h-5 w-5" />
+                <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
               </AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.withIcon")}
             </span>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex -space-x-2">
-              <Avatar className="ring-2 ring-background">
+          <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
+            <div style={{ display: "flex" }}>
+              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
                 <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
                 <AvatarFallback aria-hidden="true">MR</AvatarFallback>
               </Avatar>
-              <Avatar className="ring-2 ring-background">
+              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                 <AvatarImage src={DEMO_IMAGE_SECOND} alt="" />
                 <AvatarFallback aria-hidden="true">JP</AvatarFallback>
               </Avatar>
-              <Avatar className="ring-2 ring-background">
+              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                 <AvatarFallback aria-hidden="true">
-                  <User aria-hidden="true" className="h-5 w-5" />
+                  <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
             </div>
-            <span className="text-xs text-muted-foreground">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.groupTitle")}
             </span>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="relative inline-block">
+          <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
+            <div style={{ position: "relative", display: "inline-block" }}>
               <Avatar>
                 <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
                 <AvatarFallback aria-hidden="true">MR</AvatarFallback>
               </Avatar>
               <span
                 aria-label={tContent("demonstration.labels.statusOnline")}
-                className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+                className="nds-rounded-full nds-bg-primary"
+                style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
               />
             </div>
-            <span className="text-xs text-muted-foreground">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.statusTitle")}
             </span>
           </div>
@@ -437,7 +444,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             ),
             dontPreview: (
               <Avatar>
-                <AvatarFallback className="text-xs">mar</AvatarFallback>
+                <AvatarFallback className="nds-text-caption">mar</AvatarFallback>
               </Avatar>
             ),
             doCaption: tContent("doDont.pair2.do"),
@@ -490,7 +497,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             preview: (
               <Avatar>
                 <AvatarFallback aria-label="Usuário genérico">
-                  <User aria-hidden="true" className="h-5 w-5" />
+                  <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
             ),
@@ -500,22 +507,22 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             description: stripHtml(tContent("variants.items.group")),
             code: codeGroup,
             preview: (
-              <div className="flex -space-x-2">
-                <Avatar className="ring-2 ring-background">
+              <div style={{ display: "flex" }}>
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
                   <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
                   <AvatarFallback aria-hidden="true">MR</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarImage src={DEMO_IMAGE_SECOND} alt="" />
                   <AvatarFallback aria-hidden="true">JP</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarImage src={DEMO_IMAGE_THIRD} alt="" />
                   <AvatarFallback aria-hidden="true">AS</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarFallback aria-hidden="true">
-                    <User aria-hidden="true" className="h-5 w-5" />
+                    <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                   </AvatarFallback>
                 </Avatar>
               </div>
@@ -526,14 +533,15 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             description: stripHtml(tContent("variants.items.withStatus")),
             code: codeWithStatus,
             preview: (
-              <div className="relative inline-block">
+              <div style={{ position: "relative", display: "inline-block" }}>
                 <Avatar>
                   <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
                   <AvatarFallback aria-hidden="true">MR</AvatarFallback>
                 </Avatar>
                 <span
                   aria-label="online"
-                  className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+                  className="nds-rounded-full nds-bg-primary"
+                  style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
                 />
               </div>
             ),
@@ -574,11 +582,11 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.withIcon.name"),
             description: tContent("variants.compositions.withIcon.description"),
             useWhen: tContent("variants.compositions.withIcon.use"),
-            code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" className="h-5 w-5 text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
+            code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
             preview: (
               <Avatar>
                 <AvatarFallback role="img" aria-label="Usuário genérico">
-                  <User aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
+                  <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
             ),
@@ -587,20 +595,20 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.group.name"),
             description: tContent("variants.compositions.group.description"),
             useWhen: tContent("variants.compositions.group.use"),
-            code: `<div className="flex -space-x-2" role="group" aria-label="Participantes">\n  <Avatar className="ring-2 ring-background">\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar className="ring-2 ring-background">\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
+            code: `<div style={{ display: "flex" }} role="group" aria-label="Participantes">\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
             preview: (
-              <div className="flex -space-x-2" role="group" aria-label="Participantes">
-                <Avatar className="ring-2 ring-background">
+              <div style={{ display: "flex" }} role="group" aria-label="Participantes">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
                   <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
                   <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarFallback>JP</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarFallback>AL</AvatarFallback>
                 </Avatar>
-                <Avatar className="ring-2 ring-background">
+                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarFallback>+3</AvatarFallback>
                 </Avatar>
               </div>
@@ -610,14 +618,14 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.withStatus.name"),
             description: tContent("variants.compositions.withStatus.description"),
             useWhen: tContent("variants.compositions.withStatus.use"),
-            code: `<div className="relative inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />\n</div>`,
+            code: `<div style={{ position: "relative", display: "inline-block" }}>\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />\n</div>`,
             preview: (
-              <div className="relative inline-block">
+              <div style={{ position: "relative", display: "inline-block" }}>
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
                   <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
-                <span role="status" aria-label="online" className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
+                <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />
               </div>
             ),
           },

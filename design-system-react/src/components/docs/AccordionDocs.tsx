@@ -244,7 +244,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <Accordion defaultValue={["item-1"]} className="w-full">
+            <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
               {([1, 2, 3, 4] as const).map((i) => {
                 const label = tContent(`demonstration.labels.q${i}`);
                 return (
@@ -343,7 +343,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion className="w-full">
+                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
                     <AccordionItem value="do-1">
                       <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
                       <AccordionContent>Clique em "Esqueci minha senha" na tela de login.</AccordionContent>
@@ -351,7 +351,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion className="w-full">
+                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
                     <AccordionItem value="dont-1">
                       <AccordionTrigger>Senha</AccordionTrigger>
                       <AccordionContent>Ver mais informações.</AccordionContent>
@@ -365,7 +365,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion multiple className="w-full">
+                  <Accordion multiple className="nds-w-full nds-max-w-xs nds-text-body">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB</AccordionContent>
@@ -377,7 +377,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion className="w-full">
+                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
                     <AccordionItem value="single-only">
                       <AccordionTrigger>Mostrar informações</AccordionTrigger>
                       <AccordionContent>Use Collapsible para uma única seção.</AccordionContent>
@@ -407,7 +407,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.single.description")),
                 code: codeSingle,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>{tContent("demonstration.labels.q1")}</AccordionTrigger>
                       <AccordionContent>{tContent("demonstration.labels.a1")}</AccordionContent>
@@ -424,7 +424,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.multiple.description")),
                 code: codeMultiple,
                 preview: (
-                  <Accordion multiple className="w-full">
+                  <Accordion multiple className="nds-w-full nds-max-w-sm nds-text-body">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB, SSD: 512GB</AccordionContent>
@@ -441,7 +441,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.controlled.description")),
                 code: codeControlled,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item controlado</AccordionTrigger>
                       <AccordionContent>Estado gerenciado via value + onValueChange.</AccordionContent>
@@ -454,7 +454,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="w-full">
+                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
                       <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
@@ -479,11 +479,11 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.iconTrigger.name"),
                 description: tContent("variants.compositions.iconTrigger.description"),
                 useWhen: tContent("variants.compositions.iconTrigger.use"),
-                code: `<Accordion type="single" collapsible className="w-full max-w-lg">
+                code: `<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
-      <span className="flex items-center gap-2">
-        <Info aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="xs">
+        <Info aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
         Informação
       </span>
     </AccordionTrigger>
@@ -491,8 +491,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
   <AccordionItem value="warning">
     <AccordionTrigger>
-      <span className="flex items-center gap-2">
-        <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="xs">
+        <AlertTriangle aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
         Aviso
       </span>
     </AccordionTrigger>
@@ -500,8 +500,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
   <AccordionItem value="success">
     <AccordionTrigger>
-      <span className="flex items-center gap-2">
-        <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="xs">
+        <CheckCircle2 aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
         Confirmação
       </span>
     </AccordionTrigger>
@@ -509,11 +509,11 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion className="w-full max-w-lg">
+                  <Accordion className="nds-w-full nds-max-w-lg">
                     <AccordionItem value="info">
                       <AccordionTrigger>
-                        <span className="flex items-center gap-2">
-                          <Info aria-hidden="true" className="h-4 w-4" />
+                        <span className="nds-cluster" data-spacing="xs">
+                          <Info aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
                           Informação
                         </span>
                       </AccordionTrigger>
@@ -521,8 +521,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                     <AccordionItem value="warning">
                       <AccordionTrigger>
-                        <span className="flex items-center gap-2">
-                          <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+                        <span className="nds-cluster" data-spacing="xs">
+                          <AlertTriangle aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
                           Aviso
                         </span>
                       </AccordionTrigger>
@@ -530,8 +530,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                     <AccordionItem value="success">
                       <AccordionTrigger>
-                        <span className="flex items-center gap-2">
-                          <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                        <span className="nds-cluster" data-spacing="xs">
+                          <CheckCircle2 aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
                           Confirmação
                         </span>
                       </AccordionTrigger>
@@ -544,42 +544,42 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.badgeTrigger.name"),
                 description: tContent("variants.compositions.badgeTrigger.description"),
                 useWhen: tContent("variants.compositions.badgeTrigger.use"),
-                code: `<Accordion type="single" collapsible className="w-full max-w-lg">
+                code: `<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
   <AccordionItem value="novo">
     <AccordionTrigger>
-      <span className="flex items-center gap-2">
+      <span className="nds-cluster" data-spacing="xs">
         Novidades da versão 3.0
-        <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
+        <Badge variant="default" style={{ fontSize: "10px", height: "1rem" }}>Novo</Badge>
       </span>
     </AccordionTrigger>
     <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
   </AccordionItem>
   <AccordionItem value="beta">
     <AccordionTrigger>
-      <span className="flex items-center gap-2">
+      <span className="nds-cluster" data-spacing="xs">
         Funcionalidades em beta
-        <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
+        <Badge variant="secondary" style={{ fontSize: "10px", height: "1rem" }}>Beta</Badge>
       </span>
     </AccordionTrigger>
     <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion className="w-full max-w-lg">
+                  <Accordion className="nds-w-full nds-max-w-lg">
                     <AccordionItem value="novo">
                       <AccordionTrigger>
-                        <span className="flex items-center gap-2">
+                        <span className="nds-cluster" data-spacing="xs">
                           Novidades da versão 3.0
-                          <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
+                          <Badge variant="default" style={{ fontSize: "10px", height: "1rem" }}>Novo</Badge>
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="beta">
                       <AccordionTrigger>
-                        <span className="flex items-center gap-2">
+                        <span className="nds-cluster" data-spacing="xs">
                           Funcionalidades em beta
-                          <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
+                          <Badge variant="secondary" style={{ fontSize: "10px", height: "1rem" }}>Beta</Badge>
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
@@ -591,13 +591,13 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.richContent.name"),
                 description: tContent("variants.compositions.richContent.description"),
                 useWhen: tContent("variants.compositions.richContent.use"),
-                code: `<Accordion type="multiple" className="w-full max-w-lg">
+                code: `<Accordion type="multiple" className="nds-w-full nds-max-w-lg">
   <AccordionItem value="layout">
     <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
     <AccordionContent>
-      <div className="grid grid-cols-2 gap-2 text-sm">
-        <div className="font-medium">Propriedade</div>
-        <div className="font-medium">Valor</div>
+      <div className="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
+        <div className="nds-font-medium">Propriedade</div>
+        <div className="nds-font-medium">Valor</div>
         <div>Gutter</div><div>24px</div>
         <div>Margem mobile</div><div>16px</div>
         <div>Colunas</div><div>12</div>
@@ -607,7 +607,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   <AccordionItem value="tipografia">
     <AccordionTrigger>Tipografia</AccordionTrigger>
     <AccordionContent>
-      <ul className="list-disc pl-5 text-sm space-y-1">
+      <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
         <li>text-xs — 12px</li>
         <li>text-sm — 14px</li>
         <li>text-base — 16px</li>
@@ -616,13 +616,13 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion multiple className="w-full max-w-lg">
+                  <Accordion multiple className="nds-w-full nds-max-w-lg">
                     <AccordionItem value="layout">
                       <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
                       <AccordionContent>
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                          <div className="font-medium">Propriedade</div>
-                          <div className="font-medium">Valor</div>
+                        <div className="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
+                          <div className="nds-font-medium">Propriedade</div>
+                          <div className="nds-font-medium">Valor</div>
                           <div>Gutter</div><div>24px</div>
                           <div>Margem mobile</div><div>16px</div>
                           <div>Colunas</div><div>12</div>
@@ -632,7 +632,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     <AccordionItem value="tipografia">
                       <AccordionTrigger>Tipografia</AccordionTrigger>
                       <AccordionContent>
-                        <ul className="list-disc pl-5 text-sm space-y-1">
+                        <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
                           <li>text-xs — 12px</li>
                           <li>text-sm — 14px</li>
                           <li>text-base — 16px</li>
@@ -646,8 +646,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.faq.name"),
                 description: tContent("variants.compositions.faq.description"),
                 useWhen: tContent("variants.compositions.faq.use"),
-                code: `<h2 className="text-base font-semibold">Perguntas frequentes</h2>
-<Accordion type="single" collapsible className="w-full max-w-lg">
+                code: `<h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
+<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
   <AccordionItem value="senha">
     <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
     <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
@@ -666,9 +666,9 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <div className="space-y-3 w-full max-w-lg">
-                    <h2 className="text-base font-semibold">Perguntas frequentes</h2>
-                    <Accordion className="w-full max-w-lg">
+                  <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="xs">
+                    <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
+                    <Accordion className="nds-w-full nds-max-w-lg">
                       <AccordionItem value="senha">
                         <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
                         <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>

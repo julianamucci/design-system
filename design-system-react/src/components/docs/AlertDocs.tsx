@@ -132,7 +132,7 @@ export function AlertDocs() {
 import { Info } from "lucide-react";`;
 
   const codeDefault = `<Alert>
-  <Info aria-hidden="true" className="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
@@ -140,23 +140,23 @@ import { Info } from "lucide-react";`;
 </Alert>`;
 
   const codeDestructive = `<Alert variant="destructive">
-  <AlertCircle aria-hidden="true" className="h-4 w-4" />
+  <AlertCircle aria-hidden="true" />
   <AlertTitle>Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
 </Alert>`;
 
-  const codeSuccess = `<Alert className="bg-success/10 text-success border-success/30">
-  <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+  const codeSuccess = `<Alert className="nds-alert-success">
+  <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
 </Alert>`;
 
-  const codeWarning = `<Alert className="bg-warning/10 text-warning border-warning/30">
-  <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+  const codeWarning = `<Alert className="nds-alert-warning">
+  <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
@@ -164,7 +164,7 @@ import { Info } from "lucide-react";`;
 </Alert>`;
 
   const codeWithoutTitle = `<Alert>
-  <Info aria-hidden="true" className="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -207,24 +207,24 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <div className="w-full space-y-3">
+            <div className="nds-w-full nds-stack" data-spacing="sm">
               <Alert>
-                <Info aria-hidden="true" className="h-4 w-4" />
+                <Info aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
               </Alert>
               <Alert variant="destructive">
-                <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                <AlertCircle aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
               </Alert>
-              <Alert className="bg-success/10 text-success border-success/30">
-                <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+              <Alert className="nds-alert-success">
+                <CheckCircle2 aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
               </Alert>
-              <Alert className="bg-warning/10 text-warning border-warning/30">
-                <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+              <Alert className="nds-alert-warning">
+                <TriangleAlert aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
               </Alert>
@@ -333,7 +333,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 dontLabel: tNav("common.dont"),
                 doPreview: (
                   <Alert>
-                    <Info aria-hidden="true" className="h-4 w-4" />
+                    <Info aria-hidden="true" />
                     <AlertTitle>Erro ao salvar</AlertTitle>
                     <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
                   </Alert>
@@ -351,7 +351,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 dontLabel: tNav("common.dont"),
                 doPreview: (
                   <Alert variant="destructive">
-                    <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                    <AlertCircle aria-hidden="true" />
                     <AlertTitle>Erro ao salvar</AlertTitle>
                     <AlertDescription>Verifique sua conexão.</AlertDescription>
                   </Alert>
@@ -386,8 +386,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: tContent("variants.items.default"),
                 code: codeDefault,
                 preview: (
-                  <Alert className="w-full">
-                    <Info aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full">
+                    <Info aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
@@ -398,8 +398,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: stripHtml(tContent("variants.items.destructive")),
                 code: codeDestructive,
                 preview: (
-                  <Alert variant="destructive" className="w-full">
-                    <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                  <Alert variant="destructive" className="nds-w-full">
+                    <AlertCircle aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
                   </Alert>
@@ -410,8 +410,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: stripHtml(tContent("variants.items.success")),
                 code: codeSuccess,
                 preview: (
-                  <Alert className="w-full bg-success/10 text-success border-success/30">
-                    <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full nds-alert-success">
+                    <CheckCircle2 aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
                   </Alert>
@@ -422,8 +422,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: stripHtml(tContent("variants.items.warning")),
                 code: codeWarning,
                 preview: (
-                  <Alert className="w-full bg-warning/10 text-warning border-warning/30">
-                    <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full nds-alert-warning">
+                    <TriangleAlert aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
                   </Alert>
@@ -434,8 +434,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: tContent("states.withoutTitle.behavior"),
                 code: codeWithoutTitle,
                 preview: (
-                  <Alert className="w-full">
-                    <Info aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full">
+                    <Info aria-hidden="true" />
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -453,10 +453,10 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.withIcon.name"),
                 description: tContent("variants.compositions.withIcon.description"),
                 useWhen: tContent("variants.compositions.withIcon.use"),
-                code: `<Alert>\n  <Info aria-hidden="true" className="h-4 w-4" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
                 preview: (
-                  <Alert className="w-full">
-                    <Info aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full">
+                    <Info aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
@@ -466,12 +466,12 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.withAction.name"),
                 description: tContent("variants.compositions.withAction.description"),
                 useWhen: tContent("variants.compositions.withAction.use"),
-                code: `<Alert>\n  <Info aria-hidden="true" className="h-4 w-4" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription className="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription className="nds-cluster" data-align="center" data-justify="between" style={{ marginTop: "var(--spacing-1)" }}>\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
                 preview: (
-                  <Alert className="w-full">
-                    <Info aria-hidden="true" className="h-4 w-4" />
+                  <Alert className="nds-w-full">
+                    <Info aria-hidden="true" />
                     <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-                    <AlertDescription className="flex items-center justify-between gap-4 mt-1">
+                    <AlertDescription className="nds-cluster" data-align="center" data-justify="between" style={{ marginTop: "var(--spacing-1)" }}>
                       <span>Salve seu trabalho para não perder as alterações.</span>
                       <Button size="sm" variant="outline">Salvar agora</Button>
                     </AlertDescription>
@@ -482,10 +482,10 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.compact.name"),
                 description: tContent("variants.compositions.compact.description"),
                 useWhen: tContent("variants.compositions.compact.use"),
-                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" className="h-4 w-4" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
                 preview: (
-                  <Alert variant="destructive" className="w-full">
-                    <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                  <Alert variant="destructive" className="nds-w-full">
+                    <AlertCircle aria-hidden="true" />
                     <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -494,26 +494,26 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.multipleTypes.name"),
                 description: tContent("variants.compositions.multipleTypes.description"),
                 useWhen: tContent("variants.compositions.multipleTypes.use"),
-                code: `<div className="space-y-3">\n  <Alert>\n    <Info aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert className="bg-success/10 text-success border-success/30">\n    <CheckCircle2 aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert className="bg-warning/10 text-warning border-warning/30">\n    <TriangleAlert aria-hidden="true" className="h-4 w-4" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+                code: `<div className="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert className="nds-alert-success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert className="nds-alert-warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
                 preview: (
-                  <div className="space-y-3 w-full">
+                  <div className="nds-stack nds-w-full" data-spacing="sm">
                     <Alert>
-                      <Info aria-hidden="true" className="h-4 w-4" />
+                      <Info aria-hidden="true" />
                       <AlertTitle>Informação</AlertTitle>
                       <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
                     </Alert>
                     <Alert variant="destructive">
-                      <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                      <AlertCircle aria-hidden="true" />
                       <AlertTitle>Erro</AlertTitle>
                       <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
                     </Alert>
-                    <Alert className="bg-success/10 text-success border-success/30">
-                      <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                    <Alert className="nds-alert-success">
+                      <CheckCircle2 aria-hidden="true" />
                       <AlertTitle>Sucesso</AlertTitle>
                       <AlertDescription>Ação concluída com sucesso.</AlertDescription>
                     </Alert>
-                    <Alert className="bg-warning/10 text-warning border-warning/30">
-                      <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+                    <Alert className="nds-alert-warning">
+                      <TriangleAlert aria-hidden="true" />
                       <AlertTitle>Aviso</AlertTitle>
                       <AlertDescription>Aviso que requer atenção.</AlertDescription>
                     </Alert>
@@ -659,14 +659,14 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               description: tContent("tokens.table.part"),
             }}
             items={[
-              { token: "--background", value: "bg-background", description: tContent("tokens.table.background") },
-              { token: "--foreground", value: "text-foreground", description: tContent("tokens.table.foreground") },
-              { token: "--border", value: "border", description: tContent("tokens.table.border") },
-              { token: "--destructive", value: "border-destructive/50", description: tContent("tokens.table.destructiveBorder") },
-              { token: "--destructive", value: "text-destructive", description: tContent("tokens.table.destructiveText") },
-              { token: "--success", value: "bg-success/10 text-success border-success/30", description: tContent("tokens.table.success") },
-              { token: "--warning", value: "bg-warning/10 text-warning border-warning/30", description: tContent("tokens.table.warning") },
-              { token: "--radius", value: "rounded-lg", description: tContent("tokens.table.radius") },
+              { token: "--background", value: "hsl(var(--background))", description: tContent("tokens.table.background") },
+              { token: "--foreground", value: "hsl(var(--foreground))", description: tContent("tokens.table.foreground") },
+              { token: "--border", value: "hsl(var(--border))", description: tContent("tokens.table.border") },
+              { token: "--destructive", value: "hsl(var(--destructive) / 0.3)", description: tContent("tokens.table.destructiveBorder") },
+              { token: "--destructive", value: "hsl(var(--destructive))", description: tContent("tokens.table.destructiveText") },
+              { token: "--success", value: ".nds-alert-success", description: tContent("tokens.table.success") },
+              { token: "--warning", value: ".nds-alert-warning", description: tContent("tokens.table.warning") },
+              { token: "--radius", value: "var(--radius-alert, 0.625rem)", description: tContent("tokens.table.radius") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={codeCustomizationTokens}

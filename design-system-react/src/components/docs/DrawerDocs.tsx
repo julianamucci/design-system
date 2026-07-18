@@ -234,30 +234,39 @@ interface DrawerProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+        <div
+          className="nds-cluster nds-w-full"
+          data-justify="center"
+          data-spacing="sm"
+          style={{ contain: "layout", flexWrap: "wrap", minHeight: "140px" }}
+        >
           {directions.map((dir) => (
             <div
               key={dir}
-              className="space-y-2"
+              className="nds-stack"
+              data-spacing="xs"
               style={{ contain: "layout", minHeight: 80, position: "relative" }}
             >
-              <p className="text-xs font-medium text-muted-foreground">
+              <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
               </p>
               <Drawer direction={dir}>
                 <DrawerTrigger asChild>
-                  <Button variant="outline" size="sm" className="w-full capitalize">
+                  <Button variant="outline" size="sm" className="nds-w-full" style={{ textTransform: "capitalize" }}>
                     {dir}
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent>
                   <DrawerHeader>
-                    <DrawerTitle className="capitalize">{dir}</DrawerTitle>
+                    <DrawerTitle style={{ textTransform: "capitalize" }}>{dir}</DrawerTitle>
                     <DrawerDescription>
                       {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
                     </DrawerDescription>
                   </DrawerHeader>
-                  <div className="px-4 pb-2 text-sm text-muted-foreground">
+                  <div
+                    className="nds-px-4 nds-text-body nds-text-muted-foreground"
+                    style={{ paddingBottom: "0.5rem" }}
+                  >
                     {DOMPurify.sanitize(tContent(`variants.styles.${dir}`))}
                   </div>
                   <DrawerFooter>
@@ -382,14 +391,14 @@ interface DrawerProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm space-y-1">
-                <div className="font-medium">DrawerTitle: Editar perfil</div>
-                <div className="text-muted-foreground">aria-labelledby OK</div>
+              <div className="nds-stack nds-text-body" data-spacing="xs">
+                <div className="nds-font-medium">DrawerTitle: Editar perfil</div>
+                <div className="nds-text-muted-foreground">aria-labelledby OK</div>
               </div>
             ),
             dontPreview: (
-              <div className="text-sm space-y-1 text-muted-foreground">
-                <div className="italic">(sem DrawerTitle)</div>
+              <div className="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
+                <div className="nds-italic">(sem DrawerTitle)</div>
                 <div>screen reader silencioso</div>
               </div>
             ),
@@ -400,15 +409,15 @@ interface DrawerProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm">
-                <div className="font-medium">Drawer (bottom)</div>
-                <div className="text-muted-foreground">swipe-to-close</div>
+              <div className="nds-text-body">
+                <div className="nds-font-medium">Drawer (bottom)</div>
+                <div className="nds-text-muted-foreground">swipe-to-close</div>
               </div>
             ),
             dontPreview: (
-              <div className="text-sm">
-                <div className="font-medium">Drawer dentro de Drawer</div>
-                <div className="text-destructive">focus trap quebra</div>
+              <div className="nds-text-body">
+                <div className="nds-font-medium">Drawer dentro de Drawer</div>
+                <div className="nds-text-destructive">focus trap quebra</div>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -430,7 +439,7 @@ interface DrawerProps {
             description: stripHtml(tContent("variants.styles.bottom")),
             code: codeBottom,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 direction=&quot;bottom&quot;
               </div>
             ),
@@ -440,7 +449,7 @@ interface DrawerProps {
             description: stripHtml(tContent("variants.styles.top")),
             code: codeTop,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 direction=&quot;top&quot;
               </div>
             ),
@@ -450,7 +459,7 @@ interface DrawerProps {
             description: stripHtml(tContent("variants.styles.left")),
             code: codeLeft,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 direction=&quot;left&quot;
               </div>
             ),
@@ -460,7 +469,7 @@ interface DrawerProps {
             description: stripHtml(tContent("variants.styles.right")),
             code: codeRight,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 direction=&quot;right&quot;
               </div>
             ),
@@ -487,14 +496,14 @@ interface DrawerProps {
       <DrawerTitle>Editar perfil</DrawerTitle>
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
-    <form className="grid gap-3 px-4">
-      <label className="grid gap-1 text-sm">
-        <span className="font-medium">Nome</span>
-        <input className="border rounded-md px-3 py-2" defaultValue="Maria Souza" />
+    <form className="nds-stack nds-px-4" data-spacing="sm">
+      <label className="nds-stack nds-text-body" data-spacing="xs">
+        <span className="nds-font-medium">Nome</span>
+        <input className="nds-border-default nds-rounded-md" style={{ padding: '0.5rem 0.75rem' }} defaultValue="Maria Souza" />
       </label>
-      <label className="grid gap-1 text-sm">
-        <span className="font-medium">E-mail</span>
-        <input type="email" className="border rounded-md px-3 py-2" defaultValue="maria@exemplo.com" />
+      <label className="nds-stack nds-text-body" data-spacing="xs">
+        <span className="nds-font-medium">E-mail</span>
+        <input type="email" className="nds-border-default nds-rounded-md" style={{ padding: '0.5rem 0.75rem' }} defaultValue="maria@exemplo.com" />
       </label>
     </form>
     <DrawerFooter>
@@ -515,14 +524,14 @@ interface DrawerProps {
                     <DrawerTitle>Editar perfil</DrawerTitle>
                     <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
                   </DrawerHeader>
-                  <form className="grid gap-3 px-4">
-                    <label className="grid gap-1 text-sm">
-                      <span className="font-medium">Nome</span>
-                      <input className="border rounded-md px-3 py-2" defaultValue="Maria Souza" />
+                  <form className="nds-stack nds-px-4" data-spacing="sm">
+                    <label className="nds-stack nds-text-body" data-spacing="xs">
+                      <span className="nds-font-medium">Nome</span>
+                      <input className="nds-border-default nds-rounded-md" style={{ padding: "0.5rem 0.75rem" }} defaultValue="Maria Souza" />
                     </label>
-                    <label className="grid gap-1 text-sm">
-                      <span className="font-medium">E-mail</span>
-                      <input type="email" className="border rounded-md px-3 py-2" defaultValue="maria@exemplo.com" />
+                    <label className="nds-stack nds-text-body" data-spacing="xs">
+                      <span className="nds-font-medium">E-mail</span>
+                      <input type="email" className="nds-border-default nds-rounded-md" style={{ padding: "0.5rem 0.75rem" }} defaultValue="maria@exemplo.com" />
                     </label>
                   </form>
                   <DrawerFooter>
@@ -593,7 +602,7 @@ interface DrawerProps {
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div className="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+    <div className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" style={{ maxHeight: '16rem' }}>
       {Array.from({ length: 12 }).map((_, i) => (
         <p key={i}>
           Parágrafo {i + 1}: termos longos para garantir scroll interno.
@@ -618,7 +627,11 @@ interface DrawerProps {
                     <DrawerTitle>Termos de uso</DrawerTitle>
                     <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
                   </DrawerHeader>
-                  <div className="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+                  <div
+                    className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+                    data-spacing="sm"
+                    style={{ maxHeight: "16rem" }}
+                  >
                     {Array.from({ length: 12 }).map((_, i) => (
                       <p key={i}>
                         Parágrafo {i + 1}: termos longos para garantir scroll interno.
@@ -643,12 +656,12 @@ interface DrawerProps {
   <DrawerTrigger asChild>
     <Button variant="outline">Abrir filtros</Button>
   </DrawerTrigger>
-  <DrawerContent className="max-w-md">
+  <DrawerContent className="nds-max-w-md">
     <DrawerHeader>
       <DrawerTitle>Filtros</DrawerTitle>
       <DrawerDescription>Refine os resultados.</DrawerDescription>
     </DrawerHeader>
-    <div className="px-4 text-sm text-muted-foreground">
+    <div className="nds-px-4 nds-text-body nds-text-muted-foreground">
       Conteúdo dos filtros…
     </div>
     <DrawerFooter>
@@ -664,12 +677,12 @@ interface DrawerProps {
                 <DrawerTrigger asChild>
                   <Button variant="outline">Abrir filtros</Button>
                 </DrawerTrigger>
-                <DrawerContent className="max-w-md">
+                <DrawerContent className="nds-max-w-md">
                   <DrawerHeader>
                     <DrawerTitle>Filtros</DrawerTitle>
                     <DrawerDescription>Refine os resultados.</DrawerDescription>
                   </DrawerHeader>
-                  <div className="px-4 text-sm text-muted-foreground">
+                  <div className="nds-px-4 nds-text-body nds-text-muted-foreground">
                     Conteúdo dos filtros…
                   </div>
                   <DrawerFooter>

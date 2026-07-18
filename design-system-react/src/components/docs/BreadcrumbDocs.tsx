@@ -232,7 +232,7 @@ import {
     <BreadcrumbSeparator />
     <BreadcrumbItem>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-1">
+        <DropdownMenuTrigger className="nds-cluster" data-spacing="xs">
           <BreadcrumbEllipsis />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
@@ -362,7 +362,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         <BreadcrumbItem>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex items-center gap-1"
+              className="nds-cluster"
+              data-spacing="xs"
               aria-label="Expandir níveis ocultos"
             >
               <BreadcrumbEllipsis />
@@ -399,7 +400,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full space-y-4">
+        <div className="nds-stack nds-w-full">
           {previewDefault}
           {previewWithEllipsis}
           {previewCustomSeparator}

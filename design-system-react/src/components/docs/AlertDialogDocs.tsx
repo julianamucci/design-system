@@ -107,7 +107,7 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action, def
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction className="nds-bg-destructive">
             {action}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -215,7 +215,7 @@ import {
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <AlertDialogAction className="nds-bg-destructive">
         Excluir
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -285,7 +285,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       }
     >
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="nds-cluster" data-spacing="md" data-justify="center">
           <DestructiveDemo
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
@@ -525,7 +525,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             name: tContent("variants.compositions.destructive.name"),
             description: tContent("variants.compositions.destructive.description"),
             useWhen: tContent("variants.compositions.destructive.use"),
-            code: `<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant="destructive">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>\n      <AlertDialogDescription>\n        Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">\n        Excluir conta\n      </AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>`,
+            code: `<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant="destructive">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>\n      <AlertDialogDescription>\n        Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction className="nds-bg-destructive">\n        Excluir conta\n      </AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>`,
             preview: (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -540,7 +540,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    <AlertDialogAction className="nds-bg-destructive">
                       Excluir conta
                     </AlertDialogAction>
                   </AlertDialogFooter>

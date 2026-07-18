@@ -152,7 +152,8 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <form
-          className="grid gap-4"
+          className="nds-stack"
+          data-spacing="sm"
           onSubmit={(e) => {
             e.preventDefault();
             track("dialog_action", {
@@ -162,7 +163,7 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
             });
           }}
         >
-          <div className="grid gap-2">
+          <div className="nds-stack" data-spacing="xs">
             <Label htmlFor="docs-dialog-name">Nome</Label>
             <Input id="docs-dialog-name" defaultValue="Maria Silva" />
           </div>
@@ -238,7 +239,7 @@ export function DialogDocs() {
   const codeImportWithScroll = `// React/Svelte: scroll interno manual
 <DialogContent>
   <DialogHeader>...</DialogHeader>
-  <div className="max-h-[60vh] overflow-y-auto">{/* conteúdo longo */}</div>
+  <div className="nds-overflow-y" style={{ maxHeight: '60vh' }}>{/* conteúdo longo */}</div>
   <DialogFooter>...</DialogFooter>
 </DialogContent>`;
 
@@ -273,7 +274,7 @@ export function DialogDocs() {
         Atualize suas informações pessoais.
       </DialogDescription>
     </DialogHeader>
-    <form className="grid gap-4" onSubmit={onSubmit}>
+    <form className="nds-stack" data-spacing="sm" onSubmit={onSubmit}>
       <Input defaultValue="Maria Silva" />
       <DialogFooter>
         <DialogClose asChild>
@@ -363,7 +364,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       }
     >
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="nds-cluster" data-justify="center" data-spacing="md" style={{ flexWrap: "wrap" }}>
           <DefaultDemo
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
@@ -603,14 +604,18 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 <DialogTrigger render={<Button variant="outline" />}>
                   Ver termos
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="nds-max-w-md">
                   <DialogHeader>
                     <DialogTitle>Termos de uso</DialogTitle>
                     <DialogDescription>
                       Leia atentamente antes de aceitar.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-3">
+                  <div
+                    className="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground"
+                    data-spacing="sm"
+                    style={{ maxHeight: "40vh", paddingRight: "0.5rem" }}
+                  >
                     {Array.from({ length: 8 }).map((_, i) => (
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
                     ))}
@@ -714,7 +719,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         Verifique o endereço antes de enviar o link de acesso.
       </DialogDescription>
     </DialogHeader>
-    <p className="text-sm text-muted-foreground">
+    <p className="nds-text-body nds-text-muted-foreground">
       Vamos enviar um link para maria@exemplo.com.
     </p>
     <DialogFooter>
@@ -735,7 +740,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       Verifique o endereço antes de enviar o link de acesso.
                     </DialogDescription>
                   </DialogHeader>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="nds-text-body nds-text-muted-foreground">
                     Vamos enviar um link para maria@exemplo.com.
                   </p>
                   <DialogFooter>
@@ -761,7 +766,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         Atualize suas informações pessoais.
       </DialogDescription>
     </DialogHeader>
-    <form className="grid gap-3">
+    <form className="nds-stack" data-spacing="sm">
       <Label htmlFor="name">Nome de exibição</Label>
       <Input id="name" defaultValue="Maria Souza" />
       <Label htmlFor="role">Função</Label>
@@ -785,12 +790,12 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       Atualize suas informações pessoais.
                     </DialogDescription>
                   </DialogHeader>
-                  <form className="grid gap-3">
-                    <div className="grid gap-1.5">
+                  <form className="nds-stack" data-spacing="sm">
+                    <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="docs-comp-name">Nome de exibição</Label>
                       <Input id="docs-comp-name" defaultValue="Maria Souza" />
                     </div>
-                    <div className="grid gap-1.5">
+                    <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="docs-comp-role">Função</Label>
                       <Input id="docs-comp-role" defaultValue="Designer" />
                     </div>
@@ -818,7 +823,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         Pré-visualização em tamanho real.
       </DialogDescription>
     </DialogHeader>
-    <div className="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+    <div className="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground" style={{ aspectRatio: '16/9', display: 'grid', placeItems: 'center' }}>
       Pré-visualização da mídia
     </div>
   </DialogContent>
@@ -833,7 +838,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       Pré-visualização em tamanho real.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+                  <div
+                    className="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground"
+                    style={{ aspectRatio: "16/9", display: "grid", placeItems: "center" }}
+                  >
                     Pré-visualização da mídia
                   </div>
                 </DialogContent>
