@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button';
-
 export interface DocsRelatedItem {
   name: string;
   description: string;
@@ -25,29 +23,27 @@ function slugify(s: string) {
 export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
   return (
     <section id="relacionados">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <h2 className="nds-section-title">{title}</h2>
+      <div className="nds-grid" data-cols="2" data-spacing="md">
         {items.map((item, i) => {
           const trackId = componentSlug ? `${componentSlug}:related:${slugify(item.name)}` : undefined;
           return (
-            <Button
+            // Card clicável com aparência do button outline (border + bg + hover accent).
+            // Implementado como classe própria .nds-related-card em vez de usar
+            // .nds-button-outline porque o layout difere (vertical, multi-linha,
+            // padding maior, sem white-space:nowrap nem inline-flex centralizado).
+            <a
               key={i}
-              nativeButton={false}
-              render={
-                <a
-                  href={item.path}
-                  target="_top"
-                  data-track="related"
-                  data-track-id={trackId}
-                  data-track-label={item.name}
-                />
-              }
-              variant="ghost"
-              className="text-left h-auto p-4 border bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
+              href={item.path}
+              target="_top"
+              className="nds-related-card"
+              data-track="related"
+              data-track-id={trackId}
+              data-track-label={item.name}
             >
-              <p className="text-sm font-semibold text-primary">{item.name}</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-            </Button>
+              <p className="nds-related-card-title">{item.name}</p>
+              <p className="nds-related-card-description">{item.description}</p>
+            </a>
           );
         })}
       </div>

@@ -22,7 +22,7 @@ defineProps<{ title: string; componentSlug?: string }>();
 
 <template>
   <section id="demonstracao">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
     <ComponentDemo>

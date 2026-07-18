@@ -13,20 +13,20 @@ defineProps<{
 
 <template>
   <section id="analytics">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <Card class="p-4 overflow-x-auto md:overflow-visible">
-      <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
+    <Card class="nds-p-4 nds-overflow-x">
+      <Table class="nds-w-full nds-text-body">
         <TableHeader>
-          <TableRow class="border-b border-border bg-muted/50 text-left">
-            <TableHead class="p-3 font-semibold">
+          <TableRow class="nds-border-b nds-bg-muted-soft">
+            <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.event }}
             </TableHead>
-            <TableHead class="p-3 font-semibold">
+            <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.trigger }}
             </TableHead>
-            <TableHead class="p-3 font-semibold">
+            <TableHead class="nds-p-2 nds-font-semibold">
               {{ cols.payload }}
             </TableHead>
           </TableRow>
@@ -35,15 +35,15 @@ defineProps<{
           <TableRow
             v-for="(item, i) in items"
             :key="i"
-            class="border-b border-border last:border-0 hover:bg-muted/5"
+            class="nds-border-b nds-hover-bg-muted-faint"
           >
-            <TableCell class="p-3 font-mono text-primary">
+            <TableCell class="nds-p-2 nds-font-mono nds-text-primary">
               {{ item.event }}
             </TableCell>
-            <TableCell class="p-3 text-muted-foreground">
+            <TableCell class="nds-p-2 nds-text-muted-foreground">
               {{ item.trigger }}
             </TableCell>
-            <TableCell class="p-3 font-mono text-xs text-muted-foreground">
+            <TableCell class="nds-p-2 nds-font-mono nds-text-caption nds-text-muted-foreground">
               {{ item.payload }}
             </TableCell>
           </TableRow>

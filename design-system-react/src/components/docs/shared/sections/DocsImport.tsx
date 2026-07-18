@@ -21,28 +21,28 @@ export interface DocsImportProps {
 export function DocsImport({ title, description, code, secondaryCode, secondaryDescription, tertiaryCode, tertiaryDescription }: DocsImportProps) {
   return (
     <section id="importacao">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      {description && <p className="text-sm text-muted-foreground mb-3">{description}</p>}
-      <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
-        <code className="whitespace-pre">{code}</code>
+      <h2 className="nds-section-title">{title}</h2>
+      {description && <p className="nds-text-body nds-text-muted-foreground nds-mb-4">{description}</p>}
+      <Card className="nds-code-block nds-shadow-none">
+        <code className="nds-whitespace-pre">{code}</code>
       </Card>
       {secondaryCode && (
         <>
           {secondaryDescription && (
-            <p className="text-sm text-muted-foreground mt-4 mb-3">{secondaryDescription}</p>
+            <p className="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{secondaryDescription}</p>
           )}
-          <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
-            <code className="whitespace-pre">{secondaryCode}</code>
+          <Card className="nds-code-block nds-mt-2 nds-shadow-none">
+            <code className="nds-whitespace-pre">{secondaryCode}</code>
           </Card>
         </>
       )}
       {tertiaryCode && (
         <>
           {tertiaryDescription && (
-            <p className="text-sm text-muted-foreground mt-4 mb-3">{tertiaryDescription}</p>
+            <p className="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{tertiaryDescription}</p>
           )}
-          <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
-            <code className="whitespace-pre">{tertiaryCode}</code>
+          <Card className="nds-code-block nds-mt-2 nds-shadow-none">
+            <code className="nds-whitespace-pre">{tertiaryCode}</code>
           </Card>
         </>
       )}

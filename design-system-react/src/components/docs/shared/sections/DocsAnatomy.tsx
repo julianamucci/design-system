@@ -12,24 +12,24 @@ export interface DocsAnatomyProps {
 export function DocsAnatomy({ title, items, structureCode, structureLabel }: DocsAnatomyProps) {
   return (
     <section id="anatomia">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
+      <h2 className="nds-section-title">{title}</h2>
       <ComponentDemo>
-        <div className="space-y-4 w-full">
-          <ol className="space-y-3 text-sm list-none p-0 m-0">
+        <div className="nds-stack nds-w-full" data-spacing="md">
+          <ol className="nds-stack nds-text-body nds-list-none" data-spacing="sm">
             {items.map((item, i) => (
-              <li key={i} className="flex gap-3 list-none">
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
+              <li key={i} className="nds-row list-none" data-spacing="sm" data-align="start">
+                <span className="nds-pill" data-tone="primary">
                   {i + 1}
                 </span>
                 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               </li>
             ))}
           </ol>
-          <Card className="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">
+          <Card className="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
             {structureLabel && (
-              <p className="text-xs text-muted-foreground mb-2">{structureLabel}</p>
+              <p className="nds-text-caption nds-text-muted-foreground nds-mb-2">{structureLabel}</p>
             )}
-            <pre className="font-mono text-sm whitespace-pre">{structureCode}</pre>
+            <pre className="nds-font-mono nds-text-body nds-whitespace-pre">{structureCode}</pre>
           </Card>
         </div>
       </ComponentDemo>

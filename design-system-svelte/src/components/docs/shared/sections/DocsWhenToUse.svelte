@@ -17,13 +17,13 @@
 </script>
 
 <section id="quando-usar">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card class="p-4 space-y-6">
+  <h2 class="nds-section-title">{title}</h2>
+  <Card class="nds-p-4 nds-stack" data-spacing="lg">
 
       <!-- Guidelines -->
-      <Card class="bg-muted/50 border border-border/40 shadow-none p-4 space-y-3">
-          <h3 class="font-medium text-sm">{guidelines.title}</h3>
-          <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+      <Card class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
+          <h3 class="nds-font-medium nds-text-body">{guidelines.title}</h3>
+          <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {#each guidelines.items as item}
               <li>{@html DOMPurify.sanitize(item)}</li>
             {/each}
@@ -31,21 +31,21 @@
       </Card>
 
       <!-- Cenários -->
-      <Card class="overflow-x-auto md:overflow-visible p-4">
-        <Table class="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+      <Card class="nds-overflow-x nds-p-4">
+        <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
-            <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
-              <TableHead class="p-3">{scenarios.cols.scenario}</TableHead>
-              <TableHead class="p-3">{scenarios.cols.use}</TableHead>
-              <TableHead class="p-3">{scenarios.cols.alternative}</TableHead>
+            <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
+              <TableHead class="nds-p-2">{scenarios.cols.scenario}</TableHead>
+              <TableHead class="nds-p-2">{scenarios.cols.use}</TableHead>
+              <TableHead class="nds-p-2">{scenarios.cols.alternative}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {#each scenarios.items as item}
-              <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-                <TableCell class="p-3">{item.s}</TableCell>
-                <TableCell class="p-3 font-medium text-primary">{item.u}</TableCell>
-                <TableCell class="p-3 text-muted-foreground">{item.a}</TableCell>
+              <TableRow class="nds-border-b nds-hover-bg-muted-faint">
+                <TableCell class="nds-p-2">{item.s}</TableCell>
+                <TableCell class="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>
+                <TableCell class="nds-p-2 nds-text-muted-foreground">{item.a}</TableCell>
               </TableRow>
             {/each}
           </TableBody>
@@ -54,25 +54,25 @@
 
       <!-- UX Writing -->
       {#if uxWriting}
-      <div class="space-y-3">
-        <h3 class="font-medium text-sm">{uxWriting.title}</h3>
-        <Card class="overflow-x-auto md:overflow-visible p-4">
-          <Table class="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+      <div class="nds-stack" data-spacing="sm">
+        <h3 class="nds-font-medium nds-text-body">{uxWriting.title}</h3>
+        <Card class="nds-overflow-x nds-p-4">
+          <Table class="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
-              <TableRow class="border-b border-border bg-muted/70 text-left">
-                <TableHead class="p-3 font-semibold">{uxWriting.cols.element}</TableHead>
+              <TableRow class="nds-border-b nds-bg-muted-soft">
+                <TableHead class="nds-p-2 nds-font-semibold">{uxWriting.cols.element}</TableHead>
                 {#if uxWriting.cols.rules}
-                  <TableHead class="p-3 font-semibold">{uxWriting.cols.rules}</TableHead>
+                  <TableHead class="nds-p-2 nds-font-semibold">{uxWriting.cols.rules}</TableHead>
                 {/if}
-                <TableHead class="p-3 font-semibold text-green-700 dark:text-green-400">
-                  <span class="flex items-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+                <TableHead class="nds-p-2 nds-font-semibold nds-text-success">
+                  <span class="nds-cluster" data-spacing="xs">
+                    <span class="nds-pill" data-tone="success">✓</span>
                     {uxWriting.cols.do}
                   </span>
                 </TableHead>
-                <TableHead class="p-3 font-semibold text-red-700 dark:text-red-400">
-                  <span class="flex items-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+                <TableHead class="nds-p-2 nds-font-semibold nds-text-destructive">
+                  <span class="nds-cluster" data-spacing="xs">
+                    <span class="nds-pill" data-tone="destructive">✗</span>
                     {uxWriting.cols.dont}
                   </span>
                 </TableHead>
@@ -80,13 +80,13 @@
             </TableHeader>
             <TableBody>
               {#each uxWriting.items as row}
-                <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell class="p-3 font-medium">{row.element}</TableCell>
+                <TableRow class="nds-border-b nds-hover-bg-muted-faint">
+                  <TableCell class="nds-p-2 nds-font-medium">{row.element}</TableCell>
                   {#if uxWriting.cols.rules}
-                    <TableCell class="p-3 text-muted-foreground">{row.rules ?? ''}</TableCell>
+                    <TableCell class="nds-p-2 nds-text-muted-foreground">{row.rules ?? ''}</TableCell>
                   {/if}
-                  <TableCell class="p-3 font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
-                  <TableCell class="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
+                  <TableCell class="nds-p-2 nds-font-medium nds-text-success">{row.do}</TableCell>
+                  <TableCell class="nds-p-2 nds-font-medium nds-text-destructive">{row.dont}</TableCell>
                 </TableRow>
               {/each}
             </TableBody>
@@ -96,24 +96,24 @@
       {/if}
 
       <!-- Do / Don't cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card class="bg-card p-4">
-            <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+      <div class="nds-grid" data-cols="2" data-spacing="md">
+        <Card class="nds-p-4">
+            <h3 class="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster" data-spacing="sm">
+              <span class="nds-pill" data-tone="success">✓</span>
               {doBlock.title}
             </h3>
-            <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+            <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
               {#each doBlock.items as item}
                 <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}
             </ul>
         </Card>
-        <Card class="bg-card p-4">
-            <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+        <Card class="nds-p-4">
+            <h3 class="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster" data-spacing="sm">
+              <span class="nds-pill" data-tone="destructive">✗</span>
               {dontBlock.title}
             </h3>
-            <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+            <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
               {#each dontBlock.items as item}
                 <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}

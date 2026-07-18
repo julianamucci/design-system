@@ -14,25 +14,25 @@
 </script>
 
 <section id="acessibilidade">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <Card class="p-4 space-y-6">
-    <div class="space-y-4">
-      <p class="text-sm text-muted-foreground leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
-      <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
+  <h2 class="nds-section-title">{title}</h2>
+  <Card class="nds-p-4 nds-stack" data-spacing="lg">
+    <div class="nds-stack" data-spacing="md">
+      <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
+      <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
         {#each items as item}
-          <li class="leading-relaxed">{@html DOMPurify.sanitize(item)}</li>
+          <li class="nds-leading-relaxed">{@html DOMPurify.sanitize(item)}</li>
         {/each}
       </ul>
     </div>
     <div>
-      <h3 class="text-base font-semibold mb-3">{keyboardTitle}</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <h3 class="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
+      <div class="nds-grid" data-cols="2" data-spacing="sm">
         {#each keyboardItems as item}
-          <Card class="bg-muted/30 border-0 shadow-none p-4 flex items-start gap-3">
-              <kbd class="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0">
+          <Card class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4" data-spacing="sm" data-align="start">
+              <kbd class="nds-kbd">
                 {item.key}
               </kbd>
-              <span class="text-sm text-muted-foreground leading-relaxed">{item.description}</span>
+              <span class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{item.description}</span>
           </Card>
         {/each}
       </div>

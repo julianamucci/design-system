@@ -26,16 +26,25 @@ const props = defineProps<{
 
 <template>
   <section id="quando-usar">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <Card class="p-4 space-y-6">
+    <Card
+      class="nds-p-4 nds-stack"
+      data-spacing="lg"
+    >
       <!-- Guidelines -->
-      <Card class="bg-muted/40 border border-border/40 shadow-none p-4 space-y-3">
-        <h3 class="font-medium text-sm">
+      <Card
+        class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack"
+        data-spacing="sm"
+      >
+        <h3 class="nds-font-medium nds-text-body">
           {{ guidelines.title }}
         </h3>
-        <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+        <ul
+          class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground"
+          data-spacing="sm"
+        >
           <li
             v-for="(item, i) in guidelines.items"
             :key="i"
@@ -45,17 +54,17 @@ const props = defineProps<{
       </Card>
 
       <!-- Cenários -->
-      <Card class="overflow-x-auto md:overflow-visible p-4">
-        <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
+      <Card class="nds-overflow-x nds-p-4">
+        <Table class="nds-w-full nds-border-collapse nds-text-body">
           <TableHeader>
-            <TableRow class="border-b border-border text-left bg-muted/50 font-medium">
-              <TableHead class="p-3">
+            <TableRow class="nds-border-b nds-bg-muted-soft nds-font-medium">
+              <TableHead class="nds-p-2">
                 {{ scenarios.cols.scenario }}
               </TableHead>
-              <TableHead class="p-3">
+              <TableHead class="nds-p-2">
                 {{ scenarios.cols.use }}
               </TableHead>
-              <TableHead class="p-3">
+              <TableHead class="nds-p-2">
                 {{ scenarios.cols.alternative }}
               </TableHead>
             </TableRow>
@@ -64,15 +73,15 @@ const props = defineProps<{
             <TableRow
               v-for="(item, i) in scenarios.items"
               :key="i"
-              class="border-b border-border last:border-0 hover:bg-muted/5"
+              class="nds-border-b nds-hover-bg-muted-faint"
             >
-              <TableCell class="p-3">
+              <TableCell class="nds-p-2">
                 {{ item.s ?? item.scenario }}
               </TableCell>
-              <TableCell class="p-3 font-medium text-primary">
+              <TableCell class="nds-p-2 nds-font-medium nds-text-primary">
                 {{ item.u ?? item.use }}
               </TableCell>
-              <TableCell class="p-3 text-muted-foreground">
+              <TableCell class="nds-p-2 nds-text-muted-foreground">
                 {{ item.a ?? item.alternative }}
               </TableCell>
             </TableRow>
@@ -83,33 +92,46 @@ const props = defineProps<{
       <!-- UX Writing -->
       <div
         v-if="uxWriting"
-        class="space-y-3"
+        class="nds-stack"
+        data-spacing="sm"
       >
-        <h3 class="font-medium text-sm">
+        <h3 class="nds-font-medium nds-text-body">
           {{ uxWriting.title }}
         </h3>
-        <Card class="overflow-x-auto md:overflow-visible p-4">
-          <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
+        <Card class="nds-overflow-x nds-p-4">
+          <Table class="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
-              <TableRow class="border-b border-border bg-muted/70 text-left">
-                <TableHead class="p-3 font-semibold">
+              <TableRow class="nds-border-b nds-bg-muted-soft">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ uxWriting.cols.element }}
                 </TableHead>
                 <TableHead
                   v-if="uxWriting.cols.rules"
-                  class="p-3 font-semibold"
+                  class="nds-p-2 nds-font-semibold"
                 >
                   {{ uxWriting.cols.rules }}
                 </TableHead>
-                <TableHead class="p-3 font-semibold text-green-700 dark:text-green-400">
-                  <span class="flex items-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+                <TableHead class="nds-p-2 nds-font-semibold nds-text-success">
+                  <span
+                    class="nds-cluster"
+                    data-spacing="xs"
+                  >
+                    <span
+                      class="nds-pill"
+                      data-tone="success"
+                    >✓</span>
                     {{ uxWriting.cols.do }}
                   </span>
                 </TableHead>
-                <TableHead class="p-3 font-semibold text-red-700 dark:text-red-400">
-                  <span class="flex items-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+                <TableHead class="nds-p-2 nds-font-semibold nds-text-destructive">
+                  <span
+                    class="nds-cluster"
+                    data-spacing="xs"
+                  >
+                    <span
+                      class="nds-pill"
+                      data-tone="destructive"
+                    >✗</span>
                     {{ uxWriting.cols.dont }}
                   </span>
                 </TableHead>
@@ -119,21 +141,21 @@ const props = defineProps<{
               <TableRow
                 v-for="(row, i) in uxWriting.items"
                 :key="i"
-                class="border-b border-border last:border-0 hover:bg-muted/5"
+                class="nds-border-b nds-hover-bg-muted-faint"
               >
-                <TableCell class="p-3 font-medium">
+                <TableCell class="nds-p-2 nds-font-medium">
                   {{ row.element }}
                 </TableCell>
                 <TableCell
                   v-if="uxWriting!.cols.rules"
-                  class="p-3 text-muted-foreground"
+                  class="nds-p-2 nds-text-muted-foreground"
                 >
                   {{ row.rules }}
                 </TableCell>
-                <TableCell class="p-3 font-medium text-green-600 dark:text-green-500">
+                <TableCell class="nds-p-2 nds-font-medium nds-text-success">
                   {{ row.do }}
                 </TableCell>
-                <TableCell class="p-3 font-medium text-red-600 dark:text-red-500">
+                <TableCell class="nds-p-2 nds-font-medium nds-text-destructive">
                   {{ row.dont }}
                 </TableCell>
               </TableRow>
@@ -143,13 +165,26 @@ const props = defineProps<{
       </div>
 
       <!-- Do / Don't cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card class="p-4">
-          <h3 class="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
-            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+      <div
+        class="nds-grid"
+        data-cols="2"
+        data-spacing="md"
+      >
+        <Card class="nds-p-4">
+          <h3
+            class="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster"
+            data-spacing="sm"
+          >
+            <span
+              class="nds-pill"
+              data-tone="success"
+            >✓</span>
             {{ props.do.title }}
           </h3>
-          <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+          <ul
+            class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed"
+            data-spacing="sm"
+          >
             <li
               v-for="(item, i) in props.do.items"
               :key="i"
@@ -157,12 +192,21 @@ const props = defineProps<{
             />
           </ul>
         </Card>
-        <Card class="p-4">
-          <h3 class="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
-            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+        <Card class="nds-p-4">
+          <h3
+            class="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster"
+            data-spacing="sm"
+          >
+            <span
+              class="nds-pill"
+              data-tone="destructive"
+            >✗</span>
             {{ props.dont.title }}
           </h3>
-          <ul class="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+          <ul
+            class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed"
+            data-spacing="sm"
+          >
             <li
               v-for="(item, i) in props.dont.items"
               :key="i"

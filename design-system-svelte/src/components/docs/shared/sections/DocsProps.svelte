@@ -22,32 +22,32 @@
 </script>
 
 <section id="propriedades">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <div class="space-y-8">
+  <h2 class="nds-section-title">{title}</h2>
+  <div class="nds-stack" data-spacing="xl">
     {#each tables as def}
-      <div class="space-y-3">
+      <div class="nds-stack" data-spacing="sm">
         {#if def.title}
-          <h3 class="text-base font-semibold">{def.title}</h3>
+          <h3 class="nds-text-base nds-font-semibold">{def.title}</h3>
         {/if}
-        <Card class="overflow-x-auto md:overflow-visible p-4">
-            <Table class="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+        <Card class="nds-p-4 nds-overflow-x">
+            <Table class="nds-w-full nds-text-body">
               <TableHeader>
-                <TableRow class="border-b border-border bg-muted/50 text-left">
-                  <TableHead class="p-3 font-semibold">{def.cols.prop}</TableHead>
-                  <TableHead class="p-3 font-semibold">{def.cols.type}</TableHead>
-                  <TableHead class="p-3 font-semibold">{def.cols.default}</TableHead>
-                  <TableHead class="p-3 font-semibold">{def.cols.required}</TableHead>
-                  <TableHead class="p-3 font-semibold">{def.cols.description}</TableHead>
+                <TableRow class="nds-border-b nds-bg-muted-soft">
+                  <TableHead class="nds-p-2 nds-font-semibold">{def.cols.prop}</TableHead>
+                  <TableHead class="nds-p-2 nds-font-semibold">{def.cols.type}</TableHead>
+                  <TableHead class="nds-p-2 nds-font-semibold">{def.cols.default}</TableHead>
+                  <TableHead class="nds-p-2 nds-font-semibold">{def.cols.required}</TableHead>
+                  <TableHead class="nds-p-2 nds-font-semibold">{def.cols.description}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {#each def.items as item}
-                  <TableRow class="border-b border-border last:border-0 hover:bg-muted/5">
-                    <TableCell class="p-3 font-mono font-bold text-primary">{item.name}</TableCell>
-                    <TableCell class="p-3 font-mono text-muted-foreground">{item.type}</TableCell>
-                    <TableCell class="p-3 text-muted-foreground">{item.defaultValue}</TableCell>
-                    <TableCell class="p-3 text-muted-foreground">{item.required}</TableCell>
-                    <TableCell class="p-3 text-muted-foreground">{item.description}</TableCell>
+                  <TableRow class="nds-border-b nds-hover-bg-muted-faint">
+                    <TableCell class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
+                    <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
+                    <TableCell class="nds-p-2 nds-text-muted-foreground">{item.defaultValue}</TableCell>
+                    <TableCell class="nds-p-2 nds-text-muted-foreground">{item.required}</TableCell>
+                    <TableCell class="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>
                   </TableRow>
                 {/each}
               </TableBody>
@@ -56,15 +56,15 @@
       </div>
     {/each}
     {#if interfaceCode}
-      <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
-        <code class="whitespace-pre">{interfaceCode}</code>
+      <Card class="nds-code-block nds-shadow-none">
+        <code class="nds-whitespace-pre">{interfaceCode}</code>
       </Card>
     {/if}
     {#if extensibilityTitle}
-      <div class="space-y-2">
-        <h3 class="text-base font-semibold">{extensibilityTitle}</h3>
+      <div class="nds-stack" data-spacing="sm">
+        <h3 class="nds-text-base nds-font-semibold">{extensibilityTitle}</h3>
         {#if extensibilityNotes}
-          <div class="text-sm text-muted-foreground leading-relaxed">{@html DOMPurify.sanitize(extensibilityNotes)}</div>
+          <div class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{@html DOMPurify.sanitize(extensibilityNotes)}</div>
         {/if}
       </div>
     {/if}

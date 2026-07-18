@@ -13,31 +13,42 @@ defineProps<{
 
 <template>
   <section id="anatomia">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
     <ComponentDemo>
-      <div class="space-y-4 w-full">
-        <ol class="space-y-3 text-sm list-none p-0 m-0">
+      <div
+        class="nds-stack nds-w-full"
+        data-spacing="md"
+      >
+        <ol
+          class="nds-stack nds-text-body nds-list-none"
+          data-spacing="sm"
+        >
           <li
             v-for="(item, i) in items"
             :key="i"
-            class="flex gap-3 list-none"
+            class="nds-row list-none"
+            data-spacing="sm"
+            data-align="start"
           >
-            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
+            <span
+              class="nds-pill"
+              data-tone="primary"
+            >
               {{ i + 1 }}
             </span>
             <span v-html="DOMPurify.sanitize(item)" />
           </li>
         </ol>
-        <Card class="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">
+        <Card class="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
           <p
             v-if="structureLabel"
-            class="text-xs text-muted-foreground mb-2"
+            class="nds-text-caption nds-text-muted-foreground nds-mb-2"
           >
             {{ structureLabel }}
           </p>
-          <pre class="font-mono text-sm whitespace-pre">{{ structureCode }}</pre>
+          <pre class="nds-font-mono nds-text-body nds-whitespace-pre">{{ structureCode }}</pre>
         </Card>
       </div>
     </ComponentDemo>

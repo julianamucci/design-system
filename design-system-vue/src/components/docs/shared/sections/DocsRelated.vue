@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-
 interface DocsRelatedItem { name: string; description: string; path: string }
 
 /**
@@ -27,29 +25,31 @@ function trackId(name: string): string | undefined {
 
 <template>
   <section id="relacionados">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Button
+    <div
+      class="nds-grid"
+      data-cols="2"
+      data-spacing="md"
+    >
+      <!-- Card clicável com aparência do button outline (border + bg + hover accent).
+           Implementado como classe própria .nds-related-card em vez de usar
+           .nds-button-outline porque o layout difere (vertical, multi-linha,
+           padding maior, sem white-space:nowrap nem inline-flex centralizado). -->
+      <a
         v-for="(item, i) in items"
         :key="i"
-        as="a"
         :href="item.path"
         target="_top"
-        variant="ghost"
-        class="text-left h-auto p-4 border bg-card hover:bg-muted/50 w-full flex-col items-start space-y-1 whitespace-normal"
+        class="nds-related-card"
         data-track="related"
         :data-track-id="trackId(item.name)"
         :data-track-label="item.name"
       >
-        <p class="text-sm font-semibold text-primary">
-          {{ item.name }}
-        </p>
-        <p class="text-xs text-muted-foreground leading-relaxed">
-          {{ item.description }}
-        </p>
-      </Button>
+        <span class="nds-related-card-title">{{ item.name }}</span>
+        <span class="nds-related-card-description">{{ item.description }}</span>
+      </a>
     </div>
   </section>
 </template>

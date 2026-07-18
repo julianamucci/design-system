@@ -13,33 +13,29 @@ export interface DocsHeaderProps {
 
 export function DocsHeader({ title, description, category, type, installNote, languageSwitcher }: DocsHeaderProps) {
   return (
-    <header className="ds-docs mb-8 sm:mb-12 border-b pb-6 sm:pb-8 border-border/50">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Badge
-            variant="secondary"
-            className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
-          >
-            {category}
-          </Badge>
-          <Badge variant="outline" className="text-muted-foreground font-normal px-2 py-0">
-            {type}
-          </Badge>
-        </div>
-        {languageSwitcher ?? <LanguageSwitcher />}
+    <header className="ds-docs nds-stack nds-border-b-soft" data-spacing="md" style={{ paddingBottom: 'var(--spacing-6)' }}>
+      <div className="nds-cluster" data-spacing="sm">
+        <Badge
+          variant="secondary"
+          className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
+        >
+          {category}
+        </Badge>
+        <Badge variant="outline" className="nds-text-muted-foreground nds-font-normal">
+          {type}
+        </Badge>
+        <div className="nds-spacer-start">{languageSwitcher ?? <LanguageSwitcher />}</div>
       </div>
 
-      <div className="space-y-3 sm:space-y-4">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">{title}</h1>
-        <p className="text-muted-foreground text-base sm:text-lg max-w-3xl leading-relaxed">{description}</p>
+      <div className="nds-stack" data-spacing="sm">
+        <h1 className="nds-text-h1 nds-text-foreground">{title}</h1>
+        <p className="nds-text-lead nds-text-muted-foreground nds-max-w-prose">{description}</p>
       </div>
 
       {installNote && (
-        <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground/80">
-          <span className="flex items-center gap-1.5">
-            <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono border border-border/50">
-              {installNote}
-            </code>
+        <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm">
+          <span className="nds-cluster" data-spacing="xs">
+            <code className="nds-code-inline">{installNote}</code>
           </span>
         </div>
       )}

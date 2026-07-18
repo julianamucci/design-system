@@ -37,15 +37,15 @@
 </script>
 
 <section {id}>
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <div class="space-y-4">
+  <h2 class="nds-section-title">{title}</h2>
+  <div class="nds-stack" data-spacing="md">
     {#each items as item, i}
-      <Card class="p-4 gap-2">
+      <Card class="nds-p-4">
         <div>
-          <p class="text-sm font-semibold">{item.name}</p>
-          <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">{@html DOMPurify.sanitize(item.description)}</p>
+          <p class="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>
+          <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed">{@html DOMPurify.sanitize(item.description)}</p>
         </div>
-        <div class="flex items-center justify-center">
+        <div class="nds-cluster" data-justify="center">
           {@render item.preview()}
         </div>
         {#if item.code}
@@ -53,7 +53,7 @@
             <Button
               variant="link"
               size="sm"
-              class="px-0 h-auto"
+              class="nds-px-0"
               data-track="code"
               data-track-id={trackId(item.name)}
               data-track-label="Copiar código"
@@ -62,8 +62,8 @@
               {openStates[i] ? 'Ocultar código' : 'Ver código'}
             </Button>
             {#if openStates[i]}
-              <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2">
-                <code class="whitespace-pre">{item.code}</code>
+              <Card class="nds-code-block nds-shadow-none nds-mt-2">
+                <code class="nds-whitespace-pre">{item.code}</code>
               </Card>
             {/if}
           </div>

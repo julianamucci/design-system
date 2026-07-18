@@ -18,39 +18,56 @@ withDefaults(defineProps<{
 
 <template>
   <section id="acessibilidade">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <Card class="p-4 space-y-6">
-      <div class="space-y-4">
+    <Card
+      class="nds-p-4 nds-stack"
+      data-spacing="lg"
+    >
+      <div
+        class="nds-stack"
+        data-spacing="md"
+      >
         <p
-          class="text-sm text-muted-foreground leading-relaxed"
+          class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
           v-html="DOMPurify.sanitize(summary)"
         />
-        <ul class="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
+        <ul
+          class="nds-stack nds-text-body nds-list-disc"
+          data-spacing="sm"
+        >
           <li
             v-for="(item, i) in items"
             :key="i"
-            class="leading-relaxed"
+            class="nds-leading-relaxed"
             v-html="DOMPurify.sanitize(item)"
           />
         </ul>
       </div>
       <div>
-        <h3 class="text-base font-semibold mb-3">
+        <h3 class="nds-text-base nds-font-semibold nds-mb-4">
           {{ keyboardTitle }}
         </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div
+          class="nds-grid"
+          data-cols="2"
+          data-spacing="sm"
+        >
           <Card
             v-for="(item, i) in keyboardItems"
             :key="i"
-            class="bg-muted/30 border-0 shadow-none p-4"
+            class="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4"
           >
-            <div class="flex items-start gap-3">
-              <kbd class="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0">
+            <div
+              class="nds-row"
+              data-spacing="sm"
+              data-align="start"
+            >
+              <kbd class="nds-kbd">
                 {{ item.key }}
               </kbd>
-              <span class="text-sm text-muted-foreground leading-relaxed">{{ item.description }}</span>
+              <span class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{{ item.description }}</span>
             </div>
           </Card>
         </div>

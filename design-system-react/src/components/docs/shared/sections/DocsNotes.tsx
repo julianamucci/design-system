@@ -23,8 +23,8 @@ export interface DocsNotesProps {
 export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
   return (
     <section id="notas">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="space-y-4">
+      <h2 className="nds-section-title">{title}</h2>
+      <div className="nds-stack" data-spacing="md">
         {items.map((item, i) => {
           const trackId = componentSlug ? `${componentSlug}:link:notes-${i + 1}` : undefined;
           return (

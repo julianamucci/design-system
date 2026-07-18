@@ -25,8 +25,8 @@
 </script>
 
 <section id="notas">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
-  <div class="space-y-4">
+  <h2 class="nds-section-title">{title}</h2>
+  <div class="nds-stack" data-spacing="md">
     {#each items as item, i}
       <div data-track="link" data-track-id={trackId(i)}>
         <Alert variant="default">

@@ -45,13 +45,13 @@ export interface DocsWhenToUseProps {
 export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: DocsWhenToUseProps) {
   return (
     <section id="quando-usar">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card className="p-4 space-y-6">
+      <h2 className="nds-section-title">{title}</h2>
+      <Card className="nds-p-4 nds-stack" data-spacing="lg">
 
         {/* Guidelines */}
-        <Card className="bg-muted/50 border border-border/40 shadow-none p-4">
-          <h3 className="font-medium text-sm mb-3">{guidelines.title}</h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+        <Card className="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
+          <h3 className="nds-font-medium nds-text-body">{guidelines.title}</h3>
+          <ul className="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             {guidelines.items.map((item, i) => (
               <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
             ))}
@@ -59,21 +59,21 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         </Card>
 
         {/* Cenários */}
-        <Card className="overflow-x-auto md:overflow-visible p-4">
-          <Table className="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+        <Card className="nds-overflow-x nds-p-4">
+          <Table className="nds-w-full nds-border-collapse nds-text-body">
             <TableHeader>
-              <TableRow className="border-b border-border text-left bg-muted/50 font-medium">
-                <TableHead className="p-3">{scenarios.cols.scenario}</TableHead>
-                <TableHead className="p-3">{scenarios.cols.use}</TableHead>
-                <TableHead className="p-3">{scenarios.cols.alternative}</TableHead>
+              <TableRow className="nds-border-b nds-bg-muted-soft nds-font-medium">
+                <TableHead className="nds-p-2">{scenarios.cols.scenario}</TableHead>
+                <TableHead className="nds-p-2">{scenarios.cols.use}</TableHead>
+                <TableHead className="nds-p-2">{scenarios.cols.alternative}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {scenarios.items.map((item, i) => (
-                <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell className="p-3">{item.s}</TableCell>
-                  <TableCell className="p-3 font-medium text-primary">{item.u}</TableCell>
-                  <TableCell className="p-3 text-muted-foreground">{item.a}</TableCell>
+                <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
+                  <TableCell className="nds-p-2">{item.s}</TableCell>
+                  <TableCell className="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>
+                  <TableCell className="nds-p-2 nds-text-muted-foreground">{item.a}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -82,25 +82,25 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
 
         {/* UX Writing */}
         {uxWriting && (
-          <div className="space-y-3">
-            <h3 className="font-medium text-sm">{uxWriting.title}</h3>
-            <Card className="overflow-x-auto md:overflow-visible p-4">
-              <Table className="w-full border-collapse text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+          <div className="nds-stack" data-spacing="sm">
+            <h3 className="nds-font-medium nds-text-body">{uxWriting.title}</h3>
+            <Card className="nds-overflow-x nds-p-4">
+              <Table className="nds-w-full nds-border-collapse nds-text-body">
                 <TableHeader>
-                  <TableRow className="border-b border-border bg-muted/70 text-left">
-                    <TableHead className="p-3 font-semibold">{uxWriting.cols.element}</TableHead>
+                  <TableRow className="nds-border-b nds-bg-muted-soft">
+                    <TableHead className="nds-p-2 nds-font-semibold">{uxWriting.cols.element}</TableHead>
                     {uxWriting.cols.rules && (
-                      <TableHead className="p-3 font-semibold">{uxWriting.cols.rules}</TableHead>
+                      <TableHead className="nds-p-2 nds-font-semibold">{uxWriting.cols.rules}</TableHead>
                     )}
-                    <TableHead className="p-3 font-semibold text-green-700 dark:text-green-400">
-                      <span className="flex items-center gap-1.5">
-                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+                    <TableHead className="nds-p-2 nds-font-semibold nds-text-success">
+                      <span className="nds-cluster" data-spacing="xs">
+                        <span className="nds-pill" data-tone="success">✓</span>
                         {uxWriting.cols.do}
                       </span>
                     </TableHead>
-                    <TableHead className="p-3 font-semibold text-red-700 dark:text-red-400">
-                      <span className="flex items-center gap-1.5">
-                        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+                    <TableHead className="nds-p-2 nds-font-semibold nds-text-destructive">
+                      <span className="nds-cluster" data-spacing="xs">
+                        <span className="nds-pill" data-tone="destructive">✗</span>
                         {uxWriting.cols.dont}
                       </span>
                     </TableHead>
@@ -108,13 +108,13 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
                 </TableHeader>
                 <TableBody>
                   {uxWriting.items.map((row, i) => (
-                    <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                      <TableCell className="p-3 font-medium">{row.element}</TableCell>
+                    <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
+                      <TableCell className="nds-p-2 nds-font-medium">{row.element}</TableCell>
                       {uxWriting.cols.rules && (
-                        <TableCell className="p-3 text-muted-foreground">{row.rules}</TableCell>
+                        <TableCell className="nds-p-2 nds-text-muted-foreground">{row.rules}</TableCell>
                       )}
-                      <TableCell className="p-3 font-medium text-green-600 dark:text-green-500">{row.do}</TableCell>
-                      <TableCell className="p-3 font-medium text-red-600 dark:text-red-500">{row.dont}</TableCell>
+                      <TableCell className="nds-p-2 nds-font-medium nds-text-success">{row.do}</TableCell>
+                      <TableCell className="nds-p-2 nds-font-medium nds-text-destructive">{row.dont}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -124,24 +124,24 @@ export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doB
         )}
 
         {/* Do / Don't cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card className="bg-card p-4">
-            <h3 className="mb-3 text-sm font-semibold text-green-600 flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-600 dark:text-green-400 text-xs font-bold flex-shrink-0">✓</span>
+        <div className="nds-grid" data-cols="2" data-spacing="md">
+          <Card className="nds-p-4">
+            <h3 className="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster" data-spacing="sm">
+              <span className="nds-pill" data-tone="success">✓</span>
               {doBlock.title}
             </h3>
-            <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+            <ul className="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
               {doBlock.items.map((item, i) => (
                 <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               ))}
             </ul>
           </Card>
-          <Card className="bg-card p-4">
-            <h3 className="mb-3 text-sm font-semibold text-red-600 flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/15 text-red-600 dark:text-red-400 text-xs font-bold flex-shrink-0">✗</span>
+          <Card className="nds-p-4">
+            <h3 className="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster" data-spacing="sm">
+              <span className="nds-pill" data-tone="destructive">✗</span>
               {dontBlock.title}
             </h3>
-            <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+            <ul className="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
               {dontBlock.items.map((item, i) => (
                 <li key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }} />
               ))}

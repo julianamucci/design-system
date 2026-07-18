@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -28,15 +29,15 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
   const [open, setOpen] = useState(false);
   const trackId = componentSlug ? `${componentSlug}:code:${item.name}` : undefined;
   return (
-    <Card className="p-4 space-y-2">
+    <Card className="nds-p-4">
       <div>
-        <p className="text-sm font-semibold">{item.name}</p>
+        <p className="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>
         <p
-          className="text-xs text-muted-foreground mt-0.5 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: item.description }}
+          className="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.description) }}
         />
       </div>
-      <div className="flex items-center justify-center">
+      <div className="nds-cluster" data-justify="center">
         {item.preview}
       </div>
       {item.code && (
@@ -45,7 +46,7 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
             type="button"
             variant="link"
             size="sm"
-            className="px-0 h-auto"
+            className="nds-px-0"
             onClick={() => setOpen((v) => !v)}
             data-track="code"
             data-track-id={trackId}
@@ -54,9 +55,9 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
             {open ? 'Ocultar código' : 'Ver código'}
           </Button>
           {open && (
-            <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2">
-              <code className="whitespace-pre">{item.code}</code>
-            </Card>
+            <pre className="nds-code-block nds-mt-2">
+              <code>{item.code}</code>
+            </pre>
           )}
         </div>
       )}
@@ -67,8 +68,8 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
 export function DocsVariants({ title, items, id = "variantes", componentSlug }: DocsVariantsProps) {
   return (
     <section id={id}>
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="space-y-4">
+      <h2 className="nds-section-title">{title}</h2>
+      <div className="nds-stack" data-spacing="md">
         {items.map((item, i) => (
           <VariantCard key={i} item={item} componentSlug={componentSlug} />
         ))}

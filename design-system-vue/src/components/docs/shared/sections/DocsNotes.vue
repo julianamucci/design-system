@@ -26,10 +26,13 @@ function trackId(i: number): string | undefined {
 
 <template>
   <section id="notas">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <div class="space-y-4">
+    <div
+      class="nds-stack"
+      data-spacing="md"
+    >
       <div
         v-for="(item, i) in items"
         :key="i"

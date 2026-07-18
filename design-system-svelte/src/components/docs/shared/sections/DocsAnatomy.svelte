@@ -12,24 +12,24 @@
 </script>
 
 <section id="anatomia">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
+  <h2 class="nds-section-title">{title}</h2>
   <ComponentDemo>
-    <div class="space-y-4 w-full">
-        <ol class="space-y-3 text-sm list-none p-0 m-0">
+    <div class="nds-stack nds-w-full" data-spacing="md">
+        <ol class="nds-stack nds-text-body nds-list-none" data-spacing="sm">
           {#each items as item, i}
-            <li class="flex gap-3 list-none">
-              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
+            <li class="nds-row list-none" data-spacing="sm" data-align="start">
+              <span class="nds-pill" data-tone="primary">
                 {i + 1}
               </span>
               <span>{@html DOMPurify.sanitize(item)}</span>
             </li>
           {/each}
         </ol>
-        <Card class="bg-muted/50 border-border/40 shadow-none px-4 pt-3 pb-4 overflow-x-auto">
+        <Card class="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
           {#if structureLabel}
-            <p class="text-xs text-muted-foreground mb-2">{structureLabel}</p>
+            <p class="nds-text-caption nds-text-muted-foreground nds-mb-2">{structureLabel}</p>
           {/if}
-          <pre class="font-mono text-sm whitespace-pre">{structureCode}</pre>
+          <pre class="nds-font-mono nds-text-body nds-whitespace-pre">{structureCode}</pre>
         </Card>
     </div>
   </ComponentDemo>

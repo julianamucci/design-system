@@ -24,18 +24,19 @@ export function DocsPageLayout({ navGroups, activeSection, header, children, com
     // todas as regras prose emotion (.css-XXXX :where(p|h1|table|...)) usam
     // :not(.sb-unstyled, .sb-unstyled <tag>), então marcar o root com essa
     // classe desliga 100% do prose-style injetado pelo emotion na subárvore.
-    <div ref={rootRef} className="sb-unstyled ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+    <div ref={rootRef} className="sb-unstyled ds-docs nds-page" data-width="wide">
       {header}
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
+      <div className="nds-sidebar-layout" data-sidebar-sticky="true">
         <nav
           aria-label="Navegação das seções do componente"
-          className="w-full lg:sticky lg:top-8 lg:w-52 lg:shrink-0 self-start space-y-5"
+          className="nds-stack"
+          data-spacing="md"
         >
           <DocsNav groups={navGroups} activeSection={activeSection} componentSlug={componentSlug} />
         </nav>
 
-        <div className="ds-docs flex-1 min-w-0 w-full space-y-12">
+        <div className="ds-docs nds-stack" data-spacing="2xl">
           {children}
         </div>
       </div>

@@ -21,19 +21,19 @@
 </script>
 
 <section id="importacao">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
+  <h2 class="nds-section-title">{title}</h2>
   {#if description}
-    <p class="text-sm text-muted-foreground mb-3">{description}</p>
+    <p class="nds-text-body nds-text-muted-foreground nds-mb-4">{description}</p>
   {/if}
-  <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
-    <code class="whitespace-pre">{code}</code>
+  <Card class="nds-code-block nds-shadow-none">
+    <code class="nds-whitespace-pre">{code}</code>
   </Card>
   {#if secondaryCode}
     {#if secondaryDescription}
-      <p class="text-sm text-muted-foreground mt-4 mb-3">{secondaryDescription}</p>
+      <p class="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{secondaryDescription}</p>
     {/if}
-    <Card class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-3">
-      <code class="whitespace-pre">{secondaryCode}</code>
+    <Card class="nds-code-block nds-mt-2 nds-shadow-none">
+      <code class="nds-whitespace-pre">{secondaryCode}</code>
     </Card>
   {/if}
 </section>

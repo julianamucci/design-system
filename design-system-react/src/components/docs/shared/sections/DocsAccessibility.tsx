@@ -17,18 +17,18 @@ export interface DocsAccessibilityProps {
 export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboardItems }: DocsAccessibilityProps) {
   return (
     <section id="acessibilidade">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <Card className="p-4 space-y-6">
-        <div className="space-y-4">
+      <h2 className="nds-section-title">{title}</h2>
+      <Card className="nds-p-4 nds-stack" data-spacing="lg">
+        <div className="nds-stack" data-spacing="md">
           <p
-            className="text-sm text-muted-foreground leading-relaxed"
+            className="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(summary) }}
           />
-          <ul className="space-y-2 text-sm list-disc pl-5 marker:text-muted-foreground">
+          <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
             {items.map((item, i) => (
               <li
                 key={i}
-                className="leading-relaxed"
+                className="nds-leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }}
               />
             ))}
@@ -36,15 +36,15 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
         </div>
 
         <div>
-          <h3 className="text-base font-semibold mb-3">{keyboardTitle}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <h3 className="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
+          <div className="nds-grid" data-cols="2" data-spacing="sm">
             {keyboardItems.map((item, i) => (
-              <Card key={i} className="bg-muted/30 border-0 shadow-none p-4">
-                <div className="flex items-start gap-3">
-                  <kbd className="inline-flex items-center justify-center rounded border border-border bg-background px-2 py-1 text-xs font-mono font-semibold shrink-0">
+              <Card key={i} className="nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4">
+                <div className="nds-row" data-spacing="sm" data-align="start">
+                  <kbd className="nds-kbd">
                     {item.key}
                   </kbd>
-                  <span className="text-sm text-muted-foreground leading-relaxed">{item.description}</span>
+                  <span className="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{item.description}</span>
                 </div>
               </Card>
             ))}

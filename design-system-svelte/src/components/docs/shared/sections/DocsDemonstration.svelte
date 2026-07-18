@@ -26,7 +26,7 @@
 </script>
 
 <section id="demonstracao">
-  <h2 class="text-xl font-semibold mb-4">{title}</h2>
+  <h2 class="nds-section-title">{title}</h2>
   <ComponentDemo>
     {@render children()}
   </ComponentDemo>

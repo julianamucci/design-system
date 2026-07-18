@@ -26,7 +26,7 @@ export interface DocsDemonstrationProps {
 export function DocsDemonstration({ title, children }: DocsDemonstrationProps) {
   return (
     <section id="demonstracao">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
+      <h2 className="nds-section-title">{title}</h2>
       <ComponentDemo>{children}</ComponentDemo>
     </section>
   );

@@ -40,32 +40,38 @@ function trackId(name: string): string | undefined {
 
 <template>
   <section :id="props.id">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <div class="space-y-4">
+    <div
+      class="nds-stack"
+      data-spacing="md"
+    >
       <Card
         v-for="(item, i) in items"
         :key="i"
-        class="p-4 gap-2"
+        class="nds-p-4"
       >
         <div>
-          <p class="text-sm font-semibold">
+          <p class="nds-text-body nds-font-semibold nds-m-0">
             {{ item.name }}
           </p>
           <p
-            class="text-xs text-muted-foreground mt-0.5 leading-relaxed"
+            class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed"
             v-html="DOMPurify.sanitize(item.description)"
           />
         </div>
-        <div class="flex items-center justify-center">
+        <div
+          class="nds-cluster"
+          data-justify="center"
+        >
           <slot :name="`variant-preview-${i}`" />
         </div>
         <div v-if="item.code">
           <Button
             variant="link"
             size="sm"
-            class="px-0 h-auto"
+            class="nds-px-0"
             data-track="code"
             :data-track-id="trackId(item.name)"
             data-track-label="Copiar código"
@@ -73,12 +79,10 @@ function trackId(name: string): string | undefined {
           >
             {{ openStates[i] ? 'Ocultar código' : 'Ver código' }}
           </Button>
-          <Card
+          <pre
             v-if="openStates[i]"
-            class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none mt-2"
-          >
-            <code class="whitespace-pre">{{ item.code }}</code>
-          </Card>
+            class="nds-code-block nds-mt-2"
+          ><code>{{ item.code }}</code></pre>
         </div>
       </Card>
     </div>

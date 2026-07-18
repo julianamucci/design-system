@@ -24,18 +24,19 @@
 
 <!-- sb-unstyled: escape hatch oficial do Storybook que desliga as regras
      prose do @storybook/blocks na subárvore. Ver storybook-docs.css. -->
-<div bind:this={rootEl} class="sb-unstyled ds-docs p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+<div bind:this={rootEl} class="sb-unstyled ds-docs nds-page" data-width="wide">
   {@render header?.()}
 
-  <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
+  <div class="nds-sidebar-layout" data-sidebar-sticky="true">
     <nav
       aria-label="Navegação das seções do componente"
-      class="w-full lg:sticky lg:top-8 lg:w-52 lg:shrink-0 self-start space-y-5"
+      class="nds-stack"
+      data-spacing="md"
     >
       <DocsNav groups={navGroups} {activeSection} {componentSlug} />
     </nav>
 
-    <div class="ds-docs flex-1 min-w-0 w-full space-y-12">
+    <div class="ds-docs nds-stack" data-spacing="2xl">
       {@render children?.()}
     </div>
   </div>

@@ -28,38 +28,42 @@ defineProps<{
 
 <template>
   <section id="propriedades">
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="nds-section-title">
       {{ title }}
     </h2>
-    <div class="space-y-8">
+    <div
+      class="nds-stack"
+      data-spacing="xl"
+    >
       <div
         v-for="(def, ti) in tables"
         :key="ti"
-        class="space-y-3"
+        class="nds-stack"
+        data-spacing="xl"
       >
         <h3
           v-if="def.title"
-          class="text-base font-semibold"
+          class="nds-text-base nds-font-semibold"
         >
           {{ def.title }}
         </h3>
-        <Card class="p-4 overflow-x-auto md:overflow-visible">
-          <Table class="[&_th]:whitespace-normal [&_td]:whitespace-normal">
+        <Card class="nds-p-4 nds-overflow-x">
+          <Table class="nds-w-full nds-text-body">
             <TableHeader>
-              <TableRow class="border-b border-border bg-muted/50 text-left">
-                <TableHead class="p-3 font-semibold">
+              <TableRow class="nds-border-b nds-bg-muted-soft">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ def.cols.prop }}
                 </TableHead>
-                <TableHead class="p-3 font-semibold">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ def.cols.type }}
                 </TableHead>
-                <TableHead class="p-3 font-semibold">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ def.cols.default }}
                 </TableHead>
-                <TableHead class="p-3 font-semibold">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ def.cols.required }}
                 </TableHead>
-                <TableHead class="p-3 font-semibold">
+                <TableHead class="nds-p-2 nds-font-semibold">
                   {{ def.cols.description }}
                 </TableHead>
               </TableRow>
@@ -68,21 +72,21 @@ defineProps<{
               <TableRow
                 v-for="(item, i) in def.items"
                 :key="i"
-                class="border-b border-border last:border-0 hover:bg-muted/5"
+                class="nds-border-b nds-hover-bg-muted-faint"
               >
-                <TableCell class="p-3 font-mono font-bold text-primary">
+                <TableCell class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">
                   {{ item.name }}
                 </TableCell>
-                <TableCell class="p-3 font-mono text-muted-foreground">
+                <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">
                   {{ item.type }}
                 </TableCell>
-                <TableCell class="p-3 text-muted-foreground">
+                <TableCell class="nds-p-2 nds-text-muted-foreground">
                   {{ item.defaultValue }}
                 </TableCell>
-                <TableCell class="p-3 text-muted-foreground">
+                <TableCell class="nds-p-2 nds-text-muted-foreground">
                   {{ item.required }}
                 </TableCell>
-                <TableCell class="p-3 text-muted-foreground">
+                <TableCell class="nds-p-2 nds-text-muted-foreground">
                   {{ item.description }}
                 </TableCell>
               </TableRow>
@@ -90,22 +94,21 @@ defineProps<{
           </Table>
         </Card>
       </div>
-      <Card
+      <pre
         v-if="interfaceCode"
-        class="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none"
-      >
-        <code class="whitespace-pre">{{ interfaceCode }}</code>
-      </Card>
+        class="nds-code-block"
+      ><code>{{ interfaceCode }}</code></pre>
       <div
         v-if="extensibilityTitle"
-        class="space-y-2"
+        class="nds-stack"
+        data-spacing="sm"
       >
-        <h3 class="text-base font-semibold">
+        <h3 class="nds-text-base nds-font-semibold">
           {{ extensibilityTitle }}
         </h3>
         <div
           v-if="extensibilityNotes"
-          class="text-sm text-muted-foreground leading-relaxed"
+          class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
           v-html="DOMPurify.sanitize(extensibilityNotes)"
         />
       </div>

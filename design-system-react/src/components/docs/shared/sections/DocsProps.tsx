@@ -33,27 +33,27 @@ export interface DocsPropsProps {
 
 function PropsTable({ def }: { def: DocsPropsTableDef }) {
   return (
-    <div className="space-y-3">
-      {def.title && <h3 className="text-base font-semibold">{def.title}</h3>}
-      <Card className="overflow-x-auto md:overflow-visible p-4">
-          <Table className="w-full text-sm [&_th]:whitespace-normal [&_td]:whitespace-normal">
+    <div className="nds-stack" data-spacing="sm">
+      {def.title && <h3 className="nds-text-base nds-font-semibold">{def.title}</h3>}
+      <Card className="nds-p-4 nds-overflow-x">
+          <Table className="nds-w-full nds-text-body">
             <TableHeader>
-              <TableRow className="border-b border-border bg-muted/50 text-left">
-                <TableHead className="p-3 font-semibold">{def.cols.prop}</TableHead>
-                <TableHead className="p-3 font-semibold">{def.cols.type}</TableHead>
-                <TableHead className="p-3 font-semibold">{def.cols.default}</TableHead>
-                <TableHead className="p-3 font-semibold">{def.cols.required}</TableHead>
-                <TableHead className="p-3 font-semibold">{def.cols.description}</TableHead>
+              <TableRow className="nds-border-b nds-bg-muted-soft">
+                <TableHead className="nds-p-2 nds-font-semibold">{def.cols.prop}</TableHead>
+                <TableHead className="nds-p-2 nds-font-semibold">{def.cols.type}</TableHead>
+                <TableHead className="nds-p-2 nds-font-semibold">{def.cols.default}</TableHead>
+                <TableHead className="nds-p-2 nds-font-semibold">{def.cols.required}</TableHead>
+                <TableHead className="nds-p-2 nds-font-semibold">{def.cols.description}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {def.items.map((item, i) => (
-                <TableRow key={i} className="border-b border-border last:border-0 hover:bg-muted/5">
-                  <TableCell className="p-3 font-mono font-bold text-primary">{item.name}</TableCell>
-                  <TableCell className="p-3 font-mono text-muted-foreground">{item.type}</TableCell>
-                  <TableCell className="p-3 text-muted-foreground">{item.defaultValue}</TableCell>
-                  <TableCell className="p-3 text-muted-foreground">{item.required}</TableCell>
-                  <TableCell className="p-3 text-muted-foreground">{item.description}</TableCell>
+                <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
+                  <TableCell className="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
+                  <TableCell className="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
+                  <TableCell className="nds-p-2 nds-text-muted-foreground">{item.defaultValue}</TableCell>
+                  <TableCell className="nds-p-2 nds-text-muted-foreground">{item.required}</TableCell>
+                  <TableCell className="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -66,22 +66,22 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
 export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes }: DocsPropsProps) {
   return (
     <section id="propriedades">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="space-y-8">
+      <h2 className="nds-section-title">{title}</h2>
+      <div className="nds-stack" data-spacing="xl">
         {tables.map((def, i) => (
           <PropsTable key={i} def={def} />
         ))}
         {interfaceCode && (
-          <Card className="bg-muted p-4 font-mono text-sm overflow-x-auto shadow-none">
-            <code className="whitespace-pre">{interfaceCode}</code>
+          <Card className="nds-code-block nds-shadow-none">
+            <code className="nds-whitespace-pre">{interfaceCode}</code>
           </Card>
         )}
         {extensibilityTitle && (
-          <div className="space-y-2">
-            <h3 className="text-base font-semibold">{extensibilityTitle}</h3>
+          <div className="nds-stack" data-spacing="sm">
+            <h3 className="nds-text-base nds-font-semibold">{extensibilityTitle}</h3>
             {extensibilityNotes && (
               <div
-                className="text-sm text-muted-foreground leading-relaxed"
+                className="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(extensibilityNotes) }}
               />
             )}
