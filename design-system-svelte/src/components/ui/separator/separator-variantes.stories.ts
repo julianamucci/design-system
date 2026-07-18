@@ -36,10 +36,10 @@ export const Horizontal: Story = {
       const sep = canvasElement.querySelector('[data-slot="separator"]');
       await expect(sep).toHaveAttribute('data-orientation', 'horizontal');
     });
-    await step('Classes de dimensão horizontal (h-px + w-full)', async () => {
+    await step('Dimensões horizontais (1px de altura, largura total)', async () => {
       const sep = canvasElement.querySelector('[data-slot="separator"]') as HTMLElement;
-      await expect(sep.className).toMatch(/data-\[orientation=horizontal\]:h-px/);
-      await expect(sep.className).toMatch(/data-\[orientation=horizontal\]:w-full/);
+      await expect(sep).toHaveClass('nds-separator');
+      await expect(getComputedStyle(sep).height).toBe('1px');
     });
   },
 };
@@ -58,10 +58,10 @@ export const Vertical: Story = {
       const sep = canvasElement.querySelector('[data-slot="separator"]');
       await expect(sep).toHaveAttribute('data-orientation', 'vertical');
     });
-    await step('Classes de dimensão vertical (w-px + h-full)', async () => {
+    await step('Dimensões verticais (1px de largura)', async () => {
       const sep = canvasElement.querySelector('[data-slot="separator"]') as HTMLElement;
-      await expect(sep.className).toMatch(/data-\[orientation=vertical\]:w-px/);
-      await expect(sep.className).toMatch(/data-\[orientation=vertical\]:h-full/);
+      await expect(sep).toHaveClass('nds-separator');
+      await expect(getComputedStyle(sep).width).toBe('1px');
     });
   },
 };

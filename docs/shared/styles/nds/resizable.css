@@ -126,6 +126,27 @@
   transform: rotate(90deg);
 }
 
+/* Libs Svelte de painéis (paneforge) emitem data-direction no próprio handle */
+.nds-resizable-handle[data-direction="vertical"] {
+  width: 100%;
+  height: 1px;
+  cursor: row-resize;
+}
+
+.nds-resizable-handle[data-direction="vertical"]::after {
+  inset-block: auto;
+  inset-inline: 0;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: var(--spacing-1, 0.25rem);
+  transform: translateY(-50%);
+}
+
+.nds-resizable-handle[data-direction="vertical"] > .nds-resizable-grip-bar {
+  transform: rotate(90deg);
+}
+
 .nds-resizable-handle[aria-orientation="horizontal"] {
   width: 100%;
   height: 1px;

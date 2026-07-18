@@ -105,7 +105,7 @@ export const WithFooter: Story = {
     await step('CardFooter renderizado com border-t', async () => {
       const footer = canvasElement.querySelector('[data-slot="card-footer"]');
       await expect(footer).toBeInTheDocument();
-      await expect(footer).toHaveClass('border-t');
+      await expect(footer).toHaveClass('nds-card-footer');
     });
 
     await step('Botões acessíveis no footer', async () => {

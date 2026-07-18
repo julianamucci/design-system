@@ -64,8 +64,7 @@ export const Playground: Story = {
     await step('CardFooter com border-t e bg-muted/50', async () => {
       const footer = canvasElement.querySelector('[data-slot="card-footer"]');
       await expect(footer).toBeInTheDocument();
-      await expect(footer).toHaveClass('border-t');
-      await expect(footer).toHaveClass('bg-muted/50');
+      await expect(footer).toHaveClass('nds-card-footer');
     });
 
     await step('Botões do footer visíveis com nome acessível', async () => {
