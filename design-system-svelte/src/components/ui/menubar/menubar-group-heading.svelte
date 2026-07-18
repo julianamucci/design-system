@@ -17,6 +17,6 @@
 	bind:ref
 	data-slot="menubar-group-heading"
 	data-inset={inset}
-	class={cn("px-2 py-1.5 text-sm font-medium data-[inset]:ps-8", className)}
+	class={cn("nds-dropdown-menu-label", className)}
 	{...restProps}
 />
