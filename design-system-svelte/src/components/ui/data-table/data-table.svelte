@@ -300,26 +300,26 @@
   }
 </script>
 
-<div data-slot="data-table" class={cn('flex flex-col gap-3', className)}>
+<div data-slot="data-table" class={cn('nds-data-table', className)}>
   {#if table}
     {@const headerGroups = table.getHeaderGroups()}
     {@const rows = table.getRowModel().rows}
     {@const visibleLeafColumns = table.getVisibleLeafColumns().length}
 
     {#if enableGlobalFilter || enableColumnVisibility}
-      <div data-slot="data-table-toolbar" class="flex items-center gap-2">
+      <div data-slot="data-table-toolbar" class="nds-data-table-toolbar">
         {#if enableGlobalFilter}
-          <div class="relative max-w-sm flex-1">
+          <div class="nds-data-table-search">
             <Search
               aria-hidden="true"
-              class="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              class="nds-dt-icon nds-dt-icon-muted"
             />
             <Input
               value={globalFilter}
               oninput={(e: Event) => setGlobalFilter((e.currentTarget as HTMLInputElement).value)}
               placeholder={globalFilterPlaceholder}
               aria-label={globalFilterPlaceholder}
-              class="pl-8"
+              class="nds-data-table-search-input"
             />
           </div>
         {/if}
@@ -327,42 +327,42 @@
           <DropdownMenu>
             <DropdownMenuTrigger>
               {#snippet child({ props })}
-                <Button {...props} variant="outline" size="sm" class="ml-auto">
+                <Button {...props} variant="outline" size="sm" class="nds-data-table-columns-btn">
                   <Settings2 aria-hidden="true" />
                   Colunas
                 </Button>
               {/snippet}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" class="w-64">
+            <DropdownMenuContent align="end" class="nds-data-table-columns-menu-content">
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as column (column.id)}
                   {@const pinned = column.getIsPinned()}
                   {@const label = headerLabel(column)}
-                  <div class="flex items-center gap-1">
+                  <div class="nds-data-table-columns-menu-row">
                     <DropdownMenuCheckboxItem
-                      class="flex-1 capitalize"
+                      class="nds-data-table-columns-menu-check"
                       checked={column.getIsVisible()}
                       onCheckedChange={(v: boolean) => column.toggleVisibility(!!v)}
                     >
                       {label}
                     </DropdownMenuCheckboxItem>
                     {#if enableColumnPinning}
-                      <div class="flex shrink-0 pr-1">
+                      <div class="nds-data-table-pin-wrap">
                         <button
                           type="button"
                           aria-label={pinned === 'left' ? `Desafixar ${label}` : `Fixar ${label} à esquerda`}
                           onclick={() => column.pin(pinned === 'left' ? false : 'left')}
                           class={cn(
-                            'inline-flex size-6 items-center justify-center rounded-md hover:bg-muted',
-                            pinned === 'left' && 'text-primary',
+                            'nds-data-table-pin-btn',
+                            pinned === 'left' && 'is-active',
                           )}
                         >
                           {#if pinned === 'left'}
-                            <PinOff aria-hidden="true" class="size-3.5" />
+                            <PinOff aria-hidden="true" class="nds-dt-icon" />
                           {:else}
-                            <Pin aria-hidden="true" class="size-3.5 -rotate-45" />
+                            <Pin aria-hidden="true" class="nds-dt-icon nds-dt-icon-pin" />
                           {/if}
                         </button>
                       </div>
@@ -379,14 +379,14 @@
     <div
       bind:this={scrollRef}
       class={cn(
-        'relative w-full overflow-auto rounded-md border',
-        virtualized && 'overflow-y-auto',
+        'nds-data-table-scroll',
+        virtualized && 'nds-data-table-scroll-virtual',
       )}
       style={virtualized ? `max-height: ${maxHeight};` : undefined}
     >
       <Table
         class={cn(
-          (enableColumnResizing || enableColumnOrdering || virtualized) && 'table-fixed',
+          (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed',
         )}
       >
         <TableHeader>
@@ -409,16 +409,16 @@
                     enableColumnResizing ? `width: ${header.getSize()}px;` : '',
                     pinStyle(header.column),
                   ].join(' ')}
-                  class={cn('relative', header.column.getIsPinned() && 'bg-background')}
+                  class={cn('nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-td-pinned')}
                   draggable={isDraggable}
                   ondragstart={isDraggable ? () => handleDragStart(header.column.id) : undefined}
                   ondragover={isDraggable ? handleDragOver : undefined}
                   ondrop={isDraggable ? () => handleDrop(header.column.id) : undefined}
                 >
                   {#if !header.isPlaceholder}
-                    <div class="flex items-center gap-1">
+                    <div class="nds-data-table-columns-menu-row">
                       {#if isDraggable}
-                        <GripVertical aria-hidden="true" class="size-3.5 cursor-grab text-muted-foreground/60" />
+                        <GripVertical aria-hidden="true" class="nds-dt-icon nds-dt-icon-grip" />
                       {/if}
                       {#if header.column.id === '__select__'}
                         <Checkbox
@@ -431,20 +431,20 @@
                         <button
                           type="button"
                           onclick={header.column.getToggleSortingHandler()}
-                          class="inline-flex flex-1 items-center gap-1.5 text-left font-medium hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-sm"
+                          class="nds-data-table-sort-btn"
                           aria-label={`Ordenar por ${label}`}
                         >
                           {label}
                           {#if sortDir === 'asc'}
-                            <ArrowUp aria-hidden="true" class="size-3.5" />
+                            <ArrowUp aria-hidden="true" class="nds-dt-icon" />
                           {:else if sortDir === 'desc'}
-                            <ArrowDown aria-hidden="true" class="size-3.5" />
+                            <ArrowDown aria-hidden="true" class="nds-dt-icon" />
                           {:else}
-                            <ArrowUpDown aria-hidden="true" class="size-3.5 text-muted-foreground" />
+                            <ArrowUpDown aria-hidden="true" class="nds-dt-icon nds-dt-icon-muted" />
                           {/if}
                         </button>
                       {:else}
-                        <div class="flex-1">{label}</div>
+                        <div class="nds-data-table-th-label">{label}</div>
                       {/if}
                     </div>
                     {#if enableColumnResizing && header.column.getCanResize()}
@@ -455,8 +455,8 @@
                         aria-orientation="vertical"
                         aria-label={`Redimensionar coluna ${label}`}
                         class={cn(
-                          'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-primary/50',
-                          header.column.getIsResizing() && 'bg-primary',
+                          'nds-data-table-resize-handle',
+                          header.column.getIsResizing() && 'is-resizing',
                         )}
                       ></div>
                     {/if}
@@ -472,7 +472,7 @@
                 {@const canFilter = header.column.getCanFilter()}
                 <TableHead
                   style={pinStyle(header.column)}
-                  class={cn('py-1.5', header.column.getIsPinned() && 'bg-background')}
+                  class={cn('', header.column.getIsPinned() && 'nds-data-table-td-pinned')}
                 >
                   {#if canFilter && filterMeta}
                     {#if filterMeta.type === 'select'}
@@ -480,7 +480,7 @@
                         value={(header.column.getFilterValue() as string) ?? ''}
                         onchange={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLSelectElement).value || undefined)}
                         aria-label={`Filtrar ${header.column.id}`}
-                        class="h-7 w-full rounded-md border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                        class="nds-data-table-filter-select"
                       >
                         <option value="">Todos</option>
                         {#each filterMeta.options ?? [] as opt}
@@ -493,7 +493,7 @@
                         oninput={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLInputElement).value)}
                         placeholder={filterMeta.placeholder ?? 'Filtrar...'}
                         aria-label={`Filtrar ${header.column.id}`}
-                        class="h-7 text-xs"
+                        class="nds-data-table-filter-input"
                       />
                     {/if}
                   {/if}
@@ -517,7 +517,7 @@
                       pinStyle(cell.column),
                     ].join(' ')}
                     class={cn(
-                      cell.column.getIsPinned() && 'bg-background',
+                      cell.column.getIsPinned() && 'nds-data-table-th-pinned',
                       cell.column.columnDef.meta?.cellClass,
                     )}
                   >
@@ -550,7 +550,7 @@
             {/each}
           {:else}
             <TableRow>
-              <TableCell colspan={visibleLeafColumns} class="h-24 text-center text-muted-foreground">
+              <TableCell colspan={visibleLeafColumns} class="nds-data-table-empty">
                 {emptyMessage}
               </TableCell>
             </TableRow>

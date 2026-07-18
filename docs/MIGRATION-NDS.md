@@ -50,7 +50,9 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
   empty, field, form-helpers, input-group, item, kbd, native-select,
   number-field, range-calendar, stepper no Vue; input-group no React) —
   migrar num sub-lote próprio antes da Fase 5.
-- [ ] **Fase 3 — Svelte UI** (bump bits-ui primeiro; idem).
+- [x] **Fase 3 — Svelte UI** (9 lotes; bits-ui 2.18.1 já estava no lock).
+  Helpers pendentes do Svelte (input-group e afins) entram no mesmo sub-lote
+  registrado na Fase 2.
 - [ ] **Fase 4 — Docs pages + stories** das 3 stacks: substituir utilitários
   Tailwind pelas classes de docs da vanilla (`nds-stack`, `nds-cluster`,
   `nds-max-w-prose`, `docs-*`…). Os arquivos vanilla em

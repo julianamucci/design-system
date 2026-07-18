@@ -44,17 +44,17 @@
     oninput={(e: Event) => (value = (e.currentTarget as HTMLInputElement).value)}
     onblur={commit}
     onkeydown={handleKeyDown}
-    class="h-7"
+    class="nds-data-table-edit-input"
   />
 {:else}
   <button
     type="button"
     onclick={() => (editing = true)}
-    class="block w-full rounded-sm px-1 py-0.5 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+    class="nds-data-table-edit-btn"
     aria-label={`Editar ${columnId}`}
   >
     {#if value === ''}
-      <span class="text-muted-foreground">—</span>
+      <span class="nds-dt-icon-muted">—</span>
     {:else}
       {value}
     {/if}
