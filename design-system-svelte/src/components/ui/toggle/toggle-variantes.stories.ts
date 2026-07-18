@@ -45,7 +45,7 @@ export const Default: Story = {
     });
 
     await step('Toggle não tem borda (variant=default)', async () => {
-      await expect(toggle).not.toHaveClass('border');
+      await expect(toggle).toHaveAttribute('data-variant', 'default');
     });
   },
 };
@@ -73,7 +73,7 @@ export const Outline: Story = {
     });
 
     await step('Toggle tem classe border', async () => {
-      await expect(toggle).toHaveClass('border');
+      await expect(toggle).toHaveAttribute('data-variant', 'outline');
     });
   },
 };
