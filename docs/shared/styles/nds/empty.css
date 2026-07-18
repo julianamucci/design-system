@@ -1,0 +1,102 @@
+/*
+ * ─── nds-empty ──────────────────────────────────────────────────────────────
+ * Estado vazio (placeholder de lista/tabela sem dados) com mídia, título,
+ * descrição e ações.
+ *
+ *   <div class="nds-empty">
+ *     <div class="nds-empty-header">
+ *       <div class="nds-empty-media nds-empty-media-icon"><svg/></div>
+ *       <div class="nds-empty-title">Sem resultados</div>
+ *       <p class="nds-empty-description">Tente outra busca.</p>
+ *     </div>
+ *     <div class="nds-empty-content">[ações]</div>
+ *   </div>
+ *
+ * Tokens: --muted, --muted-foreground, --primary, --border, --radius, --spacing-*
+ */
+
+.nds-empty {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+
+  padding: var(--spacing-6);
+  border: 1px dashed hsl(var(--border));
+  border-radius: 0.75rem;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.nds-empty-header {
+  display: flex;
+  max-width: 24rem;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.nds-empty-content {
+  display: flex;
+  width: 100%;
+  max-width: 24rem;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2-5, 0.625rem);
+  font-size: 0.875rem;
+  text-wrap: balance;
+}
+
+.nds-empty-title {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: -0.01em;
+}
+
+.nds-empty-description {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-empty-description a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.nds-empty-description a:hover {
+  color: hsl(var(--primary));
+}
+
+/* ── Media (ícone/avatar acima do título) ────────────────────────────────── */
+.nds-empty-media {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.nds-empty-media svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nds-empty-media-icon {
+  width: var(--spacing-8, 2rem);
+  height: var(--spacing-8, 2rem);
+  border-radius: var(--radius, 0.5rem);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.nds-empty-media-icon svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}

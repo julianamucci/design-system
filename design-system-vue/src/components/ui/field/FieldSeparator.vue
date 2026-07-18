@@ -12,15 +12,12 @@ const props = defineProps<{
   <div
     data-slot="field-separator"
     :data-content="!!$slots.default"
-    :class="cn(
-      '-my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2 relative',
-      props.class,
-    )"
+    :class="cn('nds-field-separator', props.class)"
   >
-    <Separator class="absolute inset-0 top-1/2" />
+    <Separator />
     <span
       v-if="$slots.default"
-      class="text-muted-foreground px-2 relative mx-auto block w-fit bg-background"
+      class="nds-field-separator-content"
       data-slot="field-separator-content"
     >
       <slot />

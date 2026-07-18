@@ -1,0 +1,110 @@
+/*
+ * ─── nds-stepper ────────────────────────────────────────────────────────────
+ * Indicador de progresso em etapas (wizard). Estados via data-state
+ * (active/completed/inactive) e data-disabled no item.
+ *
+ *   <ol class="nds-stepper">
+ *     <li class="nds-stepper-item" data-state="completed">
+ *       <button class="nds-stepper-trigger">
+ *         <span class="nds-stepper-indicator">1</span>
+ *         <span class="nds-stepper-title">Conta</span>
+ *         <span class="nds-stepper-description">Seus dados</span>
+ *       </button>
+ *       <div class="nds-stepper-separator"></div>
+ *     </li>
+ *   </ol>
+ *
+ * Tokens: --primary, --primary-foreground, --accent, --muted,
+ *         --muted-foreground, --radius, --spacing-*
+ */
+
+.nds-stepper-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.nds-stepper-item[data-disabled] {
+  pointer-events: none;
+}
+
+.nds-stepper-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1);
+
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
+}
+
+.nds-stepper-trigger:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
+/* ── Indicator (círculo numerado) — quadrado icon-only, dimensão fixa ok ── */
+.nds-stepper-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-8, 2rem);
+  height: var(--spacing-8, 2rem);
+  border-radius: 9999px;
+  color: hsl(var(--muted-foreground) / 0.5);
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.nds-stepper-item[data-state="active"] .nds-stepper-indicator {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-stepper-item[data-state="completed"] .nds-stepper-indicator {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-stepper-item[data-disabled] .nds-stepper-indicator {
+  color: hsl(var(--muted-foreground));
+  opacity: 0.5;
+}
+
+.nds-stepper-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold, 600);
+  white-space: nowrap;
+}
+
+.nds-stepper-description {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Separator (linha entre etapas) ──────────────────────────────────────── */
+.nds-stepper-separator {
+  flex: 1;
+  height: 1px;
+  min-width: var(--spacing-8, 2rem);
+  background-color: hsl(var(--border));
+}
+
+.nds-stepper-item[data-state="completed"] .nds-stepper-separator {
+  background-color: hsl(var(--accent));
+}
+
+.nds-stepper-item[data-disabled] .nds-stepper-separator {
+  background-color: hsl(var(--muted));
+  opacity: 0.5;
+}
+
+.nds-stepper {
+  display: flex;
+  gap: var(--spacing-2);
+}

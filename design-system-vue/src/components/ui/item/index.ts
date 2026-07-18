@@ -13,18 +13,18 @@ export { default as ItemSeparator } from './ItemSeparator.vue'
 export { default as ItemTitle } from './ItemTitle.vue'
 
 export const itemVariants = cva(
-  '[a]:hover:bg-muted rounded-lg border text-sm group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors',
+  'nds-item',
   {
     variants: {
       variant: {
-        default: 'border-transparent',
-        outline: 'border-border',
-        muted: 'bg-muted/50 border-transparent',
+        default: '',
+        outline: 'nds-item-outline',
+        muted: 'nds-item-muted',
       },
       size: {
-        default: 'gap-2.5 px-3 py-2.5',
-        sm: 'gap-2.5 px-3 py-2.5',
-        xs: 'gap-2 px-2.5 py-2 in-data-[slot=dropdown-menu-content]:p-0',
+        default: '',
+        sm: '',
+        xs: '',
       },
     },
     defaultVariants: {
@@ -35,13 +35,13 @@ export const itemVariants = cva(
 )
 
 export const itemMediaVariants = cva(
-  'gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start flex shrink-0 items-center justify-center [&_svg]:pointer-events-none',
+  'nds-item-media',
   {
     variants: {
       variant: {
-        default: 'bg-transparent',
-        icon: '[&_svg:not([class*=size-])]:size-4',
-        image: 'size-10 overflow-hidden rounded-sm group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover',
+        default: '',
+        icon: 'nds-item-media-icon',
+        image: 'nds-item-media-image',
       },
     },
     defaultVariants: {

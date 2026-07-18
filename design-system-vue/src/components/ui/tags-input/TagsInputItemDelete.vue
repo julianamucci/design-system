@@ -17,10 +17,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 <template>
   <TagsInputItemDelete
     v-bind="forwardedProps"
-    :class="cn('flex rounded bg-transparent mr-1', props.class)"
+    :class="cn('nds-tags-input-item-delete', props.class)"
   >
     <slot>
-      <XIcon class="w-4 h-4" />
+      <XIcon />
     </slot>
   </TagsInputItemDelete>
 </template>

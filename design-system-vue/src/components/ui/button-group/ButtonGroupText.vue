@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
     :data-orientation="props.orientation"
     :as="as"
     :as-child="asChild"
-    :class="cn('bg-muted gap-2 rounded-lg border px-2.5 text-sm font-medium [&_svg:not([class*=size-])]:size-4 flex items-center [&_svg]:pointer-events-none', props.class)"
+    :class="cn('nds-button-group-text', props.class)"
   >
     <slot />
   </Primitive>

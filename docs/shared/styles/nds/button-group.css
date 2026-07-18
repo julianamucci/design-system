@@ -1,0 +1,93 @@
+/*
+ * ─── nds-button-group ───────────────────────────────────────────────────────
+ * Agrupa botões/inputs colados (segmented). Orientação via data-orientation.
+ *
+ *   <div class="nds-button-group" data-orientation="horizontal">
+ *     <button class="nds-button nds-button-outline">A</button>
+ *     <button class="nds-button nds-button-outline">B</button>
+ *   </div>
+ *
+ * Tokens: --input, --muted, --radius, --spacing-*
+ */
+
+.nds-button-group {
+  display: flex;
+  width: fit-content;
+  align-items: stretch;
+}
+
+.nds-button-group > input {
+  flex: 1;
+}
+
+.nds-button-group > *:focus-visible {
+  position: relative;
+  z-index: 10;
+}
+
+/* Horizontal (default): emenda as bordas laterais */
+.nds-button-group:not([data-orientation="vertical"]) > *:not(:first-child) {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-left-width: 0;
+}
+
+.nds-button-group:not([data-orientation="vertical"]) > *:not(:last-child) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* Vertical */
+.nds-button-group[data-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.nds-button-group[data-orientation="vertical"] > *:not(:first-child) {
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  border-top-width: 0;
+}
+
+.nds-button-group[data-orientation="vertical"] > *:not(:last-child) {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* ── Texto no meio do grupo (prefixo/sufixo) ─────────────────────────────── */
+.nds-button-group-text {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding-inline: var(--spacing-2-5, 0.625rem);
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.nds-button-group-text svg:not([class*="size-"]) {
+  pointer-events: none;
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/* ── Separador interno ───────────────────────────────────────────────────── */
+.nds-button-group-separator {
+  position: relative;
+  align-self: stretch;
+  background-color: hsl(var(--input, var(--border)));
+}
+
+.nds-button-group-separator[data-orientation="vertical"],
+.nds-button-group:not([data-orientation="vertical"]) > .nds-button-group-separator {
+  width: 1px;
+  margin-inline: 1px;
+}
+
+.nds-button-group[data-orientation="vertical"] > .nds-button-group-separator {
+  height: 1px;
+  width: auto;
+  margin-block: 1px;
+}

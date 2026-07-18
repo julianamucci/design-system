@@ -1,0 +1,83 @@
+/*
+ * ─── nds-number-field ───────────────────────────────────────────────────────
+ * Input numérico com botões de incremento/decremento sobrepostos nas laterais.
+ *
+ *   <div class="nds-number-field">
+ *     <button class="nds-number-field-decrement">−</button>
+ *     <input class="nds-number-field-input" inputmode="numeric" />
+ *     <button class="nds-number-field-increment">+</button>
+ *   </div>
+ *
+ * Tokens: --input, --ring, --muted-foreground, --radius, --spacing-*
+ */
+
+.nds-number-field {
+  position: relative;
+}
+
+.nds-number-field-input {
+  display: flex;
+  width: 100%;
+
+  padding-block: var(--spacing-1-5, 0.375rem);    /* altura via padding (WCAG 1.4.4) */
+  padding-inline: var(--spacing-8, 2rem);          /* espaço pros botões */
+
+  font-family: inherit;
+  font-size: 0.875rem;
+  text-align: center;
+  color: hsl(var(--foreground));
+  background-color: transparent;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  outline: 0;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-number-field-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-number-field-input:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-number-field-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-number-field-decrement,
+.nds-number-field-increment {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: var(--spacing-3, 0.75rem);
+
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
+}
+
+.nds-number-field-decrement { left: 0; }
+.nds-number-field-increment { right: 0; }
+
+.nds-number-field-decrement:disabled,
+.nds-number-field-increment:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
+.nds-number-field-root {
+  display: grid;
+  gap: var(--spacing-1-5, 0.375rem);
+}
+
+.nds-number-field-decrement svg:not([class*="size-"]),
+.nds-number-field-increment svg:not([class*="size-"]) {
+  width: var(--spacing-4, 1rem);
+  height: var(--spacing-4, 1rem);
+}

@@ -36,7 +36,7 @@ const content = computed(() => {
     v-if="$slots.default || content"
     role="alert"
     data-slot="field-error"
-    :class="cn('text-destructive text-sm font-normal', props.class)"
+    :class="cn('nds-field-error', props.class)"
   >
     <slot v-if="$slots.default" />
 
@@ -46,7 +46,7 @@ const content = computed(() => {
 
     <ul
       v-else-if="Array.isArray(content)"
-      class="ml-4 flex list-disc flex-col gap-1"
+      class="nds-field-error-list"
     >
       <li
         v-for="(error, index) in content"

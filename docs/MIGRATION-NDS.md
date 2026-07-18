@@ -47,9 +47,10 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
   Todos os primitivos ui/ do React estão em classes .nds-*.
 - [x] **Fase 2 — Vue UI** (9 lotes espelhando a Fase 1; reka-ui 2.10.1 já estava no lock).
   Helpers A migrados (form, kbd, pin-input→input-otp, native-select — CSS
-  reutilizado/estendido em form.css e select.css). Helpers B pendentes
-  (precisam de CSS novo): input-group (3 stacks), button-group, combobox,
-  empty, field, item, number-field, range-calendar, stepper, tags-input (Vue).
+  reutilizado/estendido em form.css e select.css). Helpers B migrados:
+  B1 = range-calendar/combobox (CSS reutilizado) + input-group nas 3 stacks
+  (input-group.css novo); B2 = button-group, empty, field, item, number-field,
+  stepper, tags-input (Vue — 7 arquivos CSS novos em docs/shared/styles/nds/).
 - [x] **Fase 3 — Svelte UI** (9 lotes; bits-ui 2.18.1 já estava no lock).
   Helpers pendentes do Svelte (input-group e afins) entram no mesmo sub-lote
   registrado na Fase 2.
