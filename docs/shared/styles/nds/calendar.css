@@ -508,6 +508,30 @@
   opacity: 0.5;
 }
 
+/* Range (reka/bits): pontas em primary; miolo destacado via célula pai */
+.nds-calendar-day-btn[data-selection-start],
+.nds-calendar-day-btn[data-selection-end] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nds-calendar-day-cell:has([data-selected]) {
+  background-color: hsl(var(--accent));
+  border-radius: 0;
+}
+
+.nds-calendar-day-cell:first-child:has([data-selected]),
+.nds-calendar-day-cell:has([data-selection-start]) {
+  border-start-start-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+  border-end-start-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+}
+
+.nds-calendar-day-cell:last-child:has([data-selected]),
+.nds-calendar-day-cell:has([data-selection-end]) {
+  border-start-end-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+  border-end-end-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+}
+
 /* ── Seletores nativos de mês/ano no caption ─────────────────────────────── */
 .nds-calendar-select-row {
   display: flex;

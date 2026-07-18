@@ -200,6 +200,76 @@
   height: auto;
 }
 
+/*
+ * ─── nds-combobox ───────────────────────────────────────────────────────────
+ * Combobox (input + lista filtrável em popup). Reusa nds-select-item/-separator
+ * e nds-command-group; aqui só o popup, o input inline, o viewport e o empty.
+ */
+
+.nds-combobox-list {
+  position: relative;
+  z-index: 50;
+  min-width: 9rem;
+  max-height: 18rem;                              /* 288px — max-h-72 */
+  width: var(--reka-combobox-trigger-width, auto);
+  overflow: hidden;
+
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-radius: var(--radius, 0.5rem);
+  box-shadow:
+    0 0 0 1px hsl(var(--foreground) / 0.1),
+    0 4px 6px -1px hsl(0 0% 0% / 0.1),
+    0 2px 4px -2px hsl(0 0% 0% / 0.1);
+}
+
+.nds-combobox-input {
+  flex: 1;
+  outline: 0;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: inherit;
+}
+
+.nds-combobox-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-combobox-trigger svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-combobox-viewport {
+  max-height: calc(18rem - var(--spacing-9, 2.25rem));
+  overflow-y: auto;
+  padding: var(--spacing-1);
+  scroll-padding-block: var(--spacing-1);
+}
+
+.nds-combobox-viewport[data-empty] {
+  padding: 0;
+}
+
+/* Empty: só aparece quando a lista está vazia */
+.nds-combobox-empty {
+  display: none;
+  width: 100%;
+  justify-content: center;
+  padding-block: var(--spacing-2);
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+[data-empty] .nds-combobox-empty,
+.nds-combobox-empty[data-visible] {
+  display: flex;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-command-item {
     transition: none;

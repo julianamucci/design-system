@@ -1,0 +1,154 @@
+/*
+ * ─── nds-input-group ────────────────────────────────────────────────────────
+ * Moldura única em volta de input/textarea + addons (ícones, texto, botões).
+ * A borda e o focus ring vivem no GRUPO; o controle interno fica "nu".
+ *
+ *   <div class="nds-input-group">
+ *     <span class="nds-input-group-addon" data-align="inline-start">🔍</span>
+ *     <input class="nds-input nds-input-group-control" />
+ *     <span class="nds-input-group-addon" data-align="inline-end">
+ *       <kbd class="nds-kbd">⌘K</kbd>
+ *     </span>
+ *   </div>
+ *
+ * Alinhamentos: inline-start/inline-end (linha) e block-start/block-end
+ * (empilha acima/abaixo — o grupo vira coluna). Sem altura fixa
+ * (WCAG 1.4.4): altura via padding do controle interno.
+ *
+ * Tokens: --input, --ring, --destructive, --muted-foreground, --radius,
+ *         --spacing-*
+ */
+
+.nds-input-group {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  outline: 0;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-input-group:has([data-slot="input-group-control"]:focus-visible) {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-input-group:has([aria-invalid="true"]) {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+}
+
+.nds-input-group:has(:disabled) {
+  opacity: 0.5;
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Addons em bloco (acima/abaixo) empilham o grupo */
+.nds-input-group:has(> [data-align="block-start"]),
+.nds-input-group:has(> [data-align="block-end"]),
+.nds-input-group:has(> textarea) {
+  height: auto;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ── Controle interno (input/textarea sem moldura própria) ───────────────── */
+.nds-input-group-control {
+  flex: 1;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.nds-input-group-control:focus-visible {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.nds-input-group-control:disabled {
+  background: transparent;
+}
+
+textarea.nds-input-group-control {
+  resize: none;
+  padding-block: var(--spacing-2);
+}
+
+/* ── Addon (ícone, texto, kbd, botão) ────────────────────────────────────── */
+.nds-input-group-addon {
+  display: flex;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding-block: var(--spacing-1-5, 0.375rem);
+
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: hsl(var(--muted-foreground));
+  cursor: text;
+  user-select: none;
+}
+
+.nds-input-group-addon svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.nds-input-group-addon[data-align="inline-start"] {
+  order: -1;
+  padding-inline-start: var(--spacing-2);
+}
+
+.nds-input-group-addon[data-align="inline-end"] {
+  order: 99;
+  padding-inline-end: var(--spacing-2);
+}
+
+.nds-input-group-addon[data-align="block-start"],
+.nds-input-group-addon[data-align="block-end"] {
+  width: 100%;
+  justify-content: flex-start;
+  padding-inline: var(--spacing-2-5, 0.625rem);
+}
+
+.nds-input-group-addon[data-align="block-start"] { order: -1; padding-top: var(--spacing-2); }
+.nds-input-group-addon[data-align="block-end"]   { order: 99; padding-bottom: var(--spacing-2); }
+
+/* ── Texto auxiliar dentro do grupo ──────────────────────────────────────── */
+.nds-input-group-text {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-input-group-text svg:not([class*="size-"]) {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/* ── Botão compacto dentro do grupo (compõe nds-button) ──────────────────── */
+.nds-input-group-button {
+  gap: var(--spacing-1);
+  border-radius: calc(var(--radius, 0.5rem) - 3px);
+  padding-inline: var(--spacing-1-5, 0.375rem);
+  padding-block: 2px;
+}
+
+.nds-input-group-button svg:not([class*="size-"]) {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-input-group {
+    transition: none;
+  }
+}
