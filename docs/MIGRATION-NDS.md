@@ -45,7 +45,11 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 - [x] **Fase 1 — React UI** (~46 componentes, 11 lotes por categoria):
   form → feedback → display → layout → navigation → disclosure → overlay → tables.
   Todos os primitivos ui/ do React estão em classes .nds-*.
-- [ ] **Fase 2 — Vue UI** (bump reka-ui primeiro; reaproveita 100% dos CSS já estendidos na Fase 1).
+- [x] **Fase 2 — Vue UI** (9 lotes espelhando a Fase 1; reka-ui 2.10.1 já estava no lock).
+  Pendência registrada: helpers fora das 7 categorias (button-group, combobox,
+  empty, field, form-helpers, input-group, item, kbd, native-select,
+  number-field, range-calendar, stepper no Vue; input-group no React) —
+  migrar num sub-lote próprio antes da Fase 5.
 - [ ] **Fase 3 — Svelte UI** (bump bits-ui primeiro; idem).
 - [ ] **Fase 4 — Docs pages + stories** das 3 stacks: substituir utilitários
   Tailwind pelas classes de docs da vanilla (`nds-stack`, `nds-cluster`,

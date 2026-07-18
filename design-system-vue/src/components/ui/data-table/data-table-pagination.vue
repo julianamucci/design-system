@@ -13,9 +13,9 @@ const props = defineProps<{
 <template>
   <div
     data-slot="data-table-pagination"
-    class="flex flex-wrap items-center justify-between gap-3 text-sm"
+    class="nds-data-table-pagination"
   >
-    <div class="text-muted-foreground">
+    <div class="nds-data-table-pagination-count">
       <template v-if="enableRowSelection">
         {{ props.table.getFilteredSelectedRowModel().rows.length }} de
         {{ props.table.getFilteredRowModel().rows.length }} linha(s) selecionada(s).
@@ -24,13 +24,13 @@ const props = defineProps<{
         {{ props.table.getFilteredRowModel().rows.length }} linha(s).
       </template>
     </div>
-    <div class="flex flex-wrap items-center gap-4">
-      <div class="flex items-center gap-2">
-        <span class="text-muted-foreground">Linhas por página</span>
+    <div class="nds-data-table-pagination-controls">
+      <div class="nds-data-table-page-size">
+        <span>Linhas por página</span>
         <select
           aria-label="Linhas por página"
           :value="props.table.getState().pagination.pageSize"
-          class="h-8 rounded-md border border-input bg-transparent px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          class="nds-data-table-page-size-select"
           @change="(e) => props.table.setPageSize(Number((e.target as HTMLSelectElement).value))"
         >
           <option
@@ -42,11 +42,11 @@ const props = defineProps<{
           </option>
         </select>
       </div>
-      <div class="text-muted-foreground">
+      <div class="nds-data-table-pagination-count">
         Página {{ props.table.getState().pagination.pageIndex + 1 }} de
         {{ Math.max(props.table.getPageCount(), 1) }}
       </div>
-      <div class="flex items-center gap-1">
+      <div class="nds-data-table-pagination-nav">
         <Button
           variant="outline"
           size="icon"

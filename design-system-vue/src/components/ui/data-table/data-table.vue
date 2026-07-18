@@ -384,14 +384,14 @@ const EditableCell = defineComponent({
           {
             type: 'button',
             class:
-              'block w-full rounded-sm px-1 py-0.5 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+              'nds-data-table-edit-btn',
             'aria-label': `Editar ${p.context.column.id}`,
             onClick: () => {
               editing.value = true;
             },
           },
           value.value === ''
-            ? h('span', { class: 'text-muted-foreground' }, '—')
+            ? h('span', { class: 'nds-dt-icon-muted' }, '—')
             : value.value,
         );
       }
@@ -410,7 +410,7 @@ const EditableCell = defineComponent({
             cancel();
           }
         },
-        class: 'h-7',
+        class: 'nds-data-table-edit-input',
       });
     };
   },
@@ -439,27 +439,27 @@ watch(
 <template>
   <div
     data-slot="data-table"
-    :class="cn('flex flex-col gap-3', props.class)"
+    :class="cn('nds-data-table', props.class)"
   >
     <!-- Toolbar -->
     <div
       v-if="enableGlobalFilter || enableColumnVisibility"
       data-slot="data-table-toolbar"
-      class="flex items-center gap-2"
+      class="nds-data-table-toolbar"
     >
       <div
         v-if="enableGlobalFilter"
-        class="relative max-w-sm flex-1"
+        class="nds-data-table-search"
       >
         <Search
           aria-hidden="true"
-          class="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          class="nds-dt-icon nds-dt-icon-muted"
         />
         <Input
           v-model="globalFilter"
           :placeholder="globalFilterPlaceholder"
           :aria-label="globalFilterPlaceholder"
-          class="pl-8"
+          class="nds-data-table-search-input"
         />
       </div>
       <DropdownMenu v-if="enableColumnVisibility">
@@ -467,7 +467,7 @@ watch(
           <Button
             variant="outline"
             size="sm"
-            class="ml-auto"
+            class="nds-data-table-columns-btn"
           >
             <Settings2 aria-hidden="true" />
             Colunas
@@ -475,7 +475,7 @@ watch(
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          class="w-64"
+          class="nds-data-table-columns-menu-content"
         >
           <DropdownMenuGroup>
             <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
@@ -484,9 +484,9 @@ watch(
               v-for="column in table.getAllLeafColumns().filter((c) => c.getCanHide())"
               :key="column.id"
             >
-              <div class="flex items-center gap-1">
+              <div class="nds-data-table-columns-menu-row">
                 <DropdownMenuCheckboxItem
-                  class="flex-1 capitalize"
+                  class="nds-data-table-columns-menu-check"
                   :model-value="column.getIsVisible()"
                   @update:model-value="(v: boolean) => column.toggleVisibility(!!v)"
                   @select.prevent
@@ -495,15 +495,15 @@ watch(
                 </DropdownMenuCheckboxItem>
                 <div
                   v-if="enableColumnPinning"
-                  class="flex shrink-0 pr-1"
+                  class="nds-data-table-pin-wrap"
                 >
                   <button
                     type="button"
                     :aria-label="pinLabel(column)"
                     :class="
                       cn(
-                        'inline-flex size-6 items-center justify-center rounded-md hover:bg-muted',
-                        column.getIsPinned() === 'left' && 'text-primary',
+                        'nds-data-table-pin-btn',
+                        column.getIsPinned() === 'left' && 'is-active',
                       )
                     "
                     @click="togglePin(column)"
@@ -511,12 +511,12 @@ watch(
                     <PinOff
                       v-if="column.getIsPinned() === 'left'"
                       aria-hidden="true"
-                      class="size-3.5"
+                      class="nds-dt-icon"
                     />
                     <Pin
                       v-else
                       aria-hidden="true"
-                      class="size-3.5 -rotate-45"
+                      class="nds-dt-icon nds-dt-icon-pin"
                     />
                   </button>
                 </div>
@@ -532,8 +532,8 @@ watch(
       ref="scrollRef"
       :class="
         cn(
-          'relative w-full overflow-auto rounded-md border',
-          virtualized && 'overflow-y-auto',
+          'nds-data-table-scroll',
+          virtualized && 'nds-data-table-scroll-virtual',
         )
       "
       :style="virtualized ? { maxHeight } : undefined"
@@ -542,7 +542,7 @@ watch(
         :class="
           cn(
             (enableColumnResizing || enableColumnOrdering || virtualized) &&
-              'table-fixed',
+              'nds-table-fixed',
           )
         "
       >
@@ -569,8 +569,8 @@ watch(
               }"
               :class="
                 cn(
-                  'relative',
-                  header.column.getIsPinned() && 'bg-background',
+                  'nds-data-table-th',
+                  header.column.getIsPinned() && 'nds-data-table-th-pinned',
                 )
               "
               :draggable="
@@ -593,18 +593,18 @@ watch(
               "
             >
               <template v-if="!header.isPlaceholder">
-                <div class="flex items-center gap-1">
+                <div class="nds-data-table-th-inner">
                   <GripVertical
                     v-if="
                       enableColumnOrdering && header.column.id !== '__select__'
                     "
                     aria-hidden="true"
-                    class="size-3.5 cursor-grab text-muted-foreground/60"
+                    class="nds-dt-icon nds-dt-icon-grip"
                   />
                   <button
                     v-if="header.column.getCanSort()"
                     type="button"
-                    class="inline-flex flex-1 items-center gap-1.5 text-left font-medium hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-sm"
+                    class="nds-data-table-sort-btn"
                     :aria-label="`Ordenar por ${
                       flexHeaderLabel(header.column.columnDef.header) ??
                       header.column.id
@@ -618,22 +618,22 @@ watch(
                     <ArrowUp
                       v-if="header.column.getIsSorted() === 'asc'"
                       aria-hidden="true"
-                      class="size-3.5"
+                      class="nds-dt-icon"
                     />
                     <ArrowDown
                       v-else-if="header.column.getIsSorted() === 'desc'"
                       aria-hidden="true"
-                      class="size-3.5"
+                      class="nds-dt-icon"
                     />
                     <ArrowUpDown
                       v-else
                       aria-hidden="true"
-                      class="size-3.5 text-muted-foreground"
+                      class="nds-dt-icon nds-dt-icon-muted"
                     />
                   </button>
                   <div
                     v-else
-                    class="flex-1"
+                    class="nds-data-table-th-label"
                   >
                     <FlexRender
                       :render="header.column.columnDef.header"
@@ -652,8 +652,8 @@ watch(
                 }`"
                 :class="
                   cn(
-                    'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-primary/50',
-                    header.column.getIsResizing() && 'bg-primary',
+                    'nds-data-table-resize-handle',
+                    header.column.getIsResizing() && 'is-resizing',
                   )
                 "
                 @mousedown="header.getResizeHandler()?.($event)"
@@ -673,8 +673,7 @@ watch(
               "
               :class="
                 cn(
-                  'py-1.5',
-                  header.column.getIsPinned() && 'bg-background',
+                  header.column.getIsPinned() && 'nds-data-table-th-pinned',
                 )
               "
             >
@@ -685,7 +684,7 @@ watch(
                   v-if="header.column.columnDef.meta.filter.type === 'select'"
                   :value="(header.column.getFilterValue() ?? '') as string"
                   :aria-label="`Filtrar ${header.column.id}`"
-                  class="h-7 w-full rounded-md border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                  class="nds-data-table-filter-select"
                   @change="(e) => header.column.setFilterValue((e.target as HTMLSelectElement).value || undefined)"
                 >
                   <option value="">
@@ -704,13 +703,13 @@ watch(
                   :model-value="(header.column.getFilterValue() ?? '') as string"
                   :placeholder="header.column.columnDef.meta.filter.placeholder ?? 'Filtrar...'"
                   :aria-label="`Filtrar ${header.column.id}`"
-                  class="h-7 text-xs"
+                  class="nds-data-table-filter-input"
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
               </template>
               <span
                 v-else
-                class="sr-only"
+                class="nds-sr-only"
               >Sem filtro</span>
             </TableHead>
           </TableRow>
@@ -738,7 +737,7 @@ watch(
                   width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined,
                   ...pinStyle(cell.column),
                 }"
-                :class="cn(cell.column.getIsPinned() && 'bg-background')"
+                :class="cn(cell.column.getIsPinned() && 'nds-data-table-td-pinned')"
               >
                 <EditableCell
                   v-if="cell.column.columnDef.meta?.editable"
@@ -755,7 +754,7 @@ watch(
           <TableRow v-else>
             <TableCell
               :colspan="visibleLeafColumns"
-              class="h-24 text-center text-muted-foreground"
+              class="nds-data-table-empty"
             >
               {{ emptyMessage }}
             </TableCell>

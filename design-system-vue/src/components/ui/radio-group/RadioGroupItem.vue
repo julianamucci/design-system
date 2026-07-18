@@ -34,7 +34,7 @@ const forwardedProps = useForwardProps(delegatedProps)
       class="nds-radio-indicator"
     >
       <slot>
-        <CircleIcon class="bg-primary-foreground absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full" />
+        <CircleIcon />
       </slot>
     </RadioGroupIndicator>
   </RadioGroupItem>
