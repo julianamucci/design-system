@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <kbd
     data-slot="kbd-group"
-    :class="cn('gap-1 inline-flex items-center', props.class)"
+    :class="cn('nds-kbd-group', props.class)"
   >
     <slot />
   </kbd>

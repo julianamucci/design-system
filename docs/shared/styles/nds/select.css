@@ -79,6 +79,68 @@
 }
 
 /*
+ * ─── nds-native-select ──────────────────────────────────────────────────────
+ * Wrapper para <select> nativo com ícone próprio (em vez do chevron de
+ * background do .nds-select). Usado pelos seletores de mês/ano e helpers.
+ */
+
+.nds-native-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nds-native-select-input {
+  width: 100%;
+  min-width: 0;
+  appearance: none;
+  padding-block: var(--spacing-1, 0.25rem);
+  padding-inline-start: var(--spacing-2-5, 0.625rem);
+  padding-inline-end: var(--spacing-8, 2rem);
+
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: hsl(var(--foreground));
+  background-color: transparent;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius, 0.5rem);
+  outline: 0;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.nds-native-select-input:focus-visible {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+}
+
+.nds-native-select-input:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nds-native-select-input[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+}
+
+.nds-native-select-input[data-size="sm"] {
+  padding-block: 2px;
+  border-radius: min(var(--radius-md, calc(var(--radius) - 2px)), 10px);
+  font-size: 0.8125rem;
+}
+
+.nds-native-select-icon {
+  position: absolute;
+  right: var(--spacing-2);
+  pointer-events: none;
+  color: hsl(var(--muted-foreground));
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+/*
  * ─── nds-select composite ───────────────────────────────────────────────────
  * Variante composta (trigger + popup + itens) para selects customizados com
  * listbox próprio. Estados via atributos ARIA e data-attrs (libs headless
