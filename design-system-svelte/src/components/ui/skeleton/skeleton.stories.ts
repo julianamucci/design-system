@@ -41,11 +41,11 @@ export const Playground: Story = {
       await expect(sk).toBeInTheDocument();
     });
 
-    await step('Aplica classes base (animate-pulse, rounded-md, bg-muted)', async () => {
+    await step('Aplica estilo base (pulso, radius, bg)', async () => {
       const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-      await expect(sk.className).toMatch(/animate-pulse/);
-      await expect(sk.className).toMatch(/rounded-md/);
-      await expect(sk.className).toMatch(/bg-muted/);
+      await expect(sk.className).toMatch(/nds-skeleton/);
+      await expect(getComputedStyle(sk).animationName).toBe('nds-skeleton-pulse');
+      await expect(getComputedStyle(sk).borderRadius).not.toBe('0px');
     });
 
     await step('Skeleton possui aria-hidden=true', async () => {

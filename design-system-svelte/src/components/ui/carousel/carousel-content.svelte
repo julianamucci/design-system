@@ -16,7 +16,7 @@
 
 <div
 	data-slot="carousel-content"
-	class="overflow-hidden"
+	class="nds-carousel-overflow"
 	use:emblaCarouselSvelte={{
 		options: {
 			container: "[data-embla-container]",
@@ -31,11 +31,11 @@
 	<div
 		bind:this={ref}
 		class={cn(
-			"flex",
-			emblaCtx.orientation === "horizontal" ? "-ms-4" : "-mt-4 flex-col",
+			"nds-carousel-track",
 			className
 		)}
 		data-embla-container=""
+		data-orientation={emblaCtx.orientation}
 		{...restProps}
 	>
 		{@render children?.()}

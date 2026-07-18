@@ -50,7 +50,8 @@ export const Playground: Story = {
 
     await step('Avatar tem forma circular via rounded-full', async () => {
       const avatar = canvasElement.querySelector('[data-slot="avatar"]');
-      await expect(avatar).toHaveClass('rounded-full');
+      await expect(avatar).toHaveClass('nds-avatar');
+      await expect(getComputedStyle(avatar).borderRadius).not.toBe('0px');
     });
 
     await step('AvatarImage possui alt descritivo', async () => {

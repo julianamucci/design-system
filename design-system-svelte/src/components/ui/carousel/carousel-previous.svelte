@@ -18,15 +18,13 @@
 
 <Button
 	data-slot="carousel-previous"
+	data-orientation={emblaCtx.orientation}
 	{variant}
 	{size}
 	aria-disabled={!emblaCtx.canScrollPrev}
 	disabled={!emblaCtx.canScrollPrev}
 	class={cn(
-		"rounded-full absolute touch-manipulation",
-		emblaCtx.orientation === "horizontal"
-			? "-start-12 top-1/2 -translate-y-1/2"
-			: "start-1/2 -top-12 -translate-x-1/2 rotate-90",
+		"nds-carousel-arrow nds-carousel-arrow-prev",
 		className
 	)}
 	onclick={emblaCtx.scrollPrev}
@@ -35,5 +33,5 @@
 	bind:ref
 >
 	<ChevronLeftIcon  />
-	<span class="sr-only">Previous slide</span>
+	<span class="nds-sr-only">Previous slide</span>
 </Button>

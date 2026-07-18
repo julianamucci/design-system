@@ -85,7 +85,7 @@
 <div
 	bind:this={ref}
 	data-slot="carousel"
-	class={cn("relative", className)}
+	class={cn("nds-carousel", className)}
 	role="region"
 	aria-roledescription="carousel"
 	{...restProps}

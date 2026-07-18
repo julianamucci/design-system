@@ -37,7 +37,7 @@ export const Retangulo: Story = {
       await expect(sk).toBeInTheDocument();
       await expect(sk.className).toMatch(/h-20/);
       await expect(sk.className).toMatch(/w-64/);
-      await expect(sk.className).toMatch(/rounded-md/);
+      await expect(sk.className).toMatch(/nds-skeleton/);
     });
   },
 };

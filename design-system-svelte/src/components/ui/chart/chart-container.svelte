@@ -114,7 +114,7 @@
   data-slot="chart"
   role="img"
   aria-label={ariaLabel}
-  class={cn('w-full', className)}
+  class={cn('nds-chart', className)}
   style="min-height: 200px;"
   {...restProps}
 ></div>

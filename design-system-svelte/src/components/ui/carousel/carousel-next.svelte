@@ -18,15 +18,13 @@
 
 <Button
 	data-slot="carousel-next"
+	data-orientation={emblaCtx.orientation}
 	{variant}
 	{size}
 	aria-disabled={!emblaCtx.canScrollNext}
 	disabled={!emblaCtx.canScrollNext}
 	class={cn(
-		"rounded-full absolute touch-manipulation",
-		emblaCtx.orientation === "horizontal"
-			? "-end-12 top-1/2 -translate-y-1/2"
-			: "start-1/2 -bottom-12 -translate-x-1/2 rotate-90",
+		"nds-carousel-arrow nds-carousel-arrow-next",
 		className
 	)}
 	onclick={emblaCtx.scrollNext}
@@ -35,5 +33,5 @@
 	{...restProps}
 >
 	<ChevronRightIcon  />
-	<span class="sr-only">Next slide</span>
+	<span class="nds-sr-only">Next slide</span>
 </Button>

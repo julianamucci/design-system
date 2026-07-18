@@ -19,11 +19,11 @@
 	role="group"
 	aria-roledescription="slide"
 	class={cn(
-		"min-w-0 shrink-0 grow-0 basis-full",
-		emblaCtx.orientation === "horizontal" ? "ps-4" : "pt-4",
+		"nds-carousel-slide",
 		className
 	)}
 	data-embla-slide=""
+	data-orientation={emblaCtx.orientation}
 	{...restProps}
 >
 	{@render children?.()}
