@@ -16,7 +16,7 @@
 	bind:this={ref}
 	data-slot="input-otp-separator"
 	role="separator"
-	class={cn("[&_svg:not([class*='size-'])]:size-4 flex items-center", className)}
+	class={cn("nds-input-otp-separator", className)}
 	{...restProps}
 >
 	{#if children}

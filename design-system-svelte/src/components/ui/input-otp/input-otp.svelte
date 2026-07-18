@@ -16,7 +16,7 @@
 	data-slot="input-otp"
 	spellcheck={false}
 	class={cn(
-		"cn-input-otp-input gap-2 flex items-center disabled:cursor-not-allowed has-disabled:opacity-50",
+		"nds-input-otp-container",
 		className
 	)}
 	{...restProps}

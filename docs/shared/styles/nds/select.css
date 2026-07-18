@@ -188,11 +188,13 @@
   transform-origin: var(--transform-origin, var(--reka-select-content-transform-origin, center));
 }
 
-/* Viewport interno (reka): em modo popper acompanha as dimensões do trigger */
-.nds-select-viewport[data-position="popper"] {
-  height: var(--reka-select-trigger-height);
+/* Viewport interno: acompanha as dimensões do trigger/anchor (reka popper,
+ * bits anchor). Vars ausentes → height/min-width caem pra auto. */
+.nds-select-viewport {
+  height: var(--reka-select-trigger-height, var(--bits-select-anchor-height));
   width: 100%;
-  min-width: var(--reka-select-trigger-width);
+  min-width: var(--reka-select-trigger-width, var(--bits-select-anchor-width));
+  scroll-margin-block: var(--spacing-1, 0.25rem);
 }
 
 .nds-select-content[data-open] {

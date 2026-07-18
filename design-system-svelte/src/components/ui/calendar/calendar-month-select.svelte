@@ -14,13 +14,13 @@
 
 <span
 	class={cn(
-		"has-focus:border-ring border-input has-focus:ring-ring/50 relative flex rounded-md border shadow-xs has-focus:ring-[3px]",
+		"nds-calendar-select-framed",
 		className
 	)}
 >
 	<CalendarPrimitive.MonthSelect
 		bind:ref
-		class="bg-background dark:bg-popover dark:text-popover-foreground absolute inset-0 opacity-0"
+		class="nds-calendar-select-overlay"
 		{...restProps}
 	>
 		{#snippet child({ props, monthItems, selectedMonthItem })}
@@ -37,7 +37,7 @@
 				{/each}
 			</select>
 			<span
-				class="[&>svg]:text-muted-foreground flex h-(--cell-size) items-center gap-1 rounded-md ps-2 pe-1 text-sm font-medium select-none [&>svg]:size-3.5"
+				class="nds-calendar-select-display"
 				aria-hidden="true"
 			>
 				{monthItems.find((item) => item.value === value)?.label || selectedMonthItem.label}

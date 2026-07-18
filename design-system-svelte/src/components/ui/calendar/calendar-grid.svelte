@@ -11,6 +11,6 @@
 
 <CalendarPrimitive.Grid
 	bind:ref
-	class={cn("flex w-full border-collapse flex-col", className)}
+	class={cn("nds-calendar-table", className)}
 	{...restProps}
 />
