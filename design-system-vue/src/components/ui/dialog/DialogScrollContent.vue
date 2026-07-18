@@ -28,12 +28,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <DialogPortal>
     <DialogOverlay
-      class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+      class="nds-dialog-overlay nds-dialog-overlay-scroll"
     >
       <DialogContent
         :class="
           cn(
-            'relative z-50 grid w-full max-w-lg my-8 gap-4 border border-border bg-background p-6 shadow-lg duration-200 sm:rounded-lg md:w-full',
+            'nds-dialog-content nds-dialog-content-scroll',
             props.class,
           )
         "
@@ -49,10 +49,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <slot />
 
         <DialogClose
-          class="absolute top-4 right-4 p-0.5 transition-colors rounded-md hover:bg-secondary"
+          class="nds-dialog-close"
         >
-          <XIcon class="w-4 h-4" />
-          <span class="sr-only">Close</span>
+          <XIcon />
+          <span class="nds-sr-only">Close</span>
         </DialogClose>
       </DialogContent>
     </DialogOverlay>

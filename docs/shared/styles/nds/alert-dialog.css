@@ -107,16 +107,8 @@
  * (ícone), e footer em grid de 2 colunas no tamanho sm.
  */
 
-.nds-alert-dialog-overlay {
-  animation: nds-dialog-fade-in var(--duration-fast) var(--ease-entrance);
-}
-
 .nds-alert-dialog-overlay[data-closed] {
   animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
-}
-
-.nds-alert-dialog-content {
-  animation: nds-dialog-zoom-in var(--duration-fast) var(--ease-entrance);
 }
 
 .nds-alert-dialog-content[data-closed] {

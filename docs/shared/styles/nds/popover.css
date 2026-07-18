@@ -43,7 +43,7 @@
 }
 
 .nds-popover-content {
-  transform-origin: var(--transform-origin, center);
+  transform-origin: var(--transform-origin, var(--reka-popover-content-transform-origin, center));
 }
 
 /* Animação de saída apenas (data-ending-style): a entrada aparece direto,

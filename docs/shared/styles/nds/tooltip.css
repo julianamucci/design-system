@@ -30,7 +30,7 @@
   pointer-events: none;
   box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
 
-  transform-origin: var(--transform-origin, center);
+  transform-origin: var(--transform-origin, var(--reka-tooltip-content-transform-origin, center));
 }
 
 /* Encurta o padding quando há um <kbd> à direita */

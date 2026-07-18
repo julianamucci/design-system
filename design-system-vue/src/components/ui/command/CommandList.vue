@@ -17,7 +17,7 @@ const forwarded = useForwardProps(delegatedProps)
     data-slot="command-list"
     v-bind="forwarded"
     :aria-label="($attrs['aria-label'] as string) || 'Resultados'"
-    :class="cn('no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto', props.class)"
+    :class="cn('nds-command-list', props.class)"
   >
     <slot />
   </ListboxContent>

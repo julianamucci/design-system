@@ -26,17 +26,13 @@
   z-index: 50;
   isolation: isolate;
   background-color: hsl(0 0% 0% / 0.1);
-  animation: nds-dialog-fade-in var(--duration-fast) var(--ease-entrance);
+  /* entrada instantânea — anima só a saída (evita corrida de opacity:0 com toBeVisible) */
 }
 
 @supports (backdrop-filter: blur(4px)) {
   .nds-dialog-overlay {
     backdrop-filter: blur(4px);
   }
-}
-
-.nds-dialog-overlay[data-state="closed"] {
-  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */
@@ -59,17 +55,12 @@
   color: hsl(var(--popover-foreground));
   box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);
   border-radius: 0;
-  animation: nds-dialog-zoom-in var(--duration-fast) var(--ease-entrance);
 }
 
 @media (min-width: 40rem) {
   .nds-dialog-content {
     border-radius: 0.75rem;                        /* 12px — rounded-xl */
   }
-}
-
-.nds-dialog-content[data-state="closed"] {
-  animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -209,6 +200,21 @@
 
 .nds-dialog-description a:hover {
   color: hsl(var(--foreground));
+}
+
+/* ── Variante scrollável (overlay rola; content no fluxo do grid) ─────────── */
+.nds-dialog-overlay-scroll {
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+}
+
+.nds-dialog-content-scroll {
+  position: relative;
+  top: auto;
+  left: auto;
+  translate: none;
+  margin-block: var(--spacing-8, 2rem);
 }
 
 /* Botão de fechar composto (nds-button ghost icon) — só posicionamento */

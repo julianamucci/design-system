@@ -14,7 +14,7 @@ const delegatedProps = reactiveOmit(props, 'class', 'inset')
     data-slot="menubar-label"
     :data-inset="inset ? '' : undefined"
     v-bind="delegatedProps"
-    :class="cn('px-1.5 py-1 text-sm font-medium data-inset:pl-7', props.class)"
+    :class="cn('nds-dropdown-menu-label', props.class)"
   >
     <slot />
   </MenubarLabel>

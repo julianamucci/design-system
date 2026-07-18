@@ -100,13 +100,14 @@
   user-select: none;
 }
 
-/* Content composto: scroll interno + dimensões do positioner + animação */
+/* Content composto: scroll interno + dimensões do positioner + animação.
+ * Fallbacks em cadeia: base-ui → reka (dropdown/context/menubar). */
 .nds-dropdown-menu-content {
-  max-height: var(--available-height);
-  width: var(--anchor-width);
+  max-height: var(--available-height, var(--reka-dropdown-menu-content-available-height, var(--reka-context-menu-content-available-height, var(--reka-menubar-content-available-height))));
+  width: var(--anchor-width, var(--reka-dropdown-menu-trigger-width, auto));
   overflow-x: hidden;
   overflow-y: auto;
-  transform-origin: var(--transform-origin, center);
+  transform-origin: var(--transform-origin, var(--reka-dropdown-menu-content-transform-origin, var(--reka-context-menu-content-transform-origin, var(--reka-menubar-content-transform-origin, center))));
 }
 
 /* Sem animação de saída: manter o menu montado durante transição de

@@ -120,7 +120,7 @@
 }
 
 .nds-command-item[aria-disabled="true"],
-.nds-command-item[data-disabled="true"] {
+.nds-command-item[data-disabled]:not([data-disabled="false"]) {
   pointer-events: none;
   opacity: 0.5;
   cursor: not-allowed;

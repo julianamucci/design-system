@@ -21,12 +21,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-slot="slotProps"
     data-slot="menubar"
     v-bind="forwarded"
-    :class="
-      cn(
-        'h-8 gap-0.5 rounded-lg border p-[3px] flex items-center',
-        props.class,
-      )
-    "
+    :class="cn('nds-menubar', props.class)"
   >
     <slot v-bind="slotProps" />
   </MenubarRoot>

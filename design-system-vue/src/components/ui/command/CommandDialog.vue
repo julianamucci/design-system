@@ -27,10 +27,10 @@ const forwarded = useForwardPropsEmits(props, emits)
     v-bind="forwarded"
   >
     <DialogContent
-      :class="cn('rounded-xl! top-1/3 translate-y-0 overflow-hidden p-0', props.class)"
+      :class="cn('nds-command-dialog-content', props.class)"
       :show-close-button="showCloseButton"
     >
-      <DialogHeader class="sr-only">
+      <DialogHeader class="nds-sr-only">
         <DialogTitle>{{ title }}</DialogTitle>
         <DialogDescription>{{ description }}</DialogDescription>
       </DialogHeader>

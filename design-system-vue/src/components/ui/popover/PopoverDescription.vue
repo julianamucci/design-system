@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <p
     data-slot="popover-description"
-    :class="cn('text-muted-foreground', props.class)"
+    :class="cn('nds-popover-description', props.class)"
   >
     <slot />
   </p>
