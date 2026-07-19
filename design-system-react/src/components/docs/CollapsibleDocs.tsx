@@ -89,8 +89,8 @@ const getNavGroups = (t: (key: string) => string) => [
 function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full max-w-sm space-y-3">
-      <div className="flex gap-2">
+    <div className="nds-w-full nds-max-w-sm nds-stack" data-spacing="sm">
+      <div className="nds-cluster" data-spacing="xs">
         <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
           {tContent("demonstration.labels.triggerClosed")}
         </Button>
@@ -98,11 +98,11 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
           {tContent("demonstration.labels.triggerOpen")}
         </Button>
       </div>
-      <Collapsible open={open} onOpenChange={setOpen} className="space-y-2">
+      <Collapsible open={open} onOpenChange={setOpen} className="nds-w-full nds-text-body">
         <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
-            className="flex w-full items-center justify-between px-4"
+            className="nds-cluster nds-w-full nds-px-4" data-justify="between"
             aria-label={open
               ? tContent("demonstration.labels.triggerOpen")
               : tContent("demonstration.labels.triggerClosed")
@@ -116,11 +116,11 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
             </span>
             <ChevronDown
               aria-hidden="true"
-              className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+              className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
             />
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
+        <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           <p>{tContent("demonstration.labels.advancedFilter1")}</p>
           <p>{tContent("demonstration.labels.advancedFilter2")}</p>
         </CollapsibleContent>
@@ -185,14 +185,14 @@ export function CollapsibleDocs() {
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";`;
 
-  const codeUncontrolled = `<Collapsible defaultOpen={false} className="space-y-2">
+  const codeUncontrolled = `<Collapsible defaultOpen={false} className="nds-w-full nds-max-w-sm nds-text-body">
   <CollapsibleTrigger asChild>
-    <Button variant="ghost" className="flex w-full items-center justify-between px-4">
+    <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-justify="between">
       <span>Exibir filtros avançados</span>
-      <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
     </Button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border px-4 py-3 text-sm">
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
     <p>Filtro avançado 1</p>
     <p>Filtro avançado 2</p>
   </CollapsibleContent>
@@ -200,18 +200,18 @@ import { ChevronDown } from "lucide-react";`;
 
   const codeControlled = `const [open, setOpen] = useState(false);
 
-<Collapsible open={open} onOpenChange={setOpen} className="space-y-2">
+<Collapsible open={open} onOpenChange={setOpen} className="nds-w-full nds-text-body">
   <CollapsibleTrigger asChild>
     <Button
       variant="ghost"
-      className="flex w-full items-center justify-between px-4"
+      className="nds-cluster nds-w-full nds-px-4" data-justify="between"
       aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
     >
       <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
-      <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
     </Button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border px-4 py-3 text-sm">
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
     <p>Filtro avançado 1</p>
   </CollapsibleContent>
 </Collapsible>`;
@@ -248,27 +248,27 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full space-y-6">
+        <div className="nds-w-full nds-stack" data-spacing="xl">
           {/* Default — uncontrolled */}
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
               Padrão (não-controlado)
             </p>
-            <Collapsible className="w-full max-w-sm space-y-2">
+            <Collapsible className="nds-w-full nds-max-w-sm">
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex w-full items-center justify-between px-4"
+                  className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                   aria-label={tContent("demonstration.labels.triggerClosed")}
                 >
                   <span>{tContent("demonstration.labels.headerLabel")}</span>
                   <ChevronDown
                     aria-hidden="true"
-                    className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+                    className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
                   />
                 </Button>
               </CollapsibleTrigger>
-              <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
+              <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                 <p>{tContent("demonstration.labels.advancedFilter1")}</p>
                 <p>{tContent("demonstration.labels.advancedFilter2")}</p>
               </CollapsibleContent>
@@ -276,30 +276,30 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
           </div>
 
           {/* Controlled */}
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
               Controlado
             </p>
             <ControlledDemo tContent={tContent} />
           </div>
 
           {/* Disabled */}
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
               Desabilitado
             </p>
-            <Collapsible className="w-full max-w-sm space-y-2">
+            <Collapsible className="nds-w-full nds-max-w-sm">
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex w-full items-center justify-between px-4"
+                  className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                   disabled
                 >
                   <span>{tContent("demonstration.labels.headerLabel")}</span>
-                  <ChevronDown aria-hidden="true" className="h-4 w-4" />
+                  <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0" />
                 </Button>
               </CollapsibleTrigger>
-              <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
+              <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                 <p>{tContent("demonstration.labels.advancedFilter1")}</p>
               </CollapsibleContent>
             </Collapsible>
@@ -374,34 +374,34 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Collapsible className="w-full space-y-2">
+              <Collapsible className="nds-w-full nds-max-w-xs nds-text-body">
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="flex w-full items-center justify-between px-4"
+                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                     aria-label="Exibir filtros avançados"
                   >
                     <span>Exibir filtros avançados</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+                      className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
                     />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>Filtro avançado 1</p>
                 </CollapsibleContent>
               </Collapsible>
             ),
             dontPreview: (
-              <Collapsible className="w-full space-y-2">
+              <Collapsible className="nds-w-full nds-max-w-xs nds-text-body">
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" className="flex w-full items-center justify-between px-4">
+                  <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-justify="between">
                     <span>Ver mais</span>
-                    <ChevronDown aria-hidden="true" className="h-4 w-4" />
+                    <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0" />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>Filtro avançado 1</p>
                 </CollapsibleContent>
               </Collapsible>
@@ -413,32 +413,32 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Collapsible className="w-full space-y-2">
+              <Collapsible className="nds-w-full nds-max-w-xs nds-text-body">
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="flex w-full items-center justify-between px-4"
+                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                   >
                     <span>Filtros avançados</span>
-                    <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+                    <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>Filtro avançado 1</p>
                 </CollapsibleContent>
               </Collapsible>
             ),
             dontPreview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
                 {[1, 2, 3].map((i) => (
-                  <Collapsible key={i} className="space-y-1">
+                  <Collapsible key={i} className="nds-w-full nds-text-body">
                     <CollapsibleTrigger asChild>
-                      <Button variant="ghost" className="flex w-full items-center justify-between px-4 text-sm">
+                      <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4 nds-text-body" data-justify="between">
                         <span>Seção {i}</span>
-                        <ChevronDown aria-hidden="true" className="h-3 w-3" />
+                        <ChevronDown aria-hidden="true" className="nds-icon-sm nds-shrink-0" />
                       </Button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="rounded border px-3 py-2 text-xs">
+                    <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                       Conteúdo {i}
                     </CollapsibleContent>
                   </Collapsible>
@@ -470,20 +470,20 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             description: stripHtml(tContent("variants.items.uncontrolled")),
             code: codeUncontrolled,
             preview: (
-              <Collapsible defaultOpen={false} className="w-full max-w-sm space-y-2">
+              <Collapsible defaultOpen={false} className="nds-w-full nds-max-w-sm nds-text-body">
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="flex w-full items-center justify-between px-4"
+                    className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                   >
                     <span>{tContent("demonstration.labels.triggerClosed")}</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+                      className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
                     />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>{tContent("demonstration.labels.advancedFilter1")}</p>
                   <p>{tContent("demonstration.labels.advancedFilter2")}</p>
                 </CollapsibleContent>
@@ -509,22 +509,22 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             name: tContent("variants.compositions.customButton.name"),
             description: tContent("variants.compositions.customButton.description"),
             useWhen: tContent("variants.compositions.customButton.use"),
-            code: `<Collapsible className="w-full max-w-sm">
+            code: `<Collapsible className="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger asChild>
     <Button variant="outline">Exibir opções avançadas</Button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
     <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
     <p>Opção avançada 3</p>
   </CollapsibleContent>
 </Collapsible>`,
             preview: (
-              <Collapsible className="w-full max-w-sm">
+              <Collapsible className="nds-w-full nds-max-w-sm">
                 <CollapsibleTrigger asChild>
                   <Button variant="outline">Exibir opções avançadas</Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>Opção avançada 1</p>
                   <p>Opção avançada 2</p>
                   <p>Opção avançada 3</p>
@@ -536,32 +536,32 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             name: tContent("variants.compositions.iconTrigger.name"),
             description: tContent("variants.compositions.iconTrigger.description"),
             useWhen: tContent("variants.compositions.iconTrigger.use"),
-            code: `<Collapsible className="w-full max-w-sm">
+            code: `<Collapsible className="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger asChild>
     <Button variant="outline">
-      <span className="flex items-center gap-2">
-        <Filter aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="sm">
+        <Filter aria-hidden="true" className="nds-icon nds-shrink-0" />
         Filtros avançados
       </span>
     </Button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
     <p>Filtro por categoria</p>
     <p>Filtro por data</p>
     <p>Filtro por status</p>
   </CollapsibleContent>
 </Collapsible>`,
             preview: (
-              <Collapsible className="w-full max-w-sm">
+              <Collapsible className="nds-w-full nds-max-w-sm">
                 <CollapsibleTrigger asChild>
                   <Button variant="outline">
-                    <span className="flex items-center gap-2">
-                      <Filter aria-hidden="true" className="h-4 w-4" />
+                    <span className="nds-cluster" data-spacing="sm">
+                      <Filter aria-hidden="true" className="nds-icon nds-shrink-0" />
                       Filtros avançados
                     </span>
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                   <p>Filtro por categoria</p>
                   <p>Filtro por data</p>
                   <p>Filtro por status</p>
@@ -573,52 +573,52 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             name: tContent("variants.compositions.rotatingChevron.name"),
             description: tContent("variants.compositions.rotatingChevron.description"),
             useWhen: tContent("variants.compositions.rotatingChevron.use"),
-            code: `<Collapsible className="group/collapsible w-full max-w-sm">
+            code: `<Collapsible className="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger asChild>
     <button
       type="button"
-      className="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent"
+      className="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between"
     >
       <span>Configurações avançadas</span>
       <ChevronDown
         aria-hidden="true"
-        className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
+        className="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
       />
     </button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
-    <div className="flex items-center justify-between">
-      <span className="text-muted-foreground">Notificações</span>
-      <span className="font-medium">Ativadas</span>
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+    <div className="nds-cluster" data-justify="between">
+      <span className="nds-text-muted-foreground">Notificações</span>
+      <span className="nds-font-medium">Ativadas</span>
     </div>
-    <div className="flex items-center justify-between">
-      <span className="text-muted-foreground">Privacidade</span>
-      <span className="font-medium">Modo estrito</span>
+    <div className="nds-cluster" data-justify="between">
+      <span className="nds-text-muted-foreground">Privacidade</span>
+      <span className="nds-font-medium">Modo estrito</span>
     </div>
   </CollapsibleContent>
 </Collapsible>`,
             preview: (
-              <Collapsible className="group/collapsible w-full max-w-sm">
+              <Collapsible className="nds-w-full nds-max-w-sm">
                 <CollapsibleTrigger asChild>
                   <button
                     type="button"
-                    className="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent"
+                    className="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between"
                   >
                     <span>Configurações avançadas</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
+                      className="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
                     />
                   </button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-2 mt-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Notificações</span>
-                    <span className="font-medium">Ativadas</span>
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+                  <div className="nds-cluster" data-justify="between">
+                    <span className="nds-text-muted-foreground">Notificações</span>
+                    <span className="nds-font-medium">Ativadas</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Privacidade</span>
-                    <span className="font-medium">Modo estrito</span>
+                  <div className="nds-cluster" data-justify="between">
+                    <span className="nds-text-muted-foreground">Privacidade</span>
+                    <span className="nds-font-medium">Modo estrito</span>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
@@ -628,57 +628,57 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             name: tContent("variants.compositions.richContent.name"),
             description: tContent("variants.compositions.richContent.description"),
             useWhen: tContent("variants.compositions.richContent.use"),
-            code: `<Collapsible className="w-full max-w-sm">
+            code: `<Collapsible className="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger asChild>
     <Button variant="outline">
-      <span className="flex items-center gap-2">
-        <Settings aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="sm">
+        <Settings aria-hidden="true" className="nds-icon nds-shrink-0" />
         Configurações do sistema
       </span>
     </Button>
   </CollapsibleTrigger>
-  <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-3 mt-2">
-    <p className="text-muted-foreground">
+  <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+    <p className="nds-text-muted-foreground nds-text-caption">
       Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.
     </p>
-    <label className="flex items-center gap-2">
-      <input type="checkbox" />
+    <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+      <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
       <span>Habilitar modo de depuração</span>
     </label>
-    <label className="flex items-center gap-2">
-      <input type="checkbox" />
+    <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+      <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
       <span>Limpar cache ao sair</span>
     </label>
-    <label className="flex items-center gap-2">
-      <input type="checkbox" />
+    <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+      <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
       <span>Exportar logs automaticamente</span>
     </label>
   </CollapsibleContent>
 </Collapsible>`,
             preview: (
-              <Collapsible className="w-full max-w-sm">
+              <Collapsible className="nds-w-full nds-max-w-sm">
                 <CollapsibleTrigger asChild>
                   <Button variant="outline">
-                    <span className="flex items-center gap-2">
-                      <Settings aria-hidden="true" className="h-4 w-4" />
+                    <span className="nds-cluster" data-spacing="sm">
+                      <Settings aria-hidden="true" className="nds-icon nds-shrink-0" />
                       Configurações do sistema
                     </span>
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="rounded-md border border-border bg-muted/50 p-4 text-sm space-y-3 mt-2">
-                  <p className="text-muted-foreground">
+                <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+                  <p className="nds-text-muted-foreground nds-text-caption">
                     Altere as configurações abaixo com cuidado. As mudanças são aplicadas imediatamente.
                   </p>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                  <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+                    <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
                     <span>Habilitar modo de depuração</span>
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                  <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+                    <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
                     <span>Limpar cache ao sair</span>
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                  <label className="nds-cluster nds-cursor-pointer" data-spacing="sm">
+                    <input type="checkbox" className="nds-icon nds-rounded-sm nds-border-default" />
                     <span>Exportar logs automaticamente</span>
                   </label>
                 </CollapsibleContent>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -232,18 +232,19 @@ interface DropdownMenuItemProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+        <div className="nds-grid nds-w-full" data-spacing="md" style={{ "--grid-min": "9rem" } as CSSProperties}>
           {/* Basic */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="sm"
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.basic"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="nds-w-full">
                   Conta
                 </Button>
               </DropdownMenuTrigger>
@@ -259,15 +260,16 @@ interface DropdownMenuItemProps {
 
           {/* Checkbox */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="sm"
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withCheckbox"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="nds-w-full">
                   Colunas
                 </Button>
               </DropdownMenuTrigger>
@@ -296,15 +298,16 @@ interface DropdownMenuItemProps {
 
           {/* Radio */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="sm"
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withRadio"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="nds-w-full">
                   Tema
                 </Button>
               </DropdownMenuTrigger>
@@ -320,15 +323,16 @@ interface DropdownMenuItemProps {
 
           {/* Submenu */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="sm"
             style={{ contain: "layout", minHeight: 80, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withSubmenu"))}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="nds-w-full">
                   Ações
                 </Button>
               </DropdownMenuTrigger>
@@ -456,14 +460,14 @@ interface DropdownMenuItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm space-y-1">
-                <div className="font-medium">Conta</div>
-                <div className="text-muted-foreground">Perfil / Configurações</div>
-                <div className="text-muted-foreground border-t pt-1">Equipe</div>
+              <div className="nds-text-body nds-stack" data-spacing="xs">
+                <div className="nds-font-medium">Conta</div>
+                <div className="nds-text-muted-foreground">Perfil / Configurações</div>
+                <div className="nds-text-muted-foreground" style={{ borderTop: "1px solid var(--border)", paddingTop: "0.25rem" }}>Equipe</div>
               </div>
             ),
             dontPreview: (
-              <div className="text-sm text-muted-foreground italic">
+              <div className="nds-text-body nds-text-muted-foreground nds-italic">
                 10+ items planos sem agrupamento
               </div>
             ),
@@ -474,15 +478,15 @@ interface DropdownMenuItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm">
-                <div className="text-destructive font-medium">Excluir conta</div>
-                <div className="text-muted-foreground text-xs">variant=destructive</div>
+              <div className="nds-text-body">
+                <div className="nds-text-destructive nds-font-medium">Excluir conta</div>
+                <div className="nds-text-muted-foreground nds-text-caption">variant=destructive</div>
               </div>
             ),
             dontPreview: (
-              <div className="text-sm">
-                <div className="font-medium">Excluir conta</div>
-                <div className="text-muted-foreground text-xs">Item normal sem aviso</div>
+              <div className="nds-text-body">
+                <div className="nds-font-medium">Excluir conta</div>
+                <div className="nds-text-muted-foreground nds-text-caption">Item normal sem aviso</div>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -504,7 +508,7 @@ interface DropdownMenuItemProps {
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 variant=&quot;default&quot;
               </div>
             ),
@@ -514,7 +518,7 @@ interface DropdownMenuItemProps {
             description: stripHtml(tContent("variants.styles.destructive")),
             code: codeDestructive,
             preview: (
-              <div className="text-xs font-mono text-destructive">
+              <div className="nds-text-caption nds-font-mono nds-text-destructive">
                 variant=&quot;destructive&quot;
               </div>
             ),

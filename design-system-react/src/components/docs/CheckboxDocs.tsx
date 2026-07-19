@@ -92,32 +92,32 @@ function SelectAllPreview() {
     setC(v);
   };
   return (
-    <div className="space-y-3 w-72">
-      <div className="flex items-center gap-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+      <div className="nds-cluster nds-border-b" data-spacing="xs" style={{ paddingBottom: "0.5rem" }}>
         <Checkbox
           id="cb-select-all"
           checked={allChecked}
           onCheckedChange={(v) => toggleAll(Boolean(v))}
         />
-        <Label htmlFor="cb-select-all" className="text-sm font-medium leading-none cursor-pointer">
+        <Label htmlFor="cb-select-all" className="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">
           Selecionar todos os itens
         </Label>
       </div>
-      <div className="flex items-center gap-2 pl-6">
+      <div className="nds-cluster" data-spacing="xs" style={{ paddingLeft: "0.5rem" }}>
         <Checkbox id="cb-child-1" checked={a} onCheckedChange={(v) => setA(Boolean(v))} />
-        <Label htmlFor="cb-child-1" className="text-sm font-medium leading-none cursor-pointer">
+        <Label htmlFor="cb-child-1" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
           Manter sessão ativa
         </Label>
       </div>
-      <div className="flex items-center gap-2 pl-6">
+      <div className="nds-cluster" data-spacing="xs" style={{ paddingLeft: "0.5rem" }}>
         <Checkbox id="cb-child-2" checked={b} onCheckedChange={(v) => setB(Boolean(v))} />
-        <Label htmlFor="cb-child-2" className="text-sm font-medium leading-none cursor-pointer">
+        <Label htmlFor="cb-child-2" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
           Receber novidades por email
         </Label>
       </div>
-      <div className="flex items-center gap-2 pl-6">
+      <div className="nds-cluster" data-spacing="xs" style={{ paddingLeft: "0.5rem" }}>
         <Checkbox id="cb-child-3" checked={c} onCheckedChange={(v) => setC(Boolean(v))} />
-        <Label htmlFor="cb-child-3" className="text-sm font-medium leading-none cursor-pointer">
+        <Label htmlFor="cb-child-3" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
           Receber notificações push
         </Label>
       </div>
@@ -175,26 +175,26 @@ export function CheckboxDocs() {
 
   const codeChecked = `<Checkbox id="termos" defaultChecked />`;
 
-  const codeWithLabel = `<div className="flex items-center gap-2">
+  const codeWithLabel = `<div className="nds-cluster" data-spacing="xs">
   <Checkbox id="termos" />
   <label
     htmlFor="termos"
-    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+    className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
   >
     Aceito os termos e condições
   </label>
 </div>`;
 
-  const codeWithDescription = `<div className="flex gap-2">
-  <Checkbox id="newsletter" className="mt-0.5" />
-  <div className="flex flex-col gap-0.5">
+  const codeWithDescription = `<div className="nds-cluster" data-spacing="xs" data-align="start">
+  <Checkbox id="newsletter" />
+  <div className="nds-stack" data-spacing="xs">
     <label
       htmlFor="newsletter"
-      className="text-sm font-medium leading-none cursor-pointer"
+      className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
     >
       Receber novidades por email
     </label>
-    <p className="text-sm text-muted-foreground">
+    <p className="nds-text-body nds-text-muted-foreground">
       Enviaremos no máximo 2 emails por semana.
     </p>
   </div>
@@ -244,30 +244,31 @@ export function CheckboxDocs() {
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
+            <div className="nds-stack" data-spacing="sm">
+              <div className="nds-cluster" data-spacing="xs">
                 <Checkbox id="demo-terms" />
-                <label htmlFor="demo-terms" className="text-sm font-medium leading-none cursor-pointer">
+                <label htmlFor="demo-terms" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.acceptTerms")}
                 </label>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="nds-cluster" data-spacing="xs">
                 <Checkbox id="demo-newsletter" defaultChecked />
-                <label htmlFor="demo-newsletter" className="text-sm font-medium leading-none cursor-pointer">
+                <label htmlFor="demo-newsletter" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.newsletter")}
                 </label>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="nds-cluster" data-spacing="xs">
                 <Checkbox id="demo-remember" />
-                <label htmlFor="demo-remember" className="text-sm font-medium leading-none cursor-pointer">
+                <label htmlFor="demo-remember" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.rememberMe")}
                 </label>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="nds-cluster" data-spacing="xs">
                 <Checkbox id="demo-notif" disabled />
                 <label
                   htmlFor="demo-notif"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="nds-text-body nds-font-medium nds-leading-none nds-cursor-default"
+                  style={{ opacity: 0.7 }}
                 >
                   {tContent("demonstration.labels.notifications")}
                 </label>
@@ -343,17 +344,17 @@ export function CheckboxDocs() {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="dodont-1-do" defaultChecked />
-                    <label htmlFor="dodont-1-do" className="text-sm font-medium leading-none cursor-pointer">
+                    <label htmlFor="dodont-1-do" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       Receber notificações por email
                     </label>
                   </div>
                 ),
                 dontPreview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="dodont-1-dont" defaultChecked />
-                    <label htmlFor="dodont-1-dont" className="text-sm font-medium leading-none cursor-pointer">
+                    <label htmlFor="dodont-1-dont" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       Email
                     </label>
                   </div>
@@ -365,12 +366,12 @@ export function CheckboxDocs() {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <fieldset className="border-none p-0 m-0 space-y-2">
-                    <legend className="text-sm font-semibold mb-2">Preferências</legend>
+                  <fieldset className="nds-border-default nds-rounded-lg nds-stack nds-w-full" data-spacing="xs" style={{ padding: "0.75rem" }}>
+                    <legend className="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
                     {["Email", "SMS", "Push"].map((opt) => (
-                      <div key={opt} className="flex items-center gap-2">
+                      <div key={opt} className="nds-cluster" data-spacing="xs">
                         <Checkbox id={`dodont-2-do-${opt}`} />
-                        <label htmlFor={`dodont-2-do-${opt}`} className="text-sm font-medium leading-none cursor-pointer">
+                        <label htmlFor={`dodont-2-do-${opt}`} className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                           {opt}
                         </label>
                       </div>
@@ -378,11 +379,11 @@ export function CheckboxDocs() {
                   </fieldset>
                 ),
                 dontPreview: (
-                  <div className="space-y-2">
+                  <div className="nds-stack nds-w-full" data-spacing="xs">
                     {["Email", "SMS", "Push"].map((opt) => (
-                      <div key={opt} className="flex items-center gap-2">
+                      <div key={opt} className="nds-cluster" data-spacing="xs">
                         <Checkbox id={`dodont-2-dont-${opt}`} />
-                        <label htmlFor={`dodont-2-dont-${opt}`} className="text-sm font-medium leading-none cursor-pointer">
+                        <label htmlFor={`dodont-2-dont-${opt}`} className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                           {opt}
                         </label>
                       </div>
@@ -413,9 +414,9 @@ export function CheckboxDocs() {
                 description: stripHtml(tContent("variants.items.default")),
                 code: codeDefault,
                 preview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="var-default" />
-                    <label htmlFor="var-default" className="text-sm font-medium leading-none cursor-pointer">
+                    <label htmlFor="var-default" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       {tContent("demonstration.labels.rememberMe")}
                     </label>
                   </div>
@@ -426,9 +427,9 @@ export function CheckboxDocs() {
                 description: stripHtml(tContent("variants.items.checked")),
                 code: codeChecked,
                 preview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="var-checked" defaultChecked />
-                    <label htmlFor="var-checked" className="text-sm font-medium leading-none cursor-pointer">
+                    <label htmlFor="var-checked" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       {tContent("demonstration.labels.newsletter")}
                     </label>
                   </div>
@@ -439,11 +440,11 @@ export function CheckboxDocs() {
                 description: stripHtml(tContent("variants.items.withLabel")),
                 code: codeWithLabel,
                 preview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="var-with-label" />
                     <label
                       htmlFor="var-with-label"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
                     >
                       {tContent("demonstration.labels.acceptTerms")}
                     </label>
@@ -455,16 +456,16 @@ export function CheckboxDocs() {
                 description: stripHtml(tContent("variants.items.withDescription")),
                 code: codeWithDescription,
                 preview: (
-                  <div className="flex gap-2">
-                    <Checkbox id="var-with-desc" className="mt-0.5" />
-                    <div className="flex flex-col gap-0.5">
+                  <div className="nds-cluster" data-spacing="xs" data-align="start">
+                    <Checkbox id="var-with-desc" />
+                    <div className="nds-stack" data-spacing="xs">
                       <label
                         htmlFor="var-with-desc"
-                        className="text-sm font-medium leading-none cursor-pointer"
+                        className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
                       >
                         {tContent("demonstration.labels.newsletter")}
                       </label>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="nds-text-body nds-text-muted-foreground">
                         Enviaremos no máximo 2 emails por semana.
                       </p>
                     </div>
@@ -484,16 +485,16 @@ export function CheckboxDocs() {
                 name: tContent("variants.compositions.withLabel.name"),
                 description: tContent("variants.compositions.withLabel.description"),
                 useWhen: tContent("variants.compositions.withLabel.use"),
-                code: `<div className="flex items-center gap-2">
+                code: `<div className="nds-cluster" data-spacing="xs">
   <Checkbox id="cb-tos" />
-  <Label htmlFor="cb-tos" className="text-sm font-medium leading-none cursor-pointer">
+  <Label htmlFor="cb-tos" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
     Aceito os termos e condições
   </Label>
 </div>`,
                 preview: (
-                  <div className="flex items-center gap-2">
+                  <div className="nds-cluster" data-spacing="xs">
                     <Checkbox id="cb-tos" />
-                    <Label htmlFor="cb-tos" className="text-sm font-medium leading-none cursor-pointer">
+                    <Label htmlFor="cb-tos" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       Aceito os termos e condições
                     </Label>
                   </div>
@@ -503,21 +504,21 @@ export function CheckboxDocs() {
                 name: tContent("variants.compositions.withDescription.name"),
                 description: tContent("variants.compositions.withDescription.description"),
                 useWhen: tContent("variants.compositions.withDescription.use"),
-                code: `<div className="flex gap-2 items-start">
-  <Checkbox id="cb-newsletter" className="mt-0.5" />
-  <div className="flex flex-col gap-1">
+                code: `<div className="nds-cluster" data-spacing="xs" data-align="start">
+  <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
+  <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-    <p className="text-sm text-muted-foreground">
+    <p className="nds-text-body nds-text-muted-foreground">
       Enviaremos atualizações sobre novos recursos e melhorias do produto.
     </p>
   </div>
 </div>`,
                 preview: (
-                  <div className="flex gap-2 items-start">
-                    <Checkbox id="cb-newsletter" className="mt-0.5" />
-                    <div className="flex flex-col gap-1">
+                  <div className="nds-cluster" data-spacing="xs" data-align="start">
+                    <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
+                    <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="nds-text-body nds-text-muted-foreground">
                         Enviaremos atualizações sobre novos recursos e melhorias do produto.
                       </p>
                     </div>
@@ -528,33 +529,33 @@ export function CheckboxDocs() {
                 name: tContent("variants.compositions.fieldset.name"),
                 description: tContent("variants.compositions.fieldset.description"),
                 useWhen: tContent("variants.compositions.fieldset.use"),
-                code: `<fieldset className="border rounded-lg p-4 space-y-3 w-72">
-  <legend className="text-sm font-semibold px-1">Notificações</legend>
-  <div className="flex items-center gap-2">
+                code: `<fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+  <legend className="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
+  <div className="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-email" />
     <Label htmlFor="notif-email">Receber novidades por email</Label>
   </div>
-  <div className="flex items-center gap-2">
+  <div className="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-push" />
     <Label htmlFor="notif-push">Receber notificações push</Label>
   </div>
-  <div className="flex items-center gap-2">
+  <div className="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-sms" />
     <Label htmlFor="notif-sms">Alertas por SMS</Label>
   </div>
 </fieldset>`,
                 preview: (
-                  <fieldset className="border rounded-lg p-4 space-y-3 w-72">
-                    <legend className="text-sm font-semibold px-1">Notificações</legend>
-                    <div className="flex items-center gap-2">
+                  <fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+                    <legend className="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
+                    <div className="nds-cluster" data-spacing="xs">
                       <Checkbox id="notif-email" />
                       <Label htmlFor="notif-email">Receber novidades por email</Label>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="nds-cluster" data-spacing="xs">
                       <Checkbox id="notif-push" />
                       <Label htmlFor="notif-push">Receber notificações push</Label>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="nds-cluster" data-spacing="xs">
                       <Checkbox id="notif-sms" />
                       <Label htmlFor="notif-sms">Alertas por SMS</Label>
                     </div>
@@ -571,8 +572,8 @@ const [c, setC] = useState(false);
 const allChecked = a && b && c;
 const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
-<div className="space-y-3 w-72">
-  <div className="flex items-center gap-2">
+<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+  <div className="nds-cluster nds-border-b" data-spacing="xs" style={{ paddingBottom: "0.5rem" }}>
     <Checkbox
       id="cb-select-all"
       checked={allChecked}
@@ -580,7 +581,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
     />
     <Label htmlFor="cb-select-all">Selecionar todos os itens</Label>
   </div>
-  <div className="flex items-center gap-2 pl-6">
+  <div className="nds-cluster" data-spacing="xs" style={{ paddingLeft: "0.5rem" }}>
     <Checkbox id="cb-child-1" checked={a} onCheckedChange={(v) => setA(Boolean(v))} />
     <Label htmlFor="cb-child-1">Manter sessão ativa</Label>
   </div>
@@ -592,16 +593,16 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 name: tContent("variants.compositions.inList.name"),
                 description: tContent("variants.compositions.inList.description"),
                 useWhen: tContent("variants.compositions.inList.use"),
-                code: `<div className="space-y-2 w-80">
-  <p className="text-sm font-semibold mb-3">Preferências de contato</p>
-  <div className="flex items-center justify-between rounded-md border px-3 py-2">
-    <div className="flex items-center gap-2">
+                code: `<div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
+  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
+  <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+    <div className="nds-cluster" data-spacing="xs">
       <Checkbox id="pref-email" defaultChecked />
       <Label htmlFor="pref-email">Receber novidades por email</Label>
     </div>
   </div>
-  <div className="flex items-center justify-between rounded-md border px-3 py-2">
-    <div className="flex items-center gap-2">
+  <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+    <div className="nds-cluster" data-spacing="xs">
       <Checkbox id="pref-push" />
       <Label htmlFor="pref-push">Receber notificações push</Label>
     </div>
@@ -609,28 +610,28 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
   {/* …demais linhas */}
 </div>`,
                 preview: (
-                  <div className="space-y-2 w-80">
-                    <p className="text-sm font-semibold mb-3">Preferências de contato</p>
-                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <div className="flex items-center gap-2">
+                  <div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
+                    <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
+                    <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+                      <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-email" defaultChecked />
                         <Label htmlFor="pref-email">Receber novidades por email</Label>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <div className="flex items-center gap-2">
+                    <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+                      <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-push" />
                         <Label htmlFor="pref-push">Receber notificações push</Label>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <div className="flex items-center gap-2">
+                    <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+                      <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-sms" />
                         <Label htmlFor="pref-sms">Alertas por SMS</Label>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <div className="flex items-center gap-2">
+                    <div className="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}>
+                      <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-weekly" defaultChecked />
                         <Label htmlFor="pref-weekly">Newsletter semanal</Label>
                       </div>

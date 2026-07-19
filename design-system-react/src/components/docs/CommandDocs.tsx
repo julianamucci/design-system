@@ -29,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/lib/use-active-section";
 
 import { LanguageSwitcher } from "@/components/product/LanguageSwitcher";
@@ -127,13 +126,13 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-56 justify-between"
+          className="nds-cluster" data-justify="between" style={{ width: "12rem" }}
         >
           {value ? DEMO_ITEMS.find((f) => f.value === value)?.label : selectPlaceholder}
-          <ChevronsUpDownIcon className="opacity-50" />
+          <ChevronsUpDownIcon className="nds-text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56 p-0">
+      <PopoverContent className="nds-p-0" style={{ width: "12rem" }}>
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
@@ -150,7 +149,7 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
                 >
                   {item.label}
                   <CheckIcon
-                    className={cn("ml-auto", value === item.value ? "opacity-100" : "opacity-0")}
+                    style={{ marginLeft: "auto", opacity: value === item.value ? 1 : 0 }}
                   />
                 </CommandItem>
               ))}
@@ -194,10 +193,10 @@ function CommandPaletteDemo({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+    <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
+      <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
         <span>{shortcutHint}</span>
-        <kbd className="rounded border px-1.5 py-0.5 text-xs font-mono bg-muted">{shortcutKey}</kbd>
+        <kbd className="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.125rem 0.375rem" }}>{shortcutKey}</kbd>
       </div>
       <Button
         variant="outline"
@@ -358,7 +357,7 @@ const [value, setValue] = useState("");
       {value ? items.find((i) => i.value === value)?.label : "Selecione..."}
     </Button>
   </PopoverTrigger>
-  <PopoverContent className="p-0">
+  <PopoverContent className="nds-p-0" style={{ width: "12rem" }}>
     <Command>
       <CommandInput placeholder="Buscar item..." />
       <CommandList>
@@ -497,13 +496,13 @@ interface CommandDialogProps
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full space-y-8">
+        <div className="nds-w-full nds-stack" data-spacing="xl">
           {/* Inline */}
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
               Inline
             </p>
-            <div className="w-full max-w-sm">
+            <div className="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
               <Command>
                 <CommandInput placeholder={labels.searchPlaceholder} />
                 <CommandList>
@@ -531,8 +530,8 @@ interface CommandDialogProps
           </div>
 
           {/* Combobox */}
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
               Combobox
             </p>
             <ComboboxDemo
@@ -542,8 +541,8 @@ interface CommandDialogProps
           </div>
 
           {/* Command Palette */}
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
               Command Palette
             </p>
             <CommandPaletteDemo
@@ -638,7 +637,7 @@ interface CommandDialogProps
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full max-w-xs">
+              <div className="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
                 <Command>
                   <CommandInput placeholder={labels.searchPlaceholder} />
                   <CommandList>
@@ -654,7 +653,7 @@ interface CommandDialogProps
               </div>
             ),
             dontPreview: (
-              <div className="w-full max-w-xs">
+              <div className="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
                 <Command>
                   <CommandInput placeholder={labels.searchPlaceholder} />
                   <CommandList>
@@ -675,10 +674,10 @@ interface CommandDialogProps
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
+                <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
                   <span>{labels.shortcutHint}</span>
-                  <kbd className="rounded border px-1.5 py-0.5 text-xs font-mono bg-muted">{labels.shortcutKey}</kbd>
+                  <kbd className="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.125rem 0.375rem" }}>{labels.shortcutKey}</kbd>
                 </div>
                 <Button variant="outline" size="sm">
                   <SearchIcon />
@@ -687,12 +686,12 @@ interface CommandDialogProps
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col items-center gap-3">
+              <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
                 <Button variant="outline" size="sm">
                   <SearchIcon />
                   {labels.openPalette}
                 </Button>
-                <p className="text-xs text-muted-foreground/40 line-through">⌘K</p>
+                <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>⌘K</p>
               </div>
             ),
             doCaption: tContent("doDont.pair2.do"),
@@ -722,7 +721,7 @@ interface CommandDialogProps
             description: stripHtml(tContent("variants.items.inline")),
             code: codeInline,
             preview: (
-              <div className="w-full max-w-xs">
+              <div className="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
                 <Command>
                   <CommandInput placeholder={labels.searchPlaceholder} />
                   <CommandList>
@@ -813,7 +812,7 @@ interface CommandDialogProps
   </CommandList>
 </Command>`,
             preview: (
-              <div className="w-full max-w-xs rounded-md border shadow-md">
+              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
                 <Command>
                   <CommandInput placeholder="Buscar componente..." />
                   <CommandList>
@@ -857,7 +856,7 @@ interface CommandDialogProps
   </CommandList>
 </Command>`,
             preview: (
-              <div className="w-full max-w-xs rounded-md border shadow-md">
+              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
                 <Command>
                   <CommandInput placeholder="Buscar..." />
                   <CommandList>
@@ -905,7 +904,7 @@ interface CommandDialogProps
   </CommandList>
 </Command>`,
             preview: (
-              <div className="w-full max-w-xs rounded-md border shadow-md">
+              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
                 <Command>
                   <CommandInput placeholder="Buscar componente..." />
                   <CommandList>
