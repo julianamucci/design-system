@@ -237,10 +237,10 @@ type PaginationDirectionalProps =
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="space-y-8 w-full">
+        <div className="nds-stack nds-w-full" data-spacing="xl">
           {/* Demo 1 — paginação simples interativa */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {locale === "en"
                 ? "Simple pagination · 5 pages"
                 : locale === "es"
@@ -255,7 +255,6 @@ type PaginationDirectionalProps =
                     text={lblPrev}
                     aria-disabled={page === 1}
                     tabIndex={page === 1 ? -1 : 0}
-                    className={page === 1 ? "pointer-events-none opacity-50" : ""}
                     onClick={(e) => {
                       e.preventDefault();
                       if (page > 1) goTo(page - 1);
@@ -283,9 +282,6 @@ type PaginationDirectionalProps =
                     text={lblNext}
                     aria-disabled={page === totalSimple}
                     tabIndex={page === totalSimple ? -1 : 0}
-                    className={
-                      page === totalSimple ? "pointer-events-none opacity-50" : ""
-                    }
                     onClick={(e) => {
                       e.preventDefault();
                       if (page < totalSimple) goTo(page + 1);
@@ -297,8 +293,8 @@ type PaginationDirectionalProps =
           </div>
 
           {/* Demo 2 — com ellipsis */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {locale === "en"
                 ? "Long list with ellipsis · 12 pages"
                 : locale === "es"
@@ -353,8 +349,8 @@ type PaginationDirectionalProps =
           </div>
 
           {/* Demo 3 — última página, Next desabilitado */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {locale === "en"
                 ? "Last page · Next disabled"
                 : locale === "es"
@@ -391,7 +387,6 @@ type PaginationDirectionalProps =
                     text={lblNext}
                     aria-disabled
                     tabIndex={-1}
-                    className="pointer-events-none opacity-50"
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -551,7 +546,7 @@ type PaginationDirectionalProps =
               </Pagination>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 1 2 3 4 5 6 7 8 9 10 11 12
               </div>
             ),
@@ -574,7 +569,7 @@ type PaginationDirectionalProps =
               </Pagination>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 &lt; &nbsp;&nbsp; &gt;
               </div>
             ),
@@ -661,7 +656,7 @@ type PaginationDirectionalProps =
             code: `<Pagination>
   <PaginationContent>
     <PaginationItem>
-      <PaginationPrevious href="#" text="${lblPrev}" aria-disabled tabIndex={-1} className="pointer-events-none opacity-50" />
+      <PaginationPrevious href="#" text="${lblPrev}" aria-disabled tabIndex={-1} />
     </PaginationItem>
     {[1,2,3,4,5].map((n) => (
       <PaginationItem key={n}>
@@ -682,7 +677,6 @@ type PaginationDirectionalProps =
                       text={lblPrev}
                       aria-disabled
                       tabIndex={-1}
-                      className="pointer-events-none opacity-50"
                     />
                   </PaginationItem>
                   {[1, 2, 3, 4, 5].map((n) => (
@@ -766,7 +760,7 @@ type PaginationDirectionalProps =
     <PaginationItem><PaginationLink href="#">9</PaginationLink></PaginationItem>
     <PaginationItem><PaginationLink href="#" isActive>10</PaginationLink></PaginationItem>
     <PaginationItem>
-      <PaginationNext href="#" text="${lblNext}" aria-disabled tabIndex={-1} className="pointer-events-none opacity-50" />
+      <PaginationNext href="#" text="${lblNext}" aria-disabled tabIndex={-1} />
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
@@ -794,7 +788,6 @@ type PaginationDirectionalProps =
                       text={lblNext}
                       aria-disabled
                       tabIndex={-1}
-                      className="pointer-events-none opacity-50"
                     />
                   </PaginationItem>
                 </PaginationContent>
@@ -816,7 +809,6 @@ const total = 8;
         text="${lblPrev}"
         aria-disabled={current === 1}
         tabIndex={current === 1 ? -1 : 0}
-        className={current === 1 ? "pointer-events-none opacity-50" : ""}
         onClick={(e) => { e.preventDefault(); if (current > 1) setCurrent(current - 1); }}
       />
     </PaginationItem>
@@ -837,14 +829,13 @@ const total = 8;
         text="${lblNext}"
         aria-disabled={current === total}
         tabIndex={current === total ? -1 : 0}
-        className={current === total ? "pointer-events-none opacity-50" : ""}
         onClick={(e) => { e.preventDefault(); if (current < total) setCurrent(current + 1); }}
       />
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
             preview: (
-              <div className="w-full space-y-3">
+              <div className="nds-stack nds-w-full" data-spacing="sm" style={{ alignItems: 'center' }}>
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
@@ -896,7 +887,7 @@ const total = 8;
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="nds-text-body nds-text-muted-foreground">
                   {lblPage} {compPage} {locale === "en" ? "of" : "de"} {compTotal}
                 </p>
               </div>

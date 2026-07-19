@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { FoundationPage } from './shared/FoundationPage';
 import translations from '@shared/content/foundations/elevacao-bordas-sombras/translations.json';
 
@@ -17,38 +18,46 @@ const RADII = [
 
 function ElevationSpecimens() {
   return (
-    <section className="space-y-6 border-t border-border/50 pt-8">
-      <div className="space-y-1">
-        <h2 className="text-xl font-semibold text-foreground m-0">Specimens</h2>
-        <p className="text-sm text-muted-foreground m-0">
+    <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <div className="nds-stack" data-spacing="xs">
+        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Specimens</h2>
+        <p className="nds-text-body nds-text-muted-foreground">
           Cards com cada nível de sombra e cada token de radius aplicado.
         </p>
       </div>
 
-      <div className="space-y-3">
-        <h3 className="text-sm font-medium text-foreground m-0">Sombras</h3>
-        <div className="grid gap-6 grid-cols-2 md:grid-cols-4 p-6 bg-muted/20 rounded-lg">
+      <div className="nds-stack" data-spacing="sm">
+        <h3 className="nds-text-body nds-font-medium nds-text-foreground">Sombras</h3>
+        <div
+          className="nds-grid nds-p-6 nds-rounded-lg"
+          data-spacing="lg"
+          style={{ '--grid-min': '8rem', backgroundColor: 'hsl(var(--muted) / 0.2)' } as CSSProperties}
+        >
           {ELEVATIONS.map((el) => (
             <div
               key={el.token}
-              className="bg-card rounded-lg p-4 text-center text-xs text-muted-foreground"
-              style={{ boxShadow: `var(${el.token})` }}
+              className="nds-bg-card nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground"
+              style={{ boxShadow: `var(${el.token})`, textAlign: 'center' }}
             >
-              <div className="font-medium text-foreground mb-1">{el.label}</div>
-              <code className="text-[10px]">{el.token}</code>
+              <div className="nds-font-medium nds-text-foreground nds-mb-1">{el.label}</div>
+              <code style={{ fontSize: '10px' }}>{el.token}</code>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="space-y-3">
-        <h3 className="text-sm font-medium text-foreground m-0">Radius</h3>
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+      <div className="nds-stack" data-spacing="sm">
+        <h3 className="nds-text-body nds-font-medium nds-text-foreground">Radius</h3>
+        <div
+          className="nds-grid"
+          data-spacing="md"
+          style={{ '--grid-min': '8rem' } as CSSProperties}
+        >
           {RADII.map((r) => (
             <div
               key={r.token}
-              className="bg-primary/10 border border-primary/20 p-6 text-center text-xs text-muted-foreground"
-              style={{ borderRadius: `var(${r.token})` }}
+              className="nds-bg-primary-soft nds-border-primary-soft nds-p-6 nds-text-caption nds-text-muted-foreground"
+              style={{ borderRadius: `var(${r.token})`, textAlign: 'center' }}
             >
               <code>{r.token}</code>
             </div>

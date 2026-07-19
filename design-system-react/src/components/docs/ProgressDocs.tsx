@@ -202,13 +202,13 @@ interface ProgressProps extends Progress.Root.Props {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Upload animado com label e valor */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.upload")}
             </p>
-            <div className="p-4 border rounded-md">
+            <div className="nds-p-4 nds-border-default nds-rounded-md">
               <Progress
                 value={uploadValue}
                 aria-label={tContent("demonstration.labels.upload")}
@@ -225,11 +225,11 @@ interface ProgressProps extends Progress.Root.Props {
           </div>
 
           {/* Loading animado simples */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.loading")}
             </p>
-            <div className="p-4 border rounded-md">
+            <div className="nds-p-4 nds-border-default nds-rounded-md">
               <Progress
                 value={loadingValue}
                 aria-label={tContent("demonstration.labels.loading")}
@@ -238,11 +238,11 @@ interface ProgressProps extends Progress.Root.Props {
           </div>
 
           {/* Completo */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.complete")}
             </p>
-            <div className="p-4 border rounded-md">
+            <div className="nds-p-4 nds-border-default nds-rounded-md">
               <Progress
                 value={100}
                 aria-label={tContent("demonstration.labels.complete")}
@@ -252,11 +252,11 @@ interface ProgressProps extends Progress.Root.Props {
           </div>
 
           {/* Indeterminate */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.indeterminate")}
             </p>
-            <div className="p-4 border rounded-md">
+            <div className="nds-p-4 nds-border-default nds-rounded-md">
               <Progress
                 value={null}
                 aria-label={tContent("demonstration.labels.indeterminate")}
@@ -365,12 +365,12 @@ interface ProgressProps extends Progress.Root.Props {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Progress value={42} aria-label="Progresso do upload" />
               </div>
             ),
             dontPreview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Progress value={42} aria-label="Barra" />
               </div>
             ),
@@ -381,16 +381,16 @@ interface ProgressProps extends Progress.Root.Props {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full space-y-2">
-                <p className="text-sm text-muted-foreground" aria-live="polite">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <p className="nds-text-body nds-text-muted-foreground" aria-live="polite">
                   50%
                 </p>
                 <Progress value={50} aria-label="Progresso do upload" />
               </div>
             ),
             dontPreview: (
-              <div className="w-full space-y-2">
-                <p className="text-sm text-muted-foreground" aria-live="assertive">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <p className="nds-text-body nds-text-muted-foreground" aria-live="assertive">
                   51%
                 </p>
                 <Progress value={51} aria-label="Progresso do upload" />
@@ -415,7 +415,7 @@ interface ProgressProps extends Progress.Root.Props {
             description: stripHtml(tContent("variants.styles.determinate")),
             code: codeDeterminate,
             preview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Progress value={42} aria-label="Progresso do upload" />
               </div>
             ),
@@ -425,7 +425,7 @@ interface ProgressProps extends Progress.Root.Props {
             description: stripHtml(tContent("variants.styles.indeterminate")),
             code: codeIndeterminate,
             preview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Progress
                   value={null}
                   aria-label="Processando dados"
@@ -439,7 +439,7 @@ interface ProgressProps extends Progress.Root.Props {
             description: stripHtml(tContent("variants.styles.withLabel")),
             code: codeWithLabel,
             preview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Progress value={42} aria-label="Enviando arquivo">
                   <ProgressLabel>Enviando arquivo</ProgressLabel>
                   <ProgressValue />

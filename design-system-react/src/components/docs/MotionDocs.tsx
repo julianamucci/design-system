@@ -13,15 +13,15 @@ const DURATIONS = [
 // é tratado globalmente pelo motion.css — não precisa de tratamento aqui.
 function MotionSpecimens() {
   return (
-    <section className="space-y-6 border-t border-border/50 pt-8">
-      <div className="space-y-1">
-        <h2 className="text-xl font-semibold text-foreground m-0">Specimens</h2>
-        <p className="text-sm text-muted-foreground m-0">
+    <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <div className="nds-stack" data-spacing="xs">
+        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Specimens</h2>
+        <p className="nds-text-body nds-text-muted-foreground">
           Passe o mouse sobre cada botão para sentir as três durações do sistema.
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-4 p-6 bg-card rounded-lg border border-border/50">
+      <div className="nds-cluster nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="md">
         {DURATIONS.map((d) => (
           <Button
             key={d.token}

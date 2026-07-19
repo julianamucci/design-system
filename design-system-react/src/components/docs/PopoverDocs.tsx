@@ -155,7 +155,7 @@ export function PopoverDocs() {
     <Button variant="outline">Abrir popover</Button>
   </PopoverTrigger>
   <PopoverContent>
-    <p className="text-sm">Conteúdo livre.</p>
+    <p className="nds-text-body">Conteúdo livre.</p>
   </PopoverContent>
 </Popover>`;
 
@@ -181,7 +181,7 @@ export function PopoverDocs() {
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form className="flex flex-col gap-2">
+    <form className="nds-stack" data-spacing="sm">
       <Label htmlFor="name">Nome</Label>
       <Input id="name" />
       <Label htmlFor="email">Email</Label>
@@ -243,13 +243,19 @@ interface PopoverContentProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
+        <div
+          className="nds-grid nds-w-full"
+          data-cols="3"
+          data-spacing="lg"
+          style={{ contain: "layout", minHeight: 180 }}
+        >
           {/* Default */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
             <Popover>
@@ -259,10 +265,10 @@ interface PopoverContentProps {
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
-                <PopoverTitle className="text-sm font-medium">
+                <PopoverTitle className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.title")}
                 </PopoverTitle>
-                <p className="text-xs text-muted-foreground">
+                <p className="nds-text-caption nds-text-muted-foreground">
                   {tContent("demonstration.labels.description")}
                 </p>
               </PopoverContent>
@@ -271,10 +277,11 @@ interface PopoverContentProps {
 
           {/* With title */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withTitle")}
             </p>
             <Popover>
@@ -292,7 +299,7 @@ interface PopoverContentProps {
                     {tContent("demonstration.labels.description")}
                   </PopoverDescription>
                 </PopoverHeader>
-                <div className="flex justify-end gap-2 pt-1">
+                <div className="nds-cluster" data-spacing="xs" data-justify="end">
                   <Button variant="ghost" size="sm">
                     {tContent("demonstration.labels.cancel")}
                   </Button>
@@ -306,10 +313,11 @@ interface PopoverContentProps {
 
           {/* Form */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.form")}
             </p>
             <Popover>
@@ -325,14 +333,15 @@ interface PopoverContentProps {
                   </PopoverTitle>
                 </PopoverHeader>
                 <form
-                  className="flex flex-col gap-2"
+                  className="nds-stack"
+                  data-spacing="sm"
                   onSubmit={(e) => e.preventDefault()}
                 >
-                  <Label htmlFor="popover-demo-name" className="text-xs">
+                  <Label htmlFor="popover-demo-name" className="nds-text-caption">
                     {tContent("demonstration.labels.form.name")}
                   </Label>
                   <Input id="popover-demo-name" defaultValue="Joana" />
-                  <Label htmlFor="popover-demo-email" className="text-xs">
+                  <Label htmlFor="popover-demo-email" className="nds-text-caption">
                     {tContent("demonstration.labels.form.email")}
                   </Label>
                   <Input
@@ -340,7 +349,7 @@ interface PopoverContentProps {
                     type="email"
                     defaultValue="joana@example.com"
                   />
-                  <Button type="submit" size="sm" className="mt-1">
+                  <Button type="submit" size="sm" className="nds-mt-1">
                     {tContent("demonstration.labels.form.submit")}
                   </Button>
                 </form>
@@ -449,18 +458,18 @@ interface PopoverContentProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm space-y-1">
-                <div className="font-medium">
+              <div className="nds-text-body nds-stack" data-spacing="xs">
+                <div className="nds-font-medium">
                   {tContent("demonstration.labels.title")}
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="nds-text-caption nds-text-muted-foreground">
                   {tContent("demonstration.labels.description")}
                 </div>
               </div>
             ),
             dontPreview: (
-              <div className="text-sm">
-                <div className="text-xs text-muted-foreground italic">
+              <div className="nds-text-body">
+                <div className="nds-text-caption nds-text-muted-foreground nds-italic">
                   (sem PopoverTitle)
                 </div>
                 <div>{tContent("demonstration.labels.description")}</div>
@@ -473,12 +482,12 @@ interface PopoverContentProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-sm font-medium">
+              <div className="nds-text-body nds-font-medium">
                 {tContent("demonstration.labels.form.trigger")}
               </div>
             ),
             dontPreview: (
-              <div className="text-sm font-medium italic text-muted-foreground">
+              <div className="nds-text-body nds-font-medium nds-italic nds-text-muted-foreground">
                 {locale === "en"
                   ? "Click here"
                   : locale === "es"
@@ -515,10 +524,10 @@ interface PopoverContentProps {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent>
-                    <PopoverTitle className="text-sm font-medium">
+                    <PopoverTitle className="nds-text-body nds-font-medium">
                       {tContent("demonstration.labels.title")}
                     </PopoverTitle>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="nds-text-caption nds-text-muted-foreground">
                       {tContent("demonstration.labels.description")}
                     </p>
                   </PopoverContent>
@@ -575,10 +584,11 @@ interface PopoverContentProps {
                       </PopoverTitle>
                     </PopoverHeader>
                     <form
-                      className="flex flex-col gap-2"
+                      className="nds-stack"
+                      data-spacing="sm"
                       onSubmit={(e) => e.preventDefault()}
                     >
-                      <Label htmlFor="popover-var-name" className="text-xs">
+                      <Label htmlFor="popover-var-name" className="nds-text-caption">
                         {tContent("demonstration.labels.form.name")}
                       </Label>
                       <Input id="popover-var-name" defaultValue="Joana" />
@@ -616,14 +626,15 @@ interface PopoverContentProps {
       </PopoverDescription>
     </PopoverHeader>
     <form
-      className="space-y-3"
+      className="nds-stack"
+      data-spacing="sm"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="space-y-1">
+      <div className="nds-stack" data-spacing="xs">
         <Label htmlFor="pc-name">Nome</Label>
         <Input id="pc-name" defaultValue="Joana Silva" />
       </div>
-      <div className="space-y-1">
+      <div className="nds-stack" data-spacing="xs">
         <Label htmlFor="pc-email">Email</Label>
         <Input id="pc-email" type="email" defaultValue="joana@example.com" />
       </div>
@@ -646,17 +657,18 @@ interface PopoverContentProps {
                       </PopoverTitle>
                     </PopoverHeader>
                     <form
-                      className="space-y-2"
+                      className="nds-stack"
+                      data-spacing="xs"
                       onSubmit={(e) => e.preventDefault()}
                     >
-                      <div className="space-y-1">
-                        <Label htmlFor="pc-name" className="text-xs">
+                      <div className="nds-stack" data-spacing="xs">
+                        <Label htmlFor="pc-name" className="nds-text-caption">
                           {tContent("demonstration.labels.form.name")}
                         </Label>
                         <Input id="pc-name" defaultValue="Joana Silva" />
                       </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="pc-email" className="text-xs">
+                      <div className="nds-stack" data-spacing="xs">
+                        <Label htmlFor="pc-email" className="nds-text-caption">
                           {tContent("demonstration.labels.form.email")}
                         </Label>
                         <Input id="pc-email" type="email" defaultValue="joana@example.com" />
@@ -682,21 +694,21 @@ interface PopoverContentProps {
     <PopoverHeader>
       <PopoverTitle>Filtrar por status</PopoverTitle>
     </PopoverHeader>
-    <div className="space-y-2">
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" defaultChecked />
+    <div className="nds-stack" data-spacing="xs">
+      <label className="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" defaultChecked className="nds-icon-sm" />
         Ativo
       </label>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" />
+      <label className="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" className="nds-icon-sm" />
         Pendente
       </label>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" />
+      <label className="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" className="nds-icon-sm" />
         Arquivado
       </label>
     </div>
-    <div className="flex justify-end gap-2 pt-2">
+    <div className="nds-cluster" data-spacing="xs" data-justify="end" style={{ paddingTop: "0.5rem" }}>
       <Button variant="ghost" size="sm">Limpar</Button>
       <Button size="sm">Aplicar</Button>
     </div>
@@ -712,19 +724,19 @@ interface PopoverContentProps {
                     <PopoverHeader>
                       <PopoverTitle>Filtrar por status</PopoverTitle>
                     </PopoverHeader>
-                    <div className="space-y-2">
+                    <div className="nds-stack" data-spacing="xs">
                       {["Ativo", "Pendente", "Arquivado"].map((opt) => (
-                        <label key={opt} className="flex items-center gap-2 text-sm">
+                        <label key={opt} className="nds-cluster nds-text-body" data-spacing="xs">
                           <input
                             type="checkbox"
                             defaultChecked={opt === "Ativo"}
-                            className="h-4 w-4"
+                            className="nds-icon-sm"
                           />
                           {opt}
                         </label>
                       ))}
                     </div>
-                    <div className="flex justify-end gap-2 pt-2">
+                    <div className="nds-cluster" data-spacing="xs" data-justify="end" style={{ paddingTop: "0.5rem" }}>
                       <Button variant="ghost" size="sm">Limpar</Button>
                       <Button size="sm">Aplicar</Button>
                     </div>
@@ -745,13 +757,21 @@ interface PopoverContentProps {
     <PopoverHeader>
       <PopoverTitle>Selecionar cor</PopoverTitle>
     </PopoverHeader>
-    <div className="grid grid-cols-6 gap-2">
-      {["Vermelho","Laranja","Amarelo","Verde","Azul","Roxo"].map((name, i) => (
+    <div className="nds-grid" data-cols="6" data-spacing="xs">
+      {[
+        { name: "Vermelho", color: "#ef4444" },
+        { name: "Laranja",  color: "#f97316" },
+        { name: "Amarelo",  color: "#eab308" },
+        { name: "Verde",    color: "#22c55e" },
+        { name: "Azul",     color: "#3b82f6" },
+        { name: "Roxo",     color: "#a855f7" },
+      ].map((s) => (
         <button
-          key={name}
+          key={s.name}
           type="button"
-          aria-label={name}
-          className={\`h-6 w-6 rounded-full ring-1 ring-foreground/10 \${["bg-red-500","bg-orange-500","bg-yellow-500","bg-green-500","bg-blue-500","bg-purple-500"][i]}\`}
+          aria-label={s.name}
+          className="nds-rounded-full"
+          style={{ width: "1.5rem", height: "1.5rem", background: s.color }}
         />
       ))}
     </div>
@@ -767,20 +787,26 @@ interface PopoverContentProps {
                     <PopoverHeader>
                       <PopoverTitle>Selecionar cor</PopoverTitle>
                     </PopoverHeader>
-                    <div className="grid grid-cols-6 gap-2">
+                    <div className="nds-grid" data-cols="6" data-spacing="xs">
                       {[
-                        { name: "Vermelho", bg: "bg-red-500" },
-                        { name: "Laranja", bg: "bg-orange-500" },
-                        { name: "Amarelo", bg: "bg-yellow-500" },
-                        { name: "Verde", bg: "bg-green-500" },
-                        { name: "Azul", bg: "bg-blue-500" },
-                        { name: "Roxo", bg: "bg-purple-500" },
+                        { name: "Vermelho", color: "#ef4444" },
+                        { name: "Laranja", color: "#f97316" },
+                        { name: "Amarelo", color: "#eab308" },
+                        { name: "Verde", color: "#22c55e" },
+                        { name: "Azul", color: "#3b82f6" },
+                        { name: "Roxo", color: "#a855f7" },
                       ].map((s) => (
                         <button
                           key={s.name}
                           type="button"
                           aria-label={s.name}
-                          className={`h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring ${s.bg}`}
+                          className="nds-rounded-full"
+                          style={{
+                            width: "1.5rem",
+                            height: "1.5rem",
+                            background: s.color,
+                            boxShadow: "0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)",
+                          }}
                         />
                       ))}
                     </div>
@@ -801,18 +827,18 @@ interface PopoverContentProps {
     <PopoverHeader>
       <PopoverTitle>Preferências rápidas</PopoverTitle>
     </PopoverHeader>
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3">
+    <div className="nds-stack" data-spacing="sm">
+      <div className="nds-cluster" data-spacing="sm" data-justify="between">
         <Label htmlFor="cfg-notifs">Notificações</Label>
-        <input id="cfg-notifs" type="checkbox" defaultChecked className="h-4 w-4" />
+        <input id="cfg-notifs" type="checkbox" defaultChecked className="nds-icon-sm" />
       </div>
-      <div className="flex items-center justify-between gap-3">
+      <div className="nds-cluster" data-spacing="sm" data-justify="between">
         <Label htmlFor="cfg-dark">Modo escuro</Label>
-        <input id="cfg-dark" type="checkbox" className="h-4 w-4" />
+        <input id="cfg-dark" type="checkbox" className="nds-icon-sm" />
       </div>
-      <div className="flex items-center justify-between gap-3">
+      <div className="nds-cluster" data-spacing="sm" data-justify="between">
         <Label htmlFor="cfg-compact">Modo compacto</Label>
-        <input id="cfg-compact" type="checkbox" className="h-4 w-4" />
+        <input id="cfg-compact" type="checkbox" className="nds-icon-sm" />
       </div>
     </div>
   </PopoverContent>
@@ -827,19 +853,19 @@ interface PopoverContentProps {
                     <PopoverHeader>
                       <PopoverTitle>Preferências rápidas</PopoverTitle>
                     </PopoverHeader>
-                    <div className="space-y-3">
+                    <div className="nds-stack" data-spacing="sm">
                       {[
                         { id: "cfg-notifs", label: "Notificações", checked: true },
                         { id: "cfg-dark", label: "Modo escuro", checked: false },
                         { id: "cfg-compact", label: "Modo compacto", checked: false },
                       ].map((t) => (
-                        <div key={t.id} className="flex items-center justify-between gap-3">
-                          <Label htmlFor={t.id} className="text-sm">{t.label}</Label>
+                        <div key={t.id} className="nds-cluster" data-spacing="sm" data-justify="between">
+                          <Label htmlFor={t.id}>{t.label}</Label>
                           <input
                             id={t.id}
                             type="checkbox"
                             defaultChecked={t.checked}
-                            className="h-4 w-4"
+                            className="nds-icon-sm"
                           />
                         </div>
                       ))}

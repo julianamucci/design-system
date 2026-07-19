@@ -258,10 +258,15 @@ interface InputOTPProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div
+          className="nds-grid nds-w-full"
+          data-spacing="lg"
+          data-min="18rem"
+          style={{ contain: "layout", minHeight: 160 }}
+        >
           {/* 6 dígitos */}
-          <div className="space-y-2">
-            <label htmlFor="demo-six" className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <label htmlFor="demo-six" className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.sixDigits"))}
             </label>
             <InputOTP
@@ -282,8 +287,8 @@ interface InputOTPProps {
           </div>
 
           {/* 4 dígitos */}
-          <div className="space-y-2">
-            <label htmlFor="demo-four" className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <label htmlFor="demo-four" className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.fourDigits"))}
             </label>
             <InputOTP
@@ -304,8 +309,8 @@ interface InputOTPProps {
           </div>
 
           {/* Com Separator */}
-          <div className="space-y-2">
-            <label htmlFor="demo-sep" className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <label htmlFor="demo-sep" className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withSeparator"))}
             </label>
             <InputOTP
@@ -332,8 +337,8 @@ interface InputOTPProps {
           </div>
 
           {/* Alfanumérico */}
-          <div className="space-y-2">
-            <label htmlFor="demo-alpha" className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
+            <label htmlFor="demo-alpha" className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.alphanumeric"))}
             </label>
             <InputOTP
@@ -460,12 +465,12 @@ interface InputOTPProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 autoComplete="one-time-code"
               </div>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 {/* sem autoComplete */}
                 (sem autoComplete)
               </div>
@@ -477,10 +482,10 @@ interface InputOTPProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-medium">Código de verificação</div>
+              <div className="nds-text-caption nds-font-medium">Código de verificação</div>
             ),
             dontPreview: (
-              <div className="text-xs italic text-muted-foreground">(sem label)</div>
+              <div className="nds-text-caption nds-italic nds-text-muted-foreground">(sem label)</div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
@@ -501,7 +506,7 @@ interface InputOTPProps {
             description: stripHtml(tContent("variants.styles.sixDigits")),
             code: codeSixDigits,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 maxLength=6 · inputMode=numeric
               </div>
             ),
@@ -511,7 +516,7 @@ interface InputOTPProps {
             description: stripHtml(tContent("variants.styles.fourDigits")),
             code: codeFourDigits,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 maxLength=4 · inputMode=numeric
               </div>
             ),
@@ -521,7 +526,7 @@ interface InputOTPProps {
             description: stripHtml(tContent("variants.styles.withSeparator")),
             code: codeWithSeparator,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 3 + Separator + 3
               </div>
             ),
@@ -531,7 +536,7 @@ interface InputOTPProps {
             description: stripHtml(tContent("variants.styles.alphanumeric")),
             code: codeAlpha,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 pattern=DIGITS_AND_CHARS · inputMode=text
               </div>
             ),
@@ -549,7 +554,7 @@ interface InputOTPProps {
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
-            code: `<div className="flex flex-col gap-2">
+            code: `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="otp-code">Código de verificação</Label>
   <InputOTP id="otp-code" maxLength={6} autoComplete="one-time-code" inputMode="numeric">
     <InputOTPGroup>
@@ -563,7 +568,7 @@ interface InputOTPProps {
   </InputOTP>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-2">
+              <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
                 <Label htmlFor="comp-label-otp">Código de verificação</Label>
                 <InputOTP id="comp-label-otp" maxLength={6} autoComplete="one-time-code" inputMode="numeric" aria-label="Código de verificação">
                   <InputOTPGroup>
@@ -579,18 +584,18 @@ interface InputOTPProps {
             name: tContent("variants.compositions.withHelpText.name"),
             description: tContent("variants.compositions.withHelpText.description"),
             useWhen: tContent("variants.compositions.withHelpText.use"),
-            code: `<div className="flex flex-col gap-2">
+            code: `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="otp-help">Código de verificação</Label>
   <InputOTP id="otp-help" maxLength={6} aria-describedby="otp-help-text"
     autoComplete="one-time-code" inputMode="numeric">
     <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
   </InputOTP>
-  <p id="otp-help-text" className="text-xs text-muted-foreground">
+  <p id="otp-help-text" className="nds-text-caption nds-text-muted-foreground">
     Enviamos por SMS, expira em 5 min.
   </p>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-2">
+              <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
                 <Label htmlFor="comp-help-otp">Código de verificação</Label>
                 <InputOTP
                   id="comp-help-otp"
@@ -606,7 +611,7 @@ interface InputOTPProps {
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
-                <p id="comp-help-otp-text" className="text-xs text-muted-foreground">
+                <p id="comp-help-otp-text" className="nds-text-caption nds-text-muted-foreground">
                   Enviamos por SMS, expira em 5 min.
                 </p>
               </div>
@@ -616,18 +621,18 @@ interface InputOTPProps {
             name: tContent("variants.compositions.withErrorMessage.name"),
             description: tContent("variants.compositions.withErrorMessage.description"),
             useWhen: tContent("variants.compositions.withErrorMessage.use"),
-            code: `<div className="flex flex-col gap-2">
+            code: `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="otp-err">Código de verificação</Label>
   <InputOTP id="otp-err" maxLength={6} aria-invalid="true"
     aria-describedby="otp-err-text" autoComplete="one-time-code" inputMode="numeric">
     <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
   </InputOTP>
-  <p id="otp-err-text" className="text-xs text-destructive">
+  <p id="otp-err-text" className="nds-text-caption nds-text-destructive">
     Código incorreto. Verifique e tente novamente.
   </p>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-2">
+              <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
                 <Label htmlFor="comp-err-otp">Código de verificação</Label>
                 <InputOTP
                   id="comp-err-otp"
@@ -645,7 +650,7 @@ interface InputOTPProps {
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
-                <p id="comp-err-otp-text" className="text-xs text-destructive">
+                <p id="comp-err-otp-text" className="nds-text-caption nds-text-destructive">
                   Código incorreto. Verifique e tente novamente.
                 </p>
               </div>
@@ -655,18 +660,18 @@ interface InputOTPProps {
             name: tContent("variants.compositions.withResendButton.name"),
             description: tContent("variants.compositions.withResendButton.description"),
             useWhen: tContent("variants.compositions.withResendButton.use"),
-            code: `<div className="flex flex-col gap-3">
+            code: `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="otp-resend">Código de verificação</Label>
   <InputOTP id="otp-resend" maxLength={6} autoComplete="one-time-code" inputMode="numeric">
     <InputOTPGroup>{/* 6 slots */}</InputOTPGroup>
   </InputOTP>
-  <div className="flex items-center justify-between gap-3">
-    <p className="text-xs text-muted-foreground">Não recebeu?</p>
+  <div className="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+    <p className="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
     <Button variant="link" size="sm">Reenviar código</Button>
   </div>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-3">
+              <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
                 <Label htmlFor="comp-resend-otp">Código de verificação</Label>
                 <InputOTP
                   id="comp-resend-otp"
@@ -681,8 +686,8 @@ interface InputOTPProps {
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-xs text-muted-foreground">Não recebeu?</p>
+                <div className="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+                  <p className="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
                   <Button variant="link" size="sm">Reenviar código</Button>
                 </div>
               </div>

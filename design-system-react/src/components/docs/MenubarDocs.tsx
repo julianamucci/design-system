@@ -241,10 +241,10 @@ interface MenubarItemProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Menu Arquivo (com submenu) */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.fileMenu"))}
             </p>
             <Menubar>
@@ -271,8 +271,8 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Editar (com shortcuts) */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.editMenu"))}
             </p>
             <Menubar>
@@ -298,8 +298,8 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Exibir (com checkbox) */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.viewMenu"))}
             </p>
             <Menubar>
@@ -324,8 +324,8 @@ interface MenubarItemProps {
           </div>
 
           {/* Menu Ferramentas (com radio) */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.toolsMenu"))}
             </p>
             <Menubar>
@@ -453,12 +453,12 @@ interface MenubarItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 Arquivo · Editar · Exibir
               </div>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 Menu único
               </div>
             ),
@@ -469,12 +469,12 @@ interface MenubarItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 Salvar ⌘S
               </div>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 Sub &gt; Sub &gt; Sub
               </div>
             ),
@@ -497,7 +497,7 @@ interface MenubarItemProps {
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 variant=&quot;default&quot;
               </div>
             ),
@@ -507,7 +507,7 @@ interface MenubarItemProps {
             description: stripHtml(tContent("variants.styles.destructive")),
             code: codeDestructive,
             preview: (
-              <div className="text-xs font-mono text-destructive">
+              <div className="nds-text-caption nds-font-mono nds-text-destructive">
                 variant=&quot;destructive&quot;
               </div>
             ),

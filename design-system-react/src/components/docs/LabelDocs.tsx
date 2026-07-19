@@ -122,7 +122,7 @@ export function LabelDocs() {
 <Input id="nome" placeholder="ex: João da Silva" />`;
 
   const codeCustomization = `/* Personalização via className */
-<Label htmlFor="field" className="text-muted-foreground">
+<Label htmlFor="field" className="nds-text-muted-foreground">
   Rótulo secundário
 </Label>`;
 
@@ -145,23 +145,23 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full space-y-4">
-          <div className="flex flex-col gap-1.5">
+        <div className="nds-stack nds-w-full">
+          <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
             <Label htmlFor="demo-default">
               {tContent("demonstration.labels.default")}
             </Label>
             <Input id="demo-default" placeholder="ex: João da Silva" />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
             <Label htmlFor="demo-required">
               {tContent("demonstration.labels.required")}
-              <span className="text-destructive" aria-hidden="true">
+              <span className="nds-text-destructive" style={{ marginLeft: "var(--spacing-0-5)" }} aria-hidden="true">
                 {tContent("demonstration.labels.requiredMarker")}
               </span>
             </Label>
             <Input id="demo-required" type="email" aria-required="true" placeholder="ex: joao@empresa.com" />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
             <Label htmlFor="demo-disabled">
               {tContent("demonstration.labels.disabled")}
             </Label>
@@ -234,13 +234,13 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
                 <Label htmlFor="dodont-do-1">Email profissional</Label>
                 <Input id="dodont-do-1" type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
                 <Label>Email profissional</Label>
                 <Input type="email" placeholder="ex: joao@empresa.com" />
               </div>
@@ -252,13 +252,13 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
                 <Label htmlFor="dodont-do-2">Nome completo</Label>
                 <Input id="dodont-do-2" placeholder="ex: João da Silva" />
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
                 <Label htmlFor="dodont-dont-2">Informe seu nome completo</Label>
                 <Input id="dodont-dont-2" placeholder="ex: João da Silva" />
               </div>
@@ -285,7 +285,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
             description: tContent("variants.note"),
             code: codeDefault,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
                 <Label htmlFor="variant-default">
                   {tContent("demonstration.labels.default")}
                 </Label>
