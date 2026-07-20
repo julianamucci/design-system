@@ -208,8 +208,8 @@ import { Bold } from "lucide-react";`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full max-w-md flex flex-col gap-5">
-          <div className="flex items-center gap-1 rounded-lg border p-1 w-fit">
+        <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md" style={{ alignItems: "flex-start" }}>
+          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-spacing="xs">
             <Toggle
               pressed={demoBold}
               onPressedChange={setDemoBold}
@@ -241,13 +241,12 @@ import { Bold } from "lucide-react";`;
             pressed={demoShowHidden}
             onPressedChange={setDemoShowHidden}
             aria-label={tContent("demonstration.labels.showHidden")}
-            className="w-fit"
           >
             <Eye aria-hidden="true" />
             {tContent("demonstration.labels.showHidden")}
           </Toggle>
 
-          <div className="flex items-center gap-3">
+          <div className="nds-cluster" data-spacing="sm">
             <Toggle
               size="sm"
               pressed={demoCompact}
@@ -384,7 +383,7 @@ import { Bold } from "lucide-react";`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex items-center gap-1 rounded-lg border p-1">
+              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-spacing="xs">
                 <Toggle aria-label="Negrito">
                   <Bold aria-hidden="true" />
                 </Toggle>
@@ -397,7 +396,7 @@ import { Bold } from "lucide-react";`;
               </div>
             ),
             dontPreview: (
-              <div className="flex items-center gap-3">
+              <div className="nds-cluster" data-spacing="sm">
                 <Toggle aria-label="Negrito">
                   <Bold aria-hidden="true" />
                 </Toggle>
@@ -470,27 +469,27 @@ import { Bold } from "lucide-react";`;
             name: tContent("variants.compositions.toolbar.name"),
             description: tContent("variants.compositions.toolbar.description"),
             useWhen: tContent("variants.compositions.toolbar.use"),
-            code: `<div role="group" aria-label="Formatação de texto" className="flex items-center gap-1 rounded-md border border-input p-1">
+            code: `<div role="group" aria-label="Formatação de texto" className="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
   <Toggle aria-label="Negrito" defaultPressed>
-    <Bold className="h-4 w-4" />
+    <Bold className="nds-icon" />
   </Toggle>
   <Toggle aria-label="Itálico">
-    <Italic className="h-4 w-4" />
+    <Italic className="nds-icon" />
   </Toggle>
   <Toggle aria-label="Sublinhado">
-    <Underline className="h-4 w-4" />
+    <Underline className="nds-icon" />
   </Toggle>
 </div>`,
             preview: (
-              <div role="group" aria-label="Formatação de texto" className="flex items-center gap-1 rounded-md border border-input p-1">
+              <div role="group" aria-label="Formatação de texto" className="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
                 <Toggle aria-label="Negrito" defaultPressed>
-                  <Bold className="h-4 w-4" />
+                  <Bold className="nds-icon" />
                 </Toggle>
                 <Toggle aria-label="Itálico">
-                  <Italic className="h-4 w-4" />
+                  <Italic className="nds-icon" />
                 </Toggle>
                 <Toggle aria-label="Sublinhado">
-                  <Underline className="h-4 w-4" />
+                  <Underline className="nds-icon" />
                 </Toggle>
               </div>
             ),
@@ -500,12 +499,12 @@ import { Bold } from "lucide-react";`;
             description: tContent("variants.compositions.filterWithLabel.description"),
             useWhen: tContent("variants.compositions.filterWithLabel.use"),
             code: `<Toggle variant="outline">
-  <Eye className="h-4 w-4" />
+  <Eye className="nds-icon" />
   Mostrar ocultos
 </Toggle>`,
             preview: (
               <Toggle variant="outline">
-                <Eye className="h-4 w-4" />
+                <Eye className="nds-icon" />
                 Mostrar ocultos
               </Toggle>
             ),
@@ -514,27 +513,27 @@ import { Bold } from "lucide-react";`;
             name: tContent("variants.compositions.sizes.name"),
             description: tContent("variants.compositions.sizes.description"),
             useWhen: tContent("variants.compositions.sizes.use"),
-            code: `<div className="flex items-center gap-3">
+            code: `<div className="nds-cluster" data-spacing="sm">
   <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
-    <Bold className="h-4 w-4" />
+    <Bold className="nds-icon" />
   </Toggle>
   <Toggle variant="outline" size="default" aria-label="Negrito (default)">
-    <Bold className="h-4 w-4" />
+    <Bold className="nds-icon" />
   </Toggle>
   <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
-    <Bold className="h-4 w-4" />
+    <Bold className="nds-icon" />
   </Toggle>
 </div>`,
             preview: (
-              <div className="flex items-center gap-3">
+              <div className="nds-cluster" data-spacing="sm">
                 <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
-                  <Bold className="h-4 w-4" />
+                  <Bold className="nds-icon" />
                 </Toggle>
                 <Toggle variant="outline" size="default" aria-label="Negrito (default)">
-                  <Bold className="h-4 w-4" />
+                  <Bold className="nds-icon" />
                 </Toggle>
                 <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
-                  <Bold className="h-4 w-4" />
+                  <Bold className="nds-icon" />
                 </Toggle>
               </div>
             ),
@@ -543,29 +542,29 @@ import { Bold } from "lucide-react";`;
             name: tContent("variants.compositions.filterList.name"),
             description: tContent("variants.compositions.filterList.description"),
             useWhen: tContent("variants.compositions.filterList.use"),
-            code: `<div className="flex flex-col gap-2 w-72">
-  <p className="text-sm font-semibold mb-1">Filtros de exibição</p>
-  <div className="flex flex-wrap gap-2">
+            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+  <p className="nds-text-body nds-font-semibold nds-mb-1">Filtros de exibição</p>
+  <div className="nds-cluster" data-spacing="sm">
     <Toggle variant="outline">
-      <Eye className="h-4 w-4" />
+      <Eye className="nds-icon" />
       Mostrar ocultos
     </Toggle>
     <Toggle variant="outline" defaultPressed>
-      <List className="h-4 w-4" />
+      <List className="nds-icon" />
       Visão compacta
     </Toggle>
   </div>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-2 w-72">
-                <p className="text-sm font-semibold mb-1">Filtros de exibição</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+                <p className="nds-text-body nds-font-semibold nds-mb-1">Filtros de exibição</p>
+                <div className="nds-cluster" data-spacing="sm">
                   <Toggle variant="outline">
-                    <Eye className="h-4 w-4" />
+                    <Eye className="nds-icon" />
                     Mostrar ocultos
                   </Toggle>
                   <Toggle variant="outline" defaultPressed>
-                    <List className="h-4 w-4" />
+                    <List className="nds-icon" />
                     Visão compacta
                   </Toggle>
                 </div>

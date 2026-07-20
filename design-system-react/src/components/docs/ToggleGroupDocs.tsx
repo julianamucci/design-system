@@ -233,10 +233,10 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full max-w-md flex flex-col gap-6">
+        <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
           {/* Single — alinhamento */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.alignmentLabel")}
             </span>
             <ToggleGroup
@@ -261,8 +261,8 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           </div>
 
           {/* Multiple — formatação */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.formattingLabel")}
             </span>
             <ToggleGroup
@@ -284,8 +284,8 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           </div>
 
           {/* Vertical — modos de visualização */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xs text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.viewLabel")}
             </span>
             <ToggleGroup
@@ -414,16 +414,16 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
               </ToggleGroup>
             ),
             dontPreview: (
-              <div className="flex items-center gap-3">
+              <div className="nds-cluster" data-spacing="sm" data-align="center">
                 {/* anti-padrão: Toggles soltos sem agrupamento ARIA */}
-                <button type="button" className="px-2 py-1 border rounded" aria-label="Alinhar à esquerda">
-                  <AlignLeft aria-hidden="true" className="size-4" />
+                <button type="button" className="nds-px-2 nds-py-1 nds-border-default nds-rounded-sm" aria-label="Alinhar à esquerda">
+                  <AlignLeft aria-hidden="true" className="nds-icon" />
                 </button>
-                <button type="button" className="px-2 py-1 border rounded" aria-label="Centralizar">
-                  <AlignCenter aria-hidden="true" className="size-4" />
+                <button type="button" className="nds-px-2 nds-py-1 nds-border-default nds-rounded-sm" aria-label="Centralizar">
+                  <AlignCenter aria-hidden="true" className="nds-icon" />
                 </button>
-                <button type="button" className="px-2 py-1 border rounded" aria-label="Alinhar à direita">
-                  <AlignRight aria-hidden="true" className="size-4" />
+                <button type="button" className="nds-px-2 nds-py-1 nds-border-default nds-rounded-sm" aria-label="Alinhar à direita">
+                  <AlignRight aria-hidden="true" className="nds-icon" />
                 </button>
               </div>
             ),
@@ -621,10 +621,10 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             name: tContent("variants.compositions.filterWithText.name"),
             description: tContent("variants.compositions.filterWithText.description"),
             useWhen: tContent("variants.compositions.filterWithText.use"),
-            code: `<div className="flex flex-col gap-2 w-72">\n  <p className="text-sm font-medium">Filtros de exibição</p>\n  <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">\n    <ToggleGroupItem value="hidden">\n      <Eye aria-hidden="true" />\n      Ocultos\n    </ToggleGroupItem>\n    <ToggleGroupItem value="compact">\n      <List aria-hidden="true" />\n      Compacto\n    </ToggleGroupItem>\n  </ToggleGroup>\n</div>`,
+            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>\n  <p className="nds-text-body nds-font-medium">Filtros de exibição</p>\n  <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">\n    <ToggleGroupItem value="hidden">\n      <Eye aria-hidden="true" />\n      Ocultos\n    </ToggleGroupItem>\n    <ToggleGroupItem value="compact">\n      <List aria-hidden="true" />\n      Compacto\n    </ToggleGroupItem>\n  </ToggleGroup>\n</div>`,
             preview: (
-              <div className="flex flex-col gap-2 w-72">
-                <p className="text-sm font-medium">Filtros de exibição</p>
+              <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+                <p className="nds-text-body nds-font-medium">Filtros de exibição</p>
                 <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">
                   <ToggleGroupItem value="hidden">
                     <Eye aria-hidden="true" />

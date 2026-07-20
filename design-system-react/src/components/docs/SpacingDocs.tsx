@@ -21,26 +21,26 @@ const SPACING_TOKENS: Array<{ name: string; varName: string; px: string }> = [
 
 function SpacingSpecimens() {
   return (
-    <section className="space-y-4 border-t border-border/50 pt-8">
-      <div className="space-y-1">
-        <h2 className="text-xl font-semibold text-foreground m-0">Escala visual</h2>
-        <p className="text-sm text-muted-foreground m-0">
+    <section className="nds-stack nds-docs-section-divider" data-spacing="md">
+      <div className="nds-stack" data-spacing="xs">
+        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Escala visual</h2>
+        <p className="nds-text-body nds-text-muted-foreground">
           Cada barra tem largura igual ao token. A escala acompanha a densidade
           ativa do tema.
         </p>
       </div>
-      <div className="rounded-lg border border-border/50 p-6 space-y-2 bg-card">
+      <div className="nds-stack nds-bg-card nds-border-soft nds-rounded-lg nds-p-6" data-spacing="sm">
         {SPACING_TOKENS.map((tok) => (
-          <div key={tok.name} className="flex items-center gap-4">
-            <code className="text-xs text-muted-foreground w-32 shrink-0">
+          <div key={tok.name} className="nds-row" data-align="center" data-spacing="md">
+            <code className="nds-text-caption nds-text-muted-foreground nds-shrink-0" style={{ width: '8rem' }}>
               {tok.name}
             </code>
             <div
-              className="h-4 bg-primary rounded-sm"
-              style={{ width: `var(${tok.varName})` }}
+              className="nds-bg-primary nds-rounded-sm nds-shrink-0"
+              style={{ width: `var(${tok.varName})`, height: 'var(--spacing-4)' }}
               aria-hidden="true"
             />
-            <span className="text-xs text-muted-foreground">{tok.px}</span>
+            <span className="nds-text-caption nds-text-muted-foreground">{tok.px}</span>
           </div>
         ))}
       </div>

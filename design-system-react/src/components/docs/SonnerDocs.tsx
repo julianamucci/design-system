@@ -198,10 +198,10 @@ interface ToasterProps {
       >
         <div
           style={{ contain: "layout", minHeight: 80, position: "relative" }}
-          className="w-full"
+          className="nds-w-full"
         >
           <Toaster position="top-right" richColors />
-          <div className="flex flex-wrap gap-2">
+          <div className="nds-cluster" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -374,7 +374,7 @@ interface ToasterProps {
             doPreview: (
               <div
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="w-full"
+                className="nds-w-full"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -389,7 +389,7 @@ interface ToasterProps {
             dontPreview: (
               <div
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="w-full"
+                className="nds-w-full"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -410,7 +410,7 @@ interface ToasterProps {
             doPreview: (
               <div
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="w-full"
+                className="nds-w-full"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -434,7 +434,7 @@ interface ToasterProps {
             dontPreview: (
               <div
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="w-full"
+                className="nds-w-full"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -470,7 +470,8 @@ interface ToasterProps {
             preview: (
               <div
                 style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="w-full flex justify-center"
+                className="nds-cluster nds-w-full"
+                data-justify="center"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -490,7 +491,8 @@ interface ToasterProps {
             preview: (
               <div
                 style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="w-full flex justify-center"
+                className="nds-cluster nds-w-full"
+                data-justify="center"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -510,7 +512,8 @@ interface ToasterProps {
             preview: (
               <div
                 style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="w-full flex justify-center"
+                className="nds-cluster nds-w-full"
+                data-justify="center"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -530,7 +533,8 @@ interface ToasterProps {
             preview: (
               <div
                 style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="w-full flex justify-center"
+                className="nds-cluster nds-w-full"
+                data-justify="center"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -550,7 +554,8 @@ interface ToasterProps {
             preview: (
               <div
                 style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="w-full flex justify-center"
+                className="nds-cluster nds-w-full"
+                data-justify="center"
               >
                 <Toaster position="top-right" richColors />
                 <Button
@@ -568,17 +573,18 @@ interface ToasterProps {
 
       {/* ── Estados (Composições) ─────────────────────────────────── */}
       <section id="estados">
-        <h2 className="text-xl font-semibold mb-4">{tContent("states.title")}</h2>
-        <div className="space-y-4">
+        <h2 className="nds-section-title">{tContent("states.title")}</h2>
+        <div className="nds-stack" data-spacing="md">
           {/* WithDescription */}
-          <div className="rounded-lg border border-border p-4 space-y-2">
-            <p className="text-sm font-semibold">{tContent("states.items.withDescription.label")}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-semibold">{tContent("states.items.withDescription.label")}</p>
+            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
               {tContent("states.items.withDescription.description")}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="flex items-center"
+              className="nds-cluster"
+              data-align="center"
             >
               <Toaster position="top-right" richColors />
               <Button
@@ -593,20 +599,21 @@ interface ToasterProps {
                 {tContent("demonstration.labels.triggerWithDescription")}
               </Button>
             </div>
-            <div className="bg-muted rounded p-3 font-mono text-xs overflow-x-auto">
-              <code className="whitespace-pre">{codeWithDescription}</code>
+            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
+              <code className="nds-whitespace-pre">{codeWithDescription}</code>
             </div>
           </div>
 
           {/* WithAction */}
-          <div className="rounded-lg border border-border p-4 space-y-2">
-            <p className="text-sm font-semibold">{tContent("states.items.withAction.label")}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-semibold">{tContent("states.items.withAction.label")}</p>
+            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
               {stripHtml(tContent("states.items.withAction.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="flex items-center"
+              className="nds-cluster"
+              data-align="center"
             >
               <Toaster position="top-right" richColors />
               <Button
@@ -630,20 +637,21 @@ interface ToasterProps {
                 {tContent("demonstration.labels.triggerWithAction")}
               </Button>
             </div>
-            <div className="bg-muted rounded p-3 font-mono text-xs overflow-x-auto">
-              <code className="whitespace-pre">{codeWithAction}</code>
+            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
+              <code className="nds-whitespace-pre">{codeWithAction}</code>
             </div>
           </div>
 
           {/* Promise */}
-          <div className="rounded-lg border border-border p-4 space-y-2">
-            <p className="text-sm font-semibold">{tContent("states.items.promise.label")}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-semibold">{tContent("states.items.promise.label")}</p>
+            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
               {tContent("states.items.promise.description")}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="flex items-center"
+              className="nds-cluster"
+              data-align="center"
             >
               <Toaster position="top-right" richColors />
               <Button
@@ -663,20 +671,21 @@ interface ToasterProps {
                 {tContent("demonstration.labels.triggerPromise")}
               </Button>
             </div>
-            <div className="bg-muted rounded p-3 font-mono text-xs overflow-x-auto">
-              <code className="whitespace-pre">{codePromise}</code>
+            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
+              <code className="nds-whitespace-pre">{codePromise}</code>
             </div>
           </div>
 
           {/* Persistent */}
-          <div className="rounded-lg border border-border p-4 space-y-2">
-            <p className="text-sm font-semibold">{tContent("states.items.persistent.label")}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
+            <p className="nds-text-body nds-font-semibold">{tContent("states.items.persistent.label")}</p>
+            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
               {stripHtml(tContent("states.items.persistent.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="flex items-center"
+              className="nds-cluster"
+              data-align="center"
             >
               <Toaster position="top-right" richColors />
               <Button
@@ -692,8 +701,8 @@ interface ToasterProps {
                 {tContent("demonstration.labels.triggerPersistent")}
               </Button>
             </div>
-            <div className="bg-muted rounded p-3 font-mono text-xs overflow-x-auto">
-              <code className="whitespace-pre">{codePersistent}</code>
+            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
+              <code className="nds-whitespace-pre">{codePersistent}</code>
             </div>
           </div>
         </div>

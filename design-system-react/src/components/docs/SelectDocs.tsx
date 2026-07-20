@@ -246,13 +246,14 @@ interface SelectContentProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
+        <div className="nds-grid nds-w-full" data-cols="3" data-spacing="lg">
           {/* Default */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
             <Select value={stateValue} onValueChange={(v) => setStateValue(v ?? "")}>
@@ -270,10 +271,11 @@ interface SelectContentProps {
 
           {/* With groups */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withGroups")}
             </p>
             <Select value={regionValue} onValueChange={(v) => setRegionValue(v ?? "")}>
@@ -299,10 +301,11 @@ interface SelectContentProps {
 
           {/* Size sm */}
           <div
-            className="space-y-2"
+            className="nds-stack"
+            data-spacing="xs"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               size="sm"
             </p>
             <Select value={smValue} onValueChange={(v) => setSmValue(v ?? "")}>
@@ -588,8 +591,8 @@ interface SelectContentProps {
             name: tContent("variants.compositions.states.name"),
             description: tContent("variants.compositions.states.description"),
             useWhen: tContent("variants.compositions.states.use"),
-            code: `<div className="flex flex-col gap-2 w-80">
-  <label htmlFor="state" className="text-sm font-semibold">Estado</label>
+            code: `<div className="nds-stack nds-w-sm" data-spacing="xs">
+  <label htmlFor="state" className="nds-text-body nds-font-semibold">Estado</label>
   <Select>
     <SelectTrigger id="state" aria-label="Estado">
       <SelectValue placeholder="Selecione..." />
@@ -604,10 +607,11 @@ interface SelectContentProps {
 </div>`,
             preview: (
               <div
-                className="flex flex-col gap-2 w-80"
+                className="nds-stack nds-w-sm"
+                data-spacing="xs"
                 style={{ contain: "layout", minHeight: 100, position: "relative" }}
               >
-                <label htmlFor="comp-state" className="text-sm font-semibold">
+                <label htmlFor="comp-state" className="nds-text-body nds-font-semibold">
                   {tContent("demonstration.labels.stateLabel")}
                 </label>
                 <Select>
@@ -628,8 +632,8 @@ interface SelectContentProps {
             name: tContent("variants.compositions.regionGroups.name"),
             description: tContent("variants.compositions.regionGroups.description"),
             useWhen: tContent("variants.compositions.regionGroups.use"),
-            code: `<div className="flex flex-col gap-2 w-80">
-  <label htmlFor="region" className="text-sm font-semibold">Região</label>
+            code: `<div className="nds-stack nds-w-sm" data-spacing="xs">
+  <label htmlFor="region" className="nds-text-body nds-font-semibold">Região</label>
   <Select>
     <SelectTrigger id="region" aria-label="Região">
       <SelectValue placeholder="Selecione..." />
@@ -653,10 +657,11 @@ interface SelectContentProps {
 </div>`,
             preview: (
               <div
-                className="flex flex-col gap-2 w-80"
+                className="nds-stack nds-w-sm"
+                data-spacing="xs"
                 style={{ contain: "layout", minHeight: 100, position: "relative" }}
               >
-                <label htmlFor="comp-region" className="text-sm font-semibold">
+                <label htmlFor="comp-region" className="nds-text-body nds-font-semibold">
                   {tContent("demonstration.labels.regionLabel")}
                 </label>
                 <Select>
@@ -687,15 +692,16 @@ interface SelectContentProps {
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),
             code: `<form
-  className="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  className="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
+  data-spacing="md"
   onSubmit={(e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     console.log("Estado:", data.get("state"));
   }}
 >
-  <div className="flex flex-col gap-2">
-    <label htmlFor="form-state" className="text-sm font-semibold">Estado</label>
+  <div className="nds-stack" data-spacing="xs">
+    <label htmlFor="form-state" className="nds-text-body nds-font-semibold">Estado</label>
     <Select name="state" required>
       <SelectTrigger id="form-state" aria-label="Estado">
         <SelectValue placeholder="Selecione..." />
@@ -707,16 +713,17 @@ interface SelectContentProps {
       </SelectContent>
     </Select>
   </div>
-  <button type="submit" className="self-end">Continuar</button>
+  <button type="submit" style={{ alignSelf: "flex-end" }}>Continuar</button>
 </form>`,
             preview: (
               <form
-                className="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+                className="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
+                data-spacing="md"
                 style={{ contain: "layout", minHeight: 180, position: "relative" }}
                 onSubmit={(e) => e.preventDefault()}
               >
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="comp-form-state" className="text-sm font-semibold">
+                <div className="nds-stack" data-spacing="xs">
+                  <label htmlFor="comp-form-state" className="nds-text-body nds-font-semibold">
                     {tContent("demonstration.labels.stateLabel")}
                   </label>
                   <Select name="state">
@@ -735,7 +742,15 @@ interface SelectContentProps {
                 </div>
                 <button
                   type="submit"
-                  className="self-end inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium"
+                  className="nds-rounded-md nds-bg-primary nds-text-body nds-font-medium"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    alignSelf: "flex-end",
+                    padding: "0.375rem 0.75rem",
+                    color: "var(--primary-foreground)",
+                  }}
                 >
                   {locale === "en" ? "Continue" : locale === "es" ? "Continuar" : "Continuar"}
                 </button>

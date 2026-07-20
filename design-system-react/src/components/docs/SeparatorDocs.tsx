@@ -120,13 +120,13 @@ export function SeparatorDocs() {
 
   const codeImport = `import { Separator } from "@/components/ui/separator";`;
 
-  const codeHorizontal = `<div className="w-64 space-y-4">
+  const codeHorizontal = `<div className="nds-stack nds-w-xs" data-spacing="md">
   <div>Item 1</div>
   <Separator orientation="horizontal" />
   <div>Item 2</div>
 </div>`;
 
-  const codeVertical = `<div className="flex items-center h-12 gap-4">
+  const codeVertical = `<div className="nds-cluster" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
   <span>Item 1</span>
   <Separator orientation="vertical" />
   <span>Item 2</span>
@@ -177,22 +177,22 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.horizontal")}
             </p>
-            <div className="w-full space-y-3 text-sm border rounded-md p-4">
+            <div className="nds-stack nds-w-full nds-text-body nds-border-default nds-rounded-md nds-p-4" data-spacing="sm">
               <div>Item 1</div>
               <Separator orientation="horizontal" />
               <div>Item 2</div>
             </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.vertical")}
             </p>
-            <div className="flex items-center h-16 gap-4 text-sm border rounded-md px-4">
+            <div className="nds-cluster nds-text-body nds-border-default nds-rounded-md nds-px-4" data-spacing="md" data-align="center" style={{ height: "4rem" }}>
               <span>Item 1</span>
               <Separator orientation="vertical" />
               <span>Item 2</span>
@@ -306,16 +306,16 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full space-y-3 text-sm">
-                <div className="font-medium">Header do Card</div>
+              <div className="nds-stack nds-w-full nds-text-body" data-spacing="sm">
+                <div className="nds-font-medium">Header do Card</div>
                 <Separator orientation="horizontal" />
-                <div className="text-muted-foreground">Conteúdo do Card</div>
+                <div className="nds-text-muted-foreground">Conteúdo do Card</div>
               </div>
             ),
             dontPreview: (
-              <div className="w-full space-y-6 text-sm">
-                <div className="font-medium">Header do Card</div>
-                <div className="text-muted-foreground">Conteúdo do Card</div>
+              <div className="nds-stack nds-w-full nds-text-body" data-spacing="lg">
+                <div className="nds-font-medium">Header do Card</div>
+                <div className="nds-text-muted-foreground">Conteúdo do Card</div>
               </div>
             ),
             doCaption: stripHtml(tContent("doDont.pair1.do")),
@@ -325,19 +325,19 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex items-center h-12 gap-4 text-sm">
-                <a href="#" className="text-primary">Link 1</a>
+              <div className="nds-cluster nds-text-body" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
+                <a href="#" className="nds-text-primary">Link 1</a>
                 <Separator orientation="vertical" />
-                <a href="#" className="text-primary">Link 2</a>
+                <a href="#" className="nds-text-primary">Link 2</a>
                 <Separator orientation="vertical" />
-                <a href="#" className="text-primary">Link 3</a>
+                <a href="#" className="nds-text-primary">Link 3</a>
               </div>
             ),
             dontPreview: (
-              <div className="flex gap-4 text-sm">
-                <a href="#" className="text-primary">Link 1</a>
+              <div className="nds-cluster nds-text-body" data-spacing="md">
+                <a href="#" className="nds-text-primary">Link 1</a>
                 <Separator orientation="vertical" />
-                <a href="#" className="text-primary">Link 2</a>
+                <a href="#" className="nds-text-primary">Link 2</a>
               </div>
             ),
             doCaption: stripHtml(tContent("doDont.pair2.do")),
@@ -359,7 +359,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: codeHorizontal,
             preview: (
-              <div className="w-64 space-y-3 text-sm">
+              <div className="nds-stack nds-w-xs nds-text-body" data-spacing="sm">
                 <div>Seção superior</div>
                 <Separator orientation="horizontal" />
                 <div>Seção inferior</div>
@@ -371,7 +371,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="flex items-center h-12 gap-4 text-sm">
+              <div className="nds-cluster nds-text-body" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
                 <span>Item 1</span>
                 <Separator orientation="vertical" />
                 <span>Item 2</span>

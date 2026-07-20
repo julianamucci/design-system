@@ -164,27 +164,27 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";`;
 
-  const codeText = `<div className="flex flex-col gap-1.5">
+  const codeText = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="nome">Nome completo</label>
   <Input id="nome" type="text" placeholder="ex: João da Silva" />
 </div>`;
 
-  const codeEmail = `<div className="flex flex-col gap-1.5">
+  const codeEmail = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="email">Email</label>
   <Input id="email" type="email" placeholder="ex: joao@empresa.com" />
 </div>`;
 
-  const codePassword = `<div className="flex flex-col gap-1.5">
+  const codePassword = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="senha">Senha</label>
   <Input id="senha" type="password" placeholder="Mínimo 8 caracteres" />
 </div>`;
 
-  const codeNumber = `<div className="flex flex-col gap-1.5">
+  const codeNumber = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="qtd">Quantidade</label>
   <Input id="qtd" type="number" placeholder="0" />
 </div>`;
 
-  const codeFile = `<div className="flex flex-col gap-1.5">
+  const codeFile = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="arquivo">Arquivo</label>
   <Input id="arquivo" type="file" />
 </div>`;
@@ -266,9 +266,9 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
     >
       {/* ── Demonstração ────────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full space-y-4 max-w-sm">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="demo-nome" className="text-sm font-medium">
+        <div className="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
+          <div className="nds-stack" data-spacing="xs">
+            <label htmlFor="demo-nome" className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.defaultLabel")}
             </label>
             <Input
@@ -277,8 +277,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               placeholder={tContent("demonstration.labels.defaultPlaceholder")}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="demo-email" className="text-sm font-medium">
+          <div className="nds-stack" data-spacing="xs">
+            <label htmlFor="demo-email" className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.emailLabel")}
             </label>
             <Input
@@ -287,8 +287,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               placeholder={tContent("demonstration.labels.emailPlaceholder")}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="demo-search" className="text-sm font-medium">
+          <div className="nds-stack" data-spacing="xs">
+            <label htmlFor="demo-search" className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.searchLabel")}
             </label>
             <InputGroup>
@@ -302,8 +302,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               />
             </InputGroup>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="demo-disabled" className="text-sm font-medium">
+          <div className="nds-stack" data-spacing="xs">
+            <label htmlFor="demo-disabled" className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.disabledLabel")}
             </label>
             <Input
@@ -313,8 +313,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               disabled
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="demo-error" className="text-sm font-medium">
+          <div className="nds-stack" data-spacing="xs">
+            <label htmlFor="demo-error" className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.errorLabel")}
             </label>
             <Input
@@ -324,12 +324,12 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               aria-invalid="true"
               aria-describedby="demo-error-msg"
             />
-            <p id="demo-error-msg" className="text-sm text-destructive">
+            <p id="demo-error-msg" className="nds-text-caption nds-text-destructive">
               {tContent("demonstration.labels.errorMessage")}
             </p>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium">
+          <div className="nds-stack" data-spacing="xs">
+            <label className="nds-text-body nds-font-medium nds-text-foreground">
               {tContent("demonstration.labels.passwordLabel")}
             </label>
             <PasswordToggleDemo
@@ -408,14 +408,14 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="dodont-1-do" className="text-sm font-medium">Email</label>
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="dodont-1-do" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
                 <Input id="dodont-1-do" type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="dodont-1-dont" className="text-sm font-medium">Email</label>
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="dodont-1-dont" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
                 <Input id="dodont-1-dont" type="email" placeholder="Digite seu email" />
               </div>
             ),
@@ -426,14 +426,14 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="dodont-2-do" className="text-sm font-medium">Email</label>
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="dodont-2-do" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
                 <Input id="dodont-2-do" type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="dodont-2-dont" className="text-sm font-medium">Email</label>
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="dodont-2-dont" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
                 <Input id="dodont-2-dont" type="text" placeholder="ex: joao@empresa.com" />
               </div>
             ),
@@ -444,15 +444,15 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="dodont-3-do" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="dodont-3-do" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.defaultLabel")}
                 </label>
                 <Input id="dodont-3-do" type="text" placeholder="ex: João da Silva" />
               </div>
             ),
             dontPreview: (
-              <div className="flex flex-col gap-1.5 w-full">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
                 <Input type="text" placeholder={tContent("demonstration.labels.defaultLabel")} />
               </div>
             ),
@@ -480,8 +480,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.types.text")),
             code: codeText,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-text" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-text" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.defaultLabel")}
                 </label>
                 <Input id="var-text" type="text" placeholder={tContent("demonstration.labels.defaultPlaceholder")} />
@@ -493,8 +493,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.types.email")),
             code: codeEmail,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-email" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-email" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.emailLabel")}
                 </label>
                 <Input id="var-email" type="email" placeholder={tContent("demonstration.labels.emailPlaceholder")} />
@@ -506,8 +506,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.types.password")),
             code: codePassword,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-password" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-password" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.passwordLabel")}
                 </label>
                 <Input id="var-password" type="password" placeholder={tContent("demonstration.labels.passwordPlaceholder")} />
@@ -519,8 +519,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.types.number")),
             code: codeNumber,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-number" className="text-sm font-medium">Quantidade</label>
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-number" className="nds-text-body nds-font-medium nds-text-foreground">Quantidade</label>
                 <Input id="var-number" type="number" placeholder="0" />
               </div>
             ),
@@ -530,8 +530,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.types.file")),
             code: codeFile,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-file" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-file" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.fileLabel")}
                 </label>
                 <Input id="var-file" type="file" />
@@ -543,8 +543,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.inputGroup.description")),
             code: codeInputGroupSearch,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-group-search" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-group-search" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.searchLabel")}
                 </label>
                 <InputGroup>
@@ -565,8 +565,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             description: stripHtml(tContent("variants.inputGroup.subcomponents.inputGroupAddon")),
             code: codeInputGroupEmail,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full">
-                <label htmlFor="var-group-email" className="text-sm font-medium">
+              <div className="nds-stack nds-w-full" data-spacing="xs">
+                <label htmlFor="var-group-email" className="nds-text-body nds-font-medium nds-text-foreground">
                   {tContent("demonstration.labels.emailLabel")}
                 </label>
                 <InputGroup>
@@ -597,9 +597,9 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
+            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+              <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
                 <Label htmlFor="input-nome">Nome completo</Label>
                 <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
               </div>
@@ -609,12 +609,12 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             name: tContent("variants.compositions.withHint.name"),
             description: tContent("variants.compositions.withHint.description"),
             useWhen: tContent("variants.compositions.withHint.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-email-hint">Email</Label>\n  <Input id="input-email-hint" type="email" placeholder="ex: joao@empresa.com" />\n  <p className="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
+            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-email-hint">Email</Label>\n  <Input id="input-email-hint" type="email" placeholder="ex: joao@empresa.com" />\n  <p className="nds-text-caption nds-text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+              <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
                 <Label htmlFor="input-email-hint">Email</Label>
                 <Input id="input-email-hint" type="email" placeholder="ex: joao@empresa.com" />
-                <p className="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+                <p className="nds-text-caption nds-text-muted-foreground">Usaremos este email para envio de notificações.</p>
               </div>
             ),
           },
@@ -622,9 +622,9 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             name: tContent("variants.compositions.withError.name"),
             description: tContent("variants.compositions.withError.description"),
             useWhen: tContent("variants.compositions.withError.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-email-error">Email</Label>\n  <Input\n    id="input-email-error"\n    type="email"\n    placeholder="ex: joao@empresa.com"\n    aria-invalid="true"\n    aria-describedby="input-email-error-error"\n  />\n  <p id="input-email-error-error" className="text-xs text-destructive">\n    Email inválido. Use o formato nome@dominio.com\n  </p>\n</div>`,
+            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-email-error">Email</Label>\n  <Input\n    id="input-email-error"\n    type="email"\n    placeholder="ex: joao@empresa.com"\n    aria-invalid="true"\n    aria-describedby="input-email-error-error"\n  />\n  <p id="input-email-error-error" className="nds-text-caption nds-text-destructive">\n    Email inválido. Use o formato nome@dominio.com\n  </p>\n</div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+              <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
                 <Label htmlFor="input-email-error">Email</Label>
                 <Input
                   id="input-email-error"
@@ -633,7 +633,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                   aria-invalid="true"
                   aria-describedby="input-email-error-error"
                 />
-                <p id="input-email-error-error" className="text-xs text-destructive">
+                <p id="input-email-error-error" className="nds-text-caption nds-text-destructive">
                   Email inválido. Use o formato nome@dominio.com
                 </p>
               </div>
@@ -643,14 +643,14 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             name: tContent("variants.compositions.withPrefix.name"),
             description: tContent("variants.compositions.withPrefix.description"),
             useWhen: tContent("variants.compositions.withPrefix.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label htmlFor="input-url">URL do site</Label>\n  <div className="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">\n    <span className="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>\n    <Input\n      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"\n      type="url"\n      id="input-url"\n      placeholder="meusite.com"\n    />\n  </div>\n</div>`,
+            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-url">URL do site</Label>\n  <div className="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">\n    <span className="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style={{ borderRight: "1px solid var(--input)" }}>https://</span>\n    <Input\n      className="nds-flex-1" style={{ border: 0 }}\n      type="url"\n      id="input-url"\n      placeholder="meusite.com"\n    />\n  </div>\n</div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-sm">
+              <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
                 <Label htmlFor="input-url">URL do site</Label>
-                <div className="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
-                  <span className="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
+                <div className="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
+                  <span className="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style={{ borderRight: "1px solid var(--input)" }}>https://</span>
                   <Input
-                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+                    className="nds-flex-1" style={{ border: 0 }}
                     type="url"
                     id="input-url"
                     placeholder="meusite.com"
