@@ -45,9 +45,6 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
-const kbdClass =
-  "inline-flex h-4 min-w-4 items-center justify-center rounded-sm bg-background/15 px-1 font-mono text-[10px] font-medium text-background";
-
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -243,7 +240,10 @@ interface TooltipContentProps {
         {/* ── Demonstração ──────────────────────────────────────────── */}
         <DocsDemonstration title={tContent("demonstration.title")}>
           <div
-            className="flex flex-wrap items-center justify-center gap-6"
+            className="nds-cluster"
+            data-justify="center"
+            data-align="center"
+            data-spacing="lg"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
             <Tooltip>
@@ -378,14 +378,14 @@ interface TooltipContentProps {
               doLabel: tNav("common.do"),
               dontLabel: tNav("common.dont"),
               doPreview: (
-                <div className="text-xs font-mono text-muted-foreground">
+                <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                   &lt;Button aria-label="Salvar"&gt;
                   <br />
                   + Tooltip "Salvar (Ctrl+S)"
                 </div>
               ),
               dontPreview: (
-                <div className="text-xs font-mono text-muted-foreground">
+                <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                   &lt;Button&gt; (sem aria-label)
                   <br />
                   + Tooltip "Salvar"
@@ -398,10 +398,10 @@ interface TooltipContentProps {
               doLabel: tNav("common.do"),
               dontLabel: tNav("common.dont"),
               doPreview: (
-                <div className="text-xs text-muted-foreground">"Salvar (Ctrl+S)"</div>
+                <div className="nds-text-caption nds-text-muted-foreground">"Salvar (Ctrl+S)"</div>
               ),
               dontPreview: (
-                <div className="text-xs text-muted-foreground italic">
+                <div className="nds-text-caption nds-text-muted-foreground nds-italic">
                   "Clique aqui para salvar o documento atual no servidor."
                 </div>
               ),
@@ -451,8 +451,8 @@ interface TooltipContentProps {
                   />
                   <TooltipContent>
                     <span>{labelSaveBtn}</span>
-                    <kbd className={kbdClass}>Ctrl</kbd>
-                    <kbd className={kbdClass}>S</kbd>
+                    <kbd className="nds-kbd">Ctrl</kbd>
+                    <kbd className="nds-kbd">S</kbd>
                   </TooltipContent>
                 </Tooltip>
               ),
@@ -518,8 +518,8 @@ interface TooltipContentProps {
                   />
                   <TooltipContent>
                     <span>{labelSaveBtn}</span>
-                    <kbd className={kbdClass}>Ctrl</kbd>
-                    <kbd className={kbdClass}>S</kbd>
+                    <kbd className="nds-kbd">Ctrl</kbd>
+                    <kbd className="nds-kbd">S</kbd>
                   </TooltipContent>
                 </Tooltip>
               ),
@@ -528,9 +528,9 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.formFieldHelp.name"),
               description: tContent("variants.compositions.formFieldHelp.description"),
               useWhen: tContent("variants.compositions.formFieldHelp.use"),
-              code: `<div className="flex flex-col gap-2">
-  <div className="flex items-center gap-2">
-    <label htmlFor="api-token" className="text-sm font-medium">Token de API</label>
+              code: `<div className="nds-stack" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="xs">
+    <label htmlFor="api-token" className="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger
         render={(props) => (
@@ -539,17 +539,17 @@ interface TooltipContentProps {
           </Button>
         )}
       />
-      <TooltipContent side="right" className="max-w-xs">
+      <TooltipContent side="right" className="nds-max-w-xs">
         Cole o token gerado em Configurações &gt; Integrações.
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" className="input w-64" placeholder="sk-..." />
+  <input id="api-token" type="text" className="nds-input" style={{ width: "16rem" }} placeholder="sk-..." />
 </div>`,
               preview: (
-                <div className="flex flex-col gap-2 items-start">
-                  <div className="flex items-center gap-2">
-                    <label htmlFor="api-token-react-comp" className="text-sm font-medium">
+                <div className="nds-stack" data-spacing="xs" style={{ alignItems: "flex-start" }}>
+                  <div className="nds-cluster" data-spacing="xs">
+                    <label htmlFor="api-token-react-comp" className="nds-text-body nds-font-medium">
                       {locale === "en" ? "API Token" : locale === "es" ? "Token de API" : "Token de API"}
                     </label>
                     <Tooltip>
@@ -571,7 +571,7 @@ interface TooltipContentProps {
                           </Button>
                         )}
                       />
-                      <TooltipContent side="right" className="max-w-xs">
+                      <TooltipContent side="right" className="nds-max-w-xs">
                         {locale === "en"
                           ? "Paste the token generated in Settings > Integrations."
                           : locale === "es"
@@ -583,7 +583,8 @@ interface TooltipContentProps {
                   <input
                     id="api-token-react-comp"
                     type="text"
-                    className="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                    className="nds-input"
+                    style={{ width: "16rem" }}
                     placeholder="sk-..."
                   />
                 </div>
@@ -593,9 +594,9 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.metricDescription.name"),
               description: tContent("variants.compositions.metricDescription.description"),
               useWhen: tContent("variants.compositions.metricDescription.use"),
-              code: `<div className="flex flex-col gap-1">
-  <div className="flex items-center gap-2">
-    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+              code: `<div className="nds-stack" data-spacing="xs">
+  <div className="nds-cluster" data-spacing="xs">
+    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger
         render={(props) => (
@@ -604,17 +605,17 @@ interface TooltipContentProps {
           </Button>
         )}
       />
-      <TooltipContent side="top" className="max-w-xs">
+      <TooltipContent side="top" className="nds-max-w-xs">
         Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
       </TooltipContent>
     </Tooltip>
   </div>
-  <p className="text-2xl font-semibold">1.8s</p>
+  <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.8s</p>
 </div>`,
               preview: (
-                <div className="flex flex-col gap-1 items-start">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+                <div className="nds-stack" data-spacing="xs" style={{ alignItems: 'flex-start' }}>
+                  <div className="nds-cluster" data-spacing="xs">
+                    <p className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
                     <Tooltip>
                       <TooltipTrigger
                         render={(props) => (
@@ -634,7 +635,7 @@ interface TooltipContentProps {
                           </Button>
                         )}
                       />
-                      <TooltipContent side="top" className="max-w-xs">
+                      <TooltipContent side="top" className="nds-max-w-xs nds-whitespace-normal">
                         {locale === "en"
                           ? "Largest Contentful Paint — time until the largest visible element is rendered."
                           : locale === "es"
@@ -643,7 +644,7 @@ interface TooltipContentProps {
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <p className="text-2xl font-semibold">1.8s</p>
+                  <p className="nds-font-semibold" style={{ fontSize: '1.5rem', lineHeight: '2rem' }}>1.8s</p>
                 </div>
               ),
             },
@@ -651,7 +652,7 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.positioningSides.name"),
               description: tContent("variants.compositions.positioningSides.description"),
               useWhen: tContent("variants.compositions.positioningSides.use"),
-              code: `<div className="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+              code: `<div className="nds-grid nds-w-full" style={{ placeItems: "center", gap: "2rem" }}>
   {(["top", "right", "bottom", "left"] as const).map((side) => (
     <Tooltip key={side}>
       <TooltipTrigger
@@ -664,7 +665,7 @@ interface TooltipContentProps {
   ))}
 </div>`,
               preview: (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full" style={{ contain: "layout", minHeight: 140 }}>
+                <div className="nds-grid nds-w-full" style={{ contain: "layout", minHeight: 140, placeItems: "center", gap: "2rem" }}>
                   {(["top", "right", "bottom", "left"] as const).map((side) => (
                     <Tooltip key={side}>
                       <TooltipTrigger

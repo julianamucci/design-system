@@ -146,22 +146,22 @@ export function SwitchDocs() {
   const codeImportWithLabel = `import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";`;
 
-  const codeDefault = `<div className="flex items-center space-x-2">
+  const codeDefault = `<div className="nds-cluster" data-spacing="sm">
   <Switch id="notifications" />
   <Label htmlFor="notifications">Receber notificações por email</Label>
 </div>`;
 
-  const codeWithDescription = `<div className="flex items-center justify-between rounded-lg border p-4">
-  <div className="space-y-0.5">
+  const codeWithDescription = `<div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+  <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="marketing">Emails de marketing</Label>
-    <p className="text-sm text-muted-foreground">
+    <p className="nds-text-body nds-text-muted-foreground">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
   <Switch id="marketing" />
 </div>`;
 
-  const codeSm = `<div className="flex items-center space-x-2">
+  const codeSm = `<div className="nds-cluster" data-spacing="sm">
   <Switch id="airplane" size="sm" />
   <Label htmlFor="airplane">Modo avião</Label>
 </div>`;
@@ -217,8 +217,8 @@ import { Label } from "@/components/ui/label";`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full max-w-md flex flex-col gap-5">
-          <div className="flex items-center space-x-2">
+        <div className="nds-stack" data-spacing="sm">
+          <div className="nds-cluster" data-spacing="sm">
             <Switch
               id="demo-notifications"
               checked={demoNotifications}
@@ -229,12 +229,12 @@ import { Label } from "@/components/ui/label";`;
             </Label>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-4">
-            <div className="space-y-0.5 pr-4">
+          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+            <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
               <Label htmlFor="demo-marketing">
                 {tContent("demonstration.labels.marketing")}
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="nds-text-body nds-text-muted-foreground">
                 {tContent("demonstration.labels.marketingDesc")}
               </p>
             </div>
@@ -245,12 +245,12 @@ import { Label } from "@/components/ui/label";`;
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-4">
-            <div className="space-y-0.5 pr-4">
+          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+            <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
               <Label htmlFor="demo-darkmode">
                 {tContent("demonstration.labels.darkMode")}
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="nds-text-body nds-text-muted-foreground">
                 {tContent("demonstration.labels.darkModeDesc")}
               </p>
             </div>
@@ -261,14 +261,14 @@ import { Label } from "@/components/ui/label";`;
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="nds-cluster" data-spacing="sm">
             <Switch
               id="demo-sm"
               size="sm"
               checked={demoSm}
               onCheckedChange={setDemoSm}
             />
-            <Label htmlFor="demo-sm" className="text-xs">
+            <Label htmlFor="demo-sm" className="nds-text-caption">
               {tContent("demonstration.labels.sm")}
             </Label>
           </div>
@@ -371,13 +371,13 @@ import { Label } from "@/components/ui/label";`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="dodont-1-do" defaultChecked />
                 <Label htmlFor="dodont-1-do">Receber notificações por email</Label>
               </div>
             ),
             dontPreview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="dodont-1-dont" defaultChecked />
                 <Label htmlFor="dodont-1-dont">Notificações</Label>
               </div>
@@ -389,15 +389,15 @@ import { Label } from "@/components/ui/label";`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="dodont-2-do" />
                 <Label htmlFor="dodont-2-do">Modo escuro</Label>
               </div>
             ),
             dontPreview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="dodont-2-dont" />
-                <span className="text-sm font-medium">Modo escuro</span>
+                <span className="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
               </div>
             ),
             doCaption: tContent("doDont.pair2.do"),
@@ -422,7 +422,7 @@ import { Label } from "@/components/ui/label";`;
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="var-default" />
                 <Label htmlFor="var-default">Receber notificações por email</Label>
               </div>
@@ -433,10 +433,10 @@ import { Label } from "@/components/ui/label";`;
             description: stripHtml(tContent("variants.styles.withDescription")),
             code: codeWithDescription,
             preview: (
-              <div className="flex items-center justify-between w-80 rounded-lg border p-4">
-                <div className="space-y-0.5 pr-4">
+              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+                <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                   <Label htmlFor="var-marketing">Emails de marketing</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="nds-text-body nds-text-muted-foreground">
                     Receba novidades e promoções da plataforma.
                   </p>
                 </div>
@@ -449,9 +449,9 @@ import { Label } from "@/components/ui/label";`;
             description: stripHtml(tContent("variants.styles.sm")),
             code: codeSm,
             preview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="var-sm" size="sm" />
-                <Label htmlFor="var-sm" className="text-xs">
+                <Label htmlFor="var-sm" className="nds-text-caption">
                   Modo avião
                 </Label>
               </div>
@@ -470,13 +470,13 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
-            code: `<div className="flex items-center space-x-2">\n  <Switch id="sw-email" />\n  <Label htmlFor="sw-email" className="text-sm font-medium leading-none cursor-pointer">\n    Receber notificações por email\n  </Label>\n</div>`,
+            code: `<div className="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label htmlFor="sw-email" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">\n    Receber notificações por email\n  </Label>\n</div>`,
             preview: (
-              <div className="flex items-center space-x-2">
+              <div className="nds-cluster" data-spacing="sm">
                 <Switch id="sw-email" />
                 <Label
                   htmlFor="sw-email"
-                  className="text-sm font-medium leading-none cursor-pointer"
+                  className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
                 >
                   Receber notificações por email
                 </Label>
@@ -487,12 +487,12 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.withDescription.name"),
             description: tContent("variants.compositions.withDescription.description"),
             useWhen: tContent("variants.compositions.withDescription.use"),
-            code: `<div className="flex items-center justify-between rounded-lg border p-3 w-80">\n  <div className="flex flex-col gap-0.5 pr-3">\n    <Label htmlFor="sw-marketing">Emails de marketing</Label>\n    <p className="text-sm text-muted-foreground">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id="sw-marketing" defaultChecked />\n</div>`,
+            code: `<div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>\n  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n    <Label htmlFor="sw-marketing">Emails de marketing</Label>\n    <p className="nds-text-body nds-text-muted-foreground">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id="sw-marketing" defaultChecked />\n</div>`,
             preview: (
-              <div className="flex items-center justify-between rounded-lg border p-3 w-80">
-                <div className="flex flex-col gap-0.5 pr-3">
+              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+                <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                   <Label htmlFor="sw-marketing">Emails de marketing</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="nds-text-body nds-text-muted-foreground">
                     Receba novidades e promoções da plataforma.
                   </p>
                 </div>
@@ -504,32 +504,32 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.settingsList.name"),
             description: tContent("variants.compositions.settingsList.description"),
             useWhen: tContent("variants.compositions.settingsList.use"),
-            code: `<div className="space-y-2 w-96">\n  <p className="text-sm font-semibold mb-3">Preferências de notificação</p>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="flex items-center justify-between rounded-lg border p-3">\n    <div className="flex flex-col gap-0.5 pr-3">\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
+            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "24rem" }}>\n  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="nds-text-body nds-text-muted-foreground">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="nds-text-body nds-text-muted-foreground">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="nds-text-body nds-text-muted-foreground">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
             preview: (
-              <div className="space-y-2 w-96">
-                <p className="text-sm font-semibold mb-3">Preferências de notificação</p>
-                <div className="flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex flex-col gap-0.5 pr-3">
+              <div className="nds-stack" data-spacing="sm" style={{ width: "24rem" }}>
+                <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                     <Label htmlFor="pref-email">Receber novidades por email</Label>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="nds-text-body nds-text-muted-foreground">
                       Resumo semanal sobre o produto.
                     </p>
                   </div>
                   <Switch id="pref-email" defaultChecked />
                 </div>
-                <div className="flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex flex-col gap-0.5 pr-3">
+                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                     <Label htmlFor="pref-push">Receber notificações push</Label>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="nds-text-body nds-text-muted-foreground">
                       Alertas no dispositivo em tempo real.
                     </p>
                   </div>
                   <Switch id="pref-push" />
                 </div>
-                <div className="flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex flex-col gap-0.5 pr-3">
+                <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+                  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                     <Label htmlFor="pref-sms">Alertas por SMS</Label>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="nds-text-body nds-text-muted-foreground">
                       Eventos críticos via mensagem de texto.
                     </p>
                   </div>
@@ -542,13 +542,13 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.inForm.name"),
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),
-            code: `<form className="flex flex-col gap-3 w-80" onSubmit={(e) => e.preventDefault()}>\n  <div className="flex items-center space-x-2">\n    <Switch id="sw-form-newsletter" name="newsletter" defaultChecked />\n    <Label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
+            code: `<form className="nds-stack nds-w-sm" data-spacing="sm" onSubmit={(e) => e.preventDefault()}>\n  <div className="nds-cluster" data-spacing="sm">\n    <Switch id="sw-form-newsletter" name="newsletter" defaultChecked />\n    <Label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
             preview: (
               <form
-                className="flex flex-col gap-3 w-80"
+                className="nds-stack nds-w-sm" data-spacing="sm"
                 onSubmit={(e) => e.preventDefault()}
               >
-                <div className="flex items-center space-x-2">
+                <div className="nds-cluster" data-spacing="sm">
                   <Switch id="sw-form-newsletter" name="newsletter" defaultChecked />
                   <Label htmlFor="sw-form-newsletter">Aceitar newsletter semanal</Label>
                 </div>

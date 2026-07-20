@@ -148,13 +148,14 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
         }
       >
         <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
-        <SheetContent side="right" className="w-[400px] sm:w-[420px]">
+        <SheetContent side="right" style={{ width: '420px' }}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
           </SheetHeader>
           <form
-            className="grid gap-4 px-4"
+            className="nds-grid nds-px-4"
+            data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
               track("dialog_confirm", {
@@ -164,11 +165,11 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
               });
             }}
           >
-            <div className="grid gap-2">
+            <div className="nds-grid" data-spacing="xs">
               <Label htmlFor="docs-sheet-category">Categoria</Label>
               <Input id="docs-sheet-category" defaultValue="Eletrônicos" />
             </div>
-            <div className="grid gap-2">
+            <div className="nds-grid" data-spacing="xs">
               <Label htmlFor="docs-sheet-min">Preço mínimo</Label>
               <Input id="docs-sheet-min" type="number" defaultValue="100" />
             </div>
@@ -297,7 +298,7 @@ export function SheetDocs() {
       }
     >
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="nds-cluster" data-justify="center" data-spacing="sm" style={{ flexWrap: "wrap" }}>
           <SheetDemo
             trigger={tContent("demonstration.labels.trigger")}
             title={tContent("demonstration.labels.title")}
@@ -437,12 +438,12 @@ export function SheetDocs() {
                   <SheetContent side="right">
                     {/* Sem Title/Description — exemplo do "Don't" */}
                     <SheetHeader>
-                      <SheetTitle className="sr-only">Sem título visível</SheetTitle>
-                      <SheetDescription className="sr-only">
+                      <SheetTitle className="nds-sr-only">Sem título visível</SheetTitle>
+                      <SheetDescription className="nds-sr-only">
                         Sem descrição visível
                       </SheetDescription>
                     </SheetHeader>
-                    <p className="px-4 text-sm text-muted-foreground">
+                    <p className="nds-px-4 nds-text-body nds-text-muted-foreground">
                       Conteúdo sem cabeçalho — leitores de tela perdem contexto.
                     </p>
                   </SheetContent>
@@ -567,12 +568,12 @@ export function SheetDocs() {
             useWhen: tContent("variants.compositions.advancedFilters.use"),
             code: `<Sheet>
   <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
-  <SheetContent side="right" className="w-[400px] sm:w-[420px]">
+  <SheetContent side="right" style={{ width: '420px' }}>
     <SheetHeader>
       <SheetTitle>Filtros avançados</SheetTitle>
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
-    <form className="grid gap-4 px-4">
+    <form className="nds-grid nds-px-4" data-spacing="md">
       <Label htmlFor="cat">Categoria</Label>
       <Input id="cat" defaultValue="Eletrônicos" />
       <Label htmlFor="min">Preço mínimo</Label>
@@ -606,11 +607,11 @@ export function SheetDocs() {
       <SheetTitle>Menu</SheetTitle>
       <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
     </SheetHeader>
-    <nav aria-label="Navegação secundária" className="flex flex-col gap-1 px-4">
-      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
-      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
-      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
-      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+    <nav aria-label="Navegação secundária" className="nds-stack nds-px-4" data-spacing="xs">
+      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Dashboard</a>
+      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Projetos</a>
+      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Equipe</a>
+      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Configurações</a>
     </nav>
   </SheetContent>
 </Sheet>`,
@@ -623,11 +624,11 @@ export function SheetDocs() {
                       <SheetTitle>Menu</SheetTitle>
                       <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
                     </SheetHeader>
-                    <nav aria-label="Navegação secundária" className="flex flex-col gap-1 px-4">
-                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Dashboard</a>
-                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Projetos</a>
-                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Equipe</a>
-                      <a href="#" className="px-3 py-2 rounded-md text-sm hover:bg-accent">Configurações</a>
+                    <nav aria-label="Navegação secundária" className="nds-stack nds-px-4" data-spacing="xs">
+                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Dashboard</a>
+                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Projetos</a>
+                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Equipe</a>
+                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Configurações</a>
                     </nav>
                   </SheetContent>
                 </Sheet>
@@ -645,10 +646,10 @@ export function SheetDocs() {
       <SheetTitle>Ações rápidas</SheetTitle>
       <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
     </SheetHeader>
-    <div className="grid grid-cols-3 gap-3 px-4 text-sm">
-      <button type="button" className="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
-      <button type="button" className="p-3 rounded-md border hover:bg-accent">Editar</button>
-      <button type="button" className="p-3 rounded-md border hover:bg-accent">Excluir</button>
+    <div className="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
+      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Compartilhar</button>
+      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Editar</button>
+      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Excluir</button>
     </div>
   </SheetContent>
 </Sheet>`,
@@ -661,10 +662,10 @@ export function SheetDocs() {
                       <SheetTitle>Ações rápidas</SheetTitle>
                       <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
                     </SheetHeader>
-                    <div className="grid grid-cols-3 gap-3 px-4 text-sm">
-                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Compartilhar</button>
-                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Editar</button>
-                      <button type="button" className="p-3 rounded-md border hover:bg-accent">Excluir</button>
+                    <div className="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
+                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Compartilhar</button>
+                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Editar</button>
+                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Excluir</button>
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -682,7 +683,7 @@ export function SheetDocs() {
       <SheetTitle>Termos de uso</SheetTitle>
       <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
     </SheetHeader>
-    <div className="space-y-3 px-4 text-sm text-muted-foreground">
+    <div className="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
       {/* parágrafos longos — body rola, footer fixo */}
     </div>
     <SheetFooter>
@@ -700,7 +701,7 @@ export function SheetDocs() {
                       <SheetTitle>Termos de uso</SheetTitle>
                       <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
                     </SheetHeader>
-                    <div className="space-y-3 px-4 text-sm text-muted-foreground">
+                    <div className="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
                       {Array.from({ length: 12 }).map((_, i) => (
                         <p key={i}>Parágrafo {i + 1}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
                       ))}

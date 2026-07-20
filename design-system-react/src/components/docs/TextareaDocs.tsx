@@ -150,7 +150,7 @@ export function TextareaDocs() {
   const codeImportBasic = `import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";`;
 
-  const codeDefault = `<div className="space-y-2">
+  const codeDefault = `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="bio">Biografia</Label>
   <Textarea
     id="bio"
@@ -162,7 +162,7 @@ import { Label } from "@/components/ui/label";`;
   const codeWithCounter = `const [value, setValue] = useState('');
 const max = 500;
 
-<div className="space-y-2">
+<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="description">Descrição</Label>
   <Textarea
     id="description"
@@ -172,7 +172,7 @@ const max = 500;
     className="resize-y min-h-[120px]"
     maxLength={max}
   />
-  <div className="flex justify-between text-xs text-muted-foreground">
+  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
     <span>Descreva com clareza.</span>
     <span
       aria-live="polite"
@@ -183,7 +183,7 @@ const max = 500;
   </div>
 </div>`;
 
-  const codeNoResize = `<div className="space-y-2">
+  const codeNoResize = `<div className="nds-stack" data-spacing="sm">
   <Label htmlFor="feedback">Feedback</Label>
   <Textarea
     id="feedback"
@@ -245,9 +245,9 @@ function Textarea({
     >
       {/* ── Demonstração ────────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full max-w-md flex flex-col gap-6">
+        <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
           {/* Default */}
-          <div className="space-y-2">
+          <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="demo-description">
               {tContent("demonstration.labels.descriptionLabel")}
             </Label>
@@ -260,7 +260,7 @@ function Textarea({
               maxLength={demoMax}
               aria-describedby="demo-description-help"
             />
-            <div className="flex justify-between text-xs text-muted-foreground">
+            <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
               <span id="demo-description-help">
                 {tContent("demonstration.labels.descriptionHelp")}
               </span>
@@ -274,7 +274,7 @@ function Textarea({
           </div>
 
           {/* Bio — sem contador */}
-          <div className="space-y-2">
+          <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="demo-bio">
               {tContent("demonstration.labels.bioLabel")}
             </Label>
@@ -288,7 +288,7 @@ function Textarea({
           </div>
 
           {/* Feedback — resize-none */}
-          <div className="space-y-2">
+          <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="demo-feedback">
               {tContent("demonstration.labels.feedbackLabel")}
             </Label>
@@ -299,7 +299,7 @@ function Textarea({
               placeholder={tContent("demonstration.labels.feedbackPlaceholder")}
               className="resize-none min-h-[120px]"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.noResize")}
             </p>
           </div>
@@ -403,7 +403,7 @@ function Textarea({
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="dodont-1-do">Descrição</Label>
                 <Textarea
                   id="dodont-1-do"
@@ -412,7 +412,7 @@ function Textarea({
                   maxLength={500}
                   defaultValue="Camiseta de algodão, gola redonda, manga curta."
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
                   <span>Descreva com clareza.</span>
                   <span aria-live="polite" aria-label={counterLabel(48, 500)}>
                     48/500
@@ -421,7 +421,7 @@ function Textarea({
               </div>
             ),
             dontPreview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="dodont-1-dont">Descrição</Label>
                 <Textarea
                   id="dodont-1-dont"
@@ -439,7 +439,7 @@ function Textarea({
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="dodont-2-do">Biografia</Label>
                 <Textarea
                   id="dodont-2-do"
@@ -449,7 +449,7 @@ function Textarea({
               </div>
             ),
             dontPreview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="dodont-2-dont">Biografia</Label>
                 <Textarea
                   id="dodont-2-dont"
@@ -479,7 +479,7 @@ function Textarea({
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="var-default">Biografia</Label>
                 <Textarea
                   id="var-default"
@@ -494,7 +494,7 @@ function Textarea({
             description: stripHtml(tContent("variants.styles.withCounter")),
             code: codeWithCounter,
             preview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="var-counter">Descrição</Label>
                 <Textarea
                   id="var-counter"
@@ -503,7 +503,7 @@ function Textarea({
                   maxLength={500}
                   defaultValue="Camiseta de algodão, gola redonda."
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
                   <span>Descreva com clareza.</span>
                   <span aria-live="polite" aria-label={counterLabel(33, 500)}>
                     33/500
@@ -517,7 +517,7 @@ function Textarea({
             description: stripHtml(tContent("variants.styles.noResize")),
             code: codeNoResize,
             preview: (
-              <div className="w-full space-y-2">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
                 <Label htmlFor="var-noresize">Feedback</Label>
                 <Textarea
                   id="var-noresize"
@@ -540,7 +540,7 @@ function Textarea({
             name: tContent("variants.compositions.withLabel.name"),
             description: tContent("variants.compositions.withLabel.description"),
             useWhen: tContent("variants.compositions.withLabel.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+            code: `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
   <Label htmlFor="ta-label">Descrição</Label>
   <Textarea
     id="ta-label"
@@ -549,7 +549,7 @@ function Textarea({
   />
 </div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-md">
+              <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
                 <Label htmlFor="comp-ta-label">Descrição</Label>
                 <Textarea
                   id="comp-ta-label"
@@ -563,26 +563,26 @@ function Textarea({
             name: tContent("variants.compositions.withHint.name"),
             description: tContent("variants.compositions.withHint.description"),
             useWhen: tContent("variants.compositions.withHint.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+            code: `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
   <Label htmlFor="ta-hint">Descrição</Label>
   <Textarea
     id="ta-hint"
     className="resize-y min-h-[120px]"
     placeholder="ex: Descreva o produto..."
   />
-  <p className="text-xs text-muted-foreground">
+  <p className="nds-text-caption nds-text-muted-foreground">
     Descreva o produto com clareza, destacando os principais atributos.
   </p>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-md">
+              <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
                 <Label htmlFor="comp-ta-hint">Descrição</Label>
                 <Textarea
                   id="comp-ta-hint"
                   className="resize-y min-h-[120px]"
                   placeholder="ex: Descreva o produto..."
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="nds-text-caption nds-text-muted-foreground">
                   Descreva o produto com clareza, destacando os principais atributos.
                 </p>
               </div>
@@ -594,7 +594,7 @@ function Textarea({
             useWhen: tContent("variants.compositions.withCounter.use"),
             code: `const [value, setValue] = useState("");
 
-<div className="flex flex-col gap-1.5 w-full max-w-md">
+<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
   <Label htmlFor="ta-counter">Descrição</Label>
   <Textarea
     id="ta-counter"
@@ -604,10 +604,10 @@ function Textarea({
     value={value}
     onChange={(e) => setValue(e.target.value)}
   />
-  <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
     <span>Descreva o produto com clareza.</span>
     <span
-      className="tabular-nums shrink-0"
+      className="tabular-nums nds-shrink-0"
       aria-live="polite"
       aria-label={\`\${value.length} de 500 caracteres usados\`}
     >
@@ -616,7 +616,7 @@ function Textarea({
   </div>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-md">
+              <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
                 <Label htmlFor="comp-ta-counter">Descrição</Label>
                 <Textarea
                   id="comp-ta-counter"
@@ -626,10 +626,10 @@ function Textarea({
                   value={compCounter}
                   onChange={(e) => setCompCounter(e.target.value)}
                 />
-                <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+                <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
                   <span>Descreva o produto com clareza.</span>
                   <span
-                    className="tabular-nums shrink-0"
+                    className="tabular-nums nds-shrink-0"
                     aria-live="polite"
                     aria-label={counterLabel(compCounter.length, 500)}
                   >
@@ -643,7 +643,7 @@ function Textarea({
             name: tContent("variants.compositions.withError.name"),
             description: tContent("variants.compositions.withError.description"),
             useWhen: tContent("variants.compositions.withError.use"),
-            code: `<div className="flex flex-col gap-1.5 w-full max-w-md">
+            code: `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
   <Label htmlFor="ta-error">Descrição</Label>
   <Textarea
     id="ta-error"
@@ -652,12 +652,12 @@ function Textarea({
     aria-invalid="true"
     aria-describedby="ta-error-error"
   />
-  <p className="text-xs text-destructive" id="ta-error-error">
+  <p className="nds-text-caption nds-text-destructive" id="ta-error-error">
     A descrição é obrigatória e deve ter pelo menos 20 caracteres.
   </p>
 </div>`,
             preview: (
-              <div className="flex flex-col gap-1.5 w-full max-w-md">
+              <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
                 <Label htmlFor="comp-ta-error">Descrição</Label>
                 <Textarea
                   id="comp-ta-error"
@@ -666,7 +666,7 @@ function Textarea({
                   aria-invalid="true"
                   aria-describedby="comp-ta-error-error"
                 />
-                <p className="text-xs text-destructive" id="comp-ta-error-error">
+                <p className="nds-text-caption nds-text-destructive" id="comp-ta-error-error">
                   A descrição é obrigatória e deve ter pelo menos 20 caracteres.
                 </p>
               </div>
@@ -679,14 +679,14 @@ function Textarea({
             code: `const [value, setValue] = useState("");
 
 <form
-  className="flex flex-col gap-4 w-full max-w-md"
+  className="nds-stack nds-w-full nds-max-w-md" data-spacing="md"
   aria-label="Formulário de feedback"
   onSubmit={(e) => {
     e.preventDefault();
     // submit value
   }}
 >
-  <div className="flex flex-col gap-1.5">
+  <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="ta-form">Feedback</Label>
     <Textarea
       id="ta-form"
@@ -697,10 +697,10 @@ function Textarea({
       value={value}
       onChange={(e) => setValue(e.target.value)}
     />
-    <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+    <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
       <span>Seja específico para ajudarmos melhor.</span>
       <span
-        className="tabular-nums shrink-0"
+        className="tabular-nums nds-shrink-0"
         aria-live="polite"
         aria-label={\`\${value.length} de 280 caracteres usados\`}
       >
@@ -712,14 +712,14 @@ function Textarea({
 </form>`,
             preview: (
               <form
-                className="flex flex-col gap-4 w-full max-w-md"
+                className="nds-stack nds-w-full nds-max-w-md" data-spacing="md"
                 aria-label="Formulário de feedback"
                 onSubmit={(e) => {
                   e.preventDefault();
                   setCompFormResult(compForm.trim() ? `Enviado: "${compForm}"` : "Digite algo antes de enviar.");
                 }}
               >
-                <div className="flex flex-col gap-1.5">
+                <div className="nds-stack" data-spacing="xs">
                   <Label htmlFor="comp-ta-form">Feedback</Label>
                   <Textarea
                     id="comp-ta-form"
@@ -730,10 +730,10 @@ function Textarea({
                     value={compForm}
                     onChange={(e) => setCompForm(e.target.value)}
                   />
-                  <div className="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+                  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
                     <span>Seja específico para ajudarmos melhor.</span>
                     <span
-                      className="tabular-nums shrink-0"
+                      className="tabular-nums nds-shrink-0"
                       aria-live="polite"
                       aria-label={counterLabel(compForm.length, 280)}
                     >
@@ -743,7 +743,7 @@ function Textarea({
                 </div>
                 <Button type="submit">Enviar</Button>
                 {compFormResult && (
-                  <p className="text-xs text-muted-foreground" aria-live="polite">
+                  <p className="nds-text-caption nds-text-muted-foreground" aria-live="polite">
                     {compFormResult}
                   </p>
                 )}

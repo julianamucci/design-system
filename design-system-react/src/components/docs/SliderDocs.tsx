@@ -85,10 +85,10 @@ const getNavGroups = (t: (key: string) => string) => [
 function VolumeDemo({ label }: { label: string }) {
   const [value, setValue] = useState<number[]>([50]);
   return (
-    <div className="space-y-3 w-full">
-      <div className="flex items-center justify-between">
+    <div className="nds-stack nds-w-full" data-spacing="xs">
+      <div className="nds-cluster" data-justify="between">
         <Label>{label}</Label>
-        <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
           {value[0]}%
         </span>
       </div>
@@ -106,10 +106,10 @@ function VolumeDemo({ label }: { label: string }) {
 function PriceRangeDemo({ label }: { label: string }) {
   const [value, setValue] = useState<number[]>([100, 400]);
   return (
-    <div className="space-y-3 w-full">
-      <div className="flex items-center justify-between">
+    <div className="nds-stack nds-w-full" data-spacing="sm">
+      <div className="nds-cluster" data-justify="between">
         <Label>{label}</Label>
-        <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
           R$ {value[0]} — R$ {value[1]}
         </span>
       </div>
@@ -128,8 +128,8 @@ function PriceRangeDemo({ label }: { label: string }) {
 function VerticalDemo({ label }: { label: string }) {
   const [value, setValue] = useState<number[]>([60]);
   return (
-    <div className="flex flex-col items-center gap-3 h-40 w-32">
-      <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+    <div className="nds-stack" data-spacing="sm" style={{ alignItems: "center", height: "10rem", width: "8rem" }}>
+      <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
         {value[0]}%
       </span>
       <Slider
@@ -147,10 +147,10 @@ function VerticalDemo({ label }: { label: string }) {
 function BrightnessCompDemo() {
   const [value, setValue] = useState<number[]>([75]);
   return (
-    <div className="space-y-3 w-full max-w-xs">
-      <div className="flex items-center justify-between">
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+      <div className="nds-cluster" data-justify="between">
         <Label>Brilho</Label>
-        <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
           {value[0]}%
         </span>
       </div>
@@ -172,16 +172,16 @@ function FormCompDemo() {
   return (
     <form
       aria-label="Configurações de áudio"
-      className="flex flex-col gap-4 w-full max-w-xs"
+      className="nds-stack nds-w-full nds-max-w-xs" data-spacing="md"
       onSubmit={(e) => {
         e.preventDefault();
         setCommitted(value[0]);
       }}
     >
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="nds-stack" data-spacing="sm">
+        <div className="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" className="text-sm tabular-nums text-foreground">
+          <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
             {value[0]}%
           </span>
         </div>
@@ -194,8 +194,8 @@ function FormCompDemo() {
           aria-label="Volume"
         />
       </div>
-      <Button type="submit" size="sm" className="self-start">Salvar</Button>
-      <p className="text-xs text-muted-foreground" aria-live="polite">
+      <Button type="submit" size="sm" style={{ alignSelf: "flex-start" }}>Salvar</Button>
+      <p className="nds-text-caption nds-text-muted-foreground" aria-live="polite">
         Último commit: {committed}%
       </p>
     </form>
@@ -270,7 +270,7 @@ export function SliderDocs() {
   aria-label="Faixa de preço"
 />`;
 
-  const codeVertical = `<div className="h-40">
+  const codeVertical = `<div style={{ height: "10rem" }}>
   <Slider
     value={[60]}
     onValueChange={setValue}
@@ -312,21 +312,21 @@ interface SliderProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          <div className="p-4 border rounded-md">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+          <div className="nds-p-4 nds-border-default nds-rounded-md">
             <VolumeDemo label={tContent("demonstration.labels.volume")} />
           </div>
-          <div className="p-4 border rounded-md">
+          <div className="nds-p-4 nds-border-default nds-rounded-md">
             <PriceRangeDemo label={tContent("demonstration.labels.priceRange")} />
           </div>
-          <div className="p-4 border rounded-md flex justify-center">
+          <div className="nds-p-4 nds-border-default nds-rounded-md nds-cluster" data-justify="center">
             <VerticalDemo label={tContent("demonstration.labels.brightness")} />
           </div>
-          <div className="p-4 border rounded-md">
-            <div className="space-y-3 w-full">
-              <div className="flex items-center justify-between">
+          <div className="nds-p-4 nds-border-default nds-rounded-md">
+            <div className="nds-stack nds-w-full" data-spacing="sm">
+              <div className="nds-cluster" data-justify="between">
                 <Label>{tContent("demonstration.labels.single")}</Label>
-                <span aria-live="polite" className="text-sm tabular-nums">
+                <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
                   25
                 </span>
               </div>
@@ -439,10 +439,10 @@ interface SliderProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Volume</span>
-                  <span aria-live="polite" className="text-sm tabular-nums">
+              <div className="nds-stack nds-w-full" data-spacing="sm">
+                <div className="nds-cluster" data-justify="between">
+                  <span className="nds-text-body">Volume</span>
+                  <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
                     75%
                   </span>
                 </div>
@@ -450,7 +450,7 @@ interface SliderProps {
               </div>
             ),
             dontPreview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Slider defaultValue={[75]} min={0} max={100} aria-label="Volume" />
               </div>
             ),
@@ -461,12 +461,12 @@ interface SliderProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
               </div>
             ),
             dontPreview: (
-              <div className="w-full">
+              <div className="nds-w-full">
                 <Slider defaultValue={[50]} min={0} max={100} aria-label="Slider" />
               </div>
             ),
@@ -489,7 +489,7 @@ interface SliderProps {
             description: stripHtml(tContent("variants.styles.single")),
             code: codeSingle,
             preview: (
-              <div className="w-full max-w-xs">
+              <div className="nds-w-full nds-max-w-xs">
                 <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
               </div>
             ),
@@ -499,7 +499,7 @@ interface SliderProps {
             description: stripHtml(tContent("variants.styles.range")),
             code: codeRange,
             preview: (
-              <div className="w-full max-w-xs">
+              <div className="nds-w-full nds-max-w-xs">
                 <Slider
                   defaultValue={[20, 80]}
                   min={0}
@@ -514,7 +514,7 @@ interface SliderProps {
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="flex justify-center w-full h-40">
+              <div className="nds-cluster nds-w-full" data-justify="center" style={{ height: "10rem" }}>
                 <Slider
                   defaultValue={[60]}
                   orientation="vertical"
@@ -540,10 +540,10 @@ interface SliderProps {
             useWhen: tContent("variants.compositions.volume.use"),
             code: `const [value, setValue] = useState([50]);
 
-<div className="space-y-3">
-  <div className="flex items-center justify-between">
+<div className="nds-stack" data-spacing="sm">
+  <div className="nds-cluster" data-justify="between">
     <Label>Volume</Label>
-    <span aria-live="polite" className="text-sm tabular-nums">{value[0]}%</span>
+    <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>{value[0]}%</span>
   </div>
   <Slider
     value={value}
@@ -575,10 +575,10 @@ interface SliderProps {
             useWhen: tContent("variants.compositions.priceRange.use"),
             code: `const [range, setRange] = useState([100, 400]);
 
-<div className="space-y-3">
-  <div className="flex items-center justify-between">
+<div className="nds-stack" data-spacing="sm">
+  <div className="nds-cluster" data-justify="between">
     <Label>Faixa de preço</Label>
-    <span aria-live="polite" className="text-sm tabular-nums">
+    <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
       R$ {range[0]} — R$ {range[1]}
     </span>
   </div>
