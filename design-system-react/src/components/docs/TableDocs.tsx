@@ -213,7 +213,7 @@ export function TableDocs() {
 </Table>`;
 
   const codeSrOnlyCaption = `<Table>
-  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
@@ -235,14 +235,14 @@ export function TableDocs() {
 </Table>`;
 
   const codeWithActions = `<Table>
-  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
       <TableHead scope="col">Valor</TableHead>
-      <TableHead scope="col"><span className="sr-only">Ações</span></TableHead>
+      <TableHead scope="col"><span className="nds-sr-only">Ações</span></TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
@@ -267,7 +267,7 @@ export function TableDocs() {
 </Table>`;
 
   const codeEmpty = `<Table>
-  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
@@ -280,7 +280,7 @@ export function TableDocs() {
     <TableRow>
       <TableCell
         colSpan={4}
-        className="h-24 text-center text-muted-foreground"
+        className="nds-text-muted-foreground" style={{ height: "6rem", textAlign: "center" }}
       >
         Nenhum dado encontrado.
       </TableCell>
@@ -335,9 +335,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
     >
       {/* ── Demonstração ─────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="w-full">
+        <div className="nds-w-full">
           <Table>
-            <TableCaption className="sr-only">
+            <TableCaption className="nds-sr-only">
               {tContent("demonstration.labels.caption")}
             </TableCaption>
             <TableHeader>
@@ -345,7 +345,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 <TableHead scope="col">{tContent("demonstration.labels.invoice")}</TableHead>
                 <TableHead scope="col">{tContent("demonstration.labels.status")}</TableHead>
                 <TableHead scope="col">{tContent("demonstration.labels.method")}</TableHead>
-                <TableHead scope="col" className="text-right">
+                <TableHead scope="col" style={{ textAlign: "right" }}>
                   {tContent("demonstration.labels.amount")}
                 </TableHead>
               </TableRow>
@@ -353,17 +353,17 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             <TableBody>
               {invoices.map((invoice) => (
                 <TableRow key={invoice.id}>
-                  <TableCell className="font-medium">{invoice.id}</TableCell>
+                  <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                   <TableCell>{invoice.status}</TableCell>
                   <TableCell>{invoice.method}</TableCell>
-                  <TableCell className="text-right">{invoice.amount}</TableCell>
+                  <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>{tContent("demonstration.labels.total")}</TableCell>
-                <TableCell className="text-right">
+                <TableCell style={{ textAlign: "right" }}>
                   {tContent("demonstration.labels.totalAmount")}
                 </TableCell>
               </TableRow>
@@ -479,9 +479,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
@@ -498,7 +498,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
               </div>
             ),
             dontPreview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -522,9 +522,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
@@ -535,7 +535,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                     <TableRow>
                       <TableCell
                         colSpan={2}
-                        className="h-16 text-center text-muted-foreground"
+                        className="nds-text-muted-foreground" style={{ height: "4rem", textAlign: "center" }}
                       >
                         Nenhuma fatura encontrada.
                       </TableCell>
@@ -545,9 +545,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
               </div>
             ),
             dontPreview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
@@ -580,7 +580,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.basic.description")),
             code: codeBasic,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
                   <TableCaption>Lista de faturas recentes</TableCaption>
                   <TableHeader>
@@ -588,16 +588,16 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -610,7 +610,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.withFooter.description")),
             code: codeWithFooter,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
                   <TableCaption>Lista de faturas recentes</TableCaption>
                   <TableHeader>
@@ -618,23 +618,23 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow>
                       <TableCell colSpan={3}>Total</TableCell>
-                      <TableCell className="text-right">R$ 1.400,00</TableCell>
+                      <TableCell style={{ textAlign: "right" }}>R$ 1.400,00</TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
@@ -646,24 +646,24 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.withSrOnlyCaption.description")),
             code: codeSrOnlyCaption,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -676,27 +676,27 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.withInlineActions.description")),
             code: codeWithActions,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
-                      <TableHead scope="col" className="w-10">
-                        <span className="sr-only">Ações</span>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" style={{ width: "2.5rem" }}>
+                        <span className="nds-sr-only">Ações</span>
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                         <TableCell>
                           <Button
                             variant="ghost"
@@ -718,22 +718,22 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             description: stripHtml(tContent("variants.withEmptyState.description")),
             code: codeEmpty,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+                  <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        className="h-24 text-center text-muted-foreground"
+                        className="nds-text-muted-foreground" style={{ height: "6rem", textAlign: "center" }}
                       >
                         Nenhum dado encontrado.
                       </TableCell>
@@ -756,21 +756,21 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             name: tContent("variants.compositions.filterableToolbar.name"),
             description: tContent("variants.compositions.filterableToolbar.description"),
             useWhen: tContent("variants.compositions.filterableToolbar.use"),
-            code: `<div className="flex flex-col gap-3">
-  <div className="flex items-center gap-2">
-    <div className="relative w-full max-w-sm">
-      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-      <Input placeholder="Filtrar faturas..." className="pl-8" />
+            code: `<div className="nds-stack" data-spacing="sm">
+  <div className="nds-cluster" data-align="center" data-spacing="sm">
+    <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
+      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+      <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
     </div>
     <Button variant="outline">Status</Button>
   </div>
   <Table>
-    <TableCaption className="sr-only">Lista de faturas filtráveis</TableCaption>
+    <TableCaption className="nds-sr-only">Lista de faturas filtráveis</TableCaption>
     <TableHeader>
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
         <TableHead scope="col">Status</TableHead>
-        <TableHead scope="col" className="text-right">Valor</TableHead>
+        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -778,37 +778,37 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         <TableRow key={invoice.id}>
           <TableCell>{invoice.id}</TableCell>
           <TableCell>{invoice.status}</TableCell>
-          <TableCell className="text-right">{invoice.amount}</TableCell>
+          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
         </TableRow>
       ))}
     </TableBody>
   </Table>
 </div>`,
             preview: (
-              <div className="w-full flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="relative w-full max-w-sm">
-                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    <Input placeholder="Filtrar faturas..." className="pl-8" />
+              <div className="nds-w-full nds-stack" data-spacing="sm">
+                <div className="nds-cluster" data-align="center" data-spacing="sm">
+                  <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+                    <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
                   </div>
                   <Button variant="outline">Status</Button>
                 </div>
-                <div className="w-full overflow-x-auto">
+                <div className="nds-w-full nds-overflow-x">
                   <Table>
-                    <TableCaption className="sr-only">Lista de faturas filtráveis</TableCaption>
+                    <TableCaption className="nds-sr-only">Lista de faturas filtráveis</TableCaption>
                     <TableHeader>
                       <TableRow>
                         <TableHead scope="col">Fatura</TableHead>
                         <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" className="text-right">Valor</TableHead>
+                        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {invoices.slice(0, 3).map((invoice) => (
                         <TableRow key={invoice.id}>
-                          <TableCell className="font-medium">{invoice.id}</TableCell>
+                          <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                           <TableCell>{invoice.status}</TableCell>
-                          <TableCell className="text-right">{invoice.amount}</TableCell>
+                          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -825,13 +825,13 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <TableHeader>
     <TableRow>
       <TableHead scope="col" aria-sort="ascending">
-        <Button variant="ghost" size="sm" className="-ml-2">
+        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
           Fatura
           <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
         </Button>
       </TableHead>
       <TableHead scope="col" aria-sort="none">
-        <Button variant="ghost" size="sm" className="-ml-2">
+        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
           Valor
           <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
         </Button>
@@ -841,25 +841,25 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <TableBody>{/* rows */}</TableBody>
 </Table>`,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Faturas ordenáveis</TableCaption>
+                  <TableCaption className="nds-sr-only">Faturas ordenáveis</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col" aria-sort="ascending">
-                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Fatura
                           <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none">
-                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Status
                           <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
                         </Button>
                       </TableHead>
-                      <TableHead scope="col" aria-sort="none" className="text-right">
-                        <Button variant="ghost" size="sm" className="-ml-2 h-8">
+                      <TableHead scope="col" aria-sort="none" style={{ textAlign: "right" }}>
+                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Valor
                           <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
                         </Button>
@@ -869,9 +869,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                   <TableBody>
                     {invoices.slice(0, 3).map((invoice) => (
                       <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
-                        <TableCell className="text-right">{invoice.amount}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -886,7 +886,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             code: `<Table>
   <TableHeader>
     <TableRow>
-      <TableHead scope="col" className="w-10">
+      <TableHead scope="col" style={{ width: "2.5rem" }}>
         <Checkbox aria-label="Selecionar todas as linhas" />
       </TableHead>
       <TableHead scope="col">Fatura</TableHead>
@@ -910,17 +910,17 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   </TableBody>
 </Table>`,
             preview: (
-              <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-overflow-x">
                 <Table>
-                  <TableCaption className="sr-only">Faturas com seleção</TableCaption>
+                  <TableCaption className="nds-sr-only">Faturas com seleção</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col" className="w-10">
+                      <TableHead scope="col" style={{ width: "2.5rem" }}>
                         <Checkbox aria-label="Selecionar todas as linhas" />
                       </TableHead>
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col" className="text-right">Valor</TableHead>
+                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -928,25 +928,25 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableCell>
                         <Checkbox defaultChecked aria-label="Selecionar fatura #INV-001" />
                       </TableCell>
-                      <TableCell className="font-medium">#INV-001</TableCell>
+                      <TableCell className="nds-font-medium">#INV-001</TableCell>
                       <TableCell>Pago</TableCell>
-                      <TableCell className="text-right">R$ 250,00</TableCell>
+                      <TableCell style={{ textAlign: "right" }}>R$ 250,00</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Checkbox aria-label="Selecionar fatura #INV-002" />
                       </TableCell>
-                      <TableCell className="font-medium">#INV-002</TableCell>
+                      <TableCell className="nds-font-medium">#INV-002</TableCell>
                       <TableCell>Pendente</TableCell>
-                      <TableCell className="text-right">R$ 150,00</TableCell>
+                      <TableCell style={{ textAlign: "right" }}>R$ 150,00</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Checkbox aria-label="Selecionar fatura #INV-003" />
                       </TableCell>
-                      <TableCell className="font-medium">#INV-003</TableCell>
+                      <TableCell className="nds-font-medium">#INV-003</TableCell>
                       <TableCell>Cancelado</TableCell>
-                      <TableCell className="text-right">R$ 350,00</TableCell>
+                      <TableCell style={{ textAlign: "right" }}>R$ 350,00</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -957,7 +957,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             name: tContent("variants.compositions.withPagination.name"),
             description: tContent("variants.compositions.withPagination.description"),
             useWhen: tContent("variants.compositions.withPagination.use"),
-            code: `<div className="flex flex-col gap-3">
+            code: `<div className="nds-stack" data-spacing="sm">
   <Table>{/* ... */}</Table>
   <Pagination>
     <PaginationContent>
@@ -974,23 +974,23 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   </Pagination>
 </div>`,
             preview: (
-              <div className="w-full flex flex-col gap-3">
-                <div className="w-full overflow-x-auto">
+              <div className="nds-w-full nds-stack" data-spacing="sm">
+                <div className="nds-w-full nds-overflow-x">
                   <Table>
-                    <TableCaption className="sr-only">Faturas paginadas</TableCaption>
+                    <TableCaption className="nds-sr-only">Faturas paginadas</TableCaption>
                     <TableHeader>
                       <TableRow>
                         <TableHead scope="col">Fatura</TableHead>
                         <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" className="text-right">Valor</TableHead>
+                        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {invoices.slice(0, 3).map((invoice) => (
                         <TableRow key={invoice.id}>
-                          <TableCell className="font-medium">{invoice.id}</TableCell>
+                          <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                           <TableCell>{invoice.status}</TableCell>
-                          <TableCell className="text-right">{invoice.amount}</TableCell>
+                          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

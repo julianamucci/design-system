@@ -142,19 +142,19 @@ export function ScrollAreaDocs() {
 
   const codeImportBasic = `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";`;
 
-  const codeVertical = `<div className="h-[300px]">
-  <ScrollArea className="h-full w-full rounded-md border">
-    <div className="p-4 space-y-2">
+  const codeVertical = `<div style={{ height: "300px" }}>
+  <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div className="nds-stack nds-p-4" data-spacing="sm">
       {tags.map((tag) => (
-        <div key={tag} className="text-sm">Tag {tag}</div>
+        <div key={tag} className="nds-text-body">Tag {tag}</div>
       ))}
     </div>
   </ScrollArea>
 </div>`;
 
-  const codeHorizontal = `<div className="w-[500px]">
-  <ScrollArea className="h-full w-full whitespace-nowrap rounded-md border">
-    <div className="flex w-max gap-4 p-4">
+  const codeHorizontal = `<div style={{ width: "500px" }}>
+  <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "max-content" }}>
       {items.map((item) => (
         <Card key={item.id} />
       ))}
@@ -163,9 +163,9 @@ export function ScrollAreaDocs() {
   </ScrollArea>
 </div>`;
 
-  const codeBoth = `<div className="h-[300px] w-[500px]">
-  <ScrollArea className="h-full w-full rounded-md border">
-    <table className="w-max">{/* …conteúdo amplo */}</table>
+  const codeBoth = `<div style={{ height: "300px", width: "500px" }}>
+  <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <table style={{ width: "max-content" }}>{/* …conteúdo amplo */}</table>
     <ScrollBar orientation="horizontal" />
   </ScrollArea>
 </div>`;
@@ -218,19 +218,20 @@ interface ScrollBarProps {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 gap-8 w-full">
+        <div className="nds-stack nds-w-full" data-spacing="xl">
           {/* Demo 1: Vertical */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {lblVertical}
             </p>
-            <div className="h-[300px] w-full max-w-[360px]">
-              <ScrollArea className="h-full w-full rounded-md border">
-                <div className="p-4 space-y-2">
+            <div className="nds-w-full" style={{ height: "300px", maxWidth: "360px" }}>
+              <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                <div className="nds-stack nds-p-4" data-spacing="sm">
                   {VERTICAL_TAGS.map((n) => (
                     <div
                       key={n}
-                      className="text-sm border-b pb-2 last:border-b-0"
+                      className="nds-text-body nds-border-b last:border-b-0"
+                      style={{ paddingBottom: "0.5rem" }}
                     >
                       {lblTag} {n}
                     </div>
@@ -241,17 +242,20 @@ interface ScrollBarProps {
           </div>
 
           {/* Demo 2: Horizontal */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {lblHorizontal}
             </p>
-            <div className="h-[180px] w-full max-w-[500px]">
-              <ScrollArea className="h-full w-full whitespace-nowrap rounded-md border">
-                <div className="flex w-max gap-4 p-4">
+            <div className="nds-w-full" style={{ height: "180px", maxWidth: "500px" }}>
+              <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "max-content" }}>
                   {HORIZONTAL_CARDS.map((n) => (
                     <div
                       key={n}
-                      className="flex h-[120px] w-[140px] items-center justify-center rounded-md bg-muted text-sm shrink-0"
+                      className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0"
+                      data-align="center"
+                      data-justify="center"
+                      style={{ height: "120px", width: "140px" }}
                     >
                       Card {n}
                     </div>
@@ -263,20 +267,21 @@ interface ScrollBarProps {
           </div>
 
           {/* Demo 3: Bidirecional */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {lblBoth}
             </p>
-            <div className="h-[260px] w-full max-w-[500px]">
-              <ScrollArea className="h-full w-full rounded-md border">
-                <table className="w-max border-collapse text-xs">
+            <div className="nds-w-full" style={{ height: "260px", maxWidth: "500px" }}>
+              <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
                   <tbody>
                     {MATRIX_ROWS.map((r) => (
                       <tr key={r}>
                         {MATRIX_COLS.map((c) => (
                           <td
                             key={c}
-                            className="border px-3 py-2 whitespace-nowrap"
+                            className="nds-border-default nds-whitespace-nowrap"
+                            style={{ padding: "0.5rem 0.75rem" }}
                           >
                             R{r}·C{c}
                           </td>
@@ -390,9 +395,9 @@ interface ScrollBarProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="h-[160px] w-full">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <div className="p-3 space-y-2 text-xs">
+              <div className="nds-w-full" style={{ height: "160px" }}>
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                     {Array.from({ length: 12 }, (_, i) => (
                       <div key={i}>Item {i + 1}</div>
                     ))}
@@ -401,9 +406,9 @@ interface ScrollBarProps {
               </div>
             ),
             dontPreview: (
-              <div className="w-full">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <div className="p-3 space-y-2 text-xs">
+              <div className="nds-w-full">
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                     {Array.from({ length: 5 }, (_, i) => (
                       <div key={i}>Item {i + 1}</div>
                     ))}
@@ -418,9 +423,9 @@ interface ScrollBarProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="h-[160px] w-full">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <div className="p-3 space-y-2 text-xs">
+              <div className="nds-w-full" style={{ height: "160px" }}>
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                     {Array.from({ length: 14 }, (_, i) => (
                       <div key={i}>Linha {i + 1}</div>
                     ))}
@@ -429,11 +434,11 @@ interface ScrollBarProps {
               </div>
             ),
             dontPreview: (
-              <div className="h-[160px] w-full">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <div className="h-[140px]">
-                    <ScrollArea className="h-full w-full">
-                      <div className="p-3 space-y-2 text-xs">
+              <div className="nds-w-full" style={{ height: "160px" }}>
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div style={{ height: "140px" }}>
+                    <ScrollArea className="nds-w-full" style={{ height: "100%" }}>
+                      <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                         {Array.from({ length: 14 }, (_, i) => (
                           <div key={i}>Linha {i + 1}</div>
                         ))}
@@ -461,11 +466,11 @@ interface ScrollBarProps {
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="h-[200px] w-full max-w-[300px]">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <div className="p-3 space-y-2 text-xs">
+              <div className="nds-w-full" style={{ height: "200px", maxWidth: "300px" }}>
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                     {VERTICAL_TAGS.slice(0, 20).map((n) => (
-                      <div key={n} className="border-b pb-1 last:border-b-0">
+                      <div key={n} className="nds-border-b last:border-b-0" style={{ paddingBottom: "0.25rem" }}>
                         {lblTag} {n}
                       </div>
                     ))}
@@ -479,13 +484,16 @@ interface ScrollBarProps {
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: codeHorizontal,
             preview: (
-              <div className="h-[140px] w-full max-w-[420px]">
-                <ScrollArea className="h-full w-full whitespace-nowrap rounded-md border">
-                  <div className="flex w-max gap-3 p-3">
+              <div className="nds-w-full" style={{ height: "140px", maxWidth: "420px" }}>
+                <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <div className="nds-cluster" data-spacing="sm" style={{ width: "max-content", padding: "0.75rem" }}>
                     {HORIZONTAL_CARDS.map((n) => (
                       <div
                         key={n}
-                        className="flex h-[90px] w-[120px] items-center justify-center rounded-md bg-muted text-xs shrink-0"
+                        className="nds-cluster nds-rounded-md nds-bg-muted nds-text-caption nds-shrink-0"
+                        data-align="center"
+                        data-justify="center"
+                        style={{ height: "90px", width: "120px" }}
                       >
                         Card {n}
                       </div>
@@ -501,16 +509,16 @@ interface ScrollBarProps {
             description: stripHtml(tContent("variants.styles.both")),
             code: codeBoth,
             preview: (
-              <div className="h-[200px] w-full max-w-[420px]">
-                <ScrollArea className="h-full w-full rounded-md border">
-                  <table className="w-max border-collapse text-xs">
+              <div className="nds-w-full" style={{ height: "200px", maxWidth: "420px" }}>
+                <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+                  <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
                     <tbody>
                       {MATRIX_ROWS.slice(0, 10).map((r) => (
                         <tr key={r}>
                           {MATRIX_COLS.slice(0, 10).map((c) => (
                             <td
                               key={c}
-                              className="border px-2 py-1 whitespace-nowrap"
+                              className="nds-border-default nds-px-2 nds-py-1 nds-whitespace-nowrap"
                             >
                               R{r}·C{c}
                             </td>

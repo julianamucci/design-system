@@ -234,10 +234,10 @@ interface NavigationMenuLinkProps
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Demo 1: simple link */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.simpleLink"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain}>
@@ -256,8 +256,8 @@ interface NavigationMenuLinkProps
           </div>
 
           {/* Demo 2: with dropdown */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withDropdown"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="produtos">
@@ -265,7 +265,7 @@ interface NavigationMenuLinkProps
                 <NavigationMenuItem value="produtos">
                   <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[260px] gap-1 p-2">
+                    <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
                       <li>
                         <NavigationMenuLink href="#">
                           Plano Starter
@@ -289,8 +289,8 @@ interface NavigationMenuLinkProps
           </div>
 
           {/* Demo 3: with grid */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withGrid"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="solucoes">
@@ -298,12 +298,12 @@ interface NavigationMenuLinkProps
                 <NavigationMenuItem value="solucoes">
                   <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[420px] grid-cols-2 gap-2 p-3">
+                    <ul className="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style={{ width: "420px" }}>
                       <li>
                         <NavigationMenuLink href="#">
                           <div>
-                            <div className="text-sm font-medium">Para Times</div>
-                            <p className="text-xs text-muted-foreground">
+                            <div className="nds-text-body nds-font-medium">Para Times</div>
+                            <p className="nds-text-caption nds-text-muted-foreground">
                               Colaboração em tempo real.
                             </p>
                           </div>
@@ -312,8 +312,8 @@ interface NavigationMenuLinkProps
                       <li>
                         <NavigationMenuLink href="#">
                           <div>
-                            <div className="text-sm font-medium">Para Devs</div>
-                            <p className="text-xs text-muted-foreground">
+                            <div className="nds-text-body nds-font-medium">Para Devs</div>
+                            <p className="nds-text-caption nds-text-muted-foreground">
                               SDK e API públicos.
                             </p>
                           </div>
@@ -322,8 +322,8 @@ interface NavigationMenuLinkProps
                       <li>
                         <NavigationMenuLink href="#">
                           <div>
-                            <div className="text-sm font-medium">Para Design</div>
-                            <p className="text-xs text-muted-foreground">
+                            <div className="nds-text-body nds-font-medium">Para Design</div>
+                            <p className="nds-text-caption nds-text-muted-foreground">
                               Tokens e componentes.
                             </p>
                           </div>
@@ -332,8 +332,8 @@ interface NavigationMenuLinkProps
                       <li>
                         <NavigationMenuLink href="#">
                           <div>
-                            <div className="text-sm font-medium">Para Marketing</div>
-                            <p className="text-xs text-muted-foreground">
+                            <div className="nds-text-body nds-font-medium">Para Marketing</div>
+                            <p className="nds-text-caption nds-text-muted-foreground">
                               Landing pages prontas.
                             </p>
                           </div>
@@ -347,8 +347,8 @@ interface NavigationMenuLinkProps
           </div>
 
           {/* Demo 4: featured card */}
-          <div className="space-y-2" style={wrapperStyle}>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withFeatured"))}
             </p>
             <NavigationMenu aria-label={ariaLabelMain} defaultValue="recursos">
@@ -356,8 +356,8 @@ interface NavigationMenuLinkProps
                 <NavigationMenuItem value="recursos">
                   <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid w-[460px] grid-cols-[1fr_180px] gap-3 p-3">
-                      <ul className="grid gap-1">
+                    <div className="nds-grid nds-p-4" data-spacing="md" style={{ width: "460px", gridTemplateColumns: "1fr 180px" }}>
+                      <ul className="nds-grid" data-spacing="xs">
                         <li>
                           <NavigationMenuLink href="#">
                             Documentação
@@ -374,9 +374,9 @@ interface NavigationMenuLinkProps
                           </NavigationMenuLink>
                         </li>
                       </ul>
-                      <div className="rounded-md bg-accent p-3 text-xs">
-                        <div className="text-sm font-medium mb-1">Novo</div>
-                        <p className="text-muted-foreground">
+                      <div className="nds-rounded-md nds-bg-accent nds-p-4 nds-text-caption">
+                        <div className="nds-text-body nds-font-medium nds-mb-1">Novo</div>
+                        <p className="nds-text-muted-foreground">
                           Conheça os tokens v2.
                         </p>
                       </div>
@@ -497,12 +497,12 @@ interface NavigationMenuLinkProps
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 aria-label · aria-current
               </div>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 role=navigation (sozinho)
               </div>
             ),
@@ -513,12 +513,12 @@ interface NavigationMenuLinkProps
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 4-6 sub-links
               </div>
             ),
             dontPreview: (
-              <div className="text-xs font-mono text-muted-foreground italic">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
                 30+ links sem grupo
               </div>
             ),
@@ -541,7 +541,7 @@ interface NavigationMenuLinkProps
             description: stripHtml(tContent("variants.styles.horizontal")),
             code: codeHorizontal,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 orientation=&quot;horizontal&quot;
               </div>
             ),
@@ -551,7 +551,7 @@ interface NavigationMenuLinkProps
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="text-xs font-mono text-muted-foreground">
+              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 orientation=&quot;vertical&quot;
               </div>
             ),
@@ -612,7 +612,7 @@ interface NavigationMenuLinkProps
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul className="grid w-[240px] gap-1 p-2">
+        <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "240px" }}>
           <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
           <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
           <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
@@ -632,7 +632,7 @@ interface NavigationMenuLinkProps
                     <NavigationMenuItem value="produtos">
                       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[240px] gap-1 p-2">
+                        <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "240px" }}>
                           <li><NavigationMenuLink href="#">Plano Inicial</NavigationMenuLink></li>
                           <li><NavigationMenuLink href="#">Plano Profissional</NavigationMenuLink></li>
                           <li><NavigationMenuLink href="#">Plano Empresarial</NavigationMenuLink></li>
@@ -654,17 +654,17 @@ interface NavigationMenuLinkProps
     <NavigationMenuItem value="solucoes">
       <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul className="grid w-[560px] grid-cols-2 gap-2 p-3">
+        <ul className="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style={{ width: "560px" }}>
           <li>
             <NavigationMenuLink href="/solucoes/marketing">
-              <div className="text-sm font-medium">Para Marketing</div>
-              <p className="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+              <div className="nds-text-body nds-font-medium">Para Marketing</div>
+              <p className="nds-text-caption nds-text-muted-foreground">Automação, leads e campanhas.</p>
             </NavigationMenuLink>
           </li>
           <li>
             <NavigationMenuLink href="/solucoes/vendas">
-              <div className="text-sm font-medium">Para Vendas</div>
-              <p className="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+              <div className="nds-text-body nds-font-medium">Para Vendas</div>
+              <p className="nds-text-caption nds-text-muted-foreground">Pipeline, CRM e propostas.</p>
             </NavigationMenuLink>
           </li>
           {/* ...mais 4 itens */}
@@ -680,41 +680,41 @@ interface NavigationMenuLinkProps
                     <NavigationMenuItem value="solucoes">
                       <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[560px] grid-cols-2 gap-2 p-3">
+                        <ul className="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style={{ width: "560px" }}>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Marketing</div>
-                              <p className="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+                              <div className="nds-text-body nds-font-medium">Para Marketing</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Automação, leads e campanhas.</p>
                             </NavigationMenuLink>
                           </li>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Vendas</div>
-                              <p className="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+                              <div className="nds-text-body nds-font-medium">Para Vendas</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Pipeline, CRM e propostas.</p>
                             </NavigationMenuLink>
                           </li>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Suporte</div>
-                              <p className="text-xs text-muted-foreground">Tickets, base de conhecimento.</p>
+                              <div className="nds-text-body nds-font-medium">Para Suporte</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Tickets, base de conhecimento.</p>
                             </NavigationMenuLink>
                           </li>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Sucesso</div>
-                              <p className="text-xs text-muted-foreground">Onboarding e retenção.</p>
+                              <div className="nds-text-body nds-font-medium">Para Sucesso</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Onboarding e retenção.</p>
                             </NavigationMenuLink>
                           </li>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Operações</div>
-                              <p className="text-xs text-muted-foreground">Workflows e integrações.</p>
+                              <div className="nds-text-body nds-font-medium">Para Operações</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Workflows e integrações.</p>
                             </NavigationMenuLink>
                           </li>
                           <li>
                             <NavigationMenuLink href="#">
-                              <div className="text-sm font-medium">Para Analytics</div>
-                              <p className="text-xs text-muted-foreground">Dashboards e relatórios.</p>
+                              <div className="nds-text-body nds-font-medium">Para Analytics</div>
+                              <p className="nds-text-caption nds-text-muted-foreground">Dashboards e relatórios.</p>
                             </NavigationMenuLink>
                           </li>
                         </ul>
@@ -734,14 +734,14 @@ interface NavigationMenuLinkProps
     <NavigationMenuItem value="recursos">
       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <div className="flex gap-3 w-[560px] p-3">
-          <a href="/quickstart" className="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
-            <div className="text-base font-semibold leading-tight">Comece em 5 minutos</div>
-            <p className="mt-2 text-sm leading-snug text-muted-foreground">
+        <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "560px" }}>
+          <a href="/quickstart" className="nds-stack nds-rounded-md nds-p-4" style={{ width: "220px", justifyContent: "flex-end", textDecoration: "none", background: "linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))" }}>
+            <div className="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
+            <p className="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
               Crie sua primeira integração com nosso quickstart.
             </p>
           </a>
-          <ul className="flex flex-col flex-1 gap-1">
+          <ul className="nds-stack nds-flex-1" data-spacing="xs">
             <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
             <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
             <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
@@ -758,17 +758,17 @@ interface NavigationMenuLinkProps
                     <NavigationMenuItem value="recursos">
                       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="flex gap-3 w-[560px] p-3">
+                        <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "560px" }}>
                           <a
                             href="#"
-                            className="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline"
+                            className="nds-stack nds-rounded-md nds-p-4" style={{ width: "220px", justifyContent: "flex-end", textDecoration: "none", background: "linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))" }}
                           >
-                            <div className="text-base font-semibold leading-tight">Comece em 5 minutos</div>
-                            <p className="mt-2 text-sm leading-snug text-muted-foreground">
+                            <div className="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
+                            <p className="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
                               Crie sua primeira integração com nosso quickstart.
                             </p>
                           </a>
-                          <ul className="flex flex-col flex-1 gap-1">
+                          <ul className="nds-stack nds-flex-1" data-spacing="xs">
                             <li><NavigationMenuLink href="#">Documentação</NavigationMenuLink></li>
                             <li><NavigationMenuLink href="#">Tutoriais</NavigationMenuLink></li>
                             <li><NavigationMenuLink href="#">Comunidade</NavigationMenuLink></li>

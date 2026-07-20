@@ -125,12 +125,12 @@ function SidebarDemoPreview({
   defaultOpen?: boolean;
 }) {
   return (
-    <div className="min-h-[300px] flex w-full overflow-hidden rounded-lg border border-border" style={{ contain: "layout" }}>
+    <div className="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style={{ contain: "layout", minHeight: "300px", display: "flex" }}>
       <SidebarProvider defaultOpen={defaultOpen}>
         <nav aria-label="Navegação principal">
           <Sidebar variant={variant} collapsible={collapsible} side={side}>
-            <SidebarHeader className="p-3">
-              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+            <SidebarHeader style={{ padding: "0.75rem" }}>
+              <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
             </SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -194,9 +194,9 @@ function SidebarDemoPreview({
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header className="flex items-center gap-2 p-3 border-b border-border">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
-            <span className="text-xs text-muted-foreground">Conteúdo</span>
+            <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -208,7 +208,7 @@ function SidebarDemoPreview({
 
 function CompositionWrap({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-[260px] flex w-full overflow-hidden rounded-lg border border-border" style={{ contain: "layout" }}>
+    <div className="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style={{ contain: "layout", minHeight: "260px", display: "flex" }}>
       {children}
     </div>
   );
@@ -220,8 +220,8 @@ function PreviewWithGroups() {
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader className="p-3">
-              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+            <SidebarHeader style={{ padding: "0.75rem" }}>
+              <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
             </SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -280,9 +280,9 @@ function PreviewWithGroups() {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header className="flex items-center gap-2 p-3 border-b border-border">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
-            <span className="text-xs text-muted-foreground">Dashboard</span>
+            <span className="nds-text-caption nds-text-muted-foreground">Dashboard</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -297,8 +297,8 @@ function PreviewWithSubMenu() {
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader className="p-3">
-              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
+            <SidebarHeader style={{ padding: "0.75rem" }}>
+              <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
             </SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -356,9 +356,9 @@ function PreviewWithSubMenu() {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header className="flex items-center gap-2 p-3 border-b border-border">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
-            <span className="text-xs text-muted-foreground">Clique em "Componentes"</span>
+            <span className="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -372,14 +372,14 @@ function PreviewWithSearch() {
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader className="gap-2 p-3">
-              <span className="font-semibold text-xs text-sidebar-foreground">Design System</span>
-              <div className="relative">
+            <SidebarHeader style={{ gap: "0.5rem", padding: "0.75rem" }}>
+              <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
+              <div style={{ position: "relative" }}>
                 <Search
                   aria-hidden="true"
                   className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
                 />
-                <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" className="pl-7 h-8 text-xs" />
+                <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" className="nds-text-caption" style={{ paddingLeft: "1.75rem", height: "2rem" }} />
               </div>
             </SidebarHeader>
             <SidebarContent>
@@ -418,9 +418,9 @@ function PreviewWithSearch() {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header className="flex items-center gap-2 p-3 border-b border-border">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
-            <span className="text-xs text-muted-foreground">Busca no header</span>
+            <span className="nds-text-caption nds-text-muted-foreground">Busca no header</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -434,8 +434,8 @@ function PreviewWithBadges() {
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader className="p-3">
-              <span className="font-semibold text-xs text-sidebar-foreground">App</span>
+            <SidebarHeader style={{ padding: "0.75rem" }}>
+              <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>App</span>
             </SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -474,9 +474,9 @@ function PreviewWithBadges() {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header className="flex items-center gap-2 p-3 border-b border-border">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
-            <span className="text-xs text-muted-foreground">Inbox</span>
+            <span className="nds-text-caption nds-text-muted-foreground">Inbox</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -737,8 +737,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
               <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} />
             ),
             dontPreview: (
-              <div className="min-h-[200px] flex items-center justify-center rounded-lg border border-destructive/30 bg-destructive/5 p-4">
-                <p className="text-xs text-destructive text-center">
+              <div className="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4" data-align="center" data-justify="center" style={{ minHeight: "200px" }}>
+                <p className="nds-text-caption nds-text-destructive" style={{ textAlign: "center" }}>
                   <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tContent("doDont.pair1.dont")) }} />
                 </p>
               </div>
@@ -750,13 +750,13 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="rounded-lg border border-border p-4 bg-muted/30 text-xs text-foreground font-mono">
-                <code className="whitespace-pre">{`aria-current="page"\ntooltip="Dashboard"`}</code>
+              <div className="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
+                <code className="nds-whitespace-pre">{`aria-current="page"\ntooltip="Dashboard"`}</code>
               </div>
             ),
             dontPreview: (
-              <div className="rounded-lg border border-destructive/30 p-4 bg-destructive/5 text-xs text-destructive font-mono">
-                <code className="whitespace-pre">{`// Ícone sem tooltip no modo icon\n<SidebarMenuButton>\n  <Icon />\n</SidebarMenuButton>`}</code>
+              <div className="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
+                <code className="nds-whitespace-pre">{`// Ícone sem tooltip no modo icon\n<SidebarMenuButton>\n  <Icon />\n</SidebarMenuButton>`}</code>
               </div>
             ),
             doCaption: tContent("doDont.pair2.do"),
@@ -766,13 +766,13 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="rounded-lg border border-border p-4 bg-muted/30 text-xs text-foreground font-mono">
-                <code className="whitespace-pre">{`// Trigger apenas em mobile\n<SidebarTrigger className="lg:hidden" />`}</code>
+              <div className="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
+                <code className="nds-whitespace-pre">{`// Trigger apenas em mobile\n<SidebarTrigger className="lg:hidden" />`}</code>
               </div>
             ),
             dontPreview: (
-              <div className="rounded-lg border border-destructive/30 p-4 bg-destructive/5 text-xs text-destructive font-mono">
-                <code className="whitespace-pre">{`// Trigger visível em desktop\n<SidebarTrigger />\n{/* ocupa espaço do conteúdo */}`}</code>
+              <div className="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
+                <code className="nds-whitespace-pre">{`// Trigger visível em desktop\n<SidebarTrigger />\n{/* ocupa espaço do conteúdo */}`}</code>
               </div>
             ),
             doCaption: tContent("doDont.pair3.do"),
@@ -912,15 +912,15 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             name: tContent("variants.compositions.withSearch.name"),
             description: tContent("variants.compositions.withSearch.description"),
             useWhen: tContent("variants.compositions.withSearch.use"),
-            code: `<SidebarHeader className="gap-2">
-  <span className="font-semibold">Design System</span>
-  <div className="relative">
+            code: `<SidebarHeader style={{ gap: "0.5rem" }}>
+  <span className="nds-font-semibold">Design System</span>
+  <div style={{ position: "relative" }}>
     <Search aria-hidden="true" className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."
       aria-label="Buscar navegação"
-      className="pl-7"
+      style={{ paddingLeft: "1.75rem" }}
     />
   </div>
 </SidebarHeader>`,

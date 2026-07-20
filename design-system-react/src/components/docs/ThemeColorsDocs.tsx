@@ -119,7 +119,7 @@ export function ThemeColorsDocs() {
 
   // ─── Fileira de mini-swatches (variante vertical) ─────────────────────────
   const miniRow = (
-    <div className="flex flex-wrap gap-3">
+    <div className="nds-miniswatch-row">
       {MINI_TOKENS.map((token) => (
         <Swatch key={token} token={token} orientation="vertical" />
       ))}
@@ -127,22 +127,22 @@ export function ThemeColorsDocs() {
   );
 
   return (
-    <div className="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-      <div className="p-8 max-w-6xl mx-auto space-y-8">
+    <div className="sb-unstyled nds-flex-1 nds-w-full ds-docs" style={{ height: '100%', overflow: 'auto' }}>
+      <div className="nds-p-8 nds-stack" data-spacing="xl" style={{ maxWidth: '72rem', marginInline: 'auto' }}>
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <header className="space-y-4 pb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+        <header className="nds-stack nds-pb-8" style={{ paddingBottom: '2rem' }}>
+          <div className="nds-cluster" data-justify="between">
+            <div className="nds-cluster" data-spacing="sm" data-align="center">
               <Badge
                 variant="secondary"
-                className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+                className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
               >
                 {t('category')}
               </Badge>
               <Badge
                 variant="outline"
-                className="text-muted-foreground font-normal px-2 py-0"
+                className="nds-text-muted-foreground nds-font-normal"
               >
                 {t('type')}
               </Badge>
@@ -150,31 +150,28 @@ export function ThemeColorsDocs() {
             <LanguageSwitcher />
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
             {t('title')}
           </h1>
 
-          <p className="text-muted-foreground max-w-3xl leading-relaxed">
+          <p className="nds-text-muted-foreground nds-leading-relaxed" style={{ maxWidth: '48rem' }}>
             {t('description')}
           </p>
         </header>
 
         {/* ── Paleta semântica ─────────────────────────────────────────────── */}
-        <section className="space-y-6 border-t border-border/50 pt-8">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-foreground">{t('palette.title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('palette.subtitle')}</p>
+        <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
+          <div className="nds-stack" data-spacing="xs">
+            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('palette.title')}</h2>
+            <p className="nds-text-body nds-text-muted-foreground">{t('palette.subtitle')}</p>
           </div>
 
           {PALETTE_GROUPS.map((group) => (
-            <div key={group.key} className="space-y-3">
-              <h3 className="text-sm font-medium text-foreground">{t(`palette.groups.${group.key}`)}</h3>
-              <ul
-                className="grid gap-2 list-none p-0 m-0"
-                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}
-              >
+            <div key={group.key} className="nds-swatch-group">
+              <h3 className="nds-swatch-group-title">{t(`palette.groups.${group.key}`)}</h3>
+              <ul className="nds-swatch-grid">
                 {group.tokens.map((token) => (
-                  <li key={token} className="list-none">
+                  <li key={token} className="nds-swatch-grid-item">
                     <Swatch
                       token={token}
                       orientation="horizontal"
@@ -190,75 +187,73 @@ export function ThemeColorsDocs() {
         </section>
 
         {/* ── Temas de marca ───────────────────────────────────────────────── */}
-        <section className="space-y-4 border-t border-border/50 pt-8">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-foreground">{t('brand.title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('brand.subtitle')}</p>
+        <section className="nds-stack nds-docs-section-divider" data-spacing="md">
+          <div className="nds-stack" data-spacing="xs">
+            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('brand.title')}</h2>
+            <p className="nds-text-body nds-text-muted-foreground">{t('brand.subtitle')}</p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="nds-theme-card-grid">
             {BRAND_THEMES.map((theme) => (
-              <div
-                key={theme.key}
-                className={`${theme.className}${paginaDark ? ' dark' : ''} bg-background text-foreground rounded-lg border border-border/50 p-4`}
-              >
-                <span className="block text-sm font-medium text-foreground mb-3">
-                  {t(`brand.themes.${theme.key}`)}
-                </span>
-                {miniRow}
+              <div key={theme.key} className="nds-theme-card">
+                <div className={`nds-theme-card-scope ${theme.className}${paginaDark ? ' dark' : ''}`}>
+                  <span className="nds-theme-card-label">
+                    {t(`brand.themes.${theme.key}`)}
+                  </span>
+                  {miniRow}
+                </div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Light e Dark ─────────────────────────────────────────────────── */}
-        <section className="space-y-4 border-t border-border/50 pt-8">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-foreground">{t('modes.title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('modes.subtitle')}</p>
+        <section className="nds-stack nds-docs-section-divider" data-spacing="md">
+          <div className="nds-stack" data-spacing="xs">
+            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('modes.title')}</h2>
+            <p className="nds-text-body nds-text-muted-foreground">{t('modes.subtitle')}</p>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="nds-theme-card-grid">
             {MODES.map((mode) => (
-              <div
-                key={mode.key}
-                className={`${temaAtivo}${mode.className ? ` ${mode.className}` : ''} bg-background text-foreground rounded-lg border border-border/50 p-4`}
-              >
-                <span className="block text-sm font-medium text-foreground mb-3">
-                  {t(`modes.${mode.key}`)}
-                </span>
-                {miniRow}
+              <div key={mode.key} className="nds-theme-card">
+                <div className={`nds-theme-card-scope ${temaAtivo}${mode.className ? ` ${mode.className}` : ''}`}>
+                  <span className="nds-theme-card-label">
+                    {t(`modes.${mode.key}`)}
+                  </span>
+                  {miniRow}
+                </div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Densidade e Fontes ───────────────────────────────────────────── */}
-        <section className="space-y-6 border-t border-border/50 pt-8">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-foreground">{t('axes.title')}</h2>
-            <p className="text-sm text-muted-foreground">{t('axes.subtitle')}</p>
+        <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
+          <div className="nds-stack" data-spacing="xs">
+            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('axes.title')}</h2>
+            <p className="nds-text-body nds-text-muted-foreground">{t('axes.subtitle')}</p>
           </div>
 
           {/* Densidade — tabela 3×3 dentro de cada escopo densidade-*. Os
               paddings/alturas tokenizados da Table escalam com --spacing-base,
               demonstrando o eixo sem a ambiguidade de "tamanho de botão". */}
-          <div className="space-y-3">
-            <div className="space-y-1">
-              <h3 className="text-sm font-medium text-foreground">{t('axes.density.title')}</h3>
-              <p className="text-sm text-muted-foreground">{t('axes.density.subtitle')}</p>
+          <div className="nds-stack" data-spacing="md">
+            <div className="nds-stack" data-spacing="xs">
+              <h3 className="nds-text-body nds-font-medium nds-text-foreground">{t('axes.density.title')}</h3>
+              <p className="nds-text-body nds-text-muted-foreground">{t('axes.density.subtitle')}</p>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="nds-axis-grid">
               {DENSITY_ITEMS.map((item) => {
                 const dData = (themeColorsTranslations as Record<string, unknown>)[locale] as {
                   axes: { density: { tableCols: string[]; tableRows: string[][] } };
                 };
                 const densityData = dData.axes.density;
                 return (
-                  <div key={item.key} className="rounded-lg border border-border/50 p-4 space-y-3">
-                    <span className="block text-xs text-muted-foreground">
+                  <div key={item.key} className="nds-axis-sample">
+                    <span className="nds-axis-sample-label">
                       {t(`axes.density.items.${item.key}`)}
                     </span>
-                    <div className={item.className}>
-                      <Table>
+                    <div className={`nds-axis-scope ${item.className}`}>
+                      <Table className="nds-axis-density-table">
                         <TableHeader>
                           <TableRow>
                             {densityData.tableCols.map((col, i) => <TableHead key={i}>{col}</TableHead>)}
@@ -280,24 +275,19 @@ export function ThemeColorsDocs() {
           </div>
 
           {/* Fontes */}
-          <div className="space-y-3">
-            <div className="space-y-1">
-              <h3 className="text-sm font-medium text-foreground">{t('axes.fonts.title')}</h3>
-              <p className="text-sm text-muted-foreground">{t('axes.fonts.subtitle')}</p>
+          <div className="nds-stack" data-spacing="md">
+            <div className="nds-stack" data-spacing="xs">
+              <h3 className="nds-text-body nds-font-medium nds-text-foreground">{t('axes.fonts.title')}</h3>
+              <p className="nds-text-body nds-text-muted-foreground">{t('axes.fonts.subtitle')}</p>
             </div>
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+            <div className="nds-axis-grid" data-cols="4">
               {FONT_ITEMS.map((item) => (
-                <div key={item.key} className="rounded-lg border border-border/50 p-4 space-y-3">
-                  <span className="block text-xs text-muted-foreground">
+                <div key={item.key} className="nds-axis-sample">
+                  <span className="nds-axis-sample-label">
                     {t(`axes.fonts.items.${item.key}`)}
                   </span>
                   <div className={item.className}>
-                    {/* font-family inline: o span precisa USAR var(--font-family-active)
-                        para o escopo .fonte-* deste card valer (caso contrário
-                        herda a fonte já resolvida do <body>). */}
-                    <span className="text-2xl text-foreground" style={{ fontFamily: 'var(--font-family-active)' }}>
-                      Aa Bb Cc 123
-                    </span>
+                    <span className="nds-font-sample">Aa Bb Cc 123</span>
                   </div>
                 </div>
               ))}

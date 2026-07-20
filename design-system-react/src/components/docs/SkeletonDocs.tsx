@@ -122,9 +122,9 @@ export function SkeletonDocs() {
 
   const codeImport = `import { Skeleton } from "@/components/ui/skeleton";`;
 
-  const codeRectangle = `<Skeleton className="h-20 w-full" aria-hidden="true" />`;
-  const codeCircle = `<Skeleton className="h-12 w-12 rounded-full" aria-hidden="true" />`;
-  const codeLine = `<Skeleton className="h-4 w-[200px]" aria-hidden="true" />`;
+  const codeRectangle = `<Skeleton style={{ height: "5rem", width: "100%" }} aria-hidden="true" />`;
+  const codeCircle = `<Skeleton className="nds-rounded-full" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />`;
+  const codeLine = `<Skeleton style={{ height: "1rem", width: "200px" }} aria-hidden="true" />`;
 
   const interfaceCode = `// Skeleton
 interface SkeletonProps extends React.ComponentProps<"div"> {
@@ -167,28 +167,33 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
           {/* Card de perfil */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.card"))}
             </p>
             <div
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
-              className="flex items-center gap-4 p-4 border rounded-md"
+              className="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+              data-spacing="md"
+              data-align="center"
             >
               <Skeleton
-                className="h-12 w-12 rounded-full motion-reduce:animate-none"
+                className="nds-rounded-full motion-reduce:animate-none"
+                style={{ height: "3rem", width: "3rem" }}
                 aria-hidden="true"
               />
-              <div className="space-y-2 flex-1">
+              <div className="nds-stack nds-flex-1" data-spacing="sm">
                 <Skeleton
-                  className="h-4 w-[70%] motion-reduce:animate-none"
+                  className="motion-reduce:animate-none"
+                  style={{ height: "1rem", width: "70%" }}
                   aria-hidden="true"
                 />
                 <Skeleton
-                  className="h-4 w-[50%] motion-reduce:animate-none"
+                  className="motion-reduce:animate-none"
+                  style={{ height: "1rem", width: "50%" }}
                   aria-hidden="true"
                 />
               </div>
@@ -196,28 +201,32 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           </div>
 
           {/* Lista */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.list"))}
             </p>
             <div
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
-              className="space-y-3 p-4 border rounded-md"
+              className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+              data-spacing="sm"
             >
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="nds-cluster" data-spacing="sm" data-align="center">
                   <Skeleton
-                    className="h-8 w-8 rounded-md motion-reduce:animate-none"
+                    className="nds-rounded-md motion-reduce:animate-none"
+                    style={{ height: "2rem", width: "2rem" }}
                     aria-hidden="true"
                   />
-                  <div className="flex-1 space-y-1">
+                  <div className="nds-flex-1 nds-stack" data-spacing="xs">
                     <Skeleton
-                      className="h-3 w-[60%] motion-reduce:animate-none"
+                      className="motion-reduce:animate-none"
+                      style={{ height: "0.75rem", width: "60%" }}
                       aria-hidden="true"
                     />
                     <Skeleton
-                      className="h-3 w-[40%] motion-reduce:animate-none"
+                      className="motion-reduce:animate-none"
+                      style={{ height: "0.75rem", width: "40%" }}
                       aria-hidden="true"
                     />
                   </div>
@@ -227,8 +236,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           </div>
 
           {/* Imagem em AspectRatio */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             </p>
             <div
@@ -237,7 +246,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             >
               <AspectRatio ratio={16 / 9}>
                 <Skeleton
-                  className="h-full w-full motion-reduce:animate-none"
+                  className="motion-reduce:animate-none"
+                  style={{ height: "100%", width: "100%" }}
                   aria-hidden="true"
                 />
               </AspectRatio>
@@ -245,25 +255,29 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           </div>
 
           {/* Parágrafo */}
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="nds-stack" data-spacing="sm">
+            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
             </p>
             <div
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
-              className="space-y-2 p-4 border rounded-md"
+              className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+              data-spacing="sm"
             >
               <Skeleton
-                className="h-4 w-full motion-reduce:animate-none"
+                className="motion-reduce:animate-none"
+                style={{ height: "1rem", width: "100%" }}
                 aria-hidden="true"
               />
               <Skeleton
-                className="h-4 w-[90%] motion-reduce:animate-none"
+                className="motion-reduce:animate-none"
+                style={{ height: "1rem", width: "90%" }}
                 aria-hidden="true"
               />
               <Skeleton
-                className="h-4 w-[60%] motion-reduce:animate-none"
+                className="motion-reduce:animate-none"
+                style={{ height: "1rem", width: "60%" }}
                 aria-hidden="true"
               />
             </div>
@@ -377,15 +391,16 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               <div
                 aria-busy="true"
                 aria-label="Carregando texto"
-                className="w-full space-y-2"
+                className="nds-w-full nds-stack"
+                data-spacing="sm"
               >
-                <Skeleton className="h-4 w-full motion-reduce:animate-none" aria-hidden="true" />
-                <Skeleton className="h-4 w-[70%] motion-reduce:animate-none" aria-hidden="true" />
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "100%" }} aria-hidden="true" />
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "70%" }} aria-hidden="true" />
               </div>
             ),
             dontPreview: (
-              <div className="w-full">
-                <Skeleton className="h-2 w-12 motion-reduce:animate-none" aria-hidden="true" />
+              <div className="nds-w-full">
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "0.5rem", width: "3rem" }} aria-hidden="true" />
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -398,16 +413,18 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               <div
                 aria-busy="true"
                 aria-label="Carregando avatar e texto"
-                className="flex items-center gap-3 w-full"
+                className="nds-cluster nds-w-full"
+                data-spacing="sm"
+                data-align="center"
               >
-                <Skeleton className="h-10 w-10 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-                <Skeleton className="h-4 w-[160px] motion-reduce:animate-none" aria-hidden="true" />
+                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "2.5rem", width: "2.5rem" }} aria-hidden="true" />
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "160px" }} aria-hidden="true" />
               </div>
             ),
             dontPreview: (
-              <div className="flex items-center gap-3 w-full">
-                <Skeleton className="h-10 w-10 rounded-full motion-reduce:animate-none" />
-                <Skeleton className="h-4 w-[160px] motion-reduce:animate-none" />
+              <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "2.5rem", width: "2.5rem" }} />
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "160px" }} />
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -429,8 +446,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
             preview: (
-              <div aria-busy="true" aria-label="Carregando bloco" className="w-48">
-                <Skeleton className="h-20 w-full motion-reduce:animate-none" aria-hidden="true" />
+              <div aria-busy="true" aria-label="Carregando bloco" style={{ width: "12rem" }}>
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "5rem", width: "100%" }} aria-hidden="true" />
               </div>
             ),
           },
@@ -440,7 +457,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeCircle,
             preview: (
               <div aria-busy="true" aria-label="Carregando avatar">
-                <Skeleton className="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
+                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
               </div>
             ),
           },
@@ -450,7 +467,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeLine,
             preview: (
               <div aria-busy="true" aria-label="Carregando linha de texto">
-                <Skeleton className="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />
+                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
               </div>
             ),
           },

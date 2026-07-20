@@ -265,7 +265,7 @@ interface TabsContentProps {
             const order = ["overview", "properties", "examples"];
             handleTabChange(next, labels[next] ?? next, order.indexOf(next), order.length);
           }}
-          className="w-full"
+          className="nds-w-full"
         >
           <TabsList aria-label={tContent("demonstration.title")}>
             <TabsTrigger value="overview">
@@ -370,7 +370,7 @@ interface TabsContentProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Tabs defaultValue="overview" className="w-full">
+              <Tabs defaultValue="overview" className="nds-w-full">
                 <TabsList aria-label="Seções do componente">
                   <TabsTrigger value="overview">Visão geral</TabsTrigger>
                   <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -388,7 +388,7 @@ interface TabsContentProps {
               </Tabs>
             ),
             dontPreview: (
-              <Tabs defaultValue="aba-1" className="w-full">
+              <Tabs defaultValue="aba-1" className="nds-w-full">
                 <TabsList aria-label="Tabs">
                   <TabsTrigger value="aba-1">Aba 1</TabsTrigger>
                   <TabsTrigger value="aba-2">Aba 2</TabsTrigger>
@@ -406,7 +406,7 @@ interface TabsContentProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Tabs defaultValue="profile" className="w-full">
+              <Tabs defaultValue="profile" className="nds-w-full">
                 <TabsList aria-label="Configurações da conta">
                   <TabsTrigger value="profile">
                     <User aria-hidden="true" />
@@ -431,7 +431,7 @@ interface TabsContentProps {
               </Tabs>
             ),
             dontPreview: (
-              <Tabs defaultValue="profile" className="w-full">
+              <Tabs defaultValue="profile" className="nds-w-full">
                 <TabsList aria-label="Tabs">
                   <TabsTrigger value="profile">
                     <User aria-hidden="true" />
@@ -473,7 +473,7 @@ interface TabsContentProps {
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <Tabs defaultValue="overview" className="w-full">
+              <Tabs defaultValue="overview" className="nds-w-full">
                 <TabsList aria-label="Seções do componente">
                   <TabsTrigger value="overview">
                     {tContent("demonstration.labels.overview")}
@@ -502,7 +502,7 @@ interface TabsContentProps {
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,
             preview: (
-              <Tabs defaultValue="overview" className="w-full">
+              <Tabs defaultValue="overview" className="nds-w-full">
                 <TabsList aria-label="Seções do componente" variant="line">
                   <TabsTrigger value="overview">
                     {tContent("demonstration.labels.overview")}
@@ -534,7 +534,7 @@ interface TabsContentProps {
               <Tabs
                 orientation="vertical"
                 defaultValue="overview"
-                className="w-full"
+                className="nds-w-full"
               >
                 <TabsList aria-label="Seções do componente">
                   <TabsTrigger value="overview">
@@ -572,84 +572,84 @@ interface TabsContentProps {
             name: tContent("variants.compositions.iconTrigger.name"),
             description: tContent("variants.compositions.iconTrigger.description"),
             useWhen: tContent("variants.compositions.iconTrigger.use"),
-            code: `<Tabs defaultValue="profile" className="w-full max-w-xl">
+            code: `<Tabs defaultValue="profile" className="nds-w-full" style={{ maxWidth: "36rem" }}>
   <TabsList aria-label="Configurações">
     <TabsTrigger value="profile">
-      <span className="flex items-center gap-2">
-        <User aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="sm">
+        <User aria-hidden="true" className="nds-icon nds-shrink-0" />
         Perfil
       </span>
     </TabsTrigger>
     <TabsTrigger value="account">
-      <span className="flex items-center gap-2">
-        <Settings aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="sm">
+        <Settings aria-hidden="true" className="nds-icon nds-shrink-0" />
         Conta
       </span>
     </TabsTrigger>
     <TabsTrigger value="security">
-      <span className="flex items-center gap-2">
-        <Shield aria-hidden="true" className="h-4 w-4" />
+      <span className="nds-cluster" data-spacing="sm">
+        <Shield aria-hidden="true" className="nds-icon nds-shrink-0" />
         Segurança
       </span>
     </TabsTrigger>
   </TabsList>
   <TabsContent value="profile">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Perfil</h3>
-      <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
     </div>
   </TabsContent>
   <TabsContent value="account">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Conta</h3>
-      <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Conta</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
     </div>
   </TabsContent>
   <TabsContent value="security">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Segurança</h3>
-      <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
     </div>
   </TabsContent>
 </Tabs>`,
             preview: (
-              <Tabs defaultValue="profile" className="w-full max-w-xl">
+              <Tabs defaultValue="profile" className="nds-w-full" style={{ maxWidth: "36rem" }}>
                 <TabsList aria-label="Configurações">
                   <TabsTrigger value="profile">
-                    <span className="flex items-center gap-2">
-                      <User aria-hidden="true" className="h-4 w-4" />
+                    <span className="nds-cluster" data-spacing="sm">
+                      <User aria-hidden="true" className="nds-icon nds-shrink-0" />
                       Perfil
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="account">
-                    <span className="flex items-center gap-2">
-                      <Settings aria-hidden="true" className="h-4 w-4" />
+                    <span className="nds-cluster" data-spacing="sm">
+                      <Settings aria-hidden="true" className="nds-icon nds-shrink-0" />
                       Conta
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="security">
-                    <span className="flex items-center gap-2">
-                      <Shield aria-hidden="true" className="h-4 w-4" />
+                    <span className="nds-cluster" data-spacing="sm">
+                      <Shield aria-hidden="true" className="nds-icon nds-shrink-0" />
                       Segurança
                     </span>
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Perfil</h3>
-                    <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="account">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Conta</h3>
-                    <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Conta</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="security">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Segurança</h3>
-                    <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -659,78 +659,78 @@ interface TabsContentProps {
             name: tContent("variants.compositions.badgeTrigger.name"),
             description: tContent("variants.compositions.badgeTrigger.description"),
             useWhen: tContent("variants.compositions.badgeTrigger.use"),
-            code: `<Tabs defaultValue="inbox" className="w-full max-w-xl">
+            code: `<Tabs defaultValue="inbox" className="nds-w-full" style={{ maxWidth: "36rem" }}>
   <TabsList aria-label="Caixas de mensagem">
     <TabsTrigger value="inbox">
-      <span className="flex items-center gap-2">
+      <span className="nds-cluster" data-spacing="sm">
         Caixa de entrada
-        <Badge className="text-[10px] h-4">12</Badge>
+        <Badge style={{ fontSize: "10px", height: "1rem" }}>12</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="spam">
-      <span className="flex items-center gap-2">
+      <span className="nds-cluster" data-spacing="sm">
         Spam
-        <Badge variant="destructive" className="text-[10px] h-4">3</Badge>
+        <Badge variant="destructive" style={{ fontSize: "10px", height: "1rem" }}>3</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="trash">
-      <span className="flex items-center gap-2">Lixeira</span>
+      <span className="nds-cluster" data-spacing="sm">Lixeira</span>
     </TabsTrigger>
   </TabsList>
   <TabsContent value="inbox">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Caixa de entrada</h3>
-      <p className="text-sm text-muted-foreground">12 mensagens não lidas</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Caixa de entrada</h3>
+      <p className="nds-text-body nds-text-muted-foreground">12 mensagens não lidas</p>
     </div>
   </TabsContent>
   <TabsContent value="spam">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Spam</h3>
-      <p className="text-sm text-muted-foreground">3 marcadas como spam</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Spam</h3>
+      <p className="nds-text-body nds-text-muted-foreground">3 marcadas como spam</p>
     </div>
   </TabsContent>
   <TabsContent value="trash">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Lixeira</h3>
-      <p className="text-sm text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Lixeira</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
     </div>
   </TabsContent>
 </Tabs>`,
             preview: (
-              <Tabs defaultValue="inbox" className="w-full max-w-xl">
+              <Tabs defaultValue="inbox" className="nds-w-full" style={{ maxWidth: "36rem" }}>
                 <TabsList aria-label="Caixas de mensagem">
                   <TabsTrigger value="inbox">
-                    <span className="flex items-center gap-2">
+                    <span className="nds-cluster" data-spacing="sm">
                       Caixa de entrada
-                      <Badge className="text-[10px] h-4">12</Badge>
+                      <Badge style={{ fontSize: "10px", height: "1rem" }}>12</Badge>
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="spam">
-                    <span className="flex items-center gap-2">
+                    <span className="nds-cluster" data-spacing="sm">
                       Spam
-                      <Badge variant="destructive" className="text-[10px] h-4">3</Badge>
+                      <Badge variant="destructive" style={{ fontSize: "10px", height: "1rem" }}>3</Badge>
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="trash">
-                    <span className="flex items-center gap-2">Lixeira</span>
+                    <span className="nds-cluster" data-spacing="sm">Lixeira</span>
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="inbox">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Caixa de entrada</h3>
-                    <p className="text-sm text-muted-foreground">12 mensagens não lidas</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Caixa de entrada</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">12 mensagens não lidas</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="spam">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Spam</h3>
-                    <p className="text-sm text-muted-foreground">3 marcadas como spam</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Spam</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">3 marcadas como spam</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="trash">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Lixeira</h3>
-                    <p className="text-sm text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Lixeira</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -740,39 +740,39 @@ interface TabsContentProps {
             name: tContent("variants.compositions.vertical.name"),
             description: tContent("variants.compositions.vertical.description"),
             useWhen: tContent("variants.compositions.vertical.use"),
-            code: `<Tabs defaultValue="profile" className="w-full max-w-2xl flex gap-4" orientation="vertical">
-  <TabsList className="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+            code: `<Tabs defaultValue="profile" className="nds-w-full nds-cluster" style={{ maxWidth: "42rem" }} orientation="vertical">
+  <TabsList className="nds-stack nds-shrink-0" style={{ height: "auto", alignItems: "stretch", minWidth: "10rem" }} aria-label="Configurações">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
     <TabsTrigger value="security">Segurança</TabsTrigger>
   </TabsList>
   <TabsContent value="profile">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Perfil</h3>
-      <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
     </div>
   </TabsContent>
   <TabsContent value="account">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Conta</h3>
-      <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Conta</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
     </div>
   </TabsContent>
   <TabsContent value="security">
-    <div className="p-4 rounded-md border bg-card space-y-2">
-      <h3 className="text-sm font-semibold">Segurança</h3>
-      <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+    <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+      <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
+      <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
     </div>
   </TabsContent>
 </Tabs>`,
             preview: (
               <Tabs
                 defaultValue="profile"
-                className="w-full max-w-2xl flex gap-4"
+                className="nds-w-full nds-cluster" style={{ maxWidth: "42rem" }}
                 orientation="vertical"
               >
                 <TabsList
-                  className="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]"
+                  className="nds-stack nds-shrink-0" style={{ height: "auto", alignItems: "stretch", minWidth: "10rem" }}
                   aria-label="Configurações"
                 >
                   <TabsTrigger value="profile">Perfil</TabsTrigger>
@@ -780,21 +780,21 @@ interface TabsContentProps {
                   <TabsTrigger value="security">Segurança</TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Perfil</h3>
-                    <p className="text-sm text-muted-foreground">Edite suas informações públicas.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="account">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Conta</h3>
-                    <p className="text-sm text-muted-foreground">Email, idioma e preferências.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Conta</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="security">
-                  <div className="p-4 rounded-md border bg-card space-y-2">
-                    <h3 className="text-sm font-semibold">Segurança</h3>
-                    <p className="text-sm text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                  <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                    <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
+                    <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -804,53 +804,53 @@ interface TabsContentProps {
             name: tContent("variants.compositions.lineSubNav.name"),
             description: tContent("variants.compositions.lineSubNav.description"),
             useWhen: tContent("variants.compositions.lineSubNav.use"),
-            code: `<Tabs defaultValue="all" className="w-full max-w-2xl" variant="line">
+            code: `<Tabs defaultValue="all" className="nds-w-full" style={{ maxWidth: "42rem" }} variant="line">
   <TabsList
     aria-label="Filtros de listagem"
-    className="border-b rounded-none bg-transparent w-full justify-start"
+    className="nds-border-b nds-bg-transparent nds-w-full" style={{ borderRadius: "0", justifyContent: "flex-start" }}
   >
     <TabsTrigger value="all">Tudo</TabsTrigger>
     <TabsTrigger value="active">Ativos</TabsTrigger>
     <TabsTrigger value="archived">Arquivados</TabsTrigger>
   </TabsList>
   <TabsContent value="all">
-    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+    <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
       Mostrando todos os itens.
     </div>
   </TabsContent>
   <TabsContent value="active">
-    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+    <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
       Mostrando apenas ativos.
     </div>
   </TabsContent>
   <TabsContent value="archived">
-    <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+    <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
       Mostrando apenas arquivados.
     </div>
   </TabsContent>
 </Tabs>`,
             preview: (
-              <Tabs defaultValue="all" className="w-full max-w-2xl" variant="line">
+              <Tabs defaultValue="all" className="nds-w-full" style={{ maxWidth: "42rem" }} variant="line">
                 <TabsList
                   aria-label="Filtros de listagem"
-                  className="border-b rounded-none bg-transparent w-full justify-start"
+                  className="nds-border-b nds-bg-transparent nds-w-full" style={{ borderRadius: "0", justifyContent: "flex-start" }}
                 >
                   <TabsTrigger value="all">Tudo</TabsTrigger>
                   <TabsTrigger value="active">Ativos</TabsTrigger>
                   <TabsTrigger value="archived">Arquivados</TabsTrigger>
                 </TabsList>
                 <TabsContent value="all">
-                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                  <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
                     Mostrando todos os itens.
                   </div>
                 </TabsContent>
                 <TabsContent value="active">
-                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                  <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
                     Mostrando apenas ativos.
                   </div>
                 </TabsContent>
                 <TabsContent value="archived">
-                  <div className="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+                  <div className="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
                     Mostrando apenas arquivados.
                   </div>
                 </TabsContent>
