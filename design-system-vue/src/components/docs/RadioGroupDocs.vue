@@ -135,51 +135,51 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 const codeImportBasic = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";`;
 
-const codeVertical = `<RadioGroup aria-label="Forma de pagamento" class="grid gap-2">
-  <div class="flex items-center gap-2">
+const codeVertical = `<RadioGroup aria-label="Forma de pagamento">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="cartao" id="v-cartao" />
     <Label :for="'v-cartao'">Cartão de crédito</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="pix" id="v-pix" />
     <Label :for="'v-pix'">Pix</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="boleto" id="v-boleto" />
     <Label :for="'v-boleto'">Boleto bancário</Label>
   </div>
 </RadioGroup>`;
 
-const codeHorizontal = `<RadioGroup orientation="horizontal" aria-label="Forma de entrega" class="flex gap-6">
-  <div class="flex items-center gap-2">
+const codeHorizontal = `<RadioGroup orientation="horizontal" class="nds-cluster" data-spacing="lg" aria-label="Forma de entrega">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="standard" id="h-standard" />
     <Label :for="'h-standard'">Padrão (5 dias)</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="express" id="h-express" />
     <Label :for="'h-express'">Expressa (1 dia)</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <RadioGroupItem value="pickup" id="h-pickup" />
     <Label :for="'h-pickup'">Retirar na loja</Label>
   </div>
 </RadioGroup>`;
 
-const codeWithDescription = `<RadioGroup aria-label="Forma de pagamento" class="grid gap-3">
-  <div class="flex items-start gap-2">
-    <RadioGroupItem value="cartao" id="d-cartao" class="mt-1" aria-describedby="d-cartao-desc" />
-    <div class="space-y-0.5">
+const codeWithDescription = `<RadioGroup aria-label="Forma de pagamento">
+  <div class="nds-cluster" data-spacing="xs" data-align="start">
+    <RadioGroupItem value="cartao" id="d-cartao" class="nds-mt-0-5" aria-describedby="d-cartao-desc" />
+    <div class="nds-stack" data-spacing="xs">
       <Label :for="'d-cartao'">Cartão de crédito</Label>
-      <p id="d-cartao-desc" class="text-xs text-muted-foreground">
+      <p id="d-cartao-desc" class="nds-text-body nds-text-muted-foreground">
         Aprovação imediata em até 12x.
       </p>
     </div>
   </div>
-  <div class="flex items-start gap-2">
-    <RadioGroupItem value="pix" id="d-pix" class="mt-1" aria-describedby="d-pix-desc" />
-    <div class="space-y-0.5">
+  <div class="nds-cluster" data-spacing="xs" data-align="start">
+    <RadioGroupItem value="pix" id="d-pix" class="nds-mt-0-5" aria-describedby="d-pix-desc" />
+    <div class="nds-stack" data-spacing="xs">
       <Label :for="'d-pix'">Pix</Label>
-      <p id="d-pix-desc" class="text-xs text-muted-foreground">
+      <p id="d-pix-desc" class="nds-text-body nds-text-muted-foreground">
         Pagamento instantâneo com 5% de desconto.
       </p>
     </div>
@@ -245,96 +245,97 @@ function handleInFormSubmit(e: Event) {
   inFormOutput.value = value ? String(value) : '—';
 }
 
-const codeCompVertical = `<div class="flex flex-col gap-2">
-  <p id="comp-payment-legend" class="text-sm font-semibold">Forma de pagamento</p>
+const codeCompVertical = `<div class="nds-stack" data-spacing="sm">
+  <p id="comp-payment-legend" class="nds-text-body nds-font-semibold">Forma de pagamento</p>
   <RadioGroup name="payment" aria-labelledby="comp-payment-legend">
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="card" id="comp-v-card" />
       <Label :for="'comp-v-card'">Cartão de crédito</Label>
     </div>
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="pix" id="comp-v-pix" />
       <Label :for="'comp-v-pix'">Pix</Label>
     </div>
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="boleto" id="comp-v-boleto" />
       <Label :for="'comp-v-boleto'">Boleto bancário</Label>
     </div>
   </RadioGroup>
 </div>`;
 
-const codeCompHorizontal = `<div class="flex flex-col gap-2">
-  <p id="comp-delivery-legend" class="text-sm font-semibold">Forma de entrega</p>
+const codeCompHorizontal = `<div class="nds-stack" data-spacing="sm">
+  <p id="comp-delivery-legend" class="nds-text-body nds-font-semibold">Forma de entrega</p>
   <RadioGroup
     name="delivery"
     aria-labelledby="comp-delivery-legend"
     class="grid grid-flow-col auto-cols-max gap-6"
   >
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="standard" id="comp-h-standard" />
       <Label :for="'comp-h-standard'">Padrão (5 dias)</Label>
     </div>
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="express" id="comp-h-express" />
       <Label :for="'comp-h-express'">Expressa (1 dia)</Label>
     </div>
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="pickup" id="comp-h-pickup" />
       <Label :for="'comp-h-pickup'">Retirar na loja</Label>
     </div>
   </RadioGroup>
 </div>`;
 
-const codeCompWithDescription = `<div class="flex flex-col gap-2 w-80">
-  <p id="comp-delivery-desc-legend" class="text-sm font-semibold">Forma de entrega</p>
+const codeCompWithDescription = `<div class="nds-stack nds-w-sm" data-spacing="sm">
+  <p id="comp-delivery-desc-legend" class="nds-text-body nds-font-semibold">Forma de entrega</p>
   <RadioGroup name="delivery" aria-labelledby="comp-delivery-desc-legend">
-    <div class="flex items-start space-x-2">
-      <RadioGroupItem value="standard" id="comp-d-standard" class="mt-1" />
-      <div class="flex flex-col gap-1">
+    <div class="nds-cluster" data-spacing="xs" data-align="start">
+      <RadioGroupItem value="standard" id="comp-d-standard" class="nds-mt-1" />
+      <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-standard'">Padrão</Label>
-        <p class="text-sm text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
       </div>
     </div>
-    <div class="flex items-start space-x-2">
-      <RadioGroupItem value="express" id="comp-d-express" class="mt-1" />
-      <div class="flex flex-col gap-1">
+    <div class="nds-cluster" data-spacing="xs" data-align="start">
+      <RadioGroupItem value="express" id="comp-d-express" class="nds-mt-1" />
+      <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-express'">Expressa</Label>
-        <p class="text-sm text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
       </div>
     </div>
-    <div class="flex items-start space-x-2">
-      <RadioGroupItem value="pickup" id="comp-d-pickup" class="mt-1" />
-      <div class="flex flex-col gap-1">
+    <div class="nds-cluster" data-spacing="xs" data-align="start">
+      <RadioGroupItem value="pickup" id="comp-d-pickup" class="nds-mt-1" />
+      <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-pickup'">Retirar na loja</Label>
-        <p class="text-sm text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
       </div>
     </div>
   </RadioGroup>
 </div>`;
 
 const codeCompInForm = `<form
-  class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
+  data-spacing="md"
   @submit.prevent="handleSubmit"
 >
-  <fieldset class="border-0 p-0 m-0 flex flex-col gap-2">
-    <legend class="text-sm font-semibold mb-2">Forma de pagamento</legend>
+  <fieldset class="nds-stack nds-border-none nds-p-0 nds-m-0" data-spacing="sm">
+    <legend class="nds-text-body nds-font-semibold nds-mb-2">Forma de pagamento</legend>
     <RadioGroup name="payment">
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="xs">
         <RadioGroupItem value="card" id="form-card" />
         <Label :for="'form-card'">Cartão de crédito</Label>
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="xs">
         <RadioGroupItem value="pix" id="form-pix" />
         <Label :for="'form-pix'">Pix</Label>
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="xs">
         <RadioGroupItem value="boleto" id="form-boleto" />
         <Label :for="'form-boleto'">Boleto bancário</Label>
       </div>
     </RadioGroup>
   </fieldset>
-  <Button type="submit" class="self-end">Continuar</Button>
-  <p class="text-sm text-muted-foreground">Selecionado: {{ output }}</p>
+  <Button type="submit" style="align-self: flex-end">Continuar</Button>
+  <p class="nds-text-body nds-text-muted-foreground">Selecionado: {{ output }}</p>
 </form>`;
 
 const compositionItems = computed(() => [
@@ -492,31 +493,30 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full max-w-md space-y-8">
+      <div class="nds-w-full nds-max-w-md nds-stack" data-spacing="xl">
         <!-- Vertical -->
-        <fieldset class="space-y-3">
-          <legend class="text-sm font-semibold mb-2">
+        <fieldset class="nds-stack" data-spacing="sm">
+          <legend class="nds-text-body nds-font-semibold nds-mb-2">
             {{ tContent('demonstration.labels.groupLabel') }}
           </legend>
           <RadioGroup
             :aria-label="tContent('demonstration.labels.groupLabel')"
-            class="grid gap-2"
           >
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-cartao"
                 value="cartao"
               />
               <Label :for="'demo-cartao'">{{ tContent('demonstration.labels.card') }}</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-pix"
                 value="pix"
               />
               <Label :for="'demo-pix'">{{ tContent('demonstration.labels.pix') }}</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-boleto"
                 value="boleto"
@@ -527,30 +527,30 @@ const visualTestItems = computed(() => [
         </fieldset>
 
         <!-- Horizontal -->
-        <fieldset class="space-y-3">
-          <legend class="text-sm font-semibold mb-2">
+        <fieldset class="nds-stack" data-spacing="sm">
+          <legend class="nds-text-body nds-font-semibold nds-mb-2">
             {{ tContent('demonstration.labels.deliveryLabel') }}
           </legend>
           <RadioGroup
             orientation="horizontal"
             :aria-label="tContent('demonstration.labels.deliveryLabel')"
-            class="flex gap-6"
+            style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
           >
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-standard"
                 value="standard"
               />
               <Label :for="'demo-standard'">{{ tContent('demonstration.labels.standard') }}</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-express"
                 value="express"
               />
               <Label :for="'demo-express'">{{ tContent('demonstration.labels.express') }}</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="demo-pickup"
                 value="pickup"
@@ -561,43 +561,42 @@ const visualTestItems = computed(() => [
         </fieldset>
 
         <!-- With description -->
-        <fieldset class="space-y-3">
-          <legend class="text-sm font-semibold mb-2">
+        <fieldset class="nds-stack" data-spacing="sm">
+          <legend class="nds-text-body nds-font-semibold nds-mb-2">
             {{ tContent('demonstration.labels.groupLabel') }}
           </legend>
           <RadioGroup
             :aria-label="tContent('demonstration.labels.groupLabel')"
-            class="grid gap-3"
           >
-            <div class="flex items-start gap-2">
+            <div class="nds-cluster" data-spacing="xs" data-align="start">
               <RadioGroupItem
                 id="demo-d-cartao"
                 value="cartao"
-                class="mt-1"
+                class="nds-mt-0-5"
                 aria-describedby="demo-d-cartao-desc"
               />
-              <div class="grid gap-0.5">
+              <div class="nds-stack" data-spacing="xs">
                 <Label :for="'demo-d-cartao'">{{ tContent('demonstration.labels.card') }}</Label>
                 <p
                   id="demo-d-cartao-desc"
-                  class="text-xs text-muted-foreground"
+                  class="nds-text-body nds-text-muted-foreground"
                 >
                   Visa, Mastercard, Amex · até 12x
                 </p>
               </div>
             </div>
-            <div class="flex items-start gap-2">
+            <div class="nds-cluster" data-spacing="xs" data-align="start">
               <RadioGroupItem
                 id="demo-d-pix"
                 value="pix"
-                class="mt-1"
+                class="nds-mt-0-5"
                 aria-describedby="demo-d-pix-desc"
               />
-              <div class="grid gap-0.5">
+              <div class="nds-stack" data-spacing="xs">
                 <Label :for="'demo-d-pix'">{{ tContent('demonstration.labels.pix') }}</Label>
                 <p
                   id="demo-d-pix-desc"
-                  class="text-xs text-muted-foreground"
+                  class="nds-text-body nds-text-muted-foreground"
                 >
                   Aprovação instantânea · 5% de desconto
                 </p>
@@ -699,16 +698,15 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <RadioGroup
           aria-label="Forma de pagamento (do)"
-          class="grid gap-2"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-do-1a"
               value="a"
             />
             <Label :for="'dodont-do-1a'">Cartão de crédito</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-do-1b"
               value="b"
@@ -720,21 +718,20 @@ const visualTestItems = computed(() => [
       <template #dont-preview-0>
         <RadioGroup
           aria-label="Forma de pagamento (dont)"
-          class="grid gap-2"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-dont-1a"
               value="a"
             />
-            <span class="text-sm">Cartão de crédito</span>
+            <span class="nds-text-body">Cartão de crédito</span>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-dont-1b"
               value="b"
             />
-            <span class="text-sm">Pix</span>
+            <span class="nds-text-body">Pix</span>
           </div>
         </RadioGroup>
       </template>
@@ -743,16 +740,15 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <RadioGroup
           aria-label="Forma de entrega (do)"
-          class="grid gap-2"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-do-2a"
               value="standard"
             />
             <Label :for="'dodont-do-2a'">Padrão (5 dias)</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-do-2b"
               value="express"
@@ -765,16 +761,15 @@ const visualTestItems = computed(() => [
         <RadioGroup
           default-value="express"
           aria-label="Forma de entrega (dont)"
-          class="grid gap-2"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-dont-2a"
               value="standard"
             />
             <Label :for="'dodont-dont-2a'">Padrão (5 dias)</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="dodont-dont-2b"
               value="express"
@@ -801,23 +796,22 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <RadioGroup
           aria-label="Forma de pagamento"
-          class="grid gap-2 w-full"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-v-cartao"
               value="cartao"
             />
             <Label :for="'var-v-cartao'">Cartão de crédito</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-v-pix"
               value="pix"
             />
             <Label :for="'var-v-pix'">Pix</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-v-boleto"
               value="boleto"
@@ -832,23 +826,23 @@ const visualTestItems = computed(() => [
         <RadioGroup
           orientation="horizontal"
           aria-label="Forma de entrega"
-          class="flex flex-wrap gap-6"
+          style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
         >
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-h-standard"
               value="standard"
             />
             <Label :for="'var-h-standard'">Padrão</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-h-express"
               value="express"
             />
             <Label :for="'var-h-express'">Expressa</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem
               id="var-h-pickup"
               value="pickup"
@@ -862,37 +856,36 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <RadioGroup
           aria-label="Forma de pagamento"
-          class="grid gap-3 w-full"
         >
-          <div class="flex items-start gap-2">
+          <div class="nds-cluster" data-spacing="xs" data-align="start">
             <RadioGroupItem
               id="var-d-cartao"
               value="cartao"
-              class="mt-1"
+              class="nds-mt-0-5"
               aria-describedby="var-d-cartao-desc"
             />
-            <div class="space-y-0.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label :for="'var-d-cartao'">Cartão de crédito</Label>
               <p
                 id="var-d-cartao-desc"
-                class="text-xs text-muted-foreground"
+                class="nds-text-body nds-text-muted-foreground"
               >
                 Aprovação imediata em até 12x.
               </p>
             </div>
           </div>
-          <div class="flex items-start gap-2">
+          <div class="nds-cluster" data-spacing="xs" data-align="start">
             <RadioGroupItem
               id="var-d-pix"
               value="pix"
-              class="mt-1"
+              class="nds-mt-0-5"
               aria-describedby="var-d-pix-desc"
             />
-            <div class="space-y-0.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label :for="'var-d-pix'">Pix</Label>
               <p
                 id="var-d-pix-desc"
-                class="text-xs text-muted-foreground"
+                class="nds-text-body nds-text-muted-foreground"
               >
                 Pagamento instantâneo com 5% de desconto.
               </p>
@@ -911,10 +904,10 @@ const visualTestItems = computed(() => [
     >
       <!-- vertical -->
       <template #variant-preview-0>
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <p
             id="comp-payment-legend"
-            class="text-sm font-semibold"
+            class="nds-text-body nds-font-semibold"
           >
             Forma de pagamento
           </p>
@@ -922,21 +915,21 @@ const visualTestItems = computed(() => [
             name="payment"
             aria-labelledby="comp-payment-legend"
           >
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-v-card"
                 value="card"
               />
               <Label :for="'comp-v-card'">Cartão de crédito</Label>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-v-pix"
                 value="pix"
               />
               <Label :for="'comp-v-pix'">Pix</Label>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-v-boleto"
                 value="boleto"
@@ -949,10 +942,10 @@ const visualTestItems = computed(() => [
 
       <!-- horizontal -->
       <template #variant-preview-1>
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <p
             id="comp-delivery-legend"
-            class="text-sm font-semibold"
+            class="nds-text-body nds-font-semibold"
           >
             Forma de entrega
           </p>
@@ -961,21 +954,21 @@ const visualTestItems = computed(() => [
             aria-labelledby="comp-delivery-legend"
             class="grid grid-flow-col auto-cols-max gap-6"
           >
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-h-standard"
                 value="standard"
               />
               <Label :for="'comp-h-standard'">Padrão (5 dias)</Label>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-h-express"
                 value="express"
               />
               <Label :for="'comp-h-express'">Expressa (1 dia)</Label>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="nds-cluster" data-spacing="xs">
               <RadioGroupItem
                 id="comp-h-pickup"
                 value="pickup"
@@ -988,10 +981,10 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-2>
-        <div class="flex flex-col gap-2 w-80">
+        <div class="nds-stack nds-w-sm" data-spacing="sm">
           <p
             id="comp-delivery-desc-legend"
-            class="text-sm font-semibold"
+            class="nds-text-body nds-font-semibold"
           >
             Forma de entrega
           </p>
@@ -999,41 +992,41 @@ const visualTestItems = computed(() => [
             name="delivery"
             aria-labelledby="comp-delivery-desc-legend"
           >
-            <div class="flex items-start space-x-2">
+            <div class="nds-cluster" data-spacing="xs" data-align="start">
               <RadioGroupItem
                 id="comp-d-standard"
                 value="standard"
-                class="mt-1"
+                class="nds-mt-1"
               />
-              <div class="flex flex-col gap-1">
+              <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-standard'">Padrão</Label>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Entrega em 5 dias úteis — frete grátis acima de R$ 199.
                 </p>
               </div>
             </div>
-            <div class="flex items-start space-x-2">
+            <div class="nds-cluster" data-spacing="xs" data-align="start">
               <RadioGroupItem
                 id="comp-d-express"
                 value="express"
-                class="mt-1"
+                class="nds-mt-1"
               />
-              <div class="flex flex-col gap-1">
+              <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-express'">Expressa</Label>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Receba em 1 dia útil — taxa adicional de R$ 19,90.
                 </p>
               </div>
             </div>
-            <div class="flex items-start space-x-2">
+            <div class="nds-cluster" data-spacing="xs" data-align="start">
               <RadioGroupItem
                 id="comp-d-pickup"
                 value="pickup"
-                class="mt-1"
+                class="nds-mt-1"
               />
-              <div class="flex flex-col gap-1">
+              <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-pickup'">Retirar na loja</Label>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Disponível em 2h — sem custo de frete.
                 </p>
               </div>
@@ -1045,29 +1038,30 @@ const visualTestItems = computed(() => [
       <!-- inForm -->
       <template #variant-preview-3>
         <form
-          class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+          class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
+          data-spacing="md"
           @submit.prevent="handleInFormSubmit"
         >
-          <fieldset class="border-0 p-0 m-0 flex flex-col gap-2">
-            <legend class="text-sm font-semibold mb-2">
+          <fieldset class="nds-stack nds-border-none nds-p-0 nds-m-0" data-spacing="sm">
+            <legend class="nds-text-body nds-font-semibold nds-mb-2">
               Forma de pagamento
             </legend>
             <RadioGroup name="payment">
-              <div class="flex items-center space-x-2">
+              <div class="nds-cluster" data-spacing="xs">
                 <RadioGroupItem
                   id="form-card"
                   value="card"
                 />
                 <Label :for="'form-card'">Cartão de crédito</Label>
               </div>
-              <div class="flex items-center space-x-2">
+              <div class="nds-cluster" data-spacing="xs">
                 <RadioGroupItem
                   id="form-pix"
                   value="pix"
                 />
                 <Label :for="'form-pix'">Pix</Label>
               </div>
-              <div class="flex items-center space-x-2">
+              <div class="nds-cluster" data-spacing="xs">
                 <RadioGroupItem
                   id="form-boleto"
                   value="boleto"
@@ -1078,11 +1072,11 @@ const visualTestItems = computed(() => [
           </fieldset>
           <Button
             type="submit"
-            class="self-end"
+            style="align-self: flex-end"
           >
             Continuar
           </Button>
-          <p class="text-sm text-muted-foreground">
+          <p class="nds-text-body nds-text-muted-foreground">
             Selecionado: {{ inFormOutput }}
           </p>
         </form>

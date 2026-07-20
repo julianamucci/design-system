@@ -139,7 +139,7 @@ const codeImportWithPlugin = `import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";`;
 
-const codeHorizontal = `<Carousel class="w-full max-w-sm">
+const codeHorizontal = `<Carousel class="nds-w-full nds-max-w-sm">
   <CarouselContent>
     <CarouselItem v-for="(n, i) in 5" :key="i">Slide {{ n }}</CarouselItem>
   </CarouselContent>
@@ -147,15 +147,15 @@ const codeHorizontal = `<Carousel class="w-full max-w-sm">
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-const codeVertical = `<Carousel orientation="vertical" class="w-full max-w-xs">
-  <CarouselContent class="h-[200px]">
+const codeVertical = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs">
+  <CarouselContent style="height: 200px">
     <CarouselItem v-for="(n, i) in 5" :key="i">Slide {{ n }}</CarouselItem>
   </CarouselContent>
   <CarouselPrevious aria-label="Item anterior" />
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-const codeSingle = `<Carousel class="w-full max-w-sm">
+const codeSingle = `<Carousel class="nds-w-full nds-max-w-sm">
   <CarouselContent>
     <CarouselItem v-for="(n, i) in 5" :key="i">Slide {{ n }}</CarouselItem>
   </CarouselContent>
@@ -163,7 +163,7 @@ const codeSingle = `<Carousel class="w-full max-w-sm">
   <CarouselNext />
 </Carousel>`;
 
-const codeMulti = `<Carousel class="w-full max-w-xl">
+const codeMulti = `<Carousel class="nds-w-full" style="max-width: 42rem">
   <CarouselContent>
     <CarouselItem v-for="(n, i) in 6" :key="i" class="md:basis-1/2 lg:basis-1/3">
       Slide {{ n }}
@@ -234,7 +234,7 @@ function onInitApi(payload: CarouselApi) {
 <\/script>
 
 <template>
-  <div class="space-y-3">
+  <div class="nds-stack" data-spacing="sm">
     <Carousel @init-api="onInitApi" aria-label="Galeria de fotos do produto">
       <CarouselContent>
         <CarouselItem v-for="(s, i) in slides" :key="i">{{ s }}</CarouselItem>
@@ -242,30 +242,36 @@ function onInitApi(payload: CarouselApi) {
       <CarouselPrevious aria-label="Item anterior" />
       <CarouselNext aria-label="Próximo item" />
     </Carousel>
-    <div class="flex justify-center gap-2" aria-label="Ir para o slide">
+    <div class="nds-cluster" data-spacing="sm" data-justify="center" aria-label="Ir para o slide">
       <button
         v-for="(_, i) in slides"
         :key="i"
         type="button"
         :aria-label="\`Ir para o slide \${i + 1} de \${slides.length}\`"
         :aria-current="i === current ? 'true' : 'false'"
-        :class="['h-2 w-2 rounded-full', i === current ? 'bg-primary' : 'bg-muted-foreground/30']"
+        :class="['nds-rounded-full', i === current ? 'nds-bg-primary' : '']"
+        :style="{ height: '0.5rem', width: '0.5rem' }"
         @click="api?.scrollTo(i)"
       />
     </div>
   </div>
 </template>`;
 
-const codeCompositionGallery = `<Carousel class="w-full max-w-md" aria-label="Galeria de fotos do produto">
+const codeCompositionGallery = `<Carousel class="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     <CarouselItem v-for="photo in photos" :key="photo.id">
-      <Card class="overflow-hidden">
-        <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-          <span class="text-2xl font-semibold">{{ photo.title }}</span>
+      <Card class="nds-w-full nds-overflow-hidden">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+          style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))"
+        >
+          <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
         </div>
-        <div class="p-4">
-          <h3 class="font-semibold">{{ photo.title }}</h3>
-          <p class="text-sm text-muted-foreground">{{ photo.description }}</p>
+        <div class="nds-p-4">
+          <h3 class="nds-text-body nds-font-semibold nds-text-foreground">{{ photo.title }}</h3>
+          <p class="nds-text-caption nds-text-muted-foreground">{{ photo.description }}</p>
         </div>
       </Card>
     </CarouselItem>
@@ -292,7 +298,7 @@ import Autoplay from "embla-carousel-autoplay";
   </Carousel>
 </template>`;
 
-const codeCompositionMultiResponsive = `<Carousel class="w-full max-w-2xl" aria-label="Cards de produto">
+const codeCompositionMultiResponsive = `<Carousel class="nds-w-full" style="max-width: 42rem" aria-label="Cards de produto">
   <CarouselContent>
     <CarouselItem
       v-for="p in products"
@@ -487,9 +493,9 @@ const demoSlides = [1, 2, 3, 4, 5];
       :title="tContent('demonstration.title')"
       component-slug="carousel"
     >
-      <div class="flex items-center justify-center w-full py-10">
+      <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
         <Carousel
-          class="w-full max-w-sm"
+          class="nds-w-full nds-max-w-sm"
           :aria-label="tContent('usage.uxWriting.table.caption.good')"
         >
           <CarouselContent>
@@ -497,8 +503,8 @@ const demoSlides = [1, 2, 3, 4, 5];
               v-for="n in demoSlides"
               :key="n"
             >
-              <Card class="flex aspect-square items-center justify-center p-6">
-                <span class="text-3xl font-semibold">{{ n }}</span>
+              <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.875rem">{{ n }}</span>
               </Card>
             </CarouselItem>
           </CarouselContent>
@@ -571,9 +577,10 @@ const demoSlides = [1, 2, 3, 4, 5];
       ]"
     >
       <template #do-preview-0>
-        <div class="flex items-center justify-center py-6 px-8">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-[200px]"
+            class="nds-w-full"
+            style="max-width: 200px"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -581,8 +588,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-4">
-                  <span class="text-xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -592,15 +599,15 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="flex items-center justify-center py-6 px-8">
-          <Carousel class="w-full max-w-[200px]">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+          <Carousel class="nds-w-full" style="max-width: 200px">
             <CarouselContent>
               <CarouselItem
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-4">
-                  <span class="text-xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -608,29 +615,41 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #do-preview-1>
-        <div class="flex flex-col items-center justify-center gap-2 py-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
+        <div class="nds-stack" data-spacing="sm" data-align="center">
+          <div
+            class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
+            data-spacing="sm"
+            data-align="center"
+            style="padding: 0.375rem 0.75rem"
+          >
             <span
-              class="w-2 h-2 rounded-full bg-green-500"
+              class="nds-rounded-full nds-bg-success"
+              style="width: 0.5rem; height: 0.5rem"
               aria-hidden="true"
             />
             <code>Autoplay({ delay: 3000, stopOnInteraction: true })</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">
+          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
             loop: true + stopOnInteraction respeita WCAG 2.2.2
           </p>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="flex flex-col items-center justify-center gap-2 py-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-xs font-mono">
+        <div class="nds-stack" data-spacing="sm" data-align="center">
+          <div
+            class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
+            data-spacing="sm"
+            data-align="center"
+            style="padding: 0.375rem 0.75rem"
+          >
             <span
-              class="w-2 h-2 rounded-full bg-red-500"
+              class="nds-rounded-full nds-bg-destructive"
+              style="width: 0.5rem; height: 0.5rem"
               aria-hidden="true"
             />
             <code>Autoplay({ delay: 800 })</code>
           </div>
-          <p class="text-xs text-muted-foreground text-center max-w-xs">
+          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
             Avanço rápido sem pausa quebra WCAG 2.2.2
           </p>
         </div>
@@ -653,9 +672,9 @@ const demoSlides = [1, 2, 3, 4, 5];
       component-slug="carousel"
     >
       <template #variant-preview-0>
-        <div class="py-10 px-12">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-xs"
+            class="nds-w-full nds-max-w-xs"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -663,8 +682,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-6">
-                  <span class="text-2xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -674,19 +693,20 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="py-14 px-4">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
             orientation="vertical"
-            class="w-full max-w-[200px]"
+            class="nds-w-full"
+            style="max-width: 200px"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
-            <CarouselContent class="h-[200px]">
+            <CarouselContent style="height: 200px">
               <CarouselItem
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-4">
-                  <span class="text-2xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -696,9 +716,9 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="py-10 px-12">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-xs"
+            class="nds-w-full nds-max-w-xs"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -706,8 +726,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-6">
-                  <span class="text-2xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -717,9 +737,9 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="py-10 px-12">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-md"
+            class="nds-w-full nds-max-w-md"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -728,8 +748,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 :key="n"
                 class="md:basis-1/2 lg:basis-1/3"
               >
-                <Card class="flex aspect-square items-center justify-center p-4">
-                  <span class="text-xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -748,9 +768,9 @@ const demoSlides = [1, 2, 3, 4, 5];
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="w-full max-w-md space-y-3">
+        <div class="nds-w-full nds-max-w-md nds-stack" data-spacing="sm">
           <Carousel
-            class="w-full"
+            class="nds-w-full"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
             @init-api="onDotsInit"
           >
@@ -759,8 +779,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-6">
-                  <span class="text-2xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -768,7 +788,9 @@ const demoSlides = [1, 2, 3, 4, 5];
             <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
           </Carousel>
           <div
-            class="flex items-center justify-center gap-2"
+            class="nds-cluster"
+            data-spacing="sm"
+            data-justify="center"
             :aria-label="tContent('demonstration.labels.goToSlide')"
           >
             <button
@@ -777,16 +799,19 @@ const demoSlides = [1, 2, 3, 4, 5];
               type="button"
               :aria-label="`${tContent('demonstration.labels.goToSlide')} ${i + 1} ${tContent('demonstration.labels.of')} ${demoSlides.length}`"
               :aria-current="i === dotsCurrent ? 'true' : 'false'"
-              :class="['h-2 w-2 rounded-full transition-colors', i === dotsCurrent ? 'bg-primary' : 'bg-muted-foreground/30']"
+              :class="['nds-rounded-full', i === dotsCurrent ? 'nds-bg-primary' : '']"
+              :style="i === dotsCurrent
+                ? { height: '0.5rem', width: '0.5rem', transition: 'background-color 200ms' }
+                : { height: '0.5rem', width: '0.5rem', transition: 'background-color 200ms', background: 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)' }"
               @click="(dotsApi as any)?.scrollTo(i)"
             />
           </div>
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="py-6 px-4">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-sm"
+            class="nds-w-full nds-max-w-sm"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -794,15 +819,20 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="(photo, i) in galleryPhotos"
                 :key="i"
               >
-                <Card class="overflow-hidden">
-                  <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-                    <span class="text-2xl font-semibold text-foreground">{{ photo.title }}</span>
+                <Card class="nds-w-full nds-overflow-hidden nds-shadow-none">
+                  <div
+                    class="nds-w-full nds-cluster"
+                    data-justify="center"
+                    data-align="center"
+                    style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))"
+                  >
+                    <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
                   </div>
-                  <div class="p-4">
-                    <h3 class="text-sm font-semibold text-foreground">
+                  <div class="nds-p-4">
+                    <h3 class="nds-text-body nds-font-semibold nds-text-foreground">
                       {{ photo.title }}
                     </h3>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="nds-text-caption nds-text-muted-foreground">
                       {{ photo.description }}
                     </p>
                   </div>
@@ -815,9 +845,9 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="py-10 px-12">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-xs"
+            class="nds-w-full nds-max-w-xs"
             :opts="{ loop: true }"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
@@ -826,8 +856,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="flex aspect-square items-center justify-center p-6">
-                  <span class="text-2xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -837,9 +867,9 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="py-10 px-12">
+        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
           <Carousel
-            class="w-full max-w-md"
+            class="nds-w-full nds-max-w-md"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
           >
             <CarouselContent>
@@ -848,8 +878,8 @@ const demoSlides = [1, 2, 3, 4, 5];
                 :key="n"
                 class="md:basis-1/2 lg:basis-1/3"
               >
-                <Card class="flex aspect-square items-center justify-center p-4">
-                  <span class="text-xl font-semibold">{{ n }}</span>
+                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>

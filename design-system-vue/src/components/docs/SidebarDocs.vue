@@ -4,6 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
+import DOMPurify from 'dompurify';
 import { Badge } from '@/components/ui/badge';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -445,15 +446,15 @@ const open = ref(false);
   </SidebarMenuItem>
 </template>`;
 
-const codeCompositionWithSearch = `<SidebarHeader class="gap-2">
-  <span class="font-semibold">Design System</span>
-  <div class="relative">
+const codeCompositionWithSearch = `<SidebarHeader style="gap: 0.5rem">
+  <span class="nds-font-semibold">Design System</span>
+  <div style="position: relative">
     <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."
       aria-label="Buscar navegação"
-      class="pl-7"
+      style="padding-left: 1.75rem"
     />
   </div>
 </SidebarHeader>`;
@@ -511,13 +512,13 @@ const compositionItems = computed(() => [
         <template #badges>
           <Badge
             variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+            class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
           >
             {{ tContent('category') }}
           </Badge>
           <Badge
             variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+            class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
           >
             {{ tContent('type') }}
           </Badge>
@@ -531,13 +532,13 @@ const compositionItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="w-full min-h-[400px] flex rounded-lg overflow-hidden border border-border"
-        style="contain: layout"
+        class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
+        style="contain: layout; min-height: 400px; display: flex"
       >
         <SidebarProvider>
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
             <Sidebar collapsible="offcanvas">
-              <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">
+              <SidebarHeader class="nds-p-4 nds-font-semibold" style="color: var(--sidebar-foreground)">
                 Design System
               </SidebarHeader>
               <SidebarContent>
@@ -584,7 +585,7 @@ const compositionItems = computed(() => [
                   </SidebarGroupContent>
                 </SidebarGroup>
               </SidebarContent>
-              <SidebarFooter class="p-2">
+              <SidebarFooter class="nds-p-2">
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton :tooltip="tContent('demonstration.labels.profile')">
@@ -598,15 +599,20 @@ const compositionItems = computed(() => [
             </Sidebar>
           </nav>
           <SidebarInset>
-            <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+            <header
+              class="nds-cluster nds-border-b nds-px-4"
+              data-spacing="sm"
+              data-align="center"
+              style="height: 3rem"
+            >
               <SidebarTrigger />
-              <span class="text-sm text-muted-foreground">{{ tContent('demonstration.labels.dashboard') }}</span>
+              <span class="nds-text-body nds-text-muted-foreground">{{ tContent('demonstration.labels.dashboard') }}</span>
             </header>
             <main
               id="main-content"
-              class="p-4"
+              class="nds-p-4"
             >
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 {{ tContent('description') }}
               </p>
             </main>
@@ -667,16 +673,16 @@ const compositionItems = computed(() => [
       <!-- Par 1: SidebarProvider na raiz -->
       <template #do-preview-0>
         <div
-          class="w-full min-h-[180px] flex rounded overflow-hidden border border-border text-xs"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-text-caption"
+          style="contain: layout; min-height: 180px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
               <Sidebar
                 collapsible="none"
-                class="w-32"
+                style="width: 8rem"
               >
-                <SidebarHeader class="p-2 font-semibold text-sidebar-foreground text-xs">
+                <SidebarHeader class="nds-p-2 nds-font-semibold nds-text-caption" style="color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -701,7 +707,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-do1"
-                class="p-2 text-muted-foreground"
+                class="nds-p-2 nds-text-muted-foreground"
               >
                 Conteúdo
               </main>
@@ -710,160 +716,47 @@ const compositionItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-full min-h-[180px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5">
-          <div class="w-32 bg-sidebar border-r border-border p-2">
-            <p class="font-semibold text-sidebar-foreground">
-              App
-            </p>
-            <p class="text-muted-foreground mt-2">
-              Dashboard
-            </p>
-          </div>
-          <div class="flex-1 p-2 text-muted-foreground">
-            Estado replicado manualmente
-          </div>
+        <div
+          class="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4"
+          data-align="center"
+          data-justify="center"
+          style="min-height: 200px"
+        >
+          <p class="nds-text-caption nds-text-destructive" style="text-align: center">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="DOMPurify.sanitize(tContent('doDont.pair1.dont'))" />
+          </p>
         </div>
       </template>
 
       <!-- Par 2: aria-current no item ativo -->
       <template #do-preview-1>
-        <div
-          class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs"
-          style="contain: layout"
-        >
-          <SidebarProvider>
-            <nav aria-label="Navegação principal">
-              <Sidebar
-                collapsible="none"
-                class="w-32"
-              >
-                <SidebarContent>
-                  <SidebarGroup>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton
-                            :is-active="true"
-                            size="sm"
-                            :tooltip="'Dashboard'"
-                            aria-current="page"
-                          >
-                            <LayoutDashboard aria-hidden="true" /><span>Dashboard</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-                </SidebarContent>
-              </Sidebar>
-            </nav>
-            <SidebarInset>
-              <main
-                id="main-content-do2"
-                class="p-2 text-xs text-muted-foreground"
-              >
-                aria-current="page" + tooltip
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
+        <div class="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
+          <code class="nds-whitespace-pre">aria-current="page"
+tooltip="Dashboard"</code>
         </div>
       </template>
       <template #dont-preview-1>
-        <div
-          class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5"
-          style="contain: layout"
-        >
-          <div class="w-32 bg-sidebar border-r border-border p-2">
-            <div class="bg-sidebar-accent rounded p-1 text-sidebar-foreground">
-              <LayoutDashboard
-                class="inline-block mr-1 size-3"
-                aria-hidden="true"
-              />Dashboard
-            </div>
-          </div>
-          <div class="flex-1 p-2 text-muted-foreground">
-            Sem aria-current no item ativo
-          </div>
+        <div class="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
+          <code class="nds-whitespace-pre">// Ícone sem tooltip no modo icon
+&lt;SidebarMenuButton&gt;
+  &lt;Icon /&gt;
+&lt;/SidebarMenuButton&gt;</code>
         </div>
       </template>
 
       <!-- Par 3: SidebarTrigger só em mobile -->
       <template #do-preview-2>
-        <div
-          class="w-full min-h-[120px] flex rounded overflow-hidden border border-border text-xs"
-          style="contain: layout"
-        >
-          <SidebarProvider>
-            <nav aria-label="Navegação principal">
-              <Sidebar
-                collapsible="none"
-                class="w-32"
-              >
-                <SidebarContent>
-                  <SidebarGroup>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton size="sm">
-                            <Blocks aria-hidden="true" /><span>Componentes</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-                </SidebarContent>
-              </Sidebar>
-            </nav>
-            <SidebarInset>
-              <header class="flex h-8 items-center gap-2 px-2 border-b border-border">
-                <SidebarTrigger class="lg:hidden size-5" />
-                <span class="text-xs text-muted-foreground">Trigger só em mobile</span>
-              </header>
-              <main
-                id="main-content-do3"
-                class="p-2"
-              />
-            </SidebarInset>
-          </SidebarProvider>
+        <div class="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
+          <code class="nds-whitespace-pre">// Trigger apenas em mobile
+&lt;SidebarTrigger className="lg:hidden" /&gt;</code>
         </div>
       </template>
       <template #dont-preview-2>
-        <div
-          class="w-full min-h-[120px] flex rounded overflow-hidden border border-destructive/30 text-xs bg-destructive/5"
-          style="contain: layout"
-        >
-          <SidebarProvider>
-            <nav aria-label="Navegação principal">
-              <Sidebar
-                collapsible="none"
-                class="w-32"
-              >
-                <SidebarContent>
-                  <SidebarGroup>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton size="sm">
-                            <Blocks aria-hidden="true" /><span>Componentes</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-                </SidebarContent>
-              </Sidebar>
-            </nav>
-            <SidebarInset>
-              <header class="flex h-8 items-center gap-2 px-2 border-b border-border">
-                <SidebarTrigger class="size-5" />
-                <span class="text-xs text-muted-foreground">Trigger em desktop</span>
-              </header>
-              <main
-                id="main-content-dont3"
-                class="p-2"
-              />
-            </SidebarInset>
-          </SidebarProvider>
+        <div class="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
+          <code class="nds-whitespace-pre">// Trigger visível em desktop
+&lt;SidebarTrigger /&gt;
+{/* ocupa espaço do conteúdo */}</code>
         </div>
       </template>
     </DocsDoDont>
@@ -885,8 +778,8 @@ const compositionItems = computed(() => [
       <!-- variant: sidebar -->
       <template #variant-preview-0>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -894,7 +787,7 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -925,7 +818,8 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-v1"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 variant="sidebar"
               </main>
@@ -937,8 +831,8 @@ const compositionItems = computed(() => [
       <!-- variant: floating -->
       <template #variant-preview-1>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -946,7 +840,7 @@ const compositionItems = computed(() => [
                 variant="floating"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -977,7 +871,8 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-v2"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 variant="floating"
               </main>
@@ -989,8 +884,8 @@ const compositionItems = computed(() => [
       <!-- variant: inset -->
       <template #variant-preview-2>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -998,7 +893,7 @@ const compositionItems = computed(() => [
                 variant="inset"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1029,7 +924,8 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-v3"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 variant="inset"
               </main>
@@ -1041,8 +937,8 @@ const compositionItems = computed(() => [
       <!-- collapsible: icon -->
       <template #variant-preview-3>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider :default-open="false">
             <nav aria-label="Navegação principal">
@@ -1090,7 +986,8 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-v4"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 collapsible="icon"
               </main>
@@ -1102,8 +999,8 @@ const compositionItems = computed(() => [
       <!-- collapsible: none -->
       <template #variant-preview-4>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -1111,7 +1008,7 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="none"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1141,7 +1038,8 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <main
                 id="main-content-v5"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 collapsible="none"
               </main>
@@ -1153,14 +1051,15 @@ const compositionItems = computed(() => [
       <!-- side: right -->
       <template #variant-preview-5>
         <div
-          class="w-full min-h-[200px] flex rounded overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
+          style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
             <SidebarInset>
               <main
                 id="main-content-v6"
-                class="p-3 text-xs text-muted-foreground"
+                class="nds-text-caption nds-text-muted-foreground"
+                style="padding: 0.75rem"
               >
                 side="right"
               </main>
@@ -1171,7 +1070,7 @@ const compositionItems = computed(() => [
                 collapsible="offcanvas"
                 side="right"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1209,8 +1108,8 @@ const compositionItems = computed(() => [
       <!-- Com grupos de navegação -->
       <template #variant-preview-0>
         <div
-          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
+          style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -1218,7 +1117,7 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   Design System
                 </SidebarHeader>
                 <SidebarContent>
@@ -1277,8 +1176,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
-                <SidebarTrigger /><span class="text-xs text-muted-foreground">Dashboard</span>
+              <header
+                class="nds-cluster nds-border-b"
+                data-spacing="sm"
+                data-align="center"
+                style="height: 2.5rem; padding-inline: 0.75rem"
+              >
+                <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Dashboard</span>
               </header>
             </SidebarInset>
           </SidebarProvider>
@@ -1288,8 +1192,8 @@ const compositionItems = computed(() => [
       <!-- Com sub-menu -->
       <template #variant-preview-1>
         <div
-          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
+          style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -1297,7 +1201,7 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   Design System
                 </SidebarHeader>
                 <SidebarContent>
@@ -1357,8 +1261,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
-                <SidebarTrigger /><span class="text-xs text-muted-foreground">Clique em "Componentes"</span>
+              <header
+                class="nds-cluster nds-border-b"
+                data-spacing="sm"
+                data-align="center"
+                style="height: 2.5rem; padding-inline: 0.75rem"
+              >
+                <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
               </header>
             </SidebarInset>
           </SidebarProvider>
@@ -1368,8 +1277,8 @@ const compositionItems = computed(() => [
       <!-- Com busca no header -->
       <template #variant-preview-2>
         <div
-          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
+          style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -1377,9 +1286,9 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="gap-2 p-3">
-                  <span class="font-semibold text-sm text-sidebar-foreground">Design System</span>
-                  <div class="relative">
+                <SidebarHeader style="gap: 0.5rem; padding: 0.75rem">
+                  <span class="nds-font-semibold nds-text-body" style="color: var(--sidebar-foreground)">Design System</span>
+                  <div style="position: relative">
                     <Search
                       aria-hidden="true"
                       class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
@@ -1388,7 +1297,8 @@ const compositionItems = computed(() => [
                       type="search"
                       placeholder="Buscar..."
                       aria-label="Buscar navegação"
-                      class="pl-7 h-8 text-xs"
+                      class="nds-text-caption"
+                      style="padding-left: 1.75rem; height: 2rem"
                     />
                   </div>
                 </SidebarHeader>
@@ -1428,8 +1338,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
-                <SidebarTrigger /><span class="text-xs text-muted-foreground">Busca no header</span>
+              <header
+                class="nds-cluster nds-border-b"
+                data-spacing="sm"
+                data-align="center"
+                style="height: 2.5rem; padding-inline: 0.75rem"
+              >
+                <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Busca no header</span>
               </header>
             </SidebarInset>
           </SidebarProvider>
@@ -1439,8 +1354,8 @@ const compositionItems = computed(() => [
       <!-- Com badges -->
       <template #variant-preview-3>
         <div
-          class="w-full min-h-[260px] flex rounded-lg overflow-hidden border border-border"
-          style="contain: layout"
+          class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
+          style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="Navegação principal">
@@ -1448,7 +1363,7 @@ const compositionItems = computed(() => [
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="p-3 font-semibold text-sidebar-foreground text-sm">
+                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1494,8 +1409,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <header class="flex h-10 items-center gap-2 px-3 border-b border-border">
-                <SidebarTrigger /><span class="text-xs text-muted-foreground">Inbox</span>
+              <header
+                class="nds-cluster nds-border-b"
+                data-spacing="sm"
+                data-align="center"
+                style="height: 2.5rem; padding-inline: 0.75rem"
+              >
+                <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Inbox</span>
               </header>
             </SidebarInset>
           </SidebarProvider>

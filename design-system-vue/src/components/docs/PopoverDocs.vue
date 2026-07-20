@@ -154,7 +154,7 @@ const codeDefault = `<Popover>
     <Button>Abrir popover</Button>
   </PopoverTrigger>
   <PopoverContent>
-    <p>Conteúdo livre.</p>
+    <p class="nds-text-body">Conteúdo livre.</p>
   </PopoverContent>
 </Popover>`;
 
@@ -178,7 +178,7 @@ const codeForm = `<Popover>
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form class="grid gap-2">
+    <form class="nds-stack" data-spacing="sm">
       <Label for="name">Nome</Label>
       <Input id="name" />
       <Label for="email">Email</Label>
@@ -230,12 +230,12 @@ const codeEditProfile = `<Popover>
       <PopoverTitle>Dados do perfil</PopoverTitle>
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
-    <form class="space-y-3" @submit.prevent>
-      <div class="space-y-1">
+    <form class="nds-stack" data-spacing="sm" @submit.prevent>
+      <div class="nds-stack" data-spacing="xs">
         <Label for="pc-name">Nome</Label>
         <Input id="pc-name" model-value="Joana Silva" />
       </div>
-      <div class="space-y-1">
+      <div class="nds-stack" data-spacing="xs">
         <Label for="pc-email">Email</Label>
         <Input id="pc-email" type="email" model-value="joana@example.com" />
       </div>
@@ -252,18 +252,18 @@ const codeTableFilter = `<Popover>
     <PopoverHeader>
       <PopoverTitle>Filtrar por status</PopoverTitle>
     </PopoverHeader>
-    <div class="space-y-2">
-      <label class="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked /> Ativo
+    <div class="nds-stack" data-spacing="xs">
+      <label class="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" checked class="nds-icon-sm" /> Ativo
       </label>
-      <label class="flex items-center gap-2 text-sm">
-        <input type="checkbox" /> Pendente
+      <label class="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" class="nds-icon-sm" /> Pendente
       </label>
-      <label class="flex items-center gap-2 text-sm">
-        <input type="checkbox" /> Arquivado
+      <label class="nds-cluster nds-text-body" data-spacing="xs">
+        <input type="checkbox" class="nds-icon-sm" /> Arquivado
       </label>
     </div>
-    <div class="flex justify-end gap-2 pt-2">
+    <div class="nds-cluster" data-spacing="xs" data-justify="end" style="padding-top: 0.5rem">
       <Button variant="ghost" size="sm">Limpar</Button>
       <Button size="sm">Aplicar</Button>
     </div>
@@ -278,13 +278,13 @@ const codeColorPicker = `<Popover>
     <PopoverHeader>
       <PopoverTitle>Selecionar cor</PopoverTitle>
     </PopoverHeader>
-    <div class="grid grid-cols-6 gap-2">
-      <button type="button" aria-label="Vermelho" class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-red-500" />
-      <button type="button" aria-label="Laranja"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-orange-500" />
-      <button type="button" aria-label="Amarelo"  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-yellow-500" />
-      <button type="button" aria-label="Verde"    class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-green-500" />
-      <button type="button" aria-label="Azul"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-blue-500" />
-      <button type="button" aria-label="Roxo"     class="h-6 w-6 rounded-full ring-1 ring-foreground/10 bg-purple-500" />
+    <div class="nds-grid" data-cols="6" data-spacing="xs">
+      <button type="button" aria-label="Vermelho" class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #ef4444" />
+      <button type="button" aria-label="Laranja"  class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #f97316" />
+      <button type="button" aria-label="Amarelo"  class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #eab308" />
+      <button type="button" aria-label="Verde"    class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #22c55e" />
+      <button type="button" aria-label="Azul"     class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #3b82f6" />
+      <button type="button" aria-label="Roxo"     class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #a855f7" />
     </div>
   </PopoverContent>
 </Popover>`;
@@ -297,18 +297,18 @@ const codeQuickSettings = `<Popover>
     <PopoverHeader>
       <PopoverTitle>Preferências rápidas</PopoverTitle>
     </PopoverHeader>
-    <div class="space-y-3">
-      <div class="flex items-center justify-between gap-3">
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="sm" data-justify="between">
         <Label for="cfg-notifs">Notificações</Label>
-        <input id="cfg-notifs" type="checkbox" checked class="h-4 w-4" />
+        <input id="cfg-notifs" type="checkbox" checked class="nds-icon-sm" />
       </div>
-      <div class="flex items-center justify-between gap-3">
+      <div class="nds-cluster" data-spacing="sm" data-justify="between">
         <Label for="cfg-dark">Modo escuro</Label>
-        <input id="cfg-dark" type="checkbox" class="h-4 w-4" />
+        <input id="cfg-dark" type="checkbox" class="nds-icon-sm" />
       </div>
-      <div class="flex items-center justify-between gap-3">
+      <div class="nds-cluster" data-spacing="sm" data-justify="between">
         <Label for="cfg-compact">Modo compacto</Label>
-        <input id="cfg-compact" type="checkbox" class="h-4 w-4" />
+        <input id="cfg-compact" type="checkbox" class="nds-icon-sm" />
       </div>
     </div>
   </PopoverContent>
@@ -438,14 +438,15 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
+      <div class="nds-grid nds-w-full" data-cols="3" data-spacing="lg">
         <!-- Default -->
         <div
-          class="space-y-2 flex flex-col items-start"
+          class="nds-stack"
+          data-spacing="xs"
           style="contain: layout; min-height: 220px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.default'))"
           />
           <Popover>
@@ -458,10 +459,10 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <PopoverTitle class="text-sm font-medium">
+              <PopoverTitle class="nds-text-body nds-font-medium">
                 {{ tContent('demonstration.labels.title') }}
               </PopoverTitle>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 {{ tContent('demonstration.labels.description') }}
               </p>
             </PopoverContent>
@@ -470,11 +471,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- With title and actions -->
         <div
-          class="space-y-2 flex flex-col items-start"
+          class="nds-stack"
+          data-spacing="xs"
           style="contain: layout; min-height: 220px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.withTitle'))"
           />
           <Popover>
@@ -488,14 +490,14 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle class="text-sm font-medium">
+                <PopoverTitle>
                   {{ tContent('demonstration.labels.title') }}
                 </PopoverTitle>
-                <PopoverDescription class="text-xs text-muted-foreground">
+                <PopoverDescription>
                   {{ tContent('demonstration.labels.description') }}
                 </PopoverDescription>
               </PopoverHeader>
-              <div class="flex justify-end gap-2 pt-1">
+              <div class="nds-cluster" data-spacing="xs" data-justify="end">
                 <Button
                   variant="outline"
                   size="sm"
@@ -512,11 +514,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Form -->
         <div
-          class="space-y-2 flex flex-col items-start"
+          class="nds-stack"
+          data-spacing="xs"
           style="contain: layout; min-height: 260px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.form'))"
           />
           <Popover>
@@ -530,22 +533,23 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <PopoverHeader>
-                <PopoverTitle class="text-sm font-medium">
+                <PopoverTitle>
                   {{ tContent('demonstration.labels.form.trigger') }}
                 </PopoverTitle>
               </PopoverHeader>
               <form
-                class="grid gap-2"
+                class="nds-stack"
+                data-spacing="sm"
                 @submit.prevent
               >
                 <Label
                   for="popover-demo-name"
-                  class="text-xs"
+                  class="nds-text-caption"
                 >{{ tContent('demonstration.labels.form.name') }}</Label>
                 <Input id="popover-demo-name" />
                 <Label
                   for="popover-demo-email"
-                  class="text-xs"
+                  class="nds-text-caption"
                 >{{ tContent('demonstration.labels.form.email') }}</Label>
                 <Input
                   id="popover-demo-email"
@@ -644,13 +648,13 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm space-y-1">
-            <div class="font-medium">
+          <div class="nds-text-body nds-stack" data-spacing="xs">
+            <div class="nds-font-medium">
               Configurações de exibição
             </div>
-            <div class="text-xs text-muted-foreground">
+            <div class="nds-text-caption nds-text-muted-foreground">
               + PopoverTitle anunciado pelo SR
             </div>
           </div>
@@ -659,10 +663,10 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm">
-            <div class="text-xs text-muted-foreground italic">
+          <div class="nds-text-body">
+            <div class="nds-text-caption nds-text-muted-foreground nds-italic">
               Sem título — SR fica sem contexto
             </div>
           </div>
@@ -671,7 +675,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Button
             variant="outline"
@@ -684,7 +688,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Button
             variant="outline"
@@ -710,9 +714,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             PopoverContent (sem header)
           </div>
         </div>
@@ -720,9 +724,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             PopoverHeader + Title + Description
           </div>
         </div>
@@ -730,9 +734,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             form (Inputs + submit)
           </div>
         </div>
@@ -749,7 +753,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -768,23 +772,24 @@ const a11yCritCols = computed(() => ({
                 <PopoverTitle>{{ tContent('demonstration.labels.form.trigger') }}</PopoverTitle>
               </PopoverHeader>
               <form
-                class="space-y-2"
+                class="nds-stack"
+                data-spacing="xs"
                 @submit.prevent
               >
-                <div class="space-y-1">
+                <div class="nds-stack" data-spacing="xs">
                   <Label
                     for="pc-name-vue"
-                    class="text-xs"
+                    class="nds-text-caption"
                   >{{ tContent('demonstration.labels.form.name') }}</Label>
                   <Input
                     id="pc-name-vue"
                     model-value="Joana Silva"
                   />
                 </div>
-                <div class="space-y-1">
+                <div class="nds-stack" data-spacing="xs">
                   <Label
                     for="pc-email-vue"
-                    class="text-xs"
+                    class="nds-text-caption"
                   >{{ tContent('demonstration.labels.form.email') }}</Label>
                   <Input
                     id="pc-email-vue"
@@ -806,7 +811,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -824,28 +829,28 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Filtrar por status</PopoverTitle>
               </PopoverHeader>
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm">
+              <div class="nds-stack" data-spacing="xs">
+                <label class="nds-cluster nds-text-body" data-spacing="xs">
                   <input
                     type="checkbox"
                     checked
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   > Ativo
                 </label>
-                <label class="flex items-center gap-2 text-sm">
+                <label class="nds-cluster nds-text-body" data-spacing="xs">
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   > Pendente
                 </label>
-                <label class="flex items-center gap-2 text-sm">
+                <label class="nds-cluster nds-text-body" data-spacing="xs">
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   > Arquivado
                 </label>
               </div>
-              <div class="flex justify-end gap-2 pt-2">
+              <div class="nds-cluster" data-spacing="xs" data-justify="end" style="padding-top: 0.5rem">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -863,7 +868,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -881,36 +886,42 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Selecionar cor</PopoverTitle>
               </PopoverHeader>
-              <div class="grid grid-cols-6 gap-2">
+              <div class="nds-grid" data-cols="6" data-spacing="xs">
                 <button
                   type="button"
                   aria-label="Vermelho"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-red-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #ef4444"
                 />
                 <button
                   type="button"
                   aria-label="Laranja"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-orange-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #f97316"
                 />
                 <button
                   type="button"
                   aria-label="Amarelo"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-yellow-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #eab308"
                 />
                 <button
                   type="button"
                   aria-label="Verde"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-green-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #22c55e"
                 />
                 <button
                   type="button"
                   aria-label="Azul"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-blue-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #3b82f6"
                 />
                 <button
                   type="button"
                   aria-label="Roxo"
-                  class="h-6 w-6 rounded-full ring-1 ring-foreground/10 focus:outline-none focus:ring-2 focus:ring-ring bg-purple-500"
+                  class="nds-rounded-full"
+                  style="width: 1.5rem; height: 1.5rem; background: #a855f7"
                 />
               </div>
             </PopoverContent>
@@ -920,7 +931,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Popover>
             <PopoverTrigger as-child>
@@ -938,30 +949,30 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Preferências rápidas</PopoverTitle>
               </PopoverHeader>
-              <div class="space-y-3">
-                <div class="flex items-center justify-between gap-3">
+              <div class="nds-stack" data-spacing="sm">
+                <div class="nds-cluster" data-spacing="sm" data-justify="between">
                   <Label for="cfg-notifs-vue">Notificações</Label>
                   <input
                     id="cfg-notifs-vue"
                     type="checkbox"
                     checked
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   >
                 </div>
-                <div class="flex items-center justify-between gap-3">
+                <div class="nds-cluster" data-spacing="sm" data-justify="between">
                   <Label for="cfg-dark-vue">Modo escuro</Label>
                   <input
                     id="cfg-dark-vue"
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   >
                 </div>
-                <div class="flex items-center justify-between gap-3">
+                <div class="nds-cluster" data-spacing="sm" data-justify="between">
                   <Label for="cfg-compact-vue">Modo compacto</Label>
                   <input
                     id="cfg-compact-vue"
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="nds-icon-sm"
                   >
                 </div>
               </div>

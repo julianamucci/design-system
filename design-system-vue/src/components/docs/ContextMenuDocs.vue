@@ -4,8 +4,6 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Badge } from '@/components/ui/badge';
-import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/context-menu/translations.json';
 import {
@@ -172,7 +170,7 @@ const codeImportWithCheckbox = `import {
 
 const codeDefault = `<ContextMenu>
   <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
-  <ContextMenuContent class="w-52">
+  <ContextMenuContent>
     <ContextMenuItem>
       Editar
       <ContextMenuShortcut>⌘E</ContextMenuShortcut>
@@ -184,7 +182,7 @@ const codeDefault = `<ContextMenu>
 
 const codeDestructive = `<ContextMenu>
   <ContextMenuTrigger>Clique com o botão direito</ContextMenuTrigger>
-  <ContextMenuContent class="w-52">
+  <ContextMenuContent>
     <ContextMenuItem>Editar</ContextMenuItem>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
@@ -211,7 +209,7 @@ const codeRadioGroup = `<ContextMenuRadioGroup
 
 const codeSubTrigger = `<ContextMenuSub>
   <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-  <ContextMenuSubContent class="w-40">
+  <ContextMenuSubContent>
     <ContextMenuItem>Por e-mail</ContextMenuItem>
     <ContextMenuItem>Por link</ContextMenuItem>
   </ContextMenuSubContent>
@@ -572,37 +570,22 @@ const compositionItems = computed(() => [
         :category="tContent('category')"
         :type="tContent('type')"
         install-note="npx shadcn-vue@latest add context-menu"
-      >
-        <template #badges>
-          <Badge
-            variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
-          >
-            {{ tContent('category') }}
-          </Badge>
-          <Badge
-            variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
-          >
-            {{ tContent('type') }}
-          </Badge>
-        </template>
-        <template #language-switcher>
-          <LanguageSwitcher />
-        </template>
-      </DocsHeader>
+      />
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex items-center justify-center w-full py-8">
+      <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
         <ContextMenu>
           <ContextMenuTrigger
-            class="flex h-(--height-default) w-72 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default"
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-52">
+          <ContextMenuContent style="min-width: 12rem">
             <ContextMenuGroup>
               <ContextMenuItem>
                 {{ tContent('demonstration.labels.edit') }}
@@ -611,7 +594,7 @@ const compositionItems = computed(() => [
               <ContextMenuItem>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
               <ContextMenuSub>
                 <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
-                <ContextMenuSubContent class="w-40">
+                <ContextMenuSubContent>
                   <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
                   <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
                 </ContextMenuSubContent>
@@ -677,27 +660,37 @@ const compositionItems = computed(() => [
     >
       <!-- Par 1: alternativa explícita -->
       <template #do-preview-0>
-        <div class="flex gap-2 items-center">
+        <div class="nds-cluster" data-spacing="sm">
           <ContextMenu>
-            <ContextMenuTrigger class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+            <ContextMenuTrigger
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+              data-align="center"
+              data-justify="center"
+              style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+            >
               Área com menu
             </ContextMenuTrigger>
-            <ContextMenuContent class="w-40">
+            <ContextMenuContent>
               <ContextMenuItem>Editar</ContextMenuItem>
               <ContextMenuItem variant="destructive">
                 Excluir
               </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
-          <span class="text-xs text-muted-foreground">+ botão visível</span>
+          <span class="nds-text-body nds-text-muted-foreground">+ botão visível</span>
         </div>
       </template>
       <template #dont-preview-0>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             Área (sem botão)
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-40">
+          <ContextMenuContent>
             <ContextMenuItem variant="destructive">
               Excluir
             </ContextMenuItem>
@@ -708,10 +701,15 @@ const compositionItems = computed(() => [
       <!-- Par 2: item destrutivo separado -->
       <template #do-preview-1>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             Clique com direito
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-40">
+          <ContextMenuContent>
             <ContextMenuItem>Editar</ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem variant="destructive">
@@ -722,10 +720,15 @@ const compositionItems = computed(() => [
       </template>
       <template #dont-preview-1>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             Clique com direito
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-40">
+          <ContextMenuContent>
             <ContextMenuSub>
               <ContextMenuSubTrigger>Nível 1</ContextMenuSubTrigger>
               <ContextMenuSubContent>
@@ -744,10 +747,15 @@ const compositionItems = computed(() => [
       <!-- Par 3: shortcut visual + listener separado -->
       <template #do-preview-2>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             Clique com direito
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-40">
+          <ContextMenuContent>
             <ContextMenuItem>
               Editar
               <ContextMenuShortcut>⌘E</ContextMenuShortcut>
@@ -756,8 +764,13 @@ const compositionItems = computed(() => [
         </ContextMenu>
       </template>
       <template #dont-preview-2>
-        <div class="flex h-(--height-default) w-44 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none">
-          <span>Sem dica visual</span>
+        <div
+          class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-bg-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
+          data-align="center"
+          data-justify="center"
+          style="border-style: dashed; user-select: none"
+        >
+          <span style="text-align: center">Sem dica visual</span>
         </div>
       </template>
     </DocsDoDont>
@@ -779,10 +792,15 @@ const compositionItems = computed(() => [
       <!-- default -->
       <template #variant-preview-0>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuItem>
               {{ tContent('demonstration.labels.edit') }}
               <ContextMenuShortcut>{{ tContent('demonstration.labels.editShortcut') }}</ContextMenuShortcut>
@@ -796,10 +814,15 @@ const compositionItems = computed(() => [
       <!-- destructive -->
       <template #variant-preview-1>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem variant="destructive">
@@ -813,10 +836,15 @@ const compositionItems = computed(() => [
       <!-- CheckboxItem -->
       <template #variant-preview-2>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuCheckboxItem
               :checked="demoShowGrid"
               @update:checked="demoShowGrid = $event"
@@ -830,10 +858,15 @@ const compositionItems = computed(() => [
       <!-- RadioItem -->
       <template #variant-preview-3>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuRadioGroup
               :model-value="demoLayout"
               @update:model-value="demoLayout = $event as string"
@@ -852,13 +885,18 @@ const compositionItems = computed(() => [
       <!-- SubTrigger -->
       <template #variant-preview-4>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuSub>
               <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
-              <ContextMenuSubContent class="w-40">
+              <ContextMenuSubContent>
                 <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
                 <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
               </ContextMenuSubContent>
@@ -870,10 +908,15 @@ const compositionItems = computed(() => [
       <!-- Label inset -->
       <template #variant-preview-5>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-48">
+          <ContextMenuContent>
             <ContextMenuLabel inset>
               Arquivo
             </ContextMenuLabel>
@@ -899,10 +942,15 @@ const compositionItems = computed(() => [
       <!-- withCheckbox -->
       <template #variant-preview-0>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-52">
+          <ContextMenuContent>
             <ContextMenuGroup>
               <ContextMenuLabel inset>
                 Visualização
@@ -927,10 +975,15 @@ const compositionItems = computed(() => [
       <!-- withRadio -->
       <template #variant-preview-1>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-52">
+          <ContextMenuContent>
             <ContextMenuGroup>
               <ContextMenuLabel inset>
                 Zoom
@@ -957,15 +1010,20 @@ const compositionItems = computed(() => [
       <!-- withSubmenu -->
       <template #variant-preview-2>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-52">
+          <ContextMenuContent>
             <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
             <ContextMenuItem>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
             <ContextMenuSub>
               <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
-              <ContextMenuSubContent class="w-40">
+              <ContextMenuSubContent>
                 <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
                 <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
               </ContextMenuSubContent>
@@ -977,10 +1035,15 @@ const compositionItems = computed(() => [
       <!-- withShortcuts -->
       <template #variant-preview-3>
         <ContextMenu>
-          <ContextMenuTrigger class="flex h-(--height-default) w-52 items-center justify-center rounded border border-dashed border-border text-xs text-muted-foreground select-none cursor-default">
+          <ContextMenuTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+          >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
-          <ContextMenuContent class="w-52">
+          <ContextMenuContent>
             <ContextMenuItem>
               {{ tContent('demonstration.labels.edit') }}
               <ContextMenuShortcut>{{ tContent('demonstration.labels.editShortcut') }}</ContextMenuShortcut>

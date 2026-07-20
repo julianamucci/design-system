@@ -127,37 +127,37 @@ const codeImportBasic = `import { Checkbox } from "@/components/ui/checkbox";`;
 const codeImportWithLabel = `import { Checkbox } from "@/components/ui/checkbox";
 // Label é um elemento HTML nativo ou componente Label de @/components/ui/label`;
 
-const codeDefault = `<div class="flex items-center gap-2">
+const codeDefault = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="terms" />
-  <label for="terms" class="text-sm font-medium leading-none">
+  <label for="terms" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
     Aceito os termos e condições
   </label>
 </div>`;
 
-const codeChecked = `<div class="flex items-center gap-2">
+const codeChecked = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="terms" :checked="true" />
-  <label for="terms" class="text-sm font-medium leading-none">
+  <label for="terms" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
     Aceito os termos e condições
   </label>
 </div>`;
 
-const codeWithLabel = `<div class="flex items-center gap-2">
+const codeWithLabel = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="newsletter" />
   <label
     for="newsletter"
-    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+    class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
   >
     Receber novidades por email
   </label>
 </div>`;
 
-const codeWithDescription = `<div class="flex items-start gap-2">
-  <Checkbox id="newsletter" class="mt-0.5" aria-describedby="newsletter-desc" />
-  <div class="space-y-1">
-    <label for="newsletter" class="text-sm font-medium leading-none">
+const codeWithDescription = `<div class="nds-cluster" data-spacing="xs" data-align="start">
+  <Checkbox id="newsletter" style="margin-top: 0.125rem" aria-describedby="newsletter-desc" />
+  <div class="nds-stack" data-spacing="xs">
+    <label for="newsletter" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
       Receber novidades por email
     </label>
-    <p id="newsletter-desc" class="text-sm text-muted-foreground">
+    <p id="newsletter-desc" class="nds-text-body nds-text-muted-foreground">
       Enviaremos atualizações mensais sobre o produto.
     </p>
   </div>
@@ -236,31 +236,31 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withLabel.name'),
     description: stripHtml(tContent('variants.compositions.withLabel.description')),
     useWhen: stripHtml(tContent('variants.compositions.withLabel.use')),
-    code: `<div class="flex items-center gap-2">\n  <Checkbox id="cb-tos" />\n  <Label for="cb-tos" class="text-sm font-medium leading-none cursor-pointer">\n    Aceito os termos e condições\n  </Label>\n</div>`,
+    code: `<div class="nds-cluster" data-spacing="xs">\n  <Checkbox id="cb-tos" />\n  <Label for="cb-tos" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">\n    Aceito os termos e condições\n  </Label>\n</div>`,
   },
   {
     name: tContent('variants.compositions.withDescription.name'),
     description: stripHtml(tContent('variants.compositions.withDescription.description')),
     useWhen: stripHtml(tContent('variants.compositions.withDescription.use')),
-    code: `<div class="flex gap-2 items-start">\n  <Checkbox id="cb-newsletter" class="mt-0.5" />\n  <div class="flex flex-col gap-1">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="text-sm text-muted-foreground">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
+    code: `<div class="nds-cluster" data-spacing="xs" data-align="start">\n  <Checkbox id="cb-newsletter" style="margin-top: 0.125rem" />\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="nds-text-body nds-text-muted-foreground">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
   },
   {
     name: tContent('variants.compositions.fieldset.name'),
     description: stripHtml(tContent('variants.compositions.fieldset.description')),
     useWhen: stripHtml(tContent('variants.compositions.fieldset.use')),
-    code: `<fieldset class="border rounded-lg p-4 space-y-3 w-72">\n  <legend class="text-sm font-semibold px-1">Notificações</legend>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-email" />\n    <Label for="notif-email">Receber novidades por email</Label>\n  </div>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-push" />\n    <Label for="notif-push">Receber notificações push</Label>\n  </div>\n  <div class="flex items-center gap-2">\n    <Checkbox id="notif-sms" />\n    <Label for="notif-sms">Alertas por SMS</Label>\n  </div>\n</fieldset>`,
+    code: `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">\n  <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-email" />\n    <Label for="notif-email">Receber novidades por email</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-push" />\n    <Label for="notif-push">Receber notificações push</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-sms" />\n    <Label for="notif-sms">Alertas por SMS</Label>\n  </div>\n</fieldset>`,
   },
   {
     name: tContent('variants.compositions.selectAll.name'),
     description: stripHtml(tContent('variants.compositions.selectAll.description')),
     useWhen: stripHtml(tContent('variants.compositions.selectAll.use')),
-    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="space-y-3 w-72">\n    <div class="flex items-center gap-2 pb-2 border-b">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="text-sm font-semibold leading-none">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="flex items-center gap-2 pl-2">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
+    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="nds-stack" data-spacing="sm" style="width: 18rem">\n    <div class="nds-cluster nds-border-b" data-spacing="xs" style="padding-bottom: 0.5rem">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="nds-cluster" data-spacing="xs" style="padding-left: 0.5rem">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
   },
   {
     name: tContent('variants.compositions.inList.name'),
     description: stripHtml(tContent('variants.compositions.inList.description')),
     useWhen: stripHtml(tContent('variants.compositions.inList.use')),
-    code: `<div class="space-y-2 w-80">\n  <p class="text-sm font-semibold mb-3">Preferências de contato</p>\n  <div class="flex items-center justify-between rounded-md border px-3 py-2">\n    <div class="flex items-center gap-2">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
+    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
   },
 ]);
 
@@ -385,53 +385,54 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap gap-6">
-        <div class="flex items-center gap-2">
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="demo-terms" />
           <label
             for="demo-terms"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             {{ tContent('demonstration.labels.acceptTerms') }}
           </label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox
             id="demo-newsletter"
             :checked="true"
           />
           <label
             for="demo-newsletter"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             {{ tContent('demonstration.labels.newsletter') }}
           </label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox
             id="demo-session"
             :disabled="true"
           />
           <label
             for="demo-session"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-default"
+            style="opacity: 0.7"
           >
             {{ tContent('demonstration.labels.rememberMe') }}
           </label>
         </div>
-        <div class="flex items-start gap-2">
+        <div class="nds-cluster" data-spacing="xs" data-align="start">
           <Checkbox
             id="demo-notif"
-            class="mt-0.5"
+            style="margin-top: 0.125rem"
           />
-          <div class="space-y-1">
+          <div class="nds-stack" data-spacing="xs">
             <label
               for="demo-notif"
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >
               {{ tContent('demonstration.labels.notifications') }}
             </label>
-            <p class="text-xs text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Enviaremos atualizações mensais.
             </p>
           </div>
@@ -514,22 +515,22 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: label semântica vs label genérica -->
       <template #do-preview-0>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="dodont-do-1" />
           <label
             for="dodont-do-1"
-            class="text-sm font-medium leading-none"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Receber notificações por email
           </label>
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="dodont-dont-1" />
           <label
             for="dodont-dont-1"
-            class="text-sm font-medium leading-none"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Email
           </label>
@@ -538,40 +539,40 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: fieldset vs checkboxes soltos -->
       <template #do-preview-1>
-        <fieldset class="space-y-2 border rounded-md p-3 w-full">
-          <legend class="text-xs font-semibold px-1">
+        <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full" data-spacing="xs" style="padding: 0.75rem">
+          <legend class="nds-text-caption nds-font-semibold nds-px-1">
             Notificações
           </legend>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="dodont-do-2a" />
             <label
               for="dodont-do-2a"
-              class="text-sm font-medium leading-none"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >Email</label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="dodont-do-2b" />
             <label
               for="dodont-do-2b"
-              class="text-sm font-medium leading-none"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >Push</label>
           </div>
         </fieldset>
       </template>
       <template #dont-preview-1>
-        <div class="space-y-2">
-          <div class="flex items-center gap-2">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="dodont-dont-2a" />
             <label
               for="dodont-dont-2a"
-              class="text-sm font-medium leading-none"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >Email</label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="dodont-dont-2b" />
             <label
               for="dodont-dont-2b"
-              class="text-sm font-medium leading-none"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >Push</label>
           </div>
         </div>
@@ -595,11 +596,11 @@ const visualTestItems = computed(() => [
     >
       <!-- default: unchecked -->
       <template #variant-preview-0>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="variant-default" />
           <label
             for="variant-default"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Aceito os termos e condições
           </label>
@@ -608,14 +609,14 @@ const visualTestItems = computed(() => [
 
       <!-- checked -->
       <template #variant-preview-1>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox
             id="variant-checked"
             :checked="true"
           />
           <label
             for="variant-checked"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Aceito os termos e condições
           </label>
@@ -624,11 +625,11 @@ const visualTestItems = computed(() => [
 
       <!-- withLabel -->
       <template #variant-preview-2>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="variant-with-label" />
           <label
             for="variant-with-label"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Receber novidades por email
           </label>
@@ -637,19 +638,19 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-3>
-        <div class="flex items-start gap-2">
+        <div class="nds-cluster" data-spacing="xs" data-align="start">
           <Checkbox
             id="variant-with-desc"
-            class="mt-0.5"
+            style="margin-top: 0.125rem"
           />
-          <div class="space-y-1">
+          <div class="nds-stack" data-spacing="xs">
             <label
               for="variant-with-desc"
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
             >
               Receber novidades por email
             </label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Enviaremos atualizações mensais sobre o produto.
             </p>
           </div>
@@ -666,11 +667,11 @@ const visualTestItems = computed(() => [
     >
       <!-- 0: withLabel -->
       <template #variant-preview-0>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="cb-tos" />
           <Label
             for="cb-tos"
-            class="text-sm font-medium leading-none cursor-pointer"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Aceito os termos e condições
           </Label>
@@ -679,14 +680,14 @@ const visualTestItems = computed(() => [
 
       <!-- 1: withDescription -->
       <template #variant-preview-1>
-        <div class="flex gap-2 items-start">
+        <div class="nds-cluster" data-spacing="xs" data-align="start">
           <Checkbox
             id="cb-newsletter"
-            class="mt-0.5"
+            style="margin-top: 0.125rem"
           />
-          <div class="flex flex-col gap-1">
+          <div class="nds-stack" data-spacing="xs">
             <Label for="cb-newsletter">Receber novidades por email</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Enviaremos atualizações sobre novos recursos e melhorias do produto.
             </p>
           </div>
@@ -695,19 +696,19 @@ const visualTestItems = computed(() => [
 
       <!-- 2: fieldset -->
       <template #variant-preview-2>
-        <fieldset class="border rounded-lg p-4 space-y-3 w-72">
-          <legend class="text-sm font-semibold px-1">
+        <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
+          <legend class="nds-text-body nds-font-semibold nds-px-1">
             Notificações
           </legend>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="notif-email" />
             <Label for="notif-email">Receber novidades por email</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="notif-push" />
             <Label for="notif-push">Receber notificações push</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="xs">
             <Checkbox id="notif-sms" />
             <Label for="notif-sms">Alertas por SMS</Label>
           </div>
@@ -716,34 +717,34 @@ const visualTestItems = computed(() => [
 
       <!-- 3: selectAll -->
       <template #variant-preview-3>
-        <div class="space-y-3 w-72">
-          <div class="flex items-center gap-2 pb-2 border-b">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem">
+          <div class="nds-cluster nds-border-b" data-spacing="xs" style="padding-bottom: 0.5rem">
             <Checkbox
               id="cb-select-all"
               v-model:checked="selectAllValue"
             />
             <Label
               for="cb-select-all"
-              class="text-sm font-semibold leading-none"
+              class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer"
             >
               Selecionar todos os itens
             </Label>
           </div>
-          <div class="flex items-center gap-2 pl-2">
+          <div class="nds-cluster" data-spacing="xs" style="padding-left: 0.5rem">
             <Checkbox
               id="cb-select-child-1"
               v-model:checked="selectAllChild1"
             />
             <Label for="cb-select-child-1">Receber novidades por email</Label>
           </div>
-          <div class="flex items-center gap-2 pl-2">
+          <div class="nds-cluster" data-spacing="xs" style="padding-left: 0.5rem">
             <Checkbox
               id="cb-select-child-2"
               v-model:checked="selectAllChild2"
             />
             <Label for="cb-select-child-2">Receber notificações push</Label>
           </div>
-          <div class="flex items-center gap-2 pl-2">
+          <div class="nds-cluster" data-spacing="xs" style="padding-left: 0.5rem">
             <Checkbox
               id="cb-select-child-3"
               v-model:checked="selectAllChild3"
@@ -755,12 +756,12 @@ const visualTestItems = computed(() => [
 
       <!-- 4: inList -->
       <template #variant-preview-4>
-        <div class="space-y-2 w-80">
-          <p class="text-sm font-semibold mb-3">
+        <div class="nds-stack" data-spacing="xs" style="width: 20rem">
+          <p class="nds-text-body nds-font-semibold nds-mb-2">
             Preferências de contato
           </p>
-          <div class="flex items-center justify-between rounded-md border px-3 py-2">
-            <div class="flex items-center gap-2">
+          <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">
+            <div class="nds-cluster" data-spacing="xs">
               <Checkbox
                 id="list-email"
                 v-model:checked="inListEmail"
@@ -768,8 +769,8 @@ const visualTestItems = computed(() => [
               <Label for="list-email">Receber novidades por email</Label>
             </div>
           </div>
-          <div class="flex items-center justify-between rounded-md border px-3 py-2">
-            <div class="flex items-center gap-2">
+          <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">
+            <div class="nds-cluster" data-spacing="xs">
               <Checkbox
                 id="list-push"
                 v-model:checked="inListPush"
@@ -777,8 +778,8 @@ const visualTestItems = computed(() => [
               <Label for="list-push">Receber notificações push</Label>
             </div>
           </div>
-          <div class="flex items-center justify-between rounded-md border px-3 py-2">
-            <div class="flex items-center gap-2">
+          <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">
+            <div class="nds-cluster" data-spacing="xs">
               <Checkbox
                 id="list-sms"
                 v-model:checked="inListSms"
@@ -786,8 +787,8 @@ const visualTestItems = computed(() => [
               <Label for="list-sms">Alertas por SMS</Label>
             </div>
           </div>
-          <div class="flex items-center justify-between rounded-md border px-3 py-2">
-            <div class="flex items-center gap-2">
+          <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">
+            <div class="nds-cluster" data-spacing="xs">
               <Checkbox
                 id="list-newsletter"
                 v-model:checked="inListNewsletter"
