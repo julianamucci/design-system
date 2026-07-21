@@ -53,8 +53,8 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// Preview image source — same shadcn avatar used across stacks.
-const PREVIEW_SRC = 'https://github.com/shadcn.png';
+// Preview image source — avatar de exemplo usado em todas as stacks.
+const PREVIEW_SRC = 'https://i.pravatar.cc/128?img=47';
 
 function buildUserIconSvg(): SVGSVGElement {
   type LucideIconNode = [string, Record<string, string>];
@@ -231,7 +231,6 @@ export function createAvatarDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add avatar',
     });
     headerSlot.replaceChildren(header);
   }
@@ -414,7 +413,7 @@ root.appendChild(fallback);`,
 
       case 'variantes': {
         const codeImage = `createAvatar({
-  src: 'https://github.com/shadcn.png',
+  src: 'https://i.pravatar.cc/128?img=47',
   alt: 'Foto de perfil de Maria Rodrigues',
   fallbackText: 'MR',
 });`;
@@ -498,7 +497,7 @@ wrapper.appendChild(status);`;
               useWhen: t('variants.compositions.withImage.use'),
               code:
                 `const av = createAvatar({\n` +
-                `  src: 'https://github.com/shadcn.png',\n` +
+                `  src: 'https://i.pravatar.cc/128?img=47',\n` +
                 `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
                 `  fallbackText: 'MR',\n` +
                 `});`,
@@ -545,7 +544,7 @@ wrapper.appendChild(status);`;
                 `group.setAttribute('role', 'group');\n` +
                 `group.setAttribute('aria-label', 'Participantes');\n` +
                 `const members = [\n` +
-                `  { src: 'https://github.com/shadcn.png', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },\n` +
+                `  { src: 'https://i.pravatar.cc/128?img=47', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },\n` +
                 `  { alt: '', fallback: 'JP' },\n` +
                 `  { alt: '', fallback: 'AL' },\n` +
                 `  { alt: '', fallback: '+3' },\n` +
@@ -587,7 +586,7 @@ wrapper.appendChild(status);`;
                 `wrapper.style.position = 'relative';\n` +
                 `wrapper.style.display = 'inline-block';\n` +
                 `const av = createAvatar({\n` +
-                `  src: 'https://github.com/shadcn.png',\n` +
+                `  src: 'https://i.pravatar.cc/128?img=47',\n` +
                 `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
                 `  fallbackText: 'MR',\n` +
                 `});\n` +

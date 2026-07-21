@@ -1,6 +1,6 @@
 // ─── Toggle — Vanilla factory standalone ────────────────────────────────────
 //
-// Visual: classe .nds-toggle (zero Tailwind/basecoat-css).
+// Visual: classe .nds-toggle (standalone).
 // Variantes/tamanhos via data-variant/data-size.
 
 export type ToggleVariant = 'default' | 'outline';

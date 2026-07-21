@@ -227,7 +227,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add avatar"
         />
       }
     >
@@ -559,10 +558,10 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.withImage.name"),
             description: tContent("variants.compositions.withImage.description"),
             useWhen: tContent("variants.compositions.withImage.use"),
-            code: `<Avatar>\n  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
+            code: `<Avatar>\n  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
             preview: (
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
                 <AvatarFallback>MR</AvatarFallback>
               </Avatar>
             ),
@@ -595,11 +594,11 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.group.name"),
             description: tContent("variants.compositions.group.description"),
             useWhen: tContent("variants.compositions.group.use"),
-            code: `<div style={{ display: "flex" }} role="group" aria-label="Participantes">\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
+            code: `<div style={{ display: "flex" }} role="group" aria-label="Participantes">\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
             preview: (
               <div style={{ display: "flex" }} role="group" aria-label="Participantes">
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
-                  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
                   <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
@@ -618,11 +617,11 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             name: tContent("variants.compositions.withStatus.name"),
             description: tContent("variants.compositions.withStatus.description"),
             useWhen: tContent("variants.compositions.withStatus.use"),
-            code: `<div style={{ position: "relative", display: "inline-block" }}>\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />\n</div>`,
+            code: `<div style={{ position: "relative", display: "inline-block" }}>\n  <Avatar>\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />\n</div>`,
             preview: (
               <div style={{ position: "relative", display: "inline-block" }}>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+                  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
                   <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
                 <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />

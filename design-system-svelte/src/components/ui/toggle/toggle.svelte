@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import { type VariantProps, tv } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
-	export const toggleVariants = tv({
-		base: "nds-toggle",
+	export const toggleVariants = cva("nds-toggle", {
+		
 		variants: {
 			variant: {
 				default: "",

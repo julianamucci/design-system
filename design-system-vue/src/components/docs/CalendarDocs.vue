@@ -342,7 +342,7 @@ const cellTriggerPropItems = computed(() => [
   { name: 'day',   type: 'DateValue', defaultValue: '—',        required: 'Sim', description: 'Data representada pela célula. Aplica data-attributes (data-selected, data-today, data-disabled, data-outside-view, data-unavailable).' },
   { name: 'month', type: 'DateValue', defaultValue: '—',        required: 'Sim', description: 'Primeira data do mês visível — permite detectar dias fora do mês.' },
   { name: 'as',    type: 'string',    defaultValue: '"button"', required: 'Não', description: 'Elemento HTML do botão (ex: "a" para links).' },
-  { name: 'class', type: 'string',    defaultValue: '—',        required: 'Não', description: 'Classes Tailwind adicionais. O componente já aplica buttonVariants(ghost).' },
+  { name: 'class', type: 'string',    defaultValue: '—',        required: 'Não', description: 'Classes utilitárias .nds-* adicionais. O componente já aplica buttonVariants(ghost).' },
 ]);
 
 const tokenRows = computed(() => [
@@ -439,7 +439,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add calendar"
       />
     </template>
 

@@ -227,7 +227,7 @@ InputOTP (maxLength, pattern)
 - `htmlFor` obrigatório fora de `FormField` — associa o label ao campo via `id`.
 - Dentro de `FormField`, usar `FormLabel` — associação automática via contexto interno.
 - Posicionar **acima** do campo (padrão) ou à esquerda em layouts horizontais.
-- Peso tipográfico: `font-medium` — padrão Shadcn, não sobrescrever para `font-bold`.
+- Peso tipográfico: `font-medium` — padrão do design system, não sobrescrever para `font-bold`.
 - Asterisco de obrigatório: `<span aria-hidden="true">*</span>` com `text-destructive`; campo recebe `aria-required="true"`.
 
 **UX Writing** (ver `19-tom-de-voz.md`):
@@ -293,7 +293,7 @@ Select
 
 ## Combobox
 
-**Propósito**: Select com busca integrada — **padrão composto**, não um componente Shadcn isolado. É a combinação de `Command + Popover`. A implementação completa está em `10-overlay-components.md` → "Command — Combobox".
+**Propósito**: Select com busca integrada — **padrão composto**, não um componente isolado. É a combinação de `Command + Popover`. A implementação completa está em `10-overlay-components.md` → "Command — Combobox".
 
 **Quando usar em vez do Select**:
 - Listas com 10+ itens onde busca por texto facilita a seleção.
@@ -356,16 +356,16 @@ Select
 
 **API e exemplos**: `src/components/ui/textarea.tsx` + stories + `TextareaDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Classes de resize** (via Tailwind):
+**Controle de resize** (via propriedade CSS `resize` — `.nds-textarea` já usa `resize: vertical` por padrão):
 
-| Classe | Uso |
+| Valor | Uso |
 |---|---|
-| `resize-none` | Modais, layouts fixos |
-| `resize-y` | Vertical apenas (padrão recomendado) |
-| `resize` | Livre (evitar — quebra layouts) |
+| `resize: none` | Modais, layouts fixos |
+| `resize: vertical` | Vertical apenas (padrão recomendado) |
+| `resize: both` | Livre (evitar — quebra layouts) |
 
 **Regras**:
-- `min-h-[120px]` como altura mínima padrão (~3 linhas).
+- `min-height` de ~120px (~3 linhas) como altura mínima padrão.
 - Contador de caracteres com `aria-live="polite"` — anuncia ao leitor de tela sem interromper.
 - `maxLength` no elemento + validação Zod — defesa em profundidade.
 

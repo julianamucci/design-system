@@ -16,7 +16,7 @@ Antes de realizar qualquer edição parcial, você DEVE verificar:
 - [ ] **TODOS** os imports existentes foram preservados?
 - [ ] Nenhum import foi removido, mesmo que não apareça na seção editada?
 - [ ] Imports de ícones do lucide-react estão completos?
-- [ ] Imports de componentes Shadcn/UI estão completos?
+- [ ] Imports de componentes de UI do design system estão completos?
 
 **IMPORTANTE**: Mesmo que a seção editada não use determinado import, ele pode ser usado em OUTRAS seções do mesmo arquivo.
 
@@ -192,7 +192,7 @@ fast_apply_tool({
 
 ### Edição de Estilo Visual
 **Solicitação**: "Mude o estilo da seção X"
-- ✅ Modifique apenas classes Tailwind da seção X
+- ✅ Modifique apenas as classes `.nds-*` da seção X
 - ✅ Preserve toda a estrutura JSX
 - ✅ Preserve todos os imports
 - ❌ NÃO remova imports não usados na seção X

@@ -192,7 +192,7 @@ const codeCustomizationTokens = `/* Override do tamanho do radio */
   height: 1.25rem;
 }
 
-/* Cor customizada via Tailwind */
+/* Cor customizada via classe .nds-* */
 .payment-radio [data-slot="radio-group-item"][data-checked] {
   @apply bg-blue-600 border-blue-600;
 }`;
@@ -396,7 +396,7 @@ const radioGroupItemPropItems = computed(() => [
   { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Valor único do item — OBRIGATÓRIO.' },
   { name: 'id',       type: 'string',  defaultValue: '—',     required: 'Não', description: 'Identificador para vincular ao Label via :for.' },
   { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: 'Desabilita apenas este item.' },
-  { name: 'class',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Classes Tailwind adicionais.' },
+  { name: 'class',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Classes utilitárias .nds-* adicionais.' },
 ]);
 
 const tokenRows = computed(() => [
@@ -487,7 +487,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add radio-group"
       />
     </template>
 

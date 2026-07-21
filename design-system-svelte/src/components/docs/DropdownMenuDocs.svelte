@@ -212,7 +212,6 @@ interface DropdownMenuRadioGroupProps {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add dropdown-menu"
     />
   {/snippet}
 

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 // Estilo 100% via classes .nds-* (docs/shared/styles/nds/button.css) —
-// compartilhadas com as stacks Vue, Svelte e Vanilla. Zero Tailwind.
+// compartilhadas com as stacks Vue, Svelte e Vanilla.
 // Estados (hover/focus/disabled/aria-*) vivem no CSS, não em utilitários.
 const buttonVariants = cva("nds-button", {
   variants: {

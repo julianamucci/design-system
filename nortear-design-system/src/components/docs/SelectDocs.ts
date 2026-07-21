@@ -219,7 +219,6 @@ export function createSelectDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add select',
     });
     headerSlot.replaceChildren(header);
   }

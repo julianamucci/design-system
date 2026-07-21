@@ -35,7 +35,7 @@ const meta: Meta<ScrollAreaArgs> = {
     },
     className: {
       control: 'text',
-      description: 'Classes Tailwind extras no root.',
+      description: 'Classes utilitárias .nds-* extras no root.',
     },
   },
   args: {

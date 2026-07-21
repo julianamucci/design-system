@@ -26,10 +26,10 @@ const popularComponents = [
           </div>
         </div>
         <h1 class="text-5xl font-extrabold nds-tracking-tight">
-          Documentação Shadcn/UI
+          Documentação do Design System
         </h1>
         <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Biblioteca de componentes reutilizáveis construída com Vue 3 e Tailwind CSS.
+          Biblioteca de componentes reutilizáveis construída com Vue 3 e CSS standalone .nds-*.
           Copie e cole os componentes que precisar em seu projeto.
         </p>
         <div class="flex justify-center gap-4 pt-4">
@@ -60,7 +60,7 @@ const popularComponents = [
       <section class="space-y-6">
         <div class="text-center space-y-2">
           <h2 class="text-3xl font-semibold">
-            Por que usar Shadcn/UI?
+            Por que usar o Design System?
           </h2>
           <p class="text-muted-foreground">
             Uma biblioteca moderna e flexível para desenvolvimento rápido

@@ -59,7 +59,7 @@ function priorityLabel(raw: string): string {
 
 // ─── Card preview builders ───────────────────────────────────────────────────
 //
-// API vanilla alinhada ao primitive React (shadcn v2):
+// API vanilla alinhada ao primitive React:
 //   - `createCard({ size })` propaga `data-slot="card"` + `data-size`.
 //   - `createCardAction` posiciona slot à direita no header (grid `[1fr_auto]`).
 //   - CardFooter detectado via `has-data-[slot=card-footer]:pb-0`.
@@ -305,7 +305,6 @@ export function createCardDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add card',
     });
     headerSlot.replaceChildren(header);
   }

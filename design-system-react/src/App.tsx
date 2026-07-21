@@ -106,7 +106,7 @@ export default function App() {
             <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center" aria-hidden="true">
               <span className="text-primary-foreground">S</span>
             </div>
-            <span className="font-semibold nds-text-3xl">Shadcn/UI</span>
+            <span className="font-semibold nds-text-3xl">Design System</span>
           </div>
         </SidebarHeader>
 

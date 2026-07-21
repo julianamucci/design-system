@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 // Estilo via .nds-radio-* (docs/shared/styles/nds/radio-group.css). O círculo
 // interno do indicator é desenhado via CSS (::after) — o base-ui desmonta o
-// indicator quando unchecked, então não há filho aqui. Zero Tailwind.
+// indicator quando unchecked, então não há filho aqui.
 function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
   return (
     <RadioGroupPrimitive

@@ -201,7 +201,7 @@ Menubar (aria-label="Menu principal")
 
 **API e exemplos**: `src/components/ui/stepper.tsx` + stories + `StepperDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-> **Componente customizado**: o Stepper não faz parte do Shadcn/UI oficial — é uma implementação local em `@/components/ui/stepper`. Verificar suporte nativo a `aria-label` no `StepperItem`; sem suporte, aplicar via `data-*` ou contribuir o suporte diretamente.
+> **Componente customizado**: o Stepper não faz parte do `@base-ui/react` — é uma implementação local em `@/components/ui/stepper`. Verificar suporte nativo a `aria-label` no `StepperItem`; sem suporte, aplicar via `data-*` ou contribuir o suporte diretamente.
 
 **Critério de decisão — Stepper vs Tabs vs Accordion**:
 

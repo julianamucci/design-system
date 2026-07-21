@@ -151,7 +151,7 @@ interface InputProps {
   type?: string;            // Tipo HTML do input (text, email, password...)
   placeholder?: string;     // Texto de exemplo do formato esperado
   disabled?: boolean;       // Desabilita o campo
-  class?: string;           // Classes Tailwind adicionais
+  class?: string;           // Classes utilitárias .nds-* adicionais
   modelValue?: string | number;
   defaultValue?: string | number;
 }`;
@@ -346,7 +346,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add input"
       />
     </template>
 

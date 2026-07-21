@@ -8,7 +8,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentação do Collapsible: seção expansível com trigger explícito, modos controlado e não-controlado, acessibilidade WCAG e aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir e ocultar uma única seção de conteúdo. Suporta modo controlado (estado externo + callback de mudança) e não-controlado (estado inicial), com aria-expanded e aria-controls aplicados automaticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -160,7 +160,7 @@
         "defaultOpen": "Estado inicial no modo não-controlado.",
         "disabled": "Desabilita o trigger impedindo interação.",
         "asChild": "Repassa o comportamento do trigger para o filho direto (ex: <code>Button</code>).",
-        "className": "Classes Tailwind adicionais para customização visual.",
+        "className": "Classes .nds-* adicionais para customização visual.",
         "children": "Conteúdo do componente: CollapsibleTrigger e CollapsibleContent."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -170,7 +170,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "border": "Borda do painel de conteúdo",
         "background": "Fundo do painel de conteúdo",
@@ -307,7 +307,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Collapsible documentation: expandable section with explicit trigger, controlled and uncontrolled modes, WCAG accessibility with automatic aria-expanded.",
       "aiSummary": "Collapsible component to expand and hide a single content section. Supports controlled (external state + change callback) and uncontrolled (initial state) modes, with aria-expanded and aria-controls applied automatically.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -459,7 +459,7 @@
         "defaultOpen": "Initial state in uncontrolled mode.",
         "disabled": "Disables the trigger preventing interaction.",
         "asChild": "Passes trigger behavior to the direct child (e.g., <code>Button</code>).",
-        "className": "Additional Tailwind classes for visual customization.",
+        "className": "Additional .nds-* classes for visual customization.",
         "children": "Component content: CollapsibleTrigger and CollapsibleContent."
       },
       "extensibilityTitle": "Extensibility",
@@ -469,7 +469,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "border": "Content panel border",
         "background": "Content panel background",
@@ -606,7 +606,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentación del Collapsible: sección expandible con trigger explícito, modos controlado y no controlado, accesibilidad WCAG con aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir y ocultar una única sección de contenido. Soporta modo controlado (estado externo + callback de cambio) y no controlado (estado inicial), con aria-expanded y aria-controls aplicados automáticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, Tailwind CSS, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -758,7 +758,7 @@
         "defaultOpen": "Estado inicial en modo no controlado.",
         "disabled": "Deshabilita el trigger impidiendo la interacción.",
         "asChild": "Delega el comportamiento del trigger al hijo directo (ej: <code>Button</code>).",
-        "className": "Clases Tailwind adicionales para personalización visual.",
+        "className": "Clases .nds-* adicionales para personalización visual.",
         "children": "Contenido del componente: CollapsibleTrigger y CollapsibleContent."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -768,7 +768,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "border": "Borde del panel de contenido",
         "background": "Fondo del panel de contenido",

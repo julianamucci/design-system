@@ -24,7 +24,7 @@ const meta = {
   argTypes: {
     className: {
       control: 'text',
-      description: 'Classes Tailwind extras (use h-[300px] w-[500px] p/ controlar tamanho).',
+      description: 'Classes utilitárias .nds-* extras (use h-[300px] w-[500px] p/ controlar tamanho).',
     },
     renderer: {
       control: 'select',

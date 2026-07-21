@@ -239,7 +239,6 @@ function Textarea({
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add textarea"
         />
       }
     >

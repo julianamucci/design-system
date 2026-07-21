@@ -8,7 +8,7 @@
       "title": "Slider — Formulário",
       "description": "Documentação do Slider: Root, Track, Range e Thumb com role=\"slider\", navegação por teclado e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Slider com Root, Track, Range e Thumb, role=\"slider\" automático, navegação por teclado (setas, Home, End, PgUp, PgDn) e suporte a single/range.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role slider",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -372,7 +372,7 @@
       "title": "Slider — Form",
       "description": "Slider documentation: Root, Track, Range and Thumb with role=\"slider\", keyboard navigation and WCAG 2.1 AA support.",
       "aiSummary": "Slider component with Root, Track, Range and Thumb, automatic role=\"slider\", keyboard navigation (arrows, Home, End, PgUp, PgDn) and single/range support.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role slider",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -736,7 +736,7 @@
       "title": "Slider — Formulario",
       "description": "Documentación de Slider: Root, Track, Range y Thumb con role=\"slider\", navegación por teclado y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Slider con Root, Track, Range y Thumb, role=\"slider\" automático, navegación por teclado (flechas, Home, End, PgUp, PgDn) y soporte single/range.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role slider",
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role slider",
       "aiIntent": "informational"
     },
     "demonstration": {

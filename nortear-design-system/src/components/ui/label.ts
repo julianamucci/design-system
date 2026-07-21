@@ -1,6 +1,6 @@
 // ─── Label — Vanilla factory standalone ──────────────────────────────────────
 //
-// Visual: classe .nds-label (zero Tailwind/basecoat-css).
+// Visual: classe .nds-label (standalone).
 // Estado disabled propaga: via .peer (controle irmão) ou via ancestral
 // data-disabled="true" / fieldset:disabled.
 

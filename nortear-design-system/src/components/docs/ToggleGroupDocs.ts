@@ -262,7 +262,6 @@ export function createToggleGroupDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add toggle-group',
     });
     headerSlot.replaceChildren(header);
   }

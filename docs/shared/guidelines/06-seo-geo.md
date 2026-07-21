@@ -113,8 +113,8 @@ O title aparece na aba do navegador, nos resultados de busca e quando a página 
 
 | Contexto | ❌ Errado | ✅ Correto |
 |----------|----------|-----------|
-| Componente Button | "Página do Button" | "Button — Componente Shadcn/UI do Design System" |
-| Componente Dialog | "Dialog - Documentação" | "Dialog — Overlays com Radix UI e Tailwind" |
+| Componente Button | "Página do Button" | "Button — Componente do Design System" |
+| Componente Dialog | "Dialog - Documentação" | "Dialog — Overlays acessíveis com CSS .nds-*" |
 | Foundations/Theming | "Temas do Design System" | "Temas — Sistema de Design com CSS Variables" |
 | Showcase Form | "Form Components Showcase" | "Componentes de Formulário — Showcase do Design System" |
 
@@ -136,7 +136,7 @@ Aparece abaixo do title nos resultados de busca. É o principal argumento para o
 | Contexto | ❌ Errado | ✅ Correto |
 |----------|----------|-----------|
 | Button | "O melhor componente de botão." | "Documentação do Button: 6 variantes, 4 tamanhos, estados interativos, acessibilidade WCAG e exemplos com React Hook Form." |
-| Dialog | "Veja como usar o Dialog." | "Como implementar Dialog com Shadcn/UI: composição de subcomponentes, foco gerenciado, variantes de confirmação e exemplos controlados." |
+| Dialog | "Veja como usar o Dialog." | "Como implementar o Dialog: composição de subcomponentes, foco gerenciado, variantes de confirmação e exemplos controlados." |
 
 ---
 
@@ -153,7 +153,7 @@ Representa a intenção de busca mais direta que a página atende. Extraída do 
 
 | Página | Palavra-chave principal |
 |--------|------------------------|
-| AlertDocs | "alert shadcn tailwind" |
+| AlertDocs | "alert componente design system" |
 | DialogDocs | "dialog radix ui react" |
 | ThemingDocs | "temas css variables design system" |
 
@@ -203,7 +203,7 @@ O `useSeoEffect` injeta automaticamente o JSON-LD correto conforme o tipo de pá
   "@type": "TechArticle",
   "name": "Button — Documentação do Componente",
   "description": "Documentação completa do Button com variantes, estados e exemplos.",
-  "keywords": "button, shadcn, tailwind, react, acessibilidade",
+  "keywords": "button, componente, design system, react, acessibilidade",
   "inLanguage": "pt-BR",
   "about": {
     "@type": "SoftwareSourceCode",
@@ -245,7 +245,7 @@ Metatags específicas para consumo por IAs generativas. Gerenciadas pelo `useSeo
 Resumo descritivo em 1–2 frases. Máximo 200 caracteres. Estilo enciclopédico.
 
 ```html
-<meta name="ai:summary" content="Documentação do Button do Design System, baseado em Shadcn/UI. Cobre variantes, estados, propriedades TypeScript e integração com formulários React." />
+<meta name="ai:summary" content="Documentação do Button do Design System. Cobre variantes, estados, propriedades TypeScript e integração com formulários React." />
 ```
 
 ### ai:entities
@@ -253,7 +253,7 @@ Resumo descritivo em 1–2 frases. Máximo 200 caracteres. Estilo enciclopédico
 Entidades principais. Lista separada por vírgulas, máximo 10.
 
 ```html
-<meta name="ai:entities" content="Button, Shadcn/UI, Tailwind CSS, React, TypeScript, Radix UI, WCAG, React Hook Form, Lucide React, variantes de botão" />
+<meta name="ai:entities" content="Button, Design System, CSS .nds-*, React, TypeScript, base-ui, WCAG, React Hook Form, Lucide React, variantes de botão" />
 ```
 
 ### ai:intent
@@ -288,7 +288,7 @@ Para este projeto: ComponentDocs, Showcase, Foundations → `informational`.
 ```
 Title:       [NomeComponente] — [categoria] · Design System
 Description: Documentação do [NomeComponente]: [N] variantes, estados interativos, propriedades TypeScript e exemplos de código.
-Keyword:     [nome componente] shadcn tailwind
+Keyword:     [nome componente] componente design system
 Slug:        [nome-componente]
 ai:intent:   informational
 Schema:      TechArticle
@@ -298,7 +298,7 @@ Schema:      TechArticle
 ```
 Title:       Alert — Feedback · Design System
 Description: Documentação do Alert: variantes default e destructive, composição com AlertTitle e AlertDescription, acessibilidade WCAG via role='alert'.
-Keyword:     alert shadcn tailwind react
+Keyword:     alert componente design system react
 Slug:        alert
 ai:intent:   informational
 ```
@@ -319,7 +319,7 @@ Schema:      TechArticle
 ```
 Title:       [Categoria] Components — Showcase · Design System
 Description: Visualização completa de todos os componentes de [Categoria]: variantes, estados e exemplos combinados.
-Keyword:     [categoria] components shadcn
+Keyword:     [categoria] components design system
 Slug:        [categoria]-showcase
 ai:intent:   informational
 ```

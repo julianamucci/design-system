@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
-	const inputGroupButtonVariants = tv({
-		base: "nds-input-group-button",
+	const inputGroupButtonVariants = cva("nds-input-group-button", {
+		
 		variants: {
 			size: {
 				xs: "",

@@ -150,7 +150,6 @@ parameters: {
     description={tContent('description')}
     category={tContent('category')}
     type={tContent('type')}
-    installNote="npx shadcn@latest add <slug>"
   />
 
   <div class="flex gap-16 items-start">
@@ -186,7 +185,6 @@ parameters: {
   description={tContent('description')}
   category={tContent('category')}
   type={tContent('type')}
-  installNote="npx shadcn@latest add <slug>"
 />
 ```
 
@@ -576,7 +574,7 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
 ## Proibições
 
 - ❌ **NUNCA** reimplemente inline o HTML de uma seção — use o container
-- ❌ **NUNCA** copie classes Tailwind dos containers para o template da docs
+- ❌ **NUNCA** copie classes utilitárias dos containers para o template da docs
 - ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`)
 - ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `DocsDoDont` fazer o split
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre o componente real

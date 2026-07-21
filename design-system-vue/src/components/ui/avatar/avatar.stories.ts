@@ -21,7 +21,7 @@ const meta = {
   argTypes: {
     class: {
       control: 'text',
-      description: 'Classes Tailwind adicionais — use para ajustar tamanho (h-6 w-6, h-8 w-8, h-10 w-10, h-12 w-12).',
+      description: 'Classes utilitárias .nds-* adicionais — use para ajustar tamanho (h-6 w-6, h-8 w-8, h-10 w-10, h-12 w-12).',
     },
   },
   args: {

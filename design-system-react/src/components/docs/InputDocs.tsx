@@ -260,7 +260,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add input"
         />
       }
     >

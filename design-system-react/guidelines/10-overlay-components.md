@@ -6,7 +6,7 @@
 
 ### Tokens de fundo por tipo de overlay
 
-O Shadcn usa tokens semânticos diferentes para painéis de conteúdo e menus flutuantes. Sobrescrever o token errado quebra a coerência do tema, especialmente em dark mode.
+O design system usa tokens semânticos diferentes para painéis de conteúdo e menus flutuantes. Sobrescrever o token errado quebra a coerência do tema, especialmente em dark mode.
 
 | Tipo de overlay | Token correto | Componentes |
 |-----------------|---------------|-------------|
@@ -205,7 +205,7 @@ Dialog
 - `DialogTrigger asChild` obrigatório — evita renderizar um `<button>` extra dentro do trigger.
 - `DialogTitle` e `DialogDescription` obrigatórios — sem eles o Radix emite warning e leitores de tela não têm contexto.
 - Máximo 80% da viewport: `sm:max-w-[425px]` ou similar.
-- Botão de fechar nativo do Shadcn (X) sempre visível — não remover com `showCloseButton={false}` salvo instrução específica.
+- Botão de fechar nativo do Dialog (X) sempre visível — não remover com `showCloseButton={false}` salvo instrução específica.
 - Scroll interno via `overflow-y-auto` no conteúdo — nunca no `DialogContent` inteiro.
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
@@ -461,12 +461,12 @@ Tooltip
 
 ## Padrão Responsivo — Dialog (desktop) + Drawer (mobile)
 
-Para overlays que precisam funcionar em ambos os contextos, o Shadcn recomenda renderizar `Dialog` em desktop e `Drawer` em mobile com o mesmo conteúdo.
+Para overlays que precisam funcionar em ambos os contextos, o padrão recomendado é renderizar `Dialog` em desktop e `Drawer` em mobile com o mesmo conteúdo.
 
 **Regras**:
 - Extrair o conteúdo para um componente separado — evita duplicação de JSX.
 - `useMediaQuery` implementado com `addEventListener` para reagir a mudanças de viewport.
-- Breakpoint padrão: `768px` (md) — alinhado com os breakpoints do Tailwind do projeto.
+- Breakpoint padrão: `768px` (md) — alinhado com os breakpoints do projeto.
 - Compartilhar `open` / `onOpenChange` entre Dialog e Drawer — estado único no caller.
 
 ---
@@ -490,7 +490,7 @@ Para overlays que precisam funcionar em ambos os contextos, o Shadcn recomenda r
 
 **Tokens de fundo** (ver regra global no início deste arquivo):
 - Painéis (Dialog, Sheet, Drawer): `bg-card text-card-foreground`
-- Menus e overlays flutuantes (DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip): `bg-popover text-popover-foreground` (padrão do Shadcn — não sobrescrever)
+- Menus e overlays flutuantes (DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip): `bg-popover text-popover-foreground` (padrão do design system — não sobrescrever)
 
 **Acessibilidade transversal** (ver `11-acessibilidade.md`):
 - Focus trap automático em Dialog, Sheet, Drawer — não reimplementar

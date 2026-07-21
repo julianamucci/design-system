@@ -469,7 +469,6 @@ const a11yCritCols = computed(() => ({
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add dialog"
       />
     </template>
 

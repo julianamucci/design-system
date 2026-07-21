@@ -644,7 +644,6 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add sidebar"
           languageSwitcher={<LanguageSwitcher />}
         />
       }

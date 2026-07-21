@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { CheckIcon } from "lucide-react"
 
 // Estilo via .nds-checkbox (docs/shared/styles/nds/checkbox.css) — estados
-// base-ui (data-checked/data-disabled) e hit-area expandida no CSS. Zero Tailwind.
+// base-ui (data-checked/data-disabled) e hit-area expandida no CSS.
 function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
   return (
     <CheckboxPrimitive.Root

@@ -1,6 +1,6 @@
 // ─── Input — Vanilla factory standalone ──────────────────────────────────────
 //
-// Visual: classe .nds-input (zero Tailwind/basecoat-css).
+// Visual: classe .nds-input (standalone).
 
 export type InputOptions = {
   type?: string;

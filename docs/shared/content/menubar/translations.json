@@ -8,7 +8,7 @@
       "title": "Menubar — Navegação",
       "description": "Documentação do Menubar: barra de menus horizontal estilo desktop via base-ui/reka-ui/bits-ui, com setas, submenus e WCAG 2.1 AA.",
       "aiSummary": "Componente Menubar construído sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta barra horizontal de menus estilo desktop com triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts e navegação por setas entre menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -464,7 +464,7 @@
       "title": "Menubar — Navigation",
       "description": "Menubar documentation: desktop-style menu bar via base-ui/reka-ui/bits-ui, with arrows, submenus, and WCAG 2.1 AA.",
       "aiSummary": "Menubar component built on base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) that presents a horizontal bar of desktop-style menus with triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts, and arrow navigation between menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -919,7 +919,7 @@
       "title": "Menubar — Navegación",
       "description": "Documentación de Menubar: barra de menús horizontal estilo desktop vía base-ui/reka-ui/bits-ui, con flechas, submenús y WCAG 2.1 AA.",
       "aiSummary": "Componente Menubar construido sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta barra horizontal de menús estilo desktop con triggers, items, checkbox-items, radio-items, submenús, separators, shortcuts y navegación por flechas entre menús.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {

@@ -211,7 +211,6 @@ import { Label } from "@/components/ui/label";`;
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add switch"
         />
       }
     >

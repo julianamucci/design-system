@@ -16,7 +16,7 @@ const meta = {
     className: {
       control: { type: "text" },
       description:
-        "Classes Tailwind para definir dimensões e arredondamento do placeholder.",
+        "Classes utilitárias .nds-* para definir dimensões e arredondamento do placeholder.",
     },
   },
   args: {

@@ -161,7 +161,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add skeleton"
         />
       }
     >

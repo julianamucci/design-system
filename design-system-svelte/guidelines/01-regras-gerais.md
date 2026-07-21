@@ -53,7 +53,7 @@
 </div>
 
 <style>
-  /* Apenas quando necessário — preferir classes Tailwind */
+  /* Apenas quando necessário — preferir classes utilitárias */
 </style>
 ```
 

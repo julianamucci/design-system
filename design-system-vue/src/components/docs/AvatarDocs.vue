@@ -226,7 +226,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withImage.name'),
     description: tContent('variants.compositions.withImage.description'),
     useWhen: tContent('variants.compositions.withImage.use'),
-    code: `<Avatar>\n  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
+    code: `<Avatar>\n  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
   },
   {
     name: tContent('variants.compositions.withInitials.name'),
@@ -244,13 +244,13 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.group.name'),
     description: tContent('variants.compositions.group.description'),
     useWhen: tContent('variants.compositions.group.use'),
-    code: `<div style="display: flex" role="group" aria-label="Participantes">\n  <Avatar style="box-shadow: 0 0 0 2px var(--background)">\n    <AvatarImage src="https://github.com/shadcn.png" alt="" />\n    <AvatarFallback aria-hidden="true">MR</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">JP</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">AL</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>\n  </Avatar>\n</div>`,
+    code: `<div style="display: flex" role="group" aria-label="Participantes">\n  <Avatar style="box-shadow: 0 0 0 2px var(--background)">\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="" />\n    <AvatarFallback aria-hidden="true">MR</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">JP</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">AL</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>\n  </Avatar>\n</div>`,
   },
   {
     name: tContent('variants.compositions.withStatus.name'),
     description: tContent('variants.compositions.withStatus.description'),
     useWhen: tContent('variants.compositions.withStatus.use'),
-    code: `<div style="position: relative; display: inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span\n    class="nds-rounded-full nds-bg-primary"\n    style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"\n    role="status"\n    aria-label="online"\n  />\n</div>`,
+    code: `<div style="position: relative; display: inline-block">\n  <Avatar>\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span\n    class="nds-rounded-full nds-bg-primary"\n    style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"\n    role="status"\n    aria-label="online"\n  />\n</div>`,
   },
 ]);
 
@@ -453,7 +453,6 @@ const testesVisual = computed(() => ({
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add avatar"
       />
     </template>
 
@@ -714,7 +713,7 @@ const testesVisual = computed(() => ({
       <template #variant-preview-0>
         <Avatar>
           <AvatarImage
-            src="https://github.com/shadcn.png"
+            src="https://i.pravatar.cc/128?img=47"
             alt="Foto de perfil de Maria Rodrigues"
           />
           <AvatarFallback>MR</AvatarFallback>
@@ -746,7 +745,7 @@ const testesVisual = computed(() => ({
         >
           <Avatar style="box-shadow: 0 0 0 2px var(--background)">
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src="https://i.pravatar.cc/128?img=47"
               alt=""
             />
             <AvatarFallback aria-hidden="true">
@@ -777,7 +776,7 @@ const testesVisual = computed(() => ({
         <div style="position: relative; display: inline-block">
           <Avatar>
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src="https://i.pravatar.cc/128?img=47"
               alt="Foto de perfil de Maria Rodrigues"
             />
             <AvatarFallback>MR</AvatarFallback>

@@ -156,7 +156,6 @@ export function createAlertDialogDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add alert-dialog',
     });
     headerSlot.replaceChildren(header);
   }

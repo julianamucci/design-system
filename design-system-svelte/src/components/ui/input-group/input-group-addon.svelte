@@ -1,7 +1,7 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
-	export const inputGroupAddonVariants = tv({
-		base: "nds-input-group-addon",
+	import { cva, type VariantProps } from "class-variance-authority";
+	export const inputGroupAddonVariants = cva("nds-input-group-addon", {
+		
 		variants: {
 			align: {
 				"inline-start": "",

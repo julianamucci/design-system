@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
-	export const tabsListVariants = tv({
-		base: "nds-tabs-list",
+	export const tabsListVariants = cva("nds-tabs-list", {
+		
 		variants: {
 			variant: {
 				default: "",

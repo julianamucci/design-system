@@ -1,6 +1,6 @@
-// ─── Card — Vanilla factories alinhadas ao primitive React (shadcn v2) ───────
+// ─── Card — Vanilla factories alinhadas ao primitive React  ───────
 //
-// Visual: classes .nds-card-* (standalone, sem Tailwind/basecoat-css).
+// Visual: classes .nds-card-* (standalone/basecoat-css).
 // Comportamentos preservados:
 //   - data-size={size} no root → propaga padding/font dos subcomponentes via CSS
 //   - has-[> .nds-card-footer]:padding-bottom 0 (CSS, filho direto)

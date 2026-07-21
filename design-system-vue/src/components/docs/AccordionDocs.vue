@@ -392,7 +392,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add accordion"
       />
     </template>
 

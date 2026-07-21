@@ -8,7 +8,7 @@
       "title": "Alert — Feedback",
       "description": "Documentação do Alert: 2 variantes nativas, success e warning via className, acessibilidade WCAG com role=\"alert\" automático.",
       "aiSummary": "Componente Alert com 2 variantes nativas (default, destructive), variantes success e warning via className, role=\"alert\" automático e suporte a ícone, título e descrição.",
-      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.1, role alert, aria-live",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -219,7 +219,7 @@
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Alert usa <code>role=\"alert\"</code> que anuncia o conteúdo automaticamente ao leitor de tela quando inserido no DOM. Cumpre WCAG 2.1 AA: 1.4.1 (cor não é o único indicador), 4.1.3 (mensagens de status).",
-      "item1": "<strong>role=\"alert\" automático</strong> — o Shadcn aplica <code>role=\"alert\"</code> no container, fazendo leitores de tela anunciarem o conteúdo imediatamente ao ser inserido.",
+      "item1": "<strong>role=\"alert\" automático</strong> — o componente aplica <code>role=\"alert\"</code> no container, fazendo leitores de tela anunciarem o conteúdo imediatamente ao ser inserido.",
       "item2": "<strong>Inserção dinâmica</strong> — para alerts inseridos após a montagem, adicione <code>aria-live=\"polite\"</code> no container pai. Use <code>aria-live=\"assertive\"</code> apenas para erros críticos que bloqueiam o fluxo.",
       "item3": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto da <code>AlertDescription</code> já descreve o estado.",
       "item4": "<strong>Cor + ícone + texto</strong> — nunca use cor como único indicador (WCAG 1.4.1). Cada variante deve ter ícone e texto correspondentes.",
@@ -336,7 +336,7 @@
       "title": "Alert — Feedback",
       "description": "Documentation for Alert: 2 native variants, success and warning via className, WCAG accessibility with automatic role=\"alert\".",
       "aiSummary": "Alert component with 2 native variants (default, destructive), success and warning via className, automatic role=\"alert\", and support for icon, title, and description.",
-      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.1, role alert, aria-live",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -547,7 +547,7 @@
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Alert uses <code>role=\"alert\"</code> which announces content automatically to screen readers when inserted in the DOM. Meets WCAG 2.1 AA: 1.4.1 (color not the only indicator), 4.1.3 (status messages).",
-      "item1": "<strong>Automatic role=\"alert\"</strong> — Shadcn applies <code>role=\"alert\"</code> to the container, causing screen readers to announce the content immediately when inserted.",
+      "item1": "<strong>Automatic role=\"alert\"</strong> — the component applies <code>role=\"alert\"</code> to the container, causing screen readers to announce the content immediately when inserted.",
       "item2": "<strong>Dynamic insertion</strong> — for alerts inserted after mount, add <code>aria-live=\"polite\"</code> to the parent container. Use <code>aria-live=\"assertive\"</code> only for critical errors that block the flow.",
       "item3": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The <code>AlertDescription</code> text already describes the state.",
       "item4": "<strong>Color + icon + text</strong> — never use color as the only indicator (WCAG 1.4.1). Each variant must have a matching icon and text.",
@@ -664,7 +664,7 @@
       "title": "Alert — Feedback",
       "description": "Documentación del Alert: 2 variantes nativas, success y warning vía className, accesibilidad WCAG con role=\"alert\" automático.",
       "aiSummary": "Componente Alert con 2 variantes nativas (default, destructive), success y warning vía className, role=\"alert\" automático y soporte para ícono, título y descripción.",
-      "aiEntities": "Alert, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, role alert, aria-live",
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.1, role alert, aria-live",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -875,7 +875,7 @@
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Alert usa <code>role=\"alert\"</code> que anuncia el contenido automáticamente al lector de pantalla cuando se inserta en el DOM. Cumple WCAG 2.1 AA: 1.4.1 (color no es el único indicador), 4.1.3 (mensajes de estado).",
-      "item1": "<strong>role=\"alert\" automático</strong> — Shadcn aplica <code>role=\"alert\"</code> en el contenedor, haciendo que los lectores de pantalla anuncien el contenido inmediatamente al insertarse.",
+      "item1": "<strong>role=\"alert\" automático</strong> — el componente aplica <code>role=\"alert\"</code> en el contenedor, haciendo que los lectores de pantalla anuncien el contenido inmediatamente al insertarse.",
       "item2": "<strong>Inserción dinámica</strong> — para alerts insertados después del montaje, agrega <code>aria-live=\"polite\"</code> al contenedor padre. Usa <code>aria-live=\"assertive\"</code> solo para errores críticos que bloquean el flujo.",
       "item3": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto de <code>AlertDescription</code> ya describe el estado.",
       "item4": "<strong>Color + ícono + texto</strong> — nunca uses el color como único indicador (WCAG 1.4.1). Cada variante debe tener ícono y texto correspondientes.",

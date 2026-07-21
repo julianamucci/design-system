@@ -1,9 +1,9 @@
 <script lang="ts" module>
 	import { cn } from "@/lib/utils.js";
-	import { tv } from "tailwind-variants";
+	import { cva } from "class-variance-authority";
 
-	export const navigationMenuTriggerStyle = tv({
-		base: "nds-navigation-menu-trigger",
+	export const navigationMenuTriggerStyle = cva("nds-navigation-menu-trigger", {
+		
 	});
 </script>
 

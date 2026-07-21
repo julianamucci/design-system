@@ -150,7 +150,6 @@ export function createNavigationMenuDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add navigation-menu',
     });
     headerSlot.replaceChildren(header);
   }

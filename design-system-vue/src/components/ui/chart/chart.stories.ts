@@ -23,7 +23,7 @@ const meta = {
     docs: { page: withAutoDocsTab(ChartDocs) },
   },
   argTypes: {
-    class: { control: 'text', description: 'Classes Tailwind extras (use h-[300px] w-full).' },
+    class: { control: 'text', description: 'Classes utilitárias .nds-* extras (use h-[300px] w-full).' },
     renderer: { control: 'select', options: ['svg', 'canvas'] },
   },
   args: {

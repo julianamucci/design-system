@@ -106,7 +106,7 @@ export function createButtonIcon(
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  // Classes próprias .nds-* — independentes de Tailwind e de cascade externa.
+  // Classes próprias .nds-* — independentes de qualquer framework CSS e de cascade externa.
   // .nds-button-icon-svg dá width/height base (1rem); modificador -<size> ajusta.
   svg.setAttribute(
     'class',

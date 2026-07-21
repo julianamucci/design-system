@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-// Estilo via .nds-textarea (docs/shared/styles/nds/textarea.css). Zero Tailwind.
+// Estilo via .nds-textarea (docs/shared/styles/nds/textarea.css).
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea

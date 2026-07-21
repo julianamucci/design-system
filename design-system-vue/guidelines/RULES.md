@@ -6,11 +6,11 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 
 ## 1. Stack obrigatória
 
-- **Componentes**: usar exclusivamente os de `./components/ui` (Shadcn Vue / Reka UI)
+- **Componentes**: usar exclusivamente os de `./components/ui` (Reka UI)
 - **Estilos**: usar `./styles/globals.css` — nunca CSS inline arbitrário
 - **Ícones**: exclusivamente `lucide-vue-next` — zero exceções
 - **Formulários**: Vee-Validate + Zod — estrutura de campos via composables do vee-validate
-- **Tipografia**: fonte do sistema definida no CSS base — não usar classes Tailwind de tamanho ou line-height (`text-2xl`, `leading-none`)
+- **Tipografia**: fonte do sistema definida no CSS base — não usar classes utilitárias de tamanho ou line-height (`text-2xl`, `leading-none`)
 
 ---
 
@@ -84,7 +84,7 @@ Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
 
 ---
 
-## 7. Componentes — regras de API (Reka UI / Shadcn Vue)
+## 7. Componentes — regras de API (Reka UI)
 
 Nunca inventar props que não existem. Casos frequentes:
 

@@ -502,7 +502,7 @@ interface HandleProps {
           { name: 'direction',      type: $tStore('props.table.direction.type'),  defaultValue: $tStore('props.table.direction.default'),  required: $tStore('props.table.direction.required'),  description: stripHtml($tStore('props.table.direction.description')) },
           { name: 'autoSaveId',     type: 'string',                                defaultValue: '—',                                       required: 'Não',                                       description: 'Persiste tamanhos no storage automaticamente quando definido.' },
           { name: 'onLayoutChange', type: $tStore('props.table.onLayout.type'),    defaultValue: '—',                                       required: 'Não',                                       description: stripHtml($tStore('props.table.onLayout.description')) },
-          { name: 'class',          type: 'string',                                defaultValue: '—',                                       required: 'Não',                                       description: 'Classes Tailwind aplicadas ao container.' },
+          { name: 'class',          type: 'string',                                defaultValue: '—',                                       required: 'Não',                                       description: 'Classes .nds-* aplicadas ao container.' },
         ],
       },
       {

@@ -1,6 +1,6 @@
-# Arquitetura do Projeto — Shadcn/UI Documentation (Vue)
+# Arquitetura do Projeto — Documentação (Vue)
 
-Este documento descreve a arquitetura técnica, estrutura de pastas e padrões organizacionais do projeto de documentação Shadcn/UI para Vue 3.
+Este documento descreve a arquitetura técnica, estrutura de pastas e padrões organizacionais do projeto de documentação para Vue 3.
 
 ---
 
@@ -16,7 +16,7 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 │   ├── ComponentDemo.vue            # Wrapper para demos de componentes
 │   ├── docs/shared/DocsNav.vue      # Navegação lateral sticky de seções
 │   ├── ThemeSelector.vue            # Seletor de temas
-│   ├── ui/                          # Componentes Shadcn Vue base
+│   ├── ui/                          # Componentes base (Reka UI)
 │   └── docs/                        # Páginas de documentação (.vue)
 ├── composables/                     # Composables reutilizáveis
 │   └── use-mobile.ts
@@ -70,7 +70,7 @@ Este documento descreve a arquitetura técnica, estrutura de pastas e padrões o
 
 **Seções**:
 1. Header com logo e descrição
-2. "Por que usar Shadcn/UI?" (3 cards)
+2. "Por que usar o Design System?" (3 cards)
 3. Componentes Populares (grid de 6 botões)
 4. Como Navegar na Documentação (4 etapas)
 5. CTA final

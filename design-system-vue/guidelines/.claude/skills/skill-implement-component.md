@@ -1,6 +1,6 @@
 ---
 name: implement-component
-description: Implementa um componente ou feature usando Shadcn Vue (Reka UI), Tailwind CSS e Vue 3 Composition API, seguindo as guidelines do projeto. Usar sempre que o usuário pedir para criar, construir, implementar, adicionar ou codar um componente — seja uma tela nova, um formulário, um card, um dialog, ou qualquer elemento de UI. Também usar para refatorar implementações existentes que não seguem o padrão do projeto.
+description: Implementa um componente ou feature usando Reka UI e Vue 3 Composition API, com CSS standalone .nds-*, seguindo as guidelines do projeto. Usar sempre que o usuário pedir para criar, construir, implementar, adicionar ou codar um componente — seja uma tela nova, um formulário, um card, um dialog, ou qualquer elemento de UI. Também usar para refatorar implementações existentes que não seguem o padrão do projeto.
 ---
 
 # Skill: Implement Component (Vue)
@@ -25,7 +25,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 - [ ] Sem `this` — Composition API não usa `this`
 
 ### API e estrutura de componentes
-- [ ] Usar apenas props que existem na API do Reka UI / Shadcn Vue
+- [ ] Usar apenas props que existem na API do Reka UI
 - [ ] Estrutura de subcomponentes correta
 - [ ] `as-child` nos triggers de: Dialog, Sheet, Drawer, AlertDialog, Collapsible, DropdownMenu, Popover, Tooltip, ContextMenu
 - [ ] `type="button"` em botões dentro de forms que não são submit
@@ -34,7 +34,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 - [ ] Cores em HSL — nunca rgba/hex/oklch
 - [ ] Superfícies: `bg-card` para painéis, `bg-popover` para overlays flutuantes
 - [ ] Variantes customizadas via `class` com tokens — não props inexistentes
-- [ ] Tamanho de fonte via CSS base — não classes Tailwind de tamanho
+- [ ] Tamanho de fonte via CSS base — não classes utilitárias de tamanho
 - [ ] Espaçamento em múltiplos de 8px
 
 ### Formulários (Vee-Validate + Zod)

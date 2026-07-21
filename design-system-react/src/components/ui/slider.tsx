@@ -2,7 +2,7 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 // Estilo via .nds-slider-* (docs/shared/styles/nds/slider.css). O base-ui
 // posiciona range e thumbs via inline styles; o CSS cobre visual + estados
-// (focus por thumb, data-disabled, orientação vertical). Zero Tailwind.
+// (focus por thumb, data-disabled, orientação vertical).
 function Slider({
   className,
   defaultValue,

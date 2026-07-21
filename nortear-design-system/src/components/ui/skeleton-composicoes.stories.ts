@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// Aceita pseudo-classes Tailwind (motion-reduce:, w-[…], h-[…]) e converte em styles inline
+// Aceita pseudo-classes .nds-* (motion-reduce:, w-[…], h-[…]) e converte em styles inline
 // quando possível para evitar InvalidCharacterError no classList.add.
 function makeSkeleton(className: string): HTMLElement {
   const tokens = className.split(' ').filter(Boolean);

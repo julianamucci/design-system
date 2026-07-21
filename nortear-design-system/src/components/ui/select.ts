@@ -1,5 +1,5 @@
 // ─── Select — Vanilla factory standalone ────────────────────────────────────
-// Visual: classe .nds-select (zero Tailwind/basecoat-css). <select> nativo
+// Visual: classe .nds-select (standalone). <select> nativo
 // estilizado com chevron CSS inline.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

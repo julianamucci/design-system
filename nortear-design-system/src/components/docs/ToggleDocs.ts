@@ -227,7 +227,6 @@ export function createToggleDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add toggle',
     });
     headerSlot.replaceChildren(header);
   }

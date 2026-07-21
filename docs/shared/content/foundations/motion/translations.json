@@ -104,7 +104,7 @@
       "rules": {
         "global": "O arquivo <code>motion.css</code> aplica <code>animation-duration: 0.01ms</code> e <code>transition-duration: 0.01ms</code> dentro de <code>@media (prefers-reduced-motion: reduce)</code>.",
         "primitives": "Carousel, Embla e componentes baseados em scroll automaticamente desabilitam autoplay quando a preferência está ativa.",
-        "custom": "Em motion custom (CSS ou JS), use <code>motion-reduce:animate-none</code> e <code>motion-reduce:transition-none</code> do Tailwind para opt-out granular.",
+        "custom": "Em motion custom (CSS ou JS), use a media query <code>prefers-reduced-motion</code> para desativar animações e transições de forma granular.",
         "essential": "Animações essenciais à compreensão (ex: indicador de loading) podem permanecer, mas devem ser sutis."
       }
     },
@@ -233,7 +233,7 @@
       "rules": {
         "global": "The <code>motion.css</code> file applies <code>animation-duration: 0.01ms</code> and <code>transition-duration: 0.01ms</code> inside <code>@media (prefers-reduced-motion: reduce)</code>.",
         "primitives": "Carousel, Embla, and scroll-based components disable autoplay automatically when the preference is active.",
-        "custom": "In custom motion (CSS or JS), use Tailwind's <code>motion-reduce:animate-none</code> and <code>motion-reduce:transition-none</code> for granular opt-out.",
+        "custom": "In custom motion (CSS or JS), use the <code>prefers-reduced-motion</code> media query to disable animations and transitions granularly.",
         "essential": "Animations essential to comprehension (e.g., loading indicators) may stay, but should remain subtle."
       }
     },
@@ -362,7 +362,7 @@
       "rules": {
         "global": "El archivo <code>motion.css</code> aplica <code>animation-duration: 0.01ms</code> y <code>transition-duration: 0.01ms</code> dentro de <code>@media (prefers-reduced-motion: reduce)</code>.",
         "primitives": "Carousel, Embla y componentes basados en scroll desactivan autoplay automáticamente cuando la preferencia está activa.",
-        "custom": "En motion personalizado (CSS o JS), usa <code>motion-reduce:animate-none</code> y <code>motion-reduce:transition-none</code> de Tailwind para opt-out granular.",
+        "custom": "En motion personalizado (CSS o JS), usa la media query <code>prefers-reduced-motion</code> para desactivar animaciones y transiciones de forma granular.",
         "essential": "Animaciones esenciales para la comprensión (ej: indicador de loading) pueden permanecer, pero deben ser sutiles."
       }
     },

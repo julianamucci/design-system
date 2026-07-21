@@ -8,7 +8,7 @@
       "title": "HoverCard — Overlay",
       "description": "Documentação do HoverCard: cartão flutuante por hover via base-ui/reka-ui/bits-ui com delay, posicionamento e WCAG 2.1 AA.",
       "aiSummary": "Componente HoverCard construído sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que exibe cartão flutuante em hover/focus com delay configurável, posicionamento side/align e fechamento automático ao sair do trigger ou content.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -432,7 +432,7 @@
       "title": "HoverCard — Overlay",
       "description": "HoverCard documentation: floating card on hover via base-ui/reka-ui/bits-ui with delay, positioning, and WCAG 2.1 AA.",
       "aiSummary": "HoverCard component built on base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) that displays a floating card on hover/focus with configurable delay, side/align positioning, and automatic close on leave.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -856,7 +856,7 @@
       "title": "HoverCard — Overlay",
       "description": "Documentación de HoverCard: tarjeta flotante por hover vía base-ui/reka-ui/bits-ui con delay, posicionamiento y WCAG 2.1 AA.",
       "aiSummary": "Componente HoverCard construido sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que muestra tarjeta flotante en hover/focus con delay configurable, posicionamiento side/align y cierre automático al salir.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {

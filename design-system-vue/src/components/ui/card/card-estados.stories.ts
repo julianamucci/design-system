@@ -147,7 +147,7 @@ export const WithFooter: Story = {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).toBeInTheDocument();
       // selector pattern has-data-[slot=card-footer]:pb-0 — verificamos só que o footer existe;
-      // a remoção do pb é via CSS has() puro do Tailwind.
+      // a remoção do pb é via CSS has() puro do CSS.
     });
   },
 };

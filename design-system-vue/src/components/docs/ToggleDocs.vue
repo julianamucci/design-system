@@ -364,7 +364,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add toggle"
       />
     </template>
 

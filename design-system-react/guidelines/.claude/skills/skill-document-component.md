@@ -1,11 +1,11 @@
 ---
 name: document-component
-description: Documenta um componente Shadcn/UI seguindo o template padronizado de 15 seções em 4 blocos. Usar sempre que o usuário pedir para documentar, criar a documentação de, ou escrever a doc de um componente — mesmo que não cite explicitamente o template ou as 15 seções. Também usar para atualizar ou corrigir documentação existente de um componente.
+description: Documenta um componente do design system (@base-ui/react + CSS `.nds-*`) seguindo o template padronizado de 15 seções em 4 blocos. Usar sempre que o usuário pedir para documentar, criar a documentação de, ou escrever a doc de um componente — mesmo que não cite explicitamente o template ou as 15 seções. Também usar para atualizar ou corrigir documentação existente de um componente.
 ---
 
 # Skill: Document Component
 
-Cria a página de documentação de um componente Shadcn/UI seguindo o template de 15 seções em 4 blocos definido em `12-documentacao-componentes.md`.
+Cria a página de documentação de um componente do design system (@base-ui/react + CSS `.nds-*`) seguindo o template de 15 seções em 4 blocos definido em `12-documentacao-componentes.md`.
 
 ## Antes de escrever
 
@@ -24,7 +24,7 @@ Cria a página de documentação de um componente Shadcn/UI seguindo o template 
 - **Seção 5 (Do & Don't)**: 3–5 pares, exemplos concretos de código ou UI
 
 ### Bloco 2 — Referência Técnica (seções 6–11)
-- **Seção 6 (Importação)**: import statement exato do Shadcn
+- **Seção 6 (Importação)**: import statement exato de `@/components/ui`
 - **Seção 7 (Exemplos)**: todos os casos de uso documentados no guideline do componente
 - **Seção 8 (Variantes)**: grid visual de todas as variantes nativas (apenas props reais)
 - **Seção 9 (Estados)**: default, hover, focus, disabled, error — com tokens corretos
@@ -41,7 +41,7 @@ Cria a página de documentação de um componente Shadcn/UI seguindo o template 
 
 ## Regras críticas
 
-- Nunca documentar props que não existem na API do Shadcn (ex: `size` em Avatar, `warning` em Alert)
+- Nunca documentar props que não existem na API do `@base-ui/react` (ex: `size` em Avatar, `warning` em Alert)
 - `FormLabel` dentro de `FormField` não precisa de `htmlFor` — associação é automática
 - Variantes customizadas (warning, success) são sempre via `className` com tokens do projeto
 - ComponentDocsNav: sticky, com IntersectionObserver, `aria-current="location"` no item ativo

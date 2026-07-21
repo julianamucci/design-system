@@ -1,5 +1,5 @@
 // ─── Menubar — Vanilla factory standalone ───────────────────────────────────
-// Visual: classes .nds-menubar-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-menubar-* (standalone).
 // Painel oculto via `hidden` attribute; teclado: Arrow/Escape; click fora fecha.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

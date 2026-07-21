@@ -8,7 +8,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentação do AlertDialog: modal de confirmação crítica, focus trap, ARIA automático e composição com Cancel e Action.",
       "aiSummary": "Componente AlertDialog modal de confirmação para ações destrutivas, com focus trap, role=\"alertdialog\", aria-labelledby e aria-describedby automáticos via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -360,7 +360,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentation for AlertDialog: critical confirmation modal, focus trap, automatic ARIA, and composition with Cancel and Action.",
       "aiSummary": "AlertDialog modal confirmation component for destructive actions, with focus trap, role=\"alertdialog\", and automatic aria-labelledby and aria-describedby via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -712,7 +712,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentación del AlertDialog: modal de confirmación crítica, focus trap, ARIA automático y composición con Cancel y Action.",
       "aiSummary": "Componente AlertDialog modal de confirmación para acciones destructivas, con focus trap, role=\"alertdialog\", aria-labelledby y aria-describedby automáticos vía Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {

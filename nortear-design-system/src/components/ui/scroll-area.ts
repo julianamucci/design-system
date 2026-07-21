@@ -1,5 +1,5 @@
 // ─── ScrollArea — Vanilla factory standalone ────────────────────────────────
-// Visual: classes .nds-scroll-area + .nds-scroll-area-viewport (zero Tailwind).
+// Visual: classes .nds-scroll-area + .nds-scroll-area-viewport (standalone).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

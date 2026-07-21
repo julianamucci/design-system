@@ -259,7 +259,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add dialog"
     />
   {/snippet}
 

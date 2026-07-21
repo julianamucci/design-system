@@ -55,7 +55,7 @@ const meta: Meta<TextareaArgs> = {
     resize: {
       control: 'inline-radio',
       options: ['y', 'none', 'free'],
-      description: 'Direção de redimensionamento via classe Tailwind.',
+      description: 'Direção de redimensionamento via classe .nds-*.',
     },
   },
   args: {

@@ -467,7 +467,6 @@ function handleTabChange(value: string) {
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add tabs"
       />
     </template>
 

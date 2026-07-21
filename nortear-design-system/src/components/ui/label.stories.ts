@@ -24,7 +24,7 @@ const meta: Meta<LabelArgs> = {
     },
     className: {
       control: 'text',
-      description: 'Classes Tailwind adicionais para personalização.',
+      description: 'Classes utilitárias .nds-* adicionais para personalização.',
     },
   },
   args: {

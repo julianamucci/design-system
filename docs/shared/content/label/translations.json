@@ -8,7 +8,7 @@
       "title": "Label — Formulário",
       "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
       "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.1, htmlFor, aria-required",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -117,7 +117,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "htmlFor": "Associa o Label ao campo com o <code>id</code> correspondente. Obrigatório fora de FormField.",
-        "className": "Classes Tailwind adicionais para personalização do rótulo.",
+        "className": "Classes .nds-* adicionais para personalização do rótulo.",
         "children": "Texto do rótulo. Use substantivo ou frase nominal curta."
       },
       "note": "O Label estende <code>React.ComponentProps&lt;\"label\"&gt;</code> — aceita todos os atributos HTML nativos do elemento <code>&lt;label&gt;</code>."
@@ -126,7 +126,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "foreground": "Cor do texto padrão",
         "foregroundMuted": "Cor do texto quando disabled",
@@ -236,7 +236,7 @@
       "title": "Label — Form",
       "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
       "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.1, htmlFor, aria-required",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -345,7 +345,7 @@
         "required": "Required",
         "description": "Description",
         "htmlFor": "Associates the Label with the field whose <code>id</code> matches. Required outside FormField.",
-        "className": "Additional Tailwind classes for label customization.",
+        "className": "Additional .nds-* classes for label customization.",
         "children": "Label text. Use a short noun or noun phrase."
       },
       "note": "Label extends <code>React.ComponentProps&lt;\"label\"&gt;</code> — accepts all native HTML attributes of the <code>&lt;label&gt;</code> element."
@@ -354,7 +354,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component part",
         "foreground": "Default text color",
         "foregroundMuted": "Text color when disabled",
@@ -464,7 +464,7 @@
       "title": "Label — Formulario",
       "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
       "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, htmlFor, aria-required",
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.1, htmlFor, aria-required",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -573,7 +573,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "htmlFor": "Asocia el Label al campo cuyo <code>id</code> coincide. Obligatorio fuera de FormField.",
-        "className": "Clases Tailwind adicionales para personalización del rótulo.",
+        "className": "Clases .nds-* adicionales para personalización del rótulo.",
         "children": "Texto del rótulo. Usa sustantivo o frase nominal corta."
       },
       "note": "Label extiende <code>React.ComponentProps&lt;\"label\"&gt;</code> — acepta todos los atributos HTML nativos del elemento <code>&lt;label&gt;</code>."
@@ -582,7 +582,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "foreground": "Color de texto predeterminado",
         "foregroundMuted": "Color de texto cuando disabled",

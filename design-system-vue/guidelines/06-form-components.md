@@ -367,7 +367,7 @@ Select (value, onValueChange)
 
 **API e exemplos**: `src/components/ui/textarea/textarea.vue` + stories + `TextareaDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Classes de resize** (via Tailwind):
+**Classes de resize**:
 
 | Classe | Uso |
 |--------|-----|

@@ -173,7 +173,6 @@ export function createSheetDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add sheet',
     });
     headerSlot.replaceChildren(header);
   }

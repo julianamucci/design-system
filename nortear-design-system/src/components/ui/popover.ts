@@ -1,5 +1,5 @@
 // ─── Popover — Vanilla factory standalone ───────────────────────────────────
-// Visual: classe .nds-popover-content (zero Tailwind/basecoat-css).
+// Visual: classe .nds-popover-content (standalone).
 // Render via portal (body), posicionado pelo JS. Click-outside + Escape fecham.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

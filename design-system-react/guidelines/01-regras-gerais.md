@@ -12,6 +12,6 @@
 * Sistema de espaçamento baseado em múltiplos de 8px 
 * Use diretrizes WCAG 2.1 AA para acessibilidade
 * **TIPOGRAFIA**: Use APENAS a fonte sistema definida no CSS para todos os textos
-* **NÃO use classes de tamanho de fonte ou altura de linha do Tailwind** (ex: text-2xl, leading-none) - a tipografia está definida no CSS base
+* **NÃO use classes utilitárias de tamanho de fonte ou altura de linha** fora do CSS base - a tipografia está definida nos tokens `--text-*` do CSS base
 * Prefira refatoração contínua para manter o código limpo
 * Mantenha arquivos pequenos e coloque funções auxiliares em arquivos separados

@@ -503,7 +503,7 @@ Para overlays que precisam funcionar em ambos os contextos, renderizar `Dialog` 
 **Regras**:
 - Extrair o conteúdo para um componente separado — evita duplicação
 - Detecção de viewport via `useMediaQuery` (composable customizado) com listener `addEventListener("change", …)` para reagir a mudanças
-- Breakpoint padrão: `768px` (md) — alinhado com os breakpoints do Tailwind do projeto
+- Breakpoint padrão: `768px` (md) — alinhado com os breakpoints responsivos do projeto
 - Ambas as variantes recebem o mesmo `open` / `onOpenChange` — o estado do overlay é compartilhado
 
 ---

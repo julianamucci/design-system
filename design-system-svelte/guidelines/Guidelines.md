@@ -1,6 +1,6 @@
 # Design System Svelte — Guidelines
 
-Stack: **Svelte 5 + Bits UI + lucide-svelte + Tailwind CSS 4 + Zod + Storybook 10**
+Stack: **Svelte 5 + Bits UI + lucide-svelte + Zod + Storybook 10**
 
 > **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — Storybook é a interface principal.
 
@@ -26,7 +26,7 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Basecoat:
 - **[02-template-caracteres-especiais.md](./02-template-caracteres-especiais.md)** — Caracteres especiais em templates Svelte
 - **[03-sistema-design.md](./03-sistema-design.md)** — Tokens CSS e design system no projeto Svelte
 
-### 2. Componentes por Categoria (Bits UI / shadcn-svelte)
+### 2. Componentes por Categoria (Bits UI)
 
 - **[04-layout-components.md](./04-layout-components.md)** — Aspect Ratio, Card, Resizable, Scroll Area, Separator, Sidebar
 - **[05-navigation-components.md](./05-navigation-components.md)** — Breadcrumb, Menubar, Navigation Menu, Pagination, Stepper, Tabs

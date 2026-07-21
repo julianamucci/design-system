@@ -1,5 +1,5 @@
 // ─── Calendar — Vanilla factory standalone ──────────────────────────────────
-// Visual: classes .nds-calendar-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-calendar-* (standalone).
 // Locale-aware (Intl.DateTimeFormat) para nomes de dia/mês.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

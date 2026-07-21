@@ -1,6 +1,6 @@
 // ─── Toggle Group — Vanilla factory standalone ──────────────────────────────
 //
-// Visual: classe .nds-toggle-group (zero Tailwind/basecoat-css).
+// Visual: classe .nds-toggle-group (standalone).
 // Tipo (single/multiple) via lógica TS; variante via data-variant.
 
 import { createToggle, type ToggleVariant } from './toggle';

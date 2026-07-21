@@ -59,7 +59,7 @@ export const WithImage: Story = {
   },
   render: () =>
     createAvatar({
-      src: 'https://github.com/shadcn.png',
+      src: 'https://i.pravatar.cc/128?img=47',
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     }),
@@ -133,7 +133,7 @@ export const Group: Story = {
     group.setAttribute('aria-label', 'Participantes');
 
     const members: { src?: string; alt: string; fallback: string }[] = [
-      { src: 'https://github.com/shadcn.png', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },
+      { src: 'https://i.pravatar.cc/128?img=47', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },
       { alt: '', fallback: 'JP' },
       { alt: '', fallback: 'AL' },
       { alt: '', fallback: '+3' },
@@ -173,7 +173,7 @@ export const WithStatus: Story = {
     wrapper.style.position = 'relative';
 
     const avatar = createAvatar({
-      src: 'https://github.com/shadcn.png',
+      src: 'https://i.pravatar.cc/128?img=47',
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     });

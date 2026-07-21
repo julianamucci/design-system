@@ -8,7 +8,7 @@
       "title": "Progress — Feedback",
       "description": "Documentação do Progress: track, indicator, label e value, com role=\"progressbar\" automático e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Progress com Track, Indicator, Label e Value, role=\"progressbar\" automático, suporte a modo determinado (0-100) e indeterminate.",
-      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role progressbar",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -173,11 +173,11 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind adicionais. Use <code>[&>div]:bg-*</code> para customizar a cor do indicador."
+          "description": "Classes .nds-* adicionais. Use uma classe utilitária dedicada para customizar a cor do indicador."
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Cor customizada via Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
+      "extensibilityCode": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
     },
     "tokens": {
       "title": "Design Tokens",
@@ -193,7 +193,7 @@
         "ring": { "class": "ring-ring", "part": "Anel de foco quando interativo" }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor do indicador via Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": "/* Override de cor do indicador via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -317,7 +317,7 @@
       "title": "Progress — Feedback",
       "description": "Progress documentation: track, indicator, label and value, with automatic role=\"progressbar\" and WCAG 2.1 AA support.",
       "aiSummary": "Progress component with Track, Indicator, Label and Value, automatic role=\"progressbar\", support for determinate (0-100) and indeterminate modes.",
-      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role progressbar",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -482,11 +482,11 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional Tailwind classes. Use <code>[&>div]:bg-*</code> to customize the indicator color."
+          "description": "Additional .nds-* classes. Use a dedicated utility class to customize the indicator color."
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Custom color via Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
+      "extensibilityCode": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
     },
     "tokens": {
       "title": "Design Tokens",
@@ -502,7 +502,7 @@
         "ring": { "class": "ring-ring", "part": "Focus ring when interactive" }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override indicator color via Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": "/* Override indicator color via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -626,7 +626,7 @@
       "title": "Progress — Feedback",
       "description": "Documentación de Progress: track, indicator, label y value, con role=\"progressbar\" automático y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Progress con Track, Indicator, Label y Value, role=\"progressbar\" automático, soporte para modo determinado (0-100) e indeterminate.",
-      "aiEntities": "Progress, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role progressbar",
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role progressbar",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -791,11 +791,11 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind adicionales. Usa <code>[&>div]:bg-*</code> para personalizar el color del indicador."
+          "description": "Clases .nds-* adicionales. Usa una clase utilitaria dedicada para personalizar el color del indicador."
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Color personalizado vía Tailwind arbitrary variant\n<Progress\n  value={progress}\n  className=\"[&>div]:bg-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
+      "extensibilityCode": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
     },
     "tokens": {
       "title": "Design Tokens",
@@ -811,7 +811,7 @@
         "ring": { "class": "ring-ring", "part": "Anillo de foco cuando interactivo" }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override del color del indicador vía Tailwind arbitrary variant */\n.upload-progress {\n  @apply [&>div]:bg-blue-500;\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": "/* Override del color del indicador vía .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do MenubarItem: Default (neutro com hover bg-accent) e Destructive (text-destructive). NOTA: a factory createMenubar (Basecoat) não tem prop `variant` nativo — o item destructive é montado manualmente com classes Tailwind aplicadas no <li role="menuitem">.',
+          'Variantes do MenubarItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: a factory createMenubar (Basecoat) não tem prop `variant` nativo — o item destructive é montado manualmente com classes .nds-* aplicadas no <li role="menuitem">.',
       },
     },
   },

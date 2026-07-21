@@ -162,7 +162,6 @@ export function createBadgeDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add badge',
     });
     headerSlot.replaceChildren(header);
   }

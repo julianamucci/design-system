@@ -30,7 +30,7 @@ design-system-react/
 │
 ├── src/
 │   ├── components/
-│   │   ├── ui/                  # Primitivos (shadcn/ui) + stories
+│   │   ├── ui/                  # Primitivos (@base-ui/react) + stories
 │   │   │   ├── alert.tsx
 │   │   │   ├── alert.stories.tsx            # Story principal (Playground + docs.page)
 │   │   │   ├── alert-variantes.stories.tsx
@@ -84,7 +84,7 @@ design-system-react/
 │   │   └── useDocs.ts           # Hook para carregar/salvar translations.json
 │   │
 │   └── styles/
-│       ├── globals.css          # Tailwind + tokens CSS + imports de temas
+│       ├── globals.css          # tokens CSS + imports de temas + estilos .nds-*
 │       └── storybook-docs.css   # Overrides de layout para Docs tab
 │
 ├── chromatic.config.json

@@ -350,7 +350,7 @@ const selectPropItems = computed(() => [
 const selectTriggerPropItems = computed(() => [
   { name: 'size',     type: tContent('props.table.size.type'),    defaultValue: tContent('props.table.size.default'),    required: tContent('props.table.size.required'),    description: stripHtml(tContent('props.table.size.description'))    },
   { name: 'disabled', type: 'boolean',                            defaultValue: 'false',                                 required: 'Não',                                     description: 'Desabilita apenas o trigger.'                          },
-  { name: 'class',    type: 'string',                             defaultValue: '—',                                     required: 'Não',                                     description: 'Classes Tailwind adicionais.'                          },
+  { name: 'class',    type: 'string',                             defaultValue: '—',                                     required: 'Não',                                     description: 'Classes utilitárias .nds-* adicionais.'                          },
 ]);
 
 const selectValuePropItems = computed(() => [
@@ -360,7 +360,7 @@ const selectValuePropItems = computed(() => [
 const selectItemPropItems = computed(() => [
   { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Valor único do item — OBRIGATÓRIO.'  },
   { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: 'Desabilita apenas este item.'        },
-  { name: 'class',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Classes Tailwind adicionais.'        },
+  { name: 'class',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Classes utilitárias .nds-* adicionais.'        },
 ]);
 
 const tokenRows = computed(() => [
@@ -457,7 +457,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add select"
       />
     </template>
 

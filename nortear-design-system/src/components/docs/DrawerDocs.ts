@@ -180,7 +180,6 @@ export function createDrawerDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add drawer',
     });
     headerSlot.replaceChildren(header);
   }

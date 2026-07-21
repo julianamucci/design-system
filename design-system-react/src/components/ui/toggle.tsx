@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 // Estilo via .nds-toggle (docs/shared/styles/nds/toggle.css). Variante e
 // tamanho são selecionados por data-variant/data-size no CSS — o cva mantém
-// apenas a TIPAGEM das variantes (valores vazios de propósito). Zero Tailwind.
+// apenas a TIPAGEM das variantes (valores vazios de propósito).
 const toggleVariants = cva("nds-toggle", {
   variants: {
     variant: {

@@ -23,7 +23,7 @@ const meta = {
     class: {
       control: { type: 'text' },
       description:
-        'Classes Tailwind para definir dimensões e arredondamento (ex: h-4 w-[250px], h-12 w-12 rounded-full).',
+        'Classes utilitárias .nds-* para definir dimensões e arredondamento (ex: h-4 w-[250px], h-12 w-12 rounded-full).',
     },
   },
   args: {

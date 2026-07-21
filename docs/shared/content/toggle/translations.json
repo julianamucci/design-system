@@ -8,7 +8,7 @@
       "title": "Toggle — Formulário",
       "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -211,7 +211,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind adicionais."
+          "description": "Classes .nds-* adicionais."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -352,7 +352,7 @@
       "title": "Toggle — Form",
       "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.1 AA support.",
       "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -555,7 +555,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional Tailwind classes."
+          "description": "Additional .nds-* classes."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -696,7 +696,7 @@
       "title": "Toggle — Formulario",
       "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -899,7 +899,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind adicionales."
+          "description": "Clases .nds-* adicionales."
         }
       },
       "extensibilityTitle": "Extensibilidad",

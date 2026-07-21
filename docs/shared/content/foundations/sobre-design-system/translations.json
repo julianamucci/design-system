@@ -8,7 +8,7 @@
       "title": "Sobre",
       "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.1 AA por padrão.",
       "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
-      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semânticos, WCAG, multi-stack",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Storybook, tokens semânticos, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
@@ -28,19 +28,19 @@
       "rows": {
         "react": {
           "name": "React",
-          "base": "base-ui + Tailwind 4",
+          "base": "base-ui + CSS .nds-*",
           "port": "6006",
           "when": "Aplicações React 19 com necessidade de SSR via Next/Remix"
         },
         "vue": {
           "name": "Vue",
-          "base": "reka-ui + Tailwind 4",
+          "base": "reka-ui + CSS .nds-*",
           "port": "6007",
           "when": "Aplicações Vue 3 com Composition API e Nuxt"
         },
         "svelte": {
           "name": "Svelte",
-          "base": "bits-ui + Tailwind 4",
+          "base": "bits-ui + CSS .nds-*",
           "port": "6008",
           "when": "Aplicações Svelte 5 com runes e SvelteKit"
         },
@@ -115,7 +115,7 @@
       "title": "About",
       "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.1 AA by default.",
       "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), the shared content architecture and the core principles.",
-      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, semantic tokens, WCAG, multi-stack",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Storybook, semantic tokens, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
@@ -135,19 +135,19 @@
       "rows": {
         "react": {
           "name": "React",
-          "base": "base-ui + Tailwind 4",
+          "base": "base-ui + CSS .nds-*",
           "port": "6006",
           "when": "React 19 apps needing SSR via Next/Remix"
         },
         "vue": {
           "name": "Vue",
-          "base": "reka-ui + Tailwind 4",
+          "base": "reka-ui + CSS .nds-*",
           "port": "6007",
           "when": "Vue 3 apps with Composition API and Nuxt"
         },
         "svelte": {
           "name": "Svelte",
-          "base": "bits-ui + Tailwind 4",
+          "base": "bits-ui + CSS .nds-*",
           "port": "6008",
           "when": "Svelte 5 apps with runes and SvelteKit"
         },
@@ -222,7 +222,7 @@
       "title": "Sobre",
       "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.1 AA por defecto.",
       "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + basecoat), la arquitectura de contenido compartido y los principios fundamentales.",
-      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Tailwind, Storybook, tokens semánticos, WCAG, multi-stack",
+      "aiEntities": "Design System, React, Vue, Svelte, Basecoat, Storybook, tokens semánticos, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
@@ -242,19 +242,19 @@
       "rows": {
         "react": {
           "name": "React",
-          "base": "base-ui + Tailwind 4",
+          "base": "base-ui + CSS .nds-*",
           "port": "6006",
           "when": "Aplicaciones React 19 con necesidad de SSR vía Next/Remix"
         },
         "vue": {
           "name": "Vue",
-          "base": "reka-ui + Tailwind 4",
+          "base": "reka-ui + CSS .nds-*",
           "port": "6007",
           "when": "Aplicaciones Vue 3 con Composition API y Nuxt"
         },
         "svelte": {
           "name": "Svelte",
-          "base": "bits-ui + Tailwind 4",
+          "base": "bits-ui + CSS .nds-*",
           "port": "6008",
           "when": "Aplicaciones Svelte 5 con runes y SvelteKit"
         },

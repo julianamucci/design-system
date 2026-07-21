@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
-	export const sidebarMenuButtonVariants = tv({
-		base: "nds-sidebar-menu-button",
+	export const sidebarMenuButtonVariants = cva("nds-sidebar-menu-button", {
+		
 		variants: {
 			variant: {
 				default: "",

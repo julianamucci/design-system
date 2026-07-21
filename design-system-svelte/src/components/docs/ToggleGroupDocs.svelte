@@ -215,7 +215,6 @@ interface ToggleGroupItemProps {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add toggle-group"
     />
   {/snippet}
 

@@ -8,7 +8,7 @@
       "title": "Checkbox — Formulário",
       "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Basecoat.",
       "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -178,7 +178,7 @@
         "required": "<code>required</code> — marca o campo como obrigatório. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nome do campo para participação em formulários HTML nativos.",
         "value": "<code>value</code> — valor enviado no submit do formulário quando marcado. Padrão <code>\"on\"</code>.",
-        "className": "<code>className</code>/<code>class</code> — classes Tailwind adicionais mescladas via <code>cn()</code>.",
+        "className": "<code>className</code>/<code>class</code> — classes .nds-* adicionais mescladas via <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla o estado indeterminado independentemente de <code>checked</code>.",
         "basecoatId": "<code>id</code> (Basecoat) — ID do elemento. Usado para associação com label externo.",
         "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — label acessível quando não há <code>&lt;label&gt;</code> externo visível."
@@ -188,7 +188,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "primary": "Fundo marcado/indeterminado",
         "primaryForeground": "Cor do ícone (checked, indeterminate)",
@@ -326,7 +326,7 @@
       "title": "Checkbox — Form",
       "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Basecoat support.",
       "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -496,7 +496,7 @@
         "required": "<code>required</code> — marks the field as required. Propagates <code>aria-required</code>.",
         "name": "<code>name</code> — field name for native HTML form participation.",
         "value": "<code>value</code> — value submitted on form submit when checked. Default <code>\"on\"</code>.",
-        "className": "<code>className</code>/<code>class</code> — additional Tailwind classes merged via <code>cn()</code>.",
+        "className": "<code>className</code>/<code>class</code> — additional .nds-* classes merged via <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controls the indeterminate state independently of <code>checked</code>.",
         "basecoatId": "<code>id</code> (Basecoat) — element ID. Used for association with an external label.",
         "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — accessible label when no visible external <code>&lt;label&gt;</code> is present."
@@ -506,7 +506,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "primary": "Checked/indeterminate background",
         "primaryForeground": "Icon color (checked, indeterminate)",
@@ -644,7 +644,7 @@
       "title": "Checkbox — Formulario",
       "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Basecoat.",
       "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, Tailwind CSS, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -814,7 +814,7 @@
         "required": "<code>required</code> — marca el campo como obligatorio. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nombre del campo para participación en formularios HTML nativos.",
         "value": "<code>value</code> — valor enviado en el submit cuando está marcado. Por defecto <code>\"on\"</code>.",
-        "className": "<code>className</code>/<code>class</code> — clases Tailwind adicionales combinadas vía <code>cn()</code>.",
+        "className": "<code>className</code>/<code>class</code> — clases .nds-* adicionales combinadas vía <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla el estado indeterminado independientemente de <code>checked</code>.",
         "basecoatId": "<code>id</code> (Basecoat) — ID del elemento. Usado para asociación con un label externo.",
         "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — label accesible cuando no hay <code>&lt;label&gt;</code> externo visible."
@@ -824,7 +824,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "primary": "Fondo marcado/indeterminado",
         "primaryForeground": "Color del ícono (checked, indeterminate)",

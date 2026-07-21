@@ -1,6 +1,6 @@
 // ─── Alert Dialog — Vanilla factory (portal manual) ──────────────────────────
 //
-// Visual: classes .nds-alert-dialog-* (standalone, sem Tailwind/basecoat-css).
+// Visual: classes .nds-alert-dialog-* (standalone/basecoat-css).
 // Comportamentos preservados:
 //   - Sem overlay-click-to-close e sem Escape-to-close (canônico para alert dialog).
 //   - Focus trap (Tab/Shift+Tab) entre cancel e action.

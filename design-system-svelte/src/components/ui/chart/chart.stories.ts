@@ -19,7 +19,7 @@ const meta = {
     docs: { page: withAutoDocsTab(ChartDocs) },
   },
   argTypes: {
-    class: { control: 'text', description: 'Classes Tailwind (use h-[300px] w-[500px]).' },
+    class: { control: 'text', description: 'Classes utilitárias .nds-* (use h-[300px] w-[500px]).' },
     renderer: { control: 'select', options: ['svg', 'canvas'] },
   },
   args: {

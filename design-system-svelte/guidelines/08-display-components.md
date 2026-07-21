@@ -106,7 +106,7 @@ Table
 | `editable` | `boolean` | Marca a coluna como editável inline |
 | `format` | `(value, row) => string` | Formata o texto da célula (sem JSX/snippet) |
 | `badgeVariant` | `(value, row) => 'default' \| 'secondary' \| 'destructive' \| 'outline'` | Envolve a célula em `<Badge>` com a variant retornada — substituto do `cell` renderer das outras stacks |
-| `cellClass` | `string` | Classes Tailwind extras no `<td>` |
+| `cellClass` | `string` | Classes utilitárias extras no `<td>` |
 
 **Regras**:
 - Defina `columns` no top-level do `<script>` ou em `$derived` — recriar em cada update zera o estado da tabela

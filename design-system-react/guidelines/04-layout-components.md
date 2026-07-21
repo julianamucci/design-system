@@ -197,7 +197,7 @@ SidebarProvider
 
 O componente `Sidebar` usa `position: fixed; inset-y: 0` internamente, o que faz o painel escapar de qualquer container e se sobrepor ao layout da docs page. Para conter a sidebar dentro do preview, aplique `style={{ contain: 'layout' }}` no div wrapper (todas as stacks).
 
-**Por que `contain: layout`**: a spec CSS Containment Level 2 garante que elementos `position: fixed` dentro de um container com `contain: layout` sejam posicionados relativamente àquele container, não ao viewport. `overflow: hidden` sozinho **não** é suficiente — fixed bypassa overflow. Não existe classe Tailwind para isso; use `style` inline.
+**Por que `contain: layout`**: a spec CSS Containment Level 2 garante que elementos `position: fixed` dentro de um container com `contain: layout` sejam posicionados relativamente àquele container, não ao viewport. `overflow: hidden` sozinho **não** é suficiente — fixed bypassa overflow. Não existe classe utilitária `.nds-*` para isso; use `style` inline.
 
 **Analytics** (ver `21-analytics.md`):
 - Clique em item de menu: `navigation_click` com `label` (nome da seção) e `destination` (path).

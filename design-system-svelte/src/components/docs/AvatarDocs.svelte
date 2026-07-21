@@ -175,7 +175,6 @@ interface AvatarFallbackProps {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add avatar"
     />
   {/snippet}
 
@@ -449,7 +448,7 @@ interface AvatarFallbackProps {
         description: $tStore('variants.compositions.withImage.description'),
         useWhen: $tStore('variants.compositions.withImage.use'),
         code: `<Avatar>
-  <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
   <AvatarFallback>MR</AvatarFallback>
 </Avatar>`,
         preview: compWithImage,
@@ -480,7 +479,7 @@ interface AvatarFallbackProps {
         useWhen: $tStore('variants.compositions.group.use'),
         code: `<div style="display: flex" role="group" aria-label="Participantes">
   <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
@@ -501,7 +500,7 @@ interface AvatarFallbackProps {
         useWhen: $tStore('variants.compositions.withStatus.use'),
         code: `<div style="position: relative; display: inline-block">
   <Avatar>
-    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <span
@@ -517,7 +516,7 @@ interface AvatarFallbackProps {
 
   {#snippet compWithImage()}
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
       <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   {/snippet}
@@ -536,7 +535,7 @@ interface AvatarFallbackProps {
   {#snippet compGroup()}
     <div style="display: flex" role="group" aria-label="Participantes">
       <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-        <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
@@ -553,7 +552,7 @@ interface AvatarFallbackProps {
   {#snippet compWithStatus()}
     <div style="position: relative; display: inline-block">
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <span

@@ -1,10 +1,10 @@
 <script lang="ts" module>
-	import { type VariantProps, tv } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
 	// PATCH: theme — altura via token (--height-badge) (ver PATCHES.md#badge-dimension-tokens)
-	export const badgeVariants = tv({
+	export const badgeVariants = cva("nds-badge", {
 		// PATCH: theme — rounded via token --radius-badge
-		base: "nds-badge",
+		
 		variants: {
 			variant: {
 				default: "nds-badge-default",

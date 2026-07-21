@@ -170,7 +170,6 @@ export function createInputOTPDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add input-otp',
     });
     headerSlot.replaceChildren(header);
   }

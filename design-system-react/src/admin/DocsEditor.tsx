@@ -74,7 +74,7 @@ function QuillEditor({ value, onChange, placeholder }: QuillEditorProps) {
     quill.on('text-change', () => onChangeRef.current(quill.root.innerHTML));
     quillRef.current = quill;
 
-    // Tailwind reset interfere no Quill — restaura cursor
+    // O reset de CSS base interfere no Quill — restaura cursor
     (containerRef.current.querySelector('.ql-editor') as HTMLElement | null)
       ?.style.setProperty('min-height', '80px');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

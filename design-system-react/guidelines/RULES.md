@@ -6,11 +6,11 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 
 ## 1. Stack obrigatória
 
-- **Componentes**: usar exclusivamente os de `./components/ui` (Shadcn/UI)
-- **Estilos**: usar `./styles/globals.css` — nunca CSS inline arbitrário
+- **Componentes**: usar exclusivamente os de `./components/ui` (construídos sobre `@base-ui/react` + CSS `.nds-*`)
+- **Estilos**: usar as classes `.nds-*` (`docs/shared/styles/nds/`) — nunca CSS inline arbitrário
 - **Ícones**: exclusivamente `lucide-react` — zero exceções
 - **Formulários**: React Hook Form + Zod via `Form > FormField > FormItem > FormLabel + FormControl + FormDescription + FormMessage`
-- **Tipografia**: fonte do sistema definida no CSS base — não usar classes Tailwind de tamanho ou line-height (`text-2xl`, `leading-none`)
+- **Tipografia**: fonte do sistema definida no CSS base — não usar classes utilitárias de tamanho ou line-height fora do CSS base (a tipografia já vem dos tokens `--text-*`)
 
 ---
 
@@ -42,7 +42,7 @@ Regras permanentes:
 - Ícones decorativos: sempre `aria-hidden="true"`
 - Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
 - Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
-- `motion-reduce:animate-none` em toda animação customizada fora dos componentes Shadcn
+- Respeitar `prefers-reduced-motion` em toda animação customizada fora dos primitivos `@base-ui/react`
 - Focus ring obrigatório: `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` — sem opacidade
 - `DialogTitle` e `DialogDescription` obrigatórios em todo Dialog, Sheet, Drawer — são a base do `aria-labelledby`
 - `TableCaption` obrigatório em toda Table (pode ser `sr-only`)
@@ -96,7 +96,7 @@ Nunca inventar props que não existem. Casos frequentes:
 |------------|-----------------|---------|
 | Avatar | `size` | `className="h-8 w-8"` |
 | Badge | `size` | `className` customizado |
-| Label | `font-bold` | `font-medium` (padrão Shadcn) |
+| Label | `font-bold` | `font-medium` (padrão do design system) |
 | Sonner | posição `top-right` | padrão é `bottom-right` |
 | Alert | variantes `warning`/`success` | `className` com tokens do projeto |
 | Drawer | prop `side` | `direction` no `<Drawer>` |

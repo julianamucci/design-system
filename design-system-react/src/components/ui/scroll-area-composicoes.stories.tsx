@@ -29,7 +29,7 @@ export const TagList: Story = {
     docs: {
       description: {
         story:
-          "Lista vertical com Separator entre itens — padrão clássico shadcn para tags, versões ou changelog.",
+          "Lista vertical com Separator entre itens — padrão clássico para tags, versões ou changelog.",
       },
     },
   },

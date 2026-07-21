@@ -2,7 +2,7 @@ import DOMPurify from 'dompurify';
 
 // ─── Checkbox — Vanilla factory standalone ──────────────────────────────────
 //
-// Visual: classes .nds-checkbox + .nds-checkbox-indicator (zero Tailwind).
+// Visual: classes .nds-checkbox + .nds-checkbox-indicator (standalone).
 // Estado controlado via data-state="checked|unchecked" + aria-checked.
 
 const CHECK_SVG =

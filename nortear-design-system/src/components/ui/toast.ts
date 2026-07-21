@@ -1,5 +1,5 @@
 // ─── Toast — Vanilla factory standalone ─────────────────────────────────────
-// Visual: classes .nds-toaster / .nds-toast (zero Tailwind/basecoat-css).
+// Visual: classes .nds-toaster / .nds-toast (standalone).
 
 import DOMPurify from 'dompurify';
 

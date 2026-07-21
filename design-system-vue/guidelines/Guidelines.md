@@ -1,6 +1,6 @@
 # Design System Vue — Guidelines
 
-Stack: **Vue 3 + Reka UI + Vee-validate + Pinia + lucide-vue-next + Tailwind CSS 4**
+Stack: **Vue 3 + Reka UI + Vee-validate + Pinia + lucide-vue-next**
 
 > **Leia primeiro**: [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) — Storybook é a interface principal.
 
@@ -26,7 +26,7 @@ Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Basecoat:
 - **[02-template-caracteres-especiais.md](./02-template-caracteres-especiais.md)** — Caracteres especiais em templates Vue
 - **[03-sistema-design.md](./03-sistema-design.md)** — Tokens CSS e design system no projeto Vue
 
-### 2. Componentes por Categoria (Reka UI / shadcn-vue)
+### 2. Componentes por Categoria (Reka UI)
 
 - **[04-layout-components.md](./04-layout-components.md)** — Aspect Ratio, Card, Resizable, Scroll Area, Separator, Sidebar
 - **[05-navigation-components.md](./05-navigation-components.md)** — Breadcrumb, Menubar, Navigation Menu, Pagination, Stepper, Tabs

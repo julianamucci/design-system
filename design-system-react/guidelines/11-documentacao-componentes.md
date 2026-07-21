@@ -47,57 +47,48 @@ Se você precisa de um layout que nenhum container cobre, abra uma PR no contain
 
 O ComponentDocs é um componente React que renderiza a documentação completa. Ele é referenciado no Storybook via `parameters.docs.page: withAutoDocsTab(NomeComponenteDocs)` no arquivo principal de stories.
 
-#### Layout obrigatório: Header + Sidebar + Conteúdo
+#### Layout obrigatório: `DocsPageLayout`
+
+O ComponentDocs delega toda a estrutura visual ao container `DocsPageLayout`, que aplica o wrapper `.nds-page`, o `.nds-sidebar-layout` (nav sticky à esquerda + conteúdo à direita) e o ritmo vertical entre seções (`.nds-stack` com `data-spacing="2xl"`).
 
 ```tsx
 export function NomeComponenteDocs() {
   // i18n, SEO, analytics, navGroups, activeSection, data computadas...
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-
-      <DocsHeader
-        title={t('title')}
-        description={t('description')}
-        category={t('category')}
-        type={t('type')}
-        installNote="npx shadcn@latest add nome-componente"
-      />
-
-      <div className="flex gap-16 items-start">
-        <nav
-          aria-label="Navegação das seções do componente"
-          className="sticky top-8 w-52 shrink-0 self-start space-y-5"
-        >
-          <DocsNav groups={navGroups} activeSection={activeSection} />
-        </nav>
-
-        <div className="ds-docs flex-1 min-w-0 space-y-12">
-          {/* Seções 2–16 compostas via DocsXxx containers */}
-        </div>
-      </div>
-
-    </div>
+    <DocsPageLayout
+      navGroups={navGroups}
+      activeSection={activeSection}
+      componentSlug="nome-componente"
+      header={
+        <DocsHeader
+          title={t('title')}
+          description={t('description')}
+          category={t('category')}
+          type={t('type')}
+        />
+      }
+    >
+      {/* Seções 2–16 compostas via DocsXxx containers */}
+    </DocsPageLayout>
   );
 }
 ```
 
 **Regras de layout:**
-- Container raiz: `p-8 max-w-5xl mx-auto`
-- `DocsHeader` cuida do bloco superior (badges, h1, LanguageSwitcher, description, install note) — não escreva header manualmente
-- Layout de duas colunas: `<nav>` sticky à esquerda + conteúdo `flex-1` à direita
-- Gap entre colunas: `gap-16`
-- Wrapper do conteúdo: `ds-docs flex-1 min-w-0 space-y-12` (obrigatório para neutralizar CSS do Storybook)
-- Sidebar: `sticky top-8 w-52 shrink-0 self-start space-y-5`
+- `DocsPageLayout` cuida do container (`.nds-page`), das duas colunas (`.nds-sidebar-layout` com `data-sidebar-sticky`) e do ritmo vertical (`.nds-stack`) — não escreva esse HTML manualmente
+- `DocsHeader` (passado via prop `header`) cuida do bloco superior (badges, h1, LanguageSwitcher, description) — não escreva header manualmente
+- `navGroups` alimenta a `DocsNav` sticky renderizada internamente pelo layout
+- Nenhuma classe utilitária de layout crua na docs page: toda a composição vem dos containers e das classes `.nds-*`
 
 ---
 
 ### Classe `.ds-docs` — Blindagem contra Storybook
 
-O Storybook injeta CSS-in-JS unlayered com especificidade `(0,1,0)` que reseta margens, fontes e listas. A classe `.ds-docs` no `globals.css` restaura os utilitários do Tailwind com especificidade `(0,2,N)`.
+O Storybook injeta CSS-in-JS unlayered com especificidade `(0,1,0)` que reseta margens, fontes e listas. A classe `.ds-docs` no `globals.css` restaura os estilos base e as classes `.nds-*` com especificidade `(0,2,N)`.
 
 **Regras:**
-- O wrapper `.ds-docs` deve envolver o container de conteúdo `flex-1`
+- O `DocsPageLayout` já aplica `.ds-docs` no container de conteúdo — não é preciso adicioná-la manualmente
 - `DocsHeader` já aplica `ds-docs` internamente
 - As regras CSS estão no bloco unlayered no final do `globals.css`
 
@@ -235,14 +226,13 @@ Renderizado pelo `DocsHeader` já antes do layout de duas colunas (ver bloco de 
   description={t('description')}
   category={t('category')}
   type={t('type')}
-  installNote="npx shadcn@latest add nome-componente"
 />
 ```
 
 **Regras:**
 - `category` — Layout | Navigation | Form | Feedback | Display | Overlay
 - `type` — sempre "Componente" (ou "Provider", "Hook")
-- `installNote` — opcional; se omitido, a linha do comando shadcn não é renderizada
+- `installNote` — opcional; exibe uma linha de instalação abaixo da descrição; se omitido, a linha não é renderizada
 - `LanguageSwitcher` é incluso automaticamente
 
 ---
@@ -745,7 +735,7 @@ export const Default: Story = {
 ### Proibições
 
 - **Proibido** reimplementar o HTML interno de qualquer container `Docs*` dentro da docs page
-- **Proibido** copiar classes Tailwind de seção (tabelas, cards, grids Do/Don't) — use o container
+- **Proibido** copiar classes `.nds-*` de seção (tabelas, cards, grids Do/Don't) — use o container
 - **Proibido** usar `<pre><code>` em docs pages (exceto em `anatomy.structureCode`, onde o container já cuida). Blocos de código inline usam `<div><code>`, que é o que o container já renderiza
 - **Proibido** renderizar variantes/estados com `<div>` + classes CSS manuais em vez do componente real importado de `@/components/ui/<slug>`
 
@@ -1020,7 +1010,7 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
     - `accessibility`: 4 items (`testes.accessibility.item1`–`item4`) — `{ criterion, level, how }`
     - `visual`: 4 items (`testes.visual.item1`–`item4`) — `{ story, priority }`
 
-11. **Dependência peer Recharts** — `installNote` no `DocsHeader` deve ser `"npx shadcn@latest add chart"`. Recharts é instalado separadamente (`npm install recharts`). Documentado em `notes.tip1`.
+11. **Dependência peer Recharts** — Recharts é instalado separadamente (`npm install recharts`). Documentado em `notes.tip1`.
 
 12. **`accessibilityLayer` obrigatório** — toda demonstração e preview de variante deve incluir `accessibilityLayer` no componente Recharts raiz (`<BarChart accessibilityLayer>`, `<LineChart accessibilityLayer>`, etc.).
 

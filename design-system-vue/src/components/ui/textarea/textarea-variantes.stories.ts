@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'O Textarea expõe 3 variantes via classes Tailwind: `default` (resize-y), `withCounter` (maxLength + contador com aria-live) e `noResize` (resize-none, ideal para modais).',
+          'O Textarea expõe 3 variantes via classes .nds-*: `default` (resize-y), `withCounter` (maxLength + contador com aria-live) e `noResize` (resize-none, ideal para modais).',
       },
     },
   },

@@ -246,7 +246,6 @@ export function createSeparatorDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add separator',
     });
     headerSlot.replaceChildren(header);
   }

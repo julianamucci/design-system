@@ -8,7 +8,7 @@
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
       "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -378,7 +378,7 @@
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
       "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -748,7 +748,7 @@
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
       "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Shadcn/UI, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {

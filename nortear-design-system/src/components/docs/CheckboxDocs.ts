@@ -166,7 +166,6 @@ export function createCheckboxDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add checkbox',
     });
     headerSlot.replaceChildren(header);
   }

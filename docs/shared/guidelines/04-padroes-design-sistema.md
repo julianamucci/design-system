@@ -44,12 +44,12 @@ Este documento fornece **exemplos práticos de implementação** dos design toke
 --primary: #5eb1ef;                    /* HEX não funciona */
 ```
 
-### Uso em Componentes React
+### Uso em Componentes
 
-**Classes Tailwind (automático):**
+**Classes CSS standalone `.nds-*` (automático):**
 ```tsx
-// Tailwind aplica hsl() automaticamente
-<div className="bg-primary text-primary-foreground">
+// A classe aplica hsl() a partir do token automaticamente
+<div className="nds-bg-primary nds-text-primary-foreground">
 ```
 
 **Inline Styles (manual):**
@@ -73,22 +73,22 @@ Este documento fornece **exemplos práticos de implementação** dos design toke
 
 | Token | Uso | Exemplo |
 |-------|-----|---------|
-| `--background` | Fundo principal da aplicação | `bg-background` |
-| `--foreground` | Texto sobre background | `text-foreground` |
-| `--card` | Fundo de cards/containers | `bg-card` |
-| `--card-foreground` | Texto sobre cards | `text-card-foreground` |
-| `--primary` | Ações principais | `bg-primary`, `text-primary` |
-| `--primary-foreground` | Texto sobre primary | `text-primary-foreground` |
-| `--secondary` | Ações secundárias | `bg-secondary` |
-| `--muted` | Elementos desabilitados | `bg-muted`, `text-muted-foreground` |
-| `--accent` | Destaques e hover | `bg-accent`, `hover:bg-accent` |
-| `--destructive` | Ações destrutivas | `bg-destructive` |
-| `--success` | Sucesso/confirmação | `bg-success` |
-| `--warning` | Avisos | `bg-warning` |
-| `--info` | Informações | `bg-info` |
-| `--border` | Bordas padrão | `border-border` |
-| `--input` | Bordas de inputs | `border-input` |
-| `--ring` | Focus rings | `ring-ring` |
+| `--background` | Fundo principal da aplicação | `nds-bg-background` |
+| `--foreground` | Texto sobre background | `nds-text-foreground` |
+| `--card` | Fundo de cards/containers | `nds-bg-card` |
+| `--card-foreground` | Texto sobre cards | `nds-text-card-foreground` |
+| `--primary` | Ações principais | `nds-bg-primary`, `nds-text-primary` |
+| `--primary-foreground` | Texto sobre primary | `nds-text-primary-foreground` |
+| `--secondary` | Ações secundárias | `nds-bg-secondary` |
+| `--muted` | Elementos desabilitados | `nds-bg-muted`, `nds-text-muted-foreground` |
+| `--accent` | Destaques e hover | `nds-bg-accent`, `nds-hover-bg-accent` |
+| `--destructive` | Ações destrutivas | `nds-bg-destructive` |
+| `--success` | Sucesso/confirmação | `nds-bg-success` |
+| `--warning` | Avisos | `nds-bg-warning` |
+| `--info` | Informações | `nds-bg-info` |
+| `--border` | Bordas padrão | `nds-border-default` |
+| `--input` | Bordas de inputs | `nds-border-default` |
+| `--ring` | Focus rings | `--ring` (focus-visible no CSS do componente) |
 
 #### Exemplos de Uso
 
@@ -123,7 +123,7 @@ Este documento fornece **exemplos práticos de implementação** dos design toke
 
 ### 2. Tipografia
 
-**REGRA CRÍTICA**: NÃO use classes Tailwind de tamanho de fonte (`text-2xl`, etc.) a menos que explicitamente solicitado.
+**REGRA CRÍTICA**: NÃO use classes de tamanho de fonte arbitrário a menos que explicitamente solicitado. Prefira as escalas semânticas `.nds-text-h1`/`.nds-text-body`/`.nds-text-caption` e os elementos HTML base.
 
 #### Elementos HTML Base
 
@@ -183,29 +183,31 @@ A tipografia é aplicada automaticamente via CSS base:
 
 **Sistema Base**: Múltiplos de 8px
 
-**Tokens disponíveis** (Tailwind padrão):
-- `p-1` = 4px
-- `p-2` = 8px
-- `p-4` = 16px
-- `p-6` = 24px
-- `p-8` = 32px
-- `p-12` = 48px
+**Classes de padding disponíveis** (`.nds-p-*`):
+- `nds-p-1` = 4px
+- `nds-p-2` = 8px
+- `nds-p-4` = 16px
+- `nds-p-6` = 24px
+- `nds-p-8` = 32px
 
 **Padrões de Layout**:
 
 ```tsx
 // Container de página de documentação
-<div className="p-8 max-w-4xl mx-auto space-y-12">
-  {/* Seções com espaçamento de 48px (space-y-12) */}
+<div className="nds-page nds-p-8">
+  {/* nds-stack aplica o espaçamento vertical entre seções via data-spacing */}
+  <div className="nds-stack" data-spacing="2xl">
+    {/* Seções */}
+  </div>
 </div>
 
 // Card com padding interno
-<Card className="p-6">
+<div className="nds-card nds-p-6">
   {/* Conteúdo com 24px de padding */}
-</Card>
+</div>
 
 // Grid com gap
-<div className="grid grid-cols-2 gap-6">
+<div className="nds-grid" data-cols="2" data-spacing="lg">
   {/* Gap de 24px entre itens */}
 </div>
 ```
@@ -221,9 +223,9 @@ A tipografia é aplicada automaticamente via CSS base:
 
 **Aplicação**:
 ```tsx
-// Via Tailwind (usa --radius automaticamente)
-<div className="rounded-md">   {/* var(--radius) */}
-<div className="rounded-lg">   {/* var(--radius) * 1.5 */}
+// Via classe utilitária .nds-* (usa --radius automaticamente)
+<div className="nds-rounded-md">   {/* var(--radius) */}
+<div className="nds-rounded-lg">   {/* var(--radius) * 1.5 */}
 
 // Via inline style (customização específica)
 <div style={{ borderRadius: 'var(--radius-card)' }}>
@@ -232,13 +234,13 @@ A tipografia é aplicada automaticamente via CSS base:
 **Bordas**:
 ```tsx
 // Borda padrão
-<div className="border border-border">
+<div className="nds-border-default">
 
-// Borda de input
-<Input className="border-input" />
+// Borda de input (o CSS do componente já aplica --input)
+<input className="nds-input" />
 
-// Borda personalizada por tema
-<div className="border-primary/20">  {/* 20% de opacidade da cor primária */}
+// Borda de destaque temática
+<div className="nds-border-primary-soft">
 ```
 
 ---
@@ -311,11 +313,10 @@ html.tema-personalizado.dark {
 
 ### Criando um Novo Tema
 
-**Passo 1**: Definir variáveis CSS em `globals.css`
+**Passo 1**: Definir as variáveis CSS do tema
 
 ```css
-@custom-variant meu-tema (&:is(.meu-tema *));
-
+/* Um tema é apenas um seletor de classe que redefine os tokens. */
 .meu-tema {
   /* Definir TODOS os tokens usados no tema padrão */
   --background: ...;
@@ -673,7 +674,7 @@ focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 
 ### Breakpoints
 
-O projeto usa os breakpoints padrão do Tailwind com abordagem **mobile-first**: defina o comportamento base para mobile e use os prefixos para sobrescrever em telas maiores.
+O projeto adota uma abordagem **mobile-first**: defina o comportamento base para mobile e sobrescreva em telas maiores. Os breakpoints canônicos abaixo valem tanto para media queries em CSS quanto para as classes utilitárias responsivas `.nds-*`.
 
 | Prefixo | Largura mínima | Contexto típico |
 |---------|---------------|-----------------|
@@ -717,7 +718,7 @@ O projeto define dois tipos de container de conteúdo. Use sempre um deles — n
 
 ### Layout Principal da Aplicação
 
-O layout raiz combina sidebar fixa com área de conteúdo fluida. Este padrão é gerenciado pelo `SidebarProvider` do Shadcn/UI e **não deve ser replicado manualmente**.
+O layout raiz combina sidebar fixa com área de conteúdo fluida. Este padrão é gerenciado pelo componente de Sidebar do design system (app-shell `.nds-sidebar-layout` + `SidebarProvider` da stack) e **não deve ser replicado manualmente**.
 
 ```
 ┌─────────────────────────────────────────┐
@@ -731,7 +732,7 @@ O layout raiz combina sidebar fixa com área de conteúdo fluida. Este padrão �
 ```tsx
 {/* Estrutura raiz — App.tsx */}
 <SidebarProvider>
-  <Sidebar />                    {/* 280px — gerenciado pelo Shadcn */}
+  <Sidebar />                    {/* 280px — gerenciado pelo componente Sidebar */}
   <SidebarInset className="flex-1 min-w-0">  {/* min-w-0 evita overflow */}
     <header />
     <main className="flex-1 overflow-auto">
@@ -850,7 +851,7 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 
 ### Acessibilidade em Layouts
 
-- **Ordem do DOM deve refletir a ordem visual** — não use `order-*` do Tailwind para reordenar visualmente sem reordenar no DOM, pois isso confunde leitores de tela e navegação por teclado.
+- **Ordem do DOM deve refletir a ordem visual** — não use utilitários de reordenação (`order-*`) para reordenar visualmente sem reordenar no DOM, pois isso confunde leitores de tela e navegação por teclado.
 - **Regiões semânticas**: use `<header>`, `<main>`, `<nav>`, `<aside>`, `<section>` em vez de `<div>` para estrutura de página.
 - **Landmarks ARIA**: quando não for possível usar elementos semânticos, adicione `role="main"`, `role="navigation"`, etc.
 - **Foco em mobile**: em layouts de coluna única, garanta que a ordem de foco (Tab) siga o fluxo visual de cima para baixo.
@@ -907,14 +908,14 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 ### Aplicação
 
 ```tsx
-{/* Via Tailwind shadow */}
-<Card className="shadow-sm">  {/* Usa elevation-sm */}
+{/* Via classe utilitária .nds-* */}
+<div className="nds-card nds-shadow-sm">  {/* Usa elevation-sm */}
 
 {/* Via inline style (customização) */}
 <div style={{ boxShadow: 'var(--elevation-sm)' }}>
 
-{/* Hover elevation */}
-<Card className="shadow-sm hover:shadow-md transition-shadow">
+{/* Hover elevation — via CSS do componente, ex.: .nds-card:hover { box-shadow: var(--elevation-md) } */}
+<div className="nds-card nds-shadow-sm">
 ```
 
 ---
@@ -923,84 +924,82 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 
 ### Tokens de Transição
 
-Os tokens de duração e easing estão definidos no tema e devem ser usados via `var()` em CSS customizado ou via classes Tailwind para casos padrão.
+Os tokens de duração e easing estão definidos no tema e devem ser usados via `var()` no CSS do componente.
 
 ```css
-/* Disponíveis no globals.css e em cada tema */
+/* Disponíveis no CSS de tokens e em cada tema */
 --transition-fast:   150ms;   /* Feedback imediato: hover, focus, toggle */
 --transition-normal: 300ms;   /* Maioria das transições de estado */
 --transition-slow:   500ms;   /* Entrada de painéis, modais, sidebars */
 --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);  /* Easing padrão (ease-in-out suave) */
 ```
 
-### Mapeamento para Classes Tailwind
+### Mapeamento de Situações para Tokens
 
-Prefira as classes Tailwind para transições simples — elas são suficientes para a maioria dos casos:
+Aplique o token de duração adequado no CSS `.nds-*` do componente:
 
-| Situação | Classe Tailwind | Duração equivalente |
-|----------|----------------|-------------------|
-| Hover de cor/opacidade | `transition-colors duration-150` | `--transition-fast` |
-| Hover de sombra/borda | `transition-shadow duration-150` | `--transition-fast` |
-| Estado ativo/selecionado | `transition-all duration-300` | `--transition-normal` |
-| Expansão de painel | `transition-all duration-500` | `--transition-slow` |
+| Situação | Propriedade / duração | Token |
+|----------|----------------------|-------|
+| Hover de cor/opacidade | `transition: color var(--transition-fast)` | `--transition-fast` |
+| Hover de sombra/borda | `transition: box-shadow var(--transition-fast)` | `--transition-fast` |
+| Estado ativo/selecionado | `transition: all var(--transition-normal)` | `--transition-normal` |
+| Expansão de painel | `transition: all var(--transition-slow)` | `--transition-slow` |
 
 ### Quando Usar Cada Duração
 
-```tsx
-{/* Fast (150ms): reações a hover e focus — devem ser quase imperceptíveis */}
-<Button className="transition-colors duration-150 hover:bg-primary/90">
-  Salvar
-</Button>
+```css
+/* Fast (150ms): reações a hover e focus — devem ser quase imperceptíveis */
+.nds-button {
+  transition: background-color var(--transition-fast) var(--transition-timing);
+}
 
-{/* Normal (300ms): mudanças de estado visíveis, mas não bloqueiam o usuário */}
-<div className="transition-all duration-300 data-[state=open]:opacity-100 data-[state=closed]:opacity-0">
-  Conteúdo colapsável
-</div>
+/* Normal (300ms): mudanças de estado visíveis, mas não bloqueiam o usuário */
+.nds-collapsible[data-state="open"] {
+  transition: opacity var(--transition-normal) var(--transition-timing);
+}
 
-{/* Slow (500ms): entradas de elementos grandes — use com parcimônia */}
-<Sheet>
-  <SheetContent className="transition-transform duration-500">
-    Painel lateral
-  </SheetContent>
-</Sheet>
+/* Slow (500ms): entradas de elementos grandes — use com parcimônia */
+.nds-sheet-content {
+  transition: transform var(--transition-slow) var(--transition-timing);
+}
 ```
 
 ### Animações de Loading
 
-Use apenas as classes utilitárias já definidas no `globals.css`:
+Use apenas os utilitários `.nds-*` já definidos no CSS do design system:
 
 ```tsx
-{/* Skeleton / conteúdo carregando */}
-<Skeleton className="animate-pulse h-4 w-48" />
+{/* Skeleton / conteúdo carregando — o pulse vem do próprio .nds-skeleton */}
+<Skeleton className="nds-skeleton" />
 
 {/* Spinner / ação em andamento */}
-<Loader2 className="animate-spin h-4 w-4" />
+<Loader2 className="nds-animate-spin nds-icon-sm" />
 ```
 
-> **Não crie novas animações CSS** para loading. `animate-pulse` e `animate-spin` são os únicos padrões aprovados.
+> **Não crie novas animações CSS** para loading. O pulse do Skeleton e `.nds-animate-spin` são os únicos padrões aprovados.
 
-### Componentes Shadcn/UI: Não Sobrescrever Animações
+### Componentes do Design System: Não Sobrescrever Animações
 
-Os componentes do Shadcn/UI (Accordion, Dialog, Popover, Sheet, etc.) já têm animações de entrada/saída gerenciadas pelos atributos `data-[state]` do Radix UI. **Nunca sobrescreva essas animações diretamente.**
+Os componentes do design system (Accordion, Dialog, Popover, Sheet, etc.) já têm animações de entrada/saída definidas no CSS `.nds-*`, disparadas pelos atributos `data-[state]` das libs primitivas (`@base-ui/react`, `reka-ui`, `bits-ui`). **Nunca sobrescreva essas animações diretamente.**
 
 ```tsx
-{/* ✅ CORRETO: deixar o Shadcn gerenciar as animações */}
+{/* ✅ CORRETO: deixar o componente gerenciar as animações */}
 <Dialog>
   <DialogContent>Conteúdo</DialogContent>
 </Dialog>
 
 {/* ❌ INCORRETO: sobrescrever as animações do componente */}
-<DialogContent className="animate-none transition-none">
+<DialogContent style={{ animation: 'none', transition: 'none' }}>
   Conteúdo
 </DialogContent>
 ```
 
 ### Acessibilidade: prefers-reduced-motion
 
-**Obrigatório** para qualquer animação adicionada fora dos componentes Shadcn/UI:
+**Obrigatório** para qualquer animação adicionada fora dos componentes do design system:
 
 ```css
-/* Em globals.css — já deve estar presente */
+/* Reset global de tokens — já deve estar presente */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1009,25 +1008,25 @@ Os componentes do Shadcn/UI (Accordion, Dialog, Popover, Sheet, etc.) já têm a
 }
 ```
 
-Para animações aplicadas via className em componentes React, use o modificador Tailwind:
+Para animações específicas de um componente, guarde a transição atrás da media query:
 
-```tsx
-{/* A animação só ocorre se o usuário não preferir movimento reduzido */}
-<div className="transition-all duration-300 motion-reduce:transition-none">
-  Conteúdo animado
-</div>
-
-<Skeleton className="animate-pulse motion-reduce:animate-none" />
+```css
+/* A animação só ocorre se o usuário não preferir movimento reduzido */
+@media (prefers-reduced-motion: no-preference) {
+  .nds-animated {
+    transition: all var(--transition-normal) var(--transition-timing);
+  }
+}
 ```
 
 ### Checklist de Motion
 
 Ao adicionar qualquer transição ou animação:
 
-- [ ] Usa duração dos tokens (`duration-150`, `duration-300`, `duration-500`)
-- [ ] Usa `motion-reduce:transition-none` ou `motion-reduce:animate-none`
-- [ ] Não sobrescreve animações de componentes Shadcn/UI
-- [ ] Loading usa apenas `animate-pulse` (Skeleton) ou `animate-spin` (ícone)
+- [ ] Usa duração dos tokens (`--transition-fast/normal/slow`)
+- [ ] Respeita `prefers-reduced-motion` (media query `reduce`)
+- [ ] Não sobrescreve animações dos componentes do design system
+- [ ] Loading usa apenas os padrões aprovados (pulse do Skeleton ou `.nds-animate-spin` no ícone)
 - [ ] Nenhuma animação tem duração superior a 500ms em fluxos de uso frequente
 
 ---
@@ -1065,7 +1064,7 @@ import { BarChart, Bar } from 'recharts';
 Ao criar/editar componentes, verifique:
 
 - [ ] ✅ Cores usam variáveis CSS (ex: `bg-background`, `text-foreground`)
-- [ ] ✅ Tipografia usa elementos HTML padrão (`<h1>`, `<p>`) sem classes Tailwind
+- [ ] ✅ Tipografia usa elementos HTML padrão (`<h1>`, `<p>`) ou escalas semânticas `.nds-text-*`, sem tamanhos arbitrários
 - [ ] ✅ Espaçamento usa múltiplos de 8px
 - [ ] ✅ Bordas usam `border-border` ou variantes temáticas
 - [ ] ✅ Focus states têm `ring-2 ring-ring ring-offset-2`
@@ -1075,7 +1074,7 @@ Ao criar/editar componentes, verifique:
 - [ ] ✅ Nenhum valor hardcoded (ex: `#ffffff`, `rgb(0,0,0)`)
 - [ ] ✅ Transições usam `duration-150`, `duration-300` ou `duration-500`
 - [ ] ✅ Animações têm `motion-reduce:transition-none` ou `motion-reduce:animate-none`
-- [ ] ✅ Animações dos componentes Shadcn/UI não foram sobrescritas
+- [ ] ✅ Animações dos componentes do design system não foram sobrescritas
 - [ ] ✅ Container usa `max-w-4xl` (docs) ou `max-w-6xl` (showcase) — nunca largura arbitrária
 - [ ] ✅ Grids de múltiplas colunas são mobile-first (base: 1 coluna, `md`/`lg`: mais colunas)
 - [ ] ✅ Gap usa `gap-2`, `gap-4` ou `gap-6` conforme densidade do contexto
@@ -1165,7 +1164,7 @@ export function ExampleDocs() {
 - Aplicar estilo padronizado em "Notas e Dicas"
 - Usar `duration-150/300/500` mapeados aos tokens `--transition-*`
 - Adicionar `motion-reduce:transition-none` em transições customizadas
-- Deixar os componentes Shadcn/UI gerenciarem suas próprias animações
+- Deixar os componentes do design system gerenciarem suas próprias animações
 - Usar `max-w-4xl` para docs e `max-w-6xl` para showcases
 - Construir grids mobile-first: base 1 coluna, expandir em `md` e `lg`
 - Usar `grid` para colunas de tamanho previsível, `flex` para alinhamento linear
@@ -1174,13 +1173,13 @@ export function ExampleDocs() {
 
 ### DON'T ❌
 - Usar valores hardcoded de cores
-- Usar classes Tailwind de tipografia sem solicitação
+- Usar tamanhos de tipografia arbitrários sem solicitação
 - Omitir focus-visible
 - Usar opacidade em `--ring` (ex: `/50`)
 - Modificar componentes em `/components/ui`
 - Alterar estrutura de design tokens sem documentar
 - Criar animações CSS novas para loading (usar apenas `animate-pulse` e `animate-spin`)
-- Sobrescrever animações de componentes Shadcn/UI com `animate-none` ou `transition-none`
+- Sobrescrever animações de componentes do design system com `animation: none` ou `transition: none`
 - Usar durações acima de 500ms em fluxos de uso frequente
 - Usar `max-w-*` arbitrário fora dos containers canônicos (`max-w-4xl`, `max-w-6xl`)
 - Usar `order-*` para reordenar visualmente sem reordenar no DOM

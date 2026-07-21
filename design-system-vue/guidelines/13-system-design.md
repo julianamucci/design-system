@@ -18,9 +18,9 @@ Este documento descreve o System Design do projeto para Vue 3.
 │  ├── defineAsyncComponent (lazy load)   │
 │  └── Suspense (async fallbacks)         │
 ├─────────────────────────────────────────┤
-│  Tailwind CSS 4.0 (Styling)             │
+│  CSS standalone .nds-* (Styling)        │
 │  ├── Design Tokens (CSS Variables)      │
-│  └── Utility Classes                    │
+│  └── Classes .nds-*                     │
 ├─────────────────────────────────────────┤
 │  Reka UI (Primitivos Acessíveis)        │
 │  ├── Dialog, Dropdown, Accordion, etc.  │
@@ -48,7 +48,7 @@ Para indexação real no futuro, considerar Nuxt com SSG — ver seção de esca
 ## Padrão de Composição Vue
 
 ```vue
-<!-- ✅ CORRETO: Composition com componentes Shadcn Vue -->
+<!-- ✅ CORRETO: Composition com componentes do design system -->
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

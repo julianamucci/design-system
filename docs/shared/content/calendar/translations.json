@@ -8,7 +8,7 @@
       "title": "Calendar — Formulário",
       "description": "Documentação do Calendar: wrapper de react-day-picker v9 com modos single/multiple/range, captionLayout, locale e acessibilidade WCAG.",
       "aiSummary": "Componente Calendar baseado em react-day-picker v9 com modos single/multiple/range, captionLayout label/dropdown, suporte a locale pt-BR/en/es e datas desabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -209,7 +209,7 @@
         "captionLayout": "Legenda do mês: <code>\"label\"</code> (texto) ou <code>\"dropdown\"</code> (selects).",
         "buttonVariant": "Variante do <code>Button</code> usada nos controles de navegação.",
         "numberOfMonths": "Quantidade de meses exibidos lado a lado. Útil para <code>range</code>.",
-        "className": "Classes Tailwind adicionais para customização visual.",
+        "className": "Classes .nds-* adicionais para customização visual.",
         "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -219,7 +219,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "primary": "Fundo e texto da data selecionada",
         "muted": "Fundo de hoje e do meio do intervalo",
@@ -364,7 +364,7 @@
       "title": "Calendar — Form",
       "description": "Documentation for Calendar: react-day-picker v9 wrapper with single/multiple/range modes, captionLayout, locale and WCAG accessibility.",
       "aiSummary": "Calendar component built on react-day-picker v9 with single/multiple/range modes, label/dropdown captionLayout, pt-BR/en/es locale support and disabled dates.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -565,7 +565,7 @@
         "captionLayout": "Month caption: <code>\"label\"</code> (text) or <code>\"dropdown\"</code> (selects).",
         "buttonVariant": "<code>Button</code> variant used by navigation controls.",
         "numberOfMonths": "Number of months shown side by side. Useful for <code>range</code>.",
-        "className": "Additional Tailwind classes for visual customization.",
+        "className": "Additional .nds-* classes for visual customization.",
         "classNames": "Per-slot override map (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibility",
@@ -575,7 +575,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "primary": "Background and text of the selected date",
         "muted": "Background of today and range middle",
@@ -720,7 +720,7 @@
       "title": "Calendar — Formulario",
       "description": "Documentación del Calendar: wrapper de react-day-picker v9 con modos single/multiple/range, captionLayout, locale y accesibilidad WCAG.",
       "aiSummary": "Componente Calendar basado en react-day-picker v9 con modos single/multiple/range, captionLayout label/dropdown, soporte de locale pt-BR/en/es y fechas deshabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, Shadcn/UI, WCAG 2.1, Tailwind CSS, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -921,7 +921,7 @@
         "captionLayout": "Leyenda del mes: <code>\"label\"</code> (texto) o <code>\"dropdown\"</code> (selects).",
         "buttonVariant": "Variante del <code>Button</code> usada en los controles de navegación.",
         "numberOfMonths": "Cantidad de meses mostrados lado a lado. Útil para <code>range</code>.",
-        "className": "Clases Tailwind adicionales para personalización visual.",
+        "className": "Clases .nds-* adicionales para personalización visual.",
         "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -931,7 +931,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "primary": "Fondo y texto de la fecha seleccionada",
         "muted": "Fondo de hoy y del medio del rango",

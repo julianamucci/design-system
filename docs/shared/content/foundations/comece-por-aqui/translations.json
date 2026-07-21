@@ -28,7 +28,7 @@
         "node": {
           "tool": "Node.js",
           "version": "18.0+",
-          "why": "Vite 5, Tailwind 4 e Storybook 10 exigem Node moderno."
+          "why": "Vite 5 e Storybook 10 exigem Node moderno."
         },
         "npm": {
           "tool": "npm",
@@ -156,7 +156,7 @@
         "node": {
           "tool": "Node.js",
           "version": "18.0+",
-          "why": "Vite 5, Tailwind 4 and Storybook 10 require modern Node."
+          "why": "Vite 5 and Storybook 10 require modern Node."
         },
         "npm": {
           "tool": "npm",
@@ -284,7 +284,7 @@
         "node": {
           "tool": "Node.js",
           "version": "18.0+",
-          "why": "Vite 5, Tailwind 4 y Storybook 10 requieren Node moderno."
+          "why": "Vite 5 y Storybook 10 requieren Node moderno."
         },
         "npm": {
           "tool": "npm",

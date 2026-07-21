@@ -8,7 +8,7 @@
       "title": "Table — Display",
       "description": "Documentação do Table: 8 subcomponentes semânticos, scroll horizontal, empty state, acessibilidade WCAG com scope e caption.",
       "aiSummary": "Componente Table com 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obrigatório e integração com TanStack Table para ordenação e filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.1, TanStack Table",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -226,7 +226,7 @@
         "description": "Descrição"
       },
       "items": {
-        "className": "Classes Tailwind adicionais aplicadas ao elemento HTML correspondente.",
+        "className": "Classes .nds-* adicionais aplicadas ao elemento HTML correspondente.",
         "scope": "<code>\"col\"</code> obrigatório no <code>TableHead</code> — associa o cabeçalho à coluna para leitores de tela.",
         "colSpan": "Número de colunas que a célula deve ocupar. Use no empty state para cobrir todas as colunas.",
         "rowSpan": "Número de linhas que a célula deve ocupar. Use em células que agrupam dados de múltiplas linhas.",
@@ -376,7 +376,7 @@
       "title": "Table — Display",
       "description": "Table documentation: 8 semantic subcomponents, horizontal scroll, empty state, WCAG accessibility with scope and caption.",
       "aiSummary": "Table component with 8 subcomponents (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), automatic horizontal scroll, mandatory empty state, and TanStack Table integration for sorting and filters.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.1, TanStack Table",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -594,7 +594,7 @@
         "description": "Description"
       },
       "items": {
-        "className": "Additional Tailwind classes applied to the corresponding HTML element.",
+        "className": "Additional .nds-* classes applied to the corresponding HTML element.",
         "scope": "<code>\"col\"</code> required on <code>TableHead</code> — associates the header to the column for screen readers.",
         "colSpan": "Number of columns the cell should span. Use in empty state to cover all columns.",
         "rowSpan": "Number of rows the cell should span. Use in cells that group data across multiple rows.",
@@ -744,7 +744,7 @@
       "title": "Table — Display",
       "description": "Documentación del Table: 8 subcomponentes semánticos, scroll horizontal, empty state, accesibilidad WCAG con scope y caption.",
       "aiSummary": "Componente Table con 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obligatorio e integración con TanStack Table para ordenación y filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, TanStack Table",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.1, TanStack Table",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -962,7 +962,7 @@
         "description": "Descripción"
       },
       "items": {
-        "className": "Clases Tailwind adicionales aplicadas al elemento HTML correspondiente.",
+        "className": "Clases .nds-* adicionales aplicadas al elemento HTML correspondiente.",
         "scope": "<code>\"col\"</code> obligatorio en <code>TableHead</code> — asocia el encabezado a la columna para lectores de pantalla.",
         "colSpan": "Número de columnas que debe ocupar la celda. Usar en el empty state para cubrir todas las columnas.",
         "rowSpan": "Número de filas que debe ocupar la celda. Usar en celdas que agrupan datos de múltiples filas.",

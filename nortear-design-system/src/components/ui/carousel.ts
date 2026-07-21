@@ -1,5 +1,5 @@
 // ─── Carousel — Vanilla factory standalone ──────────────────────────────────
-// Visual: classes .nds-carousel-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-carousel-* (standalone).
 // Comportamento: setas + ArrowLeft/Right + autoplay opcional (pausa no hover).
 
 import DOMPurify from 'dompurify';

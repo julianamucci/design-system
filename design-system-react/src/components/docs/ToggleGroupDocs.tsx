@@ -227,7 +227,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add toggle-group"
         />
       }
     >

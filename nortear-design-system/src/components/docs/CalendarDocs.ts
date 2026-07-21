@@ -148,7 +148,6 @@ export function createCalendarDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add calendar',
     });
     headerSlot.replaceChildren(header);
   }

@@ -22,11 +22,11 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 
 ### 1. Fundamentos (React)
 
-- **[01-regras-gerais.md](./01-regras-gerais.md)** - Regras gerais obrigatórias do projeto React (Radix UI, Shadcn/UI, lucide-react)
+- **[01-regras-gerais.md](./01-regras-gerais.md)** - Regras gerais obrigatórias do projeto React (@base-ui/react, CSS `.nds-*`, lucide-react)
 - **[02-jsx-caracteres-especiais.md](./02-jsx-caracteres-especiais.md)** - Regras para caracteres especiais em JSX
 - **[03-sistema-design.md](./03-sistema-design.md)** - Sistema de design, cores, tipografia e temas
 
-### 2. Componentes por Categoria (React / Shadcn/UI)
+### 2. Componentes por Categoria (React / @base-ui/react)
 
 - **[04-layout-components.md](./04-layout-components.md)** - Aspect Ratio, Card, Resizable, Scroll Area, Separator, Sidebar
 - **[05-navigation-components.md](./05-navigation-components.md)** - Breadcrumb, Menubar, Navigation Menu, Pagination, Stepper, Tabs
@@ -51,7 +51,7 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 
 1. Consulte [`STORYBOOK-ARCHITECTURE.md`](../STORYBOOK-ARCHITECTURE.md) antes de qualquer tarefa de stories ou documentação
 2. Consulte as **guidelines compartilhadas** (`docs/shared/guidelines/`) para regras transversais (acessibilidade, tokens, SEO, analytics, tom de voz)
-3. Consulte as **guidelines React** deste diretório para regras específicas de componentes Shadcn/UI e arquitetura React
+3. Consulte as **guidelines React** deste diretório para regras específicas de componentes @base-ui/react e arquitetura React
 4. As regras são cumulativas — todas devem ser seguidas
 5. Em caso de dúvida, consulte o arquivo específico do componente ou padrão
 
@@ -79,7 +79,7 @@ Estas guidelines estão em `docs/shared/guidelines/` e se aplicam a qualquer sta
 
 Ao adicionar novas regras:
 - Se a regra se aplica a todas as stacks → adicionar em `docs/shared/guidelines/`
-- Se a regra é específica do React/Shadcn/UI → adicionar neste diretório
+- Se a regra é específica do React/@base-ui/react → adicionar neste diretório
 - Atualizar este `Guidelines.md` se necessário
 - Manter a numeração sequencial
 

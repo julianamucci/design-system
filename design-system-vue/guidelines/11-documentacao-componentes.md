@@ -95,7 +95,6 @@ render: (args) => ({
       :description="tContent('description')"
       :category="tContent('category')"
       :type="tContent('type')"
-      install-note="npx shadcn@latest add nome-componente"
     />
 
     <div class="flex gap-16 items-start">
@@ -225,7 +224,6 @@ Todos os containers aceitam dados via props reativos. Use `computed()` para mont
   :description="tContent('description')"
   :category="tContent('category')"
   :type="tContent('type')"
-  install-note="npx shadcn@latest add <slug>"
 />
 ```
 
@@ -632,7 +630,7 @@ Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferent
 ## Proibições
 
 - ❌ **NUNCA** reimplemente o HTML de uma seção inline (grids, cards, wrappers). Use o container.
-- ❌ **NUNCA** copie classes Tailwind dos containers para o `<template>` da docs — o design evolui no container.
+- ❌ **NUNCA** copie classes utilitárias dos containers para o `<template>` da docs — o design evolui no container.
 - ❌ **NUNCA** use `<pre><code>` em blocos de código (exceto `structureCode` em `DocsAnatomy`). Os containers já usam `<div><code class="whitespace-pre">`.
 - ❌ **NUNCA** itere pares Do/Don't em um único grid — deixe `DocsDoDont` fazer o split.
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre o componente real de `@/components/ui/<slug>`.
@@ -644,7 +642,7 @@ Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferent
 
 - [ ] Todos os containers importados de `@/components/docs/shared/sections/`
 - [ ] Nenhum HTML de seção inline no `<template>` da docs
-- [ ] `DocsHeader` com category/type/installNote
+- [ ] `DocsHeader` com category/type
 - [ ] `DocsDemonstration` com slot padrão usando o componente real
 - [ ] `DocsVariants` com layout vertical (`space-y-4`) e campo `code` opcional por item
 - [ ] `DocsDoDont` com slots `#do-preview-N` / `#dont-preview-N` (um por par)

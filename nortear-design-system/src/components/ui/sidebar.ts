@@ -1,5 +1,5 @@
 // ─── Sidebar — Vanilla factory standalone ───────────────────────────────────
-// Visual: classes .nds-sidebar-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-sidebar-* (standalone).
 // Shortcut: Ctrl/Cmd+B alterna expanded/collapsed.
 
 import { createButton } from './button';

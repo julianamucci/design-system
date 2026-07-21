@@ -121,7 +121,7 @@
   const interfaceCode = `// Label — Svelte 5
 interface LabelProps {
   for?: string;       // associa ao campo com id correspondente
-  class?: string;     // classes Tailwind adicionais
+  class?: string;     // classes utilitárias .nds-* adicionais
   children?: Snippet; // texto do rótulo
   // + todos os atributos HTML nativos de <label>
 }`;
@@ -134,7 +134,6 @@ interface LabelProps {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add label"
     />
   {/snippet}
 

@@ -3,7 +3,7 @@ import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 import { cn } from "@/lib/utils"
 
 // Estilo via .nds-switch (docs/shared/styles/nds/switch.css). O tamanho é
-// controlado por data-size (default | sm) no CSS compartilhado. Zero Tailwind.
+// controlado por data-size (default | sm) no CSS compartilhado.
 function Switch({
   className,
   size = "default",

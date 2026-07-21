@@ -277,7 +277,6 @@ export function createSonnerDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add sonner',
     });
     headerSlot.replaceChildren(header);
   }

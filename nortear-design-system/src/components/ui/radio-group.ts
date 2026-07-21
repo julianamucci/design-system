@@ -1,6 +1,6 @@
 // ─── Radio Group — Vanilla factory standalone ───────────────────────────────
 //
-// Visual: classes .nds-radio-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-radio-* (standalone).
 // Estado controlado via aria-checked + display do .nds-radio-indicator.
 // Native <input type="radio"> presente em cada item para participação em forms.
 

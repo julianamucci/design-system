@@ -1,5 +1,5 @@
 // ─── Slider — Vanilla factory standalone ────────────────────────────────────
-// Visual: classes .nds-slider-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-slider-* (standalone).
 // Native <input type="range"> sobreposto à track; CSS controla aparência.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 // ─── InputOTP — Vanilla factory standalone ──────────────────────────────────
-// Visual: classes .nds-input-otp-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-input-otp-* (standalone).
 // Comportamento: foco automático, paste distribuído, navegação Arrow/Backspace.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

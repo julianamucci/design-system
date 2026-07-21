@@ -169,7 +169,7 @@
         <div class="p-8 max-w-2xl">
           <h1 class="text-3xl font-bold nds-tracking-tight mb-2">Design System</h1>
           <p class="text-muted-foreground mb-6">
-            Biblioteca de componentes em <strong>Svelte 5</strong> usando shadcn-svelte e bits-ui.
+            Biblioteca de componentes em <strong>Svelte 5</strong> usando o design system-svelte e bits-ui.
           </p>
           <div class="grid gap-3 nds-sm-grid-2">
             <button

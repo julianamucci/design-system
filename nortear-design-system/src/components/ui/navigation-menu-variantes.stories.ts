@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do NavigationMenu: Horizontal (padrão para header) e Vertical (sidebar/mobile). NOTA: factory createNavigationMenu (Basecoat) fixa orientação horizontal — a variante Vertical é montada manualmente sobrepondo classes Tailwind no <ul role="menubar">.',
+          'Variantes do NavigationMenu: Horizontal (padrão para header) e Vertical (sidebar/mobile). NOTA: factory createNavigationMenu (Basecoat) fixa orientação horizontal — a variante Vertical é montada manualmente sobrepondo classes .nds-* no <ul role="menubar">.',
       },
     },
   },

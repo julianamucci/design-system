@@ -3,7 +3,7 @@
     "title": "Tipografia",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), uma escala de tamanhos tokenizada e pesos semânticos. Tudo é controlado por variáveis CSS no <code>:root</code> e aplicado via elementos HTML padrão — não use classes Tailwind de tamanho de fonte sem motivo.",
+    "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), uma escala de tamanhos tokenizada e pesos semânticos. Tudo é controlado por variáveis CSS no <code>:root</code> e aplicado via elementos HTML padrão — não use classes utilitárias de tamanho de fonte (<code>.nds-text-*</code>) sem motivo.",
     "seo": {
       "title": "Tipografia",
       "description": "Famílias, escala de tamanhos, pesos e line-heights tokenizados do Design System. Hierarquia semântica de h1 a h6 mais regras de uso.",
@@ -160,7 +160,7 @@
         "h2": "<code>&lt;h2&gt;</code> abre seções de primeiro nível (Demonstração, Variantes, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> abre subseções dentro de uma seção (uma variante específica, um grupo de tokens).",
         "skip": "Nunca pule níveis (h2 → h4). Sempre desça um por vez.",
-        "noTailwind": "Nunca use classes Tailwind de tamanho (<code>text-2xl</code>, <code>text-sm</code>) em texto de produto — use o elemento correto.",
+        "noUtilityClasses": "Nunca use classes utilitárias de tamanho (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) em texto de produto — use o elemento correto.",
         "minSize": "Nunca use <code>text-[9px]</code> ou <code>text-[10px]</code> em corpo: WCAG 1.4.4 (Resize Text) exige que o texto permaneça legível em 200% de zoom."
       }
     },
@@ -176,7 +176,7 @@
     "title": "Typography",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "The system's typography is defined by a swappable active family (Inter by default), a tokenized size scale and semantic weights. Everything is controlled by CSS variables in <code>:root</code> and applied via standard HTML elements — don't use Tailwind font-size classes without a reason.",
+    "description": "The system's typography is defined by a swappable active family (Inter by default), a tokenized size scale and semantic weights. Everything is controlled by CSS variables in <code>:root</code> and applied via standard HTML elements — don't use utility font-size classes (<code>.nds-text-*</code>) without a reason.",
     "seo": {
       "title": "Typography",
       "description": "Families, size scale, weights and tokenized line-heights of the Design System. Semantic hierarchy from h1 to h6 plus usage rules.",
@@ -333,7 +333,7 @@
         "h2": "<code>&lt;h2&gt;</code> opens first-level sections (Demo, Variants, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> opens subsections within a section (a specific variant, a token group).",
         "skip": "Never skip levels (h2 → h4). Always go down one step at a time.",
-        "noTailwind": "Never use Tailwind size classes (<code>text-2xl</code>, <code>text-sm</code>) in product text — use the right element.",
+        "noUtilityClasses": "Never use utility size classes (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) in product text — use the right element.",
         "minSize": "Never use <code>text-[9px]</code> or <code>text-[10px]</code> for body: WCAG 1.4.4 (Resize Text) requires text to remain legible at 200% zoom."
       }
     },
@@ -349,7 +349,7 @@
     "title": "Tipografía",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), una escala de tamaños tokenizada y pesos semánticos. Todo se controla por variables CSS en <code>:root</code> y se aplica vía elementos HTML estándar — no uses clases Tailwind de tamaño de fuente sin motivo.",
+    "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), una escala de tamaños tokenizada y pesos semánticos. Todo se controla por variables CSS en <code>:root</code> y se aplica vía elementos HTML estándar — no uses clases utilitarias de tamaño de fuente (<code>.nds-text-*</code>) sin motivo.",
     "seo": {
       "title": "Tipografía",
       "description": "Familias, escala de tamaños, pesos y line-heights tokenizados del Design System. Jerarquía semántica de h1 a h6 más reglas de uso.",
@@ -506,7 +506,7 @@
         "h2": "<code>&lt;h2&gt;</code> abre secciones de primer nivel (Demostración, Variantes, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> abre subsecciones dentro de una sección (una variante específica, un grupo de tokens).",
         "skip": "Nunca saltes niveles (h2 → h4). Siempre baja uno por uno.",
-        "noTailwind": "Nunca uses clases Tailwind de tamaño (<code>text-2xl</code>, <code>text-sm</code>) en texto de producto — usa el elemento correcto.",
+        "noUtilityClasses": "Nunca uses clases utilitarias de tamaño (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) en texto de producto — usa el elemento correcto.",
         "minSize": "Nunca uses <code>text-[9px]</code> o <code>text-[10px]</code> en cuerpo: WCAG 1.4.4 (Resize Text) exige que el texto permanezca legible al 200% de zoom."
       }
     },

@@ -30,7 +30,7 @@ design-system-svelte/
 ├── src/
 │   ├── lib/
 │   │   ├── components/
-│   │   │   ├── ui/              # Primitivos (shadcn-svelte/Bits UI) + stories
+│   │   │   ├── ui/              # Primitivos (Bits UI) + stories
 │   │   │   │   ├── alert/
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   ├── Alert.svelte
@@ -65,7 +65,7 @@ design-system-svelte/
 │   │   └── ui.json              # Traduções da UI chrome
 │   │
 │   └── styles/
-│       ├── globals.css          # Tailwind + tokens CSS
+│       ├── globals.css          # .nds-* + tokens CSS
 │       └── storybook-docs.css   # Overrides para Docs tab
 │
 ├── chromatic.config.json

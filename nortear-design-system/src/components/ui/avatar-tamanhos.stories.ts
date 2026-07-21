@@ -25,7 +25,7 @@ type Story = StoryObj;
 
 function buildAvatar(size: AvatarSize, alt = 'Foto de perfil de Maria Rodrigues'): HTMLElement {
   return createAvatar({
-    src: 'https://github.com/shadcn.png',
+    src: 'https://i.pravatar.cc/128?img=47',
     alt,
     fallbackText: 'MR',
     size,

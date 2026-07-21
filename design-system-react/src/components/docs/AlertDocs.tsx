@@ -201,7 +201,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add alert"
         />
       }
     >

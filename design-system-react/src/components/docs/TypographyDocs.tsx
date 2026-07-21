@@ -3,7 +3,7 @@ import translations from '@shared/content/foundations/tipografia/translations.js
 
 // Specimens visuais usando os elementos HTML padrão — `@layer base` em
 // globals.css aplica os tokens `--text-*`, `--font-weight-*` e `--line-height-*`
-// automaticamente. Não precisamos repetir classes Tailwind aqui.
+// automaticamente. Não precisamos repetir classes utilitárias aqui.
 function TypographySpecimens() {
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="lg">

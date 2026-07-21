@@ -8,7 +8,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
       "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -421,7 +421,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "O chevron rotaciona automaticamente via seletor CSS <code>[data-state=\"open\"] svg</code> no AccordionTrigger — não aplicar a rotação manualmente.",
-      "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em <code>tailwind.config.ts</code>.",
+      "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em CSS standalone.",
       "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
       "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, fechar o item ativo depende da configuração do componente — consulte a tabela de propriedades."
@@ -569,7 +569,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
       "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -982,7 +982,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "The chevron rotates automatically via a CSS selector <code>[data-state=\"open\"] svg</code> in AccordionTrigger — don't apply the rotation manually.",
-      "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in <code>tailwind.config.ts</code>.",
+      "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in standalone CSS.",
       "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
       "item5": "In multiple mode all items are individually closable. In single mode, closing the active item depends on the component configuration — see the properties table."
@@ -1130,7 +1130,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
       "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1543,7 +1543,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "El chevron rota automáticamente vía un selector CSS <code>[data-state=\"open\"] svg</code> en AccordionTrigger — no aplicar la rotación manualmente.",
-      "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en <code>tailwind.config.ts</code>.",
+      "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en CSS standalone.",
       "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
       "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, cerrar el ítem activo depende de la configuración del componente — consulta la tabla de propiedades."

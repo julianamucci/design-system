@@ -8,7 +8,7 @@
       "title": "Avatar — Display",
       "description": "Documentação do Avatar: composição com imagem e fallback, 5 tamanhos preset (sm/md/lg/xl/2xl), agrupamento e indicador de status.",
       "aiSummary": "Componente Avatar com Avatar, AvatarImage e AvatarFallback; 5 tamanhos preset (sm/md/lg/xl/2xl) via prop size, suporte a agrupamento e indicador de status.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -244,7 +244,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O Avatar do projeto é baseado no Radix <code>AvatarPrimitive</code> — segue o padrão do Shadcn. Isso garante acessibilidade e comportamento de loading consistente entre stacks.",
+      "tip1": "O Avatar do projeto é baseado no Radix <code>AvatarPrimitive</code> — segue o padrão de composição de primitivos. Isso garante acessibilidade e comportamento de loading consistente entre stacks.",
       "tip2": "Para agrupar avatares, aplique <code>-space-x-2</code> no container e <code>ring-2 ring-background</code> em cada Avatar. Isso cria a sobreposição com separação visual no dark e light mode.",
       "tip3": "O indicador de status é um <code>&lt;span&gt;</code> irmão, não uma prop do Avatar. Posicione com <code>absolute bottom-0 right-0</code> dentro de um wrapper <code>relative</code>."
     },
@@ -328,7 +328,7 @@
       "title": "Avatar — Display",
       "description": "Documentation for Avatar: image and fallback composition, 5 preset sizes (sm/md/lg/xl/2xl), grouping, and status indicator.",
       "aiSummary": "Avatar component with Avatar, AvatarImage, and AvatarFallback; 5 preset sizes (sm/md/lg/xl/2xl) via the size prop, with grouping and status support.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -564,7 +564,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "The project's Avatar is based on Radix <code>AvatarPrimitive</code> — follows the Shadcn pattern. This ensures accessibility and consistent loading behavior across stacks.",
+      "tip1": "The project's Avatar is based on Radix <code>AvatarPrimitive</code> — follows the primitive composition pattern. This ensures accessibility and consistent loading behavior across stacks.",
       "tip2": "To group avatars, apply <code>-space-x-2</code> to the container and <code>ring-2 ring-background</code> on each Avatar. This creates the overlap with visual separation in both dark and light modes.",
       "tip3": "The status indicator is a sibling <code>&lt;span&gt;</code>, not an Avatar prop. Position it with <code>absolute bottom-0 right-0</code> inside a <code>relative</code> wrapper."
     },
@@ -648,7 +648,7 @@
       "title": "Avatar — Display",
       "description": "Documentación del Avatar: composición con imagen y fallback, 5 tamaños preset (sm/md/lg/xl/2xl), agrupación e indicador de estado.",
       "aiSummary": "Componente Avatar con Avatar, AvatarImage y AvatarFallback; 5 tamaños preset (sm/md/lg/xl/2xl) vía la prop size, con soporte para agrupación e indicador de estado.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, Shadcn/UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -884,7 +884,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El Avatar del proyecto se basa en Radix <code>AvatarPrimitive</code> — sigue el patrón de Shadcn. Esto garantiza accesibilidad y comportamiento de carga consistentes entre stacks.",
+      "tip1": "El Avatar del proyecto se basa en Radix <code>AvatarPrimitive</code> — sigue el patrón de composición de primitivos. Esto garantiza accesibilidad y comportamiento de carga consistentes entre stacks.",
       "tip2": "Para agrupar avatares, aplica <code>-space-x-2</code> en el contenedor y <code>ring-2 ring-background</code> en cada Avatar. Esto crea la superposición con separación visual en dark y light mode.",
       "tip3": "El indicador de estado es un <code>&lt;span&gt;</code> hermano, no una prop del Avatar. Posiciónalo con <code>absolute bottom-0 right-0</code> dentro de un wrapper <code>relative</code>."
     },

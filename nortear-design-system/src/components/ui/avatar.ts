@@ -1,6 +1,6 @@
 // ─── Avatar — Vanilla factories standalone ──────────────────────────────────
 //
-// Visual: classes .nds-avatar-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-avatar-* (standalone).
 // Tokens: --muted, --muted-foreground, --background.
 //
 // API:

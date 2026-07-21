@@ -110,7 +110,7 @@ function isCategoryOpen(name: string) {
           >
             <span class="text-primary-foreground font-bold">S</span>
           </div>
-          <span class="font-semibold nds-text-3xl text-sidebar-foreground">Shadcn/UI</span>
+          <span class="font-semibold nds-text-3xl text-sidebar-foreground">Design System</span>
         </div>
       </div>
 

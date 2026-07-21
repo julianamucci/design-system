@@ -235,7 +235,6 @@ interface MenubarItemProps {
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add menubar"
         />
       }
     >

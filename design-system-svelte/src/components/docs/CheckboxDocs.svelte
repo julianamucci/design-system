@@ -135,7 +135,7 @@ import { Label } from "@/components/ui/label";`;
 //   required       — propaga aria-required
 //   name           — nome do campo para formulários nativos
 //   value          — valor enviado no submit (padrão "on")
-//   class          — classes Tailwind mescladas via cn()`;
+//   class          — classes .nds-* mescladas via cn()`;
 
   // ─── Reactive checked states for demo ────────────────────────────────────────
 
@@ -279,7 +279,6 @@ import { Label } from "@/components/ui/label";`;
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add checkbox"
     />
   {/snippet}
 

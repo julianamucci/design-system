@@ -28,12 +28,12 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 │  ├── Effects (useEffect)                │
 │  └── Component Composition              │
 ├─────────────────────────────────────────┤
-│  Tailwind CSS 4.0 (Styling)             │
+│  CSS standalone .nds-* (Styling)        │
 │  ├── Design Tokens (CSS Variables)      │
-│  ├── Utility Classes                    │
-│  └── Custom Variants                    │
+│  ├── Classes .nds-* semânticas          │
+│  └── Temas via classe no <html>         │
 ├─────────────────────────────────────────┤
-│  Radix UI (Primitivos Acessíveis)       │
+│  @base-ui/react (Primitivos Acessíveis) │
 │  ├── Accordion, Dialog, Dropdown, etc.  │
 │  └── WAI-ARIA Compliance                │
 ├─────────────────────────────────────────┤
@@ -202,11 +202,11 @@ const memoizedValue = useMemo(() => value, [deps]);
 
 **Regra de Ouro**: Otimize quando medido, não por suposição.
 
-#### 3. CSS-in-CSS (Tailwind + CSS Variables)
+#### 3. CSS standalone `.nds-*` + CSS Variables
 
 ✅ **Benefícios**:
-- Atomic CSS = reutilização máxima
-- Purge CSS remove classes não usadas
+- Classes semânticas `.nds-*` = reutilização máxima, sem runtime
+- CSS estático servido uma vez — sem step de build de utilitários
 - Variáveis CSS = mudança de tema sem re-render
 - Paint performance otimizado
 
@@ -535,14 +535,14 @@ function DemoSection() { }
 - Solid.js
 
 **Razões**:
-- ✅ Ecossistema maduro (Radix UI, Recharts)
-- ✅ Shadcn/UI é React-native
+- ✅ Ecossistema maduro (@base-ui/react, Recharts)
+- ✅ `@base-ui/react` é React-native
 - ✅ Maior pool de desenvolvedores
-- ✅ Melhor integração com Tailwind
+- ✅ Primitivos acessíveis e headless, estilizados via CSS `.nds-*`
 
-### 2. Tailwind vs. CSS-in-JS
+### 2. CSS standalone `.nds-*` vs. CSS-in-JS
 
-**Escolhido**: Tailwind CSS 4.0
+**Escolhido**: CSS standalone com classes `.nds-*`
 
 **Alternativas consideradas**:
 - Styled Components
@@ -553,8 +553,8 @@ function DemoSection() { }
 - ✅ Performance (zero runtime)
 - ✅ Bundle size menor
 - ✅ Design System via CSS Variables
-- ✅ PurgeCSS automático
-- ✅ Melhor DX com autocomplete
+- ✅ Sem step de build de utilitários
+- ✅ Classes semânticas fáceis de reutilizar entre stacks
 
 ### 3. State Management
 
@@ -620,8 +620,7 @@ npm audit fix
 
 ✅ **Usar apenas dependências confiáveis**:
 - React (oficial)
-- Radix UI (mantido)
-- Tailwind CSS (mantido)
+- @base-ui/react (mantido)
 - Lucide React (mantido)
 
 #### 3. Content Security Policy (Futuro)
@@ -948,13 +947,13 @@ preview.ts
 | Decisão | Escolha | Alternativa | Razão |
 |---------|---------|-------------|-------|
 | **Docs interface** | Storybook 10 | SPA customizada | Stories + docs integrados, a11y, Chromatic |
-| **Framework** | React 18 | Vue, Svelte | Ecossistema, Shadcn/UI |
-| **Styling** | Tailwind CSS 4.0 | CSS-in-JS | Performance, DX |
+| **Framework** | React 18 | Vue, Svelte | Ecossistema, @base-ui/react |
+| **Styling** | CSS standalone `.nds-*` | CSS-in-JS | Performance, DX |
 | **State (i18n)** | Zustand | Context API | Leve, sem boilerplate |
 | **State (tema)** | Storybook toolbar | useState | Persistido via `globals` na URL |
 | **Routing (docs)** | Storybook sidebar | React Router | Zero config, storySort |
 | **Icons** | Lucide React | Font Awesome | Leve, tree-shakeable |
-| **Components** | Radix UI + Shadcn | Headless UI, MUI | Acessibilidade, customização |
+| **Components** | @base-ui/react | Headless UI, MUI | Acessibilidade, customização |
 | **Visual regression** | Chromatic | Percy | Integrado ao Storybook |
 | **A11y** | axe-playwright | jest-axe | Testes em browser real |
 

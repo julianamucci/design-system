@@ -17,7 +17,7 @@ const meta = {
   argTypes: {
     class: {
       control: 'text',
-      description: 'Classes Tailwind adicionais para personalização do rótulo.',
+      description: 'Classes utilitárias .nds-* adicionais para personalização do rótulo.',
     },
     required: {
       control: 'boolean',

@@ -184,7 +184,6 @@ export function createScrollAreaDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add scroll-area',
     });
     headerSlot.replaceChildren(header);
   }

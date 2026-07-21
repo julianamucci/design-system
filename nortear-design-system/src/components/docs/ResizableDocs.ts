@@ -191,7 +191,6 @@ export function createResizableDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add resizable',
     });
     headerSlot.replaceChildren(header);
   }

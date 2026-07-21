@@ -171,7 +171,6 @@ export function createCarouselDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add carousel',
     });
     headerSlot.replaceChildren(header);
   }

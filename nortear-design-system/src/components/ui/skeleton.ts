@@ -1,6 +1,6 @@
 // ─── Skeleton — Vanilla factory standalone ──────────────────────────────────
 //
-// Visual: classe .nds-skeleton (zero Tailwind/basecoat-css).
+// Visual: classe .nds-skeleton (standalone).
 // Sem dimensão padrão — o consumidor define width/height via style ou className.
 
 export interface SkeletonOptions {

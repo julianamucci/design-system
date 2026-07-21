@@ -1,4 +1,4 @@
-// ─── Kbd — Vanilla factories alinhadas ao shadcn ─────────────────────────────
+// ─── Kbd — Vanilla factories alinhadas ao primitive React ─────────────────────────────
 //
 // API:
 //   const group = createKbdGroup();

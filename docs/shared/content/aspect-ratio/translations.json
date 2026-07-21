@@ -8,7 +8,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentação do AspectRatio: container que preserva proporção fixa para imagens, vídeos e iframes, com 5 ratios canônicos e comportamento responsivo.",
       "aiSummary": "Componente AspectRatio container passivo que preserva proporção largura/altura em imagens, vídeos e iframes via Radix UI, Reka UI e Bits UI; sem estado, sem eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS aspect-ratio, responsive media",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -340,7 +340,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentation for AspectRatio: container that preserves fixed ratio for images, videos, and iframes, with 5 canonical ratios and responsive behavior.",
       "aiSummary": "AspectRatio component is a passive container that preserves width-to-height ratio for images, videos, and iframes via Radix UI, Reka UI, and Bits UI; no state, no events.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS aspect-ratio, responsive media",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -672,7 +672,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentación del AspectRatio: contenedor que preserva proporción fija para imágenes, vídeos e iframes, con 5 ratios canónicos y comportamiento responsivo.",
       "aiSummary": "Componente AspectRatio contenedor pasivo que preserva proporción ancho/alto en imágenes, vídeos e iframes vía Radix UI, Reka UI y Bits UI; sin estado, sin eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, Shadcn/UI, CSS aspect-ratio, responsive media",
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
       "aiIntent": "informational"
     },
     "demonstration": {

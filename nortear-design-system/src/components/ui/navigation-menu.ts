@@ -1,5 +1,5 @@
 // ─── NavigationMenu — Vanilla factory standalone ────────────────────────────
-// Visual: classes .nds-navigation-menu-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-navigation-menu-* (standalone).
 // Painel via `hidden` attribute; um aberto por vez; click-fora fecha.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

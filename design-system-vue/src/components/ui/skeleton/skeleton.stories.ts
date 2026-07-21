@@ -21,7 +21,7 @@ const meta: Meta<any> = {
   argTypes: {
     class: {
       control: { type: 'text' },
-      description: 'Classes Tailwind para definir dimensões e arredondamento (ex: h-4 w-[250px] rounded-full).',
+      description: 'Classes utilitárias .nds-* para definir dimensões e arredondamento (ex: h-4 w-[250px] rounded-full).',
     },
   },
   args: {

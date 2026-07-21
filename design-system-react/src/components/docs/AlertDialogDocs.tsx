@@ -280,7 +280,6 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add alert-dialog"
         />
       }
     >

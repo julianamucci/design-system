@@ -1,9 +1,9 @@
 <script lang="ts" module>
-	import { type VariantProps, tv } from "tailwind-variants";
+	import { cva, type VariantProps } from "class-variance-authority";
 
 	// PATCH: theme — rounded via token --radius-alert
-	export const alertVariants = tv({
-		base: "nds-alert",
+	export const alertVariants = cva("nds-alert", {
+		
 		variants: {
 			variant: {
 				default: "",

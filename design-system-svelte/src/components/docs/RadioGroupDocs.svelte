@@ -199,7 +199,7 @@ interface RadioGroupItemProps {
   height: 1.25rem;
 }
 
-/* Cor customizada via Tailwind */
+/* Cor customizada via classe .nds-* */
 .payment-radio [data-slot="radio-group-item"][data-checked] {
   @apply bg-blue-600 border-blue-600;
 }`;
@@ -235,7 +235,6 @@ interface RadioGroupItemProps {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add radio-group"
     />
   {/snippet}
 

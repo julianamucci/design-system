@@ -213,7 +213,6 @@ export function createTabsDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add tabs',
     });
     headerSlot.replaceChildren(header);
   }

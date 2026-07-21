@@ -15,9 +15,9 @@ Browser
 ├── Svelte 5 (UI Framework)
 │   ├── Runes: $state, $props, $derived, $effect
 │   └── Fragmentos nativos (sem wrapper obrigatório)
-├── Tailwind CSS 4.0 (Styling)
+├── CSS standalone .nds-* (Styling)
 │   ├── Design Tokens (CSS Variables)
-│   └── Utility Classes
+│   └── Classes .nds-*
 ├── Bits UI (Primitivos Acessíveis)
 │   ├── Dialog, Dropdown, Select, etc.
 │   └── WAI-ARIA Compliance
@@ -118,7 +118,7 @@ export default {
 
 **Storybook**: code splitting gerenciado nativamente pelo Vite — não configurar manualmente.
 
-### CSS-in-CSS (Tailwind + CSS Variables)
+### CSS-in-CSS (.nds-* + CSS Variables)
 
 ```ts
 // ✅ Mudança de tema sem re-render
@@ -171,12 +171,12 @@ document.documentElement.classList.add('dark');
 |---------|---------|-------|
 | Docs interface | Storybook 10 | Stories + docs integrados, a11y, Chromatic |
 | Framework | Svelte 5 | Runes = reatividade sem boilerplate |
-| Styling | Tailwind CSS 4.0 | Performance, DX |
+| Styling | CSS standalone .nds-* | Performance, DX |
 | State (i18n) | $state em módulo | Leve, sem boilerplate |
 | State (tema) | Storybook toolbar | Persistido via `globals` na URL |
 | Forms | Superforms + Zod | TypeScript end-to-end |
 | Icons | lucide-svelte | Leve, tree-shakeable |
-| Components | Bits UI + shadcn-svelte | Acessibilidade, customização |
+| Components | Bits UI | Acessibilidade, customização |
 | Visual regression | Chromatic | Integrado ao Storybook |
 | A11y | axe-playwright | Testes em browser real |
 

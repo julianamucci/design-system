@@ -144,7 +144,6 @@ interface InputProps extends HTMLInputAttributes {
       description={$tStore('description')}
       category={$tStore('category')}
       type={$tStore('type')}
-      installNote="npx shadcn-svelte@latest add input"
     />
   {/snippet}
 

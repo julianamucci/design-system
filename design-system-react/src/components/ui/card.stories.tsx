@@ -32,7 +32,7 @@ const meta = {
     className: {
       control: "text",
       description:
-        "Classes Tailwind adicionais aplicadas ao container raiz (sobrescreve padding/fundo/radius).",
+        "Classes utilitárias .nds-* adicionais aplicadas ao container raiz (sobrescreve padding/fundo/radius).",
     },
   },
   args: {

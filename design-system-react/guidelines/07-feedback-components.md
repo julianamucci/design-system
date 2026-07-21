@@ -50,11 +50,8 @@ Alert
 - `AlertTitle` é opcional — omitir quando a `AlertDescription` já é autoexplicativa.
 - Para variantes success e warning, usar `bg-*/10` e `border-*/30` para fundo suave — não fundo sólido.
 
-**Divergência de implementação cross-stack (intencional)**:
-O posicionamento do ícone difere entre stacks por razões de versão do Shadcn/UI — **não corrigir**:
-- React: `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` + `[&>svg~*]:pl-7` (seletor de irmão)
-- Vue/Svelte: `has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr]` (CSS grid, Shadcn mais recente)
-- Basecoat: classe CSS `.alert` definida em `globals.css`
+**Posicionamento do ícone (unificado via `.nds-alert`)**:
+O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nds-alert:has(> svg)` abre automaticamente uma coluna de grid para o ícone (16px + `column-gap` de 8px) — sem posicionamento manual. O SVG recebe um `translate` vertical leve para alinhar com a primeira linha do título. Todas as stacks compartilham o mesmo CSS `.nds-alert` (`docs/shared/styles/nds/alert.css`).
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - O componente aplica `role="alert"` automaticamente — o leitor de tela anuncia o conteúdo ao ser inserido no DOM.

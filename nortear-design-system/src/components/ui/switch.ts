@@ -1,6 +1,6 @@
 // ─── Switch — Vanilla factory standalone ────────────────────────────────────
 //
-// Visual: classes .nds-switch + .nds-switch-thumb (zero Tailwind).
+// Visual: classes .nds-switch + .nds-switch-thumb (standalone).
 // Estado via data-state="checked|unchecked" + aria-checked.
 
 export type SwitchOptions = {

@@ -8,7 +8,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentação do Dialog: modal versátil para formulários e conteúdo, com focus trap, Portal, Escape e fechamento por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formulários e conteúdo informativo, com focus trap, role=\"dialog\", aria-labelledby e aria-describedby automáticos via Base UI, Reka UI e Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal, lucide, Tailwind CSS",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -214,7 +214,7 @@
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "showCloseButtonContent": "Exibe botão X no canto superior direito do Content.",
         "showCloseButtonFooter": "Exibe botão de fechar dentro do Footer, abaixo das ações.",
-        "className": "Classes Tailwind adicionais para override de estilo.",
+        "className": "Classes .nds-* adicionais para override de estilo.",
         "children": "Conteúdo renderizado dentro do subcomponente. Em Title e Description, é o texto exibido."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -224,7 +224,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "popover": "Fundo do DialogContent",
         "popoverForeground": "Texto principal do Content",
@@ -374,7 +374,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentation for Dialog: versatile modal for forms and content, with focus trap, Portal, Escape, and overlay-click dismiss.",
       "aiSummary": "Generic Dialog modal component for forms and informational content, with focus trap, role=\"dialog\", and automatic aria-labelledby and aria-describedby via Base UI, Reka UI, and Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal, lucide, Tailwind CSS",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -580,7 +580,7 @@
         "onOpenChange": "Callback fired on open or close. Receives the new boolean state.",
         "showCloseButtonContent": "Shows X button at the top-right corner of Content.",
         "showCloseButtonFooter": "Shows close button inside the Footer, below actions.",
-        "className": "Additional Tailwind classes for style overrides.",
+        "className": "Additional .nds-* classes for style overrides.",
         "children": "Content rendered inside the subcomponent. In Title and Description, it is the displayed text."
       },
       "extensibilityTitle": "Extensibility",
@@ -590,7 +590,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "popover": "DialogContent background",
         "popoverForeground": "Main Content text",
@@ -740,7 +740,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentación del Dialog: modal versátil para formularios y contenido, con focus trap, Portal, Escape y cierre por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formularios y contenido informativo, con focus trap, role=\"dialog\", aria-labelledby y aria-describedby automáticos vía Base UI, Reka UI y Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, Shadcn/UI, WCAG 2.1, role dialog, focus trap, modal, lucide, Tailwind CSS",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -946,7 +946,7 @@
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "showCloseButtonContent": "Muestra botón X en la esquina superior derecha del Content.",
         "showCloseButtonFooter": "Muestra botón de cierre dentro del Footer, debajo de las acciones.",
-        "className": "Clases Tailwind adicionales para override de estilo.",
+        "className": "Clases .nds-* adicionales para override de estilo.",
         "children": "Contenido renderizado dentro del subcomponente. En Title y Description, es el texto mostrado."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -956,7 +956,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "popover": "Fondo del DialogContent",
         "popoverForeground": "Texto principal del Content",

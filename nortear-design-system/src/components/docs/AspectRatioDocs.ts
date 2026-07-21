@@ -177,7 +177,6 @@ export function createAspectRatioDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add aspect-ratio',
     });
     headerSlot.replaceChildren(header);
   }

@@ -231,7 +231,6 @@ export function createTextareaDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add textarea',
     });
     headerSlot.replaceChildren(header);
   }

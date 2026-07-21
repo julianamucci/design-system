@@ -47,7 +47,7 @@
       "affected": {
         "title": "Afetado pela densidade",
         "items": {
-          "spacing": "<code>--spacing-base</code> e toda a escala <code>--spacing-*</code> (consumida por Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "spacing": "<code>--spacing-base</code> e toda a escala <code>--spacing-*</code> (consumida pelas classes <code>.nds-p-*</code>, <code>.nds-m-*</code>, <code>.nds-gap-*</code>)",
           "heights": "<code>--height-*</code> — alturas de Button, Input, Select, Toggle, Badge",
           "sizes": "<code>--size-*</code> — tamanhos quadrados (icon buttons, avatares pequenos)"
         }
@@ -165,7 +165,7 @@
       "affected": {
         "title": "Affected by density",
         "items": {
-          "spacing": "<code>--spacing-base</code> and the full <code>--spacing-*</code> scale (consumed by Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "spacing": "<code>--spacing-base</code> and the full <code>--spacing-*</code> scale (consumed by the <code>.nds-p-*</code>, <code>.nds-m-*</code>, <code>.nds-gap-*</code> classes)",
           "heights": "<code>--height-*</code> — Button, Input, Select, Toggle, Badge heights",
           "sizes": "<code>--size-*</code> — square sizes (icon buttons, small avatars)"
         }
@@ -283,7 +283,7 @@
       "affected": {
         "title": "Afectado por la densidad",
         "items": {
-          "spacing": "<code>--spacing-base</code> y toda la escala <code>--spacing-*</code> (consumida por Tailwind <code>p-*</code>, <code>m-*</code>, <code>gap-*</code>)",
+          "spacing": "<code>--spacing-base</code> y toda la escala <code>--spacing-*</code> (consumida pelas classes <code>.nds-p-*</code>, <code>.nds-m-*</code>, <code>.nds-gap-*</code>)",
           "heights": "<code>--height-*</code> — alturas de Button, Input, Select, Toggle, Badge",
           "sizes": "<code>--size-*</code> — tamaños cuadrados (icon buttons, avatares pequeños)"
         }

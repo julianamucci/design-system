@@ -211,7 +211,7 @@ O elemento com foco não pode estar completamente oculto por elementos fixos (he
 Alvo mínimo de 24×24px para qualquer elemento interativo. Para elementos menores, garantir espaçamento equivalente. Touch targets em mobile: mínimo 44×44px (área de toque, não necessariamente o elemento visual).
 
 **Dragging Movements — WCAG 2.5.7 (novo no WCAG 2.2):**
-Toda ação que requer arrastar (Resizable, Carousel via swipe, Slider) deve ter alternativa por clique ou teclado. O Slider do Shadcn/UI aceita Arrow keys — documentar e manter.
+Toda ação que requer arrastar (Resizable, Carousel via swipe, Slider) deve ter alternativa por clique ou teclado. O Slider do design system aceita Arrow keys — documentar e manter.
 
 **Skip link obrigatório na aplicação:**
 ```tsx
@@ -434,17 +434,21 @@ Para trechos em outro idioma dentro da página:
 
 `prefers-reduced-motion` não é preferência estética — é necessidade médica para usuários com distúrbios vestibulares, epilepsia fotossensível e enxaqueca. Animações e transições podem causar náusea, desorientação e crises.
 
-**Regra obrigatória**: toda animação ou transição adicionada fora dos componentes Shadcn/UI deve ter `motion-reduce:transition-none` ou `motion-reduce:animate-none`.
+**Regra obrigatória**: toda animação ou transição adicionada fora dos componentes do design system deve ser guardada atrás de `@media (prefers-reduced-motion: no-preference)` (ou anulada em `reduce`) no CSS do componente.
 
-```tsx
-{/* Transições customizadas */}
-<div className="transition-all duration-300 motion-reduce:transition-none">
+```css
+/* Transições customizadas — só aplicam quando o usuário permite movimento */
+@media (prefers-reduced-motion: no-preference) {
+  .nds-animated { transition: all var(--transition-normal) var(--transition-timing); }
+}
 
-{/* Skeleton */}
-<Skeleton className="animate-pulse motion-reduce:animate-none" />
+/* Skeleton — desliga o pulse em reduce */
+@media (prefers-reduced-motion: reduce) {
+  .nds-skeleton { animation: none; }
+}
 ```
 
-A media query global no `globals.css` protege todos os casos não cobertos por classes individuais (ver `16-padroes-design-sistema.md` → "Motion e Animações").
+A media query global no CSS de tokens protege todos os casos não cobertos por regras individuais (ver `04-padroes-design-sistema.md` → "Motion e Animações").
 
 **Proibição absoluta**: nunca criar conteúdo que pisque mais de 3 vezes por segundo — causa crises epilépticas (WCAG 2.3.1).
 

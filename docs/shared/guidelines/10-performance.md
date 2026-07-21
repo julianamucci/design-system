@@ -52,7 +52,7 @@ Para garantir tree-shaking:
 |-------------|---------|-------|
 | `lucide-react/vue/svelte` | ~200B por ícone | Importar ícones individualmente, nunca `import * from 'lucide-*'` |
 | `class-variance-authority` | ~1.5KB | OK — essencial para variantes |
-| `clsx` / `tailwind-merge` | ~1KB | OK — usado em `cn()` |
+| `clsx` | ~500B | OK — usado em `cn()` (clsx puro) |
 | `zod` | ~14KB | Importar apenas esquemas necessários |
 | `pinia` / `zustand` | ~1-2KB | OK — state management essencial |
 
@@ -162,25 +162,25 @@ O Storybook gerencia code-splitting nativamente — cada story é um chunk separ
 
 ## 4. CSS
 
-### Tailwind CSS 4
+### CSS standalone `.nds-*`
 
-O Tailwind 4 (via `@tailwindcss/vite`) faz tree-shaking automático — apenas classes usadas são incluídas no bundle. Regras adicionais:
+O CSS do design system é estático e importado uma única vez (`docs/shared/styles/nds/index.css`) — sem geração de utilitários em build. Regras adicionais:
 
-- **Não gere classes dinamicamente** — o Tailwind scanner precisa encontrar classes completas no código:
+- **Use nomes de classe completos e estáticos** — não monte nomes de classe dinamicamente por string; prefira um mapa de classes completas:
 
 ```tsx
-// INCORRETO — Tailwind não detecta
-const color = `text-${variant}-foreground`;
+// INCORRETO — classe montada por interpolação
+const color = `nds-text-${variant}-foreground`;
 
 // CORRETO — classe completa visível
 const colors: Record<string, string> = {
-  default: 'text-primary-foreground',
-  destructive: 'text-destructive-foreground',
+  default: 'nds-text-primary-foreground',
+  destructive: 'nds-text-destructive',
 };
 ```
 
-- **Evite `@apply` em componentes** — `@apply` duplica CSS. Use classes Tailwind diretamente.
-- **`storybook-docs.css`** — use seletores específicos (`.ds-docs .text-primary`), nunca wildcards (`[class*="text-"]`).
+- **Reaproveite classes `.nds-*` existentes** — não duplique regras em CSS de componente quando já há um utilitário equivalente.
+- **`storybook-docs.css`** — use seletores específicos (`.ds-docs .nds-text-primary`), nunca wildcards (`[class*="nds-text-"]`).
 
 ### Critical CSS
 
@@ -259,8 +259,8 @@ Scripts em `preview-head.html` bloqueiam o carregamento:
 - [ ] Sem dependências pesadas desnecessárias
 - [ ] `useCallback` / `useMemo` em handlers e objetos derivados (React)
 - [ ] `computed` para valores derivados (Vue)
-- [ ] Classes Tailwind completas (não construídas dinamicamente)
-- [ ] Sem `@apply` em componentes
+- [ ] Nomes de classe `.nds-*` completos (não construídos dinamicamente)
+- [ ] Sem duplicação de regras que já existem como utilitário `.nds-*`
 
 ### Docs Pages
 

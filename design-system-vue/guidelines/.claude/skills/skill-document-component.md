@@ -1,11 +1,11 @@
 ---
 name: document-component
-description: Documenta um componente Shadcn Vue seguindo o template padronizado de 15 seções em 4 blocos. Usar sempre que o usuário pedir para documentar, criar a documentação de, ou escrever a doc de um componente — mesmo que não cite explicitamente o template ou as 15 seções. Também usar para atualizar ou corrigir documentação existente de um componente.
+description: Documenta um componente Vue (Reka UI) seguindo o template padronizado de 15 seções em 4 blocos. Usar sempre que o usuário pedir para documentar, criar a documentação de, ou escrever a doc de um componente — mesmo que não cite explicitamente o template ou as 15 seções. Também usar para atualizar ou corrigir documentação existente de um componente.
 ---
 
 # Skill: Document Component (Vue)
 
-Cria a página de documentação de um componente Shadcn Vue seguindo o template de 15 seções em 4 blocos definido em `12-documentacao-componentes.md`.
+Cria a página de documentação de um componente Vue (Reka UI) seguindo o template de 15 seções em 4 blocos definido em `12-documentacao-componentes.md`.
 
 ## Antes de escrever
 
@@ -24,7 +24,7 @@ Cria a página de documentação de um componente Shadcn Vue seguindo o template
 - **Seção 5 (Do & Don't)**: 3–5 pares, exemplos concretos
 
 ### Bloco 2 — Referência Técnica (seções 6–11)
-- **Seção 6 (Importação)**: import statement exato do Shadcn Vue
+- **Seção 6 (Importação)**: import statement exato do componente (`@/components/ui/<slug>`)
 - **Seção 7 (Exemplos)**: todos os casos de uso documentados no guideline
 - **Seção 8 (Variantes)**: grid visual de todas as variantes nativas
 - **Seção 9 (Estados)**: default, hover, focus, disabled, error
@@ -41,7 +41,7 @@ Cria a página de documentação de um componente Shadcn Vue seguindo o template
 
 ## Regras críticas
 
-- Nunca documentar props que não existem na API do Shadcn Vue / Reka UI
+- Nunca documentar props que não existem na API do Reka UI
 - Variantes customizadas (warning, success) são sempre via `class` com tokens do projeto
 - ComponentDocsNav: sticky, com IntersectionObserver via `onMounted/onUnmounted`
 - Arquivo gerado em: `/components/docs/[NomeComponente]Docs.vue`

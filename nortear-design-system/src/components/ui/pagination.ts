@@ -1,6 +1,6 @@
 // ─── Pagination — Vanilla factory standalone ────────────────────────────────
 //
-// Visual: classes .nds-pagination-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-pagination-* (standalone).
 
 export type PaginationOptions = {
   total: number;

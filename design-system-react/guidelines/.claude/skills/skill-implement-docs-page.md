@@ -1,6 +1,6 @@
 ---
 name: implement-docs-page
-description: Cria ou atualiza uma página de documentação interativa de componente Shadcn/UI no projeto, integrando ComponentDocsNav, exemplos ao vivo, código copiável e seções de acessibilidade e analytics. Usar quando o usuário pedir para criar ou atualizar a página de docs de um componente específico no projeto — diferente de apenas documentar em Markdown, esta skill gera o arquivo .tsx funcional completo que será renderizado na aplicação.
+description: Cria ou atualiza uma página de documentação interativa de componente do design system (@base-ui/react + CSS `.nds-*`) no projeto, integrando ComponentDocsNav, exemplos ao vivo, código copiável e seções de acessibilidade e analytics. Usar quando o usuário pedir para criar ou atualizar a página de docs de um componente específico no projeto — diferente de apenas documentar em Markdown, esta skill gera o arquivo .tsx funcional completo que será renderizado na aplicação.
 ---
 
 # Skill: Implement Docs Page
@@ -40,12 +40,12 @@ export default function [Componente]Docs() {
   }, [])
 
   return (
-    <div className="flex gap-8">
+    <div className="nds-sidebar-layout" data-sidebar-sticky="true">
       {/* Nav sticky lateral */}
       <ComponentDocsNav sections={sections} />
 
       {/* Conteúdo principal */}
-      <main id="main-content" className="flex-1 min-w-0 space-y-16">
+      <main id="main-content" className="ds-docs nds-stack" data-spacing="2xl">
         {/* Seção 1: Header */}
         <section id="header">...</section>
 
@@ -82,16 +82,16 @@ export default function [Componente]Docs() {
 
 ### Notas e Dicas (seção 14)
 ```tsx
-// Dica — CheckCircle2 text-primary
-<div className="flex gap-2 items-start">
-  <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-  <p className="text-sm">Texto da dica.</p>
+// Dica — CheckCircle2 em cor primary
+<div className="nds-row" data-align="start">
+  <CheckCircle2 className="nds-icon nds-text-primary nds-shrink-0" />
+  <p className="nds-text-body">Texto da dica.</p>
 </div>
 
-// Aviso — XCircle text-destructive  
-<div className="flex gap-2 items-start">
-  <XCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
-  <p className="text-sm">Texto do aviso.</p>
+// Aviso — XCircle em cor destructive
+<div className="nds-row" data-align="start">
+  <XCircle className="nds-icon nds-text-destructive nds-shrink-0" />
+  <p className="nds-text-body">Texto do aviso.</p>
 </div>
 ```
 

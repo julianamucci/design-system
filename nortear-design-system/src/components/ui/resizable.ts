@@ -1,5 +1,5 @@
 // ─── Resizable — Vanilla factory standalone ─────────────────────────────────
-// Visual: classes .nds-resizable-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-resizable-* (standalone).
 // Drag handle + keyboard resize (Arrow keys).
 
 // ─── Types ────────────────────────────────────────────────────────────────────

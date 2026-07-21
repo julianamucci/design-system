@@ -1,5 +1,5 @@
 // ─── Command — Vanilla factory standalone ───────────────────────────────────
-// Visual: classes .nds-command-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-command-* (standalone).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

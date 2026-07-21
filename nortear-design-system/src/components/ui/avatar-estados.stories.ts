@@ -31,7 +31,7 @@ export const Loaded: Story = {
   },
   render: () =>
     createAvatar({
-      src: 'https://github.com/shadcn.png',
+      src: 'https://i.pravatar.cc/128?img=47',
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     }),

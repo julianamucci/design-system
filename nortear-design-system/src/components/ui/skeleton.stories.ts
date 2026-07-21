@@ -21,7 +21,7 @@ const meta: Meta<SkeletonArgs> = {
     className: {
       control: 'text',
       description:
-        'Classes Tailwind para definir dimensões e arredondamento do placeholder (ex: h-4 w-[250px], h-12 w-12 rounded-full).',
+        'Classes utilitárias .nds-* para definir dimensões e arredondamento do placeholder (ex: h-4 w-[250px], h-12 w-12 rounded-full).',
     },
   },
   args: {

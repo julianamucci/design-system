@@ -1,5 +1,5 @@
 // ─── HoverCard — Vanilla factory standalone ─────────────────────────────────
-// Visual: classe .nds-hover-card-content (zero Tailwind/basecoat-css).
+// Visual: classe .nds-hover-card-content (standalone).
 // Mostra ao hover do trigger; mantém aberto enquanto mouse está sobre o painel.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 // ─── Dialog — Vanilla factory standalone ────────────────────────────────────
-// Visual: classes .nds-dialog-* (zero Tailwind/basecoat-css). Render via portal.
+// Visual: classes .nds-dialog-* (standalone). Render via portal.
 // Comportamento: overlay click + Escape fecham; focus-trap; restaura foco.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

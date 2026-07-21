@@ -1,6 +1,6 @@
 // ─── Aspect Ratio — Vanilla factory standalone ───────────────────────────────
 //
-// Visual: classes .nds-aspect-ratio (zero Tailwind, zero basecoat-css).
+// Visual: classes .nds-aspect-ratio (standalone-css).
 // Usa `aspect-ratio` CSS nativo via CSS custom property `--ratio`.
 
 export interface AspectRatioOptions {

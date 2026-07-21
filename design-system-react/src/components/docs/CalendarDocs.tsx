@@ -307,7 +307,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add calendar"
         />
       }
     >

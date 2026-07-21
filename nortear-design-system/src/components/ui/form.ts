@@ -1,5 +1,5 @@
 // ─── Form — Vanilla factories standalone ────────────────────────────────────
-// Visual: classes .nds-form-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-form-* (standalone).
 // createFormField: wrapper de label + input + description + error.
 // createFieldset: <fieldset> + <legend> + children.
 

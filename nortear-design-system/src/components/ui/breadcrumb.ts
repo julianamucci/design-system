@@ -1,6 +1,6 @@
 // ─── Breadcrumb — Vanilla factories standalone ──────────────────────────────
 //
-// Visual: classes .nds-breadcrumb-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-breadcrumb-* (standalone).
 
 export interface BreadcrumbOptions {
   /** Accessible label for the nav landmark (default: "breadcrumb"). */

@@ -1,5 +1,5 @@
 // ─── Sheet — Vanilla factory standalone ─────────────────────────────────────
-// Visual: classes .nds-sheet-* (zero Tailwind/basecoat-css). Render via portal.
+// Visual: classes .nds-sheet-* (standalone). Render via portal.
 // Comportamento: overlay click + Escape fecham; focus-trap.
 
 // ─── Types ────────────────────────────────────────────────────────────────────

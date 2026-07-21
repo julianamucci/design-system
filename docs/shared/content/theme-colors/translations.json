@@ -28,7 +28,7 @@
       "title": "Temas de marca",
       "subtitle": "Default, Warm e Cold reescrevem os tokens de cor. Trocar via toolbar do Storybook aplica a classe correspondente no <html>.",
       "themes": {
-        "default": "Default — neutro, base shadcn",
+        "default": "Default — neutro",
         "warm": "Warm — tint âmbar/terracota",
         "cold": "Cold — tint azul/ciano"
       }
@@ -114,7 +114,7 @@
       "title": "Brand themes",
       "subtitle": "Default, Warm and Cold rewrite the color tokens. Switching via the Storybook toolbar applies the matching class on <html>.",
       "themes": {
-        "default": "Default — neutral, shadcn base",
+        "default": "Default — neutral",
         "warm": "Warm — amber/terracotta tint",
         "cold": "Cold — blue/cyan tint"
       }
@@ -200,7 +200,7 @@
       "title": "Temas de marca",
       "subtitle": "Default, Warm y Cold reescriben los tokens de color. Cambiar vía la toolbar de Storybook aplica la clase correspondiente en <html>.",
       "themes": {
-        "default": "Default — neutro, base shadcn",
+        "default": "Default — neutro",
         "warm": "Warm — tinte ámbar/terracota",
         "cold": "Cold — tinte azul/cian"
       }

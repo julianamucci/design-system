@@ -224,7 +224,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add aspect-ratio"
         />
       }
     >

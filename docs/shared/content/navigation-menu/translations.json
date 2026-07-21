@@ -8,7 +8,7 @@
       "title": "NavigationMenu — Navegação",
       "description": "Documentação do NavigationMenu: menu horizontal para web com sub-menus, viewport animado, indicador e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
       "aiSummary": "Componente NavigationMenu construído sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navegação, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navegação, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -450,7 +450,7 @@
       "title": "NavigationMenu — Navigation",
       "description": "NavigationMenu documentation: web horizontal menu with sub-menus, animated viewport, indicator, and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
       "aiSummary": "NavigationMenu component built on base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navigation, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navigation, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -892,7 +892,7 @@
       "title": "NavigationMenu — Navegación",
       "description": "Documentación de NavigationMenu: menú horizontal para web con sub-menús, viewport animado, indicador y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
       "aiSummary": "Componente NavigationMenu construido sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, Tailwind CSS, navegación, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navegación, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {

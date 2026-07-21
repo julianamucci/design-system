@@ -1,6 +1,6 @@
 ---
 name: implement-docs-page
-description: Cria ou atualiza uma página de documentação interativa de componente Shadcn Vue no projeto, integrando ComponentDocsNav, exemplos ao vivo, código copiável e seções de acessibilidade e analytics. Usar quando o usuário pedir para criar ou atualizar a página de docs de um componente específico no projeto — esta skill gera o arquivo .vue funcional completo que será renderizado na aplicação.
+description: Cria ou atualiza uma página de documentação interativa de componente Vue (Reka UI) no projeto, integrando ComponentDocsNav, exemplos ao vivo, código copiável e seções de acessibilidade e analytics. Usar quando o usuário pedir para criar ou atualizar a página de docs de um componente específico no projeto — esta skill gera o arquivo .vue funcional completo que será renderizado na aplicação.
 ---
 
 # Skill: Implement Docs Page (Vue)

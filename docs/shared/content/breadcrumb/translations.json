@@ -8,7 +8,7 @@
       "title": "Breadcrumb — Navegação",
       "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -194,7 +194,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "className": "Classes Tailwind adicionais para customização visual.",
+        "className": "Classes .nds-* adicionais para customização visual.",
         "children": "Conteúdo do elemento (ícones, texto, componentes filhos).",
         "href": "URL de destino do link. Omitir em <code>BreadcrumbPage</code>.",
         "render": "Função de renderização customizada (React) — permite integração com routers.",
@@ -207,7 +207,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "mutedForeground": "Cor do texto dos links inativos",
         "foreground": "Cor do texto no hover e da página atual",
@@ -347,7 +347,7 @@
       "title": "Breadcrumb — Navigation",
       "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
       "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -533,7 +533,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "className": "Additional Tailwind classes for visual customization.",
+        "className": "Additional .nds-* classes for visual customization.",
         "children": "Element content (icons, text, child components).",
         "href": "Link destination URL. Omit on <code>BreadcrumbPage</code>.",
         "render": "Custom render function (React) — enables router integration.",
@@ -546,7 +546,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "mutedForeground": "Color of inactive link text",
         "foreground": "Color of hover text and current page",
@@ -686,7 +686,7 @@
       "title": "Breadcrumb — Navegación",
       "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -872,7 +872,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "className": "Clases Tailwind adicionales para personalización visual.",
+        "className": "Clases .nds-* adicionales para personalización visual.",
         "children": "Contenido del elemento (íconos, texto, componentes hijos).",
         "href": "URL de destino del enlace. Omitir en <code>BreadcrumbPage</code>.",
         "render": "Función de render personalizada (React) — permite integración con routers.",
@@ -885,7 +885,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "mutedForeground": "Color del texto de enlaces inactivos",
         "foreground": "Color del texto en hover y de la página actual",

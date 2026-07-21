@@ -17,7 +17,7 @@ declare module '@tanstack/table-core' {
     format?: (value: TValue, row: TData) => string;
     /** Svelte-only: envolve o valor da célula em <Badge> com a variant retornada. */
     badgeVariant?: (value: TValue, row: TData) => 'default' | 'secondary' | 'destructive' | 'outline';
-    /** Svelte-only: classes Tailwind extras aplicadas no <td> de cada célula da coluna. */
+    /** Svelte-only: classes .nds-* extras aplicadas no <td> de cada célula da coluna. */
     cellClass?: string;
   }
   interface TableMeta<TData extends RowData> {

@@ -1,6 +1,6 @@
 // ─── Separator — Vanilla factory standalone ──────────────────────────────────
 //
-// Visual: classes .nds-separator (zero Tailwind/basecoat-css).
+// Visual: classes .nds-separator (standalone).
 // Decorativo por default (role="none"); use decorative:false para semântico.
 
 export type SeparatorOrientation = 'horizontal' | 'vertical';

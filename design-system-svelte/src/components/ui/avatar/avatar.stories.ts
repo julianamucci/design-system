@@ -18,7 +18,7 @@ const meta = {
     class: {
       control: 'select',
       options: ['h-6 w-6', 'h-8 w-8', 'h-10 w-10', 'h-12 w-12'],
-      description: 'Classe Tailwind para ajustar o diâmetro (padrão: h-8 w-8).',
+      description: 'Classe utilitária .nds-* para ajustar o diâmetro (padrão: h-8 w-8).',
     },
   },
   args: {

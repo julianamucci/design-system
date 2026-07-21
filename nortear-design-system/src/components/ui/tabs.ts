@@ -1,6 +1,6 @@
 // ─── Tabs — Vanilla factory standalone ──────────────────────────────────────
 //
-// Visual: classes .nds-tabs-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-tabs-* (standalone).
 // Estado via data-state="active|inactive" no trigger; painéis usam hidden.
 
 export type TabsItemDef = {

@@ -7,8 +7,8 @@
     "seo": {
       "title": "Textarea — Formulário",
       "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.1 AA.",
-      "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes Tailwind resize-y/none/full, contador de caracteres com aria-live e integração com FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres com aria-live e integração com FormField.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.1, resize-y, aria-invalid, maxLength",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -29,7 +29,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo com classes Tailwind e <code>data-slot=\"textarea\"</code>.",
+      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo com classes .nds-* e <code>data-slot=\"textarea\"</code>.",
       "item2": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do textarea.",
       "item3": "<strong>FormDescription</strong> — texto auxiliar opcional descrevendo o conteúdo esperado.",
       "item4": "<strong>Contador de caracteres</strong> — texto adjacente com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo, vinculado a <code>maxLength</code>.",
@@ -216,7 +216,7 @@
           "type": "number",
           "default": "—",
           "required": "Não",
-          "description": "Altura inicial em linhas. Prefira <code>min-h-[…]</code> via Tailwind."
+          "description": "Altura inicial em linhas. Prefira altura mínima via <code>.nds-min-h-*</code>."
         },
         "disabled": {
           "type": "boolean",
@@ -234,7 +234,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind. Use <code>resize-y</code>, <code>resize-none</code> ou <code>resize</code>."
+          "description": "Classes .nds-*. Use <code>.nds-resize-y</code>, <code>.nds-resize-none</code> ou <code>.nds-resize</code>."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -300,9 +300,9 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sem lib upstream. Estilizado via Tailwind.",
+      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sem lib upstream. Estilizado via classes .nds-*.",
       "item2": "<strong>field-sizing-content</strong> — propriedade CSS moderna que ajusta a altura automaticamente ao conteúdo. Combinada com <code>min-h-[…]</code> para garantir altura mínima.",
-      "item3": "<strong>Resize</strong> — controlado via classe Tailwind (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), não prop CSS direta.",
+      "item3": "<strong>Resize</strong> — controlado via classe .nds-* (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), não prop CSS direta.",
       "item4": "<strong>Contador acessível</strong> — sempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> com \"X de Y caracteres usados\" para leitores de tela."
     },
     "analytics": {
@@ -377,8 +377,8 @@
     "seo": {
       "title": "Textarea — Form",
       "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.1 AA support.",
-      "aiSummary": "Textarea component for multi-line input, with field-sizing-content, Tailwind resize-y/none/full classes, character counter with aria-live and FormField integration.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiSummary": "Textarea component for multi-line input, with field-sizing-content, .nds-resize-y/.nds-resize-none/.nds-resize classes, character counter with aria-live and FormField integration.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.1, resize-y, aria-invalid, maxLength",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -399,7 +399,7 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Textarea</strong> — native <code>&lt;textarea&gt;</code> element with Tailwind classes and <code>data-slot=\"textarea\"</code>.",
+      "item1": "<strong>Textarea</strong> — native <code>&lt;textarea&gt;</code> element with .nds-* classes and <code>data-slot=\"textarea\"</code>.",
       "item2": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the textarea <code>id</code>.",
       "item3": "<strong>FormDescription</strong> — optional helper text describing the expected content.",
       "item4": "<strong>Character counter</strong> — adjacent text with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>, linked to <code>maxLength</code>.",
@@ -586,7 +586,7 @@
           "type": "number",
           "default": "—",
           "required": "No",
-          "description": "Initial height in lines. Prefer <code>min-h-[…]</code> via Tailwind."
+          "description": "Initial height in lines. Prefer minimum height via <code>.nds-min-h-*</code>."
         },
         "disabled": {
           "type": "boolean",
@@ -604,7 +604,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Tailwind classes. Use <code>resize-y</code>, <code>resize-none</code> or <code>resize</code>."
+          "description": ".nds-* classes. Use <code>.nds-resize-y</code>, <code>.nds-resize-none</code> or <code>.nds-resize</code>."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -670,9 +670,9 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Native element</strong> — uses HTML5 <code>&lt;textarea&gt;</code> with no upstream lib. Styled via Tailwind.",
+      "item1": "<strong>Native element</strong> — uses HTML5 <code>&lt;textarea&gt;</code> with no upstream lib. Styled via .nds-* classes.",
       "item2": "<strong>field-sizing-content</strong> — modern CSS property that auto-adjusts height to content. Combined with <code>min-h-[…]</code> to guarantee minimum height.",
-      "item3": "<strong>Resize</strong> — controlled via Tailwind class (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), not direct CSS prop.",
+      "item3": "<strong>Resize</strong> — controlled via .nds-* class (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), not direct CSS prop.",
       "item4": "<strong>Accessible counter</strong> — always <code>aria-live=\"polite\"</code> + <code>aria-label</code> with \"X of Y characters used\" for screen readers."
     },
     "analytics": {
@@ -747,8 +747,8 @@
     "seo": {
       "title": "Textarea — Formulario",
       "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.1 AA.",
-      "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases Tailwind resize-y/none/full, contador de caracteres con aria-live e integración con FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, resize-y, aria-invalid, maxLength",
+      "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres con aria-live e integración con FormField.",
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.1, resize-y, aria-invalid, maxLength",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -769,7 +769,7 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo con clases Tailwind y <code>data-slot=\"textarea\"</code>.",
+      "item1": "<strong>Textarea</strong> — elemento <code>&lt;textarea&gt;</code> nativo con clases .nds-* y <code>data-slot=\"textarea\"</code>.",
       "item2": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del textarea.",
       "item3": "<strong>FormDescription</strong> — texto auxiliar opcional que describe el contenido esperado.",
       "item4": "<strong>Contador de caracteres</strong> — texto adyacente con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo, vinculado a <code>maxLength</code>.",
@@ -956,7 +956,7 @@
           "type": "number",
           "default": "—",
           "required": "No",
-          "description": "Altura inicial en líneas. Prefiere <code>min-h-[…]</code> vía Tailwind."
+          "description": "Altura inicial en líneas. Prefiere altura mínima vía <code>.nds-min-h-*</code>."
         },
         "disabled": {
           "type": "boolean",
@@ -974,7 +974,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind. Usa <code>resize-y</code>, <code>resize-none</code> o <code>resize</code>."
+          "description": "Clases .nds-*. Usa <code>.nds-resize-y</code>, <code>.nds-resize-none</code> o <code>.nds-resize</code>."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -1040,9 +1040,9 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sin lib upstream. Estilizado vía Tailwind.",
+      "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sin lib upstream. Estilizado vía clases .nds-*.",
       "item2": "<strong>field-sizing-content</strong> — propiedad CSS moderna que ajusta la altura automáticamente al contenido. Combinada con <code>min-h-[…]</code> para garantizar altura mínima.",
-      "item3": "<strong>Resize</strong> — controlado vía clase Tailwind (<code>resize-y</code>, <code>resize-none</code>, <code>resize</code>), no prop CSS directa.",
+      "item3": "<strong>Resize</strong> — controlado vía clase .nds-* (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), no prop CSS directa.",
       "item4": "<strong>Contador accesible</strong> — siempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> con \"X de Y caracteres usados\" para lectores de pantalla."
     },
     "analytics": {

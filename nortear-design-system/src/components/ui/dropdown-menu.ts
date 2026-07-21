@@ -1,5 +1,5 @@
 // ─── DropdownMenu — Vanilla factory standalone ──────────────────────────────
-// Visual: classes .nds-dropdown-menu-* (zero Tailwind/basecoat-css).
+// Visual: classes .nds-dropdown-menu-* (standalone).
 // Render via portal, navegação por teclado (Arrow/Home/End/Esc/Tab).
 
 // ─── Types ────────────────────────────────────────────────────────────────────

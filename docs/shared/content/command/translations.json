@@ -8,7 +8,7 @@
       "title": "Command — Overlay",
       "description": "Documentação do Command: busca fuzzy integrada, padrões inline, combobox e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
       "aiSummary": "Componente Command com filtro fuzzy nativo, 3 padrões de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.1, Combobox, Command Palette",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -178,7 +178,7 @@
         "dialogTitle": "Título do Dialog (acessível via <code>sr-only</code>). Padrão: <code>\"Command Palette\"</code>.",
         "dialogDescription": "Descrição do Dialog (<code>sr-only</code>). Padrão: <code>\"Search for a command to run...\"</code>.",
         "dialogShowCloseButton": "Exibe o botão X de fechar no Dialog. Padrão: <code>false</code>.",
-        "className": "Classes Tailwind adicionais para customização.",
+        "className": "Classes .nds-* adicionais para customização.",
         "children": "Conteúdo interno do componente."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -188,7 +188,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "popoverBg": "Fundo do container Command",
         "popoverFg": "Texto padrão",
@@ -336,7 +336,7 @@
       "title": "Command — Overlay",
       "description": "Documentation for Command: built-in fuzzy search, inline, combobox, and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
       "aiSummary": "Command component with native fuzzy filtering, 3 usage patterns (inline, combobox, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.1, Combobox, Command Palette",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -506,7 +506,7 @@
         "dialogTitle": "Dialog title (accessible via <code>sr-only</code>). Default: <code>\"Command Palette\"</code>.",
         "dialogDescription": "Dialog description (<code>sr-only</code>). Default: <code>\"Search for a command to run...\"</code>.",
         "dialogShowCloseButton": "Shows the X close button in the Dialog. Default: <code>false</code>.",
-        "className": "Additional Tailwind classes for customization.",
+        "className": "Additional .nds-* classes for customization.",
         "children": "Inner content of the component."
       },
       "extensibilityTitle": "Extensibility",
@@ -516,7 +516,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "popoverBg": "Command container background",
         "popoverFg": "Default text color",
@@ -664,7 +664,7 @@
       "title": "Command — Overlay",
       "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline, combobox y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
       "aiSummary": "Componente Command con filtro fuzzy nativo, 3 patrones de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, Combobox, Command Palette",
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.1, Combobox, Command Palette",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -834,7 +834,7 @@
         "dialogTitle": "Título del Dialog (accesible vía <code>sr-only</code>). Por defecto: <code>\"Command Palette\"</code>.",
         "dialogDescription": "Descripción del Dialog (<code>sr-only</code>). Por defecto: <code>\"Search for a command to run...\"</code>.",
         "dialogShowCloseButton": "Muestra el botón X de cerrar en el Dialog. Por defecto: <code>false</code>.",
-        "className": "Clases Tailwind adicionales para personalización.",
+        "className": "Clases .nds-* adicionales para personalización.",
         "children": "Contenido interno del componente."
       },
       "extensibilityTitle": "Extensibilidad",
@@ -844,7 +844,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "popoverBg": "Fondo del contenedor Command",
         "popoverFg": "Color de texto predeterminado",

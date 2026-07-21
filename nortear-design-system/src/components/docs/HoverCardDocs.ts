@@ -237,7 +237,6 @@ export function createHoverCardDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add hover-card',
     });
     headerSlot.replaceChildren(header);
   }

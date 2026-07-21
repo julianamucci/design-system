@@ -144,7 +144,7 @@ const codeCustomization = `<!-- Personalização via class -->
 const interfaceCode = `// Label (Vue)
 interface LabelProps {
   for?: string;       // htmlFor no HTML nativo — associa ao campo pelo id
-  class?: string;     // Classes Tailwind adicionais
+  class?: string;     // Classes utilitárias .nds-* adicionais
   // Aceita todos os atributos HTML nativos do elemento <label>
 }`;
 
@@ -283,7 +283,6 @@ const visualTestItems = computed(() => [
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add label"
       />
     </template>
 

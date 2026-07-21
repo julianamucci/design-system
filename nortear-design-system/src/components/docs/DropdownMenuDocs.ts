@@ -140,7 +140,6 @@ export function createDropdownMenuDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add dropdown-menu',
     });
     headerSlot.replaceChildren(header);
   }

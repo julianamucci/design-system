@@ -31,7 +31,7 @@ const meta = {
     },
     class: {
       control: { type: 'text' },
-      description: 'Classes Tailwind adicionais (ex: [&>div]:bg-success).',
+      description: 'Classes utilitárias .nds-* adicionais (ex: [&>div]:bg-success).',
     },
   },
   args: {

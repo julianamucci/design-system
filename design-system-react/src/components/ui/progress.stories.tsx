@@ -30,7 +30,7 @@ const meta = {
     className: {
       control: { type: "text" },
       description:
-        "Classes Tailwind adicionais. Use [&>div]:bg-* para customizar a cor do indicador.",
+        "Classes utilitárias .nds-* adicionais. Use [&>div]:bg-* para customizar a cor do indicador.",
     },
   },
   args: {

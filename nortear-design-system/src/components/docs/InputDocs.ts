@@ -156,7 +156,6 @@ export function createInputDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add input',
     });
     headerSlot.replaceChildren(header);
   }

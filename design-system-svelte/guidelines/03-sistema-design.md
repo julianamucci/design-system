@@ -9,7 +9,7 @@
 
 ## Cores e Variáveis
 
-### Formato Obrigatório: HSL (shadcn-svelte Standard)
+### Formato Obrigatório: HSL
 
 **REGRA CRÍTICA**: Todos os valores de cores nos arquivos CSS devem ser armazenados **EXCLUSIVAMENTE no formato HSL sem vírgulas**.
 
@@ -50,7 +50,7 @@
 
 ## Tokens de superfície — uso obrigatório
 
-| Contexto | Classes Tailwind |
+| Contexto | Classes utilitárias |
 |----------|-----------------|
 | Painéis de conteúdo (Dialog, Sheet, Drawer, Card) | `bg-card text-card-foreground` |
 | Menus e overlays flutuantes (Dropdown, Popover, Tooltip) | `bg-popover text-popover-foreground` |
@@ -75,7 +75,7 @@ Aplicar via `class` — nunca via prop inexistente:
 
 * **Tamanhos disponíveis**: `--text-h1`, `--text-h2`, `--text-h3`, `--text-h4`, `--text-p`, `--text-label`
 * **Pesos disponíveis**: `--font-weight-extra-bold` (800), `--font-weight-semi-bold` (600), `--font-weight-medium` (500), `--font-weight-regular` (400)
-* **Elementos HTML** (h1, h2, p, etc.) já têm estilos base aplicados — não sobrescrever com Tailwind
+* **Elementos HTML** (h1, h2, p, etc.) já têm estilos base aplicados — não sobrescrever com classes utilitárias
 
 ## Famílias de Fonte
 

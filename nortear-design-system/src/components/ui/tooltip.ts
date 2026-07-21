@@ -1,6 +1,6 @@
 // ─── Tooltip — Vanilla factory standalone ───────────────────────────────────
 //
-// Visual: classe .nds-tooltip-content (zero Tailwind/basecoat-css).
+// Visual: classe .nds-tooltip-content (standalone).
 // Render via portal (body) com posicionamento absoluto via JS.
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';

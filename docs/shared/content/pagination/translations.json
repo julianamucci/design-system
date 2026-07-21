@@ -8,7 +8,7 @@
       "title": "Pagination — Navegação",
       "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.1 AA.",
       "aiSummary": "Componente Pagination com subcomponentes Previous, Next, Link, Ellipsis e Item, navegação acessível por teclado e aria-current na página ativa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -198,7 +198,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind adicionais para customização visual."
+          "description": "Classes .nds-* adicionais para customização visual."
         },
         "children": {
           "type": "ReactNode",
@@ -346,7 +346,7 @@
       "title": "Pagination — Navigation",
       "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.1 AA support.",
       "aiSummary": "Pagination component with Previous, Next, Link, Ellipsis and Item subcomponents, accessible keyboard navigation and aria-current on active page.",
-      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -536,7 +536,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional Tailwind classes for visual customization."
+          "description": "Additional .nds-* classes for visual customization."
         },
         "children": {
           "type": "ReactNode",
@@ -684,7 +684,7 @@
       "title": "Pagination — Navegación",
       "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.1 AA.",
       "aiSummary": "Componente Pagination con subcomponentes Previous, Next, Link, Ellipsis e Item, navegación accesible por teclado y aria-current en la página activa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -874,7 +874,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind adicionales para personalización visual."
+          "description": "Clases .nds-* adicionales para personalización visual."
         },
         "children": {
           "type": "ReactNode",

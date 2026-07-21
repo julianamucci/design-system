@@ -8,7 +8,7 @@
       "title": "RadioGroup — Formulário",
       "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.1 AA.",
       "aiSummary": "Componente RadioGroup com seleção única mutuamente exclusiva, navegação por setas, Label associado e role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -214,7 +214,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind adicionais."
+          "description": "Classes .nds-* adicionais."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -234,7 +234,7 @@
         "foreground": { "class": "text-foreground", "part": "Cor do Label associado" }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via Tailwind */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  @apply bg-blue-600 border-blue-600;\n}"
+      "customizationCode": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -358,7 +358,7 @@
       "title": "RadioGroup — Form",
       "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.1 AA accessibility.",
       "aiSummary": "RadioGroup component with single mutually exclusive selection, arrow navigation, associated Label and automatic role=\"radiogroup\".",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -564,7 +564,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional Tailwind classes."
+          "description": "Additional .nds-* classes."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -584,7 +584,7 @@
         "foreground": { "class": "text-foreground", "part": "Associated Label color" }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via Tailwind */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  @apply bg-blue-600 border-blue-600;\n}"
+      "customizationCode": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -708,7 +708,7 @@
       "title": "RadioGroup — Formulario",
       "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.1 AA.",
       "aiSummary": "Componente RadioGroup con selección única mutuamente excluyente, navegación por flechas, Label asociado y role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -914,7 +914,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind adicionales."
+          "description": "Clases .nds-* adicionales."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -934,7 +934,7 @@
         "foreground": { "class": "text-foreground", "part": "Color del Label asociado" }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía Tailwind */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  @apply bg-blue-600 border-blue-600;\n}"
+      "customizationCode": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

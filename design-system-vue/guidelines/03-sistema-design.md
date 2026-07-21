@@ -8,7 +8,7 @@
 
 ## Cores e Variáveis
 
-### Formato Obrigatório: HSL (Shadcn/UI Standard)
+### Formato Obrigatório: HSL
 
 **REGRA CRÍTICA**: Todos os valores de cores nos arquivos CSS devem ser armazenados **EXCLUSIVAMENTE no formato HSL**.
 
@@ -46,9 +46,9 @@
 
 #### Justificativa Técnica
 
-1. **Compatibilidade Tailwind v4**: Tailwind espera valores HSL para gerar classes utilitárias corretamente
-2. **Consistência com Shadcn/UI**: O padrão oficial do Shadcn/UI é HSL
-3. **Facilidade de manipulação**: HSL permite ajustes de opacidade via Tailwind (`bg-primary/50`)
+1. **Composição de opacidade**: HSL sem vírgulas permite compor opacidade diretamente no CSS (`hsl(var(--primary) / 0.5)`)
+2. **Consistência do design system**: HSL é o formato padrão dos tokens do design system
+3. **Facilidade de manipulação**: HSL permite ajustar luminosidade e saturação sem recalcular o valor
 4. **Sintaxe moderna**: HSL sem vírgulas (`220 44% 57%`) é o padrão CSS moderno
 
 #### Aplicação em Inline Styles

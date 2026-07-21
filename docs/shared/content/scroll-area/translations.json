@@ -8,7 +8,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentação do ScrollArea: viewport com scroll customizado, ScrollBar estilizada e acessibilidade por teclado.",
       "aiSummary": "Componente ScrollArea com viewport, ScrollBar e Thumb estilizados, suporte a scroll vertical/horizontal/both e fallback para scroll nativo em mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -166,7 +166,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes Tailwind adicionais. Aplicadas ao root <code>relative</code>."
+          "description": "Classes .nds-* adicionais. Aplicadas ao root <code>relative</code>."
         },
         "children": {
           "type": "ReactNode",
@@ -317,7 +317,7 @@
       "title": "ScrollArea — Layout",
       "description": "ScrollArea documentation: viewport with custom scroll, styled ScrollBar and keyboard accessibility.",
       "aiSummary": "ScrollArea component with viewport, styled ScrollBar and Thumb, vertical/horizontal/both support and native scroll fallback on mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -475,7 +475,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional Tailwind classes. Applied to <code>relative</code> root."
+          "description": "Additional .nds-* classes. Applied to <code>relative</code> root."
         },
         "children": {
           "type": "ReactNode",
@@ -626,7 +626,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentación de ScrollArea: viewport con scroll personalizado, ScrollBar estilizada y accesibilidad por teclado.",
       "aiSummary": "Componente ScrollArea con viewport, ScrollBar y Thumb estilizados, soporte vertical/horizontal/ambos y fallback a scroll nativo en móvil.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Shadcn/UI, base-ui, reka-ui, bits-ui, Tailwind CSS, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -784,7 +784,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases Tailwind adicionales. Se aplican al root <code>relative</code>."
+          "description": "Clases .nds-* adicionales. Se aplican al root <code>relative</code>."
         },
         "children": {
           "type": "ReactNode",

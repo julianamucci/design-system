@@ -8,7 +8,7 @@
       "title": "Input — Formulário",
       "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
       "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.1, aria-invalid, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -193,7 +193,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "type_prop": "Tipo HTML do input. Use sempre o tipo semântico correto.",
-        "className": "Classes Tailwind adicionais para customização pontual.",
+        "className": "Classes .nds-* adicionais para customização pontual.",
         "placeholder": "Texto de exemplo do formato esperado — nunca instrução.",
         "disabled": "Desabilita o campo. Aplica estilos e remove interatividade.",
         "ariaInvalid": "Estado de erro. Aplicado automaticamente pelo <code>FormControl</code> dentro de <code>FormField</code>.",
@@ -207,7 +207,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "height": "Altura do campo via token de densidade",
         "radius": "Border radius via token de tema",
@@ -360,7 +360,7 @@
       "title": "Input — Form",
       "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
       "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.1, aria-invalid, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -545,7 +545,7 @@
         "required": "Required",
         "description": "Description",
         "type_prop": "HTML input type. Always use the correct semantic type.",
-        "className": "Additional Tailwind classes for custom styling.",
+        "className": "Additional .nds-* classes for custom styling.",
         "placeholder": "Example text showing the expected format — never an instruction.",
         "disabled": "Disables the field. Applies styles and removes interactivity.",
         "ariaInvalid": "Error state. Applied automatically by <code>FormControl</code> inside <code>FormField</code>.",
@@ -559,7 +559,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "height": "Field height via density token",
         "radius": "Border radius via theme token",
@@ -712,7 +712,7 @@
       "title": "Input — Formulario",
       "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
       "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, Tailwind CSS, WCAG 2.1, aria-invalid, FormField",
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.1, aria-invalid, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -897,7 +897,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "type_prop": "Tipo HTML del input. Usa siempre el tipo semántico correcto.",
-        "className": "Clases Tailwind adicionales para personalización puntual.",
+        "className": "Clases .nds-* adicionales para personalización puntual.",
         "placeholder": "Texto de ejemplo del formato esperado — nunca una instrucción.",
         "disabled": "Deshabilita el campo. Aplica estilos y elimina la interactividad.",
         "ariaInvalid": "Estado de error. Aplicado automáticamente por <code>FormControl</code> dentro de <code>FormField</code>.",
@@ -911,7 +911,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "height": "Altura del campo vía token de densidad",
         "radius": "Border radius vía token de tema",

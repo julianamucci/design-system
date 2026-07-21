@@ -15,7 +15,7 @@
 	data-slot={dataSlot}
 	class={cn(
 		"nds-separator",
-		// this is different in shadcn/ui but self-stretch breaks things for us
+		// self-stretch breaks things for us, então usamos largura/altura explícitas
 		"",
 		className
 	)}

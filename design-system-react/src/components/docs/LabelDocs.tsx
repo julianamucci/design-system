@@ -139,7 +139,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add label"
         />
       }
     >

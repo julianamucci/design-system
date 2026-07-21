@@ -8,7 +8,7 @@
       "title": "Carousel — Display",
       "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
       "aiSummary": "Componente Carousel baseado em Embla com orientação horizontal/vertical, navegação por teclado, suporte a autoplay via plugin, dots customizados via CarouselApi e role=\"region\" com aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -200,7 +200,7 @@
         "plugins": "Array de plugins do Embla (ex: <code>Autoplay()</code>).",
         "orientation": "Direção do deslize: <code>\"horizontal\"</code> (padrão) ou <code>\"vertical\"</code>.",
         "setApi": "Callback que recebe a <code>CarouselApi</code> — use para dots, contadores e sincronização externa.",
-        "className": "Classes Tailwind adicionais aplicadas ao container ou subcomponente.",
+        "className": "Classes .nds-* adicionais aplicadas ao container ou subcomponente.",
         "children": "Conteúdo do componente (slides, botões, legendas).",
         "variant": "Variante do Button subjacente — padrão <code>\"outline\"</code>.",
         "size": "Tamanho do Button subjacente — padrão <code>\"icon-sm\"</code>."
@@ -212,7 +212,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe Tailwind",
+        "class": "Classe .nds-*",
         "part": "Parte do componente",
         "background": "Fundo do Button de navegação (variante outline)",
         "foreground": "Texto e ícone do Button de navegação",
@@ -354,7 +354,7 @@
       "title": "Carousel — Display",
       "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
       "aiSummary": "Embla-based Carousel component with horizontal/vertical orientation, keyboard navigation, autoplay via plugin, custom dots via CarouselApi, and role=\"region\" with aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -546,7 +546,7 @@
         "plugins": "Array of Embla plugins (e.g., <code>Autoplay()</code>).",
         "orientation": "Slide direction: <code>\"horizontal\"</code> (default) or <code>\"vertical\"</code>.",
         "setApi": "Callback that receives <code>CarouselApi</code> — use for dots, counters, and external sync.",
-        "className": "Additional Tailwind classes applied to the container or subcomponent.",
+        "className": "Additional .nds-* classes applied to the container or subcomponent.",
         "children": "Component content (slides, buttons, captions).",
         "variant": "Underlying Button variant — defaults to <code>\"outline\"</code>.",
         "size": "Underlying Button size — defaults to <code>\"icon-sm\"</code>."
@@ -558,7 +558,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": "Tailwind Class",
+        "class": ".nds-* Class",
         "part": "Component Part",
         "background": "Navigation Button background (outline variant)",
         "foreground": "Navigation Button text and icon",
@@ -700,7 +700,7 @@
       "title": "Carousel — Display",
       "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
       "aiSummary": "Componente Carousel basado en Embla con orientación horizontal/vertical, navegación por teclado, soporte a autoplay vía plugin, dots customizados vía CarouselApi y role=\"region\" con aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -892,7 +892,7 @@
         "plugins": "Array de plugins de Embla (ej: <code>Autoplay()</code>).",
         "orientation": "Dirección del deslizamiento: <code>\"horizontal\"</code> (predeterminado) o <code>\"vertical\"</code>.",
         "setApi": "Callback que recibe la <code>CarouselApi</code> — úsalo para dots, contadores y sincronización externa.",
-        "className": "Clases Tailwind adicionales aplicadas al contenedor o subcomponente.",
+        "className": "Clases .nds-* adicionales aplicadas al contenedor o subcomponente.",
         "children": "Contenido del componente (slides, botones, subtítulos).",
         "variant": "Variante del Button subyacente — por defecto <code>\"outline\"</code>.",
         "size": "Tamaño del Button subyacente — por defecto <code>\"icon-sm\"</code>."
@@ -904,7 +904,7 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase Tailwind",
+        "class": "Clase .nds-*",
         "part": "Parte del componente",
         "background": "Fondo del Button de navegación (variante outline)",
         "foreground": "Texto e ícono del Button de navegación",

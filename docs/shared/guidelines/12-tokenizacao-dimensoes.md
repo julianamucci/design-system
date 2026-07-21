@@ -4,24 +4,24 @@ Regra obrigatória para **todos os componentes UI, docs pages, stories e contain
 
 ## Princípio
 
-O design system suporta 7 temas (Nova, Vega, Maia, Lyra, Mira, Luma, Sera) inspirados nos styles do shadcn. Cada tema altera **dimensões** (altura, padding, radius, shadows, font-weight) via CSS custom properties. Componentes que **hardcodam** classes Tailwind como `h-8`, `size-10`, `rounded-lg`, `shadow-md` visualmente **não respeitam o tema ativo** — ficam com densidade "Nova" mesmo quando o usuário seleciona Vega/Lyra/etc.
+O design system suporta 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Cada tema altera **dimensões** (altura, padding, radius, shadows, font-weight) via CSS custom properties. Componentes que **hardcodam** dimensões fixas — um valor em pixels ou uma classe utilitária de tamanho fixo como `.nds-size-10` — visualmente **não respeitam o tema ativo**: ficam com densidade "Nova" mesmo quando o usuário seleciona Vega/Lyra/etc.
 
-**Basecoat é exceção** — usa o pacote `basecoat-css` (classes `.btn`, `.input`, etc.) que não são tokenizáveis sem fork do pacote. Regras abaixo se aplicam a React/Vue/Svelte.
+**Vanilla é exceção** — usa o pacote `basecoat-css` (classes `.btn`, `.input`, etc.) que não são tokenizáveis sem fork do pacote. Regras abaixo se aplicam a React/Vue/Svelte.
 
 ## Tokens disponíveis
 
-Definidos em [`docs/shared/tokens/tokens.css`](../tokens/tokens.css) e expostos ao Tailwind v4 via `@theme inline` em cada `globals.css`.
+Definidos em [`docs/shared/tokens/tokens.css`](../tokens/tokens.css) e consumidos pelo CSS standalone `.nds-*` via `var()`.
 
 ### Alturas de interativos
 
 | Token | Default | Para que serve |
 |-------|---------|----------------|
-| `--height-badge` | 20px (`h-5`) | Badge, tags compactos |
-| `--height-xs` | 24px (`h-6`) | Button size=xs, icon-xs |
-| `--height-sm` | 28px (`h-7`) | Button/Select/Toggle size=sm |
-| `--height-default` | 32px (`h-8`) | Button/Input/Select/Toggle/Textarea default |
-| `--height-lg` | 36px (`h-9`) | Button/Toggle size=lg |
-| `--height-xl` | 40px (`h-10`) | Alturas folgadas |
+| `--height-badge` | 20px | Badge, tags compactos |
+| `--height-xs` | 24px | Button size=xs, icon-xs |
+| `--height-sm` | 28px | Button/Select/Toggle size=sm |
+| `--height-default` | 32px | Button/Input/Select/Toggle/Textarea default |
+| `--height-lg` | 36px | Button/Toggle size=lg |
+| `--height-xl` | 40px | Alturas folgadas |
 
 ### Sizes de ícones / componentes quadrados
 
@@ -35,54 +35,55 @@ Definidos em [`docs/shared/tokens/tokens.css`](../tokens/tokens.css) e expostos 
 
 ### Radius, shadows, fonts — já tokenizados
 
-- `rounded-sm/md/lg/xl` → derivados de `--radius`, `--radius-button`, `--radius-card`
-- `shadow-sm/md/lg/xl` → derivados de `--elevation-*`
-- `font-medium/semibold/bold` → derivados de `--font-weight-*`
+- `.nds-rounded-sm/md/lg` → derivados de `--radius`, `--radius-button`, `--radius-card`
+- `.nds-shadow-sm/md/lg` → derivados de `--elevation-*`
+- `.nds-font-medium/semibold/bold` → derivados de `--font-weight-*`
 
-Use essas classes Tailwind normalmente — **elas já seguem o tema**.
+Use esses utilitários `.nds-*` normalmente — **eles já seguem o tema**.
 
 ## Como usar os tokens
 
-Tailwind v4.1+ suporta arbitrary values a partir de custom properties com o shortcut `(--var)`:
+As dimensões são aplicadas no CSS `.nds-*` do componente via `var()`, lendo o token — nunca cravando um valor fixo:
 
 ### ✅ CORRETO
 
-```tsx
-// Button
-<button className="h-(--height-default) px-2.5 rounded-lg">
+```css
+/* Button */
+.nds-button {
+  block-size: var(--height-default);
+  padding-inline: var(--spacing-2);
+  border-radius: var(--radius-button);
+}
 
-// Icon-only button
-<button className="size-(--size-default) rounded-lg">
+/* Icon-only button */
+.nds-button[data-shape="icon"] { inline-size: var(--size-default); }
 
-// Input
-<input className="h-(--height-default) rounded-lg" />
+/* Input */
+.nds-input { block-size: var(--height-default); }
 
-// Badge
-<span className="h-(--height-badge) rounded-4xl">
+/* Select trigger com size variants */
+.nds-select-trigger[data-size="default"] { block-size: var(--height-default); }
+.nds-select-trigger[data-size="sm"]      { block-size: var(--height-sm); }
 
-// Select trigger com size variants
-<trigger className="data-[size=default]:h-(--height-default) data-[size=sm]:h-(--height-sm)">
-
-// Toggle com min-width acompanhando altura
-<button className="h-(--height-default) min-w-(--height-default)">
+/* Toggle com min-width acompanhando altura */
+.nds-toggle { block-size: var(--height-default); min-inline-size: var(--height-default); }
 ```
 
 ### ❌ ERRADO
 
-```tsx
-// Hardcoded — não respeita temas
-<button className="h-8 rounded-lg">
-<button className="size-10">
-<input className="h-9" />
-<span className="h-5">
+```css
+/* Hardcoded — não respeita temas */
+.nds-button { block-size: 32px; }
+.nds-input  { height: 36px; }
+.nds-badge  { height: 20px; }
 ```
 
 ## Quando usar hardcoded é aceitável
 
-- **Spacing interno não-dimensional**: `px-2.5`, `py-1`, `gap-1.5` são paddings e gaps consistentes entre temas. Não precisam tokenizar (seria sobre-engenharia).
-- **Tamanhos de SVG inline em ícones decorativos**: `[&_svg]:size-4` dentro de botões está OK (ícones pequenos não escalam com a densidade do container).
-- **`min-h-16` em Textarea**: altura mínima funcional, não é densidade de tema.
-- **Containers de docs pages**: paddings internos do documento (`p-6`, `gap-4`, etc.) são layout de conteúdo estático, não variam com tema.
+- **Spacing interno não-dimensional**: paddings e gaps consistentes entre temas (ex.: `padding-inline: var(--spacing-2)`, `gap: var(--spacing-1)`). Não precisam de token de dimensão de tema.
+- **Tamanhos de SVG inline em ícones decorativos**: um ícone fixo de 16px (`.nds-icon-sm`) dentro de botões está OK (ícones pequenos não escalam com a densidade do container).
+- **Altura mínima de Textarea**: `min-block-size` funcional, não é densidade de tema.
+- **Containers de docs pages**: paddings internos do documento (`.nds-p-6`, `.nds-stack` com `data-spacing`) são layout de conteúdo estático, não variam com tema.
 - **Elementos ilustrativos em docs pages**: screenshots, exemplos visuais inline que estão lá apenas para ilustrar — estes podem usar classes literais porque representam um "momento" do design, não o componente ativo.
 
 Dúvida-chave para decidir: **"Se o usuário trocar de tema, essa medida precisaria mudar?"**
@@ -112,10 +113,10 @@ Stories que renderizam HTML inline (sem usar o componente `Button`/`Input` diret
 
 ```tsx
 // ❌ Hardcoded
-render: () => <div className="h-8 px-4 rounded-lg border">demo</div>
+render: () => <div style={{ height: 32 }} className="nds-p-4 nds-rounded-lg nds-border-default">demo</div>
 
 // ✅ Tokenizado
-render: () => <div className="h-(--height-default) px-4 rounded-lg border">demo</div>
+render: () => <div style={{ blockSize: 'var(--height-default)' }} className="nds-p-4 nds-rounded-lg nds-border-default">demo</div>
 ```
 
 **Exceção**: stories cujo propósito é ilustrar um tamanho específico (ex: `AsAvatar24px` num `-tamanhos.stories`) podem usar o valor literal.
@@ -126,12 +127,12 @@ Containers e blocos de demonstração dentro das docs pages devem respeitar o te
 
 ```tsx
 // ❌ Hardcoded
-<div className="h-10 rounded-lg border">
+<div style={{ height: 40 }} className="nds-rounded-lg nds-border-default">
   <Button>Demo</Button>
 </div>
 
 // ✅ Tokenizado (ou sem altura fixa se o conteúdo dita)
-<div className="rounded-lg border p-4">
+<div className="nds-rounded-lg nds-border-default nds-p-4">
   <Button>Demo</Button>
 </div>
 ```
@@ -145,14 +146,14 @@ Os 15 containers genéricos de seção (DocsHeader, DocsDemonstration, etc.) **n
 Para auditar um componente rapidamente:
 
 ```bash
-# Encontrar dimensões hardcoded em componentes UI
-grep -E "\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b" design-system-react/src/components/ui/*.tsx
-grep -E "\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b" design-system-vue/src/components/ui/**/*.{vue,ts}
-grep -E "\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b" design-system-svelte/src/components/ui/**/*.svelte
+# Encontrar dimensões hardcoded no CSS .nds-* dos componentes.
+# Procura height/block-size/inline-size/size com valor literal em px
+# (deveria ser var(--height-*) / var(--size-*)).
+grep -niE "(block-size|inline-size|height|width)\s*:\s*[0-9]+px" docs/shared/styles/nds/*.css
 
-# Em stories e docs pages
-grep -E "\bh-(5|6|7|8|9|10)\b" design-system-*/src/components/docs/*Docs.*
-grep -E "\bh-(5|6|7|8|9|10)\b" design-system-*/src/components/ui/*.stories.*
+# Alturas fixas cravadas via inline style em stories e docs pages
+grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" design-system-*/src/components/docs/*Docs.*
+grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" design-system-*/src/components/ui/*.stories.*
 ```
 
 Se algum match aparecer fora dos casos aceitáveis acima, tokenize.
@@ -167,4 +168,4 @@ Se algum match aparecer fora dos casos aceitáveis acima, tokenize.
 
 ## Histórico
 
-- **2026-04-21**: tokens de dimensão introduzidos junto com os 7 temas shadcn (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Patches aplicados em Button, Input, Select, Toggle, Badge. Registrado em [PATCHES.md](../../../PATCHES.md#button-dimension-tokens).
+- **2026-04-21**: tokens de dimensão introduzidos junto com os 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Patches aplicados em Button, Input, Select, Toggle, Badge. Registrado em [PATCHES.md](../../../PATCHES.md#button-dimension-tokens).

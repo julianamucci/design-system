@@ -8,7 +8,7 @@
       "title": "Resizable — Layout",
       "description": "Documentação do Resizable: PanelGroup, Panel e Handle com redimensionamento por arrasto, teclado e suporte WCAG 2.2.",
       "aiSummary": "Componente Resizable com ResizablePanelGroup, ResizablePanel e ResizableHandle, redimensionamento via arrasto e teclado, suporte a layouts horizontal/vertical e aninhados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -335,7 +335,7 @@
       "title": "Resizable — Layout",
       "description": "Resizable documentation: PanelGroup, Panel and Handle with drag and keyboard resizing, WCAG 2.2 support.",
       "aiSummary": "Resizable component with ResizablePanelGroup, ResizablePanel and ResizableHandle, drag and keyboard resizing, horizontal/vertical and nested layouts.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -662,7 +662,7 @@
       "title": "Resizable — Layout",
       "description": "Documentación de Resizable: PanelGroup, Panel y Handle con redimensionamiento por arrastre y teclado, soporte WCAG 2.2.",
       "aiSummary": "Componente Resizable con ResizablePanelGroup, ResizablePanel y ResizableHandle, redimensionamiento por arrastre y teclado, layouts horizontal/vertical y anidados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, Shadcn/UI, Tailwind CSS, WCAG 2.2",
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {

@@ -329,7 +329,6 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           description={tContent("description")}
           category={tContent("category")}
           type={tContent("type")}
-          installNote="npx shadcn@latest add table"
         />
       }
     >

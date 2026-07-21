@@ -15,13 +15,13 @@ Antes de considerar uma docs page completa, os seguintes itens **devem** estar p
 | `translations.json` em `@shared/content/{slug}/` | obrigatório | obrigatório | obrigatório | obrigatório |
 | SEO reativo ao locale | `useSeoEffect({...locale})` | `useSeoEffect(computed(...))` | `$effect(() => applySeo({...$locale}))` | `subscribe(() => applySeo(...))` |
 | Analytics `docs_page_view` | `useEffect(() => track(...), [locale])` | `track(...)` on mount | `$effect(() => track(...))` | `subscribe(() => track(...))` |
-| Nav lateral sticky (`<nav class="sticky top-8 w-52 shrink-0 self-start">`) | `<nav>` wrapper | `<nav>` wrapper | `<nav>` inline | `sidebar.className = 'sticky top-8...'` |
-| Layout duas colunas (`flex gap-16 items-start`) | obrigatório | obrigatório | obrigatório | obrigatório |
-| **`min-w-0` no conteúdo principal** (`flex-1 min-w-0 space-y-12`) | obrigatório | obrigatório | obrigatório | obrigatório |
-| Dark mode via Tailwind `dark:` | sim | sim | sim | sim |
-| Componentes da própria biblioteca | `Badge`, `Input`, etc. | idem | badges inline (sem componentes Svelte externos no bridge) | DOM manual com classes Tailwind |
-| `list-none p-0 m-0` em `<ul>` + `list-none` em `<li>` | obrigatório | obrigatório | obrigatório | obrigatório |
-| Blocos de código: `<div><code>`, **nunca** `<pre><code>` | `<div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto"><code className="whitespace-pre">` | idem (sem `className`) | idem (sem `className`) | idem (template string) |
+| Nav lateral sticky (`<nav class="nds-docs-nav">`) | `<nav>` wrapper | `<nav>` wrapper | `<nav>` inline | `sidebar.className = 'nds-docs-nav'` |
+| Layout duas colunas (`.nds-docs-layout` / cluster com `items-start`) | obrigatório | obrigatório | obrigatório | obrigatório |
+| **`min-w-0` no conteúdo principal** (`nds-flex-1 nds-min-w-0` + `nds-stack`) | obrigatório | obrigatório | obrigatório | obrigatório |
+| Dark mode via classe de tema no `<html>` | sim | sim | sim | sim |
+| Componentes da própria biblioteca | `Badge`, `Input`, etc. | idem | badges inline (sem componentes Svelte externos no bridge) | DOM manual com classes `.nds-*` |
+| `nds-list-none nds-p-0 nds-m-0` em `<ul>` + `nds-list-none` em `<li>` | obrigatório | obrigatório | obrigatório | obrigatório |
+| Blocos de código: `<div><code>`, **nunca** `<pre><code>` | `<div className="nds-code-block"><code className="nds-whitespace-pre">` | idem (sem `className`) | idem (sem `className`) | idem (template string) |
 
 ### MCP (Model Context Protocol)
 
@@ -140,14 +140,14 @@ Dentro do bridge `useEffect`, o DOM node criado pelo `ref` existe fora do contex
 - Bordas ou backgrounds ausentes em elementos internos
 
 ### Regra
-Em elementos que precisam de contraste **garantido** (tooltips, badges de feedback, overlays), use cores Tailwind explícitas em vez de variáveis semânticas:
+Em elementos que precisam de contraste **garantido** (tooltips, badges de feedback, overlays), use cores explícitas (valor literal) em vez de variáveis semânticas:
 
 ```tsx
 // ❌ Depende de CSS var — pode falhar no bridge
-className="bg-foreground text-background"
+className="nds-bg-foreground nds-text-background"
 
 // ✅ Explícito — funciona em qualquer contexto
-className="bg-neutral-900 text-white"
+style={{ background: '#171717', color: '#ffffff' }}
 ```
 
 Para o restante do componente (fundo de card, bordas, texto de conteúdo), as variáveis semânticas geralmente funcionam porque o Storybook injeta o tema globalmente.
@@ -250,19 +250,19 @@ Aplica-se a todas as stacks: React, Vue, Svelte e Basecoat.
 
 ## 4. `<ul>` / `<li>` exigem reset explícito
 
-O Storybook não injeta o preflight do Tailwind no contexto de bridge (e alguns stacks não têm preflight de forma alguma). Sem reset, `<ul>` renderiza com `list-style: disc` e margin/padding padrão do browser, quebrando grids de ícones e listas de itens.
+O CSS `.nds-*` não aplica um reset global de lista no contexto de bridge (e alguns stacks não têm reset de forma alguma). Sem reset, `<ul>` renderiza com `list-style: disc` e margin/padding padrão do browser, quebrando grids de ícones e listas de itens.
 
 ### Regra obrigatória em qualquer docs page
 
 ```html
 <!-- ❌ Sem reset — aparece com bullet points -->
-<ul class="grid gap-1">
+<ul class="nds-grid" data-spacing="xs">
   <li>...</li>
 </ul>
 
 <!-- ✅ Reset explícito -->
-<ul class="grid gap-1 list-none p-0 m-0">
-  <li class="list-none">...</li>
+<ul class="nds-grid nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
+  <li class="nds-list-none">...</li>
 </ul>
 ```
 
@@ -648,9 +648,9 @@ A tabela de tokens deve ter **5 colunas** e cobrir **todos os tokens CSS** usado
 
 | Coluna | Chave de tradução | Notas |
 |--------|------------------|-------|
-| Token CSS | `tokens.table.token` | `font-mono text-primary font-medium`, envolvido em `<code>` (herda `text-sm` do `<table>`) |
-| Classe Tailwind | `tokens.table.class` | `font-mono text-primary`, envolvido em `<code>` (herda `text-sm` do `<table>`) |
-| Parte do componente | `tokens.table.part` | `text-muted-foreground` (herda `text-sm` do `<table>`) |
+| Token CSS | `tokens.table.token` | `nds-font-mono nds-text-primary nds-font-medium`, envolvido em `<code>` (herda o tamanho do `<table>`) |
+| Classe `.nds-*` | `tokens.table.class` | `nds-font-mono nds-text-primary`, envolvido em `<code>` (herda o tamanho do `<table>`) |
+| Parte do componente | `tokens.table.part` | `nds-text-muted-foreground` (herda o tamanho do `<table>`) |
 
 > **Valores HSL não pertencem aqui.** Os valores por tema (light/dark HSL) serão documentados na seção de Temas do design system. A tabela de tokens da docs page de componente lista apenas quais tokens o componente **usa** e para qual parte visual.
 

@@ -1,6 +1,6 @@
 // ─── Textarea — Vanilla factory standalone ──────────────────────────────────
 //
-// Visual: classe .nds-textarea (zero Tailwind/basecoat-css).
+// Visual: classe .nds-textarea (standalone).
 
 export type TextareaOptions = {
   placeholder?: string;

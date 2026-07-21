@@ -484,7 +484,6 @@ const demoSlides = [1, 2, 3, 4, 5];
         :description="tContent('description')"
         :category="tContent('category')"
         :type="tContent('type')"
-        install-note="npx shadcn-vue@latest add carousel"
       />
     </template>
 

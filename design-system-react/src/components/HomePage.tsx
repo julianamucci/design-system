@@ -26,9 +26,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <span className="text-primary-foreground text-2xl font-bold">S</span>
             </div>
           </div>
-          <h1 className="text-5xl font-extrabold nds-tracking-tight">Documentação Shadcn/UI</h1>
+          <h1 className="text-5xl font-extrabold nds-tracking-tight">Documentação do Design System</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Biblioteca de componentes reutilizáveis construída com React e Tailwind CSS.
+            Biblioteca de componentes reutilizáveis construída com React e CSS standalone .nds-*.
             Copie e cole os componentes que precisar em seu projeto.
           </p>
           <div className="flex justify-center gap-4 pt-4">
@@ -45,7 +45,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
         <section className="space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-3xl font-semibold">Por que usar Shadcn/UI?</h2>
+            <h2 className="text-3xl font-semibold">Por que usar o Design System?</h2>
             <p className="text-muted-foreground">
               Uma biblioteca moderna e flexível para desenvolvimento rápido
             </p>

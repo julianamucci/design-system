@@ -117,7 +117,6 @@ export function createFormDocs(): HTMLElement {
       description: t('description'),
       category: t('category'),
       type: t('type'),
-      installNote: 'npx shadcn@latest add form',
     });
     headerSlot.replaceChildren(header);
   }

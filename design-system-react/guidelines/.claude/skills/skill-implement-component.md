@@ -1,6 +1,6 @@
 ---
 name: implement-component
-description: Implementa um componente ou feature usando Shadcn/UI, Tailwind CSS e React, seguindo as guidelines do projeto. Usar sempre que o usuário pedir para criar, construir, implementar, adicionar ou codar um componente — seja uma tela nova, um formulário, um card, um dialog, ou qualquer elemento de UI. Também usar para refatorar implementações existentes que não seguem o padrão do projeto.
+description: Implementa um componente ou feature usando @base-ui/react, CSS standalone `.nds-*` e React, seguindo as guidelines do projeto. Usar sempre que o usuário pedir para criar, construir, implementar, adicionar ou codar um componente — seja uma tela nova, um formulário, um card, um dialog, ou qualquer elemento de UI. Também usar para refatorar implementações existentes que não seguem o padrão do projeto.
 ---
 
 # Skill: Implement Component
@@ -18,7 +18,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 ## Checklist de implementação
 
 ### API e estrutura
-- [ ] Usar apenas props que existem na API do Shadcn
+- [ ] Usar apenas props que existem na API do `@base-ui/react`
 - [ ] Estrutura de subcomponentes correta (ex: `Accordion > AccordionItem > AccordionTrigger + AccordionContent`)
 - [ ] `asChild` nos triggers de: Dialog, Sheet, Drawer, AlertDialog, Collapsible, DropdownMenu, Popover, Tooltip, ContextMenu
 - [ ] `type="button"` em botões dentro de forms que não são submit
@@ -27,7 +27,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 - [ ] Cores em HSL — nunca rgba/hex/oklch
 - [ ] Superfícies: `bg-card` para painéis, `bg-popover` para overlays flutuantes
 - [ ] Variantes customizadas via `className` com tokens — não props inexistentes
-- [ ] Tamanho de fonte via CSS base — não classes Tailwind de tamanho (`text-2xl`, etc.)
+- [ ] Tamanho de fonte via CSS base / tokens `--text-*` — não classes utilitárias de tamanho
 - [ ] Espaçamento em múltiplos de 8px
 
 ### Formulários
@@ -47,7 +47,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 - [ ] `aria-live="polite"` em contadores e mensagens dinâmicas
 
 ### Alinhamento
-- [ ] Botão primário à direita — `flex justify-end` ou `ml-auto`
+- [ ] Botão primário à direita — `.nds-cluster` com `data-justify="end"` ou `.nds-spacer-start`
 - [ ] DOM na ordem visual — `flex-row-reverse` proibido
 
 ### Analytics
@@ -105,7 +105,7 @@ Implementa componentes e features seguindo as guidelines do projeto de design sy
 ## Output
 
 Arquivo `.tsx` completo com:
-- Imports corretos (Shadcn/UI + Lucide React)
+- Imports corretos (`@/components/ui/*` + Lucide React)
 - Tipagem TypeScript
 - Implementação funcional e acessível
 - Comentários apenas onde a lógica não é óbvia

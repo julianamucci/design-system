@@ -1,6 +1,6 @@
 // ─── Progress — Vanilla factory standalone ──────────────────────────────────
 //
-// Visual: classes .nds-progress + .nds-progress-indicator (zero Tailwind).
+// Visual: classes .nds-progress + .nds-progress-indicator (standalone).
 // Posição do indicador via CSS custom property `--value` (0–100).
 
 export interface ProgressOptions {
