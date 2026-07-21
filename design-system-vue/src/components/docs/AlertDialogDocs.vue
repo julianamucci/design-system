@@ -167,7 +167,7 @@ const codeDestructive = `<AlertDialog>
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <AlertDialogAction class="nds-bg-destructive">
         Excluir conta
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -260,7 +260,7 @@ const codeCompositionDestructive = `<AlertDialog>
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <AlertDialogAction class="nds-bg-destructive">
         Excluir conta
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -436,7 +436,7 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-center justify-center gap-4 w-full">
+      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
         <AlertDialog>
           <AlertDialogTrigger as-child>
             <Button variant="destructive">
@@ -450,7 +450,7 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{{ tContent('demonstration.labels.cancel') }}</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 {{ tContent('demonstration.labels.action') }}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -563,7 +563,7 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 Excluir
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -598,7 +598,7 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 Excluir
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -650,7 +650,7 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 Excluir
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -691,7 +691,7 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 Excluir conta
               </AlertDialogAction>
             </AlertDialogFooter>

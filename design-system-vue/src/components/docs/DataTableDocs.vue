@@ -381,7 +381,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ──────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full">
+      <div class="nds-w-full">
         <DataTable
           :columns="demoColumns"
           :data="demoData"

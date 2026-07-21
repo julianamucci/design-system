@@ -173,25 +173,25 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Badge>\n  <Check class="h-3 w-3" aria-hidden="true" />\n  Ativo\n</Badge>`,
+    code: `<Badge>\n  <Check class="nds-icon-sm" aria-hidden="true" />\n  Ativo\n</Badge>`,
   },
   {
     name: tContent('variants.compositions.count.name'),
     description: tContent('variants.compositions.count.description'),
     useWhen: tContent('variants.compositions.count.use'),
-    code: `<span role="status" aria-label="12 notificações não lidas" class="inline-flex items-center gap-2">\n  <Bell class="h-5 w-5" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+    code: `<span role="status" aria-label="12 notificações não lidas" class="nds-cluster" data-spacing="sm">\n  <Bell class="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
   },
   {
     name: tContent('variants.compositions.asLink.name'),
     description: tContent('variants.compositions.asLink.description'),
     useWhen: tContent('variants.compositions.asLink.use'),
-    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" style="display: inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
   },
   {
     name: tContent('variants.compositions.asTrigger.name'),
     description: tContent('variants.compositions.asTrigger.description'),
     useWhen: tContent('variants.compositions.asTrigger.use'),
-    code: `<button type="button" aria-label="Filtrar por React" class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md">\n  <Badge variant="outline">React</Badge>\n</button>`,
+    code: `<button type="button" aria-label="Filtrar por React" class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0">\n  <Badge variant="outline">React</Badge>\n</button>`,
   },
 ]);
 
@@ -307,7 +307,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
         <Badge variant="secondary">
           {{ tContent('demonstration.labels.secondaryLabel') }}
@@ -323,7 +323,7 @@ const visualTestItems = computed(() => [
         </Badge>
         <Badge>
           <Check
-            class="h-3 w-3"
+            class="nds-icon-sm"
             aria-hidden="true"
           />
           {{ tContent('demonstration.labels.statusLabel') }}
@@ -469,7 +469,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <Badge>
           <Check
-            class="h-3 w-3"
+            class="nds-icon-sm"
             aria-hidden="true"
           />
           Ativo
@@ -479,10 +479,10 @@ const visualTestItems = computed(() => [
         <span
           role="status"
           aria-label="12 notificações não lidas"
-          class="inline-flex items-center gap-2"
+          class="nds-cluster" data-spacing="sm"
         >
           <Bell
-            class="h-5 w-5"
+            class="nds-icon-lg"
             aria-hidden="true"
           />
           <Badge variant="destructive">12</Badge>
@@ -492,7 +492,7 @@ const visualTestItems = computed(() => [
         <a
           href="#design"
           aria-label="Ver todos os itens da categoria Design"
-          class="inline-flex"
+          style="display: inline-flex"
         >
           <Badge variant="secondary">Design</Badge>
         </a>
@@ -501,7 +501,7 @@ const visualTestItems = computed(() => [
         <button
           type="button"
           aria-label="Filtrar por React"
-          class="inline-flex bg-transparent p-0 border-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring focus:outline-none rounded-md"
+          class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0"
         >
           <Badge variant="outline">
             React

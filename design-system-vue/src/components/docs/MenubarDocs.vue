@@ -448,7 +448,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="w-full"
+        class="nds-w-full"
         style="contain: layout; min-height: 320px;"
       >
         <Menubar>
@@ -591,7 +591,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar>
             <MenubarMenu value="file">
@@ -609,7 +609,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar>
             <MenubarMenu value="single">
@@ -621,7 +621,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="edit">
             <MenubarMenu value="edit">
@@ -637,7 +637,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="file">
             <MenubarMenu value="file">
@@ -675,7 +675,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="file">
             <MenubarMenu value="file">
@@ -692,7 +692,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="file">
             <MenubarMenu value="file">
@@ -720,7 +720,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="edit">
             <MenubarMenu value="edit">
@@ -739,7 +739,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="view">
             <MenubarMenu value="view">
@@ -765,7 +765,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar default-value="theme">
             <MenubarMenu value="theme">
@@ -790,7 +790,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Menubar>
             <MenubarMenu value="file">

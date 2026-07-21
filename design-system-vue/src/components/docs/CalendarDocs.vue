@@ -176,8 +176,8 @@ import { CalendarDate } from "@internationalized/date";
 <Calendar locale="pt-BR" v-model="selected" />`;
 
 const codeSingle = `<Calendar v-model="date" locale="pt-BR">
-  <template #calendar-prev-icon><ChevronLeft class="size-4" /></template>
-  <template #calendar-next-icon><ChevronRight class="size-4" /></template>
+  <template #calendar-prev-icon><ChevronLeft class="nds-icon" /></template>
+  <template #calendar-next-icon><ChevronRight class="nds-icon" /></template>
 </Calendar>`;
 
 const codeMultiple = `<Calendar v-model="dates" multiple locale="pt-BR" />`;
@@ -252,7 +252,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item6'),
 ]);
 
-const codeInlineBordered = `<Calendar v-model="date" locale="pt-BR" class="rounded-md border" />`;
+const codeInlineBordered = `<Calendar v-model="date" locale="pt-BR" class="nds-rounded-md nds-border-default" />`;
 
 const codeDisabledPast = `<Calendar
   v-model="date"
@@ -264,7 +264,7 @@ const codeRangeTwoMonths = `<RangeCalendar
   v-model="range"
   locale="pt-BR"
   :number-of-months="2"
-  class="rounded-md border"
+  class="nds-rounded-md nds-border-default"
 />`;
 
 const compositionItems = computed(() => [
@@ -445,12 +445,12 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-start justify-center gap-6">
+      <div class="nds-cluster" data-justify="center" data-align="start" data-spacing="lg" style="flex-wrap: wrap">
         <Calendar
           v-model="demoSelectedSingle"
           :locale="rekaLocale"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </div>
     </DocsDemonstration>
@@ -515,7 +515,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #dont-preview-0>
@@ -523,7 +523,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="en-US"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #do-preview-1>
@@ -532,7 +532,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :is-date-disabled="disablePastDates"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #dont-preview-1>
@@ -540,7 +540,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
     </DocsDoDont>
@@ -564,7 +564,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-1>
@@ -573,7 +573,7 @@ const visualTestItems = computed(() => [
           multiple
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-2>
@@ -581,7 +581,7 @@ const visualTestItems = computed(() => [
           :default-value="{ start: demoRangeStart, end: demoRangeEnd }"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-3>
@@ -590,7 +590,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           layout="month-and-year"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-4>
@@ -599,7 +599,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :number-of-months="2"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
     </DocsVariants>
@@ -616,7 +616,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-1>
@@ -625,7 +625,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :is-date-disabled="disablePastDates"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
       <template #variant-preview-2>
@@ -634,7 +634,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :number-of-months="2"
-          class="rounded-md border"
+          class="nds-rounded-md nds-border-default"
         />
       </template>
     </DocsCompositions>

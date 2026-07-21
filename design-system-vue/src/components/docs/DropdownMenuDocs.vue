@@ -433,7 +433,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="flex flex-wrap items-center justify-center gap-4 w-full"
+        class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap"
         style="contain: layout"
       >
         <DropdownMenu>
@@ -540,7 +540,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -563,7 +563,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -587,7 +587,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -609,7 +609,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -641,7 +641,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -661,7 +661,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -692,7 +692,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 240px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -724,7 +724,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -759,7 +759,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"
@@ -796,7 +796,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <DropdownMenu
             :default-open="true"

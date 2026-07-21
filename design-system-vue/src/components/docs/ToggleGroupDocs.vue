@@ -288,7 +288,7 @@ const codeDisabledItem = `<ToggleGroup type="single" variant="outline" default-v
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeFilterWithText = `<div class="flex flex-col gap-2 w-72">
+const codeFilterWithText = `<div class="nds-stack" data-spacing="sm" style="width: 18rem">
   <span>Filtros de exibição</span>
   <ToggleGroup type="multiple" variant="outline" :default-value="['compact']" aria-label="Filtros de exibição">
     <ToggleGroupItem value="hidden">
@@ -473,7 +473,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-col gap-6 w-full max-w-md">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
         <!-- Single — alignment -->
         <ToggleGroup
           type="single"
@@ -687,7 +687,7 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #dont-preview-0>
-        <div class="flex items-center gap-3">
+        <div class="nds-cluster" data-spacing="sm">
           <ToggleGroup
             type="single"
             aria-label="A"
@@ -969,7 +969,7 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #variant-preview-4>
-        <div class="flex flex-col gap-2 w-72">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem">
           <span>Filtros de exibição</span>
           <ToggleGroup
             type="multiple"

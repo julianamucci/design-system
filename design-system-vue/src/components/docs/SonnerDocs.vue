@@ -378,7 +378,7 @@ const visualTestItems = computed(() => [
           position="top-right"
           :rich-colors="true"
         />
-        <div class="flex flex-wrap gap-2">
+        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
           <Button
             variant="outline"
             size="sm"
@@ -519,7 +519,7 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -537,7 +537,7 @@ const visualTestItems = computed(() => [
       <template #dont-preview-0>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -555,7 +555,7 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -573,7 +573,7 @@ const visualTestItems = computed(() => [
       <template #dont-preview-1>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -605,7 +605,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -623,7 +623,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -641,7 +641,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -659,7 +659,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-3>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"
@@ -677,7 +677,7 @@ const visualTestItems = computed(() => [
       <template #variant-preview-4>
         <div
           style="contain: layout; position: relative; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
           <Toaster
             position="top-right"

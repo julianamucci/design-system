@@ -428,7 +428,7 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full space-y-6">
+      <div class="nds-stack nds-w-full" data-spacing="lg">
         <Pagination
           :total="50"
           :items-per-page="10"
@@ -560,7 +560,7 @@ const a11yCritCols = computed(() => ({
           :total="120"
           :items-per-page="10"
           :default-page="6"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -603,7 +603,7 @@ const a11yCritCols = computed(() => ({
           :total="120"
           :items-per-page="10"
           :default-page="6"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -624,7 +624,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="2"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem>
@@ -652,7 +652,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="2"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious><span>&lt;</span></PaginationPrevious></PaginationItem>
@@ -685,7 +685,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="1"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -705,7 +705,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="3"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
@@ -728,7 +728,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="2"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem>
@@ -758,7 +758,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="1"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -799,7 +799,7 @@ const a11yCritCols = computed(() => ({
           :total="120"
           :items-per-page="10"
           :default-page="6"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -842,7 +842,7 @@ const a11yCritCols = computed(() => ({
           :total="100"
           :items-per-page="10"
           :default-page="10"
-          class="w-full"
+          class="nds-w-full"
         >
           <PaginationContent>
             <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -869,19 +869,19 @@ const a11yCritCols = computed(() => ({
               <PaginationNext
                 aria-disabled="true"
                 tabindex="-1"
-                class="pointer-events-none opacity-50"
+                class="nds-cursor-default" style="pointer-events: none; opacity: 0.5"
               />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-3>
-        <div class="w-full space-y-3">
+        <div class="nds-stack nds-w-full" data-spacing="sm">
           <Pagination
             :total="80"
             :items-per-page="10"
             :page="compInteractiveCurrent"
-            class="w-full"
+            class="nds-w-full"
           >
             <PaginationContent>
               <PaginationItem>
@@ -914,7 +914,7 @@ const a11yCritCols = computed(() => ({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          <p class="text-sm text-muted-foreground text-center">
+          <p class="nds-text-body nds-text-muted-foreground" style="text-align: center">
             Página {{ compInteractiveCurrent }} de 8
           </p>
         </div>

@@ -203,7 +203,7 @@ const codeCustomSeparator = `<Breadcrumb>
 const codeResponsive = `<!-- Em mobile, envolva o Ellipsis em DropdownMenu -->
 <BreadcrumbItem>
   <DropdownMenu>
-    <DropdownMenuTrigger class="flex items-center gap-1">
+    <DropdownMenuTrigger class="nds-cluster" data-spacing="xs">
       <BreadcrumbEllipsis />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="start">
@@ -497,7 +497,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full">
+      <div class="nds-w-full">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -729,7 +729,7 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -750,7 +750,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-1>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -775,7 +775,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-2>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -800,7 +800,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-3>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -828,7 +828,7 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -849,7 +849,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-1>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -874,7 +874,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-2>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -895,7 +895,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-3>
-        <Breadcrumb class="w-full">
+        <Breadcrumb class="nds-w-full">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">

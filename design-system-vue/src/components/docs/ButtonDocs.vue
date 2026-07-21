@@ -222,7 +222,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.actionPair.name'),
     description: tContent('variants.compositions.actionPair.description'),
     useWhen: tContent('variants.compositions.actionPair.use'),
-    code: `<div class="flex gap-2">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+    code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
   },
   {
     name: tContent('variants.compositions.asLink.name'),
@@ -359,7 +359,7 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap gap-3">
+      <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
         <Button @click="handleDemoClick('default')">
           {{ tContent('demonstration.labels.primary') }}
         </Button>
@@ -460,7 +460,7 @@ function handleDemoClick(variant: string) {
         <Button>Clique aqui</Button>
       </template>
       <template #do-preview-1>
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button variant="outline">
             Cancelar
           </Button>
@@ -468,7 +468,7 @@ function handleDemoClick(variant: string) {
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button>Cancelar</Button>
           <Button>Confirmar</Button>
         </div>
@@ -598,7 +598,7 @@ function handleDemoClick(variant: string) {
         </Button>
       </template>
       <template #variant-preview-4>
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button variant="outline">
             Cancelar
           </Button>

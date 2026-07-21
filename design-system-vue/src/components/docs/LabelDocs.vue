@@ -128,7 +128,7 @@ const codeDefault = `<Label for="nome">Nome completo</Label>
 
 const codeRequired = `<Label for="email">
   Email profissional
-  <span class="text-destructive" aria-hidden="true">*</span>
+  <span class="nds-text-destructive" aria-hidden="true">*</span>
 </Label>
 <input id="email" type="email" aria-required="true" />`;
 
@@ -137,7 +137,7 @@ const codeDisabled = `<!-- peer-disabled: Label e Input devem ser siblings no DO
 <input id="cpf" type="text" class="peer" disabled />`;
 
 const codeCustomization = `<!-- Personalização via class -->
-<Label for="field" class="text-muted-foreground">
+<Label for="field" class="nds-text-muted-foreground">
   Rótulo secundário
 </Label>`;
 
@@ -289,9 +289,9 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-col gap-6 w-full max-w-sm">
+      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="lg">
         <!-- Default -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-default">{{ tContent('demonstration.labels.default') }}</Label>
           <Input
             id="demo-default"
@@ -301,11 +301,11 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Required -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-required">
             {{ tContent('demonstration.labels.required') }}
             <span
-              class="text-destructive"
+              class="nds-text-destructive"
               aria-hidden="true"
             >{{ tContent('demonstration.labels.requiredMarker') }}</span>
           </Label>
@@ -318,7 +318,7 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Disabled -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-disabled">{{ tContent('demonstration.labels.disabled') }}</Label>
           <Input
             id="demo-disabled"
@@ -379,7 +379,7 @@ const visualTestItems = computed(() => [
     >
       <!-- Par 1 — com htmlFor vs. sem htmlFor -->
       <template #do-preview-0>
-        <div class="flex flex-col gap-2 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label for="do-input-1">Nome completo</Label>
           <Input
             id="do-input-1"
@@ -389,7 +389,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="flex flex-col gap-2 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label>Nome completo</Label>
           <Input
             type="text"
@@ -400,7 +400,7 @@ const visualTestItems = computed(() => [
 
       <!-- Par 2 — texto nominal vs. instrução -->
       <template #do-preview-1>
-        <div class="flex flex-col gap-2 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label for="do-input-2">Email profissional</Label>
           <Input
             id="do-input-2"
@@ -410,7 +410,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="flex flex-col gap-2 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label for="dont-input-2">Informe seu email profissional</Label>
           <Input
             id="dont-input-2"
@@ -433,7 +433,7 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div class="flex flex-col gap-2 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label for="variant-default">Nome completo</Label>
           <Input
             id="variant-default"
