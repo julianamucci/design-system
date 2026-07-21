@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <li
     data-slot="pagination-item"
-    :class="cn('inline-flex', props.class)"
+    :class="cn(props.class)"
   >
     <slot />
   </li>

@@ -25,13 +25,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <RangeCalendarHeader>
       <RangeCalendarHeading />
 
-      <div class="flex items-center gap-1">
+      <div class="nds-calendar-nav">
         <RangeCalendarPrevButton />
         <RangeCalendarNextButton />
       </div>
     </RangeCalendarHeader>
 
-    <div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">
+    <div class="nds-calendar-months">
       <RangeCalendarGrid
         v-for="month in grid"
         :key="month.value.toString()"
@@ -50,7 +50,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           <RangeCalendarGridRow
             v-for="(weekDates, index) in month.rows"
             :key="`weekDate-${index}`"
-            class="mt-2 w-full"
+            class="nds-mt-2 nds-w-full"
           >
             <RangeCalendarCell
               v-for="weekDate in weekDates"

@@ -21,7 +21,7 @@ const delegatedProps = reactiveOmit(props, 'class')
   >
     <ComboboxLabel
       v-if="heading"
-      class="text-muted-foreground px-2 py-1.5 text-xs"
+      class="nds-command-group-heading"
     >
       {{ heading }}
     </ComboboxLabel>

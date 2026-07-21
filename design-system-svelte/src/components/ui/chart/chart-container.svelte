@@ -1,6 +1,6 @@
 <!--
   ChartContainer Svelte 5 — wrapper de vanilla echarts.
-  API: <ChartContainer option={buildBarOption({...})} class="h-64" />
+  API: <ChartContainer option={buildBarOption({...})} style="height: 16rem" />
 -->
 <script lang="ts">
   import { onMount } from 'svelte';

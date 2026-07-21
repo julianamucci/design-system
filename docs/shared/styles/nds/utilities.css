@@ -110,3 +110,8 @@
   border: 0;
   margin: 0;
 }
+
+/* ── Animação de rotação (spinners) ──────────────────────────────────────── */
+.nds-animate-spin {
+  animation: nds-spin 1s linear infinite;
+}

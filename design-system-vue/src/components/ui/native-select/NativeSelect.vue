@@ -47,7 +47,7 @@ const delegatedProps = reactiveOmit(props, 'class', 'size')
       <slot />
     </select>
     <ChevronDownIcon
-      class="text-muted-foreground top-1/2 right-2.5 size-4 -translate-y-1/2 pointer-events-none absolute select-none"
+      class="nds-native-select-icon" style="top: 50%; transform: translateY(-50%); user-select: none"
       aria-hidden="true"
       data-slot="native-select-icon"
     />

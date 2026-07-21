@@ -3,7 +3,7 @@
 // passa `option` (objeto do echarts) em vez de compor JSX.
 //
 // Uso:
-//   <ChartContainer option={buildBarOption(data)} className="h-64" />
+//   <ChartContainer option={buildBarOption(data)} style={{ height: "16rem" }} />
 //
 // Para multi-série, customizar tooltip/legenda, etc., construir o `option`
 // diretamente. ECharts é declarativo — não há composição JSX como recharts.

@@ -20,7 +20,7 @@
 	{...restProps}
 >
 	{#snippet children({ checked })}
-		<div data-slot="radio-group-indicator" class="flex size-4 items-center justify-center">
+		<div data-slot="radio-group-indicator" class="nds-radio-indicator">
 			{#if checked}
 				<CircleIcon class="" />
 			{/if}
