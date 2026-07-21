@@ -144,31 +144,32 @@ const codeInitials = `<Avatar>
 
 const codeIcon = `<Avatar>
   <AvatarFallback aria-label="Usuário genérico">
-    <User class="h-5 w-5" aria-hidden="true" />
+    <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
   </AvatarFallback>
 </Avatar>`;
 
-const codeGroup = `<div class="flex -space-x-2">
-  <Avatar class="ring-2 ring-background">
+const codeGroup = `<div style="display: flex">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
     <AvatarImage src="/maria.jpg" alt="" />
     <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
     <AvatarImage src="/ana.jpg" alt="" />
     <AvatarFallback aria-hidden="true">AS</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
-    <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+    <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>
   </Avatar>
 </div>`;
 
-const codeWithStatus = `<div class="relative inline-block">
+const codeWithStatus = `<div style="position: relative; display: inline-block">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <span
-    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+    class="nds-rounded-full nds-bg-primary"
+    style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
     aria-label="online"
   />
 </div>`;
@@ -237,19 +238,19 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
+    code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" class="nds-icon nds-text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
   },
   {
     name: tContent('variants.compositions.group.name'),
     description: tContent('variants.compositions.group.description'),
     useWhen: tContent('variants.compositions.group.use'),
-    code: `<div class="flex -space-x-2" role="group" aria-label="Participantes">\n  <Avatar class="ring-2 ring-background">\n    <AvatarImage src="https://github.com/shadcn.png" alt="" />\n    <AvatarFallback aria-hidden="true">MR</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback aria-hidden="true">JP</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback aria-hidden="true">AL</AvatarFallback>\n  </Avatar>\n  <Avatar class="ring-2 ring-background">\n    <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>\n  </Avatar>\n</div>`,
+    code: `<div style="display: flex" role="group" aria-label="Participantes">\n  <Avatar style="box-shadow: 0 0 0 2px var(--background)">\n    <AvatarImage src="https://github.com/shadcn.png" alt="" />\n    <AvatarFallback aria-hidden="true">MR</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">JP</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback aria-hidden="true">AL</AvatarFallback>\n  </Avatar>\n  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">\n    <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>\n  </Avatar>\n</div>`,
   },
   {
     name: tContent('variants.compositions.withStatus.name'),
     description: tContent('variants.compositions.withStatus.description'),
     useWhen: tContent('variants.compositions.withStatus.use'),
-    code: `<div class="relative inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span\n    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"\n    role="status"\n    aria-label="online"\n  />\n</div>`,
+    code: `<div style="position: relative; display: inline-block">\n  <Avatar>\n    <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span\n    class="nds-rounded-full nds-bg-primary"\n    style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"\n    role="status"\n    aria-label="online"\n  />\n</div>`,
   },
 ]);
 
@@ -458,8 +459,8 @@ const testesVisual = computed(() => ({
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-wrap items-end justify-center gap-8">
-        <div class="flex flex-col items-center gap-2">
+      <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarImage
               :src="imgMaria"
@@ -469,31 +470,31 @@ const testesVisual = computed(() => ({
               MR
             </AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
         </div>
 
-        <div class="flex flex-col items-center gap-2">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
         </div>
 
-        <div class="flex flex-col items-center gap-2">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
               <User
-                class="h-5 w-5"
+                class="nds-icon nds-text-muted-foreground"
                 aria-hidden="true"
               />
             </AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
         </div>
 
-        <div class="flex flex-col items-center gap-2">
-          <div class="flex -space-x-2">
-            <Avatar class="ring-2 ring-background">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+          <div style="display: flex">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background)">
               <AvatarImage
                 :src="imgMaria"
                 alt=""
@@ -502,7 +503,7 @@ const testesVisual = computed(() => ({
                 MR
               </AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
               <AvatarImage
                 :src="imgAna"
                 alt=""
@@ -511,7 +512,7 @@ const testesVisual = computed(() => ({
                 AS
               </AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
               <AvatarImage
                 :src="imgCarlos"
                 alt=""
@@ -520,20 +521,20 @@ const testesVisual = computed(() => ({
                 CS
               </AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
               <AvatarFallback
-                class="text-xs"
+                class="nds-text-caption"
                 aria-hidden="true"
               >
                 +3
               </AvatarFallback>
             </Avatar>
           </div>
-          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
         </div>
 
-        <div class="flex flex-col items-center gap-2">
-          <div class="relative inline-block">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+          <div style="position: relative; display: inline-block">
             <Avatar>
               <AvatarImage
                 :src="imgMaria"
@@ -542,11 +543,12 @@ const testesVisual = computed(() => ({
               <AvatarFallback>MR</AvatarFallback>
             </Avatar>
             <span
-              class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+              class="nds-rounded-full nds-bg-primary"
+              style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
               :aria-label="tContent('demonstration.labels.statusOnline')"
             />
           </div>
-          <span class="text-xs text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
         </div>
       </div>
     </DocsDemonstration>
@@ -599,7 +601,7 @@ const testesVisual = computed(() => ({
         </Avatar>
       </template>
       <template #dont-preview-1>
-        <Avatar class="text-xs">
+        <Avatar class="nds-text-caption">
           <AvatarFallback>maria</AvatarFallback>
         </Avatar>
       </template>
@@ -639,15 +641,15 @@ const testesVisual = computed(() => ({
         <Avatar>
           <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
             <User
-              class="h-5 w-5"
+              class="nds-icon nds-text-muted-foreground"
               aria-hidden="true"
             />
           </AvatarFallback>
         </Avatar>
       </template>
       <template #variant-preview-3>
-        <div class="flex -space-x-2">
-          <Avatar class="ring-2 ring-background">
+        <div style="display: flex">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background)">
             <AvatarImage
               :src="imgMaria"
               alt=""
@@ -656,7 +658,7 @@ const testesVisual = computed(() => ({
               MR
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarImage
               :src="imgAna"
               alt=""
@@ -665,7 +667,7 @@ const testesVisual = computed(() => ({
               AS
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarImage
               :src="imgCarlos"
               alt=""
@@ -674,9 +676,9 @@ const testesVisual = computed(() => ({
               CS
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarFallback
-              class="text-xs"
+              class="nds-text-caption"
               aria-hidden="true"
             >
               +3
@@ -685,7 +687,7 @@ const testesVisual = computed(() => ({
         </div>
       </template>
       <template #variant-preview-4>
-        <div class="relative inline-block">
+        <div style="position: relative; display: inline-block">
           <Avatar>
             <AvatarImage
               :src="imgMaria"
@@ -694,7 +696,8 @@ const testesVisual = computed(() => ({
             <AvatarFallback>MR</AvatarFallback>
           </Avatar>
           <span
-            class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+            class="nds-rounded-full nds-bg-primary"
+            style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
             :aria-label="tContent('demonstration.labels.statusOnline')"
           />
         </div>
@@ -730,18 +733,18 @@ const testesVisual = computed(() => ({
           >
             <User
               aria-hidden="true"
-              class="h-5 w-5 text-muted-foreground"
+              class="nds-icon nds-text-muted-foreground"
             />
           </AvatarFallback>
         </Avatar>
       </template>
       <template #variant-preview-3>
         <div
-          class="flex -space-x-2"
+          style="display: flex"
           role="group"
           aria-label="Participantes"
         >
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background)">
             <AvatarImage
               src="https://github.com/shadcn.png"
               alt=""
@@ -750,19 +753,19 @@ const testesVisual = computed(() => ({
               MR
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarFallback aria-hidden="true">
               JP
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarFallback aria-hidden="true">
               AL
             </AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-background">
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
             <AvatarFallback
-              class="text-xs"
+              class="nds-text-caption"
               aria-hidden="true"
             >
               +3
@@ -771,7 +774,7 @@ const testesVisual = computed(() => ({
         </div>
       </template>
       <template #variant-preview-4>
-        <div class="relative inline-block">
+        <div style="position: relative; display: inline-block">
           <Avatar>
             <AvatarImage
               src="https://github.com/shadcn.png"
@@ -780,7 +783,8 @@ const testesVisual = computed(() => ({
             <AvatarFallback>MR</AvatarFallback>
           </Avatar>
           <span
-            class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+            class="nds-rounded-full nds-bg-primary"
+            style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
             role="status"
             aria-label="online"
           />

@@ -136,18 +136,18 @@ const matrixRows = Array.from({ length: 12 }, (_, i) => `R${i + 1}`);
 
 const codeImportBasic = `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";`;
 
-const codeVertical = `<div class="h-[300px] w-[280px] overflow-hidden rounded-md border">
-  <ScrollArea class="h-full w-full">
-    <div class="p-4">
-      <div v-for="tag in tags" :key="tag" class="text-sm">{{ tag }}</div>
+const codeVertical = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 300px; width: 280px">
+  <ScrollArea class="nds-w-full" style="height: 100%">
+    <div class="nds-p-4">
+      <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
     </div>
   </ScrollArea>
 </div>`;
 
-const codeHorizontal = `<div class="w-[500px] h-[180px] overflow-hidden rounded-md border">
-  <ScrollArea class="h-full w-full whitespace-nowrap">
-    <div class="flex w-max gap-4 p-4">
-      <figure v-for="card in cards" :key="card.id" class="shrink-0 w-[160px] rounded-md border p-4">
+const codeHorizontal = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px; height: 180px">
+  <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+    <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
+      <figure v-for="card in cards" :key="card.id" class="nds-shrink-0 nds-rounded-md nds-border-default nds-p-4" style="width: 160px">
         {{ card.title }}
       </figure>
     </div>
@@ -155,9 +155,9 @@ const codeHorizontal = `<div class="w-[500px] h-[180px] overflow-hidden rounded-
   </ScrollArea>
 </div>`;
 
-const codeBoth = `<div class="w-[500px] h-[280px] overflow-hidden rounded-md border">
-  <ScrollArea class="h-full w-full">
-    <table class="border-collapse">
+const codeBoth = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px; height: 280px">
+  <ScrollArea class="nds-w-full" style="height: 100%">
+    <table class="nds-border-collapse">
       <!-- linhas/colunas que excedem o viewport -->
     </table>
     <ScrollBar orientation="horizontal" />
@@ -326,19 +326,20 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full space-y-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="nds-stack nds-w-full" data-spacing="md">
+        <div class="nds-grid" data-cols="2">
           <div>
-            <p class="mb-2 text-xs font-medium text-muted-foreground">
+            <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.verticalTitle') }}
             </p>
-            <div class="h-[260px] w-full overflow-hidden rounded-md border">
-              <ScrollArea class="h-full w-full">
-                <div class="p-4 space-y-2">
+            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 260px">
+              <ScrollArea class="nds-w-full" style="height: 100%">
+                <div class="nds-stack nds-p-4" data-spacing="sm">
                   <div
                     v-for="tag in verticalTags"
                     :key="tag"
-                    class="text-sm rounded-sm border px-2 py-1.5"
+                    class="nds-text-body nds-rounded-sm nds-border-default nds-px-2"
+                    style="padding-block: 0.375rem"
                   >
                     {{ tag }}
                   </div>
@@ -347,18 +348,19 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div>
-            <p class="mb-2 text-xs font-medium text-muted-foreground">
+            <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.horizontalTitle') }}
             </p>
-            <div class="h-[180px] w-full overflow-hidden rounded-md border">
-              <ScrollArea class="h-full w-full whitespace-nowrap">
-                <div class="flex w-max gap-3 p-4">
+            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
+              <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+                <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
                   <figure
                     v-for="card in horizontalCards"
                     :key="card.id"
-                    class="shrink-0 w-[140px] rounded-md border bg-muted p-3"
+                    class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted"
+                    style="width: 140px; padding: 0.75rem"
                   >
-                    <div class="text-sm font-medium">
+                    <div class="nds-text-body nds-font-medium">
                       {{ card.title }}
                     </div>
                   </figure>
@@ -369,21 +371,22 @@ const visualTestItems = computed(() => [
           </div>
         </div>
         <div>
-          <p class="mb-2 text-xs font-medium text-muted-foreground">
+          <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.bothTitle') }}
           </p>
-          <div class="h-[260px] w-full overflow-hidden rounded-md border">
-            <ScrollArea class="h-full w-full">
-              <table class="border-collapse text-sm">
+          <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 260px">
+            <ScrollArea class="nds-w-full" style="height: 100%">
+              <table class="nds-border-collapse nds-text-body">
                 <thead>
                   <tr>
-                    <th class="sticky top-0 z-10 bg-background border px-3 py-2 text-left">
+                    <th class="nds-bg-background nds-border-default" style="position: sticky; top: 0; z-index: 10; padding: 0.5rem 0.75rem; text-align: left">
                       #
                     </th>
                     <th
                       v-for="col in matrixCols"
                       :key="col"
-                      class="sticky top-0 z-10 bg-background border px-3 py-2 text-left whitespace-nowrap"
+                      class="nds-bg-background nds-border-default nds-whitespace-nowrap"
+                      style="position: sticky; top: 0; z-index: 10; padding: 0.5rem 0.75rem; text-align: left"
                     >
                       {{ col }}
                     </th>
@@ -394,13 +397,14 @@ const visualTestItems = computed(() => [
                     v-for="row in matrixRows"
                     :key="row"
                   >
-                    <th class="border px-3 py-2 text-left whitespace-nowrap bg-muted">
+                    <th class="nds-border-default nds-whitespace-nowrap nds-bg-muted" style="padding: 0.5rem 0.75rem; text-align: left">
                       {{ row }}
                     </th>
                     <td
                       v-for="col in matrixCols"
                       :key="col"
-                      class="border px-3 py-2 whitespace-nowrap"
+                      class="nds-border-default nds-whitespace-nowrap"
+                      style="padding: 0.5rem 0.75rem"
                     >
                       {{ row }}-{{ col }}
                     </td>
@@ -492,13 +496,13 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div class="h-[180px] w-full overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full">
-            <div class="p-3 space-y-1.5">
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
+          <ScrollArea class="nds-w-full" style="height: 100%">
+            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
               <div
                 v-for="i in 18"
                 :key="i"
-                class="text-xs rounded-sm border px-2 py-1"
+                class="nds-text-caption nds-rounded-sm nds-border-default nds-px-2 nds-py-1"
               >
                 Item {{ i }}
               </div>
@@ -507,27 +511,27 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-full rounded-md border p-3 space-y-1.5">
+        <div class="nds-w-full nds-rounded-md nds-border-default nds-stack" data-spacing="sm" style="padding: 0.75rem">
           <div
             v-for="i in 6"
             :key="i"
-            class="text-xs rounded-sm border px-2 py-1"
+            class="nds-text-caption nds-rounded-sm nds-border-default nds-px-2 nds-py-1"
           >
             Item {{ i }}
           </div>
-          <p class="text-[10px] text-muted-foreground">
+          <p class="nds-text-muted-foreground" style="font-size: 10px">
             Sem altura — conteúdo expande
           </p>
         </div>
       </template>
       <template #do-preview-1>
-        <div class="h-[180px] w-full overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full">
-            <div class="p-3 space-y-1.5">
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
+          <ScrollArea class="nds-w-full" style="height: 100%">
+            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
               <div
                 v-for="i in 14"
                 :key="i"
-                class="text-xs rounded-sm border px-2 py-1"
+                class="nds-text-caption nds-rounded-sm nds-border-default nds-px-2 nds-py-1"
               >
                 Item {{ i }}
               </div>
@@ -536,14 +540,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="h-[180px] w-full overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full">
-            <ScrollArea class="h-[100px] w-full">
-              <div class="p-3 space-y-1.5">
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
+          <ScrollArea class="nds-w-full" style="height: 100%">
+            <ScrollArea class="nds-w-full" style="height: 100px">
+              <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
                 <div
                   v-for="i in 10"
                   :key="i"
-                  class="text-xs rounded-sm border px-2 py-1"
+                  class="nds-text-caption nds-rounded-sm nds-border-default nds-px-2 nds-py-1"
                 >
                   Item {{ i }}
                 </div>
@@ -566,13 +570,13 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div class="h-[200px] w-[260px] overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full">
-            <div class="p-3 space-y-1.5">
+        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 200px; width: 260px">
+          <ScrollArea class="nds-w-full" style="height: 100%">
+            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
               <div
                 v-for="i in 20"
                 :key="i"
-                class="text-xs rounded-sm border px-2 py-1"
+                class="nds-text-caption nds-rounded-sm nds-border-default nds-px-2 nds-py-1"
               >
                 {{ tContent('demonstration.labels.tag') }} {{ i }}
               </div>
@@ -581,13 +585,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="h-[140px] w-[420px] overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full whitespace-nowrap">
-            <div class="flex w-max gap-3 p-3">
+        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 140px; width: 420px">
+          <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+            <div class="nds-cluster" data-spacing="sm" style="width: max-content; padding: 0.75rem">
               <figure
                 v-for="i in 10"
                 :key="i"
-                class="shrink-0 w-[120px] rounded-md border bg-muted p-3 text-xs"
+                class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted nds-text-caption"
+                style="width: 120px; padding: 0.75rem"
               >
                 Card {{ i }}
               </figure>
@@ -597,9 +602,9 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="h-[200px] w-[420px] overflow-hidden rounded-md border">
-          <ScrollArea class="h-full w-full">
-            <table class="border-collapse text-xs">
+        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 200px; width: 420px">
+          <ScrollArea class="nds-w-full" style="height: 100%">
+            <table class="nds-border-collapse nds-text-caption">
               <tbody>
                 <tr
                   v-for="r in 12"
@@ -608,7 +613,8 @@ const visualTestItems = computed(() => [
                   <td
                     v-for="c in 10"
                     :key="c"
-                    class="border px-3 py-1.5 whitespace-nowrap"
+                    class="nds-border-default nds-whitespace-nowrap"
+                    style="padding: 0.375rem 0.75rem"
                   >
                     R{{ r }}-C{{ c }}
                   </td>

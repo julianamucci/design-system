@@ -151,7 +151,7 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 const codeImportBasic = `import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";`;
 
-const codeDefault = `<div class="space-y-1.5">
+const codeDefault = `<div class="nds-stack" data-spacing="sm">
   <Label :for="'description'">Descrição</Label>
   <Textarea
     id="description"
@@ -160,7 +160,7 @@ const codeDefault = `<div class="space-y-1.5">
   />
 </div>`;
 
-const codeWithCounter = `<div class="space-y-1.5">
+const codeWithCounter = `<div class="nds-stack" data-spacing="sm">
   <Label :for="'description'">Descrição</Label>
   <Textarea
     id="description"
@@ -169,7 +169,7 @@ const codeWithCounter = `<div class="space-y-1.5">
     placeholder="ex: Descreva o produto..."
     class="resize-y min-h-[120px]"
   />
-  <div class="flex justify-between text-xs text-muted-foreground">
+  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
     <span>Descreva com clareza.</span>
     <span
       aria-live="polite"
@@ -180,7 +180,7 @@ const codeWithCounter = `<div class="space-y-1.5">
   </div>
 </div>`;
 
-const codeNoResize = `<div class="space-y-1.5">
+const codeNoResize = `<div class="nds-stack" data-spacing="sm">
   <Label :for="'message'">Mensagem</Label>
   <Textarea
     id="message"
@@ -232,31 +232,31 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withLabel.name'),
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
-    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea\n    id="ta-label"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n</div>`,
+    code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea\n    id="ta-label"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n</div>`,
   },
   {
     name: tContent('variants.compositions.withHint.name'),
     description: tContent('variants.compositions.withHint.description'),
     useWhen: tContent('variants.compositions.withHint.use'),
-    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea\n    id="ta-hint"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="text-xs text-muted-foreground">\n    Descreva o produto com clareza, destacando os principais atributos.\n  </p>\n</div>`,
+    code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea\n    id="ta-hint"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="nds-text-caption nds-text-muted-foreground">\n    Descreva o produto com clareza, destacando os principais atributos.\n  </p>\n</div>`,
   },
   {
     name: tContent('variants.compositions.withCounter.name'),
     description: tContent('variants.compositions.withCounter.description'),
     useWhen: tContent('variants.compositions.withCounter.use'),
-    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\n<\/script>\n\n<template>\n  <div class="flex flex-col gap-1.5 w-full max-w-md">\n    <Label for="ta-counter">Descrição</Label>\n    <Textarea\n      id="ta-counter"\n      v-model="value"\n      :maxlength="500"\n      class="resize-y min-h-[120px]"\n      placeholder="ex: Descreva o produto..."\n    />\n    <div class="flex justify-between items-start gap-3 text-xs text-muted-foreground">\n      <span>Descreva com clareza.</span>\n      <span\n        class="tabular-nums shrink-0"\n        aria-live="polite"\n        :aria-label="\`\${value.length} de 500 caracteres usados\`"\n      >\n        {{ value.length }}/500\n      </span>\n    </div>\n  </div>\n</template>`,
+    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\n<\/script>\n\n<template>\n  <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n    <Label for="ta-counter">Descrição</Label>\n    <Textarea\n      id="ta-counter"\n      v-model="value"\n      :maxlength="500"\n      class="resize-y min-h-[120px]"\n      placeholder="ex: Descreva o produto..."\n    />\n    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">\n      <span>Descreva com clareza.</span>\n      <span\n        class="tabular-nums nds-shrink-0"\n        aria-live="polite"\n        :aria-label="\`\${value.length} de 500 caracteres usados\`"\n      >\n        {{ value.length }}/500\n      </span>\n    </div>\n  </div>\n</template>`,
   },
   {
     name: tContent('variants.compositions.withError.name'),
     description: tContent('variants.compositions.withError.description'),
     useWhen: tContent('variants.compositions.withError.use'),
-    code: `<div class="flex flex-col gap-1.5 w-full max-w-md">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea\n    id="ta-error"\n    aria-invalid="true"\n    aria-describedby="ta-error-error"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="text-xs text-destructive" id="ta-error-error">\n    A descrição é obrigatória e deve ter pelo menos 20 caracteres.\n  </p>\n</div>`,
+    code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea\n    id="ta-error"\n    aria-invalid="true"\n    aria-describedby="ta-error-error"\n    class="resize-y min-h-[120px]"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="nds-text-caption nds-text-destructive" id="ta-error-error">\n    A descrição é obrigatória e deve ter pelo menos 20 caracteres.\n  </p>\n</div>`,
   },
   {
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),
-    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\nconst result = ref('');\nfunction onSubmit() {\n  result.value = value.value\n    ? \`Feedback enviado (\${value.value.length} caracteres).\`\n    : 'Digite um feedback antes de enviar.';\n}\n<\/script>\n\n<template>\n  <form class="flex flex-col gap-4 w-full max-w-md" aria-label="Formulário de feedback" @submit.prevent="onSubmit">\n    <div class="flex flex-col gap-1.5">\n      <Label for="ta-form">Feedback</Label>\n      <Textarea\n        id="ta-form"\n        name="feedback"\n        v-model="value"\n        :maxlength="500"\n        class="resize-y min-h-[120px]"\n        placeholder="O que poderíamos melhorar?"\n      />\n      <div class="flex justify-end text-xs text-muted-foreground">\n        <span\n          class="tabular-nums"\n          aria-live="polite"\n          :aria-label="\`\${value.length} de 500 caracteres usados\`"\n        >\n          {{ value.length }}/500\n        </span>\n      </div>\n    </div>\n    <Button type="submit">Enviar</Button>\n    <p aria-live="polite" class="text-xs text-muted-foreground">{{ result }}</p>\n  </form>\n</template>`,
+    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\nconst result = ref('');\nfunction onSubmit() {\n  result.value = value.value\n    ? \`Feedback enviado (\${value.value.length} caracteres).\`\n    : 'Digite um feedback antes de enviar.';\n}\n<\/script>\n\n<template>\n  <form class="nds-stack nds-w-full nds-max-w-md" data-spacing="md" aria-label="Formulário de feedback" @submit.prevent="onSubmit">\n    <div class="nds-stack" data-spacing="xs">\n      <Label for="ta-form">Feedback</Label>\n      <Textarea\n        id="ta-form"\n        name="feedback"\n        v-model="value"\n        :maxlength="500"\n        class="resize-y min-h-[120px]"\n        placeholder="O que poderíamos melhorar?"\n      />\n      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">\n        <span\n          class="tabular-nums"\n          aria-live="polite"\n          :aria-label="\`\${value.length} de 500 caracteres usados\`"\n        >\n          {{ value.length }}/500\n        </span>\n      </div>\n    </div>\n    <Button type="submit">Enviar</Button>\n    <p aria-live="polite" class="nds-text-caption nds-text-muted-foreground">{{ result }}</p>\n  </form>\n</template>`,
   },
 ]);
 
@@ -393,8 +393,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-col gap-6 w-full max-w-md">
-        <div class="space-y-1.5">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+        <div class="nds-stack" data-spacing="sm">
           <Label :for="'demo-description'">{{ tContent('demonstration.labels.descriptionLabel') }}</Label>
           <Textarea
             id="demo-description"
@@ -404,7 +404,7 @@ const visualTestItems = computed(() => [
             class="resize-y min-h-[120px]"
             @update:model-value="(v) => demoDescription = String(v)"
           />
-          <div class="flex justify-between text-xs text-muted-foreground">
+          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
             <span>{{ tContent('demonstration.labels.descriptionHelp') }}</span>
             <span
               aria-live="polite"
@@ -415,7 +415,7 @@ const visualTestItems = computed(() => [
           </div>
         </div>
 
-        <div class="space-y-1.5">
+        <div class="nds-stack" data-spacing="sm">
           <Label :for="'demo-bio'">{{ tContent('demonstration.labels.bioLabel') }}</Label>
           <Textarea
             id="demo-bio"
@@ -426,7 +426,7 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="space-y-1.5">
+        <div class="nds-stack" data-spacing="sm">
           <Label :for="'demo-feedback'">{{ tContent('demonstration.labels.feedbackLabel') }}</Label>
           <Textarea
             id="demo-feedback"
@@ -541,7 +541,7 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: maxlength com contador vs sem contador -->
       <template #do-preview-0>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'dodont-do-1'">Descrição</Label>
           <Textarea
             id="dodont-do-1"
@@ -549,7 +549,7 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             class="resize-y min-h-[100px]"
           />
-          <div class="flex justify-end text-xs text-muted-foreground">
+          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
             <span
               aria-live="polite"
               aria-label="0 de 500 caracteres usados"
@@ -558,7 +558,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'dodont-dont-1'">Descrição</Label>
           <Textarea
             id="dodont-dont-1"
@@ -571,7 +571,7 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: resize-y vs resize livre -->
       <template #do-preview-1>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'dodont-do-2'">Biografia</Label>
           <Textarea
             id="dodont-do-2"
@@ -581,7 +581,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'dodont-dont-2'">Biografia</Label>
           <Textarea
             id="dodont-dont-2"
@@ -607,7 +607,7 @@ const visualTestItems = computed(() => [
     >
       <!-- default -->
       <template #variant-preview-0>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'variant-default'">Descrição</Label>
           <Textarea
             id="variant-default"
@@ -619,7 +619,7 @@ const visualTestItems = computed(() => [
 
       <!-- withCounter -->
       <template #variant-preview-1>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'variant-counter'">Descrição</Label>
           <Textarea
             id="variant-counter"
@@ -627,7 +627,7 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             class="resize-y min-h-[100px]"
           />
-          <div class="flex justify-end text-xs text-muted-foreground">
+          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
             <span
               aria-live="polite"
               aria-label="0 de 500 caracteres usados"
@@ -638,7 +638,7 @@ const visualTestItems = computed(() => [
 
       <!-- noResize -->
       <template #variant-preview-2>
-        <div class="space-y-1.5 w-full max-w-xs">
+        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
           <Label :for="'variant-noresize'">Mensagem</Label>
           <Textarea
             id="variant-noresize"
@@ -658,7 +658,7 @@ const visualTestItems = computed(() => [
     >
       <!-- 0: withLabel -->
       <template #variant-preview-0>
-        <div class="flex flex-col gap-1.5 w-full max-w-md">
+        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
           <Label :for="'ta-label'">Descrição</Label>
           <Textarea
             id="ta-label"
@@ -670,14 +670,14 @@ const visualTestItems = computed(() => [
 
       <!-- 1: withHint -->
       <template #variant-preview-1>
-        <div class="flex flex-col gap-1.5 w-full max-w-md">
+        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
           <Label :for="'ta-hint'">Descrição</Label>
           <Textarea
             id="ta-hint"
             class="resize-y min-h-[120px]"
             placeholder="ex: Descreva o produto..."
           />
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             Descreva o produto com clareza, destacando os principais atributos.
           </p>
         </div>
@@ -685,7 +685,7 @@ const visualTestItems = computed(() => [
 
       <!-- 2: withCounter -->
       <template #variant-preview-2>
-        <div class="flex flex-col gap-1.5 w-full max-w-md">
+        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
           <Label :for="'ta-counter'">Descrição</Label>
           <Textarea
             id="ta-counter"
@@ -695,10 +695,10 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             @update:model-value="(v) => compCounterValue = String(v)"
           />
-          <div class="flex justify-between items-start gap-3 text-xs text-muted-foreground">
+          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
             <span>Descreva com clareza.</span>
             <span
-              class="tabular-nums shrink-0"
+              class="tabular-nums nds-shrink-0"
               aria-live="polite"
               :aria-label="`${compCounterValue.length} de 500 caracteres usados`"
             >
@@ -710,7 +710,7 @@ const visualTestItems = computed(() => [
 
       <!-- 3: withError -->
       <template #variant-preview-3>
-        <div class="flex flex-col gap-1.5 w-full max-w-md">
+        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
           <Label :for="'ta-error'">Descrição</Label>
           <Textarea
             id="ta-error"
@@ -721,7 +721,7 @@ const visualTestItems = computed(() => [
           />
           <p
             id="ta-error-error"
-            class="text-xs text-destructive"
+            class="nds-text-caption nds-text-destructive"
           >
             A descrição é obrigatória e deve ter pelo menos 20 caracteres.
           </p>
@@ -731,11 +731,12 @@ const visualTestItems = computed(() => [
       <!-- 4: inForm -->
       <template #variant-preview-4>
         <form
-          class="flex flex-col gap-4 w-full max-w-md"
+          class="nds-stack nds-w-full nds-max-w-md"
+          data-spacing="md"
           aria-label="Formulário de feedback"
           @submit.prevent="handleCompFormSubmit"
         >
-          <div class="flex flex-col gap-1.5">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'ta-form'">Feedback</Label>
             <Textarea
               id="ta-form"
@@ -746,7 +747,7 @@ const visualTestItems = computed(() => [
               placeholder="O que poderíamos melhorar?"
               @update:model-value="(v) => compFormValue = String(v)"
             />
-            <div class="flex justify-end text-xs text-muted-foreground">
+            <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
               <span
                 class="tabular-nums"
                 aria-live="polite"
@@ -761,7 +762,7 @@ const visualTestItems = computed(() => [
           </Button>
           <p
             aria-live="polite"
-            class="text-xs text-muted-foreground"
+            class="nds-text-caption nds-text-muted-foreground"
           >
             {{ compFormResult }}
           </p>

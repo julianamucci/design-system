@@ -142,24 +142,24 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 const codeImportBasic = `import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";`;
 
-const codeDefault = `<div class="flex items-center space-x-2">
+const codeDefault = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="notifications" :model-value="enabled" @update:model-value="setEnabled" />
   <Label :for="'notifications'">Receber notificações por email</Label>
 </div>`;
 
-const codeWithDescription = `<div class="flex items-center justify-between">
-  <div class="space-y-0.5">
+const codeWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+  <div class="nds-stack" data-spacing="xs">
     <Label :for="'marketing'">Emails de marketing</Label>
-    <p class="text-sm text-muted-foreground">
+    <p class="nds-text-body nds-text-muted-foreground">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
   <Switch id="marketing" :model-value="marketing" @update:model-value="setMarketing" />
 </div>`;
 
-const codeSm = `<div class="flex items-center space-x-2">
+const codeSm = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="compact" size="sm" :model-value="value" @update:model-value="setValue" />
-  <Label :for="'compact'" class="text-xs">Tamanho compacto</Label>
+  <Label :for="'compact'" class="nds-text-caption">Tamanho compacto</Label>
 </div>`;
 
 const codeCustomizationTokens = `/* Em globals.css — sobrescrever tokens semânticos */
@@ -202,50 +202,50 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.sm')),              description: stripHtml(tContent('variants.styles.sm')),              code: codeSm              },
 ]);
 
-const codeCompWithLabel = `<div class="flex items-center space-x-2">
+const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="sw-email" />
-  <Label for="sw-email" class="text-sm font-medium leading-none cursor-pointer">
+  <Label for="sw-email" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
     Receber notificações por email
   </Label>
 </div>`;
 
-const codeCompWithDescription = `<div class="flex items-center justify-between rounded-lg border p-3 w-80">
-  <div class="flex flex-col gap-0.5 pr-3">
+const codeCompWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
+  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
     <Label for="sw-marketing">Emails de marketing</Label>
-    <p class="text-sm text-muted-foreground">
+    <p class="nds-text-body nds-text-muted-foreground">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
   <Switch id="sw-marketing" :checked="true" />
 </div>`;
 
-const codeCompSettingsList = `<div class="space-y-2 w-96">
-  <h4 class="text-sm font-medium">Preferências de notificação</h4>
-  <div class="flex items-center justify-between rounded-lg border p-3">
-    <div class="flex flex-col gap-0.5 pr-3">
+const codeCompSettingsList = `<div class="nds-stack" data-spacing="sm" style="width: 24rem;">
+  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
+  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-email">Receber novidades por email</Label>
-      <p class="text-sm text-muted-foreground">Resumo semanal sobre o produto.</p>
+      <p class="nds-text-body nds-text-muted-foreground">Resumo semanal sobre o produto.</p>
     </div>
     <Switch id="pref-email" :checked="true" />
   </div>
-  <div class="flex items-center justify-between rounded-lg border p-3">
-    <div class="flex flex-col gap-0.5 pr-3">
+  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-push">Receber notificações push</Label>
-      <p class="text-sm text-muted-foreground">Alertas no dispositivo em tempo real.</p>
+      <p class="nds-text-body nds-text-muted-foreground">Alertas no dispositivo em tempo real.</p>
     </div>
     <Switch id="pref-push" />
   </div>
-  <div class="flex items-center justify-between rounded-lg border p-3">
-    <div class="flex flex-col gap-0.5 pr-3">
+  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-sms">Alertas por SMS</Label>
-      <p class="text-sm text-muted-foreground">Eventos críticos via mensagem de texto.</p>
+      <p class="nds-text-body nds-text-muted-foreground">Eventos críticos via mensagem de texto.</p>
     </div>
     <Switch id="pref-sms" />
   </div>
 </div>`;
 
-const codeCompInForm = `<form class="flex flex-col gap-3 w-80" @submit.prevent>
-  <div class="flex items-center space-x-2">
+const codeCompInForm = `<form class="nds-stack nds-w-sm" data-spacing="sm" @submit.prevent>
+  <div class="nds-cluster" data-spacing="sm">
     <Switch id="sw-form-newsletter" name="newsletter" :checked="true" />
     <Label for="sw-form-newsletter">Aceitar newsletter semanal</Label>
   </div>
@@ -396,8 +396,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-col gap-6 w-full max-w-md">
-        <div class="flex items-center space-x-2">
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch
             id="demo-notifications"
             :model-value="demoNotifications"
@@ -406,10 +406,10 @@ const visualTestItems = computed(() => [
           <Label :for="'demo-notifications'">{{ tContent('demonstration.labels.notifications') }}</Label>
         </div>
 
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'demo-marketing'">{{ tContent('demonstration.labels.marketing') }}</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               {{ tContent('demonstration.labels.marketingDesc') }}
             </p>
           </div>
@@ -420,10 +420,10 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'demo-darkmode'">{{ tContent('demonstration.labels.darkMode') }}</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               {{ tContent('demonstration.labels.darkModeDesc') }}
             </p>
           </div>
@@ -434,7 +434,7 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch
             id="demo-sm"
             size="sm"
@@ -443,7 +443,7 @@ const visualTestItems = computed(() => [
           />
           <Label
             :for="'demo-sm'"
-            class="text-xs"
+            class="nds-text-caption"
           >
             {{ tContent('demonstration.labels.sm') }}
           </Label>
@@ -555,13 +555,13 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: label semântica vs label genérica -->
       <template #do-preview-0>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch id="dodont-do-1" />
           <Label :for="'dodont-do-1'">Receber notificações</Label>
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch id="dodont-dont-1" />
           <Label :for="'dodont-dont-1'">Notificações</Label>
         </div>
@@ -569,15 +569,15 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: Label associado via htmlFor vs texto solto -->
       <template #do-preview-1>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch id="dodont-do-2" />
           <Label :for="'dodont-do-2'">Modo escuro</Label>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch />
-          <span class="text-sm">Modo escuro</span>
+          <span class="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
         </div>
       </template>
     </DocsDoDont>
@@ -596,7 +596,7 @@ const visualTestItems = computed(() => [
     >
       <!-- default -->
       <template #variant-preview-0>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch id="variant-default" />
           <Label :for="'variant-default'">Receber notificações por email</Label>
         </div>
@@ -604,10 +604,10 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-1>
-        <div class="flex items-center justify-between rounded-lg border p-4 w-80">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'variant-marketing'">Emails de marketing</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -617,14 +617,14 @@ const visualTestItems = computed(() => [
 
       <!-- sm -->
       <template #variant-preview-2>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch
             id="variant-sm"
             size="sm"
           />
           <Label
             :for="'variant-sm'"
-            class="text-xs"
+            class="nds-text-caption"
           >Tamanho compacto</Label>
         </div>
       </template>
@@ -639,11 +639,11 @@ const visualTestItems = computed(() => [
     >
       <!-- withLabel -->
       <template #variant-preview-0>
-        <div class="flex items-center space-x-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch id="sw-email" />
           <Label
             :for="'sw-email'"
-            class="text-sm font-medium leading-none cursor-pointer"
+            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
           >
             Receber notificações por email
           </Label>
@@ -652,10 +652,10 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-1>
-        <div class="flex items-center justify-between rounded-lg border p-3 w-80">
-          <div class="flex flex-col gap-0.5 pr-3">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
+          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'sw-marketing'">Emails de marketing</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -668,14 +668,14 @@ const visualTestItems = computed(() => [
 
       <!-- settingsList -->
       <template #variant-preview-2>
-        <div class="space-y-2 w-96">
-          <h4 class="text-sm font-medium">
+        <div class="nds-stack" data-spacing="sm" style="width: 24rem;">
+          <p class="nds-text-body nds-font-semibold nds-mb-2">
             Preferências de notificação
-          </h4>
-          <div class="flex items-center justify-between rounded-lg border p-3">
-            <div class="flex flex-col gap-0.5 pr-3">
+          </p>
+          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-email'">Receber novidades por email</Label>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Resumo semanal sobre o produto.
               </p>
             </div>
@@ -684,19 +684,19 @@ const visualTestItems = computed(() => [
               :model-value="true"
             />
           </div>
-          <div class="flex items-center justify-between rounded-lg border p-3">
-            <div class="flex flex-col gap-0.5 pr-3">
+          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-push'">Receber notificações push</Label>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Alertas no dispositivo em tempo real.
               </p>
             </div>
             <Switch id="pref-push" />
           </div>
-          <div class="flex items-center justify-between rounded-lg border p-3">
-            <div class="flex flex-col gap-0.5 pr-3">
+          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-sms'">Alertas por SMS</Label>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Eventos críticos via mensagem de texto.
               </p>
             </div>
@@ -708,10 +708,11 @@ const visualTestItems = computed(() => [
       <!-- inForm -->
       <template #variant-preview-3>
         <form
-          class="flex flex-col gap-3 w-80"
+          class="nds-stack nds-w-sm"
+          data-spacing="sm"
           @submit.prevent
         >
-          <div class="flex items-center space-x-2">
+          <div class="nds-cluster" data-spacing="sm">
             <Switch
               id="sw-form-newsletter"
               name="newsletter"

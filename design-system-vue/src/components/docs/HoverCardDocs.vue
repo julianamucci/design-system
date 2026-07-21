@@ -192,14 +192,14 @@ const codeCompUserProfile = `<HoverCard :open-delay="500" :close-delay="200">
     <a href="/users/joana">@joana</a>
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex gap-3">
+    <div class="nds-cluster" data-spacing="sm">
       <Avatar>
         <AvatarImage src="/joana.jpg" alt="" />
         <AvatarFallback>JS</AvatarFallback>
       </Avatar>
-      <div class="flex flex-col">
-        <p class="font-medium text-sm">Joana Silva</p>
-        <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+      <div class="nds-stack">
+        <p class="nds-font-medium nds-text-body">Joana Silva</p>
+        <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
       </div>
     </div>
   </HoverCardContent>
@@ -210,25 +210,29 @@ const codeCompLinkPreview = `<HoverCard :open-delay="500" :close-delay="200">
     <a href="https://design-system.dev">design-system.dev</a>
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2 text-xs text-muted-foreground">
-        <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+        <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
         <span>design-system.dev</span>
       </div>
-      <p class="font-medium">Guia de overlays acessíveis</p>
+      <p class="nds-font-medium">Guia de overlays acessíveis</p>
     </div>
   </HoverCardContent>
 </HoverCard>`;
 
 const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
-    <button type="button" class="underline decoration-dotted underline-offset-4">
+    <button
+      type="button"
+      class="nds-text-primary nds-text-body nds-font-medium"
+      style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+    >
       WCAG 2.1 AA
     </button>
   </HoverCardTrigger>
   <HoverCardContent>
-    <p class="font-medium text-sm">WCAG 2.1 AA</p>
-    <p class="text-xs text-muted-foreground">
+    <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+    <p class="nds-text-caption nds-text-muted-foreground">
       Web Content Accessibility Guidelines 2.1 — nível AA.
     </p>
   </HoverCardContent>
@@ -236,16 +240,20 @@ const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
 
 const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
-    <button type="button" class="underline decoration-dotted underline-offset-4">
+    <button
+      type="button"
+      class="nds-text-primary nds-text-body nds-font-medium"
+      style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+    >
       LCP 1.8s
     </button>
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex items-baseline justify-between gap-2">
-      <p class="text-sm font-medium">Largest Contentful Paint</p>
-      <span class="text-xs font-medium text-emerald-600">1.8s</span>
+    <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+      <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
+      <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
     </div>
-    <p class="text-xs text-muted-foreground">
+    <p class="nds-text-caption nds-text-muted-foreground">
       Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
     </p>
   </HoverCardContent>
@@ -392,14 +400,21 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div
+        class="nds-grid nds-w-full"
+        data-cols="2"
+        data-spacing="lg"
+        data-min="16rem"
+        style="contain: layout; min-height: 160px;"
+      >
         <!-- User profile -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.userProfile'))"
           />
           <HoverCard
@@ -410,11 +425,12 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#joana"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex gap-3">
+              <div class="nds-cluster" data-spacing="sm">
                 <Avatar>
                   <AvatarImage
                     src=""
@@ -422,11 +438,11 @@ const a11yCritCols = computed(() => ({
                   />
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
-                <div class="flex flex-col">
-                  <p class="font-medium text-sm">
+                <div class="nds-stack">
+                  <p class="nds-font-medium nds-text-body">
                     Joana Silva
                   </p>
-                  <p class="text-xs text-muted-foreground">
+                  <p class="nds-text-caption nds-text-muted-foreground">
                     Designer · 142 seguidores
                   </p>
                 </div>
@@ -437,11 +453,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Link preview -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.linkPreview'))"
           />
           <HoverCard
@@ -452,16 +469,17 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#link"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+              <div class="nds-stack" data-spacing="sm">
+                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
                   <span>design-system.dev</span>
                 </div>
-                <p class="font-medium">
+                <p class="nds-font-medium">
                   Guia de overlays acessíveis
                 </p>
               </div>
@@ -471,11 +489,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Definition -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.definitionTooltip'))"
           />
           <HoverCard
@@ -486,14 +505,15 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#wcag"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >WCAG 2.1</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="font-medium text-sm">
+              <p class="nds-font-medium nds-text-body">
                 WCAG 2.1
               </p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
               </p>
             </HoverCardContent>
@@ -502,11 +522,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Metric -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.metricExplainer'))"
           />
           <HoverCard
@@ -517,17 +538,18 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#metric"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >3,42%</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Conversão (últimos 30d)
               </p>
-              <p class="text-2xl font-semibold">
+              <p class="nds-text-h4 nds-font-semibold">
                 3,42%
               </p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Cliques no CTA / usuários únicos.
               </p>
             </HoverCardContent>
@@ -617,13 +639,13 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm space-y-1">
-            <div class="text-primary underline">
+          <div class="nds-text-body nds-stack" data-spacing="xs">
+            <div class="nds-text-primary" style="text-decoration: underline;">
               @joana
             </div>
-            <div class="text-xs text-muted-foreground">
+            <div class="nds-text-caption nds-text-muted-foreground">
               + link para /users/joana
             </div>
           </div>
@@ -632,13 +654,13 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm">
-            <div class="text-primary underline">
+          <div class="nds-text-body">
+            <div class="nds-text-primary" style="text-decoration: underline;">
               @joana
             </div>
-            <div class="text-xs text-muted-foreground italic">
+            <div class="nds-text-caption nds-text-muted-foreground nds-italic">
               apenas hover (touch users perdem)
             </div>
           </div>
@@ -647,9 +669,9 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm font-mono">
+          <div class="nds-text-body nds-font-mono">
             openDelay={{ '{500}' }}
           </div>
         </div>
@@ -657,9 +679,9 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-sm font-mono">
+          <div class="nds-text-body nds-font-mono">
             openDelay={{ '{0}' }}
           </div>
         </div>
@@ -680,9 +702,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             openDelay=700 / closeDelay=300
           </div>
         </div>
@@ -690,9 +712,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             openDelay=500 / closeDelay=200
           </div>
         </div>
@@ -709,7 +731,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
-          class="w-full"
+          class="nds-w-full"
         >
           <HoverCard
             :open-delay="50"
@@ -719,11 +741,12 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#joana"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex gap-3">
+              <div class="nds-cluster" data-spacing="sm">
                 <Avatar>
                   <AvatarImage
                     src=""
@@ -731,11 +754,11 @@ const a11yCritCols = computed(() => ({
                   />
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
-                <div class="flex flex-col">
-                  <p class="font-medium text-sm">
+                <div class="nds-stack">
+                  <p class="nds-font-medium nds-text-body">
                     Joana Silva
                   </p>
-                  <p class="text-xs text-muted-foreground">
+                  <p class="nds-text-caption nds-text-muted-foreground">
                     Designer · 142 seguidores
                   </p>
                 </div>
@@ -747,7 +770,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
-          class="w-full"
+          class="nds-w-full"
         >
           <HoverCard
             :open-delay="50"
@@ -757,16 +780,17 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <a
                 href="#link"
-                class="text-primary underline-offset-4 hover:underline"
+                class="nds-text-primary nds-hover-underline"
+                style="text-underline-offset: 4px;"
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+              <div class="nds-stack" data-spacing="sm">
+                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
                   <span>design-system.dev</span>
                 </div>
-                <p class="font-medium">
+                <p class="nds-font-medium">
                   Guia de overlays acessíveis
                 </p>
               </div>
@@ -777,7 +801,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
-          class="w-full"
+          class="nds-w-full"
         >
           <HoverCard
             :open-delay="50"
@@ -787,16 +811,17 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <button
                 type="button"
-                class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+                class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
+                style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
               >
                 WCAG 2.1 AA
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="font-medium text-sm">
+              <p class="nds-font-medium nds-text-body">
                 WCAG 2.1 AA
               </p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
               </p>
             </HoverCardContent>
@@ -806,7 +831,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
-          class="w-full"
+          class="nds-w-full"
         >
           <HoverCard
             :open-delay="50"
@@ -816,19 +841,20 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <button
                 type="button"
-                class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+                class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
+                style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
               >
                 LCP 1.8s
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex items-baseline justify-between gap-2">
-                <p class="text-sm font-medium">
+              <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+                <p class="nds-text-body nds-font-medium">
                   Largest Contentful Paint
                 </p>
-                <span class="text-xs font-medium text-emerald-600">1.8s</span>
+                <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
               </div>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
               </p>
             </HoverCardContent>

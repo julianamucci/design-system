@@ -352,16 +352,16 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full space-y-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
+      <div class="nds-stack nds-w-full" data-spacing="md">
+        <div class="nds-grid" data-cols="2">
+          <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 220px; min-height: 200px; contain: layout">
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel
                 :default-size="30"
                 :min-size="20"
                 :max-size="50"
               >
-                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                <div class="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                   {{ tContent('demonstration.labels.sidebar') }}
                 </div>
               </ResizablePanel>
@@ -373,20 +373,20 @@ const visualTestItems = computed(() => [
                 :default-size="70"
                 :min-size="50"
               >
-                <div class="flex h-full items-center justify-center p-4 text-sm">
+                <div class="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                   {{ tContent('demonstration.labels.content') }}
                 </div>
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
-          <div class="w-full h-[220px] min-h-[200px] rounded-md border overflow-hidden">
+          <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 220px; min-height: 200px; contain: layout">
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel
                 :default-size="50"
                 :min-size="20"
                 :max-size="80"
               >
-                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                <div class="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                   {{ tContent('demonstration.labels.top') }}
                 </div>
               </ResizablePanel>
@@ -399,21 +399,21 @@ const visualTestItems = computed(() => [
                 :min-size="20"
                 :max-size="80"
               >
-                <div class="flex h-full items-center justify-center p-4 text-sm">
+                <div class="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                   {{ tContent('demonstration.labels.bottom') }}
                 </div>
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
         </div>
-        <div class="w-full h-[280px] min-h-[240px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 280px; min-height: 240px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="25"
               :min-size="15"
               :max-size="40"
             >
-              <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                 {{ tContent('demonstration.labels.sidebar') }}
               </div>
             </ResizablePanel>
@@ -430,7 +430,7 @@ const visualTestItems = computed(() => [
                   :default-size="65"
                   :min-size="30"
                 >
-                  <div class="flex h-full items-center justify-center p-4 text-sm">
+                  <div class="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                     {{ tContent('demonstration.labels.content') }}
                   </div>
                 </ResizablePanel>
@@ -442,7 +442,7 @@ const visualTestItems = computed(() => [
                   :default-size="35"
                   :min-size="20"
                 >
-                  <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">
+                  <div class="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: var(--spacing-4)">
                     {{ tContent('demonstration.labels.bottom') }}
                   </div>
                 </ResizablePanel>
@@ -531,14 +531,14 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="30"
               :min-size="20"
               :max-size="50"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 Sidebar
               </div>
             </ResizablePanel>
@@ -550,7 +550,7 @@ const visualTestItems = computed(() => [
               :default-size="70"
               :min-size="50"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 Conteúdo
               </div>
             </ResizablePanel>
@@ -558,16 +558,16 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel>
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 Sidebar
               </div>
             </ResizablePanel>
             <ResizableHandle aria-label="Redimensionar painéis — use setas" />
             <ResizablePanel>
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 Conteúdo
               </div>
             </ResizablePanel>
@@ -575,14 +575,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #do-preview-1>
-        <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="40"
               :min-size="20"
               :max-size="60"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 A
               </div>
             </ResizablePanel>
@@ -594,7 +594,7 @@ const visualTestItems = computed(() => [
               :default-size="60"
               :min-size="40"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 B
               </div>
             </ResizablePanel>
@@ -602,14 +602,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="40"
               :min-size="20"
               :max-size="60"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 A
               </div>
             </ResizablePanel>
@@ -621,7 +621,7 @@ const visualTestItems = computed(() => [
               :default-size="60"
               :min-size="40"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 B
               </div>
             </ResizablePanel>
@@ -642,14 +642,14 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div class="w-full h-[200px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="30"
               :min-size="20"
               :max-size="50"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 {{ tContent('demonstration.labels.left') }}
               </div>
             </ResizablePanel>
@@ -661,7 +661,7 @@ const visualTestItems = computed(() => [
               :default-size="70"
               :min-size="50"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 {{ tContent('demonstration.labels.right') }}
               </div>
             </ResizablePanel>
@@ -669,14 +669,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="w-full h-[260px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 260px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel
               :default-size="50"
               :min-size="20"
               :max-size="80"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 {{ tContent('demonstration.labels.top') }}
               </div>
             </ResizablePanel>
@@ -689,7 +689,7 @@ const visualTestItems = computed(() => [
               :min-size="20"
               :max-size="80"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 {{ tContent('demonstration.labels.bottom') }}
               </div>
             </ResizablePanel>
@@ -697,14 +697,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="w-full h-[260px] min-h-[200px] rounded-md border overflow-hidden">
+        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 260px; min-height: 200px; contain: layout">
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
               :default-size="30"
               :min-size="20"
               :max-size="50"
             >
-              <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+              <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                 {{ tContent('demonstration.labels.sidebar') }}
               </div>
             </ResizablePanel>
@@ -721,7 +721,7 @@ const visualTestItems = computed(() => [
                   :default-size="60"
                   :min-size="20"
                 >
-                  <div class="flex h-full items-center justify-center p-3 text-xs">
+                  <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                     {{ tContent('demonstration.labels.content') }}
                   </div>
                 </ResizablePanel>
@@ -733,7 +733,7 @@ const visualTestItems = computed(() => [
                   :default-size="40"
                   :min-size="20"
                 >
-                  <div class="flex h-full items-center justify-center p-3 text-xs bg-muted">
+                  <div class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%; padding: 0.75rem">
                     Console
                   </div>
                 </ResizablePanel>

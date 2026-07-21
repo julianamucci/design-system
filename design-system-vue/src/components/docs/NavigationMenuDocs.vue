@@ -153,7 +153,7 @@ const codeHorizontal = `<NavigationMenu aria-label="Navegação principal">
     <NavigationMenuItem>
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul class="grid w-[400px] gap-3 p-4">
+        <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 400px">
           <li><NavigationMenuLink href="/produtos/a">Produto A</NavigationMenuLink></li>
           <li><NavigationMenuLink href="/produtos/b">Produto B</NavigationMenuLink></li>
         </ul>
@@ -163,7 +163,7 @@ const codeHorizontal = `<NavigationMenu aria-label="Navegação principal">
 </NavigationMenu>`;
 
 const codeVertical = `<NavigationMenu orientation="vertical" aria-label="Navegação lateral">
-  <NavigationMenuList class="flex-col items-start">
+  <NavigationMenuList style="flex-direction: column; align-items: flex-start">
     <NavigationMenuItem>
       <NavigationMenuLink href="/">Início</NavigationMenuLink>
     </NavigationMenuItem>
@@ -237,7 +237,7 @@ const codeComDropdown = `<NavigationMenu aria-label="Navegação principal">
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul class="grid w-[240px] gap-1 p-2">
+        <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 240px">
           <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
           <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
           <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
@@ -253,17 +253,17 @@ const codeMegaMenuGrid = `<NavigationMenu aria-label="Navegação principal">
     <NavigationMenuItem value="solucoes">
       <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <ul class="grid w-[560px] grid-cols-2 gap-2 p-3">
+        <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 560px">
           <li>
             <NavigationMenuLink href="/solucoes/marketing">
-              <div class="text-sm font-medium">Para Marketing</div>
-              <p class="text-xs text-muted-foreground">Automação, leads e campanhas.</p>
+              <div class="nds-text-body nds-font-medium">Para Marketing</div>
+              <p class="nds-text-caption nds-text-muted-foreground">Automação, leads e campanhas.</p>
             </NavigationMenuLink>
           </li>
           <li>
             <NavigationMenuLink href="/solucoes/vendas">
-              <div class="text-sm font-medium">Para Vendas</div>
-              <p class="text-xs text-muted-foreground">Pipeline, CRM e propostas.</p>
+              <div class="nds-text-body nds-font-medium">Para Vendas</div>
+              <p class="nds-text-caption nds-text-muted-foreground">Pipeline, CRM e propostas.</p>
             </NavigationMenuLink>
           </li>
           <!-- ...mais 4 itens -->
@@ -278,14 +278,14 @@ const codeComCardDestacado = `<NavigationMenu aria-label="Navegação principal"
     <NavigationMenuItem value="recursos">
       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
       <NavigationMenuContent>
-        <div class="flex gap-3 w-[560px] p-3">
-          <a href="/quickstart" class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline">
-            <div class="text-base font-semibold leading-tight">Comece em 5 minutos</div>
-            <p class="mt-2 text-sm leading-snug text-muted-foreground">
+        <div class="nds-cluster nds-p-4" data-spacing="md" style="width: 560px">
+          <a href="/quickstart" class="nds-stack nds-rounded-md nds-p-4" style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))">
+            <div class="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
+            <p class="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
               Crie sua primeira integração com nosso quickstart.
             </p>
           </a>
-          <ul class="flex flex-col flex-1 gap-1">
+          <ul class="nds-stack nds-flex-1" data-spacing="xs">
             <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
             <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
             <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
@@ -441,7 +441,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="w-full flex justify-center"
+        class="nds-cluster nds-w-full" data-justify="center"
         style="contain: layout; min-height: 320px;"
       >
         <NavigationMenu
@@ -460,7 +460,7 @@ const a11yCritCols = computed(() => ({
             <NavigationMenuItem>
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withDropdown')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[400px] gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 400px">
                   <li>
                     <NavigationMenuLink href="#">
                       Produto A
@@ -482,7 +482,7 @@ const a11yCritCols = computed(() => ({
             <NavigationMenuItem>
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withGrid')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[600px] grid-cols-2 gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 600px">
                   <li>
                     <NavigationMenuLink href="#">
                       Solução 1
@@ -598,7 +598,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -625,7 +625,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu :delay-duration="80">
             <NavigationMenuList>
@@ -646,7 +646,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -657,7 +657,7 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="grid w-[400px] grid-cols-2 gap-3 p-4">
+                  <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 400px">
                     <li>
                       <NavigationMenuLink href="#">
                         Plano Pro
@@ -688,7 +688,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -699,7 +699,7 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="todos">
                 <NavigationMenuTrigger>Todos os links</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="grid w-[400px] gap-1 p-4 text-xs">
+                  <ul class="nds-grid nds-p-4 nds-text-caption" data-spacing="xs" style="width: 400px">
                     <li
                       v-for="i in 12"
                       :key="i"
@@ -731,7 +731,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -749,7 +749,7 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="grid w-[300px] gap-2 p-3">
+                  <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 300px">
                     <li>
                       <NavigationMenuLink href="#">
                         Produto A
@@ -775,14 +775,14 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="w-full flex justify-start"
+          class="nds-cluster nds-w-full" data-justify="start"
         >
           <NavigationMenu
             orientation="vertical"
             aria-label="Navegação lateral"
             :delay-duration="80"
           >
-            <NavigationMenuList class="flex-col items-start gap-1">
+            <NavigationMenuList style="flex-direction: column; align-items: flex-start; gap: 0.25rem">
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#"
@@ -817,7 +817,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 200px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -846,7 +846,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 280px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -862,7 +862,7 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="grid w-[240px] gap-1 p-2">
+                  <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 240px">
                     <li>
                       <NavigationMenuLink href="#">
                         Plano Inicial
@@ -893,7 +893,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 320px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -904,57 +904,57 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="solucoes">
                 <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="grid w-[560px] grid-cols-2 gap-2 p-3">
+                  <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 560px">
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Marketing
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Automação, leads e campanhas.
                         </p>
                       </NavigationMenuLink>
                     </li>
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Vendas
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Pipeline, CRM e propostas.
                         </p>
                       </NavigationMenuLink>
                     </li>
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Suporte
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Tickets, base de conhecimento.
                         </p>
                       </NavigationMenuLink>
                     </li>
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Sucesso
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Onboarding e retenção.
                         </p>
                       </NavigationMenuLink>
                     </li>
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Operações
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Workflows e integrações.
                         </p>
                       </NavigationMenuLink>
                     </li>
                     <li>
                       <NavigationMenuLink href="#">
-                        <div class="text-sm font-medium">
+                        <div class="nds-text-body nds-font-medium">
                           Para Analytics
-                        </div><p class="text-xs text-muted-foreground">
+                        </div><p class="nds-text-caption nds-text-muted-foreground">
                           Dashboards e relatórios.
                         </p>
                       </NavigationMenuLink>
@@ -969,7 +969,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 320px;"
-          class="w-full flex justify-center"
+          class="nds-cluster nds-w-full" data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -980,17 +980,17 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="recursos">
                 <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div class="flex gap-3 w-[560px] p-3">
+                  <div class="nds-cluster nds-p-4" data-spacing="md" style="width: 560px">
                     <a
                       href="#"
-                      class="flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline"
+                      class="nds-stack nds-rounded-md nds-p-4" style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))"
                     >
-                      <div class="text-base font-semibold leading-tight">Comece em 5 minutos</div>
-                      <p class="mt-2 text-sm leading-snug text-muted-foreground">
+                      <div class="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
+                      <p class="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
                         Crie sua primeira integração com nosso quickstart.
                       </p>
                     </a>
-                    <ul class="flex flex-col flex-1 gap-1">
+                    <ul class="nds-stack nds-flex-1" data-spacing="xs">
                       <li>
                         <NavigationMenuLink href="#">
                           Documentação

@@ -138,7 +138,7 @@ const codeImport = `import {
   TabsTrigger,
 } from "@/components/ui/tabs";`;
 
-const codeDefault = `<Tabs default-value="overview" class="w-full max-w-md">
+const codeDefault = `<Tabs default-value="overview" class="nds-w-full">
   <TabsList aria-label="Seções do componente">
     <TabsTrigger value="overview">Visão geral</TabsTrigger>
     <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -149,7 +149,7 @@ const codeDefault = `<Tabs default-value="overview" class="w-full max-w-md">
   <TabsContent value="examples">Exemplos de uso</TabsContent>
 </Tabs>`;
 
-const codeLine = `<Tabs default-value="overview" class="w-full max-w-md">
+const codeLine = `<Tabs default-value="overview" class="nds-w-full">
   <TabsList variant="line" aria-label="Seções do componente">
     <TabsTrigger value="overview">Visão geral</TabsTrigger>
     <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -160,7 +160,7 @@ const codeLine = `<Tabs default-value="overview" class="w-full max-w-md">
   <TabsContent value="examples">Exemplos de uso</TabsContent>
 </Tabs>`;
 
-const codeVertical = `<Tabs default-value="profile" orientation="vertical" class="w-full max-w-xl">
+const codeVertical = `<Tabs default-value="profile" orientation="vertical" class="nds-w-full">
   <TabsList aria-label="Configurações da conta">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
@@ -216,21 +216,41 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
 ]);
 
-const codeIconTrigger = `<Tabs default-value="profile" class="w-full max-w-xl">
+const codeIconTrigger = `<Tabs default-value="profile" class="nds-w-full" style="max-width: 36rem">
   <TabsList aria-label="Configurações">
-    <TabsTrigger value="profile"><User aria-hidden="true" class="h-4 w-4" /> Perfil</TabsTrigger>
-    <TabsTrigger value="account"><Settings aria-hidden="true" class="h-4 w-4" /> Conta</TabsTrigger>
-    <TabsTrigger value="security"><Shield aria-hidden="true" class="h-4 w-4" /> Segurança</TabsTrigger>
+    <TabsTrigger value="profile">
+      <span class="nds-cluster" data-spacing="sm">
+        <User aria-hidden="true" class="nds-icon nds-shrink-0" /> Perfil
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="account">
+      <span class="nds-cluster" data-spacing="sm">
+        <Settings aria-hidden="true" class="nds-icon nds-shrink-0" /> Conta
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="security">
+      <span class="nds-cluster" data-spacing="sm">
+        <Shield aria-hidden="true" class="nds-icon nds-shrink-0" /> Segurança
+      </span>
+    </TabsTrigger>
   </TabsList>
   <TabsContent value="profile">Perfil</TabsContent>
   <TabsContent value="account">Conta</TabsContent>
   <TabsContent value="security">Segurança</TabsContent>
 </Tabs>`;
 
-const codeBadgeTrigger = `<Tabs default-value="inbox" class="w-full max-w-xl">
+const codeBadgeTrigger = `<Tabs default-value="inbox" class="nds-w-full" style="max-width: 36rem">
   <TabsList aria-label="Caixas de mensagem">
-    <TabsTrigger value="inbox">Caixa de entrada <Badge>12</Badge></TabsTrigger>
-    <TabsTrigger value="spam">Spam <Badge variant="destructive">3</Badge></TabsTrigger>
+    <TabsTrigger value="inbox">
+      <span class="nds-cluster" data-spacing="sm">
+        Caixa de entrada <Badge style="font-size: 10px; height: 1rem">12</Badge>
+      </span>
+    </TabsTrigger>
+    <TabsTrigger value="spam">
+      <span class="nds-cluster" data-spacing="sm">
+        Spam <Badge variant="destructive" style="font-size: 10px; height: 1rem">3</Badge>
+      </span>
+    </TabsTrigger>
     <TabsTrigger value="trash">Lixeira</TabsTrigger>
   </TabsList>
   <TabsContent value="inbox">Caixa de entrada</TabsContent>
@@ -238,8 +258,8 @@ const codeBadgeTrigger = `<Tabs default-value="inbox" class="w-full max-w-xl">
   <TabsContent value="trash">Lixeira</TabsContent>
 </Tabs>`;
 
-const codeVerticalComp = `<Tabs default-value="profile" orientation="vertical" class="w-full max-w-2xl flex gap-4">
-  <TabsList class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]" aria-label="Configurações">
+const codeVerticalComp = `<Tabs default-value="profile" orientation="vertical" class="nds-w-full nds-cluster" style="max-width: 42rem">
+  <TabsList class="nds-stack nds-shrink-0" style="height: auto; align-items: stretch; min-width: 10rem" aria-label="Configurações">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
     <TabsTrigger value="security">Segurança</TabsTrigger>
@@ -249,8 +269,8 @@ const codeVerticalComp = `<Tabs default-value="profile" orientation="vertical" c
   <TabsContent value="security">Segurança</TabsContent>
 </Tabs>`;
 
-const codeLineSubNav = `<Tabs default-value="all" class="w-full">
-  <TabsList variant="line" class="border-b rounded-none bg-transparent w-full justify-start" aria-label="Filtros de listagem">
+const codeLineSubNav = `<Tabs default-value="all" class="nds-w-full">
+  <TabsList variant="line" class="nds-border-b nds-bg-transparent nds-w-full" style="border-radius: 0; justify-content: flex-start" aria-label="Filtros de listagem">
     <TabsTrigger value="all">Tudo</TabsTrigger>
     <TabsTrigger value="active">Ativos</TabsTrigger>
     <TabsTrigger value="archived">Arquivados</TabsTrigger>
@@ -455,7 +475,7 @@ function handleTabChange(value: string) {
     <DocsDemonstration :title="tContent('demonstration.title')">
       <Tabs
         default-value="overview"
-        class="w-full max-w-md"
+        class="nds-w-full nds-max-w-md"
         @update:model-value="handleTabChange(String($event))"
       >
         <TabsList :aria-label="tContent('demonstration.title')">
@@ -471,19 +491,22 @@ function handleTabChange(value: string) {
         </TabsList>
         <TabsContent
           value="overview"
-          class="pt-3 text-muted-foreground"
+          class="nds-text-muted-foreground"
+          style="padding-top: 0.75rem"
         >
           {{ demoLabels.overviewContent }}
         </TabsContent>
         <TabsContent
           value="properties"
-          class="pt-3 text-muted-foreground"
+          class="nds-text-muted-foreground"
+          style="padding-top: 0.75rem"
         >
           {{ demoLabels.propertiesContent }}
         </TabsContent>
         <TabsContent
           value="examples"
-          class="pt-3 text-muted-foreground"
+          class="nds-text-muted-foreground"
+          style="padding-top: 0.75rem"
         >
           {{ demoLabels.examplesContent }}
         </TabsContent>
@@ -554,7 +577,7 @@ function handleTabChange(value: string) {
       <template #do-preview-0>
         <Tabs
           default-value="overview"
-          class="w-full max-w-xs text-sm"
+          class="nds-w-full nds-max-w-xs nds-text-body"
         >
           <TabsList aria-label="Seções do componente">
             <TabsTrigger value="overview">
@@ -566,13 +589,15 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Conteúdo claro
           </TabsContent>
           <TabsContent
             value="properties"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Lista de props
           </TabsContent>
@@ -581,7 +606,7 @@ function handleTabChange(value: string) {
       <template #dont-preview-0>
         <Tabs
           default-value="t1"
-          class="w-full max-w-xs text-sm"
+          class="nds-w-full nds-max-w-xs nds-text-body"
         >
           <TabsList aria-label="Tabs">
             <TabsTrigger value="t1">
@@ -593,13 +618,15 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="t1"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Conteúdo genérico
           </TabsContent>
           <TabsContent
             value="t2"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Sem contexto
           </TabsContent>
@@ -608,7 +635,7 @@ function handleTabChange(value: string) {
       <template #do-preview-1>
         <Tabs
           default-value="profile"
-          class="w-full max-w-xs text-sm"
+          class="nds-w-full nds-max-w-xs nds-text-body"
         >
           <TabsList aria-label="Configurações da conta">
             <TabsTrigger value="profile">
@@ -620,13 +647,15 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Perfil
           </TabsContent>
           <TabsContent
             value="account"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Conta
           </TabsContent>
@@ -635,7 +664,7 @@ function handleTabChange(value: string) {
       <template #dont-preview-1>
         <Tabs
           default-value="profile"
-          class="w-full max-w-xs text-sm"
+          class="nds-w-full nds-max-w-xs nds-text-body"
         >
           <TabsList>
             <TabsTrigger value="profile">
@@ -647,13 +676,15 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Sem aria-label
           </TabsContent>
           <TabsContent
             value="account"
-            class="pt-2 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.5rem"
           >
             Sem contexto SR
           </TabsContent>
@@ -675,7 +706,7 @@ function handleTabChange(value: string) {
       <template #variant-preview-0>
         <Tabs
           default-value="overview"
-          class="w-full max-w-sm text-sm"
+          class="nds-w-full nds-max-w-sm nds-text-body"
         >
           <TabsList aria-label="Seções do componente">
             <TabsTrigger value="overview">
@@ -690,19 +721,22 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Conteúdo da visão geral
           </TabsContent>
           <TabsContent
             value="properties"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Lista de propriedades
           </TabsContent>
           <TabsContent
             value="examples"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Exemplos de uso
           </TabsContent>
@@ -711,7 +745,7 @@ function handleTabChange(value: string) {
       <template #variant-preview-1>
         <Tabs
           default-value="overview"
-          class="w-full max-w-sm text-sm"
+          class="nds-w-full nds-max-w-sm nds-text-body"
         >
           <TabsList
             variant="line"
@@ -729,19 +763,22 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Conteúdo da visão geral
           </TabsContent>
           <TabsContent
             value="properties"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Lista de propriedades
           </TabsContent>
           <TabsContent
             value="examples"
-            class="pt-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-top: 0.75rem"
           >
             Exemplos de uso
           </TabsContent>
@@ -751,7 +788,7 @@ function handleTabChange(value: string) {
         <Tabs
           default-value="profile"
           orientation="vertical"
-          class="w-full max-w-md text-sm"
+          class="nds-w-full nds-max-w-md nds-text-body"
         >
           <TabsList aria-label="Configurações da conta">
             <TabsTrigger value="profile">
@@ -766,19 +803,22 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="pl-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-left: 0.75rem"
           >
             Configurações do perfil
           </TabsContent>
           <TabsContent
             value="account"
-            class="pl-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-left: 0.75rem"
           >
             Configurações da conta
           </TabsContent>
           <TabsContent
             value="security"
-            class="pl-3 text-muted-foreground"
+            class="nds-text-muted-foreground"
+            style="padding-left: 0.75rem"
           >
             Configurações de segurança
           </TabsContent>
@@ -796,63 +836,61 @@ function handleTabChange(value: string) {
       <template #variant-preview-0>
         <Tabs
           default-value="profile"
-          class="w-full max-w-xl"
+          class="nds-w-full"
+          style="max-width: 36rem"
         >
           <TabsList aria-label="Configurações">
-            <TabsTrigger
-              value="profile"
-              class="gap-2"
-            >
-              <User
-                aria-hidden="true"
-                class="h-4 w-4"
-              /> Perfil
+            <TabsTrigger value="profile">
+              <span class="nds-cluster" data-spacing="sm">
+                <User
+                  aria-hidden="true"
+                  class="nds-icon nds-shrink-0"
+                /> Perfil
+              </span>
             </TabsTrigger>
-            <TabsTrigger
-              value="account"
-              class="gap-2"
-            >
-              <Settings
-                aria-hidden="true"
-                class="h-4 w-4"
-              /> Conta
+            <TabsTrigger value="account">
+              <span class="nds-cluster" data-spacing="sm">
+                <Settings
+                  aria-hidden="true"
+                  class="nds-icon nds-shrink-0"
+                /> Conta
+              </span>
             </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              class="gap-2"
-            >
-              <Shield
-                aria-hidden="true"
-                class="h-4 w-4"
-              /> Segurança
+            <TabsTrigger value="security">
+              <span class="nds-cluster" data-spacing="sm">
+                <Shield
+                  aria-hidden="true"
+                  class="nds-icon nds-shrink-0"
+                /> Segurança
+              </span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Perfil
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
           </TabsContent>
           <TabsContent value="account">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Conta
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
           </TabsContent>
           <TabsContent value="security">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Segurança
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
@@ -863,53 +901,50 @@ function handleTabChange(value: string) {
       <template #variant-preview-1>
         <Tabs
           default-value="inbox"
-          class="w-full max-w-xl"
+          class="nds-w-full"
+          style="max-width: 36rem"
         >
           <TabsList aria-label="Caixas de mensagem">
-            <TabsTrigger
-              value="inbox"
-              class="gap-2"
-            >
-              Caixa de entrada <Badge>12</Badge>
+            <TabsTrigger value="inbox">
+              <span class="nds-cluster" data-spacing="sm">
+                Caixa de entrada <Badge style="font-size: 10px; height: 1rem">12</Badge>
+              </span>
             </TabsTrigger>
-            <TabsTrigger
-              value="spam"
-              class="gap-2"
-            >
-              Spam <Badge variant="destructive">
-                3
-              </Badge>
+            <TabsTrigger value="spam">
+              <span class="nds-cluster" data-spacing="sm">
+                Spam <Badge variant="destructive" style="font-size: 10px; height: 1rem">3</Badge>
+              </span>
             </TabsTrigger>
             <TabsTrigger value="trash">
               Lixeira
             </TabsTrigger>
           </TabsList>
           <TabsContent value="inbox">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Caixa de entrada
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
           </TabsContent>
           <TabsContent value="spam">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Spam
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
           </TabsContent>
           <TabsContent value="trash">
-            <div class="p-4 rounded-md border bg-card space-y-2">
-              <h3 class="text-sm font-semibold">
+            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <h3 class="nds-text-body nds-font-semibold">
                 Lixeira
               </h3>
-              <p class="text-sm text-muted-foreground">
+              <p class="nds-text-body nds-text-muted-foreground">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
@@ -921,10 +956,12 @@ function handleTabChange(value: string) {
         <Tabs
           default-value="profile"
           orientation="vertical"
-          class="w-full max-w-2xl flex gap-4"
+          class="nds-w-full nds-cluster"
+          style="max-width: 42rem"
         >
           <TabsList
-            class="flex flex-col h-auto items-stretch shrink-0 min-w-[10rem]"
+            class="nds-stack nds-shrink-0"
+            style="height: auto; align-items: stretch; min-width: 10rem"
             aria-label="Configurações"
           >
             <TabsTrigger value="profile">
@@ -937,33 +974,33 @@ function handleTabChange(value: string) {
               Segurança
             </TabsTrigger>
           </TabsList>
-          <div class="flex-1">
+          <div class="nds-flex-1">
             <TabsContent value="profile">
-              <div class="p-4 rounded-md border bg-card space-y-2">
-                <h3 class="text-sm font-semibold">
+              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                <h3 class="nds-text-body nds-font-semibold">
                   Perfil
                 </h3>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>
             </TabsContent>
             <TabsContent value="account">
-              <div class="p-4 rounded-md border bg-card space-y-2">
-                <h3 class="text-sm font-semibold">
+              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                <h3 class="nds-text-body nds-font-semibold">
                   Conta
                 </h3>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>
             </TabsContent>
             <TabsContent value="security">
-              <div class="p-4 rounded-md border bg-card space-y-2">
-                <h3 class="text-sm font-semibold">
+              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+                <h3 class="nds-text-body nds-font-semibold">
                   Segurança
                 </h3>
-                <p class="text-sm text-muted-foreground">
+                <p class="nds-text-body nds-text-muted-foreground">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>
@@ -975,11 +1012,12 @@ function handleTabChange(value: string) {
       <template #variant-preview-3>
         <Tabs
           default-value="all"
-          class="w-full"
+          class="nds-w-full"
         >
           <TabsList
             variant="line"
-            class="border-b rounded-none bg-transparent w-full justify-start"
+            class="nds-border-b nds-bg-transparent nds-w-full"
+            style="border-radius: 0; justify-content: flex-start"
             aria-label="Filtros de listagem"
           >
             <TabsTrigger value="all">
@@ -994,25 +1032,25 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="all"
-            class="pt-3"
+            style="padding-top: 0.75rem"
           >
-            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
               Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
             </div>
           </TabsContent>
           <TabsContent
             value="active"
-            class="pt-3"
+            style="padding-top: 0.75rem"
           >
-            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
               Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
             </div>
           </TabsContent>
           <TabsContent
             value="archived"
-            class="pt-3"
+            style="padding-top: 0.75rem"
           >
-            <div class="text-sm text-muted-foreground p-3 rounded-md border bg-card">
+            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
               Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
             </div>
           </TabsContent>
