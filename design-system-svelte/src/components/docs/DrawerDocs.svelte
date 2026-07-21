@@ -196,7 +196,7 @@ interface TriggerProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-center justify-center gap-3 w-full" style="contain: layout">
+      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="contain: layout">
         <Drawer direction="bottom">
           <DrawerTrigger>
             {#snippet child({ props })}
@@ -569,14 +569,14 @@ interface TriggerProps {
       <DrawerTitle>Editar perfil</DrawerTitle>
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
-    <form class="grid gap-3 px-4">
-      <label class="grid gap-1 text-sm">
-        <span class="font-medium">Nome</span>
-        <input class="border rounded-md px-3 py-2" value="Maria Souza" />
+    <form class="nds-stack nds-px-4" data-spacing="sm">
+      <label class="nds-stack nds-text-body" data-spacing="xs">
+        <span class="nds-font-medium">Nome</span>
+        <input class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="Maria Souza" />
       </label>
-      <label class="grid gap-1 text-sm">
-        <span class="font-medium">E-mail</span>
-        <input type="email" class="border rounded-md px-3 py-2" value="maria@exemplo.com" />
+      <label class="nds-stack nds-text-body" data-spacing="xs">
+        <span class="nds-font-medium">E-mail</span>
+        <input type="email" class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="maria@exemplo.com" />
       </label>
     </form>
     <DrawerFooter>
@@ -629,7 +629,7 @@ interface TriggerProps {
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
       {#each Array.from({ length: 12 }) as _, i}
         <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
       {/each}
@@ -654,12 +654,12 @@ interface TriggerProps {
       <Button variant="outline" {...props}>Abrir filtros</Button>
     {/snippet}
   </DrawerTrigger>
-  <DrawerContent class="max-w-md">
+  <DrawerContent class="nds-max-w-md">
     <DrawerHeader>
       <DrawerTitle>Filtros</DrawerTitle>
       <DrawerDescription>Refine os resultados.</DrawerDescription>
     </DrawerHeader>
-    <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+    <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
     <DrawerFooter>
       <Button>Aplicar</Button>
       <DrawerClose>
@@ -681,14 +681,14 @@ interface TriggerProps {
             <DrawerTitle>Editar perfil</DrawerTitle>
             <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
           </DrawerHeader>
-          <form class="grid gap-3 px-4">
-            <label class="grid gap-1 text-sm">
-              <span class="font-medium">Nome</span>
-              <input class="border rounded-md px-3 py-2" value="Maria Souza" />
+          <form class="nds-stack nds-px-4" data-spacing="sm">
+            <label class="nds-stack nds-text-body" data-spacing="xs">
+              <span class="nds-font-medium">Nome</span>
+              <input class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="Maria Souza" />
             </label>
-            <label class="grid gap-1 text-sm">
-              <span class="font-medium">E-mail</span>
-              <input type="email" class="border rounded-md px-3 py-2" value="maria@exemplo.com" />
+            <label class="nds-stack nds-text-body" data-spacing="xs">
+              <span class="nds-font-medium">E-mail</span>
+              <input type="email" class="nds-border-default nds-rounded-md" style="padding: 0.5rem 0.75rem" value="maria@exemplo.com" />
             </label>
           </form>
           <DrawerFooter>
@@ -727,7 +727,7 @@ interface TriggerProps {
             <DrawerTitle>Termos de uso</DrawerTitle>
             <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
           </DrawerHeader>
-          <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+          <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
             {#each Array.from({ length: 12 }) as _, i}
               <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
             {/each}
@@ -745,12 +745,12 @@ interface TriggerProps {
   {#snippet compRightPanel()}
     <div style="contain: layout">
       <Drawer direction="right" defaultOpen={true}>
-        <DrawerContent class="max-w-md">
+        <DrawerContent class="nds-max-w-md">
           <DrawerHeader>
             <DrawerTitle>Filtros</DrawerTitle>
             <DrawerDescription>Refine os resultados.</DrawerDescription>
           </DrawerHeader>
-          <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+          <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
           <DrawerFooter>
             <Button>Aplicar</Button>
             <DrawerClose>

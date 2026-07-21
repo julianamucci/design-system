@@ -184,9 +184,9 @@ interface ToggleProps {
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="toggle">
     {#snippet children()}
-      <div class="flex flex-col gap-6 items-start">
+      <div class="nds-stack" data-spacing="lg" style="align-items: flex-start">
         <!-- Formatting toolbar (icon-only) -->
-        <div class="flex items-center gap-1">
+        <div class="nds-cluster" data-spacing="xs">
           <Toggle
             bind:pressed={demoBold}
             aria-label={$tStore('demonstration.labels.bold')}
@@ -368,7 +368,7 @@ interface ToggleProps {
   {/snippet}
 
   {#snippet dd2Do()}
-    <div class="flex items-center gap-1">
+    <div class="nds-cluster" data-spacing="xs">
       <Toggle bind:pressed={dd2DoPressed} aria-label="Negrito">
         <Bold aria-hidden="true" />
       </Toggle>
@@ -382,7 +382,7 @@ interface ToggleProps {
   {/snippet}
 
   {#snippet dd2Dont()}
-    <div class="flex items-center gap-3">
+    <div class="nds-cluster" data-spacing="sm">
       <Toggle bind:pressed={dd2DontPressed} aria-label="Negrito">
         <Bold aria-hidden="true" />
       </Toggle>
@@ -454,7 +454,7 @@ interface ToggleProps {
         name: $tStore('variants.compositions.toolbar.name'),
         description: $tStore('variants.compositions.toolbar.description'),
         useWhen: $tStore('variants.compositions.toolbar.use'),
-        code: `<div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+        code: `<div role="group" aria-label="Formatação de texto" class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
   <Toggle pressed aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
   <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
   <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
@@ -475,7 +475,7 @@ interface ToggleProps {
         name: $tStore('variants.compositions.sizes.name'),
         description: $tStore('variants.compositions.sizes.description'),
         useWhen: $tStore('variants.compositions.sizes.use'),
-        code: `<div class="flex items-center gap-3">
+        code: `<div class="nds-cluster" data-spacing="sm">
   <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
   <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
   <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
@@ -486,9 +486,9 @@ interface ToggleProps {
         name: $tStore('variants.compositions.filterList.name'),
         description: $tStore('variants.compositions.filterList.description'),
         useWhen: $tStore('variants.compositions.filterList.use'),
-        code: `<div class="flex flex-col gap-2">
-  <span class="text-sm font-medium">Filtros de exibição</span>
-  <div class="flex items-center gap-2">
+        code: `<div class="nds-stack" data-spacing="sm">
+  <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
+  <div class="nds-cluster" data-spacing="sm">
     <Toggle variant="outline"><Eye aria-hidden="true" /><span>Mostrar ocultos</span></Toggle>
     <Toggle pressed variant="outline"><List aria-hidden="true" /><span>Em lista</span></Toggle>
   </div>
@@ -499,7 +499,7 @@ interface ToggleProps {
   />
 
   {#snippet compToolbar()}
-    <div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
+    <div role="group" aria-label="Formatação de texto" class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
       <Toggle pressed aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
       <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
       <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
@@ -514,7 +514,7 @@ interface ToggleProps {
   {/snippet}
 
   {#snippet compSizes()}
-    <div class="flex items-center gap-3">
+    <div class="nds-cluster" data-spacing="sm">
       <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
       <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
       <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
@@ -522,9 +522,9 @@ interface ToggleProps {
   {/snippet}
 
   {#snippet compFilterList()}
-    <div class="flex flex-col gap-2">
-      <span class="text-sm font-medium">Filtros de exibição</span>
-      <div class="flex items-center gap-2">
+    <div class="nds-stack" data-spacing="sm">
+      <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
+      <div class="nds-cluster" data-spacing="sm">
         <Toggle variant="outline"><Eye aria-hidden="true" /><span>Mostrar ocultos</span></Toggle>
         <Toggle pressed variant="outline"><List aria-hidden="true" /><span>Em lista</span></Toggle>
       </div>

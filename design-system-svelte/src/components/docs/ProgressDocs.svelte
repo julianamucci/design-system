@@ -122,10 +122,10 @@
   class="[&>div]:animate-indeterminate"
 />`;
 
-  const codeWithLabel = `<div class="space-y-2">
-  <div class="flex items-center justify-between text-sm">
-    <span class="font-medium">Enviando arquivo</span>
-    <span class="text-muted-foreground" aria-live="polite">42%</span>
+  const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster nds-text-body" data-justify="between">
+    <span class="nds-text-foreground">Enviando arquivo</span>
+    <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">42%</span>
   </div>
   <Progress value={42} aria-label="Enviando arquivo" />
 </div>`;
@@ -154,31 +154,31 @@ interface ProgressProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
         <!-- Upload animado com label e valor -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.upload')}</p>
-          <div class="p-4 border rounded-md space-y-2">
-            <div class="flex items-center justify-between text-sm">
-              <span class="font-medium text-foreground">{$tStore('demonstration.labels.upload')}</span>
-              <span class="text-muted-foreground tabular-nums" aria-live="polite">{uploadValue}%</span>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.upload')}</p>
+          <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+            <div class="nds-cluster nds-text-body" data-justify="between">
+              <span class="nds-font-medium nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
+              <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">{uploadValue}%</span>
             </div>
             <Progress value={uploadValue} aria-label={$tStore('demonstration.labels.upload')} />
           </div>
         </div>
 
         <!-- Loading animado simples -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.loading')}</p>
-          <div class="p-4 border rounded-md">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.loading')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md">
             <Progress value={loadingValue} aria-label={$tStore('demonstration.labels.loading')} />
           </div>
         </div>
 
         <!-- Completo -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.complete')}</p>
-          <div class="p-4 border rounded-md">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.complete')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md">
             <Progress
               value={100}
               aria-label={$tStore('demonstration.labels.complete')}
@@ -188,9 +188,9 @@ interface ProgressProps {
         </div>
 
         <!-- Indeterminate -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.indeterminate')}</p>
-          <div class="p-4 border rounded-md">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.indeterminate')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md">
             <Progress
               value={null}
               aria-label={$tStore('demonstration.labels.indeterminate')}
@@ -301,24 +301,24 @@ interface ProgressProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Progress value={42} aria-label="Progresso do upload" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Progress value={42} aria-label="Barra" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="w-full space-y-2">
-      <p class="text-sm text-muted-foreground" aria-live="polite">50%</p>
+    <div class="nds-stack nds-w-full" data-spacing="xs">
+      <p class="nds-text-body nds-text-muted-foreground" aria-live="polite">50%</p>
       <Progress value={50} aria-label="Progresso do upload" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full space-y-2">
-      <p class="text-sm text-muted-foreground" aria-live="assertive">51%</p>
+    <div class="nds-stack nds-w-full" data-spacing="xs">
+      <p class="nds-text-body nds-text-muted-foreground" aria-live="assertive">51%</p>
       <Progress value={51} aria-label="Progresso do upload" />
     </div>
   {/snippet}
@@ -337,20 +337,20 @@ interface ProgressProps {
   />
 
   {#snippet variantDeterminate()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Progress value={42} aria-label="Progresso do upload" />
     </div>
   {/snippet}
   {#snippet variantIndeterminate()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Progress value={null} aria-label="Processando dados" class="[&>div]:animate-indeterminate" />
     </div>
   {/snippet}
   {#snippet variantWithLabel()}
-    <div class="w-full space-y-2">
-      <div class="flex items-center justify-between text-sm">
-        <span class="font-medium text-foreground">Enviando arquivo</span>
-        <span class="text-muted-foreground tabular-nums" aria-live="polite">42%</span>
+    <div class="nds-stack nds-w-full" data-spacing="xs">
+      <div class="nds-cluster nds-text-body" data-justify="between">
+        <span class="nds-font-medium nds-text-foreground">Enviando arquivo</span>
+        <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">42%</span>
       </div>
       <Progress value={42} aria-label="Enviando arquivo" />
     </div>

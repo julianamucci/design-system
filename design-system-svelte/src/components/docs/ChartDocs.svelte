@@ -141,31 +141,31 @@
 
   const codeBar = `<ChartContainer
   option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-  class="h-[240px] w-full"
+  class="nds-w-full" style="height: 240px"
   aria-label="Gráfico de barras: acessos mensais"
 />`;
 
   const codeLine = `<ChartContainer
   option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-  class="h-[240px] w-full"
+  class="nds-w-full" style="height: 240px"
   aria-label="Gráfico de linhas: tendência mensal"
 />`;
 
   const codeArea = `<ChartContainer
   option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-  class="h-[240px] w-full"
+  class="nds-w-full" style="height: 240px"
   aria-label="Gráfico de área: volume mensal"
 />`;
 
   const codePie = `<ChartContainer
   option={buildPieOption({ data: pieData })}
-  class="h-[280px] w-full"
+  class="nds-w-full" style="height: 280px"
   aria-label="Gráfico de pizza: distribuição por dispositivo"
 />`;
 
   const codeMulti = `<ChartContainer
   option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Vendas' })}
-  class="h-[280px] w-full"
+  class="nds-w-full" style="height: 280px"
   aria-label="Gráfico multi-séries: Vendas por categoria"
 />`;
 
@@ -217,34 +217,37 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-col items-center gap-4 w-full">
-        <div class="flex items-center gap-2">
+      <div class="nds-stack nds-w-full" data-spacing="md" style="align-items: center">
+        <div class="nds-cluster" data-spacing="sm">
           <button
             type="button"
             onclick={() => demoType = 'bar'}
-            class="px-3 py-1 rounded-md text-sm font-medium transition-colors"
-            class:bg-primary={demoType === 'bar'}
-            class:text-primary-foreground={demoType === 'bar'}
-            class:bg-muted={demoType !== 'bar'}
-            class:text-muted-foreground={demoType !== 'bar'}
+            class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
+            style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+            class:nds-bg-primary={demoType === 'bar'}
+            class:nds-text-primary-foreground={demoType === 'bar'}
+            class:nds-bg-muted={demoType !== 'bar'}
+            class:nds-text-muted-foreground={demoType !== 'bar'}
           >
             {$tStore('demonstration.labels.bar')}
           </button>
           <button
             type="button"
             onclick={() => demoType = 'line'}
-            class="px-3 py-1 rounded-md text-sm font-medium transition-colors"
-            class:bg-primary={demoType === 'line'}
-            class:text-primary-foreground={demoType === 'line'}
-            class:bg-muted={demoType !== 'line'}
-            class:text-muted-foreground={demoType !== 'line'}
+            class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
+            style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+            class:nds-bg-primary={demoType === 'line'}
+            class:nds-text-primary-foreground={demoType === 'line'}
+            class:nds-bg-muted={demoType !== 'line'}
+            class:nds-text-muted-foreground={demoType !== 'line'}
           >
             {$tStore('demonstration.labels.line')}
           </button>
         </div>
         <ChartContainer
           option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-          class="h-[220px] w-full max-w-[400px]"
+          class="nds-w-full"
+          style="height: 220px; max-width: 400px"
           aria-label={$tStore('demonstration.labels.chartTitle')}
          />
       </div>
@@ -354,28 +357,28 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet doPair1()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[140px] w-full"
+      class="nds-w-full" style="height: 140px"
       aria-label="Gráfico multi-séries com legenda: Desktop e Mobile"
      />
   {/snippet}
   {#snippet dontPair1()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[140px] w-full"
+      class="nds-w-full" style="height: 140px"
       aria-label="Gráfico multi-séries sem legenda"
      />
   {/snippet}
   {#snippet doPair2()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[140px] w-full"
+      class="nds-w-full" style="height: 140px"
       aria-label="Gráfico de barras: acessos mensais por dispositivo — com aria-label descritivo"
      />
   {/snippet}
   {#snippet dontPair2()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[140px] w-full"
+      class="nds-w-full" style="height: 140px"
      />
   {/snippet}
 
@@ -402,28 +405,28 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet variantBar()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[180px] w-[300px]"
+      style="height: 180px; width: 300px"
       aria-label="Gráfico de barras: acessos mensais"
     />
   {/snippet}
   {#snippet variantLine()}
     <ChartContainer
       option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[180px] w-[300px]"
+      style="height: 180px; width: 300px"
       aria-label="Gráfico de linhas: acessos mensais"
     />
   {/snippet}
   {#snippet variantArea()}
     <ChartContainer
       option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[180px] w-[300px]"
+      style="height: 180px; width: 300px"
       aria-label="Gráfico de área: volume mensal"
     />
   {/snippet}
   {#snippet variantPie()}
     <ChartContainer
       option={buildPieOption({ data: pieData })}
-      class="h-[200px] w-[220px]"
+      style="height: 200px; width: 220px"
       aria-label="Gráfico de pizza: distribuição por dispositivo"
     />
   {/snippet}
@@ -438,12 +441,12 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         name: $tStore('variants.compositions.inCard.name'),
         description: $tStore('variants.compositions.inCard.description'),
         useWhen: $tStore('variants.compositions.inCard.use'),
-        code: `<Card class="w-full max-w-sm">
+        code: `<Card class="nds-w-full nds-max-w-sm">
   <CardHeader>
     <CardTitle>Acessos mensais</CardTitle>
   </CardHeader>
   <CardContent>
-    <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="..." />
+    <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="..." />
   </CardContent>
 </Card>`,
         preview: compInCard,
@@ -452,19 +455,19 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         name: $tStore('variants.compositions.multiSeriesWithLegend.name'),
         description: $tStore('variants.compositions.multiSeriesWithLegend.description'),
         useWhen: $tStore('variants.compositions.multiSeriesWithLegend.use'),
-        code: `<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="Gráfico multi-séries: Desktop e Mobile" />`,
+        code: `<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="Gráfico multi-séries: Desktop e Mobile" />`,
         preview: compMultiSeries,
       },
       {
         name: $tStore('variants.compositions.smallInline.name'),
         description: $tStore('variants.compositions.smallInline.description'),
         useWhen: $tStore('variants.compositions.smallInline.use'),
-        code: `<div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+        code: `<div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
   <div>
-    <p class="text-xs text-muted-foreground">Acessos</p>
-    <p class="text-2xl font-semibold">1.224</p>
+    <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
+    <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
   </div>
-  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} class="h-[48px] w-[120px]" aria-label="Tendência de acessos" />
+  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} style="height: 48px; width: 120px" aria-label="Tendência de acessos" />
 </div>`,
         preview: compSmallInline,
       },
@@ -473,11 +476,11 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         description: $tStore('variants.compositions.withEmptyState.description'),
         useWhen: $tStore('variants.compositions.withEmptyState.use'),
         code: `{#if data.length === 0}
-  <div role="status" class="flex h-[200px] w-full items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground">
+  <div role="status" class="nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style="height: 200px; align-items: center; border: 1px dashed var(--border)">
     Nenhum dado disponível para o período selecionado.
   </div>
 {:else}
-  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="h-[200px] w-full" aria-label="..." />
+  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="..." />
 {/if}`,
         preview: compEmptyState,
       },
@@ -485,14 +488,14 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   />
 
   {#snippet compInCard()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Acessos mensais</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer
           option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-          class="h-[180px] w-full"
+          class="nds-w-full" style="height: 180px"
           aria-label="Gráfico de barras: acessos mensais"
          />
       </CardContent>
@@ -502,20 +505,20 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet compMultiSeries()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="h-[200px] w-full max-w-md"
+      class="nds-w-full nds-max-w-md" style="height: 200px"
       aria-label="Gráfico multi-séries: Desktop e Mobile"
      />
   {/snippet}
 
   {#snippet compSmallInline()}
-    <div class="flex items-center gap-4 rounded-md border p-4 w-fit">
+    <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
       <div>
-        <p class="text-xs text-muted-foreground">Acessos</p>
-        <p class="text-2xl font-semibold">1.224</p>
+        <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
+        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
       </div>
       <ChartContainer
         option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-        class="h-[48px] w-[120px]"
+        style="height: 48px; width: 120px"
         aria-label="Tendência de acessos nos últimos 6 meses"
        />
     </div>
@@ -524,7 +527,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet compEmptyState()}
     <div
       role="status"
-      class="flex h-[200px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+      class="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center"
+      style="height: 200px; align-items: center; border: 1px dashed var(--border)"
     >
       Nenhum dado disponível para o período selecionado.
     </div>

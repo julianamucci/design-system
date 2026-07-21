@@ -113,7 +113,7 @@
   AccordionTrigger,
 } from "@/components/ui/accordion";`;
 
-  const codeSingle = `<Accordion type="single" defaultValue="item-1" class="w-full">
+  const codeSingle = `<Accordion type="single" defaultValue="item-1" class="nds-w-full">
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
@@ -122,7 +122,7 @@
   </AccordionItem>
 </Accordion>`;
 
-  const codeMultiple = `<Accordion type="multiple" class="w-full">
+  const codeMultiple = `<Accordion type="multiple" class="nds-w-full">
   <AccordionItem value="especificacoes">
     <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>CPU: Intel Core i7-12700, RAM: 16GB DDR5</AccordionContent>
@@ -183,7 +183,7 @@ type AccordionProps = Accordion.RootProps & {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <Accordion type="single" class="w-full max-w-lg">
+          <Accordion type="single" class="nds-w-full nds-max-w-lg">
             {#each demoItems as item (item.value)}
               <AccordionItem value={item.value}>
                 <AccordionTrigger onclick={(e) => handleDemoTriggerClick(e, item.q)}>
@@ -295,7 +295,7 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet doPair1()}
-        <Accordion type="single" class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="nds-w-full nds-max-w-xs nds-text-body">
           <AccordionItem value="faq">
             <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
             <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
@@ -303,7 +303,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet dontPair1()}
-        <Accordion type="single" class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="nds-w-full nds-max-w-xs nds-text-body">
           <AccordionItem value="faq">
             <AccordionTrigger>Senha</AccordionTrigger>
             <AccordionContent>Informações sobre redefinição.</AccordionContent>
@@ -311,7 +311,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet doPair2()}
-        <Accordion type="multiple" class="w-full max-w-xs text-sm">
+        <Accordion type="multiple" class="nds-w-full nds-max-w-xs nds-text-body">
           <AccordionItem value="s1">
             <AccordionTrigger>Especificações técnicas</AccordionTrigger>
             <AccordionContent>CPU, RAM, SSD.</AccordionContent>
@@ -323,7 +323,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet dontPair2()}
-        <Accordion type="single" class="w-full max-w-xs text-sm">
+        <Accordion type="single" class="nds-w-full nds-max-w-xs nds-text-body">
           <AccordionItem value="s1">
             <AccordionTrigger>Expandir</AccordionTrigger>
             <AccordionContent>Conteúdo único.</AccordionContent>
@@ -351,7 +351,7 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet modeSingle()}
-        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Pergunta 1</AccordionTrigger>
             <AccordionContent>Resposta objetiva em 1–2 linhas.</AccordionContent>
@@ -363,7 +363,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeMultiple()}
-        <Accordion type="multiple" class="w-full max-w-sm text-sm">
+        <Accordion type="multiple" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="s1">
             <AccordionTrigger>Especificações técnicas</AccordionTrigger>
             <AccordionContent>CPU, RAM, SSD.</AccordionContent>
@@ -375,7 +375,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeControlled()}
-        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
             <AccordionContent>Estado gerenciado externamente via bind:value.</AccordionContent>
@@ -387,7 +387,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeDefaultOpen()}
-        <Accordion type="single" defaultValue="item-1" class="w-full max-w-sm text-sm">
+        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
             <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
@@ -409,24 +409,24 @@ type AccordionProps = Accordion.RootProps & {
             name: $tStore('variants.compositions.iconTrigger.name'),
             description: $tStore('variants.compositions.iconTrigger.description'),
             useWhen: $tStore('variants.compositions.iconTrigger.use'),
-            code: `<Accordion type="single" class="w-full">
+            code: `<Accordion type="single" class="nds-w-full">
   <AccordionItem value="info">
     <AccordionTrigger>
-      <Info class="h-4 w-4" aria-hidden="true" />
+      <Info class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
       Informações gerais
     </AccordionTrigger>
     <AccordionContent>Conteúdo informativo.</AccordionContent>
   </AccordionItem>
   <AccordionItem value="warn">
     <AccordionTrigger>
-      <AlertTriangle class="h-4 w-4" aria-hidden="true" />
+      <AlertTriangle class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
       Avisos importantes
     </AccordionTrigger>
     <AccordionContent>Atenção aos detalhes.</AccordionContent>
   </AccordionItem>
   <AccordionItem value="ok">
     <AccordionTrigger>
-      <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+      <CheckCircle2 class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
       Confirmações
     </AccordionTrigger>
     <AccordionContent>Tudo certo por aqui.</AccordionContent>
@@ -438,7 +438,7 @@ type AccordionProps = Accordion.RootProps & {
             name: $tStore('variants.compositions.badgeTrigger.name'),
             description: $tStore('variants.compositions.badgeTrigger.description'),
             useWhen: $tStore('variants.compositions.badgeTrigger.use'),
-            code: `<Accordion type="single" class="w-full">
+            code: `<Accordion type="single" class="nds-w-full">
   <AccordionItem value="news">
     <AccordionTrigger>
       Novidades
@@ -460,12 +460,12 @@ type AccordionProps = Accordion.RootProps & {
             name: $tStore('variants.compositions.richContent.name'),
             description: $tStore('variants.compositions.richContent.description'),
             useWhen: $tStore('variants.compositions.richContent.use'),
-            code: `<Accordion type="multiple" class="w-full">
+            code: `<Accordion type="multiple" class="nds-w-full">
   <AccordionItem value="layout">
     <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
     <AccordionContent>
-      <div class="grid grid-cols-2 gap-2 text-sm">
-        <div class="font-medium">Token</div><div class="font-medium">Valor</div>
+      <div class="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
+        <div class="nds-font-medium">Token</div><div class="nds-font-medium">Valor</div>
         <div>--spacing-sm</div><div>8px</div>
         <div>--spacing-md</div><div>16px</div>
       </div>
@@ -474,7 +474,7 @@ type AccordionProps = Accordion.RootProps & {
   <AccordionItem value="typo">
     <AccordionTrigger>Tipografia</AccordionTrigger>
     <AccordionContent>
-      <ul class="list-disc pl-5 text-sm">
+      <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
         <li>text-xs · 12px</li>
         <li>text-sm · 14px</li>
         <li>text-base · 16px</li>
@@ -489,8 +489,8 @@ type AccordionProps = Accordion.RootProps & {
             description: $tStore('variants.compositions.faq.description'),
             useWhen: $tStore('variants.compositions.faq.use'),
             code: `<section>
-  <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
-  <Accordion type="single" class="w-full">
+  <h2 class="nds-text-base nds-font-semibold nds-mb-4">Perguntas frequentes</h2>
+  <Accordion type="single" class="nds-w-full">
     <AccordionItem value="senha">
       <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
       <AccordionContent>Use a opção "Esqueci minha senha" na tela de login.</AccordionContent>
@@ -515,24 +515,24 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet compIconTrigger()}
-        <Accordion type="single" class="w-full max-w-sm text-sm">
+        <Accordion type="single" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="info">
             <AccordionTrigger>
-              <Info class="h-4 w-4" aria-hidden="true" />
+              <Info class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
               Informações gerais
             </AccordionTrigger>
             <AccordionContent>Conteúdo informativo.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="warn">
             <AccordionTrigger>
-              <AlertTriangle class="h-4 w-4" aria-hidden="true" />
+              <AlertTriangle class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
               Avisos importantes
             </AccordionTrigger>
             <AccordionContent>Atenção aos detalhes.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="ok">
             <AccordionTrigger>
-              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+              <CheckCircle2 class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
               Confirmações
             </AccordionTrigger>
             <AccordionContent>Tudo certo por aqui.</AccordionContent>
@@ -540,28 +540,28 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet compBadgeTrigger()}
-        <Accordion type="single" class="w-full max-w-sm text-sm">
+        <Accordion type="single" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="news">
             <AccordionTrigger>
-              <span class="flex items-center gap-2">Novidades <Badge>Novo</Badge></span>
+              <span class="nds-cluster" data-spacing="xs">Novidades <Badge>Novo</Badge></span>
             </AccordionTrigger>
             <AccordionContent>Confira as novidades da versão.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="beta">
             <AccordionTrigger>
-              <span class="flex items-center gap-2">Funcionalidades em beta <Badge variant="secondary">Beta</Badge></span>
+              <span class="nds-cluster" data-spacing="xs">Funcionalidades em beta <Badge variant="secondary">Beta</Badge></span>
             </AccordionTrigger>
             <AccordionContent>Recursos experimentais.</AccordionContent>
           </AccordionItem>
         </Accordion>
       {/snippet}
       {#snippet compRichContent()}
-        <Accordion type="multiple" class="w-full max-w-sm text-sm">
+        <Accordion type="multiple" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="layout">
             <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
             <AccordionContent>
-              <div class="grid grid-cols-2 gap-2 text-sm">
-                <div class="font-medium">Token</div><div class="font-medium">Valor</div>
+              <div class="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
+                <div class="nds-font-medium">Token</div><div class="nds-font-medium">Valor</div>
                 <div>--spacing-sm</div><div>8px</div>
                 <div>--spacing-md</div><div>16px</div>
               </div>
@@ -570,7 +570,7 @@ type AccordionProps = Accordion.RootProps & {
           <AccordionItem value="typo">
             <AccordionTrigger>Tipografia</AccordionTrigger>
             <AccordionContent>
-              <ul class="list-disc pl-5 text-sm">
+              <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
                 <li>text-xs · 12px</li>
                 <li>text-sm · 14px</li>
                 <li>text-base · 16px</li>
@@ -580,9 +580,9 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet compFaq()}
-        <section class="w-full max-w-sm text-sm">
-          <h2 class="text-lg font-semibold mb-3">Perguntas frequentes</h2>
-          <Accordion type="single" class="w-full">
+        <section class="nds-w-full nds-max-w-sm nds-text-body">
+          <h2 class="nds-text-base nds-font-semibold nds-mb-4">Perguntas frequentes</h2>
+          <Accordion type="single" class="nds-w-full">
             <AccordionItem value="senha">
               <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
               <AccordionContent>Use a opção "Esqueci minha senha" na tela de login.</AccordionContent>

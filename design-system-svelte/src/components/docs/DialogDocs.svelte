@@ -121,7 +121,7 @@
 // Aplique max-h + overflow-y-auto manualmente no body do DialogContent:
 <DialogContent>
   <DialogHeader>...</DialogHeader>
-  <div class="max-h-[80vh] overflow-y-auto">
+  <div class="nds-overflow-y" style="max-height: 80vh;">
     {/* conteúdo longo */}
   </div>
   <DialogFooter>...</DialogFooter>
@@ -162,7 +162,7 @@
       <DialogTitle>Editar dados pessoais</DialogTitle>
       <DialogDescription>Atualize seu nome e e-mail.</DialogDescription>
     </DialogHeader>
-    <form class="grid gap-3" onsubmit={onSave}>
+    <form class="nds-stack" data-spacing="sm" onsubmit={onSave}>
       <Input name="name" defaultValue="Maria Silva" />
       <Input name="email" type="email" />
     </form>
@@ -196,7 +196,7 @@
     </DialogHeader>
     <DialogFooter>
       <DialogClose>...</DialogClose>
-      <Button class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <Button variant="destructive">
         Remover item
       </Button>
     </DialogFooter>
@@ -266,7 +266,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-center justify-center gap-4 w-full">
+      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
         <Dialog>
           <DialogTrigger>
             {#snippet child({ props })}
@@ -459,7 +459,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose>
             {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
           </DialogClose>
-          <Button class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir conta</Button>
+          <Button variant="destructive">Excluir conta</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -511,10 +511,10 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Editar dados pessoais</DialogTitle>
           <DialogDescription>Atualize seu nome e e-mail.</DialogDescription>
         </DialogHeader>
-        <form class="grid gap-3">
-          <label class="grid gap-1 text-sm">
+        <form class="nds-stack" data-spacing="sm">
+          <label class="nds-stack nds-text-body" data-spacing="xs">
             <span>Nome</span>
-            <input type="text" class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm" defaultValue="Maria Silva" />
+            <input type="text" class="nds-input" defaultValue="Maria Silva" />
           </label>
         </form>
         <DialogFooter>
@@ -533,7 +533,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Termos de uso</DialogTitle>
           <DialogDescription>Leia atentamente antes de aceitar.</DialogDescription>
         </DialogHeader>
-        <div class="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-2">
+        <div class="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground" data-spacing="sm" style="max-height: 40vh; padding-right: 0.5rem;">
           {#each Array.from({ length: 10 }) as _, i}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno.</p>
           {/each}
@@ -568,7 +568,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogClose>
             {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
           </DialogClose>
-          <Button class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Remover item</Button>
+          <Button variant="destructive">Remover item</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -607,7 +607,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTitle>Confirmar e-mail</DialogTitle>
       <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
     </DialogHeader>
-    <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+    <p class="nds-text-body nds-text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
     <DialogFooter>
       <DialogClose>...</DialogClose>
       <Button>Enviar link</Button>
@@ -627,7 +627,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTitle>Editar perfil</DialogTitle>
       <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
     </DialogHeader>
-    <form class="grid gap-3">
+    <form class="nds-stack" data-spacing="sm">
       <Input name="name" defaultValue="Maria Souza" />
       <Input name="role" defaultValue="Designer" />
     </form>
@@ -650,7 +650,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTitle>Capa do post</DialogTitle>
       <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
     </DialogHeader>
-    <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+    <div class="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground" style="aspect-ratio: 16/9; display: grid; place-items: center">
       Pré-visualização da mídia
     </div>
   </DialogContent>
@@ -667,7 +667,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Confirmar e-mail</DialogTitle>
           <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
         </DialogHeader>
-        <p class="text-sm text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
         <DialogFooter>
           <DialogClose>
             {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
@@ -684,14 +684,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Editar perfil</DialogTitle>
           <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
         </DialogHeader>
-        <form class="grid gap-3">
-          <label class="grid gap-1 text-sm">
+        <form class="nds-stack" data-spacing="sm">
+          <label class="nds-stack nds-text-body" data-spacing="xs">
             <span>Nome de exibição</span>
-            <input type="text" class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm" defaultValue="Maria Souza" />
+            <input type="text" class="nds-input" defaultValue="Maria Souza" />
           </label>
-          <label class="grid gap-1 text-sm">
+          <label class="nds-stack nds-text-body" data-spacing="xs">
             <span>Função</span>
-            <input type="text" class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm" defaultValue="Designer" />
+            <input type="text" class="nds-input" defaultValue="Designer" />
           </label>
         </form>
         <DialogFooter>
@@ -710,7 +710,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Capa do post</DialogTitle>
           <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
         </DialogHeader>
-        <div class="aspect-video w-full bg-muted rounded-md grid place-items-center text-xs text-muted-foreground">
+        <div class="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground" style="aspect-ratio: 16/9; display: grid; place-items: center">
           Pré-visualização da mídia
         </div>
       </DialogContent>

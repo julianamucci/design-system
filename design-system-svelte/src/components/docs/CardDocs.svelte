@@ -130,17 +130,17 @@ import { Button } from "@/components/ui/button";`;
     </CardDescription>
   </CardHeader>
   <CardContent>
-    <p class="text-sm text-muted-foreground">R$ 1.299,00 · Em estoque</p>
+    <p class="nds-text-body nds-text-muted-foreground">R$ 1.299,00 · Em estoque</p>
   </CardContent>
 </Card>`;
 
   const codeSm = `<Card size="sm">
   <CardHeader>
     <CardDescription>Assinantes ativos</CardDescription>
-    <CardTitle class="text-2xl tabular-nums">8.742</CardTitle>
+    <CardTitle style="font-size: 1.5rem; line-height: 2rem; font-variant-numeric: tabular-nums">8.742</CardTitle>
   </CardHeader>
   <CardContent>
-    <p class="text-xs text-emerald-600">+12% no mês</p>
+    <p class="nds-text-caption nds-text-success">+12% no mês</p>
   </CardContent>
 </Card>`;
 
@@ -150,9 +150,9 @@ import { Button } from "@/components/ui/button";`;
     <CardDescription>Estrutura ergonômica.</CardDescription>
   </CardHeader>
   <CardContent>
-    <p class="text-sm">R$ 1.299,00 · Em estoque</p>
+    <p class="nds-text-body">R$ 1.299,00 · Em estoque</p>
   </CardContent>
-  <CardFooter class="justify-end gap-2">
+  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
     <Button variant="outline" size="sm">Cancelar</Button>
     <Button size="sm">Salvar</Button>
   </CardFooter>
@@ -169,18 +169,18 @@ import { Button } from "@/components/ui/button";`;
     </CardAction>
   </CardHeader>
   <CardContent>
-    <p class="text-sm">R$ 1.299,00 · Em estoque</p>
+    <p class="nds-text-body">R$ 1.299,00 · Em estoque</p>
   </CardContent>
 </Card>`;
 
   const codeWithImage = `<Card>
-  <img src="/cadeira.jpg" alt="Cadeira Gamer Pro" class="aspect-[4/3] w-full object-cover" />
+  <img src="/cadeira.jpg" alt="Cadeira Gamer Pro" class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
   <CardHeader>
     <CardTitle>Cadeira Gamer Pro</CardTitle>
     <CardDescription>Estrutura ergonômica.</CardDescription>
   </CardHeader>
   <CardContent>
-    <p class="text-sm">R$ 1.299,00 · Em estoque</p>
+    <p class="nds-text-body">R$ 1.299,00 · Em estoque</p>
   </CardContent>
 </Card>`;
 
@@ -231,9 +231,9 @@ interface CardPartProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="md" style="align-items: start">
         <Card>
-          <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="aspect-[4/3] w-full object-cover" />
+          <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
           <CardHeader>
             <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
             <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
@@ -242,9 +242,9 @@ interface CardPartProps {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p class="text-base font-semibold">{$tStore('demonstration.labels.productPrice')}</p>
+            <p class="nds-text-base nds-font-semibold">{$tStore('demonstration.labels.productPrice')}</p>
           </CardContent>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`}>
               {$tStore('demonstration.labels.actionEdit')}
             </Button>
@@ -257,27 +257,27 @@ interface CardPartProps {
         <Card size="sm">
           <CardHeader>
             <CardDescription>{$tStore('demonstration.labels.metricTitle')}</CardDescription>
-            <CardTitle class="text-2xl font-semibold tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
+            <CardTitle class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem; font-variant-numeric: tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p class="text-xs text-emerald-600 dark:text-emerald-400">{$tStore('demonstration.labels.metricTrend')}</p>
+            <p class="nds-text-caption nds-text-success">{$tStore('demonstration.labels.metricTrend')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <div class="flex items-center gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <Avatar>
                 <AvatarImage src="https://i.pravatar.cc/80?img=47" alt={$tStore('demonstration.labels.profileTitle')} />
                 <AvatarFallback>MR</AvatarFallback>
               </Avatar>
-              <div class="flex flex-col">
+              <div class="nds-stack" data-spacing="sm">
                 <CardTitle>{$tStore('demonstration.labels.profileTitle')}</CardTitle>
                 <CardDescription>{$tStore('demonstration.labels.profileDescription')}</CardDescription>
               </div>
             </div>
           </CardHeader>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button variant="outline" size="sm">{$tStore('demonstration.labels.actionEdit')}</Button>
           </CardFooter>
         </Card>
@@ -389,32 +389,32 @@ interface CardPartProps {
   />
 
   {#snippet doPair1()}
-    <Card class="w-full">
+    <Card class="nds-w-full">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
-      <CardFooter class="justify-end gap-2">
+      <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button size="sm">{$tStore('demonstration.labels.actionSave')}</Button>
       </CardFooter>
     </Card>
   {/snippet}
   {#snippet dontPair1()}
-    <Card class="w-full">
+    <Card class="nds-w-full">
       <CardContent>
-        <p class="text-sm text-muted-foreground py-4">—</p>
+        <p class="nds-text-body nds-text-muted-foreground" style="padding-block: 1rem">—</p>
       </CardContent>
     </Card>
   {/snippet}
   {#snippet doPair2()}
-    <Card class="w-full">
+    <Card class="nds-w-full">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
       </CardHeader>
-      <CardFooter class="justify-end gap-2">
+      <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`}>
           {$tStore('demonstration.labels.actionEdit')}
         </Button>
@@ -425,11 +425,11 @@ interface CardPartProps {
     </Card>
   {/snippet}
   {#snippet dontPair2()}
-    <Card class="w-full">
+    <Card class="nds-w-full">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
       </CardHeader>
-      <CardFooter class="justify-end gap-2">
+      <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button variant="outline" size="sm">{$tStore('demonstration.labels.actionEdit')}</Button>
         <Button variant="destructive" size="sm">{$tStore('demonstration.labels.actionDelete')}</Button>
       </CardFooter>
@@ -458,44 +458,44 @@ interface CardPartProps {
   />
 
   {#snippet variantDefault()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
       </CardContent>
     </Card>
   {/snippet}
   {#snippet variantSm()}
-    <Card size="sm" class="w-full max-w-sm">
+    <Card size="sm" class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardDescription>{$tStore('demonstration.labels.metricTitle')}</CardDescription>
-        <CardTitle class="text-2xl font-semibold tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
+        <CardTitle class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem; font-variant-numeric: tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p class="text-xs text-emerald-600 dark:text-emerald-400">{$tStore('demonstration.labels.metricTrend')}</p>
+        <p class="nds-text-caption nds-text-success">{$tStore('demonstration.labels.metricTrend')}</p>
       </CardContent>
     </Card>
   {/snippet}
   {#snippet variantWithFooter()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
-      <CardFooter class="justify-end gap-2">
+      <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button variant="outline" size="sm">{$tStore('demonstration.labels.actionCancel')}</Button>
         <Button size="sm">{$tStore('demonstration.labels.actionSave')}</Button>
       </CardFooter>
     </Card>
   {/snippet}
   {#snippet variantWithAction()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
@@ -506,19 +506,19 @@ interface CardPartProps {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
       </CardContent>
     </Card>
   {/snippet}
   {#snippet variantWithImage()}
-    <Card class="w-full max-w-sm">
-      <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="aspect-[4/3] w-full object-cover" />
+    <Card class="nds-w-full nds-max-w-sm">
+      <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
       <CardHeader>
         <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
     </Card>
   {/snippet}
@@ -554,15 +554,15 @@ interface CardPartProps {
   />
 
   {#snippet compWithFooter()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-lg font-semibold">R$ 1.299,00</p>
+        <p class="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
-      <CardFooter class="justify-end gap-2">
+      <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} Cadeira Gamer Pro`}>
           {$tStore('demonstration.labels.actionEdit')}
         </Button>
@@ -573,7 +573,7 @@ interface CardPartProps {
     </Card>
   {/snippet}
   {#snippet compWithAction()}
-    <Card class="w-full max-w-sm">
+    <Card class="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Assinantes ativos</CardTitle>
         <CardDescription>+12% no mês</CardDescription>
@@ -584,13 +584,13 @@ interface CardPartProps {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p class="text-2xl font-semibold">8.742</p>
+        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">8.742</p>
       </CardContent>
     </Card>
   {/snippet}
   {#snippet compWithImage()}
-    <Card class="w-full max-w-sm">
-      <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />
+    <Card class="nds-w-full nds-max-w-sm">
+      <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80" alt="Cadeira Gamer Pro" class="nds-w-full" style="height: 10rem; object-fit: cover" />
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>Estrutura ergonômica.</CardDescription>

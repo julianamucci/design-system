@@ -211,10 +211,10 @@ interface InputOTPProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
         <!-- 6 dígitos -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.sixDigits')}
           </p>
           <InputOTP
@@ -234,8 +234,8 @@ interface InputOTPProps {
         </div>
 
         <!-- 4 dígitos -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.fourDigits')}
           </p>
           <InputOTP
@@ -253,8 +253,8 @@ interface InputOTPProps {
         </div>
 
         <!-- Com Separator -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.withSeparator')}
           </p>
           <InputOTP
@@ -277,8 +277,8 @@ interface InputOTPProps {
         </div>
 
         <!-- Alfanumérico -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.alphanumeric')}
           </p>
           <InputOTP
@@ -401,20 +401,20 @@ interface InputOTPProps {
   />
 
   {#snippet doPair1()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       autocomplete="one-time-code"
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="text-xs font-mono text-muted-foreground italic" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic" style="contain: layout">
       (sem autocomplete)
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="text-xs font-medium" style="contain: layout">Código de verificação</div>
+    <div class="nds-text-caption nds-font-medium" style="contain: layout">Código de verificação</div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="text-xs italic text-muted-foreground" style="contain: layout">(sem label)</div>
+    <div class="nds-text-caption nds-italic nds-text-muted-foreground" style="contain: layout">(sem label)</div>
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -435,22 +435,22 @@ interface InputOTPProps {
   />
 
   {#snippet variantSix()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       maxLength=6 · inputmode=numeric
     </div>
   {/snippet}
   {#snippet variantFour()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       maxLength=4 · inputmode=numeric
     </div>
   {/snippet}
   {#snippet variantSep()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       3 + Separator + 3
     </div>
   {/snippet}
   {#snippet variantAlpha()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       pattern=DIGITS_AND_CHARS · inputmode=text
     </div>
   {/snippet}
@@ -465,7 +465,7 @@ interface InputOTPProps {
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: `<div class="flex flex-col gap-2">
+        code: `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-code">Código de verificação</Label>
   <InputOTP id="otp-code" maxlength={6} bind:value={code} autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup>
@@ -484,13 +484,13 @@ interface InputOTPProps {
         name: $tStore('variants.compositions.withHelpText.name'),
         description: $tStore('variants.compositions.withHelpText.description'),
         useWhen: $tStore('variants.compositions.withHelpText.use'),
-        code: `<div class="flex flex-col gap-2">
+        code: `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-help">Código de verificação</Label>
   <InputOTP id="otp-help" maxlength={6} bind:value={code}
     autocomplete="one-time-code" inputmode="numeric" aria-describedby="otp-help-text">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <p id="otp-help-text" class="text-xs text-muted-foreground">
+  <p id="otp-help-text" class="nds-text-caption nds-text-muted-foreground">
     Enviamos por SMS, expira em 5 min.
   </p>
 </div>`,
@@ -500,13 +500,13 @@ interface InputOTPProps {
         name: $tStore('variants.compositions.withErrorMessage.name'),
         description: $tStore('variants.compositions.withErrorMessage.description'),
         useWhen: $tStore('variants.compositions.withErrorMessage.use'),
-        code: `<div class="flex flex-col gap-2">
+        code: `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-err">Código de verificação</Label>
   <InputOTP id="otp-err" maxlength={6} bind:value={code} aria-invalid="true"
     autocomplete="one-time-code" inputmode="numeric" aria-describedby="otp-err-text">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <p id="otp-err-text" class="text-xs text-destructive">
+  <p id="otp-err-text" class="nds-text-caption nds-text-destructive">
     Código incorreto. Verifique e tente novamente.
   </p>
 </div>`,
@@ -516,13 +516,13 @@ interface InputOTPProps {
         name: $tStore('variants.compositions.withResendButton.name'),
         description: $tStore('variants.compositions.withResendButton.description'),
         useWhen: $tStore('variants.compositions.withResendButton.use'),
-        code: `<div class="flex flex-col gap-3">
+        code: `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-resend">Código de verificação</Label>
   <InputOTP id="otp-resend" maxlength={6} bind:value={code} autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <div class="flex items-center justify-between gap-3">
-    <p class="text-xs text-muted-foreground">Não recebeu?</p>
+  <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+    <p class="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
     <Button variant="link" size="sm">Reenviar código</Button>
   </div>
 </div>`,
@@ -532,7 +532,7 @@ interface InputOTPProps {
   />
 
   {#snippet compLabel()}
-    <div class="flex flex-col gap-2" style="contain: layout">
+    <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-label-otp">Código de verificação</Label>
       <InputOTP id="comp-label-otp" maxlength={6} bind:value={compLabelValue} aria-label="Código de verificação">
         <InputOTPGroup>
@@ -548,7 +548,7 @@ interface InputOTPProps {
   {/snippet}
 
   {#snippet compHelp()}
-    <div class="flex flex-col gap-2" style="contain: layout">
+    <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-help-otp">Código de verificação</Label>
       <InputOTP id="comp-help-otp" maxlength={6} bind:value={compHelpValue} aria-describedby="comp-help-otp-text" aria-label="Código de verificação">
         <InputOTPGroup>
@@ -560,12 +560,12 @@ interface InputOTPProps {
           <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
-      <p id="comp-help-otp-text" class="text-xs text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
+      <p id="comp-help-otp-text" class="nds-text-caption nds-text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
     </div>
   {/snippet}
 
   {#snippet compError()}
-    <div class="flex flex-col gap-2" style="contain: layout">
+    <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-err-otp">Código de verificação</Label>
       <InputOTP id="comp-err-otp" maxlength={6} bind:value={compErrorValue} aria-invalid="true" aria-describedby="comp-err-otp-text" aria-label="Código de verificação">
         <InputOTPGroup>
@@ -577,12 +577,12 @@ interface InputOTPProps {
           <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
-      <p id="comp-err-otp-text" class="text-xs text-destructive">Código incorreto. Verifique e tente novamente.</p>
+      <p id="comp-err-otp-text" class="nds-text-caption nds-text-destructive">Código incorreto. Verifique e tente novamente.</p>
     </div>
   {/snippet}
 
   {#snippet compResend()}
-    <div class="flex flex-col gap-3" style="contain: layout">
+    <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-resend-otp">Código de verificação</Label>
       <InputOTP id="comp-resend-otp" maxlength={6} bind:value={compResendValue} aria-label="Código de verificação">
         <InputOTPGroup>
@@ -594,8 +594,8 @@ interface InputOTPProps {
           <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
-      <div class="flex items-center justify-between gap-3">
-        <p class="text-xs text-muted-foreground">Não recebeu?</p>
+      <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+        <p class="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
         <Button variant="link" size="sm">Reenviar código</Button>
       </div>
     </div>

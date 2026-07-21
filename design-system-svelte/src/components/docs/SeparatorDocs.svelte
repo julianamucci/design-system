@@ -91,17 +91,19 @@
 
 <Separator orientation="horizontal" />
 
-<div class="flex h-5 items-center">
+<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 1.25rem">
   <span>Item A</span>
-  <Separator orientation="vertical" class="mx-2" />
+  <Separator orientation="vertical" />
   <span>Item B</span>
 </div>`;
 
   const codeHorizontal = `<Separator orientation="horizontal" />`;
-  const codeVertical = `<div class="flex h-5 items-center">
-  <span>Item A</span>
-  <Separator orientation="vertical" class="mx-2" />
-  <span>Item B</span>
+  const codeVertical = `<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 3rem">
+  <span>A</span>
+  <Separator orientation="vertical" />
+  <span>B</span>
+  <Separator orientation="vertical" />
+  <span>C</span>
 </div>`;
 
   const codeDecorative = `<Separator decorative={true} />`;
@@ -128,21 +130,21 @@
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
         <!-- Horizontal -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
-          <div class="rounded-md border p-4 space-y-3 text-sm">
-            <p class="font-medium">Header</p>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
+          <div class="nds-stack nds-rounded-md nds-border-default nds-p-4 nds-text-body" data-spacing="sm">
+            <p class="nds-font-medium">Header</p>
             <Separator orientation="horizontal" />
-            <p class="text-muted-foreground">Content</p>
+            <p class="nds-text-muted-foreground">Content</p>
           </div>
         </div>
 
         <!-- Vertical -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-          <div class="rounded-md border p-4 flex h-16 items-center gap-3 text-sm">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
+          <div class="nds-cluster nds-rounded-md nds-border-default nds-px-4 nds-text-body" data-spacing="md" data-align="center" style="height: 4rem">
             <span>Docs</span>
             <Separator orientation="vertical" />
             <span>Source</span>
@@ -152,27 +154,27 @@
         </div>
 
         <!-- In Menu -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.inMenu')}</p>
-          <div class="rounded-md border p-2 w-full max-w-xs">
-            <ul class="text-sm">
-              <li class="px-2 py-1.5">Perfil</li>
-              <li class="px-2 py-1.5">Configurações</li>
-              <li><Separator class="my-1" /></li>
-              <li class="px-2 py-1.5 text-destructive">Sair</li>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inMenu')}</p>
+          <div class="nds-rounded-md nds-border-default nds-p-2 nds-w-full nds-max-w-xs">
+            <ul class="nds-list-none nds-text-body">
+              <li class="nds-px-2 nds-py-1">Perfil</li>
+              <li class="nds-px-2 nds-py-1">Configurações</li>
+              <li><Separator class="nds-mt-1 nds-mb-1" /></li>
+              <li class="nds-px-2 nds-py-1 nds-text-destructive">Sair</li>
             </ul>
           </div>
         </div>
 
         <!-- In Card -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.inCard')}</p>
-          <div class="rounded-md border bg-card">
-            <div class="p-4 text-sm font-semibold">Notificações</div>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inCard')}</p>
+          <div class="nds-rounded-md nds-border-default nds-bg-card nds-text-card-foreground">
+            <div class="nds-p-4 nds-text-body nds-font-semibold">Notificações</div>
             <Separator />
-            <div class="p-4 text-sm text-muted-foreground">Você tem 3 mensagens não lidas.</div>
+            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Você tem 3 mensagens não lidas.</div>
             <Separator />
-            <div class="p-4 text-sm text-muted-foreground">Ver tudo</div>
+            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Ver tudo</div>
           </div>
         </div>
       </div>
@@ -262,29 +264,29 @@
   />
 
   {#snippet doPair1()}
-    <div class="w-full max-w-xs rounded-md border p-3 text-sm space-y-2">
-      <p class="font-medium">Mensagens</p>
+    <div class="nds-stack nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-p-4 nds-text-body" data-spacing="sm">
+      <p class="nds-font-medium">Mensagens</p>
       <Separator />
-      <p class="text-muted-foreground">3 não lidas</p>
+      <p class="nds-text-muted-foreground">3 não lidas</p>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full max-w-xs rounded-md border p-3 text-sm">
-      <p class="font-medium">Mensagens</p>
-      <Separator class="my-2" />
-      <Separator class="my-2" />
-      <p class="text-muted-foreground">3 não lidas</p>
+    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-p-4 nds-text-body">
+      <p class="nds-font-medium">Mensagens</p>
+      <Separator class="nds-mt-2 nds-mb-2" />
+      <Separator class="nds-mt-2 nds-mb-2" />
+      <p class="nds-text-muted-foreground">3 não lidas</p>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="flex h-8 items-center gap-3 text-sm rounded-md border px-3">
+    <div class="nds-cluster nds-text-body nds-rounded-md nds-border-default nds-px-4" data-spacing="md" data-align="center" style="height: 2rem">
       <span>Docs</span>
       <Separator orientation="vertical" />
       <span>API</span>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="block rounded-md border px-3 py-2 text-sm">
+    <div class="nds-block nds-rounded-md nds-border-default nds-px-4 nds-py-2 nds-text-body">
       <span>Docs</span>
       <Separator orientation="vertical" />
       <span>API</span>
@@ -308,14 +310,14 @@
   />
 
   {#snippet variantHorizontal()}
-    <div class="w-72 space-y-3 text-sm">
-      <p class="text-muted-foreground">Linha A</p>
+    <div class="nds-stack nds-text-body" data-spacing="sm" style="width: 18rem">
+      <p class="nds-text-muted-foreground">Linha A</p>
       <Separator />
-      <p class="text-muted-foreground">Linha B</p>
+      <p class="nds-text-muted-foreground">Linha B</p>
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="flex h-12 items-center gap-3 text-sm">
+    <div class="nds-cluster nds-text-body" data-spacing="md" data-align="center" style="height: 3rem">
       <span>A</span>
       <Separator orientation="vertical" />
       <span>B</span>
