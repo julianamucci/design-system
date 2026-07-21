@@ -164,19 +164,19 @@ const series = [
 
 <ChartContainer
   option={buildBarOption({ xAxis: xMonths, series })}
-  className="h-[300px] w-full"
+  className="nds-w-full" style={{ height: "300px" }}
   aria-label="Gráfico de barras: acessos mensais"
 />`;
 
   const codeLine = `<ChartContainer
   option={buildLineOption({ xAxis: xMonths, series })}
-  className="h-[300px] w-full"
+  className="nds-w-full" style={{ height: "300px" }}
   aria-label="Gráfico de linhas: tendência mensal"
 />`;
 
   const codeArea = `<ChartContainer
   option={buildAreaOption({ xAxis: xMonths, series })}
-  className="h-[300px] w-full"
+  className="nds-w-full" style={{ height: "300px" }}
   aria-label="Gráfico de área: volume mensal"
 />`;
 
@@ -188,7 +188,7 @@ const series = [
 
 <ChartContainer
   option={buildPieOption({ data: pieData })}
-  className="h-[300px] w-full"
+  className="nds-w-full" style={{ height: "300px" }}
   aria-label="Gráfico de pizza: distribuição por dispositivo"
 />`;
 
@@ -246,10 +246,10 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="flex w-full items-center justify-center">
+        <div className="nds-cluster nds-w-full" data-justify="center">
           <ChartContainer
             option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-            className="h-[300px] w-full max-w-xl"
+            className="nds-w-full" style={{ height: "300px", maxWidth: "36rem" }}
             aria-label="Gráfico de barras: acessos mensais por dispositivo"
           />
         </div>
@@ -362,14 +362,14 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             doPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="h-[200px] w-full"
+                className="nds-w-full" style={{ height: "200px" }}
                 aria-label="Gráfico multi-séries com legenda"
               />
             ),
             dontPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries, showLegend: false })}
-                className="h-[200px] w-full"
+                className="nds-w-full" style={{ height: "200px" }}
                 aria-label="Gráfico multi-séries sem legenda"
               />
             ),
@@ -382,14 +382,14 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             doPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
-                className="h-[200px] w-full"
+                className="nds-w-full" style={{ height: "200px" }}
                 aria-label="Gráfico de barras: acessos mensais desktop"
               />
             ),
             dontPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
-                className="h-[200px] w-full"
+                className="nds-w-full" style={{ height: "200px" }}
               />
             ),
             doCaption: tContent("doDont.pair2.do"),
@@ -419,7 +419,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="h-[250px] w-full"
+                className="nds-w-full" style={{ height: "250px" }}
                 aria-label="Gráfico de barras: acessos mensais"
                />
             ),
@@ -431,7 +431,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-                className="h-[250px] w-full"
+                className="nds-w-full" style={{ height: "250px" }}
                 aria-label="Gráfico de linhas: tendência mensal"
                />
             ),
@@ -443,7 +443,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-                className="h-[250px] w-full"
+                className="nds-w-full" style={{ height: "250px" }}
                 aria-label="Gráfico de área: volume mensal"
                />
             ),
@@ -455,7 +455,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildPieOption({ data: pieData })}
-                className="h-[250px] w-full max-w-sm mx-auto"
+                className="nds-w-full nds-max-w-sm" style={{ height: "250px", marginInline: "auto" }}
                 aria-label="Gráfico de pizza: distribuição por dispositivo"
                />
             ),
@@ -473,27 +473,27 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             name: tContent("variants.compositions.inCard.name"),
             description: tContent("variants.compositions.inCard.description"),
             useWhen: tContent("variants.compositions.inCard.use"),
-            code: `<Card className="w-full max-w-sm">
+            code: `<Card className="nds-w-full nds-max-w-sm">
   <CardHeader>
     <CardTitle>Acessos mensais</CardTitle>
   </CardHeader>
   <CardContent>
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      className="h-[200px] w-full"
+      className="nds-w-full" style={{ height: "200px" }}
       aria-label="Gráfico de barras: acessos mensais por dispositivo"
      />
   </CardContent>
 </Card>`,
             preview: (
-              <Card className="w-full max-w-sm">
+              <Card className="nds-w-full nds-max-w-sm">
                 <CardHeader>
                   <CardTitle>Acessos mensais</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ChartContainer
                     option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                    className="h-[200px] w-full"
+                    className="nds-w-full" style={{ height: "200px" }}
                     aria-label="Gráfico de barras: acessos mensais por dispositivo"
                    />
                 </CardContent>
@@ -506,13 +506,13 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             useWhen: tContent("variants.compositions.multiSeriesWithLegend.use"),
             code: `<ChartContainer
   option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-  className="h-[240px] w-full"
+  className="nds-w-full" style={{ height: "240px" }}
   aria-label="Gráfico multi-séries: Desktop e Mobile"
  />`,
             preview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="h-[240px] w-full"
+                className="nds-w-full" style={{ height: "240px" }}
                 aria-label="Gráfico multi-séries: Desktop e Mobile"
                />
             ),
@@ -521,26 +521,26 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             name: tContent("variants.compositions.smallInline.name"),
             description: tContent("variants.compositions.smallInline.description"),
             useWhen: tContent("variants.compositions.smallInline.use"),
-            code: `<div className="flex items-center gap-4 rounded-md border p-4 w-fit">
+            code: `<div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
   <div>
-    <p className="text-xs text-muted-foreground">Acessos</p>
-    <p className="text-2xl font-semibold">1.224</p>
+    <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
+    <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
   </div>
   <ChartContainer
     option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-    className="h-[48px] w-[120px]"
+    style={{ height: "48px", width: "120px" }}
     aria-label="Tendência de acessos nos últimos 6 meses"
    />
 </div>`,
             preview: (
-              <div className="flex items-center gap-4 rounded-md border p-4 w-fit">
+              <div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
                 <div>
-                  <p className="text-xs text-muted-foreground">Acessos</p>
-                  <p className="text-2xl font-semibold">1.224</p>
+                  <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
+                  <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
                 </div>
                 <ChartContainer
                   option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-                  className="h-[48px] w-[120px]"
+                  style={{ height: "48px", width: "120px" }}
                   aria-label="Tendência de acessos nos últimos 6 meses"
                  />
               </div>
@@ -553,17 +553,17 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             code: `{data.length === 0 ? (
   <div
     role="status"
-    className="flex h-[200px] w-full items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+    className="nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style={{ height: "200px", border: "1px dashed var(--border)" }}
   >
     Nenhum dado disponível para o período selecionado.
   </div>
 ) : (
-  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} className="h-[200px] w-full" aria-label="..." />
+  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} className="nds-w-full" style={{ height: "200px" }} aria-label="..." />
 )}`,
             preview: (
               <div
                 role="status"
-                className="flex h-[200px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+                className="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style={{ height: "200px", border: "1px dashed var(--border)" }}
               >
                 Nenhum dado disponível para o período selecionado.
               </div>
