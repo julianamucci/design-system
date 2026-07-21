@@ -69,7 +69,7 @@ export const Clickable: Story = {
       type="button"
       aria-label="Abrir produto Cadeira Gamer Pro"
       onClick={(args as { onClick?: () => void }).onClick}
-      className="nds-block nds-w-full nds-max-w-sm nds-text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" style={{ borderRadius: "var(--radius-card)" }}
+      className="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring" style={{ borderRadius: "var(--radius-card)" }}
     >
       <Card>
         <CardHeader>

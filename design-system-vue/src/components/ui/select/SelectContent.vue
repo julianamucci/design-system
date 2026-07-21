@@ -35,18 +35,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       data-slot="select-content"
       :data-align-trigger="position === 'item-aligned'"
       v-bind="{ ...$attrs, ...forwarded }"
-      :class="cn(
-        'nds-select-content',
-        props.class,
-      )
-      "
+      :class="cn( 'nds-select-content', props.class, )"
     >
       <SelectScrollUpButton />
       <SelectViewport
         :data-position="position"
-        :class="cn(
-          'nds-select-viewport',
-        )"
+        :class="cn( 'nds-select-viewport', )"
       >
         <slot />
       </SelectViewport>

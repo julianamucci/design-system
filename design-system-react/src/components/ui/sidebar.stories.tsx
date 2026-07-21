@@ -131,7 +131,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="nds-cluster min-h-[400px]">
+      <div className="nds-cluster nds-min-h-100">
         <Story />
       </div>
     ),

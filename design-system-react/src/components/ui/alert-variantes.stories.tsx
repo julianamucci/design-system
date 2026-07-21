@@ -52,7 +52,7 @@ export const Destructive: Story = {
 
 export const Success: Story = {
   render: () => (
-    <Alert className="bg-success/10 nds-text-success border-success/30">
+    <Alert className="nds-bg-success-10 nds-text-success nds-border-success-30">
       <CheckCircle2 aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Perfil atualizado</AlertTitle>
       <AlertDescription>
@@ -68,7 +68,7 @@ export const Success: Story = {
 
 export const Warning: Story = {
   render: () => (
-    <Alert className="bg-warning/10 border-warning/30 nds-text-foreground [&_svg]:text-warning">
+    <Alert className="nds-bg-warning-10 nds-border-warning-30 nds-text-foreground [&_svg]:text-warning">
       <TriangleAlert aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle className="nds-text-foreground">Assinatura expirando</AlertTitle>
       <AlertDescription className="nds-text-muted-foreground">

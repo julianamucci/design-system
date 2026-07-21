@@ -145,7 +145,7 @@ function SectionItems({ items }: { items: unknown }) {
           return (
             <li
               key={key}
-              className="text-sm text-foreground leading-relaxed pl-4 border-l-2 border-border/60"
+              className="text-sm text-foreground nds-leading-relaxed pl-4 border-l-2 nds-border-soft"
             >
               <HtmlText html={item} />
             </li>
@@ -158,7 +158,7 @@ function SectionItems({ items }: { items: unknown }) {
           return (
             <li
               key={key}
-              className="rounded-lg border border-border/50 p-4 space-y-1.5"
+              className="rounded-lg border nds-border-soft p-4 space-y-1.5"
             >
               {title && (
                 <h4 className="text-sm font-semibold text-foreground m-0">
@@ -169,7 +169,7 @@ function SectionItems({ items }: { items: unknown }) {
                 <HtmlText
                   as="p"
                   html={body}
-                  className="text-sm text-muted-foreground leading-relaxed m-0"
+                  className="text-sm text-muted-foreground nds-leading-relaxed m-0"
                 />
               )}
             </li>
@@ -212,7 +212,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
     : undefined;
 
   return (
-    <section className="space-y-4 border-t border-border/50 pt-8">
+    <section className="space-y-4 border-t nds-border-soft pt-8">
       {(title || subtitle) && (
         <div className="space-y-1">
           {title && (
@@ -224,7 +224,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
             <HtmlText
               as="p"
               html={subtitle}
-              className="text-sm text-muted-foreground leading-relaxed m-0"
+              className="text-sm text-muted-foreground nds-leading-relaxed m-0"
             />
           )}
         </div>
@@ -234,7 +234,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
         <HtmlText
           as="p"
           html={body}
-          className="text-sm text-foreground leading-relaxed m-0"
+          className="text-sm text-foreground nds-leading-relaxed m-0"
         />
       )}
 
@@ -242,7 +242,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
         <HtmlText
           as="p"
           html={audience}
-          className="text-sm text-muted-foreground leading-relaxed m-0"
+          className="text-sm text-muted-foreground nds-leading-relaxed m-0"
         />
       )}
 
@@ -257,11 +257,11 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
       {rules !== undefined && <SectionItems items={rules} />}
 
       {note && (
-        <div className="rounded-lg border border-border/50 bg-muted/30 p-3">
+        <div className="rounded-lg border nds-border-soft nds-bg-muted-30 p-3">
           <HtmlText
             as="p"
             html={note}
-            className="text-xs text-muted-foreground leading-relaxed m-0"
+            className="text-xs text-muted-foreground nds-leading-relaxed m-0"
           />
         </div>
       )}
@@ -309,7 +309,7 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
             <div className="flex items-center gap-2">
               <Badge
                 variant="secondary"
-                className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+                className="nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0"
               >
                 {t('category')}
               </Badge>
@@ -323,14 +323,14 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
             <LanguageSwitcher />
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-foreground m-0">
+          <h1 className="text-4xl font-bold nds-tracking-tight text-foreground m-0">
             {t('title')}
           </h1>
 
           <HtmlText
             as="p"
             html={t('description')}
-            className="text-muted-foreground max-w-3xl leading-relaxed m-0"
+            className="text-muted-foreground max-w-3xl nds-leading-relaxed m-0"
           />
         </header>
 

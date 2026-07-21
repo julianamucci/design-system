@@ -11,10 +11,7 @@ const props = defineProps<{
   <div
     data-slot="input-group"
     role="group"
-    :class="cn(
-      'nds-input-group',
-      props.class,
-    )"
+    :class="cn( 'nds-input-group', props.class, )"
   >
     <slot />
   </div>

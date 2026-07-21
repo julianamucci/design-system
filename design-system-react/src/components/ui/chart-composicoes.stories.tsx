@@ -26,7 +26,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
 
 export const ComCard: Story = {
   render: () => (
-    <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-6 shadow-sm" style={{ width: "480px" }}>
+    <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-6 nds-shadow-sm" style={{ width: "480px" }}>
       <h3 className="nds-text-body nds-font-medium nds-mb-1">Acessos por mês</h3>
       <p className="nds-text-caption nds-text-muted-foreground nds-mb-4">Janeiro — Abril</p>
       <ChartContainer option={buildBarOption({ data: chartData })} className="nds-w-full" style={{ height: "200px" }} />

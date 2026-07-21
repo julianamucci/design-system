@@ -11,9 +11,6 @@ const props = defineProps<{
 <template>
   <Input
     data-slot="input-group-control"
-    :class="cn(
-      'nds-input-group-control',
-      props.class,
-    )"
+    :class="cn( 'nds-input-group-control', props.class, )"
   />
 </template>

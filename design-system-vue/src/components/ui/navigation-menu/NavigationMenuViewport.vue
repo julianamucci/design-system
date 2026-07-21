@@ -20,12 +20,7 @@ const forwardedProps = useForwardProps(delegatedProps)
     <NavigationMenuViewport
       data-slot="navigation-menu-viewport"
       v-bind="forwardedProps"
-      :class="
-        cn(
-          'nds-navigation-menu-viewport-panel',
-          props.class,
-        )
-      "
+      :class="cn( 'nds-navigation-menu-viewport-panel', props.class, )"
     />
   </div>
 </template>

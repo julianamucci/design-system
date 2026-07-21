@@ -10,10 +10,7 @@ const props = defineProps<{
 <template>
   <div
     data-slot="empty"
-    :class="cn(
-      'nds-empty',
-      props.class,
-    )"
+    :class="cn( 'nds-empty', props.class, )"
   >
     <slot />
   </div>

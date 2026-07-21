@@ -42,13 +42,13 @@ export const ComButtonAsChild: Story = {
         <span>Exibir filtros avançados</span>
         <ChevronDown
           aria-hidden="true"
-          className="transition-transform [[data-state=open]_&]:rotate-180" style={{ height: "1rem", width: "1rem" }}
+          className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-card nds-px-4 nds-text-body" data-spacing="sm" style={{ paddingBlock: "0.75rem" }}>
         <div className="nds-cluster" data-justify="between">
           <span className="nds-text-muted-foreground">Filtro avançado 1</span>
-          <span className="nds-text-caption bg-primary/10 nds-text-primary nds-px-2 nds-rounded-full" style={{ paddingBlock: "0.125rem" }}>ativo</span>
+          <span className="nds-text-caption nds-bg-primary-10 nds-text-primary nds-px-2 nds-rounded-full" style={{ paddingBlock: "0.125rem" }}>ativo</span>
         </div>
         <div className="nds-cluster" data-justify="between">
           <span className="nds-text-muted-foreground">Filtro avançado 2</span>
@@ -89,10 +89,10 @@ export const ComIconeNoTrigger: Story = {
         </span>
         <ChevronDown
           aria-hidden="true"
-          className="nds-text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180" style={{ height: "1rem", width: "1rem" }}
+          className="nds-text-muted-foreground nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
         />
       </CollapsibleTrigger>
-      <CollapsibleContent className="nds-rounded-md nds-border-default bg-muted/40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
         <p className="nds-text-muted-foreground">Filtro avançado 1</p>
         <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>
@@ -129,11 +129,11 @@ export const ComConteudoEstruturado: Story = {
         >
           <ChevronDown
             aria-hidden="true"
-            className="transition-transform [[data-state=open]_&]:rotate-180" style={{ height: "1rem", width: "1rem" }}
+            className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
           />
         </CollapsibleTrigger>
       </div>
-      <CollapsibleContent className="nds-rounded-md nds-border-default bg-muted/40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
         <p className="nds-text-muted-foreground">Filtro avançado 1</p>
         <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>

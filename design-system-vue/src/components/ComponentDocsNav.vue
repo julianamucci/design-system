@@ -70,16 +70,14 @@ const grouped = props.sections.reduce<Record<number, Section[]>>((acc, s) => {
       :key="block"
       class="space-y-1"
     >
-      <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-2 mb-1">
+      <p class="text-xs font-semibold text-muted-foreground nds-uppercase nds-tracking-wide px-2 mb-1">
         {{ blockLabels[Number(block)] }}
       </p>
       <button
         v-for="section in items"
         :key="section.id"
-        class="w-full text-left px-2 py-1 text-sm rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        :class="activeId === section.id
-          ? 'text-foreground font-medium bg-accent'
-          : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'"
+        class="w-full text-left px-2 py-1 text-sm rounded-md nds-transition-colors nds-focus-ring"
+        :class="activeId === section.id ? 'text-foreground font-medium bg-accent' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'"
         :aria-current="activeId === section.id ? 'location' : undefined"
         @click="scrollTo(section.id)"
       >

@@ -64,7 +64,7 @@ export const AsLink: Story = {
     <a
       href="#design"
       aria-label="Ver todos os itens da categoria Design"
-      className="nds-cluster nds-rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="nds-cluster nds-rounded-md nds-focus-ring-inset"
     >
       <Badge variant="outline">Design</Badge>
     </a>
@@ -80,7 +80,7 @@ export const AsButton: Story = {
     <button
       type="button"
       aria-label="Filtrar por React"
-      className="nds-cluster nds-rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="nds-cluster nds-rounded-md nds-focus-ring-inset"
     >
       <Badge variant="secondary">React</Badge>
     </button>

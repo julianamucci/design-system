@@ -54,7 +54,7 @@ export const baseColumns: DataTableColumn<Invoice>[] = [
     header: "Valor",
     size: 130,
     cell: ({ row }) => (
-      <span className="nds-font-medium tabular-nums">
+      <span className="nds-font-medium nds-tabular-nums">
         {currency.format(row.original.amount)}
       </span>
     ),

@@ -29,7 +29,7 @@
       <Button variant="outline" {...props}>Ver imagem</Button>
     {/snippet}
   </DialogTrigger>
-  <DialogContent class="sm:max-w-lg">
+  <DialogContent class="nds-sm-max-w-lg">
     <DialogHeader>
       <DialogTitle>{title}</DialogTitle>
       <DialogDescription>
@@ -39,7 +39,7 @@
     <div
       role="img"
       aria-label="Imagem ilustrativa de pôr-do-sol em gradiente laranja"
-      class="aspect-video nds-w-full nds-rounded-md bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600"
+      class="nds-aspect-video nds-w-full nds-rounded-md bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600"
     ></div>
   </DialogContent>
 </Dialog>

@@ -247,7 +247,7 @@ export const ComCardDestacado: Story = {
                 </ul>
                 <a
                   href="#"
-                  className="nds-stack nds-rounded-md bg-gradient-to-b from-muted to-accent nds-text-caption no-underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50" data-justify="end" style={{ padding: "0.75rem" }}
+                  className="nds-stack nds-rounded-md bg-gradient-to-b from-muted to-accent nds-text-caption no-underline outline-none nds-focus-ring" data-justify="end" style={{ padding: "0.75rem" }}
                 >
                   <div className="nds-text-body nds-font-medium nds-mb-1">Tokens v2</div>
                   <p className="nds-text-muted-foreground">

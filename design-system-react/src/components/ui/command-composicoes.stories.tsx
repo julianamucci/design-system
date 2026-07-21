@@ -194,7 +194,7 @@ export const ComoCombobox: Story = {
             {value
               ? FRAMEWORKS.find((f) => f.value === value)?.label
               : "Selecione um item..."}
-            <ChevronsUpDownIcon className="opacity-50" />
+            <ChevronsUpDownIcon className="nds-opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="nds-p-0" style={{ width: "14rem" }} id={listboxId}>

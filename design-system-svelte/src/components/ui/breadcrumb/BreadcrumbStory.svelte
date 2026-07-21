@@ -91,7 +91,7 @@
       <BreadcrumbItem>
         <DropdownMenu>
           <DropdownMenuTrigger
-            class="nds-cluster nds-hover-text-foreground transition-colors" data-align="center" data-spacing="xs"
+            class="nds-cluster nds-hover-text-foreground nds-transition-colors" data-align="center" data-spacing="xs"
             aria-label="Abrir níveis ocultos"
           >
             <BreadcrumbEllipsis />

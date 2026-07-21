@@ -11,11 +11,7 @@ const props = defineProps<{
 <template>
   <Label
     data-slot="field-label"
-    :class="cn(
-      'nds-field-label',
-      '',
-      props.class,
-    )"
+    :class="cn( 'nds-field-label', '', props.class, )"
   >
     <slot />
   </Label>

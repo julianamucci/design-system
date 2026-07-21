@@ -61,10 +61,7 @@
       {#each components as comp}
         <button
           onclick={() => changeComponent(comp)}
-          class="w-full px-4 py-2 text-left text-sm transition-colors
-            {activeComponent === comp
-              ? 'bg-muted font-medium text-foreground'
-              : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'}"
+          class="w-full px-4 py-2 text-left text-sm nds-transition-colors {activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'text-muted-foreground nds-hover-bg-muted-50 hover:text-foreground'}"
         >
           {comp}
         </button>
@@ -76,10 +73,7 @@
       {#each LOCALES as l}
         <button
           onclick={() => locale.set(l)}
-          class="flex-1 rounded py-1 text-xs transition-colors
-            {$locale === l
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-muted text-muted-foreground hover:bg-muted/80'}"
+          class="flex-1 rounded py-1 text-xs nds-transition-colors {$locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}"
         >
           {LOCALE_LABELS[l]}
         </button>
@@ -104,7 +98,7 @@
         <button
           onclick={save}
           disabled={$saving || !$dirty}
-          class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-50"
+          class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground nds-transition-opacity nds-disabled-opacity-50"
         >
           {$saving ? 'Salvando...' : 'Salvar'}
         </button>
@@ -116,7 +110,7 @@
     <main class="flex-1 overflow-y-auto p-6">
       {#if $loading}
         <div class="flex h-32 items-center justify-center">
-          <div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+          <div class="h-5 w-5 nds-animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
         </div>
       {:else}
         <div class="max-w-2xl space-y-6">
@@ -137,7 +131,7 @@
 
   {#if isNested}
     <div class="{depth > 0 ? 'pl-4 border-l border-border' : ''} space-y-3">
-      <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p class="text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">{label}</p>
       {#each Object.entries(value as Record<string, unknown>) as [k, v]}
         {@render FieldEditorSnippet(`${fieldKey}.${k}`, v, depth + 1, onchange)}
       {/each}
@@ -154,7 +148,7 @@
         type="text"
         value={String(value ?? '')}
         oninput={(e) => onchange(fieldKey, (e.target as HTMLInputElement).value)}
-        class="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        class="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground nds-focus-ring-inset"
       />
     </div>
   {/if}

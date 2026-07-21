@@ -51,7 +51,7 @@
       <div class="nds-cluster" data-align="center" data-justify="between" style="width: 10rem">
         {#if label}<Label>{label}</Label>{/if}
         {#if showValue}
-          <span class="nds-text-body tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
+          <span class="nds-text-body nds-tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
         {/if}
       </div>
     {/if}
@@ -74,11 +74,11 @@
       <div class="nds-cluster" data-justify="between">
         {#if label}<Label>{label}</Label>{/if}
         {#if showRangeValue}
-          <span class="nds-text-body tabular-nums" aria-live="polite">
+          <span class="nds-text-body nds-tabular-nums" aria-live="polite">
             {rangePrefix}{current[0]}{valueSuffix} — {rangePrefix}{current[1]}{valueSuffix}
           </span>
         {:else if showValue}
-          <span class="nds-text-body tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
+          <span class="nds-text-body nds-tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
         {/if}
       </div>
     {/if}

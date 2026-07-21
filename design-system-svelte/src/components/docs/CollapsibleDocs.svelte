@@ -128,7 +128,7 @@ import { ChevronDown } from 'lucide-svelte';`;
   const codeUncontrolled = `<Collapsible class="nds-w-full">
   <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
     Exibir filtros avançados
-    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
   </CollapsibleTrigger>
   <CollapsibleContent>
     <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">Conteúdo colapsável</div>
@@ -205,7 +205,7 @@ interface CollapsibleContentProps {
               {$tStore('demonstration.labels.headerLabel')}
               <ChevronDown
                 aria-hidden="true"
-                class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+                class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
               />
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -232,7 +232,7 @@ interface CollapsibleContentProps {
                 : $tStore('demonstration.labels.triggerClosed')}
               <ChevronDown
                 aria-hidden="true"
-                class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+                class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
               />
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -437,7 +437,7 @@ interface CollapsibleContentProps {
         {$tStore('demonstration.labels.triggerClosed')}
         <ChevronDown
           aria-hidden="true"
-          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -458,7 +458,7 @@ interface CollapsibleContentProps {
           : $tStore('demonstration.labels.triggerClosed')}
         <ChevronDown
           aria-hidden="true"
-          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -519,7 +519,7 @@ interface CollapsibleContentProps {
         code: `<Collapsible class="nds-w-full">
   <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between">
     Configurações avançadas
-    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron" />
   </CollapsibleTrigger>
   <CollapsibleContent>
     <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
@@ -596,7 +596,7 @@ interface CollapsibleContentProps {
         Configurações avançadas
         <ChevronDown
           aria-hidden="true"
-          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>

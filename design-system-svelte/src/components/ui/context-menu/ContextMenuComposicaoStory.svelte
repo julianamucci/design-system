@@ -15,7 +15,7 @@
 {#if composition === 'shortcut'}
   <ContextMenu.Root>
     <ContextMenu.Trigger
-      class="nds-cluster nds-rounded-lg border-2 border-dashed bg-muted/30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+      class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
     >
       Clique com o botão direito aqui
     </ContextMenu.Trigger>
@@ -39,7 +39,7 @@
 {:else if composition === 'checkbox'}
   <ContextMenu.Root>
     <ContextMenu.Trigger
-      class="nds-cluster nds-rounded-lg border-2 border-dashed bg-muted/30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+      class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
     >
       Clique com o botão direito aqui
     </ContextMenu.Trigger>
@@ -58,7 +58,7 @@
 {:else if composition === 'radio'}
   <ContextMenu.Root>
     <ContextMenu.Trigger
-      class="nds-cluster nds-rounded-lg border-2 border-dashed bg-muted/30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+      class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
     >
       Clique com o botão direito aqui
     </ContextMenu.Trigger>
@@ -76,7 +76,7 @@
 {:else if composition === 'submenu'}
   <ContextMenu.Root>
     <ContextMenu.Trigger
-      class="nds-cluster nds-rounded-lg border-2 border-dashed bg-muted/30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+      class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
     >
       Clique com o botão direito aqui
     </ContextMenu.Trigger>

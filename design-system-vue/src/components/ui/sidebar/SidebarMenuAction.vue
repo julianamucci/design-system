@@ -16,11 +16,7 @@ const props = withDefaults(defineProps<PrimitiveProps & {
   <Primitive
     data-slot="sidebar-menu-action"
     data-sidebar="menu-action"
-    :class="cn(
-      'nds-sidebar-menu-action',
-      showOnHover && 'nds-sidebar-menu-action-hover',
-      props.class,
-    )"
+    :class="cn( 'nds-sidebar-menu-action', showOnHover && 'nds-sidebar-menu-action-hover', props.class, )"
     :as="as"
     :as-child="asChild"
   >

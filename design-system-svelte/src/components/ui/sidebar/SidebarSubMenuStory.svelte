@@ -31,7 +31,7 @@
   ];
 </script>
 
-<div class="nds-cluster min-h-[400px] nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
+<div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
   <SidebarProvider defaultOpen={true}>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -60,7 +60,7 @@
                     <span>Componentes</span>
                     <ChevronDown
                       aria-hidden="true"
-                      class="ml-auto transition-transform {componentsOpen ? 'rotate-180' : ''}"
+                      class="ml-auto nds-transition-transform {componentsOpen ? 'rotate-180' : ''}"
                     />
                   </SidebarMenuButton>
                   {#if componentsOpen}

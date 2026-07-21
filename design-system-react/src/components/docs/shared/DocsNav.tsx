@@ -25,7 +25,7 @@ export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) 
     <div className="space-y-6">
       {groups.map((group) => (
         <div key={group.label}>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
+          <p className="text-xs font-semibold text-muted-foreground nds-uppercase nds-tracking-wider mb-2 px-2">
             {group.label}
           </p>
           <ul className="list-none space-y-1 p-0 m-0">

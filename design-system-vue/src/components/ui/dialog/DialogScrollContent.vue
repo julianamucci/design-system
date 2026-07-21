@@ -31,12 +31,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       class="nds-dialog-overlay nds-dialog-overlay-scroll"
     >
       <DialogContent
-        :class="
-          cn(
-            'nds-dialog-content nds-dialog-content-scroll',
-            props.class,
-          )
-        "
+        :class="cn( 'nds-dialog-content nds-dialog-content-scroll', props.class, )"
         v-bind="{ ...$attrs, ...forwarded }"
         @pointer-down-outside="(event) => {
           const originalEvent = event.detail.originalEvent;

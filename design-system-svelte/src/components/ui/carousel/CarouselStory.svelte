@@ -127,13 +127,13 @@
                 alt={slide.alt}
                 loading="lazy"
                 decoding="async"
-                class="aspect-square nds-w-full nds-rounded-md nds-bg-muted" style="object-fit: cover"
+                class="nds-aspect-square nds-w-full nds-rounded-md nds-bg-muted" style="object-fit: cover"
               />
             </div>
           {:else}
             <div class="nds-p-1">
               <div
-                class="nds-cluster aspect-square nds-rounded-md nds-bg-muted text-3xl nds-font-semibold nds-text-muted-foreground" style="user-select: none" data-align="center" data-justify="center"
+                class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted text-3xl nds-font-semibold nds-text-muted-foreground" style="user-select: none" data-align="center" data-justify="center"
                 aria-label={`${slideLabel} ${i + 1} ${ofLabel} ${slides.length}`}
               >
                 {i + 1}
@@ -155,7 +155,7 @@
           role="tab"
           aria-label={`${goToSlideLabel} ${i + 1}`}
           aria-selected={selectedIndex === i}
-          class="nds-rounded-full transition-colors" style="height: 0.5rem; width: 0.5rem"
+          class="nds-rounded-full nds-transition-colors" style="height: 0.5rem; width: 0.5rem"
           class:bg-primary={selectedIndex === i}
           class:bg-muted-foreground={selectedIndex !== i}
           class:opacity-40={selectedIndex !== i}

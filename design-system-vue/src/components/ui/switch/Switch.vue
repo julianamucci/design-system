@@ -29,10 +29,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="switch"
     :data-size="size"
     v-bind="forwarded"
-    :class="cn(
-      'nds-switch',
-      props.class,
-    )"
+    :class="cn( 'nds-switch', props.class, )"
   >
     <SwitchThumb
       data-slot="switch-thumb"

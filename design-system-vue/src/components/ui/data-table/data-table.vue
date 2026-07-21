@@ -500,12 +500,7 @@ watch(
                   <button
                     type="button"
                     :aria-label="pinLabel(column)"
-                    :class="
-                      cn(
-                        'nds-data-table-pin-btn',
-                        column.getIsPinned() === 'left' && 'is-active',
-                      )
-                    "
+                    :class="cn( 'nds-data-table-pin-btn', column.getIsPinned() === 'left' && 'is-active', )"
                     @click="togglePin(column)"
                   >
                     <PinOff
@@ -530,21 +525,11 @@ watch(
     <!-- Scroll container -->
     <div
       ref="scrollRef"
-      :class="
-        cn(
-          'nds-data-table-scroll',
-          virtualized && 'nds-data-table-scroll-virtual',
-        )
-      "
+      :class="cn( 'nds-data-table-scroll', virtualized && 'nds-data-table-scroll-virtual', )"
       :style="virtualized ? { maxHeight } : undefined"
     >
       <Table
-        :class="
-          cn(
-            (enableColumnResizing || enableColumnOrdering || virtualized) &&
-              'nds-table-fixed',
-          )
-        "
+        :class="cn( (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed', )"
       >
         <TableHeader>
           <TableRow
@@ -567,12 +552,7 @@ watch(
                 width: enableColumnResizing ? `${header.getSize()}px` : undefined,
                 ...pinStyle(header.column),
               }"
-              :class="
-                cn(
-                  'nds-data-table-th',
-                  header.column.getIsPinned() && 'nds-data-table-th-pinned',
-                )
-              "
+              :class="cn( 'nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-th-pinned', )"
               :draggable="
                 enableColumnOrdering && header.column.id !== '__select__'
               "
@@ -650,12 +630,7 @@ watch(
                   flexHeaderLabel(header.column.columnDef.header) ??
                   header.column.id
                 }`"
-                :class="
-                  cn(
-                    'nds-data-table-resize-handle',
-                    header.column.getIsResizing() && 'is-resizing',
-                  )
-                "
+                :class="cn( 'nds-data-table-resize-handle', header.column.getIsResizing() && 'is-resizing', )"
                 @mousedown="header.getResizeHandler()?.($event)"
                 @touchstart="header.getResizeHandler()?.($event)"
               />
@@ -671,11 +646,7 @@ watch(
                   ? undefined
                   : 'Sem filtro disponível'
               "
-              :class="
-                cn(
-                  header.column.getIsPinned() && 'nds-data-table-th-pinned',
-                )
-              "
+              :class="cn( header.column.getIsPinned() && 'nds-data-table-th-pinned', )"
             >
               <template
                 v-if="header.column.getCanFilter() && header.column.columnDef.meta?.filter"

@@ -26,7 +26,7 @@
 
 <ContextMenu.Root>
   <ContextMenu.Trigger
-    class="nds-cluster nds-rounded-lg border-2 border-dashed bg-muted/30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+    class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
   >
     {@html triggerLabel}
   </ContextMenu.Trigger>

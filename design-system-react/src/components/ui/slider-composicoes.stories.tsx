@@ -32,7 +32,7 @@ export const ComLabelEValor: Story = {
           <Label htmlFor="volume-slider">Volume</Label>
           <span
             aria-live="polite"
-            className="nds-text-body tabular-nums nds-text-foreground"
+            className="nds-text-body nds-tabular-nums nds-text-foreground"
           >
             {value[0]}%
           </span>
@@ -70,7 +70,7 @@ export const FaixaDePreco: Story = {
           <Label>Faixa de preço</Label>
           <span
             aria-live="polite"
-            className="nds-text-body tabular-nums nds-text-foreground"
+            className="nds-text-body nds-tabular-nums nds-text-foreground"
           >
             R$ {value[0]} — R$ {value[1]}
           </span>
@@ -102,7 +102,7 @@ export const StepCustomizado: Story = {
       <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <div className="nds-cluster" data-justify="between">
           <Label>Nível (step=10)</Label>
-          <span aria-live="polite" className="nds-text-body tabular-nums">
+          <span aria-live="polite" className="nds-text-body nds-tabular-nums">
             {value[0]}
           </span>
         </div>
@@ -135,7 +135,7 @@ export const EmFormulario: Story = {
         <div className="nds-stack" data-spacing="sm">
           <div className="nds-cluster" data-justify="between">
             <Label htmlFor="form-volume">Volume</Label>
-            <span aria-live="polite" className="nds-text-body tabular-nums">
+            <span aria-live="polite" className="nds-text-body nds-tabular-nums">
               {volume[0]}%
             </span>
           </div>
@@ -151,7 +151,7 @@ export const EmFormulario: Story = {
         <div className="nds-stack" data-spacing="sm">
           <div className="nds-cluster" data-justify="between">
             <Label htmlFor="form-brilho">Brilho</Label>
-            <span aria-live="polite" className="nds-text-body tabular-nums">
+            <span aria-live="polite" className="nds-text-body nds-tabular-nums">
               {brilho[0]}%
             </span>
           </div>

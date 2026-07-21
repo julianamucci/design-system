@@ -32,12 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <PopoverContent
       data-slot="popover-content"
       v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'Popover', ...$attrs, ...forwarded }"
-      :class="
-        cn(
-          'nds-popover-content',
-          props.class,
-        )
-      "
+      :class="cn( 'nds-popover-content', props.class, )"
     >
       <slot />
     </PopoverContent>

@@ -149,7 +149,7 @@ export const Disabled: Story = {
             text="Anterior"
             aria-disabled
             tabIndex={-1}
-            className="pointer-events-none opacity-50"
+            className="pointer-events-none nds-opacity-50"
           />
         </PaginationItem>
         <PaginationItem>

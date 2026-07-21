@@ -42,7 +42,7 @@
     <ScrollArea orientation="vertical" {type} {scrollHideDelay} class="nds-w-full" style="height: 100%">
       <div class="nds-p-4" data-spacing="sm">
         {#each tags as n}
-          <div class="nds-text-body nds-border-b last:border-b-0" style="padding-bottom: 0.5rem">{tagLabel} {n}</div>
+          <div class="nds-text-body nds-border-b nds-last-border-0" style="padding-bottom: 0.5rem">{tagLabel} {n}</div>
         {/each}
       </div>
     </ScrollArea>

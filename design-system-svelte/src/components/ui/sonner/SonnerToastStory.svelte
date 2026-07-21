@@ -50,6 +50,6 @@
   });
 </script>
 
-<div style="contain: layout; position: relative" class="min-h-24 nds-w-full" >
+<div style="contain: layout; position: relative" class="nds-min-h-24 nds-w-full" >
   <Toaster position="top-right" />
 </div>

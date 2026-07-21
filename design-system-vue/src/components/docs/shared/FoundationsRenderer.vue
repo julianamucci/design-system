@@ -129,7 +129,7 @@ track('docs_page_view', {
           <div class="flex items-center gap-2">
             <Badge
               variant="secondary"
-              class="bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
+              class="nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0"
             >
               {{ t('category') }}
             </Badge>
@@ -143,11 +143,11 @@ track('docs_page_view', {
           <LanguageSwitcher />
         </div>
 
-        <h1 class="text-4xl font-bold tracking-tight text-foreground">
+        <h1 class="text-4xl font-bold nds-tracking-tight text-foreground">
           {{ t('title') }}
         </h1>
 
-        <p class="text-muted-foreground max-w-3xl leading-relaxed">
+        <p class="text-muted-foreground max-w-3xl nds-leading-relaxed">
           {{ t('description') }}
         </p>
       </header>
@@ -156,7 +156,7 @@ track('docs_page_view', {
       <section
         v-for="sec in sections"
         :key="sec.key"
-        class="space-y-4 border-t border-border/50 pt-8"
+        class="space-y-4 border-t nds-border-soft pt-8"
       >
         <div
           v-if="sec.title || sec.subtitle"
@@ -178,12 +178,12 @@ track('docs_page_view', {
 
         <p
           v-if="sec.body"
-          class="text-sm text-foreground leading-relaxed max-w-3xl"
+          class="text-sm text-foreground nds-leading-relaxed max-w-3xl"
           v-html="sec.body"
         />
         <p
           v-if="sec.audience"
-          class="text-sm text-muted-foreground leading-relaxed max-w-3xl"
+          class="text-sm text-muted-foreground nds-leading-relaxed max-w-3xl"
         >
           {{ sec.audience }}
         </p>
@@ -191,7 +191,7 @@ track('docs_page_view', {
         <!-- Table (cols + rows) -->
         <div
           v-if="sec.cols && sec.rows"
-          class="rounded-lg border border-border/50 overflow-hidden"
+          class="rounded-lg border nds-border-soft overflow-hidden"
         >
           <Table>
             <TableHeader>
@@ -229,10 +229,10 @@ track('docs_page_view', {
           <div
             v-for="item in itemEntries(sec.items)"
             :key="item.key"
-            class="rounded-lg border border-border/50 p-4 space-y-1"
+            class="rounded-lg border nds-border-soft p-4 space-y-1"
           >
             <template v-if="typeof item.value === 'string'">
-              <span class="text-xs uppercase tracking-wide text-muted-foreground">
+              <span class="text-xs nds-uppercase nds-tracking-wide text-muted-foreground">
                 {{ item.key }}
               </span>
               <p

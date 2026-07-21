@@ -21,7 +21,7 @@ export const ComLabel: Story = {
       <Checkbox id="with-label" />
       <label
         htmlFor="with-label"
-        className="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{ lineHeight: 1 }}
+        className="nds-text-body nds-font-medium nds-peer-label" style={{ lineHeight: 1 }}
       >
         Aceito os termos e condições
       </label>
@@ -174,7 +174,7 @@ export const SelecionarTodos: Story = {
 
 export const DentroDeCard: Story = {
   render: () => (
-    <div className="nds-rounded-lg nds-border-default nds-p-4 shadow-sm nds-max-w-sm">
+    <div className="nds-rounded-lg nds-border-default nds-p-4 nds-shadow-sm nds-max-w-sm">
       <div className="nds-cluster" data-align="start" data-spacing="sm">
         <Checkbox id="card-checkbox" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">

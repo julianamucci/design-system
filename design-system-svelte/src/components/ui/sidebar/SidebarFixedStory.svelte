@@ -24,7 +24,7 @@
   ];
 </script>
 
-<div class="nds-cluster min-h-[400px] nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
+<div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
   <SidebarProvider>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="none">

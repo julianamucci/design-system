@@ -91,7 +91,7 @@
 <div class="flex h-screen overflow-hidden bg-background text-foreground font-sans">
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 border-r border-border bg-sidebar flex flex-col transition-transform duration-300 md:relative md:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 w-64 border-r border-border bg-sidebar flex flex-col nds-transition-transform duration-300 nds-md-relative nds-md-translate-x-0"
     class:translate-x-0={sidebarOpen}
     class:-translate-x-full={!sidebarOpen}
   >
@@ -106,16 +106,13 @@
     <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
       {#each Object.entries(groups) as [groupName, items]}
         <div>
-          <p class="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <p class="mb-1 px-2 text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">
             {groupName}
           </p>
           {#each items as item}
             <button
               onclick={() => navigate(item.id)}
-              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors
-                {activeComponent === item.id
-                  ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent/50'}"
+              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm nds-transition-colors {activeComponent === item.id ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground' : 'text-sidebar-foreground hover:bg-sidebar-accent/50'}"
             >
               <item.icon class="h-4 w-4 shrink-0" />
               {item.label}
@@ -132,7 +129,7 @@
     <header class="flex h-14 items-center gap-3 border-b border-border bg-background px-4">
       <!-- Mobile menu toggle -->
       <button
-        class="md:hidden p-1.5 rounded-md hover:bg-muted"
+        class="nds-md-hidden p-1.5 rounded-md nds-hover-bg-muted-soft"
         onclick={() => sidebarOpen = !sidebarOpen}
         aria-label="Menu"
       >
@@ -148,7 +145,7 @@
       <!-- Dark mode toggle -->
       <button
         onclick={toggleDark}
-        class="p-1.5 rounded-md hover:bg-muted transition-colors"
+        class="p-1.5 rounded-md nds-hover-bg-muted-soft nds-transition-colors"
         aria-label={isDark ? 'Modo claro' : 'Modo escuro'}
       >
         {#if isDark}
@@ -163,21 +160,21 @@
     <main class="flex-1 overflow-y-auto">
       {#if loadingDoc}
         <div class="flex h-full items-center justify-center">
-          <div class="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+          <div class="h-6 w-6 nds-animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
         </div>
       {:else if CurrentDoc}
         <CurrentDoc.default />
       {:else}
         <!-- Home page -->
         <div class="p-8 max-w-2xl">
-          <h1 class="text-3xl font-bold tracking-tight mb-2">Design System</h1>
+          <h1 class="text-3xl font-bold nds-tracking-tight mb-2">Design System</h1>
           <p class="text-muted-foreground mb-6">
             Biblioteca de componentes em <strong>Svelte 5</strong> usando shadcn-svelte e bits-ui.
           </p>
-          <div class="grid gap-3 sm:grid-cols-2">
+          <div class="grid gap-3 nds-sm-grid-2">
             <button
               onclick={() => navigate('alert')}
-              class="rounded-lg border border-border p-4 text-left hover:bg-muted/50 transition-colors"
+              class="rounded-lg border border-border p-4 text-left nds-hover-bg-muted-50 nds-transition-colors"
             >
               <p class="font-medium">Alert</p>
               <p class="text-sm text-muted-foreground">Feedback visual para o usuário</p>
@@ -192,7 +189,7 @@
 <!-- Sidebar overlay (mobile) -->
 {#if sidebarOpen}
   <div
-    class="fixed inset-0 z-40 bg-black/50 md:hidden"
+    class="fixed inset-0 z-40 nds-bg-black-50 nds-md-hidden"
     onclick={() => sidebarOpen = false}
     role="presentation"
   ></div>

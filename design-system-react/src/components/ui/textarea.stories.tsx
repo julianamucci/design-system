@@ -67,7 +67,7 @@ function PlaygroundRender(args: React.ComponentProps<typeof Textarea>) {
         readOnly={args.readOnly}
         maxLength={args.maxLength}
         rows={args.rows}
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
       <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
         <span>Descreva o produto com clareza.</span>

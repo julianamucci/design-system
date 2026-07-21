@@ -26,7 +26,7 @@ function MotionSpecimens() {
           <Button
             key={d.token}
             variant="outline"
-            className="hover:bg-primary hover:text-primary-foreground hover:scale-105"
+            className="nds-hover-bg-primary nds-hover-text-primary-foreground nds-hover-scale-105"
             style={{
               transitionProperty: 'background-color, color, transform',
               transitionDuration: `var(${d.token})`,

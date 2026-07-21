@@ -155,7 +155,7 @@ import { Label } from "@/components/ui/label";`;
   <Textarea
     id="bio"
     placeholder="Conte um pouco sobre você..."
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
   />
 </div>`;
 
@@ -169,7 +169,7 @@ const max = 500;
     value={value}
     onChange={(e) => setValue(e.target.value)}
     placeholder="ex: Descreva o produto..."
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
     maxLength={max}
   />
   <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
@@ -188,7 +188,7 @@ const max = 500;
   <Textarea
     id="feedback"
     placeholder="O que poderíamos melhorar?"
-    className="resize-none min-h-[120px]"
+    className="nds-resize-none nds-min-h-30"
   />
 </div>`;
 
@@ -256,7 +256,7 @@ function Textarea({
               value={demoDescription}
               onChange={(e) => setDemoDescription(e.target.value)}
               placeholder={tContent("demonstration.labels.descriptionPlaceholder")}
-              className="resize-y min-h-[120px]"
+              className="nds-resize-y nds-min-h-30"
               maxLength={demoMax}
               aria-describedby="demo-description-help"
             />
@@ -283,7 +283,7 @@ function Textarea({
               value={demoBio}
               onChange={(e) => setDemoBio(e.target.value)}
               placeholder={tContent("demonstration.labels.bioPlaceholder")}
-              className="resize-y min-h-[120px]"
+              className="nds-resize-y nds-min-h-30"
             />
           </div>
 
@@ -297,7 +297,7 @@ function Textarea({
               value={demoFeedback}
               onChange={(e) => setDemoFeedback(e.target.value)}
               placeholder={tContent("demonstration.labels.feedbackPlaceholder")}
-              className="resize-none min-h-[120px]"
+              className="nds-resize-none nds-min-h-30"
             />
             <p className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.noResize")}
@@ -408,7 +408,7 @@ function Textarea({
                 <Textarea
                   id="dodont-1-do"
                   placeholder="ex: Descreva o produto..."
-                  className="resize-y min-h-[100px]"
+                  className="nds-resize-y nds-min-h-25"
                   maxLength={500}
                   defaultValue="Camiseta de algodão, gola redonda, manga curta."
                 />
@@ -426,7 +426,7 @@ function Textarea({
                 <Textarea
                   id="dodont-1-dont"
                   placeholder="ex: Descreva o produto..."
-                  className="resize-y min-h-[100px]"
+                  className="nds-resize-y nds-min-h-25"
                   maxLength={500}
                   defaultValue="Camiseta de algodão, gola redonda, manga curta."
                 />
@@ -444,7 +444,7 @@ function Textarea({
                 <Textarea
                   id="dodont-2-do"
                   placeholder="Conte um pouco sobre você..."
-                  className="resize-y min-h-[100px]"
+                  className="nds-resize-y nds-min-h-25"
                 />
               </div>
             ),
@@ -454,7 +454,7 @@ function Textarea({
                 <Textarea
                   id="dodont-2-dont"
                   placeholder="Conte um pouco sobre você..."
-                  className="resize min-h-[100px]"
+                  className="resize nds-min-h-25"
                 />
               </div>
             ),
@@ -484,7 +484,7 @@ function Textarea({
                 <Textarea
                   id="var-default"
                   placeholder="Conte um pouco sobre você..."
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                 />
               </div>
             ),
@@ -499,7 +499,7 @@ function Textarea({
                 <Textarea
                   id="var-counter"
                   placeholder="ex: Descreva o produto..."
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                   maxLength={500}
                   defaultValue="Camiseta de algodão, gola redonda."
                 />
@@ -522,7 +522,7 @@ function Textarea({
                 <Textarea
                   id="var-noresize"
                   placeholder="O que poderíamos melhorar?"
-                  className="resize-none min-h-[120px]"
+                  className="nds-resize-none nds-min-h-30"
                 />
               </div>
             ),
@@ -544,7 +544,7 @@ function Textarea({
   <Label htmlFor="ta-label">Descrição</Label>
   <Textarea
     id="ta-label"
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
     placeholder="ex: Descreva o produto..."
   />
 </div>`,
@@ -553,7 +553,7 @@ function Textarea({
                 <Label htmlFor="comp-ta-label">Descrição</Label>
                 <Textarea
                   id="comp-ta-label"
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                   placeholder="ex: Descreva o produto..."
                 />
               </div>
@@ -567,7 +567,7 @@ function Textarea({
   <Label htmlFor="ta-hint">Descrição</Label>
   <Textarea
     id="ta-hint"
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
     placeholder="ex: Descreva o produto..."
   />
   <p className="nds-text-caption nds-text-muted-foreground">
@@ -579,7 +579,7 @@ function Textarea({
                 <Label htmlFor="comp-ta-hint">Descrição</Label>
                 <Textarea
                   id="comp-ta-hint"
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                   placeholder="ex: Descreva o produto..."
                 />
                 <p className="nds-text-caption nds-text-muted-foreground">
@@ -598,7 +598,7 @@ function Textarea({
   <Label htmlFor="ta-counter">Descrição</Label>
   <Textarea
     id="ta-counter"
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
     placeholder="ex: Descreva o produto..."
     maxLength={500}
     value={value}
@@ -607,7 +607,7 @@ function Textarea({
   <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
     <span>Descreva o produto com clareza.</span>
     <span
-      className="tabular-nums nds-shrink-0"
+      className="nds-tabular-nums nds-shrink-0"
       aria-live="polite"
       aria-label={\`\${value.length} de 500 caracteres usados\`}
     >
@@ -620,7 +620,7 @@ function Textarea({
                 <Label htmlFor="comp-ta-counter">Descrição</Label>
                 <Textarea
                   id="comp-ta-counter"
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                   placeholder="ex: Descreva o produto..."
                   maxLength={500}
                   value={compCounter}
@@ -629,7 +629,7 @@ function Textarea({
                 <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
                   <span>Descreva o produto com clareza.</span>
                   <span
-                    className="tabular-nums nds-shrink-0"
+                    className="nds-tabular-nums nds-shrink-0"
                     aria-live="polite"
                     aria-label={counterLabel(compCounter.length, 500)}
                   >
@@ -647,7 +647,7 @@ function Textarea({
   <Label htmlFor="ta-error">Descrição</Label>
   <Textarea
     id="ta-error"
-    className="resize-y min-h-[120px]"
+    className="nds-resize-y nds-min-h-30"
     placeholder="ex: Descreva o produto..."
     aria-invalid="true"
     aria-describedby="ta-error-error"
@@ -661,7 +661,7 @@ function Textarea({
                 <Label htmlFor="comp-ta-error">Descrição</Label>
                 <Textarea
                   id="comp-ta-error"
-                  className="resize-y min-h-[120px]"
+                  className="nds-resize-y nds-min-h-30"
                   placeholder="ex: Descreva o produto..."
                   aria-invalid="true"
                   aria-describedby="comp-ta-error-error"
@@ -691,7 +691,7 @@ function Textarea({
     <Textarea
       id="ta-form"
       name="feedback"
-      className="resize-y min-h-[120px]"
+      className="nds-resize-y nds-min-h-30"
       placeholder="Compartilhe sua opinião..."
       maxLength={280}
       value={value}
@@ -700,7 +700,7 @@ function Textarea({
     <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
       <span>Seja específico para ajudarmos melhor.</span>
       <span
-        className="tabular-nums nds-shrink-0"
+        className="nds-tabular-nums nds-shrink-0"
         aria-live="polite"
         aria-label={\`\${value.length} de 280 caracteres usados\`}
       >
@@ -724,7 +724,7 @@ function Textarea({
                   <Textarea
                     id="comp-ta-form"
                     name="feedback"
-                    className="resize-y min-h-[120px]"
+                    className="nds-resize-y nds-min-h-30"
                     placeholder="Compartilhe sua opinião..."
                     maxLength={280}
                     value={compForm}
@@ -733,7 +733,7 @@ function Textarea({
                   <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
                     <span>Seja específico para ajudarmos melhor.</span>
                     <span
-                      className="tabular-nums nds-shrink-0"
+                      className="nds-tabular-nums nds-shrink-0"
                       aria-live="polite"
                       aria-label={counterLabel(compForm.length, 280)}
                     >

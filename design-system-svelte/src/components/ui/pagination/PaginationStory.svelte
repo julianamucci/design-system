@@ -96,7 +96,7 @@
         </Pagination>
       </div>
     {:else if demonstration === 'tabela'}
-      <div class="nds-stack nds-w-full max-w-2xl nds-border-default nds-rounded-lg nds-p-4 sm:flex-row" data-align="center" data-justify="between" data-spacing="sm">
+      <div class="nds-stack nds-w-full max-w-2xl nds-border-default nds-rounded-lg nds-p-4 nds-sm-flex-row" data-align="center" data-justify="between" data-spacing="sm">
         <span class="nds-text-body nds-text-muted-foreground">Mostrando 11–20 de {count} resultados</span>
         <Pagination {count} {perPage} page={initialPage} {siblingCount} class="!justify-end !mx-0 !w-auto">
           {#snippet children({ pages, currentPage: cp })}

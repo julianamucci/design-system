@@ -31,12 +31,7 @@ const forwardedProps = useForwardProps(delegatedProps)
     <HoverCardContent
       data-slot="hover-card-content"
       v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'HoverCard', ...$attrs, ...forwardedProps }"
-      :class="
-        cn(
-          'nds-hover-card-content',
-          props.class,
-        )
-      "
+      :class="cn( 'nds-hover-card-content', props.class, )"
     >
       <slot />
     </HoverCardContent>

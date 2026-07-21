@@ -32,7 +32,7 @@
 {#if asButton}
   <button
     type="button"
-    class="nds-cluster rounded-4xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    class="nds-cluster rounded-4xl nds-focus-ring"
     aria-label={ariaLabel ?? label}
   >
     <Badge {variant} class={className}>

@@ -83,19 +83,19 @@ export const Group: Story = {
       aria-label="Participantes"
       className="nds-cluster -space-x-2"
     >
-      <Avatar className="ring-2 ring-background">
+      <Avatar className="nds-ring-background">
         <AvatarImage src={IMG_MARIA} alt="" />
         <AvatarFallback aria-hidden="true">MR</AvatarFallback>
       </Avatar>
-      <Avatar className="ring-2 ring-background">
+      <Avatar className="nds-ring-background">
         <AvatarImage src={IMG_SECOND} alt="" />
         <AvatarFallback aria-hidden="true">JP</AvatarFallback>
       </Avatar>
-      <Avatar className="ring-2 ring-background">
+      <Avatar className="nds-ring-background">
         <AvatarImage src={IMG_THIRD} alt="" />
         <AvatarFallback aria-hidden="true">AS</AvatarFallback>
       </Avatar>
-      <Avatar className="ring-2 ring-background">
+      <Avatar className="nds-ring-background">
         <AvatarFallback aria-hidden="true">
           <User aria-hidden="true" className="" style={{ height: "1.25rem", width: "1.25rem" }} />
         </AvatarFallback>
@@ -121,7 +121,7 @@ export const WithStatus: Story = {
       <span
         role="status"
         aria-label="online"
-        className="bottom-0 right-0 nds-rounded-full nds-bg-primary ring-2 ring-background" style={{ position: "absolute", height: "0.625rem", width: "0.625rem" }}
+        className="bottom-0 right-0 nds-rounded-full nds-bg-primary nds-ring-background" style={{ position: "absolute", height: "0.625rem", width: "0.625rem" }}
       />
     </div>
   ),

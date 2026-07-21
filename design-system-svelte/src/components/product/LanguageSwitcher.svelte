@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40">
+<div class="flex items-center gap-1 nds-bg-muted-30 p-1 rounded-(--radius-input) border nds-border-border-40">
   {#each locales as lang}
     <button
       type="button"

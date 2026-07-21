@@ -88,7 +88,7 @@
 
 {#snippet renderValue(value: unknown, depth: number)}
   {#if isString(value)}
-    <p class="text-sm text-muted-foreground leading-relaxed">{@html value}</p>
+    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html value}</p>
   {:else if isArray(value)}
     {#if value.every((v) => isString(v))}
       <ul class="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
@@ -100,7 +100,7 @@
       <div class="space-y-3">
         {#each value as item}
           {#if isObject(item)}
-            <div class="rounded-lg border border-border/50 p-4 space-y-2">
+            <div class="rounded-lg border nds-border-soft p-4 space-y-2">
               {@render renderObject(item, depth + 1)}
             </div>
           {:else}
@@ -117,7 +117,7 @@
 {#snippet renderObject(obj: Record<string, unknown>, depth: number)}
   {@const table = asTable(obj)}
   {#if table}
-    <div class="rounded-lg border border-border/50 overflow-hidden">
+    <div class="rounded-lg border nds-border-soft overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -150,19 +150,19 @@
           {@const Tag = headingTag(depth)}
           <svelte:element this={Tag} class={headingClass(depth)}>{value}</svelte:element>
         {:else if (key === 'subtitle' || key === 'body' || key === 'description' || key === 'intro' || key === 'audience' || key === 'note') && isString(value)}
-          <p class="text-sm text-muted-foreground leading-relaxed">{@html value}</p>
+          <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html value}</p>
         {:else if key === 'items' && isObject(value)}
-          <div class="grid gap-3 md:grid-cols-2">
+          <div class="grid gap-3 nds-md-grid-2">
             {#each entries(value) as [, item]}
               {#if isObject(item)}
-                <div class="rounded-lg border border-border/50 p-4 space-y-2">
+                <div class="rounded-lg border nds-border-soft p-4 space-y-2">
                   {#if isString(item.title)}
                     <h4 class="text-sm font-semibold text-foreground">{item.title}</h4>
                   {/if}
                   {#if isString(item.body)}
-                    <p class="text-sm text-muted-foreground leading-relaxed">{@html item.body}</p>
+                    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html item.body}</p>
                   {:else if isString(item.description)}
-                    <p class="text-sm text-muted-foreground leading-relaxed">{@html item.description}</p>
+                    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html item.description}</p>
                   {/if}
                   {#if isArray(item.items)}
                     <ul class="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
@@ -193,8 +193,8 @@
           </ul>
         {:else if isString(value)}
           <div class="space-y-1">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{key}</span>
-            <p class="text-sm text-foreground leading-relaxed">{@html value}</p>
+            <span class="text-xs font-medium nds-uppercase nds-tracking-wide text-muted-foreground">{key}</span>
+            <p class="text-sm text-foreground nds-leading-relaxed">{@html value}</p>
           </div>
         {:else if isArray(value) || isObject(value)}
           <section class="space-y-2">

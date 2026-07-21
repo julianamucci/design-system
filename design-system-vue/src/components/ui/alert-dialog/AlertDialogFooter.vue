@@ -10,12 +10,7 @@ const props = defineProps<{
 <template>
   <div
     data-slot="alert-dialog-footer"
-    :class="
-      cn(
-        'nds-alert-dialog-footer',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-alert-dialog-footer', props.class, )"
   >
     <slot />
   </div>

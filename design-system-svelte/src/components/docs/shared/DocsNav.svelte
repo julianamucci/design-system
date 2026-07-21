@@ -26,7 +26,7 @@
 <div class="space-y-6">
   {#each groups as group (group.label)}
     <div>
-      <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
+      <p class="text-xs font-semibold text-muted-foreground nds-uppercase nds-tracking-wider mb-2 px-2">
         {group.label}
       </p>
       <ul class="list-none space-y-1 p-0 m-0">

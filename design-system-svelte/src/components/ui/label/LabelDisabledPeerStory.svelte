@@ -4,6 +4,6 @@
 </script>
 
 <div class="nds-stack" data-spacing="sm">
-  <Input id="cpf-disabled" disabled class="peer" />
+  <Input id="cpf-disabled" disabled class="nds-peer" />
   <Label for="cpf-disabled">CPF</Label>
 </div>

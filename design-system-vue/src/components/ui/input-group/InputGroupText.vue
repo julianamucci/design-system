@@ -9,10 +9,7 @@ const props = defineProps<{
 
 <template>
   <span
-    :class="cn(
-      'nds-input-group-text',
-      props.class,
-    )"
+    :class="cn( 'nds-input-group-text', props.class, )"
   >
     <slot />
   </span>

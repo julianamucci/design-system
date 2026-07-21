@@ -27,7 +27,7 @@ function select(id: string) {
 <template>
   <div class="relative">
     <button
-      class="h-8 w-8 p-0 flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+      class="h-8 w-8 p-0 flex items-center justify-center rounded-md nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-transition-colors"
       aria-label="Selecionar tema"
       :aria-expanded="open"
       @click="open = !open"
@@ -40,13 +40,13 @@ function select(id: string) {
 
     <div
       v-if="open"
-      class="absolute right-0 mt-1 w-44 rounded-md border border-border bg-popover text-popover-foreground shadow-md z-50"
+      class="absolute right-0 mt-1 w-44 rounded-md border border-border bg-popover text-popover-foreground nds-shadow-md z-50"
       role="menu"
     >
       <button
         v-for="theme in themes"
         :key="theme.id"
-        class="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+        class="w-full flex items-center justify-between px-3 py-2 text-sm nds-hover-bg-accent nds-hover-text-accent-foreground nds-transition-colors"
         role="menuitem"
         @click="select(theme.id)"
       >

@@ -278,7 +278,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   const codeMulti = `<Carousel className="nds-w-full" style={{ maxWidth: "42rem" }}>
   <CarouselContent>
     {items.map((item) => (
-      <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
+      <CarouselItem key={item.id} className="nds-md-basis-half nds-lg-basis-third">
         <Card>
           <CardContent>{item.label}</CardContent>
         </Card>
@@ -599,7 +599,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               >
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
                       <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
                     </CarouselItem>
                   ))}
@@ -797,7 +797,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             code: `<Carousel className="nds-w-full" style={{ maxWidth: "42rem" }} aria-label="Cards de produto">
   <CarouselContent>
     {products.map((p) => (
-      <CarouselItem key={p.id} className="md:basis-1/2 lg:basis-1/3">
+      <CarouselItem key={p.id} className="nds-md-basis-half nds-lg-basis-third">
         <Card>
           <CardContent>{p.name}</CardContent>
         </Card>
@@ -815,7 +815,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               >
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
                       <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
                     </CarouselItem>
                   ))}

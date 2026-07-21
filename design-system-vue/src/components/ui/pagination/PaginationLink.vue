@@ -21,14 +21,7 @@ const props = withDefaults(defineProps<{
     data-slot="pagination-link"
     :data-active="isActive ? '' : undefined"
     :aria-current="isActive ? 'page' : undefined"
-    :class="cn(
-      buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
-        size,
-      }),
-      '',
-      props.class,
-    )"
+    :class="cn( buttonVariants({ variant: isActive ? 'outline' : 'ghost', size, }), '', props.class, )"
   >
     <slot />
   </a>

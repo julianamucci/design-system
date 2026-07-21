@@ -749,7 +749,7 @@ tooltip="Dashboard"</code>
       <template #do-preview-2>
         <div class="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
           <code class="nds-whitespace-pre">// Trigger apenas em mobile
-&lt;SidebarTrigger className="lg:hidden" /&gt;</code>
+&lt;SidebarTrigger className="nds-lg-hidden" /&gt;</code>
         </div>
       </template>
       <template #dont-preview-2>

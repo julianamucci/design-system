@@ -66,7 +66,7 @@ export const MultiResponsive: Story = {
     <Carousel className="nds-w-full max-w-2xl" aria-label="Galeria de múltiplos itens">
       <CarouselContent>
         {Array.from({ length: 6 }).map((_, i) => (
-          <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+          <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
             <SlideCard label={`Slide ${i + 1}`} />
           </CarouselItem>
         ))}

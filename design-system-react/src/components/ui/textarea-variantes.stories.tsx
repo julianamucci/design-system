@@ -30,7 +30,7 @@ export const Default: Story = {
       <Textarea
         id="var-default"
         placeholder="Conte um pouco sobre você..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),
@@ -64,7 +64,7 @@ function WithCounterRender() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="ex: Camiseta de algodão, gola redonda..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
         maxLength={max}
       />
       <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
@@ -113,7 +113,7 @@ export const NoResize: Story = {
       <Textarea
         id="var-noresize"
         placeholder="O que poderíamos melhorar?"
-        className="resize-none min-h-[120px]"
+        className="nds-resize-none nds-min-h-30"
       />
     </div>
   ),

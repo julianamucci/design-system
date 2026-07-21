@@ -112,7 +112,7 @@ function SidebarWithNavGroups() {
       </nav>
       <SidebarInset>
         <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
-          <SidebarTrigger className="lg:hidden" />
+          <SidebarTrigger className="nds-lg-hidden" />
           <span className="nds-text-body nds-text-muted-foreground">Com grupos, badges e group action</span>
         </header>
         <div className="nds-p-6 nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos, SidebarMenuBadge e SidebarGroupAction.</div>
@@ -282,7 +282,7 @@ function SidebarWithSearch() {
       </nav>
       <SidebarInset>
         <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
-          <SidebarTrigger className="lg:hidden" />
+          <SidebarTrigger className="nds-lg-hidden" />
           <span className="nds-text-body nds-text-muted-foreground">Com SidebarInput para busca</span>
         </header>
         <div className="nds-p-6 nds-text-body nds-text-muted-foreground">SidebarInput filtra os itens de menu em tempo real.</div>
@@ -309,7 +309,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="nds-cluster min-h-[400px]">
+      <div className="nds-cluster nds-min-h-100">
         <Story />
       </div>
     ),

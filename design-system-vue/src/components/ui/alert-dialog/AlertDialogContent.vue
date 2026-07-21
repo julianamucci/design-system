@@ -40,12 +40,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       data-slot="alert-dialog-content"
       :data-size="size"
       v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'AlertDialog', ...$attrs, ...forwarded }"
-      :class="
-        cn(
-          'nds-alert-dialog-content',
-          props.class,
-        )
-      "
+      :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />
     </AlertDialogContent>

@@ -71,7 +71,7 @@ export const Vertical: Story = {
     >
       <CarouselContent className="" style={{ height: "200px" }}>
         {Array.from({ length: 5 }).map((_, i) => (
-          <CarouselItem key={i} className="basis-full">
+          <CarouselItem key={i} className="nds-basis-full">
             <SlideCard label={`Slide ${i + 1}`} />
           </CarouselItem>
         ))}

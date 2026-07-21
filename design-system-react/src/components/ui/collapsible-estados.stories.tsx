@@ -42,10 +42,10 @@ export const NaoControlado: Story = {
         <span>Exibir filtros avançados</span>
         <ChevronDown
           aria-hidden="true"
-          className="transition-transform [[data-state=open]_&]:rotate-180" style={{ height: "1rem", width: "1rem" }}
+          className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
         />
       </CollapsibleTrigger>
-      <CollapsibleContent className="nds-rounded-md nds-border-default bg-muted/40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
         <p>Filtro avançado 1</p>
         <p>Filtro avançado 2</p>
       </CollapsibleContent>
@@ -98,10 +98,10 @@ function ControlledExample() {
           <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
           <ChevronDown
             aria-hidden="true"
-            className="transition-transform [[data-state=open]_&]:rotate-180" style={{ height: "1rem", width: "1rem" }}
+            className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
           />
         </CollapsibleTrigger>
-        <CollapsibleContent className="nds-rounded-md nds-border-default bg-muted/40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+        <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </CollapsibleContent>
@@ -151,7 +151,7 @@ export const Desabilitado: Story = {
           className="" style={{ height: "1rem", width: "1rem" }}
         />
       </CollapsibleTrigger>
-      <CollapsibleContent className="nds-rounded-md nds-border-default bg-muted/40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
         <p>Filtro avançado 1</p>
         <p>Filtro avançado 2</p>
       </CollapsibleContent>

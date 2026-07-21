@@ -22,12 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps)
   <RadioGroupItem
     data-slot="radio-group-item"
     v-bind="forwardedProps"
-    :class="
-      cn(
-        'nds-radio-item',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-radio-item', props.class, )"
   >
     <RadioGroupIndicator
       data-slot="radio-group-indicator"

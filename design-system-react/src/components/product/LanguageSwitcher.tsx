@@ -16,7 +16,7 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useI18nStore();
 
   return (
-    <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-(--radius-input) border border-border/40">
+    <div className="flex items-center gap-1 nds-bg-muted-30 p-1 rounded-(--radius-input) border nds-border-border-40">
       <ToggleGroup
         type="single"
         value={locale}
@@ -35,27 +35,27 @@ export function LanguageSwitcher() {
         <ToggleGroupItem
           value="pt-BR"
           aria-label="Português"
-          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           PT
         </ToggleGroupItem>
         <ToggleGroupItem
           value="en"
           aria-label="English"
-          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           EN
         </ToggleGroupItem>
         <ToggleGroupItem
           value="es"
           aria-label="Español"
-          className="h-(--height-xs) px-2 text-[10px] data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
         >
           ES
         </ToggleGroupItem>
       </ToggleGroup>
 
-      <div className="ml-1 border-l border-border/50 h-3 pl-2 flex items-center">
+      <div className="ml-1 border-l nds-border-soft h-3 pl-2 flex items-center">
         <Languages className="h-3 w-3 text-muted-foreground/50" />
       </div>
     </div>

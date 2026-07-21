@@ -106,7 +106,7 @@
                 <li class="row-span-3">
                   <NavigationMenuLink
                     href="/produtos/destaque"
-                    class="nds-stack from-muted/40 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-4 no-underline outline-none focus:shadow-md" data-justify="end" style="height: 100%"
+                    class="nds-stack from-muted/40 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-4 no-underline outline-none nds-focus-shadow-md" data-justify="end" style="height: 100%"
                   >
                     <div class="mt-3 nds-mb-1 nds-text-base nds-font-medium">Plano Empresarial</div>
                     <p class="nds-text-muted-foreground nds-text-caption">

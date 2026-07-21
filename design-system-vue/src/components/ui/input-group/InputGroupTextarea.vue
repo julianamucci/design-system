@@ -11,9 +11,6 @@ const props = defineProps<{
 <template>
   <Textarea
     data-slot="input-group-control"
-    :class="cn(
-      'nds-input-group-control',
-      props.class,
-    )"
+    :class="cn( 'nds-input-group-control', props.class, )"
   />
 </template>

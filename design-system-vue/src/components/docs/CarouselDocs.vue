@@ -165,7 +165,7 @@ const codeSingle = `<Carousel class="nds-w-full nds-max-w-sm">
 
 const codeMulti = `<Carousel class="nds-w-full" style="max-width: 42rem">
   <CarouselContent>
-    <CarouselItem v-for="(n, i) in 6" :key="i" class="md:basis-1/2 lg:basis-1/3">
+    <CarouselItem v-for="(n, i) in 6" :key="i" class="nds-md-basis-half nds-lg-basis-third">
       Slide {{ n }}
     </CarouselItem>
   </CarouselContent>
@@ -303,7 +303,7 @@ const codeCompositionMultiResponsive = `<Carousel class="nds-w-full" style="max-
     <CarouselItem
       v-for="p in products"
       :key="p.id"
-      class="md:basis-1/2 lg:basis-1/3"
+      class="nds-md-basis-half nds-lg-basis-third"
     >
       <Card>{{ p.name }}</Card>
     </CarouselItem>
@@ -746,7 +746,7 @@ const demoSlides = [1, 2, 3, 4, 5];
               <CarouselItem
                 v-for="n in [1, 2, 3, 4, 5, 6]"
                 :key="n"
-                class="md:basis-1/2 lg:basis-1/3"
+                class="nds-md-basis-half nds-lg-basis-third"
               >
                 <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
                   <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
@@ -876,7 +876,7 @@ const demoSlides = [1, 2, 3, 4, 5];
               <CarouselItem
                 v-for="n in [1, 2, 3, 4, 5, 6]"
                 :key="n"
-                class="md:basis-1/2 lg:basis-1/3"
+                class="nds-md-basis-half nds-lg-basis-third"
               >
                 <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
                   <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>

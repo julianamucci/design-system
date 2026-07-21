@@ -48,7 +48,7 @@ export const Simples: Story = {
             text="Anterior"
             aria-disabled
             tabIndex={-1}
-            className="pointer-events-none opacity-50"
+            className="pointer-events-none nds-opacity-50"
           />
         </PaginationItem>
         {[1, 2, 3, 4, 5].map((n) => (
@@ -180,7 +180,7 @@ export const UltimaPagina: Story = {
             text="Próxima"
             aria-disabled
             tabIndex={-1}
-            className="pointer-events-none opacity-50"
+            className="pointer-events-none nds-opacity-50"
           />
         </PaginationItem>
       </PaginationContent>

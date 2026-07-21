@@ -27,11 +27,6 @@ const delegatedProps = reactiveOmit(props, 'class')
     v-bind="delegatedProps"
     :aria-hidden="props.decorative ? 'true' : undefined"
     :aria-orientation="!props.decorative ? props.orientation : undefined"
-    :class="
-      cn(
-        'nds-separator',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-separator', props.class, )"
   />
 </template>

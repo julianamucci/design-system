@@ -91,7 +91,7 @@ function ComDotsCarousel() {
             aria-label={`Ir para o slide ${i + 1} de ${count}`}
             onClick={() => api?.scrollTo(i)}
             className={cn(
-              "h-2 w-2 rounded-full p-0 transition-colors",
+              "h-2 w-2 rounded-full p-0 nds-transition-colors",
               i === current ? "bg-primary" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
             )}
           />
@@ -134,7 +134,7 @@ export const Galeria: Story = {
               <img
                 src={`https://picsum.photos/seed/carousel-${i + 1}/640/360`}
                 alt={`Imagem de exemplo ${i + 1}`}
-                className="nds-block nds-w-full aspect-[16/9]" style={{ objectFit: "cover" }}
+                className="nds-block nds-w-full nds-aspect-16-9" style={{ objectFit: "cover" }}
               />
               <CardContent>
                 <p className="nds-text-body nds-font-medium">Imagem {i + 1}</p>

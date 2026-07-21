@@ -23,9 +23,6 @@ const modelValue = useVModel(props, 'modelValue', emits, {
   <input
     v-model="modelValue"
     data-slot="input"
-    :class="cn(
-      'nds-input',
-      props.class,
-    )"
+    :class="cn( 'nds-input', props.class, )"
   >
 </template>

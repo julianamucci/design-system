@@ -134,7 +134,7 @@ export const GridConsistente: Story = {
     },
   },
   render: () => (
-    <div className="nds-grid sm:grid-cols-3" style={{maxWidth: "100%", width: "760px" }} data-spacing="md" >
+    <div className="nds-grid nds-sm-grid-3" style={{maxWidth: "100%", width: "760px" }} data-spacing="md" >
       {[
         { src: LANDSCAPE_SRC, alt: "Paisagem ao entardecer" },
         { src: PRODUCT_SRC, alt: "Tênis de corrida" },

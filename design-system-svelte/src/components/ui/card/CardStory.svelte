@@ -109,7 +109,7 @@
   </Card>
 {:else if variant === 'withImage'}
   <Card class={className} {size}>
-    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] nds-w-full" style="object-fit: cover" />
+    <img src={imageSrc} alt={imageAlt} class="nds-aspect-4-3 nds-w-full" style="object-fit: cover" />
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
@@ -122,7 +122,7 @@
   <a
     href="#card"
     aria-label={`Abrir ${title}`}
-    class="nds-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" style="border-radius: var(--radius-card)"
+    class="nds-block nds-focus-ring" style="border-radius: var(--radius-card)"
   >
     <Card class={className} {size}>
       <CardHeader>
@@ -136,7 +136,7 @@
   </a>
 {:else if variant === 'product'}
   <Card class={className} {size}>
-    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] nds-w-full" style="object-fit: cover" />
+    <img src={imageSrc} alt={imageAlt} class="nds-aspect-4-3 nds-w-full" style="object-fit: cover" />
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
@@ -178,7 +178,7 @@
   <Card class={className} size="sm">
     <CardHeader>
       <CardDescription>{title}</CardDescription>
-      <CardTitle class="nds-font-semibold tabular-nums" style="font-size: 1.5rem; line-height: 2rem">{metricValue}</CardTitle>
+      <CardTitle class="nds-font-semibold nds-tabular-nums" style="font-size: 1.5rem; line-height: 2rem">{metricValue}</CardTitle>
     </CardHeader>
     <CardContent>
       <p class="nds-text-caption text-emerald-700 dark:text-emerald-300">{metricTrend}</p>

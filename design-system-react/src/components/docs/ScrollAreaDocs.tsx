@@ -230,7 +230,7 @@ interface ScrollBarProps {
                   {VERTICAL_TAGS.map((n) => (
                     <div
                       key={n}
-                      className="nds-text-body nds-border-b last:border-b-0"
+                      className="nds-text-body nds-border-b nds-last-border-0"
                       style={{ paddingBottom: "0.5rem" }}
                     >
                       {lblTag} {n}
@@ -470,7 +470,7 @@ interface ScrollBarProps {
                 <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
                   <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
                     {VERTICAL_TAGS.slice(0, 20).map((n) => (
-                      <div key={n} className="nds-border-b last:border-b-0" style={{ paddingBottom: "0.25rem" }}>
+                      <div key={n} className="nds-border-b nds-last-border-0" style={{ paddingBottom: "0.25rem" }}>
                         {lblTag} {n}
                       </div>
                     ))}

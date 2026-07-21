@@ -60,8 +60,8 @@
           <TooltipContent {side} {align} {sideOffset}>
             {#if variant === 'withShortcut'}
               <span>{contentText.replace(/\s*\([^)]*\)\s*$/, '')}</span>
-              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
-              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
+              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
+              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
             {:else if variant === 'longText'}
               {contentText}
             {:else}
@@ -87,8 +87,8 @@
           <TooltipContent {side} {align} {sideOffset}>
             {#if variant === 'withShortcut'}
               <span>{contentText.replace(/\s*\([^)]*\)\s*$/, '')}</span>
-              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
-              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
+              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
+              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
             {:else if variant === 'longText'}
               {contentText}
             {:else}

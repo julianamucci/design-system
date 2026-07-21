@@ -39,7 +39,7 @@
       <Button variant="outline" {...props}>Editar perfil</Button>
     {/snippet}
   </DialogTrigger>
-  <DialogContent class="sm:max-w-md">
+  <DialogContent class="nds-sm-max-w-md">
     <DialogHeader>
       <DialogTitle>{title}</DialogTitle>
       <DialogDescription>

@@ -163,7 +163,7 @@ export const SidebarMenu: Story = {
           <nav aria-label="Sidebar" className="nds-p-2">
             {sections.map((sec) => (
               <div key={sec.name} className="nds-mb-4">
-                <div className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-mb-2 uppercase tracking-wide">
+                <div className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-mb-2 nds-uppercase nds-tracking-wide">
                   {sec.name}
                 </div>
                 <ul className="nds-stack" data-spacing="xs">
@@ -171,7 +171,7 @@ export const SidebarMenu: Story = {
                     <li key={item}>
                       <a
                         href={`#${item.toLowerCase()}`}
-                        className="nds-block nds-rounded-md nds-px-2 nds-py-1 nds-text-body nds-hover-bg-muted-soft focus-visible:bg-muted outline-none"
+                        className="nds-block nds-rounded-md nds-px-2 nds-py-1 nds-text-body nds-hover-bg-muted-soft outline-none"
                       >
                         {item}
                       </a>

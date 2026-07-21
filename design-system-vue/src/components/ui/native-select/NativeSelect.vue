@@ -39,10 +39,7 @@ const delegatedProps = reactiveOmit(props, 'class', 'size')
       v-model="modelValue"
       data-slot="native-select"
       :data-size="props.size ?? 'default'"
-      :class="cn(
-        'nds-native-select-input',
-        props.class,
-      )"
+      :class="cn( 'nds-native-select-input', props.class, )"
     >
       <slot />
     </select>

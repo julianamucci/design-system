@@ -77,7 +77,7 @@ export default function App() {
       return (
         <Suspense fallback={
           <div className="flex items-center justify-center h-64 text-muted-foreground" aria-live="polite">
-            <span className="animate-pulse text-sm">Carregando...</span>
+            <span className="nds-animate-pulse text-sm">Carregando...</span>
           </div>
         }>
           <LazyComponent />
@@ -96,7 +96,7 @@ export default function App() {
     <SidebarProvider>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded-md focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+        className="sr-only nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
       >
         Pular para conteúdo principal
       </a>
@@ -106,7 +106,7 @@ export default function App() {
             <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center" aria-hidden="true">
               <span className="text-primary-foreground">S</span>
             </div>
-            <span className="font-semibold text-[30px]">Shadcn/UI</span>
+            <span className="font-semibold nds-text-3xl">Shadcn/UI</span>
           </div>
         </SidebarHeader>
 
@@ -129,7 +129,7 @@ export default function App() {
               <Accordion className="w-full">
                 {componentCategories.map((category) => (
                   <AccordionItem key={category.name} value={category.name} className="border-none">
-                    <AccordionTrigger className="py-2 px-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md [&[data-state=open]>svg]:rotate-90">
+                    <AccordionTrigger className="py-2 px-2 nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground rounded-md [&[data-state=open]>svg]:rotate-90">
                       <div className="flex items-center gap-2">
                         <category.icon className="h-4 w-4" aria-hidden="true" />
                         <span>{category.name}</span>

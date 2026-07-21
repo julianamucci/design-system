@@ -279,18 +279,18 @@ const visualTestItems = computed(() => [
             data-align="center"
           >
             <Skeleton
-              class="nds-rounded-full motion-reduce:animate-none"
+              class="nds-rounded-full nds-motion-reduce-none"
               style="height: 3rem; width: 3rem"
               :aria-hidden="true"
             />
             <div class="nds-stack nds-flex-1" data-spacing="sm">
               <Skeleton
-                class="motion-reduce:animate-none"
+                class="nds-motion-reduce-none"
                 style="height: 1rem; width: 70%"
                 :aria-hidden="true"
               />
               <Skeleton
-                class="motion-reduce:animate-none"
+                class="nds-motion-reduce-none"
                 style="height: 1rem; width: 50%"
                 :aria-hidden="true"
               />
@@ -317,18 +317,18 @@ const visualTestItems = computed(() => [
               data-align="center"
             >
               <Skeleton
-                class="nds-rounded-md motion-reduce:animate-none"
+                class="nds-rounded-md nds-motion-reduce-none"
                 style="height: 2rem; width: 2rem"
                 :aria-hidden="true"
               />
               <div class="nds-flex-1 nds-stack" data-spacing="xs">
                 <Skeleton
-                  class="motion-reduce:animate-none"
+                  class="nds-motion-reduce-none"
                   style="height: 0.75rem; width: 60%"
                   :aria-hidden="true"
                 />
                 <Skeleton
-                  class="motion-reduce:animate-none"
+                  class="nds-motion-reduce-none"
                   style="height: 0.75rem; width: 40%"
                   :aria-hidden="true"
                 />
@@ -348,7 +348,7 @@ const visualTestItems = computed(() => [
           >
             <AspectRatio :ratio="16 / 9">
               <Skeleton
-                class="motion-reduce:animate-none"
+                class="nds-motion-reduce-none"
                 style="height: 100%; width: 100%"
                 :aria-hidden="true"
               />
@@ -368,17 +368,17 @@ const visualTestItems = computed(() => [
             data-spacing="sm"
           >
             <Skeleton
-              class="motion-reduce:animate-none"
+              class="nds-motion-reduce-none"
               style="height: 1rem; width: 100%"
               :aria-hidden="true"
             />
             <Skeleton
-              class="motion-reduce:animate-none"
+              class="nds-motion-reduce-none"
               style="height: 1rem; width: 90%"
               :aria-hidden="true"
             />
             <Skeleton
-              class="motion-reduce:animate-none"
+              class="nds-motion-reduce-none"
               style="height: 1rem; width: 60%"
               :aria-hidden="true"
             />
@@ -459,12 +459,12 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 1rem; width: 100%"
             :aria-hidden="true"
           />
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 1rem; width: 70%"
             :aria-hidden="true"
           />
@@ -473,7 +473,7 @@ const visualTestItems = computed(() => [
       <template #dont-preview-0>
         <div class="nds-w-full">
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 0.5rem; width: 3rem"
             :aria-hidden="true"
           />
@@ -488,12 +488,12 @@ const visualTestItems = computed(() => [
           data-align="center"
         >
           <Skeleton
-            class="nds-rounded-full motion-reduce:animate-none"
+            class="nds-rounded-full nds-motion-reduce-none"
             style="height: 2.5rem; width: 2.5rem"
             :aria-hidden="true"
           />
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 1rem; width: 160px"
             :aria-hidden="true"
           />
@@ -502,11 +502,11 @@ const visualTestItems = computed(() => [
       <template #dont-preview-1>
         <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
           <Skeleton
-            class="nds-rounded-full motion-reduce:animate-none"
+            class="nds-rounded-full nds-motion-reduce-none"
             style="height: 2.5rem; width: 2.5rem"
           />
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 1rem; width: 160px"
           />
         </div>
@@ -531,7 +531,7 @@ const visualTestItems = computed(() => [
           style="width: 12rem"
         >
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 5rem; width: 100%"
             :aria-hidden="true"
           />
@@ -543,7 +543,7 @@ const visualTestItems = computed(() => [
           aria-label="Carregando avatar"
         >
           <Skeleton
-            class="nds-rounded-full motion-reduce:animate-none"
+            class="nds-rounded-full nds-motion-reduce-none"
             style="height: 3rem; width: 3rem"
             :aria-hidden="true"
           />
@@ -555,7 +555,7 @@ const visualTestItems = computed(() => [
           aria-label="Carregando linha de texto"
         >
           <Skeleton
-            class="motion-reduce:animate-none"
+            class="nds-motion-reduce-none"
             style="height: 1rem; width: 200px"
             :aria-hidden="true"
           />

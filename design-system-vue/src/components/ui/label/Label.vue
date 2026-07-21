@@ -14,12 +14,7 @@ const delegatedProps = reactiveOmit(props, 'class')
   <Label
     data-slot="label"
     v-bind="delegatedProps"
-    :class="
-      cn(
-        'nds-label',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-label', props.class, )"
   >
     <slot />
   </Label>

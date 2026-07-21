@@ -183,9 +183,9 @@ import Autoplay from "embla-carousel-autoplay";`;
 
   const codeMulti = `<Carousel>
   <CarouselContent>
-    <CarouselItem class="md:basis-1/2 lg:basis-1/3">Card 1</CarouselItem>
-    <CarouselItem class="md:basis-1/2 lg:basis-1/3">Card 2</CarouselItem>
-    <CarouselItem class="md:basis-1/2 lg:basis-1/3">Card 3</CarouselItem>
+    <CarouselItem class="nds-md-basis-half nds-lg-basis-third">Card 1</CarouselItem>
+    <CarouselItem class="nds-md-basis-half nds-lg-basis-third">Card 2</CarouselItem>
+    <CarouselItem class="nds-md-basis-half nds-lg-basis-third">Card 3</CarouselItem>
   </CarouselContent>
   <CarouselPrevious />
   <CarouselNext />
@@ -266,7 +266,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   const codeCompositionMultiResponsive = `<Carousel class="nds-w-full" style="max-width: 42rem" aria-label="Cards de produto">
   <CarouselContent>
     {#each products as p}
-      <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+      <CarouselItem class="nds-md-basis-half nds-lg-basis-third">
         <div class="nds-rounded-md nds-border-default nds-p-4">{p.name}</div>
       </CarouselItem>
     {/each}
@@ -628,7 +628,7 @@ interface CarouselNavProps extends ButtonProps {
       <Carousel aria-label="Multi responsivo">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5, 6] as i}
-            <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem class="nds-md-basis-half nds-lg-basis-third">
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
                   {i}
@@ -766,7 +766,7 @@ interface CarouselNavProps extends ButtonProps {
       <Carousel aria-label="Multi responsivo">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5, 6] as i}
-            <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem class="nds-md-basis-half nds-lg-basis-third">
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
                   {i}

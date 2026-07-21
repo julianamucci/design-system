@@ -134,7 +134,7 @@ const codeRequired = `<Label for="email">
 
 const codeDisabled = `<!-- peer-disabled: Label e Input devem ser siblings no DOM -->
 <Label for="cpf">CPF</Label>
-<input id="cpf" type="text" class="peer" disabled />`;
+<input id="cpf" type="text" class="nds-peer" disabled />`;
 
 const codeCustomization = `<!-- Personalização via class -->
 <Label for="field" class="nds-text-muted-foreground">
@@ -323,7 +323,7 @@ const visualTestItems = computed(() => [
           <Input
             id="demo-disabled"
             type="text"
-            class="peer"
+            class="nds-peer"
             :placeholder="tContent('demonstration.labels.disabled')"
             disabled
           />

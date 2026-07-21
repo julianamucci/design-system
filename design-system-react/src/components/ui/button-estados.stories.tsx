@@ -46,7 +46,7 @@ export const Disabled: Story = {
 export const Loading: Story = {
   render: (args) => (
     <Button {...args} disabled aria-busy="true">
-      <Loader2 aria-hidden="true" className="animate-spin" />
+      <Loader2 aria-hidden="true" className="nds-animate-spin" />
       Salvando…
     </Button>
   ),

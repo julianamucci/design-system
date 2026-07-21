@@ -10,10 +10,7 @@ defineProps<{
 <template>
   <p
     data-slot="empty-description"
-    :class="cn(
-      'nds-empty-description',
-      $attrs.class ?? '',
-    )"
+    :class="cn( 'nds-empty-description', $attrs.class ?? '', )"
   >
     <slot />
   </p>

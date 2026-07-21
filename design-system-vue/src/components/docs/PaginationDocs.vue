@@ -437,7 +437,7 @@ const a11yCritCols = computed(() => ({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
-                <span class="hidden sm:block">{{ tContent('demonstration.labels.previous') }}</span>
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.previous') }}</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem>
@@ -470,7 +470,7 @@ const a11yCritCols = computed(() => ({
             </PaginationItem>
             <PaginationItem>
               <PaginationNext>
-                <span class="hidden sm:block">{{ tContent('demonstration.labels.next') }}</span>
+                <span class="hidden nds-sm-block">{{ tContent('demonstration.labels.next') }}</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>
@@ -629,7 +629,7 @@ const a11yCritCols = computed(() => ({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
-                <span class="hidden sm:block">Anterior</span>
+                <span class="hidden nds-sm-block">Anterior</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
@@ -641,7 +641,7 @@ const a11yCritCols = computed(() => ({
             <PaginationItem><PaginationLink>3</PaginationLink></PaginationItem>
             <PaginationItem>
               <PaginationNext>
-                <span class="hidden sm:block">Próxima</span>
+                <span class="hidden nds-sm-block">Próxima</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>
@@ -733,12 +733,12 @@ const a11yCritCols = computed(() => ({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious>
-                <span class="hidden sm:block">Anterior</span>
+                <span class="hidden nds-sm-block">Anterior</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem>
               <PaginationNext>
-                <span class="hidden sm:block">Próxima</span>
+                <span class="hidden nds-sm-block">Próxima</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>

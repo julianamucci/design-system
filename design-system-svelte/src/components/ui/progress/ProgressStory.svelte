@@ -54,7 +54,7 @@
         <span class="nds-font-medium nds-text-foreground">{label}</span>
       {/if}
       {#if showValue && percent !== null}
-        <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">{percent}%</span>
+        <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">{percent}%</span>
       {/if}
     </div>
   {/if}

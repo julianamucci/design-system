@@ -111,7 +111,7 @@ export const IDELayout: Story = {
             </ResizablePanel>
             <ResizableHandle withHandle aria-label={ariaLabel} />
             <ResizablePanel id="console" defaultSize={30} minSize={15}>
-              <div className="nds-cluster bg-muted/60 nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
+              <div className="nds-cluster nds-bg-muted-60 nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
                 <span className="nds-text-muted-foreground">{">"}</span>
                 <span className="" style={{ marginLeft: "0.5rem" }}>npm run dev</span>
               </div>

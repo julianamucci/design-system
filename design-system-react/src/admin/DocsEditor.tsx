@@ -142,7 +142,7 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
 
     return (
       <div className={`space-y-3 ${depth > 0 ? 'pl-4 border-l border-border' : ''}`}>
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+        <p className="text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">{label}</p>
         {Object.entries(nested).map(([k, v]) => (
           <FieldEditor
             key={`${fieldKey}.${k}`}
@@ -157,14 +157,14 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
           <div className="flex gap-2 pt-1">
             <button
               onClick={handleAddItem}
-              className="rounded-md border border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+              className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-border-primary nds-hover-text-primary nds-transition-colors"
             >
               + Adicionar item
             </button>
             {itemKeys(nested).length > 1 && (
               <button
                 onClick={handleRemoveLast}
-                className="rounded-md border border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground hover:border-destructive hover:text-destructive transition-colors"
+                className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-border-destructive nds-hover-text-destructive nds-transition-colors"
               >
                 − Remover último
               </button>
@@ -193,7 +193,7 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
           type="text"
           value={strValue}
           onChange={(e) => onChange(fieldKey, e.target.value)}
-          className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground nds-focus-ring-inset"
           placeholder={`Texto de ${label}...`}
         />
       )}
@@ -373,16 +373,16 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                 onClick={handleAutoTranslate}
                 disabled={translating || loading}
                 title={`Traduzir ${LOCALE_LABELS[locale]} → outros idiomas via Claude`}
-                className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50 flex items-center gap-1"
+                className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors nds-disabled-opacity-50 flex items-center gap-1"
               >
                 {translating ? (
-                  <><span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent inline-block" /> Traduzindo...</>
+                  <><span className="h-3 w-3 nds-animate-spin rounded-full border border-current border-t-transparent inline-block" /> Traduzindo...</>
                 ) : '🌐 Auto-traduzir'}
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving || !dirty}
-                className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-opacity disabled:opacity-50"
+                className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground nds-transition-opacity nds-disabled-opacity-50"
               >
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
@@ -391,7 +391,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
               <button
                 onClick={() => setShowPreview((v) => !v)}
                 title={showPreview ? 'Ocultar preview' : 'Mostrar preview'}
-                className="rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                className="rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
               >
                 {showPreview ? '⬅ Ocultar' : 'Preview →'}
               </button>
@@ -402,7 +402,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
           <main className="flex-1 overflow-y-auto p-4">
             {loading && (
               <div className="flex h-32 items-center justify-center">
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <div className="h-5 w-5 nds-animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             )}
             {!loading && (
@@ -427,7 +427,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
         {showPreview && (
           <div
             onMouseDown={handleDragStart}
-            className="w-1.5 shrink-0 cursor-col-resize bg-border hover:bg-primary/50 transition-colors active:bg-primary"
+            className="w-1.5 shrink-0 cursor-col-resize bg-border nds-hover-bg-primary-50 nds-transition-colors active:bg-primary"
             title="Arraste para redimensionar"
           />
         )}
@@ -462,7 +462,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                 <button
                   onClick={handleRefreshPreview}
                   title="Recarregar preview"
-                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
                 >
                   ↺
                 </button>
@@ -470,7 +470,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                   href={storybookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
                 >
                   ↗
                 </a>

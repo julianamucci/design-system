@@ -116,7 +116,7 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
             </span>
             <ChevronDown
               aria-hidden="true"
-              className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+              className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </Button>
         </CollapsibleTrigger>
@@ -189,7 +189,7 @@ import { ChevronDown } from "lucide-react";`;
   <CollapsibleTrigger asChild>
     <Button variant="ghost" className="nds-cluster nds-w-full nds-px-4" data-justify="between">
       <span>Exibir filtros avançados</span>
-      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
     </Button>
   </CollapsibleTrigger>
   <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
@@ -208,7 +208,7 @@ import { ChevronDown } from "lucide-react";`;
       aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
     >
       <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
-      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+      <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
     </Button>
   </CollapsibleTrigger>
   <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
@@ -264,7 +264,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                   <span>{tContent("demonstration.labels.headerLabel")}</span>
                   <ChevronDown
                     aria-hidden="true"
-                    className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+                    className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
                   />
                 </Button>
               </CollapsibleTrigger>
@@ -384,7 +384,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                     <span>Exibir filtros avançados</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+                      className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
                     />
                   </Button>
                 </CollapsibleTrigger>
@@ -420,7 +420,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                     className="nds-cluster nds-w-full nds-px-4" data-justify="between"
                   >
                     <span>Filtros avançados</span>
-                    <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
+                    <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
@@ -479,7 +479,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                     <span>{tContent("demonstration.labels.triggerClosed")}</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+                      className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
                     />
                   </Button>
                 </CollapsibleTrigger>
@@ -582,7 +582,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       <span>Configurações avançadas</span>
       <ChevronDown
         aria-hidden="true"
-        className="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
+        className="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
       />
     </button>
   </CollapsibleTrigger>
@@ -607,7 +607,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                     <span>Configurações avançadas</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
+                      className="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
                     />
                   </button>
                 </CollapsibleTrigger>

@@ -91,7 +91,7 @@ function isCategoryOpen(name: string) {
     <!-- Skip to content -->
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded-md focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+      class="sr-only nds-skip-link nds-focus-shadow-md nds-focus-ring-inset"
     >
       Pular para conteúdo principal
     </a>
@@ -110,7 +110,7 @@ function isCategoryOpen(name: string) {
           >
             <span class="text-primary-foreground font-bold">S</span>
           </div>
-          <span class="font-semibold text-[30px] text-sidebar-foreground">Shadcn/UI</span>
+          <span class="font-semibold nds-text-3xl text-sidebar-foreground">Shadcn/UI</span>
         </div>
       </div>
 
@@ -120,10 +120,8 @@ function isCategoryOpen(name: string) {
           <div class="space-y-2">
             <!-- Home -->
             <button
-              class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors"
-              :class="currentPage === 'home'
-                ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'"
+              class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm nds-transition-colors"
+              :class="currentPage === 'home' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent hover:text-sidebar-accent-foreground'"
               @click="navigateTo('home')"
             >
               <Home
@@ -139,7 +137,7 @@ function isCategoryOpen(name: string) {
               :key="category.name"
             >
               <button
-                class="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-sidebar-foreground"
+                class="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-sm nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground nds-transition-colors text-sidebar-foreground"
                 :aria-expanded="isCategoryOpen(category.name)"
                 @click="toggleCategory(category.name)"
               >
@@ -152,7 +150,7 @@ function isCategoryOpen(name: string) {
                   <span>{{ category.name }}</span>
                 </span>
                 <svg
-                  class="h-4 w-4 transition-transform shrink-0"
+                  class="h-4 w-4 nds-transition-transform shrink-0"
                   :class="isCategoryOpen(category.name) ? 'rotate-90' : ''"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -174,10 +172,8 @@ function isCategoryOpen(name: string) {
                 <button
                   v-for="item in category.items"
                   :key="item.path"
-                  class="w-full flex items-center justify-start px-2 h-7 rounded-md text-sm transition-colors"
-                  :class="currentPage === item.path
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'"
+                  class="w-full flex items-center justify-start px-2 h-7 rounded-md text-sm nds-transition-colors"
+                  :class="currentPage === item.path ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent hover:text-sidebar-accent-foreground'"
                   @click="navigateTo(item.path)"
                 >
                   {{ item.name }}
@@ -205,7 +201,7 @@ function isCategoryOpen(name: string) {
       <!-- Top header -->
       <header class="h-16 border-b border-border bg-background flex items-center justify-end px-6 shrink-0">
         <button
-          class="h-8 w-8 p-0 flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+          class="h-8 w-8 p-0 flex items-center justify-center rounded-md nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-transition-colors"
           :aria-label="isDark ? 'Ativar modo claro' : 'Ativar modo escuro'"
           @click="isDark = !isDark"
         >
@@ -241,7 +237,7 @@ function isCategoryOpen(name: string) {
               class="flex items-center justify-center h-64 text-muted-foreground"
               aria-live="polite"
             >
-              <span class="animate-pulse text-sm">Carregando...</span>
+              <span class="nds-animate-pulse text-sm">Carregando...</span>
             </div>
           </template>
         </Suspense>

@@ -17,10 +17,7 @@ const delegatedProps = reactiveOmit(props, 'class')
     class="nds-accordion-content"
   >
     <div
-      :class="cn(
-        'nds-accordion-content-body',
-        props.class,
-      )"
+      :class="cn( 'nds-accordion-content-body', props.class, )"
     >
       <slot />
     </div>

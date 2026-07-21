@@ -65,7 +65,7 @@ export const FiltersPanel: Story = {
         <SheetTrigger render={<Button variant="outline" />}>
           Abrir filtros
         </SheetTrigger>
-        <SheetContent side="right" className="sm:w-[420px]" style={{ width: "400px" }}>
+        <SheetContent side="right" className="nds-sm-w-420" style={{ width: "400px" }}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>

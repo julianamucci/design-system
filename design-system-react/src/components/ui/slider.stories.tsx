@@ -64,7 +64,7 @@ export const Playground: Story = {
           </span>
           <span
             aria-live="polite"
-            className="nds-text-body tabular-nums nds-text-foreground"
+            className="nds-text-body nds-tabular-nums nds-text-foreground"
           >
             {value[0]}
           </span>

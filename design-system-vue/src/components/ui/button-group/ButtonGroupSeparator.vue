@@ -22,9 +22,6 @@ const delegatedProps = reactiveOmit(props, 'class')
     data-slot="button-group-separator"
     v-bind="delegatedProps"
     :orientation="props.orientation"
-    :class="cn(
-      'nds-button-group-separator',
-      props.class,
-    )"
+    :class="cn( 'nds-button-group-separator', props.class, )"
   />
 </template>

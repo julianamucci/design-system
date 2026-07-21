@@ -29,7 +29,7 @@ export const Default: Story = {
       <Textarea
         id="state-default"
         placeholder="ex: Descreva o produto..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),
@@ -58,7 +58,7 @@ export const Focus: Story = {
       <Textarea
         id="state-focus"
         placeholder="ex: Descreva o produto..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),
@@ -88,7 +88,7 @@ export const Filled: Story = {
       <Textarea
         id="state-filled"
         defaultValue="Designer de interfaces há 8 anos, apaixonada por sistemas de design escaláveis e acessibilidade web."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),
@@ -118,7 +118,7 @@ export const Disabled: Story = {
         id="state-disabled"
         placeholder="Não disponível"
         disabled
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),
@@ -154,7 +154,7 @@ export const Invalid: Story = {
         defaultValue="email-invalido"
         aria-invalid="true"
         aria-describedby="state-invalid-msg"
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
       <p id="state-invalid-msg" className="nds-text-body nds-text-destructive">
         Conteúdo inválido. Revise antes de enviar.
@@ -192,7 +192,7 @@ export const Readonly: Story = {
         id="state-readonly"
         defaultValue="Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis."
         readOnly
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
     </div>
   ),

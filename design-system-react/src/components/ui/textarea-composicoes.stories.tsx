@@ -31,7 +31,7 @@ export const ComLabelEDescricao: Story = {
       <Textarea
         id="comp-desc"
         placeholder="ex: Camiseta de algodão, gola redonda..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
         aria-describedby="comp-desc-help"
       />
       <p id="comp-desc-help" className="nds-text-caption nds-text-muted-foreground">
@@ -74,7 +74,7 @@ function ComContadorRender() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="ex: Compartilhe seu pensamento..."
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
         maxLength={max}
       />
       <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
@@ -136,7 +136,7 @@ function EmFormularioRender() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Conte um pouco sobre você..."
-          className="resize-y min-h-[120px]"
+          className="nds-resize-y nds-min-h-30"
           maxLength={max}
           required
         />
@@ -192,7 +192,7 @@ function ControladoRender() {
         id="comp-controlled"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="resize-y min-h-[120px]"
+        className="nds-resize-y nds-min-h-30"
       />
       <p className="nds-text-caption nds-text-muted-foreground">
         Tamanho atual: <code className="nds-font-mono">{value.length} chars</code>

@@ -23,12 +23,7 @@ const forwardedProps = useForwardProps(delegatedProps)
   <SelectItem
     data-slot="select-item"
     v-bind="forwardedProps"
-    :class="
-      cn(
-        'nds-select-item',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-select-item', props.class, )"
   >
     <span class="nds-select-item-indicator">
       <SelectItemIndicator>

@@ -166,7 +166,7 @@ export const CardSelection: Story = {
           value={value}
           onValueChange={setValue}
           aria-label="Forma de entrega"
-          className="nds-grid sm:grid-cols-3" style={{ minWidth: "480px" }} data-spacing="sm"
+          className="nds-grid nds-sm-grid-3" style={{ minWidth: "480px" }} data-spacing="sm"
         >
           {options.map((opt) => (
             <Label

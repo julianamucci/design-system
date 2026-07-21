@@ -37,7 +37,7 @@
       <Search class="nds-size-4" aria-hidden="true" />
       Buscar...
     </span>
-    <kbd class="nds-cluster pointer-events-none nds-rounded nds-border-default nds-bg-muted nds-font-mono nds-font-medium opacity-100" style="user-select: none; height: 1.25rem; padding-inline: 0.375rem; font-size: 10px" data-align="center" data-spacing="xs" >
+    <kbd class="nds-cluster pointer-events-none nds-rounded nds-border-default nds-bg-muted nds-font-mono nds-font-medium nds-opacity-100" style="user-select: none; height: 1.25rem; padding-inline: 0.375rem; font-size: 10px" data-align="center" data-spacing="xs" >
       <span class="nds-text-caption">⌘</span>K
     </kbd>
   </Button>

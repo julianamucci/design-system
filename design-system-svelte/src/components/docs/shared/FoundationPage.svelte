@@ -61,7 +61,7 @@
     <header class="space-y-4 pb-8">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+          <Badge variant="secondary" class="rounded-md nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0">
             {$tStore('category')}
           </Badge>
           <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
@@ -71,17 +71,17 @@
         <LanguageSwitcher />
       </div>
 
-      <h1 class="text-4xl font-bold tracking-tight text-foreground">
+      <h1 class="text-4xl font-bold nds-tracking-tight text-foreground">
         {$tStore('title')}
       </h1>
 
-      <p class="text-muted-foreground max-w-3xl leading-relaxed">
+      <p class="text-muted-foreground max-w-3xl nds-leading-relaxed">
         {$tStore('description')}
       </p>
     </header>
 
     {#each sections as [key, value] (key)}
-      <section class="space-y-6 border-t border-border/50 pt-8">
+      <section class="space-y-6 border-t nds-border-soft pt-8">
         <FoundationSection node={value} level={2} />
       </section>
     {/each}

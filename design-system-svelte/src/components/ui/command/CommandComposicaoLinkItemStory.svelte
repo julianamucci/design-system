@@ -7,7 +7,7 @@
   import Github from '@lucide/svelte/icons/code-2';
 </script>
 
-<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default shadow-md">
+<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default nds-shadow-md">
   <Command.Root>
     <Command.Input placeholder="Buscar recurso..." aria-controls="cmd-link-listbox" />
     <Command.List id="cmd-link-listbox">
@@ -16,12 +16,12 @@
         <Command.LinkItem href="/docs/button" value="docs-button">
           <BookOpen class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Button — Docs
-          <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
+          <ExternalLink class="ml-auto nds-opacity-50" aria-hidden="true" />
         </Command.LinkItem>
         <Command.LinkItem href="/docs/input" value="docs-input">
           <BookOpen class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Input — Docs
-          <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
+          <ExternalLink class="ml-auto nds-opacity-50" aria-hidden="true" />
         </Command.LinkItem>
       </Command.Group>
       <Command.Separator />
@@ -29,7 +29,7 @@
         <Command.LinkItem href="https://github.com" value="github" target="_blank">
           <Github class="" style="margin-right: 0.5rem" aria-hidden="true" />
           GitHub
-          <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
+          <ExternalLink class="ml-auto nds-opacity-50" aria-hidden="true" />
         </Command.LinkItem>
       </Command.Group>
     </Command.List>

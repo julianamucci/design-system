@@ -20,10 +20,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <NavigationMenuContent
     data-slot="navigation-menu-content"
     v-bind="forwarded"
-    :class="cn(
-      'nds-navigation-menu-viewport-content',
-      props.class,
-    )"
+    :class="cn( 'nds-navigation-menu-viewport-content', props.class, )"
   >
     <slot />
   </NavigationMenuContent>

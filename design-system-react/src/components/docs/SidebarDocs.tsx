@@ -767,7 +767,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
-                <code className="nds-whitespace-pre">{`// Trigger apenas em mobile\n<SidebarTrigger className="lg:hidden" />`}</code>
+                <code className="nds-whitespace-pre">{`// Trigger apenas em mobile\n<SidebarTrigger className="nds-lg-hidden" />`}</code>
               </div>
             ),
             dontPreview: (

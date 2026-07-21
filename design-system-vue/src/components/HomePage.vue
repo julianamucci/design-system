@@ -25,7 +25,7 @@ const popularComponents = [
             <span class="text-primary-foreground text-2xl font-bold">S</span>
           </div>
         </div>
-        <h1 class="text-5xl font-extrabold tracking-tight">
+        <h1 class="text-5xl font-extrabold nds-tracking-tight">
           Documentação Shadcn/UI
         </h1>
         <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -34,7 +34,7 @@ const popularComponents = [
         </p>
         <div class="flex justify-center gap-4 pt-4">
           <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium nds-hover-bg-primary-90 nds-focus-ring nds-transition-colors"
             @click="emit('navigate', 'button')"
           >
             <Code
@@ -44,7 +44,7 @@ const popularComponents = [
             Começar
           </button>
           <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-transition-colors"
             @click="emit('navigate', 'accordion')"
           >
             <BookOpen
@@ -67,10 +67,10 @@ const popularComponents = [
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 nds-md-grid-3 gap-6">
           <div class="rounded-xl border border-border bg-card text-card-foreground p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+              <div class="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                 <Zap
                   class="h-5 w-5 text-primary"
                   aria-hidden="true"
@@ -87,7 +87,7 @@ const popularComponents = [
 
           <div class="rounded-xl border border-border bg-card text-card-foreground p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+              <div class="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                 <Palette
                   class="h-5 w-5 text-primary"
                   aria-hidden="true"
@@ -104,7 +104,7 @@ const popularComponents = [
 
           <div class="rounded-xl border border-border bg-card text-card-foreground p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+              <div class="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                 <Users
                   class="h-5 w-5 text-primary"
                   aria-hidden="true"
@@ -132,12 +132,12 @@ const popularComponents = [
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 nds-md-grid-2 nds-lg-grid-3 gap-4">
           <button
             v-for="component in popularComponents"
             :key="component.path"
             role="button"
-            class="text-left rounded-xl border border-border bg-card text-card-foreground p-4 hover:shadow-md transition-shadow cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            class="text-left rounded-xl border border-border bg-card text-card-foreground p-4 nds-hover-shadow-md nds-transition-shadow cursor-pointer nds-focus-ring"
             @click="emit('navigate', component.path)"
           >
             <p class="font-semibold mb-1">
@@ -201,7 +201,7 @@ const popularComponents = [
           Explore os componentes na sidebar ou comece com os componentes populares acima.
         </p>
         <button
-          class="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+          class="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium nds-hover-bg-primary-90 nds-focus-ring nds-transition-colors"
           @click="emit('navigate', 'button')"
         >
           Explorar Componentes

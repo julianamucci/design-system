@@ -14,10 +14,7 @@ const { error, formItemId } = useFormField()
   <Label
     data-slot="form-label"
     :data-error="!!error"
-    :class="cn(
-      'nds-form-label',
-      props.class,
-    )"
+    :class="cn( 'nds-form-label', props.class, )"
     :for="formItemId"
   >
     <slot />

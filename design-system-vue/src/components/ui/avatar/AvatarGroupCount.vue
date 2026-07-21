@@ -10,10 +10,7 @@ const props = defineProps<{
 <template>
   <div
     data-slot="avatar-group-count"
-    :class="cn(
-      'nds-avatar-group-count',
-      props.class,
-    )"
+    :class="cn( 'nds-avatar-group-count', props.class, )"
   >
     <slot />
   </div>

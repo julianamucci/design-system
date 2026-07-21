@@ -20,12 +20,7 @@ const delegatedProps = reactiveOmit(props, 'class')
     <AccordionTrigger
       data-slot="accordion-trigger"
       v-bind="delegatedProps"
-      :class="
-        cn(
-          'nds-accordion-trigger',
-          props.class,
-        )
-      "
+      :class="cn( 'nds-accordion-trigger', props.class, )"
     >
       <slot />
       <slot name="icon">

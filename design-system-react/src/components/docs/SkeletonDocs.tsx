@@ -181,18 +181,18 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               data-align="center"
             >
               <Skeleton
-                className="nds-rounded-full motion-reduce:animate-none"
+                className="nds-rounded-full nds-motion-reduce-none"
                 style={{ height: "3rem", width: "3rem" }}
                 aria-hidden="true"
               />
               <div className="nds-stack nds-flex-1" data-spacing="sm">
                 <Skeleton
-                  className="motion-reduce:animate-none"
+                  className="nds-motion-reduce-none"
                   style={{ height: "1rem", width: "70%" }}
                   aria-hidden="true"
                 />
                 <Skeleton
-                  className="motion-reduce:animate-none"
+                  className="nds-motion-reduce-none"
                   style={{ height: "1rem", width: "50%" }}
                   aria-hidden="true"
                 />
@@ -214,18 +214,18 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="nds-cluster" data-spacing="sm" data-align="center">
                   <Skeleton
-                    className="nds-rounded-md motion-reduce:animate-none"
+                    className="nds-rounded-md nds-motion-reduce-none"
                     style={{ height: "2rem", width: "2rem" }}
                     aria-hidden="true"
                   />
                   <div className="nds-flex-1 nds-stack" data-spacing="xs">
                     <Skeleton
-                      className="motion-reduce:animate-none"
+                      className="nds-motion-reduce-none"
                       style={{ height: "0.75rem", width: "60%" }}
                       aria-hidden="true"
                     />
                     <Skeleton
-                      className="motion-reduce:animate-none"
+                      className="nds-motion-reduce-none"
                       style={{ height: "0.75rem", width: "40%" }}
                       aria-hidden="true"
                     />
@@ -246,7 +246,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             >
               <AspectRatio ratio={16 / 9}>
                 <Skeleton
-                  className="motion-reduce:animate-none"
+                  className="nds-motion-reduce-none"
                   style={{ height: "100%", width: "100%" }}
                   aria-hidden="true"
                 />
@@ -266,17 +266,17 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               data-spacing="sm"
             >
               <Skeleton
-                className="motion-reduce:animate-none"
+                className="nds-motion-reduce-none"
                 style={{ height: "1rem", width: "100%" }}
                 aria-hidden="true"
               />
               <Skeleton
-                className="motion-reduce:animate-none"
+                className="nds-motion-reduce-none"
                 style={{ height: "1rem", width: "90%" }}
                 aria-hidden="true"
               />
               <Skeleton
-                className="motion-reduce:animate-none"
+                className="nds-motion-reduce-none"
                 style={{ height: "1rem", width: "60%" }}
                 aria-hidden="true"
               />
@@ -394,13 +394,13 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 className="nds-w-full nds-stack"
                 data-spacing="sm"
               >
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "100%" }} aria-hidden="true" />
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "70%" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "100%" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "70%" }} aria-hidden="true" />
               </div>
             ),
             dontPreview: (
               <div className="nds-w-full">
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "0.5rem", width: "3rem" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "0.5rem", width: "3rem" }} aria-hidden="true" />
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -417,14 +417,14 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 data-spacing="sm"
                 data-align="center"
               >
-                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "2.5rem", width: "2.5rem" }} aria-hidden="true" />
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "160px" }} aria-hidden="true" />
+                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "2.5rem", width: "2.5rem" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "160px" }} aria-hidden="true" />
               </div>
             ),
             dontPreview: (
               <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
-                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "2.5rem", width: "2.5rem" }} />
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "160px" }} />
+                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "2.5rem", width: "2.5rem" }} />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "160px" }} />
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -447,7 +447,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeRectangle,
             preview: (
               <div aria-busy="true" aria-label="Carregando bloco" style={{ width: "12rem" }}>
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "5rem", width: "100%" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "5rem", width: "100%" }} aria-hidden="true" />
               </div>
             ),
           },
@@ -457,7 +457,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeCircle,
             preview: (
               <div aria-busy="true" aria-label="Carregando avatar">
-                <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
+                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
               </div>
             ),
           },
@@ -467,7 +467,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeLine,
             preview: (
               <div aria-busy="true" aria-label="Carregando linha de texto">
-                <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
+                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
               </div>
             ),
           },

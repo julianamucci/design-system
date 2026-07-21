@@ -73,10 +73,8 @@ function handleKeyDown(e: KeyboardEvent) {
         <button
           v-for="comp in components"
           :key="comp"
-          class="w-full px-4 py-2 text-left text-sm transition-colors"
-          :class="activeComponent === comp
-            ? 'bg-muted font-medium text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'"
+          class="w-full px-4 py-2 text-left text-sm nds-transition-colors"
+          :class="activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'text-muted-foreground nds-hover-bg-muted-50 hover:text-foreground'"
           @click="changeComponent(comp)"
         >
           {{ comp }}
@@ -88,10 +86,8 @@ function handleKeyDown(e: KeyboardEvent) {
         <button
           v-for="l in LOCALES"
           :key="l"
-          class="flex-1 rounded py-1 text-xs transition-colors"
-          :class="locale === l
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-muted text-muted-foreground hover:bg-muted/80'"
+          class="flex-1 rounded py-1 text-xs nds-transition-colors"
+          :class="locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'"
           @click="locale = l"
         >
           {{ LOCALE_LABELS[l] }}
@@ -118,7 +114,7 @@ function handleKeyDown(e: KeyboardEvent) {
           >Alterações não salvas</span>
           <button
             :disabled="saving || !dirty"
-            class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-50"
+            class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground nds-transition-opacity nds-disabled-opacity-50"
             @click="save"
           >
             {{ saving ? 'Salvando...' : 'Salvar' }}
@@ -133,7 +129,7 @@ function handleKeyDown(e: KeyboardEvent) {
           v-if="loading"
           class="flex h-32 items-center justify-center"
         >
-          <div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <div class="h-5 w-5 nds-animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
         <div
           v-else

@@ -22,12 +22,7 @@ const delegatedProps = reactiveOmit(props, 'class')
   <ProgressRoot
     data-slot="progress"
     v-bind="delegatedProps"
-    :class="
-      cn(
-        'nds-progress',
-        props.class,
-      )
-    "
+    :class="cn( 'nds-progress', props.class, )"
   >
     <ProgressIndicator
       data-slot="progress-indicator"

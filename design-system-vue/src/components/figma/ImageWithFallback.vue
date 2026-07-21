@@ -24,10 +24,10 @@ const handleError = () => {
 <template>
   <div 
     v-if="error || !src" 
-    class="flex flex-col items-center justify-center bg-muted/20 text-muted-foreground w-full h-full min-h-[200px] border rounded-md" 
+    class="flex flex-col items-center justify-center nds-bg-muted-20 text-muted-foreground w-full h-full nds-min-h-50 border rounded-md" 
     v-bind="$attrs"
   >
-    <ImageIcon class="w-10 h-10 mb-2 opacity-50" />
+    <ImageIcon class="w-10 h-10 mb-2 nds-opacity-50" />
     <span class="text-sm">{{ fallbackText }}</span>
   </div>
   

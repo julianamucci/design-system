@@ -22,10 +22,7 @@ const forwarded = useForwardPropsEmits(props, emits)
     <DrawerContent
       data-slot="drawer-content"
       v-bind="{ 'aria-modal': 'true', 'aria-label': $attrs['aria-labelledby'] ? undefined : 'Drawer', ...$attrs, ...forwarded }"
-      :class="cn(
-        'nds-drawer-content',
-        props.class,
-      )"
+      :class="cn( 'nds-drawer-content', props.class, )"
     >
       <div class="nds-drawer-handle" />
       <slot />

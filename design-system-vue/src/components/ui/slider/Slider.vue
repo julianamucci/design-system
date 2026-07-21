@@ -29,10 +29,7 @@ const rootAttrs = computed(() => {
     v-slot="{ modelValue }"
     data-slot="slider"
     :data-vertical="props.orientation === 'vertical' ? '' : undefined"
-    :class="cn(
-      'nds-slider',
-      props.class,
-    )"
+    :class="cn( 'nds-slider', props.class, )"
     v-bind="{ ...forwarded, ...rootAttrs }"
   >
     <SliderTrack

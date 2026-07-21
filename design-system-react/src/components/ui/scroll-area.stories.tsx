@@ -133,7 +133,7 @@ export const Playground: Story = {
             {items.map((n) => (
               <div
                 key={n}
-                className="nds-text-body nds-border-b last:border-b-0" style={{ paddingBottom: "0.5rem" }}
+                className="nds-text-body nds-border-b nds-last-border-0" style={{ paddingBottom: "0.5rem" }}
               >
                 Tag {n}
               </div>

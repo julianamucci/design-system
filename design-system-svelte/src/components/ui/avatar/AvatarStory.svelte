@@ -67,7 +67,7 @@
     <span
       role="status"
       aria-label={statusLabel}
-      class="bottom-0 right-0 nds-rounded-full nds-bg-primary ring-2 ring-background" style="position: absolute; height: 0.625rem; width: 0.625rem"
+      class="bottom-0 right-0 nds-rounded-full nds-bg-primary nds-ring-background" style="position: absolute; height: 0.625rem; width: 0.625rem"
     ></span>
   </div>
 {/if}

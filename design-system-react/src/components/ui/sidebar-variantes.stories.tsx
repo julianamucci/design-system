@@ -87,7 +87,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
       </nav>
       <SidebarInset>
         <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
-          <SidebarTrigger className="lg:hidden" />
+          <SidebarTrigger className="nds-lg-hidden" />
           <span className="nds-text-body nds-font-medium">
             variant=&quot;{variant}&quot;{collapsible !== "offcanvas" ? ` collapsible="${collapsible}"` : ""}
             {side !== "left" ? ` side="${side}"` : ""}
@@ -117,7 +117,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="nds-cluster min-h-[400px]">
+      <div className="nds-cluster nds-min-h-100">
         <Story />
       </div>
     ),

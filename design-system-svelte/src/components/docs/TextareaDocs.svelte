@@ -120,7 +120,7 @@ import { Label } from "@/components/ui/label";`;
   <Textarea
     id="descricao"
     placeholder="ex: Descreva o produto..."
-    class="resize-y min-h-[120px]"
+    class="nds-resize-y nds-min-h-30"
   />
 </div>`;
 
@@ -137,7 +137,7 @@ import { Label } from "@/components/ui/label";`;
     '    bind:value',
     '    maxlength={max}',
     '    placeholder="ex: Descreva o produto..."',
-    '    class="resize-y min-h-[120px]"',
+    '    class="nds-resize-y nds-min-h-30"',
     '  />',
     '  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">',
     '    <span>Descreva com clareza.</span>',
@@ -154,7 +154,7 @@ import { Label } from "@/components/ui/label";`;
   <Textarea
     id="obs"
     placeholder="Adicione observações..."
-    class="resize-none min-h-[120px]"
+    class="nds-resize-none nds-min-h-30"
   />
 </div>`;
 
@@ -201,7 +201,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
             bind:value={demoDescriptionValue}
             maxlength={demoMax}
             placeholder={$tStore('demonstration.labels.descriptionPlaceholder')}
-            class="resize-y min-h-[120px]"
+            class="nds-resize-y nds-min-h-30"
           />
           <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
             <span>{$tStore('demonstration.labels.descriptionHelp')}</span>
@@ -218,7 +218,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
             bind:value={demoBioValue}
             maxlength={demoBioMax}
             placeholder={$tStore('demonstration.labels.bioPlaceholder')}
-            class="resize-none min-h-[100px]"
+            class="nds-resize-none nds-min-h-25"
           />
           <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
             <span aria-live="polite" aria-label={bioAriaLabel}>
@@ -232,7 +232,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
           <Textarea
             id="demo-feedback"
             placeholder={$tStore('demonstration.labels.feedbackPlaceholder')}
-            class="resize-y min-h-[120px]"
+            class="nds-resize-y nds-min-h-30"
           />
         </div>
       </div>
@@ -325,7 +325,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet doPair1()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="do1-desc">Descrição</Label>
-      <Textarea id="do1-desc" maxlength={500} placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+      <Textarea id="do1-desc" maxlength={500} placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-25" />
       <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
         <span aria-live="polite" aria-label="0 de 500 caracteres usados">0/500</span>
       </div>
@@ -334,20 +334,20 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet dontPair1()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="dont1-desc">Descrição</Label>
-      <Textarea id="dont1-desc" maxlength={500} placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+      <Textarea id="dont1-desc" maxlength={500} placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-25" />
     </div>
   {/snippet}
 
   {#snippet doPair2()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="do2-obs">Observações</Label>
-      <Textarea id="do2-obs" placeholder="Adicione observações..." class="resize-y min-h-[100px]" />
+      <Textarea id="do2-obs" placeholder="Adicione observações..." class="nds-resize-y nds-min-h-25" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="dont2-obs">Observações</Label>
-      <Textarea id="dont2-obs" placeholder="Adicione observações..." class="resize min-h-[100px]" />
+      <Textarea id="dont2-obs" placeholder="Adicione observações..." class="resize nds-min-h-25" />
     </div>
   {/snippet}
 
@@ -371,13 +371,13 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet variantDefault()}
     <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
       <Label for="v-default">Descrição</Label>
-      <Textarea id="v-default" placeholder="ex: Descreva o produto..." class="resize-y min-h-[100px]" />
+      <Textarea id="v-default" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-25" />
     </div>
   {/snippet}
   {#snippet variantWithCounter()}
     <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
       <Label for="v-counter">Biografia</Label>
-      <Textarea id="v-counter" maxlength={200} placeholder="Conte um pouco sobre você..." class="resize-y min-h-[100px]" />
+      <Textarea id="v-counter" maxlength={200} placeholder="Conte um pouco sobre você..." class="nds-resize-y nds-min-h-25" />
       <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
         <span aria-live="polite" aria-label="0 de 200 caracteres usados">0/200</span>
       </div>
@@ -386,7 +386,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet variantNoResize()}
     <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
       <Label for="v-noresize">Observações</Label>
-      <Textarea id="v-noresize" placeholder="Adicione observações..." class="resize-none min-h-[100px]" />
+      <Textarea id="v-noresize" placeholder="Adicione observações..." class="nds-resize-none nds-min-h-25" />
     </div>
   {/snippet}
 
@@ -400,35 +400,35 @@ interface TextareaProps extends HTMLTextareaAttributes {
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea id="ta-label" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />\n</div>`,
+        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-label">Descrição</Label>\n  <Textarea id="ta-label" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />\n</div>`,
         preview: compWithLabel,
       },
       {
         name: $tStore('variants.compositions.withHint.name'),
         description: $tStore('variants.compositions.withHint.description'),
         useWhen: $tStore('variants.compositions.withHint.use'),
-        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea id="ta-hint" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />\n  <p class="nds-text-caption nds-text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>\n</div>`,
+        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea id="ta-hint" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />\n  <p class="nds-text-caption nds-text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>\n</div>`,
         preview: compWithHint,
       },
       {
         name: $tStore('variants.compositions.withCounter.name'),
         description: $tStore('variants.compositions.withCounter.description'),
         useWhen: $tStore('variants.compositions.withCounter.use'),
-        code: `<script lang="ts">\n  let value = $state('');\n  const max = 500;\n</` + `script>\n\n<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-counter">Descrição</Label>\n  <Textarea id="ta-counter" bind:value maxlength={max} class="resize-y min-h-[120px]" />\n  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">\n    <span>Descreva com clareza.</span>\n    <span class="tabular-nums nds-shrink-0" aria-live="polite" aria-label={\`\${value.length} de \${max} caracteres usados\`}>{value.length}/{max}</span>\n  </div>\n</div>`,
+        code: `<script lang="ts">\n  let value = $state('');\n  const max = 500;\n</` + `script>\n\n<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-counter">Descrição</Label>\n  <Textarea id="ta-counter" bind:value maxlength={max} class="nds-resize-y nds-min-h-30" />\n  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">\n    <span>Descreva com clareza.</span>\n    <span class="nds-tabular-nums nds-shrink-0" aria-live="polite" aria-label={\`\${value.length} de \${max} caracteres usados\`}>{value.length}/{max}</span>\n  </div>\n</div>`,
         preview: compWithCounter,
       },
       {
         name: $tStore('variants.compositions.withError.name'),
         description: $tStore('variants.compositions.withError.description'),
         useWhen: $tStore('variants.compositions.withError.use'),
-        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea id="ta-error" aria-invalid="true" aria-describedby="ta-error-error" class="resize-y min-h-[120px]" />\n  <p id="ta-error-error" class="nds-text-caption nds-text-destructive">A descrição é obrigatória e deve ter pelo menos 20 caracteres.</p>\n</div>`,
+        code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-error">Descrição</Label>\n  <Textarea id="ta-error" aria-invalid="true" aria-describedby="ta-error-error" class="nds-resize-y nds-min-h-30" />\n  <p id="ta-error-error" class="nds-text-caption nds-text-destructive">A descrição é obrigatória e deve ter pelo menos 20 caracteres.</p>\n</div>`,
         preview: compWithError,
       },
       {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
-        code: `<form class="nds-stack nds-w-full nds-max-w-md" data-spacing="md" aria-label="Formulário de feedback" onsubmit={handleSubmit}>\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="ta-form">Feedback</Label>\n    <Textarea id="ta-form" name="feedback" bind:value maxlength={500} class="resize-y min-h-[120px]" />\n    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">\n      <span class="tabular-nums nds-shrink-0" aria-live="polite">{value.length}/500</span>\n    </div>\n  </div>\n  <Button type="submit">Enviar</Button>\n  {#if submitted}<p aria-live="polite" class="nds-text-caption nds-text-success">Obrigado pelo feedback!</p>{/if}\n</form>`,
+        code: `<form class="nds-stack nds-w-full nds-max-w-md" data-spacing="md" aria-label="Formulário de feedback" onsubmit={handleSubmit}>\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="ta-form">Feedback</Label>\n    <Textarea id="ta-form" name="feedback" bind:value maxlength={500} class="nds-resize-y nds-min-h-30" />\n    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">\n      <span class="nds-tabular-nums nds-shrink-0" aria-live="polite">{value.length}/500</span>\n    </div>\n  </div>\n  <Button type="submit">Enviar</Button>\n  {#if submitted}<p aria-live="polite" class="nds-text-caption nds-text-success">Obrigado pelo feedback!</p>{/if}\n</form>`,
         preview: compInForm,
       },
     ]}
@@ -437,13 +437,13 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet compWithLabel()}
     <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
       <Label for="ta-label">Descrição</Label>
-      <Textarea id="ta-label" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+      <Textarea id="ta-label" class="nds-resize-y nds-min-h-30" placeholder="ex: Descreva o produto..." />
     </div>
   {/snippet}
   {#snippet compWithHint()}
     <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
       <Label for="ta-hint">Descrição</Label>
-      <Textarea id="ta-hint" class="resize-y min-h-[120px]" placeholder="ex: Descreva o produto..." />
+      <Textarea id="ta-hint" class="nds-resize-y nds-min-h-30" placeholder="ex: Descreva o produto..." />
       <p class="nds-text-caption nds-text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>
     </div>
   {/snippet}
@@ -454,12 +454,12 @@ interface TextareaProps extends HTMLTextareaAttributes {
         id="ta-counter"
         bind:value={compCounterValue}
         maxlength={compMax}
-        class="resize-y min-h-[120px]"
+        class="nds-resize-y nds-min-h-30"
         placeholder="ex: Descreva o produto..."
       />
       <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
         <span>Descreva com clareza.</span>
-        <span class="tabular-nums nds-shrink-0" aria-live="polite" aria-label={compCounterAriaLabel}>
+        <span class="nds-tabular-nums nds-shrink-0" aria-live="polite" aria-label={compCounterAriaLabel}>
           {compCounterValue.length}/{compMax}
         </span>
       </div>
@@ -472,7 +472,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
         id="ta-error"
         aria-invalid="true"
         aria-describedby="ta-error-error"
-        class="resize-y min-h-[120px]"
+        class="nds-resize-y nds-min-h-30"
         placeholder="ex: Descreva o produto..."
       />
       <p id="ta-error-error" class="nds-text-caption nds-text-destructive">
@@ -494,11 +494,11 @@ interface TextareaProps extends HTMLTextareaAttributes {
           name="feedback"
           bind:value={compFormValue}
           maxlength={compMax}
-          class="resize-y min-h-[120px]"
+          class="nds-resize-y nds-min-h-30"
           placeholder="Conte sua experiência..."
         />
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
-          <span class="tabular-nums nds-shrink-0" aria-live="polite" aria-label={compFormAriaLabel}>
+          <span class="nds-tabular-nums nds-shrink-0" aria-live="polite" aria-label={compFormAriaLabel}>
             {compFormValue.length}/{compMax}
           </span>
         </div>

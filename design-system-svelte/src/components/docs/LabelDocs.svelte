@@ -110,7 +110,7 @@
 <Input id="email" type="email" aria-required="true" />`;
 
   const codeDisabled = `<!-- Input com peer + disabled dispara peer-disabled no Label -->
-<Input id="cpf" disabled class="peer" />
+<Input id="cpf" disabled class="nds-peer" />
 <Label for="cpf">CPF</Label>`;
 
   const codeCustomization = `<!-- Personalização via class -->
@@ -159,7 +159,7 @@ interface LabelProps {
 
         <!-- Disabled via peer -->
         <div class="nds-stack" data-spacing="sm">
-          <Input id="demo-disabled" disabled class="peer" />
+          <Input id="demo-disabled" disabled class="nds-peer" />
           <Label for="demo-disabled">{$tStore('demonstration.labels.disabled')}</Label>
         </div>
       </div>

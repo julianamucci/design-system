@@ -26,7 +26,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <span className="text-primary-foreground text-2xl font-bold">S</span>
             </div>
           </div>
-          <h1 className="text-5xl font-extrabold tracking-tight">Documentação Shadcn/UI</h1>
+          <h1 className="text-5xl font-extrabold nds-tracking-tight">Documentação Shadcn/UI</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Biblioteca de componentes reutilizáveis construída com React e Tailwind CSS.
             Copie e cole os componentes que precisar em seu projeto.
@@ -51,11 +51,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 nds-md-grid-3 gap-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+                  <div className="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                     <Zap className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <CardTitle>Rápido</CardTitle>
@@ -71,7 +71,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+                  <div className="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                     <Palette className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <CardTitle>Personalizável</CardTitle>
@@ -87,7 +87,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-primary/10 rounded-md flex items-center justify-center">
+                  <div className="h-10 w-10 nds-bg-primary-10 rounded-md flex items-center justify-center">
                     <Users className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <CardTitle>Acessível</CardTitle>
@@ -110,12 +110,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 nds-md-grid-2 nds-lg-grid-3 gap-4">
             {popularComponents.map((component) => (
               <Card
                 key={component.path}
                 role="button"
-                className="hover:shadow-md transition-shadow cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="nds-hover-shadow-md nds-transition-shadow cursor-pointer nds-focus-ring"
                 tabIndex={0}
                 onClick={() => onNavigate(component.path)}
                 onKeyDown={(e) => {

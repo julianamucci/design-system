@@ -166,7 +166,7 @@ export const WithScrollContent: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           Ver termos
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="nds-sm-max-w-md">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>

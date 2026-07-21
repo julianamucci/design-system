@@ -17,10 +17,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <TagsInputRoot
     v-slot="slotProps"
     v-bind="forwarded"
-    :class="cn(
-      'nds-tags-input',
-      '',
-      props.class)"
+    :class="cn( 'nds-tags-input', '', props.class)"
   >
     <slot v-bind="slotProps" />
   </TagsInputRoot>
