@@ -206,13 +206,13 @@ interface CalendarProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-col items-center gap-3">
+      <div class="nds-stack" data-spacing="sm" data-align="center">
         <Calendar
           type="single"
           bind:value={demoValue}
           locale={previewLocale}
         />
-        <p class="text-xs text-muted-foreground">
+        <p class="nds-text-caption nds-text-muted-foreground">
           {#if demoValue}
             {$tStore('demonstration.labels.singleLabel')}: {demoValue.toString()}
           {:else}
@@ -387,7 +387,7 @@ interface CalendarProps {
         name: $tStore('variants.compositions.inlineBordered.name'),
         description: $tStore('variants.compositions.inlineBordered.description'),
         useWhen: $tStore('variants.compositions.inlineBordered.use'),
-        code: `<div class="rounded-md border">
+        code: `<div class="nds-rounded-md nds-border-default">
   <Calendar type="single" bind:value locale="pt-BR" />
 </div>`,
         preview: compInline,
@@ -420,7 +420,7 @@ interface CalendarProps {
   />
 
   {#snippet compInline()}
-    <div class="rounded-md border">
+    <div class="nds-rounded-md nds-border-default">
       <CalendarStory variant="single" locale={previewLocale} />
     </div>
   {/snippet}

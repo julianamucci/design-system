@@ -160,7 +160,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <div class="flex flex-wrap gap-3">
+          <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
             <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
             <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
             <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
@@ -168,11 +168,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             <Button variant="ghost" onclick={() => handleDemoClick('ghost')}>{$tStore('demonstration.labels.ghost')}</Button>
             <Button variant="link" onclick={() => handleDemoClick('link')}>{$tStore('demonstration.labels.link')}</Button>
             <Button variant="outline" onclick={() => handleDemoClick('outline-icon')}>
-              <Plus class="h-4 w-4" aria-hidden="true" />
+              <Plus class="nds-icon" aria-hidden="true" />
               {$tStore('demonstration.labels.withIcon')}
             </Button>
             <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')} onclick={() => handleDemoClick('icon-only')}>
-              <Trash2 class="h-4 w-4" aria-hidden="true" />
+              <Trash2 class="nds-icon" aria-hidden="true" />
             </Button>
           </div>
         {/snippet}
@@ -283,13 +283,13 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button>Clique aqui</Button>
       {/snippet}
       {#snippet doPair2()}
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button variant="outline">Cancelar</Button>
           <Button>Salvar</Button>
         </div>
       {/snippet}
       {#snippet dontPair2()}
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button>Salvar</Button>
           <Button>Enviar</Button>
         </div>
@@ -361,17 +361,17 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
       {#snippet sizeIcon()}
         <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')}>
-          <Trash2 class="h-4 w-4" aria-hidden="true" />
+          <Trash2 class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconSm()}
         <Button size="icon-sm" aria-label={$tStore('demonstration.labels.ghost')}>
-          <Pencil class="h-4 w-4" aria-hidden="true" />
+          <Pencil class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconLg()}
         <Button size="icon-lg" aria-label={$tStore('demonstration.labels.withIcon')}>
-          <Plus class="h-4 w-4" aria-hidden="true" />
+          <Plus class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
 
@@ -413,7 +413,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             name: $tStore('variants.compositions.actionPair.name'),
             description: $tStore('variants.compositions.actionPair.description'),
             useWhen: $tStore('variants.compositions.actionPair.use'),
-            code: `<div class="flex gap-2">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
+            code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
             preview: compActionPair,
           },
           {
@@ -428,35 +428,35 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       {#snippet compIconLeft()}
         <Button>
-          <Plus class="h-4 w-4" aria-hidden="true" />
+          <Plus class="nds-icon" aria-hidden="true" />
           Adicionar item
         </Button>
       {/snippet}
       {#snippet compIconRight()}
         <Button variant="outline">
           Próximo
-          <ChevronRight class="h-4 w-4" aria-hidden="true" />
+          <ChevronRight class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet compDestructive()}
         <Button variant="destructive">
-          <Trash2 class="h-4 w-4" aria-hidden="true" />
+          <Trash2 class="nds-icon" aria-hidden="true" />
           Excluir
         </Button>
       {/snippet}
       {#snippet compIconOnly()}
         <Button size="icon" aria-label="Baixar arquivo">
-          <Download class="h-4 w-4" aria-hidden="true" />
+          <Download class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet compActionPair()}
-        <div class="flex gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Button variant="outline">Cancelar</Button>
           <Button>Confirmar</Button>
         </div>
       {/snippet}
       {#snippet compAsLink()}
-        <a href="#docs" class="underline-offset-4 text-primary hover:underline">Ver documentação</a>
+        <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

@@ -196,7 +196,7 @@ import {
     <BreadcrumbItem>
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="flex items-center gap-1 hover:text-foreground transition-colors"
+          class="nds-cluster" data-spacing="xs"
           aria-label="Expandir níveis ocultos"
         >
           <BreadcrumbEllipsis />
@@ -268,7 +268,7 @@ interface BreadcrumbEllipsisProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full">
+      <div class="nds-w-full">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -499,7 +499,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   {#snippet variantDefault()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -516,7 +516,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantWithEllipsis()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -537,7 +537,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantCustomSeparator()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -558,7 +558,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantResponsive()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -567,7 +567,7 @@ interface BreadcrumbEllipsisProps {
         <BreadcrumbItem>
           <DropdownMenu>
             <DropdownMenuTrigger
-              class="flex items-center gap-1 hover:text-foreground transition-colors"
+              class="nds-cluster" data-spacing="xs"
               aria-label={$tStore('demonstration.labels.more')}
             >
               <BreadcrumbEllipsis />
@@ -625,7 +625,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   {#snippet compDefault()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -642,7 +642,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet compWithEllipsis()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -663,7 +663,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet compCustomSeparator()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -680,7 +680,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet compResponsive()}
-    <Breadcrumb class="w-full">
+    <Breadcrumb class="nds-w-full">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>

@@ -105,7 +105,7 @@
 
   const codeRequired = `<Label for="email">
   Email profissional
-  <span class="text-destructive" aria-hidden="true">*</span>
+  <span class="nds-text-destructive" aria-hidden="true">*</span>
 </Label>
 <Input id="email" type="email" aria-required="true" />`;
 
@@ -114,7 +114,7 @@
 <Label for="cpf">CPF</Label>`;
 
   const codeCustomization = `<!-- Personalização via class -->
-<Label for="field" class="text-muted-foreground">
+<Label for="field" class="nds-text-muted-foreground">
   Rótulo secundário
 </Label>`;
 
@@ -141,24 +141,24 @@ interface LabelProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="label">
     {#snippet children()}
-      <div class="w-full space-y-6">
+      <div class="nds-stack nds-w-full" data-spacing="lg">
         <!-- Padrão -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-default">{$tStore('demonstration.labels.default')}</Label>
           <Input id="demo-default" type="text" />
         </div>
 
         <!-- Required -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-required">
             {$tStore('demonstration.labels.required')}
-            <span class="text-destructive" aria-hidden="true">{$tStore('demonstration.labels.requiredMarker')}</span>
+            <span class="nds-text-destructive" aria-hidden="true">{$tStore('demonstration.labels.requiredMarker')}</span>
           </Label>
           <Input id="demo-required" type="email" aria-required="true" />
         </div>
 
         <!-- Disabled via peer -->
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Input id="demo-disabled" disabled class="peer" />
           <Label for="demo-disabled">{$tStore('demonstration.labels.disabled')}</Label>
         </div>
@@ -246,25 +246,25 @@ interface LabelProps {
   />
 
   {#snippet doPair1()}
-    <div class="flex flex-col gap-2 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="dodont-do-1">Nome completo</Label>
       <Input id="dodont-do-1" type="text" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="flex flex-col gap-2 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label>Nome completo</Label>
       <Input type="text" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="flex flex-col gap-2 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="dodont-do-2">Email profissional</Label>
       <Input id="dodont-do-2" type="email" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="flex flex-col gap-2 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm">
       <Input type="email" placeholder="Informe seu email" />
     </div>
   {/snippet}
@@ -291,7 +291,7 @@ interface LabelProps {
   />
 
   {#snippet variantDefault()}
-    <div class="flex flex-col gap-2 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="variant-default">Nome completo</Label>
       <Input id="variant-default" type="text" />
     </div>

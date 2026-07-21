@@ -224,7 +224,7 @@ interface MenubarRadioGroupProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex items-center justify-center w-full" style="contain: layout">
+      <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
         <Menubar>
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>

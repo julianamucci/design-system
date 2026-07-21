@@ -222,7 +222,7 @@ interface ToggleGroupItemProps {
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="toggle-group">
     {#snippet children()}
-      <div class="flex flex-col gap-6 items-start">
+      <div class="nds-stack" data-spacing="lg" data-align="start">
         <!-- Single — alinhamento -->
         <ToggleGroup
           type="single"
@@ -410,20 +410,20 @@ interface ToggleGroupItemProps {
   {/snippet}
 
   {#snippet dd1Dont()}
-    <div class="flex items-center gap-1">
+    <div class="nds-cluster" data-spacing="xs">
       <button
         type="button"
         aria-pressed={dd1DontVal}
         onclick={() => (dd1DontVal = !dd1DontVal)}
         aria-label="Alinhar à esquerda"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted"
+        class="nds-cluster nds-rounded-md nds-hover-bg-muted-soft" data-justify="center" data-align="center" style="width: 2.25rem; height: 2.25rem"
       >
         <AlignLeft aria-hidden="true" />
       </button>
-      <button type="button" aria-pressed="false" aria-label="Centralizar" class="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted">
+      <button type="button" aria-pressed="false" aria-label="Centralizar" class="nds-cluster nds-rounded-md nds-hover-bg-muted-soft" data-justify="center" data-align="center" style="width: 2.25rem; height: 2.25rem">
         <AlignCenter aria-hidden="true" />
       </button>
-      <button type="button" aria-pressed="false" aria-label="Alinhar à direita" class="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted">
+      <button type="button" aria-pressed="false" aria-label="Alinhar à direita" class="nds-cluster nds-rounded-md nds-hover-bg-muted-soft" data-justify="center" data-align="center" style="width: 2.25rem; height: 2.25rem">
         <AlignRight aria-hidden="true" />
       </button>
     </div>
@@ -650,8 +650,8 @@ interface ToggleGroupItemProps {
   {/snippet}
 
   {#snippet compFilterWithText()}
-    <div class="flex flex-col gap-2 items-start">
-      <p class="text-sm font-medium text-foreground">Filtros de exibição</p>
+    <div class="nds-stack" data-spacing="sm" data-align="start">
+      <p class="nds-text-body nds-font-medium nds-text-foreground">Filtros de exibição</p>
       <ToggleGroup type="multiple" variant="outline" bind:value={compFilter} aria-label="Filtros de exibição">
         <ToggleGroupItem value="hidden">
           <Eye aria-hidden="true" />

@@ -219,7 +219,7 @@ interface DropdownMenuRadioGroupProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-center justify-center gap-3 w-full" style="contain: layout">
+      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap; contain: layout">
         <DropdownMenu>
           <DropdownMenuTrigger>
             {#snippet child({ props })}

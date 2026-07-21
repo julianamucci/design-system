@@ -197,7 +197,7 @@ interface PaginationDirectionalProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex items-center justify-center w-full" style="contain: layout">
+      <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
         <Pagination count={120} perPage={10} page={6} siblingCount={1}>
           {#snippet children({ pages, currentPage })}
             <PaginationContent>
@@ -641,7 +641,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet compInteractive()}
-    <div class="flex flex-col items-center gap-3 w-full">
+    <div class="nds-stack nds-w-full" data-spacing="sm" data-align="center">
       <Pagination count={80} perPage={10} bind:page={interactiveCurrent}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
@@ -659,7 +659,7 @@ interface PaginationDirectionalProps {
           </PaginationContent>
         {/snippet}
       </Pagination>
-      <p class="text-sm text-muted-foreground">Página atual: {interactiveCurrent} / 8</p>
+      <p class="nds-text-body nds-text-muted-foreground">Página atual: {interactiveCurrent} / 8</p>
     </div>
   {/snippet}
 

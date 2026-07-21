@@ -134,7 +134,7 @@ import {
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <AlertDialogAction class="nds-bg-destructive">
         Excluir conta
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -213,7 +213,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-center justify-center gap-4 w-full">
+      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
         <AlertDialog>
           <AlertDialogTrigger>
             {#snippet child({ props })}
@@ -227,7 +227,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-              <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction class="nds-bg-destructive">
                 {$tStore('demonstration.labels.action')}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -368,7 +368,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -396,7 +396,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -444,7 +444,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir</AlertDialogAction>
+          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -489,7 +489,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+      <AlertDialogAction class="nds-bg-destructive">
         Excluir conta
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -539,7 +539,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir conta</AlertDialogAction>
+          <AlertDialogAction class="nds-bg-destructive">Excluir conta</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

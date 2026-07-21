@@ -163,7 +163,7 @@ const columns: DataTableColumn<Invoice>[] = [
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="data-table">
     {#snippet children()}
-      <div class="w-full">
+      <div class="nds-w-full">
         <DataTable
           columns={demoColumns}
           data={demoData}
@@ -277,23 +277,23 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   {#snippet doPair1()}
-    <div class="text-sm text-muted-foreground">
-      <code class="bg-muted px-1.5 py-0.5 rounded text-xs">globalFilterPlaceholder="Buscar fatura, cliente, método..."</code>
+    <div class="nds-text-body nds-text-muted-foreground">
+      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">globalFilterPlaceholder="Buscar fatura, cliente, método..."</code>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="text-sm text-muted-foreground">
-      <code class="bg-muted px-1.5 py-0.5 rounded text-xs">globalFilterPlaceholder="Buscar..."</code>
+    <div class="nds-text-body nds-text-muted-foreground">
+      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">globalFilterPlaceholder="Buscar..."</code>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="text-sm text-muted-foreground">
-      <code class="bg-muted px-1.5 py-0.5 rounded text-xs">virtualized maxHeight="480px"</code>
+    <div class="nds-text-body nds-text-muted-foreground">
+      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">virtualized maxHeight="480px"</code>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="text-sm text-muted-foreground">
-      <code class="bg-muted px-1.5 py-0.5 rounded text-xs">enablePagination data={`{5000 linhas}`}</code>
+    <div class="nds-text-body nds-text-muted-foreground">
+      <code class="nds-bg-muted nds-rounded nds-text-caption" style="padding: 0.125rem 0.375rem">enablePagination data={`{5000 linhas}`}</code>
     </div>
   {/snippet}
 
@@ -324,7 +324,7 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   {#snippet noPreview()}
-    <span class="text-xs text-muted-foreground italic">Flag opcional — combine livremente conforme o caso de uso.</span>
+    <span class="nds-text-caption nds-text-muted-foreground nds-italic">Flag opcional — combine livremente conforme o caso de uso.</span>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
