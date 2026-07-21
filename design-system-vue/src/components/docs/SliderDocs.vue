@@ -161,10 +161,10 @@ const value = ref<number[]>([50]);
 <\/script>
 
 <template>
-  <div class="space-y-3 w-72">
-    <div class="flex items-center justify-between">
-      <span class="text-sm font-medium">Volume</span>
-      <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+    <div class="nds-cluster" data-justify="between">
+      <span class="nds-text-body nds-font-medium">Volume</span>
+      <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{{ value[0] }}%</span>
     </div>
     <Slider
       v-model="value"
@@ -183,10 +183,10 @@ const value = ref<number[]>([100, 400]);
 <\/script>
 
 <template>
-  <div class="space-y-3 w-72">
-    <div class="flex items-center justify-between">
-      <span class="text-sm font-medium">Faixa de preço</span>
-      <span aria-live="polite" class="text-sm tabular-nums">
+  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+    <div class="nds-cluster" data-justify="between">
+      <span class="nds-text-body nds-font-medium">Faixa de preço</span>
+      <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">
         R$ {{ value[0] }} — R$ {{ value[1] }}
       </span>
     </div>
@@ -201,7 +201,7 @@ const value = ref<number[]>([100, 400]);
 </template>`;
 
 const codeVertical = `<template>
-  <div class="h-40">
+  <div style="height: 10rem;">
     <Slider
       v-model="value"
       orientation="vertical"
@@ -265,10 +265,10 @@ const value = ref<number[]>([50]);
 <\/script>
 
 <template>
-  <div class="space-y-3 w-72">
-    <div class="flex items-center justify-between">
+  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+    <div class="nds-cluster" data-justify="between">
       <Label>Volume</Label>
-      <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+      <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{{ value[0] }}%</span>
     </div>
     <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
   </div>
@@ -465,14 +465,14 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full max-w-md space-y-10">
+      <div class="nds-stack nds-w-full nds-max-w-md" style="--stack-gap: 2.5rem;">
         <!-- Single — Volume -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>{{ tContent('demonstration.labels.volume') }}</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums text-foreground"
+              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
             >
               {{ volumeValue[0] }}%
             </span>
@@ -487,12 +487,12 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Range — Faixa de preço -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>{{ tContent('demonstration.labels.priceRange') }}</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums text-foreground"
+              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
             >
               R$ {{ priceValue[0] }} — R$ {{ priceValue[1] }}
             </span>
@@ -507,17 +507,17 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Vertical — Brilho -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>{{ tContent('demonstration.labels.brightness') }}</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums text-foreground"
+              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
             >
               {{ verticalValue[0] }}%
             </span>
           </div>
-          <div class="h-40 flex justify-center">
+          <div class="nds-cluster" data-justify="center" style="height: 10rem;">
             <Slider
               v-model="verticalValue"
               orientation="vertical"
@@ -620,12 +620,12 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: valor visível vs invisível -->
       <template #do-preview-0>
-        <div class="space-y-2 w-64">
-          <div class="flex items-center justify-between">
+        <div class="nds-w-xs nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>Volume</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >75%</span>
           </div>
           <Slider
@@ -637,7 +637,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-64">
+        <div class="nds-w-xs">
           <Slider
             :model-value="[75]"
             :min="0"
@@ -649,7 +649,7 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: aria-label descritivo vs genérico -->
       <template #do-preview-1>
-        <div class="w-64">
+        <div class="nds-w-xs">
           <Slider
             :model-value="[40]"
             :min="0"
@@ -659,7 +659,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="w-64">
+        <div class="nds-w-xs">
           <Slider
             :model-value="[40]"
             :min="0"
@@ -684,12 +684,12 @@ const visualTestItems = computed(() => [
     >
       <!-- single -->
       <template #variant-preview-0>
-        <div class="w-64 space-y-2">
-          <div class="flex items-center justify-between">
+        <div class="nds-w-xs nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>Volume</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >50%</span>
           </div>
           <Slider
@@ -703,12 +703,12 @@ const visualTestItems = computed(() => [
 
       <!-- range -->
       <template #variant-preview-1>
-        <div class="w-64 space-y-2">
-          <div class="flex items-center justify-between">
+        <div class="nds-w-xs nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>Faixa de preço</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >R$ 100 — R$ 400</span>
           </div>
           <Slider
@@ -723,7 +723,7 @@ const visualTestItems = computed(() => [
 
       <!-- vertical -->
       <template #variant-preview-2>
-        <div class="h-40 flex justify-center">
+        <div class="nds-cluster" data-justify="center" style="height: 10rem;">
           <Slider
             :model-value="[60]"
             orientation="vertical"
@@ -743,12 +743,12 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="space-y-3 w-72">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+          <div class="nds-cluster" data-justify="between">
             <Label>Volume</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >{{ compVolume[0] }}%</span>
           </div>
           <Slider
@@ -761,12 +761,12 @@ const visualTestItems = computed(() => [
       </template>
 
       <template #variant-preview-1>
-        <div class="space-y-3 w-72">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+          <div class="nds-cluster" data-justify="between">
             <Label>Brilho</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >{{ compBrightness[0] }}%</span>
           </div>
           <Slider
@@ -780,12 +780,12 @@ const visualTestItems = computed(() => [
       </template>
 
       <template #variant-preview-2>
-        <div class="space-y-3 w-72">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+          <div class="nds-cluster" data-justify="between">
             <Label>Faixa de preço</Label>
             <span
               aria-live="polite"
-              class="text-sm tabular-nums"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >
               R$ {{ compPrice[0] }} — R$ {{ compPrice[1] }}
             </span>
@@ -803,15 +803,15 @@ const visualTestItems = computed(() => [
       <template #variant-preview-3>
         <form
           aria-label="Configurações de áudio"
-          class="flex flex-col gap-4 w-72"
+          class="nds-stack" data-spacing="md" style="width: 18rem;"
           @submit="onCompFormSubmit"
         >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
+          <div class="nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-justify="between">
               <Label>Volume</Label>
               <span
                 aria-live="polite"
-                class="text-sm tabular-nums"
+                class="nds-text-body" style="font-variant-numeric: tabular-nums;"
               >{{ compFormVolume[0] }}%</span>
             </div>
             <Slider
@@ -825,12 +825,12 @@ const visualTestItems = computed(() => [
           <Button
             type="submit"
             size="sm"
-            class="self-start"
+            style="align-self: flex-start;"
           >
             Salvar
           </Button>
           <p
-            class="text-xs text-muted-foreground"
+            class="nds-text-caption nds-text-muted-foreground"
             aria-live="polite"
           >
             Último commit: {{ compFormCommitted }}%

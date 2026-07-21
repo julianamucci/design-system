@@ -128,7 +128,7 @@ const codeImportWithIcon = `import { Alert, AlertTitle, AlertDescription } from 
 import { Info } from "lucide-vue-next";`;
 
 const codeDefault = `<Alert>
-  <Info aria-hidden="true" class="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
@@ -136,23 +136,23 @@ const codeDefault = `<Alert>
 </Alert>`;
 
 const codeDestructive = `<Alert variant="destructive">
-  <AlertCircle aria-hidden="true" class="h-4 w-4" />
+  <AlertCircle aria-hidden="true" />
   <AlertTitle>Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
 </Alert>`;
 
-const codeSuccess = `<Alert class="bg-success/10 text-success border-success/30">
-  <CheckCircle2 aria-hidden="true" class="h-4 w-4" />
+const codeSuccess = `<Alert class="nds-alert-success">
+  <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
 </Alert>`;
 
-const codeWarning = `<Alert class="bg-warning/10 text-warning border-warning/30">
-  <TriangleAlert aria-hidden="true" class="h-4 w-4" />
+const codeWarning = `<Alert class="nds-alert-warning">
+  <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
@@ -160,7 +160,7 @@ const codeWarning = `<Alert class="bg-warning/10 text-warning border-warning/30"
 </Alert>`;
 
 const codeWithoutTitle = `<Alert>
-  <Info aria-hidden="true" class="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -207,25 +207,25 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
   },
   {
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
-    code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
   },
   {
     name: tContent('variants.compositions.compact.name'),
     description: tContent('variants.compositions.compact.description'),
     useWhen: tContent('variants.compositions.compact.use'),
-    code: `<Alert variant="destructive">\n  <AlertCircle class="h-4 w-4" aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+    code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
   },
   {
     name: tContent('variants.compositions.multipleTypes.name'),
     description: tContent('variants.compositions.multipleTypes.description'),
     useWhen: tContent('variants.compositions.multipleTypes.use'),
-    code: `<div class="space-y-3">\n  <Alert>\n    <Info class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert class="bg-success/10 text-success border-success/30">\n    <CheckCircle2 class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert class="bg-warning/10 text-warning border-warning/30">\n    <TriangleAlert class="h-4 w-4" aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+    code: `<div class="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert class="nds-alert-success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert class="nds-alert-warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
   },
 ]);
 
@@ -340,35 +340,27 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full space-y-3">
+      <div class="nds-w-full nds-stack" data-spacing="sm">
         <Alert>
-          <Info
-            class="h-4 w-4"
-            aria-hidden="true"
+          <Info            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
         <Alert variant="destructive">
-          <AlertCircle
-            class="h-4 w-4"
-            aria-hidden="true"
+          <AlertCircle            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
-        <Alert class="bg-success/10 text-success border-success/30">
-          <CheckCircle2
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-alert-success">
+          <CheckCircle2            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
-        <Alert class="bg-warning/10 text-warning border-warning/30">
-          <TriangleAlert
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-alert-warning">
+          <TriangleAlert            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -425,9 +417,7 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <Alert>
-          <AlertCircle
-            class="h-4 w-4"
-            aria-hidden="true"
+          <AlertCircle            aria-hidden="true"
           />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
@@ -438,9 +428,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <Alert variant="destructive">
-          <AlertCircle
-            class="h-4 w-4"
-            aria-hidden="true"
+          <AlertCircle            aria-hidden="true"
           />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
@@ -469,10 +457,8 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Alert class="w-full">
-          <Info
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full">
+          <Info            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
@@ -481,41 +467,33 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <Alert
           variant="destructive"
-          class="w-full"
+          class="nds-w-full"
         >
-          <AlertCircle
-            class="h-4 w-4"
-            aria-hidden="true"
+          <AlertCircle            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-2>
-        <Alert class="w-full bg-success/10 text-success border-success/30">
-          <CheckCircle2
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full nds-alert-success">
+          <CheckCircle2            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
-        <Alert class="w-full bg-warning/10 text-warning border-warning/30">
-          <TriangleAlert
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full nds-alert-warning">
+          <TriangleAlert            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-4>
-        <Alert class="w-full">
-          <Info
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full">
+          <Info            aria-hidden="true"
           />
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
@@ -530,23 +508,19 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Alert class="w-full">
-          <Info
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full">
+          <Info            aria-hidden="true"
           />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-1>
-        <Alert class="w-full">
-          <Info
-            class="h-4 w-4"
-            aria-hidden="true"
+        <Alert class="nds-w-full">
+          <Info            aria-hidden="true"
           />
           <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-          <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+          <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button
               size="sm"
@@ -560,45 +534,35 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <Alert
           variant="destructive"
-          class="w-full"
+          class="nds-w-full"
         >
-          <AlertCircle
-            class="h-4 w-4"
-            aria-hidden="true"
+          <AlertCircle            aria-hidden="true"
           />
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
-        <div class="space-y-3 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="sm">
           <Alert>
-            <Info
-              class="h-4 w-4"
-              aria-hidden="true"
+            <Info              aria-hidden="true"
             />
             <AlertTitle>Informação</AlertTitle>
             <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
           </Alert>
           <Alert variant="destructive">
-            <AlertCircle
-              class="h-4 w-4"
-              aria-hidden="true"
+            <AlertCircle              aria-hidden="true"
             />
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
           </Alert>
-          <Alert class="bg-success/10 text-success border-success/30">
-            <CheckCircle2
-              class="h-4 w-4"
-              aria-hidden="true"
+          <Alert class="nds-alert-success">
+            <CheckCircle2              aria-hidden="true"
             />
             <AlertTitle>Sucesso</AlertTitle>
             <AlertDescription>Ação concluída com sucesso.</AlertDescription>
           </Alert>
-          <Alert class="bg-warning/10 text-warning border-warning/30">
-            <TriangleAlert
-              class="h-4 w-4"
-              aria-hidden="true"
+          <Alert class="nds-alert-warning">
+            <TriangleAlert              aria-hidden="true"
             />
             <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>Aviso que requer atenção.</AlertDescription>

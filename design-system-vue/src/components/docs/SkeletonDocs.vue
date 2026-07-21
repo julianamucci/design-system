@@ -122,11 +122,11 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 const codeImportBasic = `import { Skeleton } from "@/components/ui/skeleton";`;
 
-const codeRectangle = `<Skeleton class="h-24 w-full rounded-md motion-reduce:animate-none" aria-hidden="true" />`;
+const codeRectangle = `<Skeleton style="height: 5rem; width: 100%" aria-hidden="true" />`;
 
-const codeCircle = `<Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />`;
+const codeCircle = `<Skeleton class="nds-rounded-full" style="height: 3rem; width: 3rem" aria-hidden="true" />`;
 
-const codeLine = `<Skeleton class="h-4 w-[250px] motion-reduce:animate-none" aria-hidden="true" />`;
+const codeLine = `<Skeleton style="height: 1rem; width: 200px" aria-hidden="true" />`;
 
 const interfaceCode = `// Skeleton
 interface SkeletonProps {
@@ -265,104 +265,124 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div class="space-y-2">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+        <!-- Card de perfil -->
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.card') }}
+          </p>
           <div
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.card')"
-            class="flex items-center gap-4 rounded-md border p-4"
+            class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+            data-spacing="md"
+            data-align="center"
           >
             <Skeleton
-              class="h-12 w-12 rounded-full motion-reduce:animate-none"
+              class="nds-rounded-full motion-reduce:animate-none"
+              style="height: 3rem; width: 3rem"
               :aria-hidden="true"
             />
-            <div class="space-y-2 flex-1">
+            <div class="nds-stack nds-flex-1" data-spacing="sm">
               <Skeleton
-                class="h-4 w-[180px] motion-reduce:animate-none"
+                class="motion-reduce:animate-none"
+                style="height: 1rem; width: 70%"
                 :aria-hidden="true"
               />
               <Skeleton
-                class="h-4 w-[140px] motion-reduce:animate-none"
+                class="motion-reduce:animate-none"
+                style="height: 1rem; width: 50%"
                 :aria-hidden="true"
               />
             </div>
           </div>
-          <p class="text-xs text-muted-foreground">
-            {{ tContent('demonstration.labels.card') }}
-          </p>
         </div>
 
-        <div class="space-y-2">
-          <ul
+        <!-- Lista -->
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.list') }}
+          </p>
+          <div
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.list')"
-            class="space-y-3 rounded-md border p-4 m-0 list-none"
+            class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+            data-spacing="sm"
           >
-            <li
+            <div
               v-for="i in 5"
               :key="i"
-              class="flex items-center gap-3"
+              class="nds-cluster"
+              data-spacing="sm"
+              data-align="center"
             >
               <Skeleton
-                class="h-8 w-8 rounded-full motion-reduce:animate-none"
+                class="nds-rounded-md motion-reduce:animate-none"
+                style="height: 2rem; width: 2rem"
                 :aria-hidden="true"
               />
-              <div class="space-y-2 flex-1">
+              <div class="nds-flex-1 nds-stack" data-spacing="xs">
                 <Skeleton
-                  class="h-3 w-[160px] motion-reduce:animate-none"
+                  class="motion-reduce:animate-none"
+                  style="height: 0.75rem; width: 60%"
                   :aria-hidden="true"
                 />
                 <Skeleton
-                  class="h-3 w-[100px] motion-reduce:animate-none"
+                  class="motion-reduce:animate-none"
+                  style="height: 0.75rem; width: 40%"
                   :aria-hidden="true"
                 />
               </div>
-            </li>
-          </ul>
-          <p class="text-xs text-muted-foreground">
-            {{ tContent('demonstration.labels.list') }}
-          </p>
+            </div>
+          </div>
         </div>
 
-        <div class="space-y-2">
+        <!-- Imagem em AspectRatio -->
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.image') }}
+          </p>
           <div
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.image')"
           >
             <AspectRatio :ratio="16 / 9">
               <Skeleton
-                class="h-full w-full rounded-md motion-reduce:animate-none"
+                class="motion-reduce:animate-none"
+                style="height: 100%; width: 100%"
                 :aria-hidden="true"
               />
             </AspectRatio>
           </div>
-          <p class="text-xs text-muted-foreground">
-            {{ tContent('demonstration.labels.image') }}
-          </p>
         </div>
 
-        <div class="space-y-2">
+        <!-- Parágrafo -->
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.paragraph') }}
+          </p>
           <div
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.paragraph')"
-            class="space-y-2 rounded-md border p-4"
+            class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+            data-spacing="sm"
           >
             <Skeleton
-              class="h-4 w-full motion-reduce:animate-none"
+              class="motion-reduce:animate-none"
+              style="height: 1rem; width: 100%"
               :aria-hidden="true"
             />
             <Skeleton
-              class="h-4 w-[92%] motion-reduce:animate-none"
+              class="motion-reduce:animate-none"
+              style="height: 1rem; width: 90%"
               :aria-hidden="true"
             />
             <Skeleton
-              class="h-4 w-[60%] motion-reduce:animate-none"
+              class="motion-reduce:animate-none"
+              style="height: 1rem; width: 60%"
               :aria-hidden="true"
             />
           </div>
-          <p class="text-xs text-muted-foreground">
-            {{ tContent('demonstration.labels.paragraph') }}
-          </p>
         </div>
       </div>
     </DocsDemonstration>
@@ -434,33 +454,27 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <div
           aria-busy="true"
-          aria-label="Carregando card"
-          class="flex items-center gap-3 w-full rounded-md border p-3"
+          aria-label="Carregando texto"
+          class="nds-w-full nds-stack"
+          data-spacing="sm"
         >
           <Skeleton
-            class="h-10 w-10 rounded-full motion-reduce:animate-none"
+            class="motion-reduce:animate-none"
+            style="height: 1rem; width: 100%"
             :aria-hidden="true"
           />
-          <div class="space-y-2 flex-1">
-            <Skeleton
-              class="h-3 w-[140px] motion-reduce:animate-none"
-              :aria-hidden="true"
-            />
-            <Skeleton
-              class="h-3 w-[100px] motion-reduce:animate-none"
-              :aria-hidden="true"
-            />
-          </div>
+          <Skeleton
+            class="motion-reduce:animate-none"
+            style="height: 1rem; width: 70%"
+            :aria-hidden="true"
+          />
         </div>
       </template>
       <template #dont-preview-0>
-        <div
-          aria-busy="true"
-          aria-label="Carregando"
-          class="w-full rounded-md border p-3"
-        >
+        <div class="nds-w-full">
           <Skeleton
-            class="h-2 w-[60px] motion-reduce:animate-none"
+            class="motion-reduce:animate-none"
+            style="height: 0.5rem; width: 3rem"
             :aria-hidden="true"
           />
         </div>
@@ -468,23 +482,33 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <div
           aria-busy="true"
-          aria-label="Carregando lista"
-          class="space-y-2 w-full rounded-md border p-3"
+          aria-label="Carregando avatar e texto"
+          class="nds-cluster nds-w-full"
+          data-spacing="sm"
+          data-align="center"
         >
           <Skeleton
-            class="h-4 w-full motion-reduce:animate-none"
+            class="nds-rounded-full motion-reduce:animate-none"
+            style="height: 2.5rem; width: 2.5rem"
             :aria-hidden="true"
           />
           <Skeleton
-            class="h-4 w-[80%] motion-reduce:animate-none"
+            class="motion-reduce:animate-none"
+            style="height: 1rem; width: 160px"
             :aria-hidden="true"
           />
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="space-y-2 w-full rounded-md border p-3">
-          <Skeleton class="h-4 w-full" />
-          <Skeleton class="h-4 w-[80%]" />
+        <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+          <Skeleton
+            class="nds-rounded-full motion-reduce:animate-none"
+            style="height: 2.5rem; width: 2.5rem"
+          />
+          <Skeleton
+            class="motion-reduce:animate-none"
+            style="height: 1rem; width: 160px"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -503,11 +527,12 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div
           aria-busy="true"
-          aria-label="Skeleton retângulo"
-          class="w-full"
+          aria-label="Carregando bloco"
+          style="width: 12rem"
         >
           <Skeleton
-            class="h-24 w-full rounded-md motion-reduce:animate-none"
+            class="motion-reduce:animate-none"
+            style="height: 5rem; width: 100%"
             :aria-hidden="true"
           />
         </div>
@@ -515,11 +540,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div
           aria-busy="true"
-          aria-label="Skeleton círculo"
-          class="w-full flex items-center justify-center"
+          aria-label="Carregando avatar"
         >
           <Skeleton
-            class="h-12 w-12 rounded-full motion-reduce:animate-none"
+            class="nds-rounded-full motion-reduce:animate-none"
+            style="height: 3rem; width: 3rem"
             :aria-hidden="true"
           />
         </div>
@@ -527,15 +552,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div
           aria-busy="true"
-          aria-label="Skeleton linha de texto"
-          class="w-full space-y-2"
+          aria-label="Carregando linha de texto"
         >
           <Skeleton
-            class="h-4 w-[250px] motion-reduce:animate-none"
-            :aria-hidden="true"
-          />
-          <Skeleton
-            class="h-4 w-[200px] motion-reduce:animate-none"
+            class="motion-reduce:animate-none"
+            style="height: 1rem; width: 200px"
             :aria-hidden="true"
           />
         </div>

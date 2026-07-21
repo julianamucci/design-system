@@ -18,8 +18,6 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
@@ -225,7 +223,7 @@ const selected = ref('');
       {{ selected || 'Selecione...' }}
     </Button>
   </PopoverTrigger>
-  <PopoverContent class="p-0">
+  <PopoverContent class="nds-p-0">
     <Command>
       <CommandInput placeholder="Buscar item..." />
       <CommandList>
@@ -563,36 +561,18 @@ const visualTestItems = computed(() => [
         :category="tContent('category')"
         :type="tContent('type')"
         install-note="npx shadcn-vue@latest add command"
-      >
-        <template #badges>
-          <Badge
-            variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
-          >
-            {{ tContent('category') }}
-          </Badge>
-          <Badge
-            variant="secondary"
-            class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0"
-          >
-            {{ tContent('type') }}
-          </Badge>
-        </template>
-        <template #language-switcher>
-          <LanguageSwitcher />
-        </template>
-      </DocsHeader>
+      />
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full space-y-8">
+      <div class="nds-w-full nds-stack" data-spacing="xl">
         <!-- Demo 1: Inline -->
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Inline
           </p>
-          <div class="w-full max-w-sm rounded-xl border border-border shadow-sm overflow-hidden">
+          <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
             <Command>
               <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
               <CommandList>
@@ -617,8 +597,8 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 2: Combobox -->
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Combobox
           </p>
           <Popover v-model:open="comboboxOpen">
@@ -627,7 +607,9 @@ const visualTestItems = computed(() => [
                 variant="outline"
                 role="combobox"
                 :aria-expanded="comboboxOpen"
-                class="w-56 justify-between"
+                class="nds-cluster"
+                data-justify="between"
+                style="width: 14rem"
               >
                 {{
                   comboboxValue
@@ -636,7 +618,7 @@ const visualTestItems = computed(() => [
                 }}
               </Button>
             </PopoverTrigger>
-            <PopoverContent class="w-56 p-0">
+            <PopoverContent class="nds-p-0" style="width: 14rem">
               <Command>
                 <CommandInput :placeholder="tContent('demonstration.labels.comboboxSearch')" />
                 <CommandList>
@@ -658,20 +640,20 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 3: Command Palette -->
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Command Palette
           </p>
-          <div class="flex items-center gap-3">
+          <div class="nds-cluster" data-align="center" data-spacing="sm">
             <Button
               variant="outline"
               @click="openPalette"
             >
               {{ tContent('demonstration.labels.openPalette') }}
             </Button>
-            <span class="flex items-center gap-1 text-sm text-muted-foreground">
+            <span class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
               {{ tContent('demonstration.labels.shortcutHint') }}
-              <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">
                 {{ tContent('demonstration.labels.shortcutKey') }}
               </kbd>
             </span>
@@ -765,7 +747,7 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: CommandEmpty -->
       <template #do-preview-0>
-        <div class="w-full rounded-xl border border-border overflow-hidden">
+        <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
           <Command>
             <CommandInput
               placeholder="zzz"
@@ -783,7 +765,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-full rounded-xl border border-border overflow-hidden">
+        <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
           <Command>
             <CommandInput
               placeholder="zzz"
@@ -802,16 +784,16 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: shortcut hint -->
       <template #do-preview-1>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-align="center" data-spacing="sm">
           <Button
             variant="outline"
             size="sm"
           >
             Buscar
           </Button>
-          <span class="flex items-center gap-1 text-xs text-muted-foreground">
+          <span class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
             Pressione
-            <kbd class="pointer-events-none inline-flex h-4 select-none items-center rounded border border-border bg-muted px-1 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
+            <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">⌘K</kbd>
           </span>
         </div>
       </template>
@@ -842,7 +824,7 @@ const visualTestItems = computed(() => [
     >
       <!-- inline preview -->
       <template #variant-preview-0>
-        <div class="w-full rounded-xl border border-border overflow-hidden">
+        <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
@@ -868,12 +850,14 @@ const visualTestItems = computed(() => [
               variant="outline"
               role="combobox"
               aria-expanded="false"
-              class="w-48 justify-between"
+              class="nds-cluster"
+              data-justify="between"
+              style="width: 12rem"
             >
               Selecione um item...
             </Button>
           </PopoverTrigger>
-          <PopoverContent class="w-48 p-0">
+          <PopoverContent class="nds-p-0" style="width: 12rem">
             <Command>
               <CommandInput placeholder="Buscar item..." />
               <CommandList>
@@ -894,14 +878,14 @@ const visualTestItems = computed(() => [
 
       <!-- palette preview -->
       <template #variant-preview-2>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-align="center" data-spacing="sm">
           <Button
             variant="outline"
             size="sm"
           >
             Buscar
           </Button>
-          <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">⌘K</kbd>
+          <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">⌘K</kbd>
         </div>
       </template>
     </DocsVariants>
@@ -914,7 +898,7 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="w-full max-w-xs rounded-md border shadow-md">
+        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
@@ -950,7 +934,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="w-full max-w-xs rounded-md border shadow-md">
+        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
           <Command>
             <CommandInput placeholder="Buscar..." />
             <CommandList>
@@ -992,7 +976,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="w-full max-w-xs rounded-md border shadow-md">
+        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
