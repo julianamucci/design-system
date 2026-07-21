@@ -54,11 +54,11 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 - [x] **Fase 3 — Svelte UI** (9 lotes; bits-ui 2.18.1 já estava no lock).
   Helpers pendentes do Svelte (input-group e afins) entram no mesmo sub-lote
   registrado na Fase 2.
-- [x] **Fase 4 — Docs pages** das 3 stacks: as ~62 docs pages de cada stack
-  (React, Vue, Svelte) + os 16 containers de seção compartilhados migrados
-  para `.nds-*`, usando os arquivos vanilla em `src/components/docs/` como
-  spec 1:1 (React migrado primeiro; Vue e Svelte espelharam React+Vue como
-  referência dupla). Snippets de código sincronizados com os previews.
+- [x] **Fase 4a — Docs pages** das 3 stacks (CONCLUÍDA): as ~62 docs pages de
+  cada stack (React, Vue, Svelte) + os 16 containers de seção compartilhados
+  migrados para `.nds-*`, usando os arquivos vanilla em `src/components/docs/`
+  como spec 1:1 (React migrado primeiro; Vue e Svelte espelharam React+Vue
+  como referência dupla). Snippets de código sincronizados com os previews.
   Build-storybook verde nas 3 stacks. `dangerouslySetInnerHTML`/`v-html`/
   `{@html}` de conteúdo dinâmico com `DOMPurify.sanitize()` no call site.
   Removido dead code de slots `#badges`/`#language-switcher` (DocsHeader não
@@ -74,6 +74,15 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
   (ScrollArea), `h-4 w-4`/`ml-2` em ícones lucide (Table), `peer` +
   `peer-disabled:` (Label), `hidden sm:block` (Pagination Vue).
   Ver também [[project_nds_latent_noop_classes]] (nds-p-3/leading-snug/pb-8).
+- [ ] **Fase 4b — Stories** das 3 stacks (PENDENTE): os `*.stories.*` e
+  story-fixtures (`*Story.svelte`, etc.) ainda usam Tailwind para layout de
+  wrapper (centralização, gaps entre variantes). Escopo: ~118 React + ~128 Vue
+  + ~66 fixtures Svelte. Dev-only (não vão para o consumidor), mas bloqueiam a
+  remoção do `@import "tailwindcss"`.
+- [ ] **Limpeza de primitivos (gap Fases 1-3)**: resíduos Tailwind em poucos
+  primitivos shipped — Vue: `ComboboxGroup`, `PaginationItem`, `TableEmpty`,
+  `RangeCalendar`; Svelte: `accordion-trigger`, `radio-group-item`. Verificar
+  cada um contra o primitivo React já migrado antes de aplicar.
 - [ ] **Fase 5 — Remoção**: tirar `@import "tailwindcss"`, `tailwind-merge`,
   `tw-animate-css` e configs de cada stack; simplificar `cn()` para `clsx` puro
   (como na vanilla); resolver os resíduos Tailwind da Fase 4 (criar utilitários
