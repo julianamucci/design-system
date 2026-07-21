@@ -169,7 +169,7 @@ export const Erro: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 100px;" class="space-y-2">
+      <div style="contain: layout; min-height: 100px;" class="nds-stack" data-spacing="sm">
         <InputOTP
           :max-length="6"
           v-model="value"

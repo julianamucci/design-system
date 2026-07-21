@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Texto: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="text" placeholder="ex: João da Silva" /></div>',
+    template: '<div class="nds-w-xs"><Input type="text" placeholder="ex: João da Silva" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -39,7 +39,7 @@ export const Texto: Story = {
 export const Email: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="email" placeholder="ex: joao@empresa.com" /></div>',
+    template: '<div class="nds-w-xs"><Input type="email" placeholder="ex: joao@empresa.com" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=email está renderizado', async () => {
@@ -53,7 +53,7 @@ export const Email: Story = {
 export const Senha: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="password" placeholder="Mínimo 8 caracteres" /></div>',
+    template: '<div class="nds-w-xs"><Input type="password" placeholder="Mínimo 8 caracteres" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=password está renderizado', async () => {
@@ -67,7 +67,7 @@ export const Senha: Story = {
 export const Numero: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="number" placeholder="ex: 42" /></div>',
+    template: '<div class="nds-w-xs"><Input type="number" placeholder="ex: 42" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=number está renderizado', async () => {
@@ -81,7 +81,7 @@ export const Numero: Story = {
 export const Arquivo: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><label for="arquivo-input" class="block text-sm font-medium mb-1">Anexar arquivo</label><Input id="arquivo-input" type="file" /></div>',
+    template: '<div class="nds-w-xs"><label for="arquivo-input" class="block text-sm font-medium mb-1">Anexar arquivo</label><Input id="arquivo-input" type="file" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=file está renderizado', async () => {

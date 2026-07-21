@@ -59,7 +59,7 @@ export const ComLabel: Story = {
         <div class="grid gap-2 w-72">
           <Label for="comp-estado">Estado</Label>
           <Select>
-            <SelectTrigger id="comp-estado" aria-labelledby="comp-estado-label" class="w-full">
+            <SelectTrigger id="comp-estado" aria-labelledby="comp-estado-label" class="nds-w-full">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
@@ -93,10 +93,10 @@ export const Controlado: Story = {
     },
     template: `
       <div class="grid gap-3 w-72" style="contain: layout; min-height: 320px;">
-        <div class="grid gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="ctrl-estado">Estado</Label>
           <Select :model-value="value" @update:model-value="(v) => value = v">
-            <SelectTrigger id="ctrl-estado" aria-label="Selecionar estado" class="w-full">
+            <SelectTrigger id="ctrl-estado" aria-label="Selecionar estado" class="nds-w-full">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
@@ -106,7 +106,7 @@ export const Controlado: Story = {
             </SelectContent>
           </Select>
         </div>
-        <p class="text-xs text-muted-foreground">Valor atual: <code>{{ value || '—' }}</code></p>
+        <p class="nds-text-caption nds-text-muted-foreground">Valor atual: <code>{{ value || '—' }}</code></p>
       </div>
     `,
   }),
@@ -135,10 +135,10 @@ export const EmFormulario: Story = {
     template: `
       <div style="contain: layout; min-height: 320px;">
         <form class="grid gap-3 w-72" @submit.prevent>
-          <div class="grid gap-2">
+          <div class="nds-stack" data-spacing="sm">
             <Label for="form-estado">Estado</Label>
             <Select name="estado">
-              <SelectTrigger id="form-estado" aria-label="Selecionar estado" class="w-full">
+              <SelectTrigger id="form-estado" aria-label="Selecionar estado" class="nds-w-full">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
               <SelectContent>

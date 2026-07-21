@@ -37,7 +37,7 @@ export const EditorComPreview: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar lista de arquivos — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="30">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Editor</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Editor</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar editor e preview — use setas para ajustar" />
           <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
@@ -68,7 +68,7 @@ export const VerticalCabecalhoConteudoRodape: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar cabeçalho — use setas para ajustar" />
           <ResizablePanel :default-size="60" :min-size="30">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Conteúdo</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Conteúdo</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar rodapé — use setas para ajustar" />
           <ResizablePanel :default-size="20" :min-size="10" :max-size="40">
@@ -96,7 +96,7 @@ export const SidebarComConsole: Story = {
           <ResizablePanel :default-size="70" :min-size="50">
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel :default-size="65" :min-size="30">
-                <div class="flex h-full items-center justify-center p-4 text-sm">Workspace</div>
+                <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Workspace</div>
               </ResizablePanel>
               <ResizableHandle with-handle aria-label="Redimensionar workspace e console — use setas" />
               <ResizablePanel :default-size="35" :min-size="15" :max-size="60">

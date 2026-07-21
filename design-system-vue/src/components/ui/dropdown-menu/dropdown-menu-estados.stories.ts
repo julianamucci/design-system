@@ -109,7 +109,7 @@ export const Controlado: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3" style="contain: layout; min-height: 240px;">
+      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 240px;">
         <Button @click="open = !open">Toggle externo ({{ open ? 'aberto' : 'fechado' }})</Button>
         <DropdownMenu :open="open" @update:open="(v) => open = v" :modal="false">
           <DropdownMenuTrigger as-child>

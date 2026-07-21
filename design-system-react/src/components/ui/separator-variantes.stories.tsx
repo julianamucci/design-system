@@ -31,7 +31,7 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <div className="w-64 space-y-4 text-sm">
+    <div className="nds-stack nds-text-body" data-spacing="md" style={{ width: "16rem" }}>
       <div>Seção superior</div>
       <Separator orientation="horizontal" />
       <div>Seção inferior</div>

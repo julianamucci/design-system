@@ -42,28 +42,28 @@ export const PerfilDeUsuario: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="text-sm text-muted-foreground">
+      <p className="nds-text-body nds-text-muted-foreground">
         Conteúdo de{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
             <a
               href="/users/joana"
-              className="text-sm font-medium underline underline-offset-4 text-foreground"
+              className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
             >
               @joana
             </a>
           </HoverCardTrigger>
           <HoverCardContent>
-            <div className="flex gap-3">
+            <div className="nds-cluster" data-spacing="sm">
               <div
                 aria-hidden="true"
                 className="size-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-sm font-medium"
               >
                 JS
               </div>
-              <div className="space-y-1">
-                <p className="text-sm font-medium leading-none">Joana Silva</p>
-                <p className="text-xs text-muted-foreground">
+              <div className="nds-stack" data-spacing="xs">
+                <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Joana Silva</p>
+                <p className="nds-text-caption nds-text-muted-foreground">
                   Designer focada em design systems e acessibilidade.
                 </p>
                 <p className="text-xs text-muted-foreground pt-1">142 seguidores</p>
@@ -97,20 +97,20 @@ export const PreviewDeLink: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="text-sm text-muted-foreground">
+      <p className="nds-text-body nds-text-muted-foreground">
         Saiba mais em{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
             <a
               href="https://example.com"
-              className="text-sm font-medium underline underline-offset-4 text-foreground"
+              className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
             >
               example.com
             </a>
           </HoverCardTrigger>
           <HoverCardContent>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
+            <div className="nds-stack" data-spacing="sm">
+              <div className="nds-cluster" data-spacing="sm">
                 <div
                   aria-hidden="true"
                   className="size-4 rounded-sm bg-muted-foreground/20"
@@ -122,7 +122,7 @@ export const PreviewDeLink: Story = {
               <p className="text-sm font-medium leading-snug">
                 Example Domain — IANA reservado
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="nds-text-caption nds-text-muted-foreground">
                 Domínio reservado pela IANA para uso em documentação e exemplos.
               </p>
             </div>
@@ -153,7 +153,7 @@ export const DefinicaoDeTermo: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="text-sm text-muted-foreground">
+      <p className="nds-text-body nds-text-muted-foreground">
         Atende{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
@@ -165,11 +165,11 @@ export const DefinicaoDeTermo: Story = {
             </button>
           </HoverCardTrigger>
           <HoverCardContent>
-            <div className="space-y-1">
-              <p className="text-sm font-medium leading-none">
+            <div className="nds-stack" data-spacing="xs">
+              <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
                 Web Content Accessibility Guidelines 2.1
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="nds-text-caption nds-text-muted-foreground">
                 Diretrizes do W3C para acessibilidade web. Nível AA cobre 50
                 critérios e é o mínimo recomendado para produtos digitais.
               </p>
@@ -202,7 +202,7 @@ export const MetricaExplicada: Story = {
   render: () => (
     <div style={wrapperStyle}>
       <div className="rounded-lg border border-border bg-card p-4 w-56">
-        <p className="text-xs text-muted-foreground">NPS últimos 30 dias</p>
+        <p className="nds-text-caption nds-text-muted-foreground">NPS últimos 30 dias</p>
         <div className="flex items-baseline gap-2 pt-1">
           <span className="text-2xl font-semibold tracking-tight">72</span>
           <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
@@ -216,9 +216,9 @@ export const MetricaExplicada: Story = {
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div className="space-y-1">
-                <p className="text-sm font-medium leading-none">Como é calculado</p>
-                <p className="text-xs text-muted-foreground">
+              <div className="nds-stack" data-spacing="xs">
+                <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Como é calculado</p>
+                <p className="nds-text-caption nds-text-muted-foreground">
                   NPS = % Promotores (9–10) − % Detratores (0–6). Janela móvel
                   de 30 dias com mínimo de 50 respostas.
                 </p>

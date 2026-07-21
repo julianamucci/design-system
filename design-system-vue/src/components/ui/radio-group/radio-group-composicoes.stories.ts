@@ -29,15 +29,15 @@ export const FormaDePagamento: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="cp-cartao" />
           <Label :for="'cp-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="cp-pix" />
           <Label :for="'cp-pix'">Pix</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="boleto" id="cp-boleto" />
           <Label :for="'cp-boleto'">Boleto bancário</Label>
         </div>
@@ -69,16 +69,16 @@ export const ComFieldsetLegend: Story = {
     template: `
       <fieldset class="space-y-3 border rounded-lg p-4 w-80">
         <legend class="text-sm font-semibold px-1">Forma de entrega</legend>
-        <RadioGroup aria-label="Forma de entrega" class="grid gap-2">
-          <div class="flex items-center gap-2">
+        <RadioGroup aria-label="Forma de entrega" class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-spacing="sm">
             <RadioGroupItem value="standard" id="cfl-standard" />
             <Label :for="'cfl-standard'">Padrão (5 dias)</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="sm">
             <RadioGroupItem value="express" id="cfl-express" />
             <Label :for="'cfl-express'">Expressa (1 dia)</Label>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="sm">
             <RadioGroupItem value="pickup" id="cfl-pickup" />
             <Label :for="'cfl-pickup'">Retirar na loja</Label>
           </div>
@@ -103,8 +103,8 @@ export const EmFormulario: Story = {
     setup() { return {}; },
     template: `
       <form class="space-y-4 w-80" @submit.prevent>
-        <div class="space-y-2">
-          <label class="text-sm font-medium" for="form-email">Email</label>
+        <div class="nds-stack" data-spacing="sm">
+          <label class="nds-text-body nds-font-medium" for="form-email">Email</label>
           <input
             id="form-email"
             type="email"
@@ -113,18 +113,18 @@ export const EmFormulario: Story = {
           />
         </div>
 
-        <fieldset class="space-y-2">
+        <fieldset class="nds-stack" data-spacing="sm">
           <legend class="text-sm font-medium mb-1">Forma de pagamento</legend>
-          <RadioGroup aria-label="Forma de pagamento" required class="grid gap-2">
-            <div class="flex items-center gap-2">
+          <RadioGroup aria-label="Forma de pagamento" required class="nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="cartao" id="form-cartao" />
               <Label :for="'form-cartao'">Cartão de crédito</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="pix" id="form-pix" />
               <Label :for="'form-pix'">Pix</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="boleto" id="form-boleto" />
               <Label :for="'form-boleto'">Boleto bancário</Label>
             </div>

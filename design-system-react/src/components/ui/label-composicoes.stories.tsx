@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ComInput: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="comp-input">Telefone</Label>
       <Input id="comp-input" type="tel" placeholder="(11) 99999-9999" />
     </div>
@@ -57,7 +57,7 @@ export const ComInput: Story = {
 
 export const ComCheckbox: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="comp-checkbox" />
       <Label htmlFor="comp-checkbox">Concordo com os termos de uso</Label>
     </div>
@@ -89,10 +89,10 @@ export const ComCheckbox: Story = {
 
 export const CampoObrigatorio: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="comp-required">
         Email profissional
-        <span className="text-destructive" aria-hidden="true">*</span>
+        <span className="nds-text-destructive" aria-hidden="true">*</span>
       </Label>
       <Input
         id="comp-required"

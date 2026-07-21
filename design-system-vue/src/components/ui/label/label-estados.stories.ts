@@ -25,7 +25,7 @@ export const Padrao: Story = {
     components: { Label },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-2">
+      <div class="nds-stack" data-spacing="sm">
         <Label for="input-padrao">Nome completo</Label>
         <input id="input-padrao" type="text" class="border rounded px-3 py-1 text-sm" placeholder="Digite aqui" />
       </div>
@@ -51,7 +51,7 @@ export const Disabled: Story = {
     components: { Label },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-2">
+      <div class="nds-stack" data-spacing="sm">
         <Label for="input-disabled" class="peer-disabled:opacity-50 peer-disabled:cursor-not-allowed">CPF</Label>
         <input
           id="input-disabled"
@@ -116,10 +116,10 @@ export const Required: Story = {
     components: { Label },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-2">
+      <div class="nds-stack" data-spacing="sm">
         <Label for="input-required">
           Email profissional
-          <span class="text-destructive" aria-hidden="true">*</span>
+          <span class="nds-text-destructive" aria-hidden="true">*</span>
         </Label>
         <input
           id="input-required"

@@ -34,7 +34,7 @@ export const ComLabelEDescricao: Story = {
         className="resize-y min-h-[120px]"
         aria-describedby="comp-desc-help"
       />
-      <p id="comp-desc-help" className="text-xs text-muted-foreground">
+      <p id="comp-desc-help" className="nds-text-caption nds-text-muted-foreground">
         Descreva o produto com clareza para aparecer melhor na busca.
       </p>
     </div>
@@ -128,7 +128,7 @@ function EmFormularioRender() {
         setSubmitted(bio);
       }}
     >
-      <div className="space-y-2">
+      <div className="nds-stack" data-spacing="sm">
         <Label htmlFor="form-bio">Biografia</Label>
         <Textarea
           id="form-bio"
@@ -152,8 +152,8 @@ function EmFormularioRender() {
       </div>
       <Button type="submit">Salvar</Button>
       {submitted && (
-        <p className="text-xs text-muted-foreground">
-          Enviado: <span className="font-mono">{submitted.length} chars</span>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          Enviado: <span className="nds-font-mono">{submitted.length} chars</span>
         </p>
       )}
     </form>
@@ -194,8 +194,8 @@ function ControladoRender() {
         onChange={(e) => setValue(e.target.value)}
         className="resize-y min-h-[120px]"
       />
-      <p className="text-xs text-muted-foreground">
-        Tamanho atual: <code className="font-mono">{value.length} chars</code>
+      <p className="nds-text-caption nds-text-muted-foreground">
+        Tamanho atual: <code className="nds-font-mono">{value.length} chars</code>
       </p>
     </div>
   );

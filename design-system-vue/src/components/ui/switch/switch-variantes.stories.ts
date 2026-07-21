@@ -28,7 +28,7 @@ export const Default: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="var-default" />
         <Label :for="'var-default'">Receber notificações por email</Label>
       </div>
@@ -55,7 +55,7 @@ export const WithDescription: Story = {
       <div class="flex items-center justify-between rounded-lg border p-4 w-80">
         <div class="space-y-0.5">
           <Label :for="'var-marketing'">Emails de marketing</Label>
-          <p class="text-sm text-muted-foreground">
+          <p class="nds-text-body nds-text-muted-foreground">
             Receba novidades e promoções da plataforma.
           </p>
         </div>
@@ -80,9 +80,9 @@ export const Small: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="var-sm" size="sm" />
-        <Label :for="'var-sm'" class="text-xs">Tamanho compacto</Label>
+        <Label :for="'var-sm'" class="nds-text-caption">Tamanho compacto</Label>
       </div>
     `,
   }),

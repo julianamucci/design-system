@@ -42,13 +42,13 @@ export const Empty: Story = {
   },
   render: () => (
     <Table>
-      <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+      <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead scope="col">Fatura</TableHead>
           <TableHead scope="col">Status</TableHead>
           <TableHead scope="col">Método</TableHead>
-          <TableHead scope="col" className="text-right">Valor</TableHead>
+          <TableHead scope="col" className="nds-text-right">Valor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -76,33 +76,33 @@ export const LinhaSelecionada: Story = {
   },
   render: () => (
     <Table>
-      <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+      <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead scope="col">Fatura</TableHead>
           <TableHead scope="col">Status</TableHead>
           <TableHead scope="col">Método</TableHead>
-          <TableHead scope="col" className="text-right">Valor</TableHead>
+          <TableHead scope="col" className="nds-text-right">Valor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow>
-          <TableCell className="font-medium">#INV-001</TableCell>
+          <TableCell className="nds-font-medium">#INV-001</TableCell>
           <TableCell>Pago</TableCell>
           <TableCell>Cartão de crédito</TableCell>
-          <TableCell className="text-right">R$ 250,00</TableCell>
+          <TableCell className="nds-text-right">R$ 250,00</TableCell>
         </TableRow>
         <TableRow data-state="selected">
-          <TableCell className="font-medium">#INV-002</TableCell>
+          <TableCell className="nds-font-medium">#INV-002</TableCell>
           <TableCell>Pendente</TableCell>
           <TableCell>Boleto bancário</TableCell>
-          <TableCell className="text-right">R$ 150,00</TableCell>
+          <TableCell className="nds-text-right">R$ 150,00</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-medium">#INV-003</TableCell>
+          <TableCell className="nds-font-medium">#INV-003</TableCell>
           <TableCell>Cancelado</TableCell>
           <TableCell>Pix</TableCell>
-          <TableCell className="text-right">R$ 350,00</TableCell>
+          <TableCell className="nds-text-right">R$ 350,00</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -124,13 +124,13 @@ export const Carregando: Story = {
   },
   render: () => (
     <Table>
-      <TableCaption className="sr-only">Carregando faturas...</TableCaption>
+      <TableCaption className="nds-sr-only">Carregando faturas...</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead scope="col">Fatura</TableHead>
           <TableHead scope="col">Status</TableHead>
           <TableHead scope="col">Método</TableHead>
-          <TableHead scope="col" className="text-right">Valor</TableHead>
+          <TableHead scope="col" className="nds-text-right">Valor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

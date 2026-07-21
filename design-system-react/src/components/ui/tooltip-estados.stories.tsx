@@ -165,8 +165,8 @@ export const Controlado: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="flex flex-col gap-3" style={wrapperStyle}>
-          <div className="flex gap-2">
+        <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-cluster" data-spacing="sm">
             <Button onClick={() => setOpen(true)}>Abrir externamente</Button>
             <Button variant="outline" onClick={() => setOpen(false)}>
               Fechar externamente

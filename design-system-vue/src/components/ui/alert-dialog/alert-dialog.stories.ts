@@ -70,7 +70,7 @@ export const Playground: Story = {
           <AlertDialogFooter>
             <AlertDialogCancel @click="onCancel">Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              class="nds-bg-destructive"
               @click="onConfirm"
             >
               Excluir conta

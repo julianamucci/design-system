@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Unchecked: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-unchecked" />
       <Label htmlFor="state-unchecked">Receber notificações por email</Label>
     </div>
@@ -50,7 +50,7 @@ export const Unchecked: Story = {
 
 export const Checked: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-checked" defaultChecked />
       <Label htmlFor="state-checked">Modo escuro</Label>
     </div>
@@ -76,7 +76,7 @@ export const Checked: Story = {
 
 export const Focus: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-focus" />
       <Label htmlFor="state-focus">Receber notificações por email</Label>
     </div>
@@ -102,7 +102,7 @@ export const Focus: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-disabled" disabled />
       <Label htmlFor="state-disabled">Receber notificações por email</Label>
     </div>
@@ -133,7 +133,7 @@ export const Disabled: Story = {
 
 export const DisabledChecked: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="state-disabled-checked" disabled defaultChecked />
       <Label htmlFor="state-disabled-checked">Modo escuro</Label>
     </div>
@@ -159,8 +159,8 @@ export const DisabledChecked: Story = {
 
 export const Invalid: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-center space-x-2">
+    <div className="nds-stack" data-spacing="xs">
+      <div className="nds-cluster" data-spacing="sm">
         <Switch id="state-invalid" aria-invalid="true" />
         <Label htmlFor="state-invalid">Aceitar política de privacidade</Label>
       </div>

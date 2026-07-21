@@ -17,9 +17,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Desmarcado: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="unchecked" />
-      <label htmlFor="unchecked" className="text-sm font-medium leading-none">
+      <label htmlFor="unchecked" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
         Receber novidades por email
       </label>
     </div>
@@ -48,9 +48,9 @@ export const Desmarcado: Story = {
 
 export const Marcado: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="checked" defaultChecked />
-      <label htmlFor="checked" className="text-sm font-medium leading-none">
+      <label htmlFor="checked" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
         Manter sessão ativa
       </label>
     </div>
@@ -79,7 +79,7 @@ export const Marcado: Story = {
 
 export const Desabilitado: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="disabled" disabled />
       <label
         htmlFor="disabled"
@@ -115,7 +115,7 @@ export const Desabilitado: Story = {
 
 export const DesabilitadoMarcado: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="disabled-checked" disabled defaultChecked />
       <label
         htmlFor="disabled-checked"
@@ -149,10 +149,10 @@ export const DesabilitadoMarcado: Story = {
 
 export const Erro: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-center gap-2">
+    <div className="nds-stack" data-spacing="xs">
+      <div className="nds-cluster" data-spacing="sm">
         <Checkbox id="error" aria-invalid="true" />
-        <label htmlFor="error" className="text-sm font-medium leading-none">
+        <label htmlFor="error" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
           Aceito os termos e condições
         </label>
       </div>
@@ -188,9 +188,9 @@ export const Erro: Story = {
 
 export const FocoVisivel: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="focus" />
-      <label htmlFor="focus" className="text-sm font-medium leading-none">
+      <label htmlFor="focus" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
         Foco visível via teclado
       </label>
     </div>

@@ -130,7 +130,7 @@ export const Galeria: Story = {
       return { slides };
     },
     template: `
-      <Carousel class="w-full max-w-sm" aria-label="Galeria de fotos">
+      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de fotos">
         <CarouselContent>
           <CarouselItem v-for="(slide, i) in slides" :key="i">
             <Card class="overflow-hidden p-0">

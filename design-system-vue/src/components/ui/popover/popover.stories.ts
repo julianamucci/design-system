@@ -95,8 +95,8 @@ export const Playground: Story = {
           </PopoverTrigger>
           <PopoverContent :side="args.side" :align="args.align">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
-              <PopoverDescription class="text-xs text-muted-foreground">
+              <PopoverTitle class="nds-text-body nds-font-medium">Configuracoes de exibição</PopoverTitle>
+              <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>

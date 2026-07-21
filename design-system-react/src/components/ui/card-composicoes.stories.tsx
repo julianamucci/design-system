@@ -42,13 +42,13 @@ type Story = StoryObj<typeof meta>;
 
 export const WithFooter: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>Produto atualizado em 12/04.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-base font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
       <CardFooter className="justify-end gap-2">
         <Button
@@ -79,7 +79,7 @@ export const WithFooter: Story = {
 
 export const WithAction: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>Em estoque</CardDescription>
@@ -94,7 +94,7 @@ export const WithAction: Story = {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="text-sm">R$ 1.299,00</p>
+        <p className="nds-text-body">R$ 1.299,00</p>
       </CardContent>
     </Card>
   ),
@@ -116,7 +116,7 @@ export const WithAction: Story = {
 
 export const WithImage: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <ImageWithFallback
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro em fundo neutro"
@@ -152,7 +152,7 @@ export const WithImage: Story = {
 
 export const ProductCard: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <ImageWithFallback
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro em fundo neutro"
@@ -204,7 +204,7 @@ export const ProductCard: Story = {
 
 export const MetricCard: Story = {
   render: () => (
-    <Card size="sm" className="w-full max-w-xs">
+    <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>
         <CardDescription>Assinantes ativos</CardDescription>
         <CardTitle className="text-2xl">8.742</CardTitle>

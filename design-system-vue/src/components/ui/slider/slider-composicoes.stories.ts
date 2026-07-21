@@ -32,8 +32,8 @@ export const VolumeComValor: Story = {
       return { value };
     },
     template: `
-      <div class="w-80 space-y-3">
-        <div class="flex items-center justify-between">
+      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
         </div>
@@ -65,8 +65,8 @@ export const FaixaDePreco: Story = {
       return { value };
     },
     template: `
-      <div class="w-80 space-y-3">
-        <div class="flex items-center justify-between">
+      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
           <span aria-live="polite" class="text-sm tabular-nums">
             R$ {{ value[0] }} — R$ {{ value[1] }}
@@ -104,7 +104,7 @@ export const EmFormulario: Story = {
     },
     template: `
       <form class="space-y-6 w-80" @submit.prevent>
-        <div class="space-y-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="form-name">Nome do preset</Label>
           <input
             id="form-name"
@@ -114,16 +114,16 @@ export const EmFormulario: Story = {
           />
         </div>
 
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>Brilho</Label>
             <span aria-live="polite" class="text-sm tabular-nums">{{ brightness[0] }}%</span>
           </div>
           <Slider v-model="brightness" :min="0" :max="100" aria-label="Brilho" />
         </div>
 
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
             <Label>Opacidade</Label>
             <span aria-live="polite" class="text-sm tabular-nums">{{ opacity[0] }}%</span>
           </div>
@@ -167,8 +167,8 @@ export const StepGrosso: Story = {
       return { value };
     },
     template: `
-      <div class="w-80 space-y-3">
-        <div class="flex items-center justify-between">
+      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster" data-justify="between">
           <Label>Avaliação</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }} / 5</span>
         </div>

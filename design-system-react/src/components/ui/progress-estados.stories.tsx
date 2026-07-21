@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Progress>;
 
 export const Default: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress value={0} aria-label="Progresso inicial" />
     </div>
   ),
@@ -39,7 +39,7 @@ export const Default: Story = {
 
 export const Loading: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress value={50} aria-label="Carregando dados" />
     </div>
   ),
@@ -55,7 +55,7 @@ export const Loading: Story = {
 
 export const Complete: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress value={100} aria-label="Concluído" />
     </div>
   ),
@@ -71,7 +71,7 @@ export const Complete: Story = {
 
 export const Indeterminate: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress
         value={null}
         aria-label="Processando"

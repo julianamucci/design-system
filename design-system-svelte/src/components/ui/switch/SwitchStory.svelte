@@ -34,10 +34,10 @@
 {#if withDescription}
   <div class="flex items-center justify-between w-80 gap-4">
     <div class="flex flex-col gap-0.5">
-      <Label id="{id}-label" for={id} class="text-sm font-medium leading-none">
+      <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
         {labelText}
       </Label>
-      <p id="{id}-description" class="text-sm text-muted-foreground">{descriptionText}</p>
+      <p id="{id}-description" class="nds-text-body nds-text-muted-foreground">{descriptionText}</p>
     </div>
     <Switch
       {id}
@@ -51,7 +51,7 @@
     />
   </div>
 {:else if withLabel}
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="sm">
     <Switch
       {id}
       bind:checked
@@ -61,7 +61,7 @@
       aria-invalid={ariaInvalid || undefined}
       aria-labelledby="{id}-label"
     />
-    <Label id="{id}-label" for={id} class="text-sm font-medium leading-none">
+    <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
       {labelText}
     </Label>
   </div>

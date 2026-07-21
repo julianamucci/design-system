@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-default">Descrição</Label>
       <Textarea
         id="state-default"
@@ -53,7 +53,7 @@ export const Default: Story = {
 
 export const Focus: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-focus">Descrição</Label>
       <Textarea
         id="state-focus"
@@ -83,7 +83,7 @@ export const Focus: Story = {
 
 export const Filled: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-filled">Biografia</Label>
       <Textarea
         id="state-filled"
@@ -112,7 +112,7 @@ export const Filled: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-disabled">Descrição</Label>
       <Textarea
         id="state-disabled"
@@ -147,7 +147,7 @@ export const Disabled: Story = {
 
 export const Invalid: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-invalid">Email</Label>
       <Textarea
         id="state-invalid"
@@ -156,7 +156,7 @@ export const Invalid: Story = {
         aria-describedby="state-invalid-msg"
         className="resize-y min-h-[120px]"
       />
-      <p id="state-invalid-msg" className="text-sm text-destructive">
+      <p id="state-invalid-msg" className="nds-text-body nds-text-destructive">
         Conteúdo inválido. Revise antes de enviar.
       </p>
     </div>
@@ -186,7 +186,7 @@ export const Invalid: Story = {
 
 export const Readonly: Story = {
   render: () => (
-    <div className="w-80 space-y-2">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-readonly">Observações</Label>
       <Textarea
         id="state-readonly"

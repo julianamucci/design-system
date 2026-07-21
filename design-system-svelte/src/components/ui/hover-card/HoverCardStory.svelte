@@ -54,41 +54,41 @@
         </HoverCardTrigger>
         <HoverCardContent {side} {align} {sideOffset}>
           {#if variant === 'linkPreview'}
-            <div class="flex flex-col gap-2">
+            <div class="nds-stack" data-spacing="sm">
               <div class="flex items-center gap-2 text-xs text-muted-foreground">
                 <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
                 <span>design-system.dev</span>
               </div>
-              <p class="font-medium">Guia de overlays acessíveis</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-font-medium">Guia de overlays acessíveis</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Padrões para HoverCard, Popover e Dialog com WCAG 2.1 AA.
               </p>
             </div>
           {:else if variant === 'definition'}
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <p class="font-medium text-sm">WCAG 2.1</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.
               </p>
             </div>
           {:else if variant === 'metric'}
-            <div class="flex flex-col gap-2">
-              <p class="text-xs text-muted-foreground">Conversão (últimos 30d)</p>
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
               <p class="text-2xl font-semibold">3,42%</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Razão entre cliques no CTA e usuários únicos. Inclui apenas tráfego orgânico.
               </p>
             </div>
           {:else}
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <Avatar>
                 <AvatarImage src="" alt="" />
                 <AvatarFallback>JS</AvatarFallback>
               </Avatar>
               <div class="flex flex-col">
                 <p class="font-medium text-sm">Joana Silva</p>
-                <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
                 <p class="text-xs text-muted-foreground mt-1">Entrou em mar/2024</p>
               </div>
             </div>
@@ -106,41 +106,41 @@
         </HoverCardTrigger>
         <HoverCardContent {side} {align} {sideOffset}>
           {#if variant === 'linkPreview'}
-            <div class="flex flex-col gap-2">
+            <div class="nds-stack" data-spacing="sm">
               <div class="flex items-center gap-2 text-xs text-muted-foreground">
                 <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
                 <span>design-system.dev</span>
               </div>
-              <p class="font-medium">Guia de overlays acessíveis</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-font-medium">Guia de overlays acessíveis</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Padrões para HoverCard, Popover e Dialog com WCAG 2.1 AA.
               </p>
             </div>
           {:else if variant === 'definition'}
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <p class="font-medium text-sm">WCAG 2.1</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.
               </p>
             </div>
           {:else if variant === 'metric'}
-            <div class="flex flex-col gap-2">
-              <p class="text-xs text-muted-foreground">Conversão (últimos 30d)</p>
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
               <p class="text-2xl font-semibold">3,42%</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Razão entre cliques no CTA e usuários únicos. Inclui apenas tráfego orgânico.
               </p>
             </div>
           {:else}
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <Avatar>
                 <AvatarImage src="" alt="" />
                 <AvatarFallback>JS</AvatarFallback>
               </Avatar>
               <div class="flex flex-col">
                 <p class="font-medium text-sm">Joana Silva</p>
-                <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
                 <p class="text-xs text-muted-foreground mt-1">Entrou em mar/2024</p>
               </div>
             </div>

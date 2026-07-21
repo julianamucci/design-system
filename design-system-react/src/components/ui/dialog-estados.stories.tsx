@@ -188,7 +188,7 @@ export const Controlled: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="flex flex-col gap-3">
+        <div className="nds-stack" data-spacing="sm">
           <Button onClick={() => setOpen(true)}>Open programmatically</Button>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>

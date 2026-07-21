@@ -73,7 +73,7 @@ export const ListaComAvatar: Story = {
         aria-label="Carregando lista de pedidos"
         class="space-y-3 w-[360px] m-0 p-0 list-none"
       >
-        <li v-for="i in 5" :key="i" class="flex items-center gap-3">
+        <li v-for="i in 5" :key="i" class="nds-cluster" data-spacing="sm">
           <Skeleton class="h-10 w-10 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
           <div class="space-y-2 flex-1">
             <Skeleton class="h-3 w-[200px] motion-reduce:animate-none" :aria-hidden="true" />

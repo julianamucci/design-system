@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 function SlideCard({ label }: { label: string }) {
   return (
     <Card className="h-40 shadow-none">
-      <CardContent className="flex h-full items-center justify-center">
+      <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
         <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
@@ -63,7 +63,7 @@ function ComDotsCarousel() {
   }, [api]);
 
   return (
-    <div className="w-full max-w-md">
+    <div className="nds-w-full nds-max-w-md">
       <Carousel setApi={setApi} opts={{ loop: true }} aria-label="Galeria com dots">
         <CarouselContent>
           {Array.from({ length: 5 }).map((_, i) => (
@@ -126,7 +126,7 @@ export const ComDots: Story = {
 
 export const Galeria: Story = {
   render: () => (
-    <Carousel className="w-full max-w-md" aria-label="Galeria de fotos do produto">
+    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -137,8 +137,8 @@ export const Galeria: Story = {
                 className="block w-full aspect-[16/9] object-cover"
               />
               <CardContent>
-                <p className="text-sm font-medium">Imagem {i + 1}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="nds-text-body nds-font-medium">Imagem {i + 1}</p>
+                <p className="nds-text-caption nds-text-muted-foreground">
                   Exemplo de conteúdo fotográfico em slide.
                 </p>
               </CardContent>

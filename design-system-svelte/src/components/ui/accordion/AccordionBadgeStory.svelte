@@ -13,12 +13,12 @@
   ];
 </script>
 
-<div class="w-full max-w-lg">
+<div class="nds-w-full nds-max-w-lg">
   <Accordion type="single">
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>
         <AccordionTrigger>
-          <span class="flex items-center gap-2">
+          <span class="nds-cluster" data-spacing="sm">
             {item.label}
             <Badge variant={item.badgeVariant} class="text-[10px] h-4">{item.badge}</Badge>
           </span>

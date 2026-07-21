@@ -28,7 +28,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="w-full max-w-md">
+      <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -64,7 +64,7 @@ export const Active: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="properties" class="w-full max-w-md">
+      <Tabs default-value="properties" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -98,7 +98,7 @@ export const Focus: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="w-full max-w-md">
+      <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -145,7 +145,7 @@ export const Disabled: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="w-full max-w-md">
+      <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties" :disabled="true">Propriedades</TabsTrigger>

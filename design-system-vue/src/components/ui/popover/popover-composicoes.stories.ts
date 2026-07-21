@@ -62,17 +62,17 @@ export const EditarPerfil: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" class="w-72">
+          <PopoverContent side="bottom" align="start" class="nds-w-full nds-max-w-xs">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Editar perfil</PopoverTitle>
-              <PopoverDescription class="text-xs text-muted-foreground">
+              <PopoverTitle class="nds-text-body nds-font-medium">Editar perfil</PopoverTitle>
+              <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Atualize seu nome e email.
               </PopoverDescription>
             </PopoverHeader>
-            <form class="grid gap-2" @submit.prevent>
-              <Label for="popover-comp-name" class="text-xs">Nome</Label>
+            <form class="nds-stack" data-spacing="sm" @submit.prevent>
+              <Label for="popover-comp-name" class="nds-text-caption">Nome</Label>
               <Input id="popover-comp-name" value="Joana Silva" />
-              <Label for="popover-comp-email" class="text-xs">Email</Label>
+              <Label for="popover-comp-email" class="nds-text-caption">Email</Label>
               <Input id="popover-comp-email" type="email" value="joana@exemplo.com" />
               <Button type="submit" size="sm">Atualizar</Button>
             </form>
@@ -105,20 +105,20 @@ export const SeletorDeDimensoes: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Dimensões</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" class="w-72">
+          <PopoverContent side="bottom" align="start" class="nds-w-full nds-max-w-xs">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Dimensões</PopoverTitle>
-              <PopoverDescription class="text-xs text-muted-foreground">
+              <PopoverTitle class="nds-text-body nds-font-medium">Dimensões</PopoverTitle>
+              <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Largura e altura em pixels.
               </PopoverDescription>
             </PopoverHeader>
             <div class="grid grid-cols-2 gap-2">
-              <div class="space-y-1">
-                <Label for="popover-comp-w" class="text-xs">Largura</Label>
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="popover-comp-w" class="nds-text-caption">Largura</Label>
                 <Input id="popover-comp-w" type="number" value="320" />
               </div>
-              <div class="space-y-1">
-                <Label for="popover-comp-h" class="text-xs">Altura</Label>
+              <div class="nds-stack" data-spacing="xs">
+                <Label for="popover-comp-h" class="nds-text-caption">Altura</Label>
                 <Input id="popover-comp-h" type="number" value="240" />
               </div>
             </div>
@@ -157,9 +157,9 @@ export const ConfiguracoesRapidas: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Configuracoes rápidas</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" class="w-64">
+          <PopoverContent side="bottom" align="start" class="nds-w-xs">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Preferências</PopoverTitle>
+              <PopoverTitle class="nds-text-body nds-font-medium">Preferências</PopoverTitle>
             </PopoverHeader>
             <div class="grid gap-2 text-sm">
               <label class="flex items-center justify-between cursor-pointer">
@@ -210,8 +210,8 @@ export const SeletorDeCor: Story = {
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start" class="w-56">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Cor de destaque</PopoverTitle>
-              <PopoverDescription class="text-xs text-muted-foreground">
+              <PopoverTitle class="nds-text-body nds-font-medium">Cor de destaque</PopoverTitle>
+              <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Selecione uma cor da paleta.
               </PopoverDescription>
             </PopoverHeader>

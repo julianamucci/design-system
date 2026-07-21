@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="playground-checkbox" {...args} />
       <label
         htmlFor="playground-checkbox"

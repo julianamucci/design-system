@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Padrao: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="text" placeholder="ex: João da Silva" /></div>',
+    template: '<div class="nds-w-xs"><Input type="text" placeholder="ex: João da Silva" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -44,7 +44,7 @@ export const Padrao: Story = {
 export const ComPlaceholder: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="text" placeholder="Buscar componentes..." /></div>',
+    template: '<div class="nds-w-xs"><Input type="text" placeholder="Buscar componentes..." /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -58,7 +58,7 @@ export const ComPlaceholder: Story = {
 export const Desabilitado: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="w-64"><Input type="text" placeholder="Não disponível" disabled /></div>',
+    template: '<div class="nds-w-xs"><Input type="text" placeholder="Não disponível" disabled /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -80,7 +80,7 @@ export const Erro: Story = {
     template: `
       <div class="w-64 space-y-1.5">
         <Input type="email" placeholder="ex: joao@empresa.com" aria-invalid="true" />
-        <p class="text-sm text-destructive">Email inválido. Use o formato nome@dominio.com</p>
+        <p class="nds-text-body nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>
       </div>
     `,
   }),

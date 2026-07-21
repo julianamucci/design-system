@@ -42,7 +42,7 @@ export const SixteenNine: Story = {
           alt="Paisagem ao entardecer"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>
@@ -62,7 +62,7 @@ export const FourThree: Story = {
           alt="Tênis de corrida"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>
@@ -82,7 +82,7 @@ export const Square: Story = {
           alt="Avatar de Maria Silva"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>
@@ -102,7 +102,7 @@ export const ThreeFour: Story = {
           alt="Capa de retrato vertical"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>
@@ -122,7 +122,7 @@ export const UltraWide: Story = {
           alt="Panorâmica da cordilheira"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>

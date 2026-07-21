@@ -147,7 +147,7 @@ export const TamanhosComparados: Story = {
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-3">
+      <div class="nds-stack" data-spacing="sm">
         <ToggleGroup type="single" size="sm" default-value="left" aria-label="Alinhamento pequeno">
           <ToggleGroupItem value="left" aria-label="Esquerda sm"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
           <ToggleGroupItem value="center" aria-label="Centro sm"><AlignCenter aria-hidden="true" /></ToggleGroupItem>

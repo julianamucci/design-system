@@ -51,7 +51,7 @@ export const Playground: Story = {
         <ScrollArea v-bind="args" class="h-full w-full">
           <div class="p-4">
             <h4 class="mb-3 text-sm font-medium leading-none">Tags</h4>
-            <div class="space-y-2">
+            <div class="nds-stack" data-spacing="sm">
               <div
                 v-for="tag in tags"
                 :key="tag"

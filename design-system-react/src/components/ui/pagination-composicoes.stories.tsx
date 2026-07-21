@@ -263,7 +263,7 @@ export const ComOnPageChange: Story = {
         onPageChange(next);
       };
       return (
-        <div className="space-y-2">
+        <div className="nds-stack" data-spacing="sm">
           <p className="text-xs font-mono text-muted-foreground">
             Página atual: {page} / {total}
           </p>

@@ -101,7 +101,7 @@ export const IconOnly: Story = {
 
 export const ParDeAcoes: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Button variant="outline">Cancelar</Button>
       <Button>Confirmar</Button>
     </div>

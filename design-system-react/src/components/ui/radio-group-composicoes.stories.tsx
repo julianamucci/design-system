@@ -43,21 +43,21 @@ export const Controlled: Story = {
             onValueChange={setValue}
             aria-label="Forma de pagamento"
           >
-            <div className="flex items-center gap-2">
+            <div className="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="cartao" id="ctrl-cartao" />
               <Label htmlFor="ctrl-cartao">Cartão de crédito</Label>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="pix" id="ctrl-pix" />
               <Label htmlFor="ctrl-pix">Pix</Label>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="boleto" id="ctrl-boleto" />
               <Label htmlFor="ctrl-boleto">Boleto bancário</Label>
             </div>
           </RadioGroup>
-          <p className="text-sm text-muted-foreground" data-testid="ctrl-output">
-            Selecionado: <span className="font-mono">{value || "—"}</span>
+          <p className="nds-text-body nds-text-muted-foreground" data-testid="ctrl-output">
+            Selecionado: <span className="nds-font-mono">{value || "—"}</span>
           </p>
         </div>
       );
@@ -106,11 +106,11 @@ export const EmFormulario: Story = {
             onValueChange={setValue}
             aria-label="Forma de pagamento"
           >
-            <div className="flex items-center gap-2">
+            <div className="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="cartao" id="form-cartao" />
               <Label htmlFor="form-cartao">Cartão de crédito</Label>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="pix" id="form-pix" />
               <Label htmlFor="form-pix">Pix</Label>
             </div>
@@ -175,7 +175,7 @@ export const CardSelection: Story = {
               className="flex flex-col items-start gap-1 rounded-lg border p-3 cursor-pointer hover:bg-accent has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5"
             >
               <div className="flex items-center justify-between w-full">
-                <span className="text-sm font-medium">{opt.title}</span>
+                <span className="nds-text-body nds-font-medium">{opt.title}</span>
                 <RadioGroupItem value={opt.value} id={`card-${opt.value}`} />
               </div>
               <p className="text-xs text-muted-foreground font-normal">

@@ -48,7 +48,7 @@ export const Playground: Story = {
       );
     }
     return (
-      <div key={args.orientation} className="w-64 space-y-4 text-sm">
+      <div key={args.orientation} className="nds-stack nds-text-body" data-spacing="md" style={{ width: "16rem" }}>
         <div>Item 1</div>
         <Separator {...args} />
         <div>Item 2</div>

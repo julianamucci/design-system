@@ -42,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 export const EstadoSemResultados: Story = {
   name: "Sem Resultados (CommandEmpty)",
   render: () => (
-    <div className="w-72">
+    <div className="nds-w-full nds-max-w-xs">
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
@@ -87,7 +87,7 @@ export const EstadoSemResultados: Story = {
 
 export const ItemDesabilitado: Story = {
   render: () => (
-    <div className="w-72">
+    <div className="nds-w-full nds-max-w-xs">
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>

@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="var-default" />
       <Label htmlFor="var-default">Receber notificações por email</Label>
     </div>
@@ -56,7 +56,7 @@ export const WithDescription: Story = {
     <div className="flex items-center justify-between w-80 rounded-lg border p-4">
       <div className="space-y-0.5">
         <Label htmlFor="var-marketing">Emails de marketing</Label>
-        <p className="text-sm text-muted-foreground">
+        <p className="nds-text-body nds-text-muted-foreground">
           Receba novidades e promoções da plataforma.
         </p>
       </div>
@@ -85,9 +85,9 @@ export const WithDescription: Story = {
 
 export const Sm: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="var-sm" size="sm" />
-      <Label htmlFor="var-sm" className="text-xs">
+      <Label htmlFor="var-sm" className="nds-text-caption">
         Tamanho compacto
       </Label>
     </div>

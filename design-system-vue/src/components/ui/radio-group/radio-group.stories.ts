@@ -59,17 +59,17 @@ export const Playground: Story = {
       <RadioGroup
         v-bind="args"
         aria-label="Forma de pagamento"
-        class="grid gap-2"
+        class="nds-stack" data-spacing="sm"
       >
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="pg-cartao" />
           <Label :for="'pg-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="pg-pix" />
           <Label :for="'pg-pix'">Pix</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="boleto" id="pg-boleto" />
           <Label :for="'pg-boleto'">Boleto bancário</Label>
         </div>

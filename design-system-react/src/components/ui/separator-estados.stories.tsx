@@ -31,7 +31,7 @@ export const Decorativo: Story = {
     },
   },
   render: () => (
-    <div className="w-64 space-y-4 text-sm">
+    <div className="nds-stack nds-text-body" data-spacing="md" style={{ width: "16rem" }}>
       <div>Item 1</div>
       <Separator orientation="horizontal" decorative={true} />
       <div>Item 2</div>
@@ -59,7 +59,7 @@ export const Semantico: Story = {
     },
   },
   render: () => (
-    <div className="w-64 space-y-4 text-sm">
+    <div className="nds-stack nds-text-body" data-spacing="md" style={{ width: "16rem" }}>
       <div>Grupo A</div>
       <Separator orientation="horizontal" decorative={false} />
       <div>Grupo B</div>

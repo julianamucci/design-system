@@ -40,7 +40,7 @@
   });
 </script>
 
-<div class="w-full" style="contain: layout; min-height: 64px;">
+<div class="nds-w-full" style="contain: layout; min-height: 64px;">
   {#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
     {#if demonstration === 'directional'}
       <Pagination {count} {perPage} page={initialPage} {siblingCount}>
@@ -55,7 +55,7 @@
       </Pagination>
     {:else if demonstration === 'controlada'}
       <div class="flex flex-col items-center gap-3">
-        <span class="text-sm text-muted-foreground">
+        <span class="nds-text-body nds-text-muted-foreground">
           Página atual: {currentPage} de {Math.ceil(count / perPage)}
         </span>
         <Pagination {count} {perPage} bind:page={currentPage} {siblingCount}>
@@ -97,7 +97,7 @@
       </div>
     {:else if demonstration === 'tabela'}
       <div class="w-full max-w-2xl border rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-sm text-muted-foreground">Mostrando 11–20 de {count} resultados</span>
+        <span class="nds-text-body nds-text-muted-foreground">Mostrando 11–20 de {count} resultados</span>
         <Pagination {count} {perPage} page={initialPage} {siblingCount} class="!justify-end !mx-0 !w-auto">
           {#snippet children({ pages, currentPage: cp })}
             <PaginationContent>

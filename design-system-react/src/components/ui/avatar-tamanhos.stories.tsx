@@ -45,7 +45,7 @@ export const Size8: Story = {
   render: () => (
     <Avatar className="h-8 w-8">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback className="text-xs">MR</AvatarFallback>
+      <AvatarFallback className="nds-text-caption">MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {

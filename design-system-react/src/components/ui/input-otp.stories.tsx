@@ -51,8 +51,8 @@ export const Playground: Story = {
     const [value, setValue] = useState("");
 
     return (
-      <div className="space-y-2">
-        <label htmlFor="otp-playground" className="text-sm font-medium">
+      <div className="nds-stack" data-spacing="sm">
+        <label htmlFor="otp-playground" className="nds-text-body nds-font-medium">
           Código de verificação
         </label>
         <InputOTP

@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Padrao: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="estado-padrao">Nome completo</Label>
       <Input id="estado-padrao" placeholder="ex: João da Silva" />
     </div>
@@ -54,7 +54,7 @@ export const Padrao: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="estado-disabled">CPF</Label>
       <Input id="estado-disabled" disabled placeholder="000.000.000-00" />
     </div>
@@ -104,10 +104,10 @@ export const DisabledViaGrupo: Story = {
 
 export const Required: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="estado-required">
         Email profissional
-        <span className="text-destructive" aria-hidden="true">*</span>
+        <span className="nds-text-destructive" aria-hidden="true">*</span>
       </Label>
       <Input id="estado-required" type="email" aria-required="true" placeholder="ex: joao@empresa.com" />
     </div>

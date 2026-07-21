@@ -79,15 +79,15 @@ export const FiltersPanel: Story = {
               trackConfirm("Aplicar filtros", location);
             }}
           >
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="filter-category">Categoria</Label>
               <Input id="filter-category" defaultValue="Eletrônicos" />
             </div>
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="filter-min">Preço mínimo</Label>
               <Input id="filter-min" type="number" defaultValue="100" />
             </div>
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="filter-max">Preço máximo</Label>
               <Input id="filter-max" type="number" defaultValue="2000" />
             </div>

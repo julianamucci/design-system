@@ -27,7 +27,7 @@ export const Unchecked: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="unchecked" />
         <label
           for="unchecked"
@@ -58,7 +58,7 @@ export const Checked: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="checked" :checked="true" />
         <label
           for="checked"
@@ -89,7 +89,7 @@ export const Disabled: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="disabled" :disabled="true" />
         <label
           for="disabled"
@@ -121,7 +121,7 @@ export const DisabledChecked: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="disabled-checked" :disabled="true" :checked="true" />
         <label
           for="disabled-checked"
@@ -148,12 +148,12 @@ export const Error: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="space-y-1">
-        <div class="flex items-center gap-2">
+      <div class="nds-stack" data-spacing="xs">
+        <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="error" aria-invalid="true" aria-describedby="error-msg" />
           <label
             for="error"
-            class="text-sm font-medium leading-none"
+            class="nds-text-body nds-font-medium" style="line-height: 1"
           >
             Aceito os termos e condições
           </label>
@@ -188,7 +188,7 @@ export const FocoVisivel: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="focus" />
         <label
           for="focus"

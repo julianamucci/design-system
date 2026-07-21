@@ -29,7 +29,7 @@
   const describedBy = [hint ? hintId : '', errorMessage ? errorId : ''].filter(Boolean).join(' ') || undefined;
 </script>
 
-<div class="flex flex-col gap-1.5 w-64">
+<div class="nds-stack" data-spacing="xs" style="width: 16rem">
   <Label for={id}>{labelText}</Label>
   <Input
     {id}
@@ -40,9 +40,9 @@
     aria-describedby={describedBy}
   />
   {#if hint}
-    <p id={hintId} class="text-sm text-muted-foreground">{hint}</p>
+    <p id={hintId} class="nds-text-body nds-text-muted-foreground">{hint}</p>
   {/if}
   {#if errorMessage}
-    <p id={errorId} class="text-sm text-destructive">{errorMessage}</p>
+    <p id={errorId} class="nds-text-body nds-text-destructive">{errorMessage}</p>
   {/if}
 </div>

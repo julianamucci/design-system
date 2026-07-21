@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   name: 'size="default"',
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>
@@ -39,7 +39,7 @@ export const Default: Story = {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-base font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
     </Card>
   ),
@@ -55,13 +55,13 @@ export const Default: Story = {
 export const Small: Story = {
   name: 'size="sm"',
   render: () => (
-    <Card size="sm" className="w-full max-w-xs">
+    <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>
         <CardDescription>Assinantes ativos</CardDescription>
         <CardTitle className="text-2xl">8.742</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">+12% no mês</p>
+        <p className="nds-text-caption nds-text-muted-foreground">+12% no mês</p>
       </CardContent>
     </Card>
   ),

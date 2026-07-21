@@ -50,7 +50,7 @@ export const Size8: Story = {
     template: `
       <Avatar>
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
-        <AvatarFallback class="text-xs">MR</AvatarFallback>
+        <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
       </Avatar>
     `,
   }),

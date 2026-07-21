@@ -63,8 +63,8 @@ export const Default: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
-            <p class="text-xs text-muted-foreground">Ajuste a aparência do conteúdo da página.</p>
+            <PopoverTitle class="nds-text-body nds-font-medium">Configuracoes de exibição</PopoverTitle>
+            <p class="nds-text-caption nds-text-muted-foreground">Ajuste a aparência do conteúdo da página.</p>
           </PopoverContent>
         </Popover>
       </div>
@@ -94,8 +94,8 @@ export const ComTitulo: Story = {
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
-              <PopoverDescription class="text-xs text-muted-foreground">
+              <PopoverTitle class="nds-text-body nds-font-medium">Configuracoes de exibição</PopoverTitle>
+              <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
@@ -133,12 +133,12 @@ export const Form: Story = {
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
             <PopoverHeader>
-              <PopoverTitle class="text-sm font-medium">Editar perfil</PopoverTitle>
+              <PopoverTitle class="nds-text-body nds-font-medium">Editar perfil</PopoverTitle>
             </PopoverHeader>
-            <form class="grid gap-2" @submit.prevent>
-              <Label for="popover-var-name" class="text-xs">Nome</Label>
+            <form class="nds-stack" data-spacing="sm" @submit.prevent>
+              <Label for="popover-var-name" class="nds-text-caption">Nome</Label>
               <Input id="popover-var-name" />
-              <Label for="popover-var-email" class="text-xs">Email</Label>
+              <Label for="popover-var-email" class="nds-text-caption">Email</Label>
               <Input id="popover-var-email" type="email" />
               <Button type="submit" size="sm">Atualizar</Button>
             </form>

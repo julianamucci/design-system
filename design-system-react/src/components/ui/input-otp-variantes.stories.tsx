@@ -49,8 +49,8 @@ export const SeisDigitos: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-six" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-six" className="nds-text-body nds-font-medium">
             Código de 6 dígitos
           </label>
           <InputOTP
@@ -95,8 +95,8 @@ export const QuatroDigitos: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-four" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-four" className="nds-text-body nds-font-medium">
             PIN de 4 dígitos
           </label>
           <InputOTP
@@ -142,8 +142,8 @@ export const ComSeparator: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-sep" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-sep" className="nds-text-body nds-font-medium">
             Código com separator (3+3)
           </label>
           <InputOTP
@@ -199,8 +199,8 @@ export const Alfanumerico: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-alpha" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-alpha" className="nds-text-body nds-font-medium">
             Código alfanumérico
           </label>
           <InputOTP

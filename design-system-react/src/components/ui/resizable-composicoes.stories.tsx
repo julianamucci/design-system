@@ -42,7 +42,7 @@ export const EditorPreview: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
           id="editor"
@@ -59,7 +59,7 @@ export const EditorPreview: Story = {
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel id="preview" defaultSize={50} minSize={30}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Preview
           </div>
         </ResizablePanel>
@@ -86,7 +86,7 @@ export const IDELayout: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
           id="sidebar"
@@ -106,13 +106,13 @@ export const IDELayout: Story = {
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel id="editor" defaultSize={70} minSize={30}>
               <div className="flex h-full p-3 text-xs font-mono">
-                <div className="text-muted-foreground">App.tsx (1:1)</div>
+                <div className="nds-text-muted-foreground">App.tsx (1:1)</div>
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle aria-label={ariaLabel} />
             <ResizablePanel id="console" defaultSize={30} minSize={15}>
               <div className="flex h-full bg-muted/60 p-3 text-xs font-mono">
-                <span className="text-muted-foreground">{">"}</span>
+                <span className="nds-text-muted-foreground">{">"}</span>
                 <span className="ml-2">npm run dev</span>
               </div>
             </ResizablePanel>
@@ -140,7 +140,7 @@ export const TripleSplit: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
           <div className="flex h-full items-center justify-center bg-muted p-3 text-xs">
@@ -184,19 +184,19 @@ export const PersistedLayout: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup
         direction="horizontal"
         autoSaveId="resizable-storybook-demo"
       >
         <ResizablePanel id="left" defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar (persiste)
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel id="right" defaultSize={70} minSize={50}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo principal
           </div>
         </ResizablePanel>

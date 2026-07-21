@@ -69,7 +69,7 @@ export const FiltroDeVisualizacao: Story = {
     components: { Toggle, Eye, LayoutGrid },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Toggle variant="outline">
           <Eye aria-hidden="true" />
           Mostrar ocultos
@@ -99,7 +99,7 @@ export const TamanhosComparados: Story = {
     components: { Toggle, Bold },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Toggle size="sm" aria-label="Negrito pequeno">
           <Bold aria-hidden="true" />
         </Toggle>
@@ -128,8 +128,8 @@ export const ToggleEmPainel: Story = {
     template: `
       <div class="flex items-center justify-between rounded-lg border p-4 w-80">
         <div class="space-y-0.5">
-          <p class="text-sm font-medium">Mostrar arquivados</p>
-          <p class="text-sm text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">Mostrar arquivados</p>
+          <p class="nds-text-body nds-text-muted-foreground">
             Inclui itens marcados como arquivados na lista.
           </p>
         </div>

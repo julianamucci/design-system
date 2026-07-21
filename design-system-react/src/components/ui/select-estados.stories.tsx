@@ -175,7 +175,7 @@ export const Invalid: Story = {
   },
   render: () => (
     <div
-      className="flex flex-col gap-2"
+      className="nds-stack" data-spacing="sm"
       style={{ contain: "layout", minHeight: 80, position: "relative" }}
     >
       <Select>
@@ -187,7 +187,7 @@ export const Invalid: Story = {
           <SelectItem value="rj">Rio de Janeiro</SelectItem>
         </SelectContent>
       </Select>
-      <p className="text-sm text-destructive">Selecione um estado para continuar.</p>
+      <p className="nds-text-body nds-text-destructive">Selecione um estado para continuar.</p>
     </div>
   ),
   play: async ({ canvasElement, step }) => {

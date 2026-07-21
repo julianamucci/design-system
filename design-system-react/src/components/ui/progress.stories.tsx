@@ -46,7 +46,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress {...args} />
     </div>
   ),
@@ -97,7 +97,7 @@ export const Animated: Story = {
     }, []);
 
     return (
-      <div className="w-80">
+      <div className="nds-w-sm">
         <Progress {...args} value={value} />
       </div>
     );

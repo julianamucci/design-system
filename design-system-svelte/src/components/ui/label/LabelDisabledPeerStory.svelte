@@ -3,7 +3,7 @@
   import { Input } from '@/components/ui/input';
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="nds-stack" data-spacing="sm">
   <Input id="cpf-disabled" disabled class="peer" />
   <Label for="cpf-disabled">CPF</Label>
 </div>

@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 export const NaoControlado: Story = {
   name: "Não Controlado",
   render: () => (
-    <Collapsible defaultOpen={false} className="w-80 space-y-2">
+    <Collapsible defaultOpen={false} className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
       >
@@ -78,11 +78,11 @@ export const NaoControlado: Story = {
 function ControlledExample() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-80 space-y-3">
-      <p className="text-xs text-muted-foreground">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+      <p className="nds-text-caption nds-text-muted-foreground">
         Estado externo: <strong>{open ? "aberto" : "fechado"}</strong>
       </p>
-      <div className="flex gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
           Abrir
         </Button>
@@ -90,7 +90,7 @@ function ControlledExample() {
           Fechar
         </Button>
       </div>
-      <Collapsible open={open} onOpenChange={setOpen} className="space-y-2">
+      <Collapsible open={open} onOpenChange={setOpen} className="nds-stack" data-spacing="sm">
         <CollapsibleTrigger
           className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
           aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
@@ -140,7 +140,7 @@ export const Controlado: Story = {
 
 export const Desabilitado: Story = {
   render: () => (
-    <Collapsible className="w-80 space-y-2">
+    <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
         disabled

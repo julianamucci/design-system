@@ -37,7 +37,7 @@ export const Horizontal: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="70" :min-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Direita</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Direita</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -62,7 +62,7 @@ export const Vertical: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Rodapé</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Rodapé</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -89,7 +89,7 @@ export const Nested: Story = {
           <ResizablePanel :default-size="70" :min-size="50">
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel :default-size="60" :min-size="20">
-                <div class="flex h-full items-center justify-center p-4 text-sm">Conteúdo</div>
+                <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Conteúdo</div>
               </ResizablePanel>
               <ResizableHandle with-handle aria-label="Redimensionar conteúdo e console — use setas" />
               <ResizablePanel :default-size="40" :min-size="20">

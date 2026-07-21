@@ -23,8 +23,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Padrao: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="estado-padrao" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="estado-padrao" className="nds-text-body nds-font-medium">
         Nome completo
       </label>
       <Input id="estado-padrao" type="text" placeholder="ex: João da Silva" />
@@ -50,8 +50,8 @@ export const Padrao: Story = {
 
 export const ComPlaceholder: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="estado-placeholder" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="estado-placeholder" className="nds-text-body nds-font-medium">
         Email
       </label>
       <Input
@@ -79,8 +79,8 @@ export const ComPlaceholder: Story = {
 
 export const Desabilitado: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="estado-disabled" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="estado-disabled" className="nds-text-body nds-font-medium">
         Campo desabilitado
       </label>
       <Input
@@ -108,8 +108,8 @@ export const Desabilitado: Story = {
 
 export const Erro: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="estado-erro" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="estado-erro" className="nds-text-body nds-font-medium">
         Email
       </label>
       <Input
@@ -119,7 +119,7 @@ export const Erro: Story = {
         aria-invalid="true"
         aria-describedby="estado-erro-msg"
       />
-      <p id="estado-erro-msg" className="text-sm text-destructive">
+      <p id="estado-erro-msg" className="nds-text-body nds-text-destructive">
         Email inválido. Use o formato nome@dominio.com
       </p>
     </div>

@@ -152,11 +152,11 @@ export const DisabledPressed: Story = {
 
 export const Invalid: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5">
+    <div className="nds-stack" data-spacing="xs">
       <Toggle aria-invalid="true" aria-label="Negrito">
         <Bold aria-hidden="true" />
       </Toggle>
-      <p className="text-sm text-destructive">Selecione ao menos uma formatação.</p>
+      <p className="nds-text-body nds-text-destructive">Selecione ao menos uma formatação.</p>
     </div>
   ),
   parameters: {

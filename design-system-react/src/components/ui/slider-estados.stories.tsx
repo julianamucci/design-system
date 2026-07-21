@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
     </div>
   ),
@@ -39,7 +39,7 @@ export const Default: Story = {
 
 export const Focus: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
     </div>
   ),
@@ -57,7 +57,7 @@ export const KeyboardInteraction: Story = {
   render: function KeyboardRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
-      <div className="w-80 space-y-3">
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <span aria-live="polite" className="text-sm tabular-nums">
           {value[0]}
         </span>
@@ -91,7 +91,7 @@ export const KeyboardInteraction: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Slider
         defaultValue={[50]}
         min={0}

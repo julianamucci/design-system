@@ -153,8 +153,8 @@ export const MegaMenuGrid: Story = {
                 <li>
                   <NavigationMenuLink href="#">
                     <div>
-                      <div className="text-sm font-medium">Para Times</div>
-                      <p className="text-xs text-muted-foreground">
+                      <div className="nds-text-body nds-font-medium">Para Times</div>
+                      <p className="nds-text-caption nds-text-muted-foreground">
                         Colaboração em tempo real e permissões.
                       </p>
                     </div>
@@ -163,8 +163,8 @@ export const MegaMenuGrid: Story = {
                 <li>
                   <NavigationMenuLink href="#">
                     <div>
-                      <div className="text-sm font-medium">Para Devs</div>
-                      <p className="text-xs text-muted-foreground">
+                      <div className="nds-text-body nds-font-medium">Para Devs</div>
+                      <p className="nds-text-caption nds-text-muted-foreground">
                         SDK, API e webhooks.
                       </p>
                     </div>
@@ -173,8 +173,8 @@ export const MegaMenuGrid: Story = {
                 <li>
                   <NavigationMenuLink href="#">
                     <div>
-                      <div className="text-sm font-medium">Para Design</div>
-                      <p className="text-xs text-muted-foreground">
+                      <div className="nds-text-body nds-font-medium">Para Design</div>
+                      <p className="nds-text-caption nds-text-muted-foreground">
                         Tokens, componentes e Figma.
                       </p>
                     </div>
@@ -183,8 +183,8 @@ export const MegaMenuGrid: Story = {
                 <li>
                   <NavigationMenuLink href="#">
                     <div>
-                      <div className="text-sm font-medium">Para Marketing</div>
-                      <p className="text-xs text-muted-foreground">
+                      <div className="nds-text-body nds-font-medium">Para Marketing</div>
+                      <p className="nds-text-caption nds-text-muted-foreground">
                         Landing pages e templates.
                       </p>
                     </div>
@@ -250,7 +250,7 @@ export const ComCardDestacado: Story = {
                   className="flex flex-col justify-end rounded-md bg-gradient-to-b from-muted to-accent p-3 text-xs no-underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <div className="text-sm font-medium mb-1">Tokens v2</div>
-                  <p className="text-muted-foreground">
+                  <p className="nds-text-muted-foreground">
                     Conheça a nova arquitetura de tokens.
                   </p>
                 </a>

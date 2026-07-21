@@ -27,9 +27,9 @@ export const Decorativo: Story = {
     components: { Separator },
     template: `
       <div class="w-[360px] space-y-3">
-        <div class="text-sm">Bloco visual A.</div>
+        <div class="nds-text-body">Bloco visual A.</div>
         <Separator orientation="horizontal" :decorative="true" />
-        <div class="text-sm">Bloco visual B (separação ignorada por leitores de tela).</div>
+        <div class="nds-text-body">Bloco visual B (separação ignorada por leitores de tela).</div>
       </div>
     `,
   }),
@@ -51,9 +51,9 @@ export const Semantico: Story = {
     components: { Separator },
     template: `
       <div class="w-[360px] space-y-3">
-        <div class="text-sm">Grupo Documentação</div>
+        <div class="nds-text-body">Grupo Documentação</div>
         <Separator orientation="horizontal" :decorative="false" />
-        <div class="text-sm">Grupo Componentes (anunciado por leitor de tela).</div>
+        <div class="nds-text-body">Grupo Componentes (anunciado por leitor de tela).</div>
       </div>
     `,
   }),

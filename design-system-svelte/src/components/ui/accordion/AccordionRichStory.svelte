@@ -7,19 +7,19 @@
   } from './index';
 </script>
 
-<Accordion type="multiple" class="w-full max-w-lg">
+<Accordion type="multiple" class="nds-w-full nds-max-w-lg">
   <AccordionItem value="especificacoes">
     <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>
       <div class="space-y-2 text-sm">
         <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-          <span class="text-muted-foreground">Processador</span>
+          <span class="nds-text-muted-foreground">Processador</span>
           <span>Intel Core i7-12700</span>
-          <span class="text-muted-foreground">Memória RAM</span>
+          <span class="nds-text-muted-foreground">Memória RAM</span>
           <span>16 GB DDR5</span>
-          <span class="text-muted-foreground">Armazenamento</span>
+          <span class="nds-text-muted-foreground">Armazenamento</span>
           <span>512 GB NVMe SSD</span>
-          <span class="text-muted-foreground">Sistema</span>
+          <span class="nds-text-muted-foreground">Sistema</span>
           <span>Windows 11 Pro</span>
         </div>
       </div>

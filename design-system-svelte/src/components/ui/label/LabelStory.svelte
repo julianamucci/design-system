@@ -20,6 +20,6 @@
 <Label for={htmlFor} class={className} {...rest}>
   {@html DOMPurify.sanitize(labelText)}
   {#if required}
-    <span class="text-destructive" aria-hidden="true">*</span>
+    <span class="nds-text-destructive" aria-hidden="true">*</span>
   {/if}
 </Label>

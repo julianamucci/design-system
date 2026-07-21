@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ComLabel: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="with-label" />
       <label
         htmlFor="with-label"
@@ -49,8 +49,8 @@ export const ComLabel: Story = {
 
 export const ComDescricao: Story = {
   render: () => (
-    <div className="flex gap-2">
-      <Checkbox id="with-desc" className="mt-0.5" />
+    <div className="nds-cluster" data-spacing="sm">
+      <Checkbox id="with-desc" className="nds-mt-0-5" />
       <div className="flex flex-col gap-0.5">
         <label
           htmlFor="with-desc"
@@ -58,7 +58,7 @@ export const ComDescricao: Story = {
         >
           Receber novidades por email
         </label>
-        <p className="text-sm text-muted-foreground">
+        <p className="nds-text-body nds-text-muted-foreground">
           Enviaremos no máximo 2 emails por semana.
         </p>
       </div>
@@ -93,9 +93,9 @@ export const GrupoComFieldset: Story = {
         { id: "contact-sms", label: "SMS" },
         { id: "contact-push", label: "Notificações push" },
       ].map(({ id, label }) => (
-        <div key={id} className="flex items-center gap-2">
+        <div key={id} className="nds-cluster" data-spacing="sm">
           <Checkbox id={id} />
-          <label htmlFor={id} className="text-sm font-medium leading-none">
+          <label htmlFor={id} className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
             {label}
           </label>
         </div>
@@ -129,7 +129,7 @@ export const GrupoComFieldset: Story = {
 export const SelecionarTodos: Story = {
   render: function SelecionarTodosRender() {
     return (
-      <div className="space-y-3">
+      <div className="nds-stack" data-spacing="sm">
         <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Checkbox id="select-all" />
           <label
@@ -146,7 +146,7 @@ export const SelecionarTodos: Story = {
         ].map(({ id, label }) => (
           <div key={id} className="flex items-center gap-2 pl-4">
             <Checkbox id={id} />
-            <label htmlFor={id} className="text-sm font-medium leading-none">
+            <label htmlFor={id} className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
               {label}
             </label>
           </div>
@@ -176,15 +176,15 @@ export const DentroDeCard: Story = {
   render: () => (
     <div className="rounded-lg border border-border p-4 shadow-sm max-w-sm">
       <div className="flex items-start gap-3">
-        <Checkbox id="card-checkbox" className="mt-0.5" />
-        <div className="flex flex-col gap-1">
+        <Checkbox id="card-checkbox" className="nds-mt-0-5" />
+        <div className="nds-stack" data-spacing="xs">
           <label
             htmlFor="card-checkbox"
             className="text-sm font-medium leading-none cursor-pointer"
           >
             Plano Pro
           </label>
-          <p className="text-sm text-muted-foreground">
+          <p className="nds-text-body nds-text-muted-foreground">
             Acesso ilimitado a todos os recursos premium.
           </p>
         </div>

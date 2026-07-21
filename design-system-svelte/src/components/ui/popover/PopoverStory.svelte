@@ -111,7 +111,7 @@
               <Button size="sm" onclick={onAction}>{saveLabel}</Button>
             </div>
           {:else}
-            <p class="text-sm">{description}</p>
+            <p class="nds-text-body">{description}</p>
           {/if}
         </PopoverContent>
       </Popover>
@@ -169,7 +169,7 @@
               <Button size="sm" onclick={onAction}>{saveLabel}</Button>
             </div>
           {:else}
-            <p class="text-sm">{description}</p>
+            <p class="nds-text-body">{description}</p>
           {/if}
         </PopoverContent>
       </Popover>

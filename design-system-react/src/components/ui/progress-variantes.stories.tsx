@@ -30,7 +30,7 @@ type Story = StoryObj<typeof Progress>;
 
 export const Determinate: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress value={42} aria-label="Progresso do upload" />
     </div>
   ),
@@ -46,7 +46,7 @@ export const Determinate: Story = {
 
 export const Indeterminate: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="nds-w-sm">
       <Progress
         value={null}
         aria-label="Processando dados"
@@ -77,7 +77,7 @@ export const WithLabel: Story = {
     }, []);
 
     return (
-      <div className="w-80">
+      <div className="nds-w-sm">
         <Progress value={value} aria-label="Enviando arquivo">
           <ProgressLabel>Enviando arquivo</ProgressLabel>
           <ProgressValue />

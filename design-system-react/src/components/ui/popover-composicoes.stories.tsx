@@ -52,7 +52,7 @@ export const EditarPerfil: Story = {
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent className="nds-w-sm">
           <PopoverHeader>
             <PopoverTitle>Editar perfil</PopoverTitle>
             <PopoverDescription>
@@ -60,14 +60,14 @@ export const EditarPerfil: Story = {
             </PopoverDescription>
           </PopoverHeader>
           <form
-            className="flex flex-col gap-2"
+            className="nds-stack" data-spacing="sm"
             onSubmit={(e) => e.preventDefault()}
           >
-            <Label htmlFor="comp-name" className="text-xs">
+            <Label htmlFor="comp-name" className="nds-text-caption">
               Nome
             </Label>
             <Input id="comp-name" defaultValue="Joana Silva" />
-            <Label htmlFor="comp-email" className="text-xs">
+            <Label htmlFor="comp-email" className="nds-text-caption">
               Email
             </Label>
             <Input
@@ -118,15 +118,15 @@ export const FiltrosRapidos: Story = {
             <PopoverTitle>Filtrar por status</PopoverTitle>
           </PopoverHeader>
           <div className="flex flex-col gap-1.5 text-sm">
-            <label className="flex items-center gap-2">
+            <label className="nds-cluster" data-spacing="sm">
               <input type="checkbox" defaultChecked />
               <span>Ativos</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="nds-cluster" data-spacing="sm">
               <input type="checkbox" />
               <span>Arquivados</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="nds-cluster" data-spacing="sm">
               <input type="checkbox" />
               <span>Rascunhos</span>
             </label>
@@ -173,10 +173,10 @@ export const SelecaoDeData: Story = {
             </PopoverDescription>
           </PopoverHeader>
           <form
-            className="flex flex-col gap-2"
+            className="nds-stack" data-spacing="sm"
             onSubmit={(e) => e.preventDefault()}
           >
-            <Label htmlFor="comp-date" className="text-xs">
+            <Label htmlFor="comp-date" className="nds-text-caption">
               Data
             </Label>
             <Input id="comp-date" type="date" defaultValue="2026-05-07" />

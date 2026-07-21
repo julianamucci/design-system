@@ -105,7 +105,7 @@
       {#if selectedLabel}
         <span>{selectedLabel}</span>
       {:else}
-        <span class="text-muted-foreground">{placeholder}</span>
+        <span class="nds-text-muted-foreground">{placeholder}</span>
       {/if}
     </SelectTrigger>
     <SelectContent>

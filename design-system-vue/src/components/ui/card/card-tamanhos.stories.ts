@@ -32,14 +32,14 @@ export const Default: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>
             Estrutura ergonômica com ajuste de altura e apoio lombar.
           </CardDescription>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
       </Card>
     `,
   }),
@@ -55,7 +55,7 @@ export const Small: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card size="sm" class="w-full max-w-sm">
+      <Card size="sm" class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Assinantes ativos</CardTitle>
           <CardDescription>+12% no mês</CardDescription>

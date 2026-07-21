@@ -88,7 +88,7 @@ export const ParDeAcoes: Story = {
   render: () => ({
     components: { Button },
     template: `
-      <div class="flex gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Button variant="outline">Cancelar</Button>
         <Button>Confirmar</Button>
       </div>

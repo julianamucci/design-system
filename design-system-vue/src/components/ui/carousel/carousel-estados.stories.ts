@@ -27,7 +27,7 @@ export const PrimeiroSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { opts: { startIndex: 0 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="w-full max-w-sm" aria-label="Galeria no primeiro slide">
+      <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no primeiro slide">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">
@@ -60,7 +60,7 @@ export const UltimoSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { opts: { startIndex: 4 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="w-full max-w-sm" aria-label="Galeria no último slide">
+      <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no último slide">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">

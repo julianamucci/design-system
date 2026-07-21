@@ -68,7 +68,7 @@
         <span class="text-sm font-medium text-muted-foreground">Modo icon colapsado</span>
       </header>
       <main id="main-content" tabindex="-1" class="flex-1 p-6">
-        <p class="text-sm text-muted-foreground">Apenas ícones visíveis na sidebar. Passe o mouse para ver os tooltips.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Apenas ícones visíveis na sidebar. Passe o mouse para ver os tooltips.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

@@ -37,7 +37,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
     <SidebarProvider defaultOpen>
       <nav aria-label="Navegação principal">
         <Sidebar variant={variant} collapsible={collapsible} side={side}>
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -86,14 +86,14 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger className="lg:hidden" />
-          <span className="text-sm font-medium">
+          <span className="nds-text-body nds-font-medium">
             variant=&quot;{variant}&quot;{collapsible !== "offcanvas" ? ` collapsible="${collapsible}"` : ""}
             {side !== "left" ? ` side="${side}"` : ""}
           </span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">Conteúdo principal</div>
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">Conteúdo principal</div>
       </SidebarInset>
     </SidebarProvider>
   );

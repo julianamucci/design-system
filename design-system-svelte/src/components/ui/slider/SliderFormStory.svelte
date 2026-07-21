@@ -7,7 +7,7 @@
 </script>
 
 <form class="space-y-6 w-80" onsubmit={(e) => e.preventDefault()}>
-  <div class="space-y-2">
+  <div class="nds-stack" data-spacing="sm">
     <Label for="form-name">Nome do preset</Label>
     <input
       id="form-name"
@@ -17,16 +17,16 @@
     />
   </div>
 
-  <div class="space-y-3">
-    <div class="flex items-center justify-between">
+  <div class="nds-stack" data-spacing="sm">
+    <div class="nds-cluster" data-justify="between">
       <Label>Brilho</Label>
       <span class="text-sm tabular-nums" aria-live="polite">{brightness[0]}%</span>
     </div>
     <Slider bind:value={brightness} min={0} max={100} aria-label="Brilho" />
   </div>
 
-  <div class="space-y-3">
-    <div class="flex items-center justify-between">
+  <div class="nds-stack" data-spacing="sm">
+    <div class="nds-cluster" data-justify="between">
       <Label>Opacidade</Label>
       <span class="text-sm tabular-nums" aria-live="polite">{opacity[0]}%</span>
     </div>

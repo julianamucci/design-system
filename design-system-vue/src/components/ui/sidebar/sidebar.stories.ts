@@ -161,10 +161,10 @@ export const Playground: Story = {
         <SidebarInset>
           <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
             <SidebarTrigger class="lg:hidden" />
-            <span class="text-sm text-muted-foreground">Conteúdo principal</span>
+            <span class="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
           </header>
           <main id="main-content" class="p-4">
-            <p class="text-sm text-muted-foreground">Use os controles para alterar variant, collapsible e side.</p>
+            <p class="nds-text-body nds-text-muted-foreground">Use os controles para alterar variant, collapsible e side.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>

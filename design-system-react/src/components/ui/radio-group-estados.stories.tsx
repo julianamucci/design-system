@@ -33,11 +33,11 @@ export const Default: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento">
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="def-cartao" />
         <Label htmlFor="def-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="def-pix" />
         <Label htmlFor="def-pix">Pix</Label>
       </div>
@@ -65,11 +65,11 @@ export const Checked: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento" defaultValue="pix">
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="ck-cartao" />
         <Label htmlFor="ck-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="ck-pix" />
         <Label htmlFor="ck-pix">Pix</Label>
       </div>
@@ -98,11 +98,11 @@ export const Disabled: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento" disabled>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="dis-cartao" disabled />
         <Label htmlFor="dis-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="dis-pix" disabled />
         <Label htmlFor="dis-pix">Pix</Label>
       </div>
@@ -135,15 +135,15 @@ export const ItemDisabled: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento">
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="idis-cartao" />
         <Label htmlFor="idis-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="idis-pix" />
         <Label htmlFor="idis-pix">Pix</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="boleto" id="idis-boleto" disabled />
         <Label htmlFor="idis-boleto">Boleto bancário (indisponível)</Label>
       </div>
@@ -170,18 +170,18 @@ export const Invalid: Story = {
     },
   },
   render: () => (
-    <div className="flex flex-col gap-2">
+    <div className="nds-stack" data-spacing="sm">
       <RadioGroup aria-label="Forma de pagamento" aria-invalid="true">
-        <div className="flex items-center gap-2">
+        <div className="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="inv-cartao" aria-invalid="true" />
           <Label htmlFor="inv-cartao">Cartão de crédito</Label>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="inv-pix" aria-invalid="true" />
           <Label htmlFor="inv-pix">Pix</Label>
         </div>
       </RadioGroup>
-      <p className="text-sm text-destructive">
+      <p className="nds-text-body nds-text-destructive">
         Selecione uma forma de pagamento para continuar.
       </p>
     </div>
@@ -213,11 +213,11 @@ export const FocoVisivel: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento">
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="foc-cartao" />
         <Label htmlFor="foc-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="foc-pix" />
         <Label htmlFor="foc-pix">Pix</Label>
       </div>

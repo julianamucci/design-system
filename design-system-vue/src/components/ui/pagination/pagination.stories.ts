@@ -84,7 +84,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div class="w-full" style="contain: layout; min-height: 64px;">
+      <div class="nds-w-full" style="contain: layout; min-height: 64px;">
         <Pagination
           :key="String(args.total) + String(args.itemsPerPage) + String(args.defaultPage) + String(args.siblingCount) + String(args.showEdges) + String(args.disabled)"
           :total="args.total"

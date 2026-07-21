@@ -48,7 +48,7 @@ export const ComLabel: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
+        <div className="nds-stack" data-spacing="sm">
           <Label htmlFor="otp-code">Código de verificação</Label>
           <InputOTP
             id="otp-code"
@@ -93,7 +93,7 @@ export const ComHelpText: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-2">
+        <div className="nds-stack" data-spacing="sm">
           <Label htmlFor="otp-help">Código de verificação</Label>
           <InputOTP
             id="otp-help"
@@ -110,7 +110,7 @@ export const ComHelpText: Story = {
               ))}
             </InputOTPGroup>
           </InputOTP>
-          <p id="otp-help-text" className="text-xs text-muted-foreground">
+          <p id="otp-help-text" className="nds-text-caption nds-text-muted-foreground">
             Enviamos por SMS, expira em 5 min.
           </p>
         </div>
@@ -141,7 +141,7 @@ export const ComErrorMessage: Story = {
     const Demo = () => {
       const [value, setValue] = useState("123");
       return (
-        <div className="space-y-2">
+        <div className="nds-stack" data-spacing="sm">
           <Label htmlFor="otp-err">Código de verificação</Label>
           <InputOTP
             id="otp-err"
@@ -191,8 +191,8 @@ export const ComResendButton: Story = {
     const Demo = () => {
       const [value, setValue] = useState("");
       return (
-        <div className="space-y-3">
-          <div className="space-y-2">
+        <div className="nds-stack" data-spacing="sm">
+          <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="otp-resend">Código de verificação</Label>
             <InputOTP
               id="otp-resend"

@@ -29,11 +29,11 @@ export const Default: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-def-cartao" />
           <Label :for="'est-def-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="est-def-pix" />
           <Label :for="'est-def-pix'">Pix</Label>
         </div>
@@ -55,11 +55,11 @@ export const Checked: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup default-value="pix" aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-chk-cartao" />
           <Label :for="'est-chk-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="est-chk-pix" />
           <Label :for="'est-chk-pix'">Pix</Label>
         </div>
@@ -81,11 +81,11 @@ export const FocoVisivel: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-foc-cartao" />
           <Label :for="'est-foc-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="est-foc-pix" />
           <Label :for="'est-foc-pix'">Pix</Label>
         </div>
@@ -116,11 +116,11 @@ export const Disabled: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup :disabled="true" aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-dis-cartao" />
           <Label :for="'est-dis-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="est-dis-pix" />
           <Label :for="'est-dis-pix'">Pix</Label>
         </div>
@@ -148,15 +148,15 @@ export const ItemDisabled: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-itd-cartao" />
           <Label :for="'est-itd-cartao'">Cartão de crédito</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="est-itd-pix" :disabled="true" />
           <Label :for="'est-itd-pix'">Pix (indisponível)</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="boleto" id="est-itd-boleto" />
           <Label :for="'est-itd-boleto'">Boleto bancário</Label>
         </div>
@@ -178,20 +178,20 @@ export const Invalid: Story = {
     setup() { return {}; },
     template: `
       <div class="space-y-2 w-80">
-        <fieldset class="space-y-2">
+        <fieldset class="nds-stack" data-spacing="sm">
           <legend class="text-sm font-semibold">Forma de pagamento *</legend>
-          <RadioGroup aria-label="Forma de pagamento" aria-invalid="true" aria-describedby="est-inv-err" class="grid gap-2">
-            <div class="flex items-center gap-2">
+          <RadioGroup aria-label="Forma de pagamento" aria-invalid="true" aria-describedby="est-inv-err" class="nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="cartao" id="est-inv-cartao" aria-invalid="true" />
               <Label :for="'est-inv-cartao'">Cartão de crédito</Label>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="pix" id="est-inv-pix" aria-invalid="true" />
               <Label :for="'est-inv-pix'">Pix</Label>
             </div>
           </RadioGroup>
         </fieldset>
-        <p id="est-inv-err" class="text-sm text-destructive">
+        <p id="est-inv-err" class="nds-text-body nds-text-destructive">
           Selecione uma forma de pagamento para continuar.
         </p>
       </div>

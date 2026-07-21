@@ -33,15 +33,15 @@ export const Vertical: Story = {
   },
   render: () => (
     <RadioGroup aria-label="Forma de pagamento">
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="cartao" id="vert-cartao" />
         <Label htmlFor="vert-cartao">Cartão de crédito</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="pix" id="vert-pix" />
         <Label htmlFor="vert-pix">Pix</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="boleto" id="vert-boleto" />
         <Label htmlFor="vert-boleto">Boleto bancário</Label>
       </div>
@@ -74,15 +74,15 @@ export const Horizontal: Story = {
       className="flex flex-wrap gap-6"
       aria-label="Forma de entrega"
     >
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="padrao" id="horiz-padrao" />
         <Label htmlFor="horiz-padrao">Padrão</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="expressa" id="horiz-expressa" />
         <Label htmlFor="horiz-expressa">Expressa</Label>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="retirar" id="horiz-retirar" />
         <Label htmlFor="horiz-retirar">Retirar</Label>
       </div>
@@ -114,28 +114,28 @@ export const WithDescription: Story = {
   render: () => (
     <RadioGroup aria-label="Forma de entrega" className="max-w-md">
       <div className="flex items-start gap-2">
-        <RadioGroupItem value="padrao" id="desc-padrao" className="mt-0.5" />
+        <RadioGroupItem value="padrao" id="desc-padrao" className="nds-mt-0-5" />
         <div className="flex flex-col gap-0.5">
           <Label htmlFor="desc-padrao">Padrão</Label>
-          <p className="text-sm text-muted-foreground">
+          <p className="nds-text-body nds-text-muted-foreground">
             Entrega em até 5 dias úteis. Frete grátis acima de R$ 99.
           </p>
         </div>
       </div>
       <div className="flex items-start gap-2">
-        <RadioGroupItem value="expressa" id="desc-expressa" className="mt-0.5" />
+        <RadioGroupItem value="expressa" id="desc-expressa" className="nds-mt-0-5" />
         <div className="flex flex-col gap-0.5">
           <Label htmlFor="desc-expressa">Expressa</Label>
-          <p className="text-sm text-muted-foreground">
+          <p className="nds-text-body nds-text-muted-foreground">
             Entrega em 1 dia útil. Custo adicional de R$ 19,90.
           </p>
         </div>
       </div>
       <div className="flex items-start gap-2">
-        <RadioGroupItem value="retirar" id="desc-retirar" className="mt-0.5" />
+        <RadioGroupItem value="retirar" id="desc-retirar" className="nds-mt-0-5" />
         <div className="flex flex-col gap-0.5">
           <Label htmlFor="desc-retirar">Retirar na loja</Label>
-          <p className="text-sm text-muted-foreground">
+          <p className="nds-text-body nds-text-muted-foreground">
             Disponível em 2 horas após confirmação do pagamento.
           </p>
         </div>

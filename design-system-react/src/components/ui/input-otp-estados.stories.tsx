@@ -41,8 +41,8 @@ export const Vazio: Story = {
     },
   },
   render: () => (
-    <div className="space-y-2">
-      <label htmlFor="otp-empty" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="sm">
+      <label htmlFor="otp-empty" className="nds-text-body nds-font-medium">
         Código de verificação
       </label>
       <InputOTP
@@ -81,8 +81,8 @@ export const Preenchendo: Story = {
     const Demo = () => {
       const [value, setValue] = useState("123");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-filling" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-filling" className="nds-text-body nds-font-medium">
             Código (preenchendo)
           </label>
           <InputOTP
@@ -123,8 +123,8 @@ export const Completo: Story = {
     const Demo = () => {
       const [value, setValue] = useState("123456");
       return (
-        <div className="space-y-2">
-          <label htmlFor="otp-complete" className="text-sm font-medium">
+        <div className="nds-stack" data-spacing="sm">
+          <label htmlFor="otp-complete" className="nds-text-body nds-font-medium">
             Código (completo)
           </label>
           <InputOTP
@@ -164,8 +164,8 @@ export const Desabilitado: Story = {
     },
   },
   render: () => (
-    <div className="space-y-2">
-      <label htmlFor="otp-disabled" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="sm">
+      <label htmlFor="otp-disabled" className="nds-text-body nds-font-medium">
         Código (desabilitado)
       </label>
       <InputOTP
@@ -204,8 +204,8 @@ export const Erro: Story = {
     },
   },
   render: () => (
-    <div className="space-y-2">
-      <label htmlFor="otp-error" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="sm">
+      <label htmlFor="otp-error" className="nds-text-body nds-font-medium">
         Código (erro)
       </label>
       <InputOTP

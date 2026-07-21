@@ -23,10 +23,10 @@ type Story = StoryObj;
 
 export const ComIconeNoTrigger: Story = {
   render: () => (
-    <Accordion className="w-full max-w-lg">
+    <Accordion className="nds-w-full nds-max-w-lg">
       <AccordionItem value="info">
         <AccordionTrigger>
-          <span className="flex items-center gap-2">
+          <span className="nds-cluster" data-spacing="sm">
             <Info className="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
             Informações gerais
           </span>
@@ -37,7 +37,7 @@ export const ComIconeNoTrigger: Story = {
       </AccordionItem>
       <AccordionItem value="aviso">
         <AccordionTrigger>
-          <span className="flex items-center gap-2">
+          <span className="nds-cluster" data-spacing="sm">
             <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
             Atenção — leia antes de continuar
           </span>
@@ -48,7 +48,7 @@ export const ComIconeNoTrigger: Story = {
       </AccordionItem>
       <AccordionItem value="sucesso">
         <AccordionTrigger>
-          <span className="flex items-center gap-2">
+          <span className="nds-cluster" data-spacing="sm">
             <CheckCircle className="h-4 w-4 text-green-500 shrink-0" aria-hidden="true" />
             Configuração concluída
           </span>
@@ -88,10 +88,10 @@ export const ComIconeNoTrigger: Story = {
 
 export const ComBadgeNoTrigger: Story = {
   render: () => (
-    <Accordion className="w-full max-w-lg">
+    <Accordion className="nds-w-full nds-max-w-lg">
       <AccordionItem value="novo">
         <AccordionTrigger>
-          <span className="flex items-center gap-2">
+          <span className="nds-cluster" data-spacing="sm">
             Novidades da versão 3.0
             <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
           </span>
@@ -102,7 +102,7 @@ export const ComBadgeNoTrigger: Story = {
       </AccordionItem>
       <AccordionItem value="beta">
         <AccordionTrigger>
-          <span className="flex items-center gap-2">
+          <span className="nds-cluster" data-spacing="sm">
             Funcionalidades em beta
             <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
           </span>
@@ -143,19 +143,19 @@ export const ComBadgeNoTrigger: Story = {
 
 export const ConteudoRico: Story = {
   render: () => (
-    <Accordion multiple className="w-full max-w-lg">
+    <Accordion multiple className="nds-w-full nds-max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
           <div className="space-y-2 text-sm">
             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-              <span className="text-muted-foreground">Processador</span>
+              <span className="nds-text-muted-foreground">Processador</span>
               <span>Intel Core i7-12700</span>
-              <span className="text-muted-foreground">Memória RAM</span>
+              <span className="nds-text-muted-foreground">Memória RAM</span>
               <span>16 GB DDR5</span>
-              <span className="text-muted-foreground">Armazenamento</span>
+              <span className="nds-text-muted-foreground">Armazenamento</span>
               <span>512 GB NVMe SSD</span>
-              <span className="text-muted-foreground">Sistema</span>
+              <span className="nds-text-muted-foreground">Sistema</span>
               <span>Windows 11 Pro</span>
             </div>
           </div>
@@ -214,7 +214,7 @@ export const ConteudoRico: Story = {
 export const FAQ: Story = {
   render: () => (
     <div className="w-full max-w-lg space-y-2">
-      <h2 className="text-base font-semibold">Perguntas frequentes</h2>
+      <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
       <Accordion>
         {[
           {

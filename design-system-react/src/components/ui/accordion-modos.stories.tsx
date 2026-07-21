@@ -22,7 +22,7 @@ type Story = StoryObj;
 
 export const Single: Story = {
   render: () => (
-    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>
@@ -86,7 +86,7 @@ export const Single: Story = {
 
 export const Multiple: Story = {
   render: () => (
-    <Accordion multiple className="w-full max-w-lg">
+    <Accordion multiple className="nds-w-full nds-max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
@@ -149,13 +149,13 @@ function ControlledAccordion() {
   const [value, setValue] = useState<string[]>(["item-1"]);
   return (
     <div className="space-y-2 w-full max-w-lg">
-      <p className="text-xs text-muted-foreground">
+      <p className="nds-text-caption nds-text-muted-foreground">
         Item aberto: <code>{value[0] || "nenhum"}</code>
       </p>
       <Accordion
         value={value}
         onValueChange={setValue}
-        className="w-full"
+        className="nds-w-full"
       >
         <AccordionItem value="item-1">
           <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
@@ -205,7 +205,7 @@ export const Controlled: Story = {
 
 export const DefaultOpen: Story = {
   render: () => (
-    <Accordion defaultValue={["item-1"]} className="w-full max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
         <AccordionContent>

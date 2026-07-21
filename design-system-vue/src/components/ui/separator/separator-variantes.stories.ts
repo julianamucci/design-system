@@ -27,9 +27,9 @@ export const Horizontal: Story = {
     components: { Separator },
     template: `
       <div class="w-[360px] space-y-3">
-        <div class="text-sm">Section A — conteúdo acima do divisor.</div>
+        <div class="nds-text-body">Section A — conteúdo acima do divisor.</div>
         <Separator orientation="horizontal" />
-        <div class="text-sm">Section B — conteúdo abaixo do divisor.</div>
+        <div class="nds-text-body">Section B — conteúdo abaixo do divisor.</div>
       </div>
     `,
   }),

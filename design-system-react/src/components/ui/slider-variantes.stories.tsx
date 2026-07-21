@@ -26,9 +26,9 @@ export const Single: Story = {
   render: function SingleRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
-      <div className="w-80 space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Volume</span>
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+        <div className="nds-cluster" data-justify="between">
+          <span className="nds-text-body nds-text-muted-foreground">Volume</span>
           <span aria-live="polite" className="text-sm tabular-nums">
             {value[0]}%
           </span>
@@ -57,9 +57,9 @@ export const Range: Story = {
   render: function RangeRender() {
     const [value, setValue] = useState<number[]>([20, 80]);
     return (
-      <div className="w-80 space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Faixa de preço</span>
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+        <div className="nds-cluster" data-justify="between">
+          <span className="nds-text-body nds-text-muted-foreground">Faixa de preço</span>
           <span aria-live="polite" className="text-sm tabular-nums">
             R$ {value[0]} — R$ {value[1]}
           </span>

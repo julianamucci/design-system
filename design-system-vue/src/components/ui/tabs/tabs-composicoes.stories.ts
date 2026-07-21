@@ -35,13 +35,13 @@ export const Controlado: Story = {
     },
     template: `
       <div class="w-full max-w-md space-y-2">
-        <p class="text-xs text-muted-foreground">
+        <p class="nds-text-caption nds-text-muted-foreground">
           Tab ativa: <code>{{ value }}</code>
         </p>
         <Tabs
           :model-value="value"
           @update:model-value="value = String($event)"
-          class="w-full"
+          class="nds-w-full"
         >
           <TabsList aria-label="Seções do componente">
             <TabsTrigger value="overview">Visão geral</TabsTrigger>
@@ -85,7 +85,7 @@ export const ComIcones: Story = {
   render: () => ({
     components: { ...sharedComponents, Code2, Eye, Settings2 },
     template: `
-      <Tabs default-value="preview" class="w-full max-w-md">
+      <Tabs default-value="preview" class="nds-w-full nds-max-w-md">
         <TabsList variant="line" aria-label="Modos de visualização">
           <TabsTrigger value="preview">
             <Eye class="size-4" aria-hidden="true" />
@@ -186,7 +186,7 @@ export const ModoManual: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" activation-mode="manual" class="w-full max-w-md">
+      <Tabs default-value="overview" activation-mode="manual" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>

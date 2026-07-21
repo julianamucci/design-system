@@ -34,14 +34,14 @@ export const Default: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>
             Estrutura ergonômica com ajuste de altura e apoio lombar.
           </CardDescription>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
       </Card>
     `,
   }),
@@ -82,7 +82,7 @@ export const Clickable: Story = {
               Estrutura ergonômica com ajuste de altura e apoio lombar.
             </CardDescription>
           </CardHeader>
-          <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+          <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
         </Card>
       </button>
     `,
@@ -123,12 +123,12 @@ export const WithFooter: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Em estoque</CardDescription>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
         <CardFooter class="justify-end gap-2">
           <Button variant="outline" size="sm" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
           <Button size="sm" aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>

@@ -46,7 +46,7 @@ export const Idle: Story = {
   },
   render: () => (
     <div className="h-[260px] w-[300px]">
-      <ScrollArea className="h-full w-full rounded-md border">
+      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
     </div>
@@ -72,7 +72,7 @@ export const AlwaysVisible: Story = {
   },
   render: () => (
     <div className="h-[260px] w-[300px]">
-      <ScrollArea type="always" className="h-full w-full rounded-md border">
+      <ScrollArea type="always" className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
     </div>
@@ -101,7 +101,7 @@ export const Hover: Story = {
       <ScrollArea
         type="hover"
         scrollHideDelay={300}
-        className="h-full w-full rounded-md border"
+        className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
       >
         <List />
       </ScrollArea>
@@ -126,7 +126,7 @@ export const Focus: Story = {
   },
   render: () => (
     <div className="h-[260px] w-[300px]">
-      <ScrollArea className="h-full w-full rounded-md border">
+      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
     </div>

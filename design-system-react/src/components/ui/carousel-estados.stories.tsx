@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 function SlideCard({ label }: { label: string }) {
   return (
     <Card className="h-40 shadow-none">
-      <CardContent className="flex h-full items-center justify-center">
+      <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
         <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
@@ -41,7 +41,7 @@ function SlideCard({ label }: { label: string }) {
 
 export const PrimeiroSlide: Story = {
   render: () => (
-    <Carousel className="w-full max-w-md" aria-label="Galeria no primeiro slide">
+    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria no primeiro slide">
       <CarouselContent>
         {Array.from({ length: 3 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -71,7 +71,7 @@ export const PrimeiroSlide: Story = {
 export const UltimoSlide: Story = {
   render: () => (
     <Carousel
-      className="w-full max-w-md"
+      className="nds-w-full nds-max-w-md"
       aria-label="Galeria no último slide"
       opts={{ startIndex: 2 }}
     >

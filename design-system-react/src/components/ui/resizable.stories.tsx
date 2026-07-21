@@ -69,7 +69,7 @@ export const Playground: Story = {
     return (
       <div
         key={direction}
-        className="rounded-lg border overflow-hidden"
+        className="nds-rounded-lg nds-border-default nds-overflow-hidden"
         style={{ width: 520, height: 280 }}
       >
         <ResizablePanelGroup direction={direction}>
@@ -78,7 +78,7 @@ export const Playground: Story = {
             minSize={minSizeLeft}
             maxSize={maxSizeLeft}
           >
-            <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+            <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
               Sidebar
             </div>
           </ResizablePanel>
@@ -87,7 +87,7 @@ export const Playground: Story = {
             aria-label="Redimensionar painéis — use setas para ajustar"
           />
           <ResizablePanel defaultSize={100 - defaultSizeLeft} minSize={20}>
-            <div className="flex h-full items-center justify-center p-4 text-sm">
+            <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
               Conteúdo principal
             </div>
           </ResizablePanel>

@@ -51,7 +51,7 @@ export const Playground: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="70" :min-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Conteúdo principal</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Conteúdo principal</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

@@ -60,8 +60,8 @@ export const Controlled: Story = {
               <SelectItem value="mg">Minas Gerais</SelectItem>
             </SelectContent>
           </Select>
-          <p className="text-sm text-muted-foreground" data-testid="ctrl-output">
-            Selecionado: <span className="font-mono">{value || "—"}</span>
+          <p className="nds-text-body nds-text-muted-foreground" data-testid="ctrl-output">
+            Selecionado: <span className="nds-font-mono">{value || "—"}</span>
           </p>
         </div>
       );
@@ -109,7 +109,7 @@ export const EmFormulario: Story = {
             onSubmit({ state: value });
           }}
         >
-          <div className="flex flex-col gap-2">
+          <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="form-state">Estado</Label>
             <Select name="state" value={value} onValueChange={(v) => setValue(v ?? "")}>
               <SelectTrigger id="form-state" aria-label="Selecionar estado">
@@ -191,7 +191,7 @@ export const WithLabel: Story = {
               <SelectItem value="es">Espírito Santo</SelectItem>
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">
+          <p className="nds-text-caption nds-text-muted-foreground">
             Esse dado é usado apenas para cálculo de frete.
           </p>
         </div>

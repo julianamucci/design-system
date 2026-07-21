@@ -53,10 +53,10 @@ export const Default: Story = {
           <Button variant="outline">Abrir popover</Button>
         </PopoverTrigger>
         <PopoverContent>
-          <PopoverTitle className="text-sm font-medium">
+          <PopoverTitle className="nds-text-body nds-font-medium">
             Configuracoes de exibição
           </PopoverTitle>
-          <p className="text-xs text-muted-foreground">
+          <p className="nds-text-caption nds-text-muted-foreground">
             Ajuste a aparência do conteúdo da página.
           </p>
         </PopoverContent>
@@ -134,14 +134,14 @@ export const Form: Story = {
             <PopoverTitle>Editar perfil</PopoverTitle>
           </PopoverHeader>
           <form
-            className="flex flex-col gap-2"
+            className="nds-stack" data-spacing="sm"
             onSubmit={(e) => e.preventDefault()}
           >
-            <Label htmlFor="popover-form-name" className="text-xs">
+            <Label htmlFor="popover-form-name" className="nds-text-caption">
               Nome
             </Label>
             <Input id="popover-form-name" defaultValue="Joana" />
-            <Label htmlFor="popover-form-email" className="text-xs">
+            <Label htmlFor="popover-form-email" className="nds-text-caption">
               Email
             </Label>
             <Input

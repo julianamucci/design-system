@@ -26,7 +26,7 @@ type Story = StoryObj;
 export const DefaultEActive: Story = {
   name: "Default e Active",
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -64,7 +64,7 @@ export const DefaultEActive: Story = {
 
 export const FocusVisible: Story = {
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -116,7 +116,7 @@ export const FocusVisible: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties" disabled>

@@ -32,7 +32,7 @@ export const PainelConfiguracoes: Story = {
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="space-y-0.5">
             <Label :for="'pc-marketing'">Emails de marketing</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -42,7 +42,7 @@ export const PainelConfiguracoes: Story = {
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="space-y-0.5">
             <Label :for="'pc-security'">Alertas de segurança</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Notificações sobre acessos suspeitos à sua conta.
             </p>
           </div>
@@ -52,7 +52,7 @@ export const PainelConfiguracoes: Story = {
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="space-y-0.5">
             <Label :for="'pc-news'">Resumo semanal</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Receba um resumo das principais novidades toda segunda.
             </p>
           </div>
@@ -112,8 +112,8 @@ export const EmFormulario: Story = {
     setup() { return {}; },
     template: `
       <form class="space-y-4 w-96" @submit.prevent>
-        <div class="space-y-2">
-          <label for="form-email" class="text-sm font-medium">Email</label>
+        <div class="nds-stack" data-spacing="sm">
+          <label for="form-email" class="nds-text-body nds-font-medium">Email</label>
           <input
             id="form-email"
             type="email"
@@ -125,7 +125,7 @@ export const EmFormulario: Story = {
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="space-y-0.5">
             <Label :for="'form-public'">Perfil público</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Qualquer pessoa pode visualizar seu perfil.
             </p>
           </div>
@@ -160,15 +160,15 @@ export const ItemDeMenuCompacto: Story = {
     template: `
       <div class="rounded-md border p-2 w-64 space-y-1">
         <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
-          <Label :for="'menu-darkmode'" class="text-xs">Modo escuro</Label>
+          <Label :for="'menu-darkmode'" class="nds-text-caption">Modo escuro</Label>
           <Switch id="menu-darkmode" size="sm" />
         </div>
         <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
-          <Label :for="'menu-autosave'" class="text-xs">Salvar automaticamente</Label>
+          <Label :for="'menu-autosave'" class="nds-text-caption">Salvar automaticamente</Label>
           <Switch id="menu-autosave" size="sm" :default-value="true" />
         </div>
         <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
-          <Label :for="'menu-compact'" class="text-xs">Visualização compacta</Label>
+          <Label :for="'menu-compact'" class="nds-text-caption">Visualização compacta</Label>
           <Switch id="menu-compact" size="sm" />
         </div>
       </div>

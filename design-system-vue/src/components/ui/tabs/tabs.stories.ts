@@ -48,7 +48,7 @@ export const Playground: Story = {
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() { return { args }; },
     template: `
-      <Tabs v-bind="args" class="w-full max-w-md">
+      <Tabs v-bind="args" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>

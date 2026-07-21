@@ -46,7 +46,7 @@
 </script>
 
 {#if orientation === 'vertical'}
-  <div class="space-y-2">
+  <div class="nds-stack" data-spacing="sm">
     {#if label || showValue}
       <div class="flex items-center justify-between w-40">
         {#if label}<Label>{label}</Label>{/if}
@@ -71,7 +71,7 @@
 {:else}
   <div class="{width} space-y-2">
     {#if label || showValue || showRangeValue}
-      <div class="flex items-center justify-between">
+      <div class="nds-cluster" data-justify="between">
         {#if label}<Label>{label}</Label>{/if}
         {#if showRangeValue}
           <span class="text-sm tabular-nums" aria-live="polite">

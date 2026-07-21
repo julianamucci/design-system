@@ -33,7 +33,7 @@ export const Single: Story = {
     },
     template: `
       <div class="w-72 space-y-2">
-        <div class="flex items-center justify-between">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
         </div>
@@ -70,7 +70,7 @@ export const Range: Story = {
     },
     template: `
       <div class="w-72 space-y-2">
-        <div class="flex items-center justify-between">
+        <div class="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
           <span aria-live="polite" class="text-sm tabular-nums">
             R$ {{ value[0] }} — R$ {{ value[1] }}
@@ -109,7 +109,7 @@ export const Vertical: Story = {
       return { value };
     },
     template: `
-      <div class="space-y-2">
+      <div class="nds-stack" data-spacing="sm">
         <div class="flex items-center justify-between w-40">
           <Label>Brilho</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>

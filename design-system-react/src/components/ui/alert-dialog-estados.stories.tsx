@@ -58,7 +58,7 @@ export const Closed: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction className="nds-bg-destructive">
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -100,7 +100,7 @@ export const Open: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction className="nds-bg-destructive">
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -141,7 +141,7 @@ export const Confirmed: Story = {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               data-testid="confirm-action"
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="nds-bg-destructive"
               onClick={onConfirm}
             >
               Excluir
@@ -190,7 +190,7 @@ export const Cancelled: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction className="nds-bg-destructive">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -229,7 +229,7 @@ export const Controlled: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="flex flex-col gap-3">
+        <div className="nds-stack" data-spacing="sm">
           <Button variant="destructive" onClick={() => setOpen(true)}>
             Abrir via estado externo
           </Button>
@@ -245,7 +245,7 @@ export const Controlled: Story = {
               <AlertDialogFooter>
                 <AlertDialogCancel>Fechar</AlertDialogCancel>
                 <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="nds-bg-destructive"
                   onClick={() => setOpen(false)}
                 >
                   Confirmar

@@ -67,7 +67,7 @@ export const Closed: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction class="nds-bg-destructive">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -108,7 +108,7 @@ export const Open: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction class="nds-bg-destructive">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -145,7 +145,7 @@ export const Confirmed: Story = {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              class="nds-bg-destructive"
               @click="onConfirm"
             >
               Excluir
@@ -186,7 +186,7 @@ export const Cancelled: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel @click="onCancel">Cancelar</AlertDialogCancel>
-            <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction class="nds-bg-destructive">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -219,7 +219,7 @@ export const Controlled: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3">
+      <div class="nds-stack" data-spacing="sm">
         <Button variant="destructive" @click="open = true">Abrir via estado externo</Button>
         <AlertDialog :open="open" @update:open="(v) => open = v">
           <AlertDialogContent>
@@ -232,7 +232,7 @@ export const Controlled: Story = {
             <AlertDialogFooter>
               <AlertDialogCancel>Fechar</AlertDialogCancel>
               <AlertDialogAction
-                class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                class="nds-bg-destructive"
                 @click="open = false"
               >
                 Confirmar

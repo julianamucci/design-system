@@ -81,7 +81,7 @@
   );
 </script>
 
-<div class="space-y-2" style="contain: layout">
+<div class="nds-stack" data-spacing="sm" style="contain: layout">
   {#if showLabel && label}
     <label for={fieldId} class="text-sm font-medium block">{label}</label>
   {/if}
@@ -141,7 +141,7 @@
   {/key}
 
   {#if showHelpText && helpText}
-    <p id={helpId} class="text-xs text-muted-foreground">{helpText}</p>
+    <p id={helpId} class="nds-text-caption nds-text-muted-foreground">{helpText}</p>
   {/if}
 
   {#if showErrorMessage && errorMessage}

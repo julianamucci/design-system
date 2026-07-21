@@ -97,7 +97,7 @@ export const Playground: Story = {
           <ScrollArea
             type={type}
             scrollHideDelay={scrollHideDelay}
-            className="h-full w-full rounded-md border"
+            className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
           >
             <table className="w-max border-collapse text-xs">
               <tbody>
@@ -127,7 +127,7 @@ export const Playground: Story = {
         <ScrollArea
           type={type}
           scrollHideDelay={scrollHideDelay}
-          className="h-full w-full rounded-md border"
+          className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
         >
           <div className="p-4 space-y-2">
             {items.map((n) => (

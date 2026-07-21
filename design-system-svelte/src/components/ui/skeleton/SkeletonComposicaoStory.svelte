@@ -36,7 +36,7 @@
     {/each}
   </ul>
 {:else if variant === 'imagemEmAspectRatio'}
-  <div role="status" aria-busy="true" aria-label="Carregando imagem" class="w-80">
+  <div role="status" aria-busy="true" aria-label="Carregando imagem" class="nds-w-sm">
     <div class="relative w-full" style="aspect-ratio: 16 / 9;">
       <Skeleton class="absolute inset-0 h-full w-full motion-reduce:animate-none" aria-hidden="true" />
     </div>

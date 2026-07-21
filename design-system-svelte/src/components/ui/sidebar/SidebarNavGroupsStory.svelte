@@ -98,7 +98,7 @@
         <span class="text-sm font-medium text-muted-foreground">Com grupos de navegação</span>
       </header>
       <main id="main-content" tabindex="-1" class="flex-1 p-6">
-        <p class="text-sm text-muted-foreground">Sidebar com múltiplos grupos, badges e campo de busca.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos, badges e campo de busca.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

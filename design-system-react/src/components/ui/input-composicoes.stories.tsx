@@ -31,8 +31,8 @@ type Story = StoryObj<typeof meta>;
 
 export const AddonIconeEsquerda: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-icon-left" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-icon-left" className="nds-text-body nds-font-medium">
         Buscar
       </label>
       <InputGroup>
@@ -65,8 +65,8 @@ export const AddonIconeEsquerda: Story = {
 
 export const AddonIconeDireita: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-icon-right" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-icon-right" className="nds-text-body nds-font-medium">
         Email
       </label>
       <InputGroup>
@@ -93,8 +93,8 @@ export const AddonIconeDireita: Story = {
 
 export const AddonTextoEsquerda: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-text-left" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-text-left" className="nds-text-body nds-font-medium">
         Usuário
       </label>
       <InputGroup>
@@ -119,8 +119,8 @@ export const AddonTextoEsquerda: Story = {
 
 export const AddonTextoDireita: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-text-right" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-text-right" className="nds-text-body nds-font-medium">
         Preço
       </label>
       <InputGroup>
@@ -149,8 +149,8 @@ export const AddonTextoDireita: Story = {
 
 export const BotaoInterno: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-btn-search" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-btn-search" className="nds-text-body nds-font-medium">
         Buscar
       </label>
       <InputGroup>
@@ -188,8 +188,8 @@ export const SenhaComToggle: Story = {
   render: function SenhaComToggleRender() {
     const [show, setShow] = useState(false);
     return (
-      <div className="flex flex-col gap-1.5 w-72">
-        <label htmlFor="comp-password-toggle" className="text-sm font-medium">
+      <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+        <label htmlFor="comp-password-toggle" className="nds-text-body nds-font-medium">
           Senha
         </label>
         <InputGroup>
@@ -237,8 +237,8 @@ export const SenhaComToggle: Story = {
 
 export const Desabilitado: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-disabled" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-disabled" className="nds-text-body nds-font-medium">
         Campo desabilitado
       </label>
       <InputGroup>
@@ -266,8 +266,8 @@ export const Desabilitado: Story = {
 
 export const ComErro: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="comp-error" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="comp-error" className="nds-text-body nds-font-medium">
         Email
       </label>
       <InputGroup>
@@ -282,7 +282,7 @@ export const ComErro: Story = {
           aria-describedby="comp-error-msg"
         />
       </InputGroup>
-      <p id="comp-error-msg" className="text-sm text-destructive">
+      <p id="comp-error-msg" className="nds-text-body nds-text-destructive">
         Email inválido. Use o formato nome@dominio.com
       </p>
     </div>

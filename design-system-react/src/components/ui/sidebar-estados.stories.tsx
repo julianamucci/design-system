@@ -42,7 +42,7 @@ function SidebarStatePreview({
     <SidebarProvider defaultOpen={defaultOpen}>
       <nav aria-label="Navegação principal">
         <Sidebar collapsible={collapsible}>
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -91,11 +91,11 @@ function SidebarStatePreview({
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger />
-          <span className="text-sm text-muted-foreground">{label}</span>
+          <span className="nds-text-body nds-text-muted-foreground">{label}</span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">
           Use o botão acima ou <kbd className="font-mono bg-muted px-1 rounded text-xs">Ctrl+B</kbd> para alternar.
         </div>
       </SidebarInset>
@@ -108,7 +108,7 @@ function SidebarLoadingPreview() {
     <SidebarProvider defaultOpen>
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="offcanvas">
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -128,11 +128,11 @@ function SidebarLoadingPreview() {
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger />
-          <span className="text-sm text-muted-foreground">Estado de carregamento</span>
+          <span className="nds-text-body nds-text-muted-foreground">Estado de carregamento</span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">Navegação carregando via SidebarMenuSkeleton.</div>
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">Navegação carregando via SidebarMenuSkeleton.</div>
       </SidebarInset>
     </SidebarProvider>
   );

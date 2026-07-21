@@ -47,7 +47,7 @@ export const ComLabel: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 100px;" class="space-y-2">
+      <div style="contain: layout; min-height: 100px;" class="nds-stack" data-spacing="sm">
         <Label for="otp-with-label">Código de verificação</Label>
         <InputOTP
           id="otp-with-label"
@@ -89,7 +89,7 @@ export const ComHelpText: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 120px;" class="space-y-2">
+      <div style="contain: layout; min-height: 120px;" class="nds-stack" data-spacing="sm">
         <Label for="otp-help">Código SMS</Label>
         <InputOTP
           id="otp-help"
@@ -105,7 +105,7 @@ export const ComHelpText: Story = {
             </InputOTPGroup>
           </template>
         </InputOTP>
-        <p id="otp-help-text" class="text-xs text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
+        <p id="otp-help-text" class="nds-text-caption nds-text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
       </div>
     `,
   }),
@@ -133,7 +133,7 @@ export const ComErrorMessage: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 120px;" class="space-y-2">
+      <div style="contain: layout; min-height: 120px;" class="nds-stack" data-spacing="sm">
         <Label for="otp-error">Código de verificação</Label>
         <InputOTP
           id="otp-error"
@@ -178,7 +178,7 @@ export const ComResendButton: Story = {
       return { value, resends };
     },
     template: `
-      <div style="contain: layout; min-height: 140px;" class="space-y-3">
+      <div style="contain: layout; min-height: 140px;" class="nds-stack" data-spacing="sm">
         <Label for="otp-resend">Código de verificação</Label>
         <InputOTP
           id="otp-resend"

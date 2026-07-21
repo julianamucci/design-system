@@ -54,7 +54,7 @@ export const Playground: Story = {
     components: { Checkbox },
     setup() { return { args }; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="playground-checkbox" v-bind="args" />
         <label
           for="playground-checkbox"

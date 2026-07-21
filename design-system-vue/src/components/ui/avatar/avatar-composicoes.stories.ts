@@ -98,7 +98,7 @@ export const Group: Story = {
           <AvatarFallback aria-hidden="true">CS</AvatarFallback>
         </Avatar>
         <Avatar class="ring-2 ring-background">
-          <AvatarFallback class="text-xs" aria-hidden="true">+3</AvatarFallback>
+          <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>
         </Avatar>
       </div>
     `,

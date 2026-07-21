@@ -38,7 +38,7 @@
   <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
     <PaneGroup direction="horizontal" class="h-full">
       <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-        <span class="text-sm text-muted-foreground">{sidebarLabel}</span>
+        <span class="nds-text-body nds-text-muted-foreground">{sidebarLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
@@ -50,7 +50,7 @@
   <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
     <PaneGroup direction="vertical" class="h-full">
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
-        <span class="text-sm text-muted-foreground">{topLabel}</span>
+        <span class="nds-text-body nds-text-muted-foreground">{topLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
@@ -62,7 +62,7 @@
   <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
     <PaneGroup direction="horizontal" class="h-full">
       <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-        <span class="text-sm text-muted-foreground">{sidebarLabel}</span>
+        <span class="nds-text-body nds-text-muted-foreground">{sidebarLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={40}>
@@ -72,7 +72,7 @@
           </Pane>
           <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
           <Pane defaultSize={40} minSize={20} class="flex items-center justify-center bg-muted/40">
-            <span class="text-sm text-muted-foreground">{bottomLabel}</span>
+            <span class="nds-text-body nds-text-muted-foreground">{bottomLabel}</span>
           </Pane>
         </PaneGroup>
       </Pane>
@@ -82,7 +82,7 @@
   <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
     <PaneGroup {direction} class="h-full">
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
-        <span class="text-sm text-muted-foreground">{leftLabel}</span>
+        <span class="nds-text-body nds-text-muted-foreground">{leftLabel}</span>
       </Pane>
       <Handle withHandle aria-label={ariaLabel} />
       <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">

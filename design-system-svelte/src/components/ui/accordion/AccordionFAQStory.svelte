@@ -15,7 +15,7 @@
 </script>
 
 <div class="w-full max-w-lg space-y-2">
-  <h2 class="text-base font-semibold">Perguntas frequentes</h2>
+  <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
   <Accordion type="single">
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>

@@ -35,7 +35,7 @@ export const Playground: Story = {
     components: { Label },
     setup() { return { args }; },
     template: `
-      <div class="flex flex-col gap-2">
+      <div class="nds-stack" data-spacing="sm">
         <Label v-bind="args">Nome completo</Label>
         <input id="demo-input" type="text" class="border rounded px-3 py-1 text-sm" placeholder="Digite aqui" />
       </div>

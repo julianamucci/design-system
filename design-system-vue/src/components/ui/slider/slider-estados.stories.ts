@@ -33,7 +33,7 @@ export const Default: Story = {
     },
     template: `
       <div class="w-72 space-y-2">
-        <div class="flex items-center justify-between">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
         </div>
@@ -127,7 +127,7 @@ export const NoMin: Story = {
     },
     template: `
       <div class="w-72 space-y-2">
-        <div class="flex items-center justify-between">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
         </div>
@@ -158,7 +158,7 @@ export const NoMax: Story = {
     },
     template: `
       <div class="w-72 space-y-2">
-        <div class="flex items-center justify-between">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
           <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
         </div>

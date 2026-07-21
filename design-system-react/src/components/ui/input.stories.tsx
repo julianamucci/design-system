@@ -43,8 +43,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="playground-input" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="playground-input" className="nds-text-body nds-font-medium">
         Nome completo
       </label>
       <Input id="playground-input" {...args} />

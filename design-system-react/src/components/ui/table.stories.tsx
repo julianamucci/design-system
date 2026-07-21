@@ -43,29 +43,29 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: () => (
     <Table>
-      <TableCaption className="sr-only">Lista de faturas recentes</TableCaption>
+      <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead scope="col">Fatura</TableHead>
           <TableHead scope="col">Status</TableHead>
           <TableHead scope="col">Método</TableHead>
-          <TableHead scope="col" className="text-right">Valor</TableHead>
+          <TableHead scope="col" className="nds-text-right">Valor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
+            <TableCell className="nds-font-medium">{invoice.id}</TableCell>
             <TableCell>{invoice.status}</TableCell>
             <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
+            <TableCell className="nds-text-right">{invoice.amount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">R$ 1.400,00</TableCell>
+          <TableCell className="nds-text-right">R$ 1.400,00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

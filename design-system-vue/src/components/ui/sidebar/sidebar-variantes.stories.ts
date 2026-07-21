@@ -114,7 +114,7 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
               <span class="text-xs text-muted-foreground font-mono">variant="{{ variant }}"</span>
             </header>
             <main id="main-content" class="p-4">
-              <p class="text-sm text-muted-foreground">Conteúdo principal adjacente à sidebar.</p>
+              <p class="nds-text-body nds-text-muted-foreground">Conteúdo principal adjacente à sidebar.</p>
             </main>
           </SidebarInset>
         </SidebarProvider>
@@ -207,7 +207,7 @@ export const SideRight: Story = {
       <SidebarProvider>
         <SidebarInset>
           <main id="main-content" class="p-4">
-            <p class="text-sm text-muted-foreground">Conteúdo principal à esquerda.</p>
+            <p class="nds-text-body nds-text-muted-foreground">Conteúdo principal à esquerda.</p>
           </main>
         </SidebarInset>
         <nav aria-label="Navegação principal">

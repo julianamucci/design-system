@@ -14,16 +14,16 @@
 
 {#if orientation === 'vertical'}
   <div class="flex items-center h-16 gap-4 text-sm">
-    <span class="text-muted-foreground">Item A</span>
+    <span class="nds-text-muted-foreground">Item A</span>
     <Separator {orientation} {decorative} />
-    <span class="text-muted-foreground">Item B</span>
+    <span class="nds-text-muted-foreground">Item B</span>
     <Separator {orientation} {decorative} />
-    <span class="text-muted-foreground">Item C</span>
+    <span class="nds-text-muted-foreground">Item C</span>
   </div>
 {:else}
   <div class="w-72 space-y-3 text-sm">
-    <p class="text-muted-foreground">Seção superior</p>
+    <p class="nds-text-muted-foreground">Seção superior</p>
     <Separator {orientation} {decorative} />
-    <p class="text-muted-foreground">Seção inferior</p>
+    <p class="nds-text-muted-foreground">Seção inferior</p>
   </div>
 {/if}

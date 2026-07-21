@@ -48,7 +48,7 @@ export const ComImagem: Story = {
           alt="Paisagem ao entardecer"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>
@@ -140,17 +140,17 @@ export const GridConsistente: Story = {
         { src: PRODUCT_SRC, alt: "Tênis de corrida" },
         { src: SQUARE_SRC, alt: "Avatar de Maria Silva" },
       ].map((item, i) => (
-        <div key={i} className="space-y-2">
+        <div key={i} className="nds-stack" data-spacing="sm">
           <AspectRatio ratio={4 / 3}>
             <ImageWithFallback
               src={item.src}
               alt={item.alt}
               loading="lazy"
               decoding="async"
-              className="rounded-md object-cover w-full h-full"
+              className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
             />
           </AspectRatio>
-          <p className="text-sm font-medium">{item.alt}</p>
+          <p className="nds-text-body nds-font-medium">{item.alt}</p>
         </div>
       ))}
     </div>
@@ -178,7 +178,7 @@ export const ComImagemDecorativa: Story = {
           alt=""
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>

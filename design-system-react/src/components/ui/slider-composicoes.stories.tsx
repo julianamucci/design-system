@@ -27,8 +27,8 @@ export const ComLabelEValor: Story = {
   render: function ComLabelEValorRender() {
     const [value, setValue] = useState<number[]>([75]);
     return (
-      <div className="w-80 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+        <div className="nds-cluster" data-justify="between">
           <Label htmlFor="volume-slider">Volume</Label>
           <span
             aria-live="polite"
@@ -65,8 +65,8 @@ export const FaixaDePreco: Story = {
   render: function FaixaDePrecoRender() {
     const [value, setValue] = useState<number[]>([100, 400]);
     return (
-      <div className="w-80 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+        <div className="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
           <span
             aria-live="polite"
@@ -99,8 +99,8 @@ export const StepCustomizado: Story = {
   render: function StepCustomizadoRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
-      <div className="w-80 space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+        <div className="nds-cluster" data-justify="between">
           <Label>Nível (step=10)</Label>
           <span aria-live="polite" className="text-sm tabular-nums">
             {value[0]}
@@ -132,8 +132,8 @@ export const EmFormulario: Story = {
     const [brilho, setBrilho] = useState<number[]>([80]);
     return (
       <form className="w-80 space-y-6">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="nds-stack" data-spacing="sm">
+          <div className="nds-cluster" data-justify="between">
             <Label htmlFor="form-volume">Volume</Label>
             <span aria-live="polite" className="text-sm tabular-nums">
               {volume[0]}%
@@ -148,8 +148,8 @@ export const EmFormulario: Story = {
             aria-label="Volume"
           />
         </div>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="nds-stack" data-spacing="sm">
+          <div className="nds-cluster" data-justify="between">
             <Label htmlFor="form-brilho">Brilho</Label>
             <span aria-live="polite" className="text-sm tabular-nums">
               {brilho[0]}%

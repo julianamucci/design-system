@@ -50,8 +50,8 @@ export const AlinhamentoSingle: Story = {
             <AlignJustify aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>
-        <p className="text-xs text-muted-foreground">
-          Atual: <code className="font-mono">{alignment[0]}</code>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          Atual: <code className="nds-font-mono">{alignment[0]}</code>
         </p>
       </div>
     );
@@ -101,8 +101,8 @@ export const FormatacaoMultiple: Story = {
             <Underline aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>
-        <p className="text-xs text-muted-foreground">
-          Ativos: <code className="font-mono">[{formats.join(", ")}]</code>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          Ativos: <code className="nds-font-mono">[{formats.join(", ")}]</code>
         </p>
       </div>
     );

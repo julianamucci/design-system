@@ -28,7 +28,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="w-full max-w-md">
+      <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -66,7 +66,7 @@ export const Line: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="w-full max-w-md">
+      <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
         <TabsList variant="line" aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>

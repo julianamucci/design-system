@@ -70,12 +70,12 @@
         <div class="flex flex-col gap-0.5">
           <Label for={id}>{opt.label}</Label>
           {#if opt.description}
-            <p id="{id}-desc" class="text-xs text-muted-foreground">{opt.description}</p>
+            <p id="{id}-desc" class="nds-text-caption nds-text-muted-foreground">{opt.description}</p>
           {/if}
         </div>
       </div>
     {:else}
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <RadioGroupItem
           value={opt.value}
           {id}

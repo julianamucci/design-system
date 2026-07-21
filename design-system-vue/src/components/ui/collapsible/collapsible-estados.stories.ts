@@ -28,7 +28,7 @@ export const NaoControlado: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible class="w-80 space-y-2">
+      <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
         <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           Exibir filtros avançados
           <ChevronDown
@@ -36,7 +36,7 @@ export const NaoControlado: Story = {
             class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
           />
         </CollapsibleTrigger>
-        <CollapsibleContent class="space-y-2">
+        <CollapsibleContent class="nds-stack" data-spacing="sm">
           <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
             Filtro avançado 1
           </div>
@@ -83,9 +83,9 @@ export const Controlado: Story = {
       return { isOpen, toggle };
     },
     template: `
-      <div class="w-80 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-muted-foreground">
+      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster" data-justify="between">
+          <span class="nds-text-body nds-text-muted-foreground">
             Estado externo: <strong>{{ isOpen ? 'aberto' : 'fechado' }}</strong>
           </span>
           <button
@@ -95,7 +95,7 @@ export const Controlado: Story = {
             {{ isOpen ? 'Fechar' : 'Abrir' }} externamente
           </button>
         </div>
-        <Collapsible :open="isOpen" @update:open="(v) => isOpen = v" class="space-y-2">
+        <Collapsible :open="isOpen" @update:open="(v) => isOpen = v" class="nds-stack" data-spacing="sm">
           <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             {{ isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}
             <ChevronDown
@@ -103,7 +103,7 @@ export const Controlado: Story = {
               class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="space-y-2">
+          <CollapsibleContent class="nds-stack" data-spacing="sm">
             <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
               Filtro avançado 1
             </div>
@@ -147,7 +147,7 @@ export const Desabilitado: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible disabled class="w-80 space-y-2">
+      <Collapsible disabled class="nds-stack" data-spacing="sm" style="width: 20rem">
         <CollapsibleTrigger
           disabled
           class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -155,7 +155,7 @@ export const Desabilitado: Story = {
           Filtros avançados (desabilitado)
           <ChevronDown aria-hidden="true" class="h-4 w-4" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="space-y-2">
+        <CollapsibleContent class="nds-stack" data-spacing="sm">
           <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
             Este conteúdo não deve aparecer
           </div>

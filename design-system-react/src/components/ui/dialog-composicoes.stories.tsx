@@ -116,11 +116,11 @@ export const ProfileEdit: Story = {
               trackAction("Salvar alterações", location);
             }}
           >
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="profile-name">Nome completo</Label>
               <Input id="profile-name" defaultValue="Maria Silva" />
             </div>
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="profile-username">Nome de usuário</Label>
               <Input id="profile-username" defaultValue="@mariasilva" />
             </div>

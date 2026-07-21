@@ -41,7 +41,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: { Input },
     setup() { return { args }; },
-    template: '<div class="w-64"><Input v-bind="args" /></div>',
+    template: '<div class="nds-w-xs"><Input v-bind="args" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

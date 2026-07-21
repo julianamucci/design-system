@@ -42,16 +42,16 @@ export const Idle: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={70} minSize={50}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo
           </div>
         </ResizablePanel>
@@ -77,16 +77,16 @@ export const Focus: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={70} minSize={50}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo
           </div>
         </ResizablePanel>
@@ -113,16 +113,16 @@ export const WithoutHandle: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
         <ResizableHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={70} minSize={50}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo
           </div>
         </ResizablePanel>
@@ -150,16 +150,16 @@ export const Disabled: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
         <ResizableHandle disabled withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={70} minSize={50}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo
           </div>
         </ResizablePanel>

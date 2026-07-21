@@ -93,7 +93,7 @@ export const WithNavGroups: Story = {
                 <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
                 <SidebarGroupAction title="Adicionar item">
                   <Plus aria-hidden="true" />
-                  <span class="sr-only">Adicionar item</span>
+                  <span class="nds-sr-only">Adicionar item</span>
                 </SidebarGroupAction>
                 <SidebarGroupContent>
                   <SidebarMenu>
@@ -135,7 +135,7 @@ export const WithNavGroups: Story = {
                       <SidebarMenuBadge>12</SidebarMenuBadge>
                       <SidebarMenuAction title="Mais opções">
                         <MoreHorizontal aria-hidden="true" />
-                        <span class="sr-only">Mais opções</span>
+                        <span class="nds-sr-only">Mais opções</span>
                       </SidebarMenuAction>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
@@ -164,10 +164,10 @@ export const WithNavGroups: Story = {
         <SidebarInset>
           <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
             <SidebarTrigger class="lg:hidden" />
-            <span class="text-sm text-muted-foreground">Com grupos e badges</span>
+            <span class="nds-text-body nds-text-muted-foreground">Com grupos e badges</span>
           </header>
           <main id="main-content" class="p-4">
-            <p class="text-sm text-muted-foreground">Sidebar com múltiplos grupos de navegação, badges e ações.</p>
+            <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos de navegação, badges e ações.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -283,10 +283,10 @@ export const WithSubMenu: Story = {
         <SidebarInset>
           <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
             <SidebarTrigger class="lg:hidden" />
-            <span class="text-sm text-muted-foreground">Com sub-menus</span>
+            <span class="nds-text-body nds-text-muted-foreground">Com sub-menus</span>
           </header>
           <main id="main-content" class="p-4">
-            <p class="text-sm text-muted-foreground">Sidebar com SidebarMenuSub para hierarquia de navegação aninhada.</p>
+            <p class="nds-text-body nds-text-muted-foreground">Sidebar com SidebarMenuSub para hierarquia de navegação aninhada.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -369,10 +369,10 @@ export const WithSearch: Story = {
         <SidebarInset>
           <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
             <SidebarTrigger class="lg:hidden" />
-            <span class="text-sm text-muted-foreground">Com busca no header</span>
+            <span class="nds-text-body nds-text-muted-foreground">Com busca no header</span>
           </header>
           <main id="main-content" class="p-4">
-            <p class="text-sm text-muted-foreground">SidebarInput no header para busca inline.</p>
+            <p class="nds-text-body nds-text-muted-foreground">SidebarInput no header para busca inline.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>

@@ -27,7 +27,7 @@ export const Horizontal: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel class="w-full max-w-sm" aria-label="Galeria de exemplos">
+      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de exemplos">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">
@@ -59,7 +59,7 @@ export const Vertical: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel orientation="vertical" class="w-full max-w-xs" aria-label="Galeria vertical">
+      <Carousel orientation="vertical" class="nds-w-full nds-max-w-xs" aria-label="Galeria vertical">
         <CarouselContent class="h-[200px]">
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-4">

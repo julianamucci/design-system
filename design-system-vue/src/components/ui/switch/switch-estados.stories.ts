@@ -28,7 +28,7 @@ export const Unchecked: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-unchecked" />
         <Label :for="'est-unchecked'">Receber notificações</Label>
       </div>
@@ -48,7 +48,7 @@ export const Checked: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-checked" :default-value="true" />
         <Label :for="'est-checked'">Receber notificações</Label>
       </div>
@@ -68,7 +68,7 @@ export const FocoVisivel: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-focus" />
         <Label :for="'est-focus'">Modo escuro</Label>
       </div>
@@ -96,7 +96,7 @@ export const Disabled: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="est-disabled" :disabled="true" />
         <Label :for="'est-disabled'">Receber notificações</Label>
       </div>
@@ -124,13 +124,13 @@ export const Invalid: Story = {
         <div class="flex items-center justify-between rounded-lg border border-destructive p-4">
           <div class="space-y-0.5">
             <Label :for="'est-invalid'">Aceitar termos</Label>
-            <p class="text-sm text-muted-foreground">
+            <p class="nds-text-body nds-text-muted-foreground">
               Você precisa aceitar para continuar.
             </p>
           </div>
           <Switch id="est-invalid" aria-invalid="true" aria-describedby="est-invalid-err" />
         </div>
-        <p id="est-invalid-err" class="text-sm text-destructive">
+        <p id="est-invalid-err" class="nds-text-body nds-text-destructive">
           Este campo é obrigatório.
         </p>
       </div>

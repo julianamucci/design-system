@@ -47,11 +47,11 @@ export const Default: Story = {
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium leading-none">Joana Silva</p>
-                <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+              <div class="nds-stack" data-spacing="xs">
+                <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
               </div>
             </div>
           </HoverCardContent>
@@ -83,11 +83,11 @@ export const ComDelayCurto: Story = {
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@bruno</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium leading-none">Bruno Lima</p>
-                <p class="text-xs text-muted-foreground">Engenharia · 89 seguidores</p>
+              <div class="nds-stack" data-spacing="xs">
+                <p class="nds-text-body nds-font-medium" style="line-height: 1">Bruno Lima</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Engenharia · 89 seguidores</p>
               </div>
             </div>
           </HoverCardContent>

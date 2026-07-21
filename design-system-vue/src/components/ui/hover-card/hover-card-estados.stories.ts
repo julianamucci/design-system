@@ -46,7 +46,7 @@ export const Fechado: Story = {
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent>
-            <p class="text-sm">Conteúdo do preview.</p>
+            <p class="nds-text-body">Conteúdo do preview.</p>
           </HoverCardContent>
         </HoverCard>
       </div>
@@ -78,11 +78,11 @@ export const Aberto: Story = {
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium leading-none">Joana Silva</p>
-                <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+              <div class="nds-stack" data-spacing="xs">
+                <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
               </div>
             </div>
           </HoverCardContent>
@@ -111,14 +111,14 @@ export const Controlado: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3" style="contain: layout; min-height: 240px;">
+      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 240px;">
         <Button @click="open = !open">Toggle externo ({{ open ? 'aberto' : 'fechado' }})</Button>
         <HoverCard :open="open" @update:open="(v) => open = v" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
-            <p class="text-sm">Preview controlado externamente.</p>
+            <p class="nds-text-body">Preview controlado externamente.</p>
           </HoverCardContent>
         </HoverCard>
       </div>

@@ -59,7 +59,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="w-72">
+    <div className="nds-w-full nds-max-w-xs">
       <Command {...args}>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>

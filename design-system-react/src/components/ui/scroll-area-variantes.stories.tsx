@@ -37,7 +37,7 @@ export const Vertical: Story = {
   },
   render: () => (
     <div className="h-[300px] w-[320px]">
-      <ScrollArea className="h-full w-full rounded-md border">
+      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <div className="p-4 space-y-2">
           {tags.map((n) => (
             <div key={n} className="text-sm border-b pb-2 last:border-b-0">
@@ -107,7 +107,7 @@ export const Both: Story = {
   },
   render: () => (
     <div className="h-[260px] w-[500px]">
-      <ScrollArea className="h-full w-full rounded-md border">
+      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <table className="w-max border-collapse text-xs">
           <tbody>
             {rows.map((r) => (

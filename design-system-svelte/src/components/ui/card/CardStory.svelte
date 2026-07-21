@@ -67,7 +67,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="text-sm text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'small'}
@@ -77,7 +77,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="text-sm text-muted-foreground">{metricValue}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{metricValue}</p>
     </CardContent>
   </Card>
 {:else if variant === 'withFooter'}
@@ -87,7 +87,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="text-sm text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
     </CardContent>
     <CardFooter class="justify-end gap-2">
       <Button variant="outline" size="sm">{actionCancel}</Button>
@@ -104,7 +104,7 @@
       </CardAction>
     </CardHeader>
     <CardContent>
-      <p class="text-sm text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'withImage'}
@@ -115,7 +115,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="text-sm text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'clickable'}
@@ -130,7 +130,7 @@
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="text-sm text-muted-foreground">{productPrice} · {productStock}</p>
+        <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
       </CardContent>
     </Card>
   </a>
@@ -145,7 +145,7 @@
       </CardAction>
     </CardHeader>
     <CardContent>
-      <p class="text-base font-semibold">{productPrice}</p>
+      <p class="nds-text-base nds-font-semibold">{productPrice}</p>
     </CardContent>
     <CardFooter class="justify-end gap-2">
       <Button variant="outline" size="sm" aria-label={`${actionEdit} produto ${title}`}>
@@ -159,7 +159,7 @@
 {:else if variant === 'profile'}
   <Card class={className} {size}>
     <CardHeader>
-      <div class="flex items-center gap-3">
+      <div class="nds-cluster" data-spacing="sm">
         <Avatar>
           <AvatarImage src="https://i.pravatar.cc/80?img=47" alt={title} />
           <AvatarFallback>MR</AvatarFallback>

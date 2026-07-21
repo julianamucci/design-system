@@ -46,12 +46,12 @@ export const PerfilDeUsuario: Story = {
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
-            <div class="flex gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium leading-none">Joana Silva</p>
-                <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
-                <p class="text-xs">Trabalha com sistemas de design desde 2019.</p>
+              <div class="nds-stack" data-spacing="xs">
+                <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
+                <p class="nds-text-caption">Trabalha com sistemas de design desde 2019.</p>
               </div>
             </div>
           </HoverCardContent>
@@ -83,14 +83,14 @@ export const PreviewDeLink: Story = {
           <HoverCardTrigger as-child>
             <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">design-system.dev</a>
           </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start" class="w-72">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
+          <HoverCardContent side="bottom" align="start" class="nds-w-full nds-max-w-xs">
+            <div class="nds-stack" data-spacing="sm">
+              <div class="nds-cluster" data-spacing="sm">
                 <div class="size-4 rounded bg-muted" aria-hidden="true"></div>
                 <span class="text-xs text-muted-foreground truncate">design-system.dev</span>
               </div>
               <p class="text-sm font-medium leading-snug">Design System — Documentação técnica</p>
-              <p class="text-xs text-muted-foreground">Componentes acessíveis em React, Vue, Svelte e Basecoat.</p>
+              <p class="nds-text-caption nds-text-muted-foreground">Componentes acessíveis em React, Vue, Svelte e Basecoat.</p>
             </div>
           </HoverCardContent>
         </HoverCard>
@@ -117,16 +117,16 @@ export const DefinicaoDeTermo: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 220px;">
-        <p class="text-sm">
+        <p class="nds-text-body">
           O conteúdo é renderizado em um
           <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
             <HoverCardTrigger as-child>
               <a href="#" class="font-medium text-primary underline-offset-4 underline decoration-dotted">portal</a>
             </HoverCardTrigger>
             <HoverCardContent side="top" align="center">
-              <div class="space-y-1">
-                <p class="text-sm font-medium leading-none">Portal</p>
-                <p class="text-xs text-muted-foreground">
+              <div class="nds-stack" data-spacing="xs">
+                <p class="nds-text-body nds-font-medium" style="line-height: 1">Portal</p>
+                <p class="nds-text-caption nds-text-muted-foreground">
                   Técnica do React/Vue para renderizar um elemento fora da hierarquia DOM do componente pai, geralmente em <code>document.body</code>, evitando problemas de overflow e z-index.
                 </p>
               </div>
@@ -159,13 +159,13 @@ export const MetricaExplicada: Story = {
           <HoverCardTrigger as-child>
             <a href="#" class="inline-flex items-baseline gap-1 font-medium text-primary underline-offset-4 underline decoration-dotted">
               <span class="text-2xl">87%</span>
-              <span class="text-xs">CSAT</span>
+              <span class="nds-text-caption">CSAT</span>
             </a>
           </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start" class="w-72">
-            <div class="space-y-1">
-              <p class="text-sm font-medium leading-none">CSAT (Customer Satisfaction)</p>
-              <p class="text-xs text-muted-foreground">
+          <HoverCardContent side="bottom" align="start" class="nds-w-full nds-max-w-xs">
+            <div class="nds-stack" data-spacing="xs">
+              <p class="nds-text-body nds-font-medium" style="line-height: 1">CSAT (Customer Satisfaction)</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Percentual de respostas com nota 4 ou 5 (escala 1-5) nas últimas 30 dias. Base: 1.248 respostas.
               </p>
             </div>

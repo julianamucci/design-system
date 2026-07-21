@@ -59,7 +59,7 @@ export const MultiplosTipos: Story = {
     components: { Alert, AlertTitle, AlertDescription, Info, AlertCircle, CheckCircle2, TriangleAlert },
     setup() { return {}; },
     template: `
-      <div class="space-y-3">
+      <div class="nds-stack" data-spacing="sm">
         <Alert>
           <Info class="h-4 w-4" aria-hidden="true" />
           <AlertTitle>Informação</AlertTitle>

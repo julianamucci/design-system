@@ -62,7 +62,7 @@ export const CardDePerfil: Story = {
         className="h-12 w-12 rounded-full motion-reduce:animate-none"
         aria-hidden="true"
       />
-      <div className="space-y-2">
+      <div className="nds-stack" data-spacing="sm">
         <Skeleton
           className="h-4 w-[200px] motion-reduce:animate-none"
           aria-hidden="true"
@@ -96,7 +96,7 @@ export const ListaComAvatar: Story = {
       className="w-96 space-y-4"
     >
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-3">
+        <div key={i} className="nds-cluster" data-spacing="sm">
           <Skeleton
             className="h-10 w-10 rounded-md motion-reduce:animate-none"
             aria-hidden="true"
@@ -133,7 +133,7 @@ export const ImagemEmAspectRatio: Story = {
       role="status"
       aria-busy="true"
       aria-label="Carregando imagem"
-      className="w-80"
+      className="nds-w-sm"
     >
       <AspectRatio ratio={16 / 9}>
         <Skeleton
@@ -162,7 +162,7 @@ export const Paragrafo: Story = {
       role="status"
       aria-busy="true"
       aria-label="Carregando parágrafo"
-      className="w-80 space-y-2"
+      className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}
     >
       <Skeleton
         className="h-4 w-full motion-reduce:animate-none"

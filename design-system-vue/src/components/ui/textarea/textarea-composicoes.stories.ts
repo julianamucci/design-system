@@ -60,7 +60,7 @@ export const ComTextoDeApoio: Story = {
           aria-describedby="comp-apoio-help"
           class="resize-y min-h-[120px]"
         />
-        <p id="comp-apoio-help" class="text-sm text-muted-foreground">
+        <p id="comp-apoio-help" class="nds-text-body nds-text-muted-foreground">
           Aparece no seu perfil público.
         </p>
       </div>
@@ -139,7 +139,7 @@ export const ComMensagemDeErro: Story = {
           aria-describedby="comp-erro-msg"
           class="resize-y min-h-[120px]"
         />
-        <p id="comp-erro-msg" class="text-sm text-destructive">
+        <p id="comp-erro-msg" class="nds-text-body nds-text-destructive">
           A descrição deve ter no mínimo 20 caracteres.
         </p>
       </div>
@@ -168,7 +168,7 @@ export const CampoObrigatorio: Story = {
       <div class="w-80 space-y-1.5">
         <Label for="comp-obrig">
           Feedback
-          <span class="text-destructive" aria-hidden="true">*</span>
+          <span class="nds-text-destructive" aria-hidden="true">*</span>
         </Label>
         <Textarea
           id="comp-obrig"
@@ -176,7 +176,7 @@ export const CampoObrigatorio: Story = {
           aria-required="true"
           class="resize-y min-h-[120px]"
         />
-        <p class="text-xs text-muted-foreground">Campos com * são obrigatórios.</p>
+        <p class="nds-text-caption nds-text-muted-foreground">Campos com * são obrigatórios.</p>
       </div>
     `,
   }),

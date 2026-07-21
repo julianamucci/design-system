@@ -25,10 +25,10 @@ export const ComIconeNoTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Info, AlertTriangle, CheckCircle },
     template: `
-      <Accordion type="single" :collapsible="true" class="w-full max-w-lg">
+      <Accordion type="single" :collapsible="true" class="nds-w-full nds-max-w-lg">
         <AccordionItem value="info">
           <AccordionTrigger>
-            <span class="flex items-center gap-2">
+            <span class="nds-cluster" data-spacing="sm">
               <Info class="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
               Informações gerais
             </span>
@@ -39,7 +39,7 @@ export const ComIconeNoTrigger: Story = {
         </AccordionItem>
         <AccordionItem value="aviso">
           <AccordionTrigger>
-            <span class="flex items-center gap-2">
+            <span class="nds-cluster" data-spacing="sm">
               <AlertTriangle class="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
               Atenção — leia antes de continuar
             </span>
@@ -50,7 +50,7 @@ export const ComIconeNoTrigger: Story = {
         </AccordionItem>
         <AccordionItem value="sucesso">
           <AccordionTrigger>
-            <span class="flex items-center gap-2">
+            <span class="nds-cluster" data-spacing="sm">
               <CheckCircle class="h-4 w-4 text-green-500 shrink-0" aria-hidden="true" />
               Configuração concluída
             </span>
@@ -78,10 +78,10 @@ export const ComBadgeNoTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Badge },
     template: `
-      <Accordion type="single" :collapsible="true" class="w-full max-w-lg">
+      <Accordion type="single" :collapsible="true" class="nds-w-full nds-max-w-lg">
         <AccordionItem value="novo">
           <AccordionTrigger>
-            <span class="flex items-center gap-2">
+            <span class="nds-cluster" data-spacing="sm">
               Novidades da versão 3.0
               <Badge variant="default" class="text-[10px] h-4">Novo</Badge>
             </span>
@@ -92,7 +92,7 @@ export const ComBadgeNoTrigger: Story = {
         </AccordionItem>
         <AccordionItem value="beta">
           <AccordionTrigger>
-            <span class="flex items-center gap-2">
+            <span class="nds-cluster" data-spacing="sm">
               Funcionalidades em beta
               <Badge variant="secondary" class="text-[10px] h-4">Beta</Badge>
             </span>
@@ -120,19 +120,19 @@ export const ConteudoRico: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="multiple" class="w-full max-w-lg">
+      <Accordion type="multiple" class="nds-w-full nds-max-w-lg">
         <AccordionItem value="especificacoes">
           <AccordionTrigger>Especificações técnicas</AccordionTrigger>
           <AccordionContent>
             <div class="space-y-2 text-sm">
               <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                <span class="text-muted-foreground">Processador</span>
+                <span class="nds-text-muted-foreground">Processador</span>
                 <span>Intel Core i7-12700</span>
-                <span class="text-muted-foreground">Memória RAM</span>
+                <span class="nds-text-muted-foreground">Memória RAM</span>
                 <span>16 GB DDR5</span>
-                <span class="text-muted-foreground">Armazenamento</span>
+                <span class="nds-text-muted-foreground">Armazenamento</span>
                 <span>512 GB NVMe SSD</span>
-                <span class="text-muted-foreground">Sistema</span>
+                <span class="nds-text-muted-foreground">Sistema</span>
                 <span>Windows 11 Pro</span>
               </div>
             </div>
@@ -182,7 +182,7 @@ export const FAQ: Story = {
     },
     template: `
       <div class="w-full max-w-lg space-y-2">
-        <h2 class="text-base font-semibold">Perguntas frequentes</h2>
+        <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
         <Accordion type="single" :collapsible="true">
           <AccordionItem v-for="item in items" :key="item.value" :value="item.value">
             <AccordionTrigger>{{ item.q }}</AccordionTrigger>

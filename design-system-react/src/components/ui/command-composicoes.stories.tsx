@@ -60,7 +60,7 @@ type Story = StoryObj<typeof meta>;
 export const ComGrupos: Story = {
   name: "Com Grupos e Separador",
   render: () => (
-    <div className="w-72">
+    <div className="nds-w-full nds-max-w-xs">
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>
@@ -105,7 +105,7 @@ export const ComGrupos: Story = {
 
 export const ComShortcuts: Story = {
   render: () => (
-    <div className="w-72">
+    <div className="nds-w-full nds-max-w-xs">
       <Command>
         <CommandInput placeholder="Buscar componente..." />
         <CommandList>

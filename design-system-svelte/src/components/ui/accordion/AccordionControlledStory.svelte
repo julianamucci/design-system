@@ -16,8 +16,8 @@
 </script>
 
 <div class="w-full max-w-lg space-y-3">
-  <p class="text-xs text-muted-foreground">
-    Item ativo: <code class="font-mono">{activeItem || '(nenhum)'}</code>
+  <p class="nds-text-caption nds-text-muted-foreground">
+    Item ativo: <code class="nds-font-mono">{activeItem || '(nenhum)'}</code>
   </p>
   <Accordion type="single" value={activeItem} onValueChange={(v) => (activeItem = v as string)}>
     {#each items as item (item.value)}

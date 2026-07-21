@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 export const ComButtonAsChild: Story = {
   name: "Com Button (asChild)",
   render: () => (
-    <Collapsible className="w-80 space-y-2">
+    <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "outline" }), "flex w-full items-center justify-between px-4")}
         aria-label="Exibir filtros avançados"
@@ -46,12 +46,12 @@ export const ComButtonAsChild: Story = {
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-card px-4 py-3 text-sm space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Filtro avançado 1</span>
+        <div className="nds-cluster" data-justify="between">
+          <span className="nds-text-muted-foreground">Filtro avançado 1</span>
           <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">ativo</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Filtro avançado 2</span>
+        <div className="nds-cluster" data-justify="between">
+          <span className="nds-text-muted-foreground">Filtro avançado 2</span>
           <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">inativo</span>
         </div>
       </CollapsibleContent>
@@ -78,12 +78,12 @@ export const ComButtonAsChild: Story = {
 export const ComIconeNoTrigger: Story = {
   name: "Com Ícone no Trigger",
   render: () => (
-    <Collapsible className="w-80 space-y-2">
+    <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
         aria-label="Filtros avançados"
       >
-        <span className="flex items-center gap-2">
+        <span className="nds-cluster" data-spacing="sm">
           <SlidersHorizontal aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
           Filtros avançados
         </span>
@@ -93,8 +93,8 @@ export const ComIconeNoTrigger: Story = {
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
-        <p className="text-muted-foreground">Filtro avançado 1</p>
-        <p className="text-muted-foreground">Filtro avançado 2</p>
+        <p className="nds-text-muted-foreground">Filtro avançado 1</p>
+        <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>
     </Collapsible>
   ),
@@ -120,7 +120,7 @@ export const ComIconeNoTrigger: Story = {
 export const ComConteudoEstruturado: Story = {
   name: "Com Conteúdo Estruturado",
   render: () => (
-    <Collapsible defaultOpen className="w-80 space-y-2">
+    <Collapsible defaultOpen className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <div className="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-3">
         <span className="flex-1 text-sm font-medium">Filtro básico ativo</span>
         <CollapsibleTrigger
@@ -134,8 +134,8 @@ export const ComConteudoEstruturado: Story = {
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className="rounded-md border border-border bg-muted/40 px-4 py-3 text-sm space-y-1">
-        <p className="text-muted-foreground">Filtro avançado 1</p>
-        <p className="text-muted-foreground">Filtro avançado 2</p>
+        <p className="nds-text-muted-foreground">Filtro avançado 1</p>
+        <p className="nds-text-muted-foreground">Filtro avançado 2</p>
       </CollapsibleContent>
     </Collapsible>
   ),

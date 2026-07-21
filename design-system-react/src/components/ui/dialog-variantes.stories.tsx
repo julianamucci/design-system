@@ -124,11 +124,11 @@ export const WithForm: Story = {
               trackAction(t("demonstration.labels.action"));
             }}
           >
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="dialog-name">Nome</Label>
               <Input id="dialog-name" defaultValue="Maria Silva" />
             </div>
-            <div className="grid gap-2">
+            <div className="nds-stack" data-spacing="sm">
               <Label htmlFor="dialog-email">E-mail</Label>
               <Input id="dialog-email" type="email" defaultValue="maria@exemplo.com" />
             </div>

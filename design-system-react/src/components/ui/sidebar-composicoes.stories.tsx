@@ -43,7 +43,7 @@ function SidebarWithNavGroups() {
     <SidebarProvider defaultOpen>
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="offcanvas">
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -111,11 +111,11 @@ function SidebarWithNavGroups() {
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger className="lg:hidden" />
-          <span className="text-sm text-muted-foreground">Com grupos, badges e group action</span>
+          <span className="nds-text-body nds-text-muted-foreground">Com grupos, badges e group action</span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">Sidebar com múltiplos grupos, SidebarMenuBadge e SidebarGroupAction.</div>
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos, SidebarMenuBadge e SidebarGroupAction.</div>
       </SidebarInset>
     </SidebarProvider>
   );
@@ -130,7 +130,7 @@ function SidebarWithSubMenu() {
     <SidebarProvider defaultOpen>
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="icon">
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -213,11 +213,11 @@ function SidebarWithSubMenu() {
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger />
-          <span className="text-sm text-muted-foreground">Com submenu e SidebarMenuAction</span>
+          <span className="nds-text-body nds-text-muted-foreground">Com submenu e SidebarMenuAction</span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">SidebarMenuSub com subitens aninhados + SidebarMenuAction com showOnHover.</div>
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">SidebarMenuSub com subitens aninhados + SidebarMenuAction com showOnHover.</div>
       </SidebarInset>
     </SidebarProvider>
   );
@@ -281,11 +281,11 @@ function SidebarWithSearch() {
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger className="lg:hidden" />
-          <span className="text-sm text-muted-foreground">Com SidebarInput para busca</span>
+          <span className="nds-text-body nds-text-muted-foreground">Com SidebarInput para busca</span>
         </header>
-        <div className="p-6 text-sm text-muted-foreground">SidebarInput filtra os itens de menu em tempo real.</div>
+        <div className="nds-p-6 nds-text-body nds-text-muted-foreground">SidebarInput filtra os itens de menu em tempo real.</div>
       </SidebarInset>
     </SidebarProvider>
   );

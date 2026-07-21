@@ -175,7 +175,7 @@ export const Controlled: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3">
+      <div class="nds-stack" data-spacing="sm">
         <Button variant="outline" @click="open = true">Abrir via estado externo</Button>
         <Sheet :open="open" @update:open="(v) => open = v">
           <SheetContent side="right">

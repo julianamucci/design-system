@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-1.5 w-64">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="playground-label" {...args} />
       <Input id="playground-label" placeholder="ex: João da Silva" />
     </div>

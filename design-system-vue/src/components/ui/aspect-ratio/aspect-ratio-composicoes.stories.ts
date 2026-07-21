@@ -53,7 +53,7 @@ export const ComIframe: Story = {
           <iframe
             src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.63%2C-23.54&layer=mapnik"
             title="Mapa do escritório em São Paulo"
-            class="h-full w-full rounded-md border"
+            class="nds-w-full nds-rounded-md nds-border-default" style="height: 100%"
             loading="lazy"
           ></iframe>
         </AspectRatio>

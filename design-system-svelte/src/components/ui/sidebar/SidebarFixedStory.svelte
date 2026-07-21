@@ -61,7 +61,7 @@
         <span class="text-sm font-medium text-muted-foreground">Sidebar sempre visível — sem toggle</span>
       </header>
       <main id="main-content" tabindex="-1" class="flex-1 p-6">
-        <p class="text-sm text-muted-foreground">collapsible="none": sidebar fixa sem possibilidade de recolher.</p>
+        <p class="nds-text-body nds-text-muted-foreground">collapsible="none": sidebar fixa sem possibilidade de recolher.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

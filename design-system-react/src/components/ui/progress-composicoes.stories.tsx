@@ -88,7 +88,7 @@ export const ComLabelEValor: Story = {
     }, []);
 
     return (
-      <div className="w-80">
+      <div className="nds-w-sm">
         <Progress value={value} aria-label="Enviando arquivo">
           <ProgressLabel>Enviando arquivo</ProgressLabel>
           <ProgressValue />
@@ -121,9 +121,9 @@ export const ComAriaLive: Story = {
     }, []);
 
     return (
-      <div className="w-80 space-y-2">
+      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <p
-          className="text-sm text-muted-foreground"
+          className="nds-text-body nds-text-muted-foreground"
           aria-live="polite"
         >
           {value}% concluído

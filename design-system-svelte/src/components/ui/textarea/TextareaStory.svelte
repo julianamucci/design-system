@@ -70,6 +70,6 @@
       </span>
     </div>
   {:else if helpText}
-    <p class="text-xs text-muted-foreground">{helpText}</p>
+    <p class="nds-text-caption nds-text-muted-foreground">{helpText}</p>
   {/if}
 </div>

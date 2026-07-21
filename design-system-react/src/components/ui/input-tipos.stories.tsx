@@ -23,8 +23,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Text: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="tipo-text" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="tipo-text" className="nds-text-body nds-font-medium">
         Nome completo
       </label>
       <Input id="tipo-text" type="text" placeholder="ex: João da Silva" />
@@ -41,8 +41,8 @@ export const Text: Story = {
 
 export const Email: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="tipo-email" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="tipo-email" className="nds-text-body nds-font-medium">
         Email
       </label>
       <Input id="tipo-email" type="email" placeholder="ex: joao@empresa.com" />
@@ -59,8 +59,8 @@ export const Email: Story = {
 
 export const Password: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="tipo-password" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="tipo-password" className="nds-text-body nds-font-medium">
         Senha
       </label>
       <Input id="tipo-password" type="password" placeholder="Mínimo 8 caracteres" />
@@ -77,8 +77,8 @@ export const Password: Story = {
 
 export const Number: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="tipo-number" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="tipo-number" className="nds-text-body nds-font-medium">
         Quantidade
       </label>
       <Input id="tipo-number" type="number" placeholder="0" />
@@ -95,8 +95,8 @@ export const Number: Story = {
 
 export const File: Story = {
   render: () => (
-    <div className="flex flex-col gap-1.5 w-72">
-      <label htmlFor="tipo-file" className="text-sm font-medium">
+    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <label htmlFor="tipo-file" className="nds-text-body nds-font-medium">
         Arquivo
       </label>
       <Input id="tipo-file" type="file" />

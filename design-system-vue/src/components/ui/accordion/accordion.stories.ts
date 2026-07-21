@@ -41,7 +41,7 @@ export const Playground: Story = {
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     setup() { return { args }; },
     template: `
-      <Accordion v-bind="args" default-value="item-1" class="w-full max-w-lg">
+      <Accordion v-bind="args" default-value="item-1" class="nds-w-full nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
           <AccordionContent>

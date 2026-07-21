@@ -68,7 +68,7 @@ export const Playground: Story = {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="text-base font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
       <CardFooter className="justify-end gap-2">
         <Button

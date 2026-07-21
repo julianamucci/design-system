@@ -31,7 +31,7 @@ export const Retangulo: Story = {
     },
   },
   render: () => (
-    <div role="status" aria-busy="true" aria-label="Carregando bloco" className="w-64">
+    <div role="status" aria-busy="true" aria-label="Carregando bloco" className="nds-w-xs">
       <Skeleton className="h-20 w-full motion-reduce:animate-none" aria-hidden="true" />
     </div>
   ),

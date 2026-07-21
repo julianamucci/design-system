@@ -94,7 +94,7 @@ export const FiltroComLabel: Story = {
 
 export const Tamanhos: Story = {
   render: () => (
-    <div className="flex items-center gap-3">
+    <div className="nds-cluster" data-spacing="sm">
       <Toggle size="sm" aria-label="Negrito pequeno">
         <Bold aria-hidden="true" />
       </Toggle>
@@ -132,8 +132,8 @@ export const Controlado: Story = {
         <Toggle pressed={isBold} onPressedChange={setIsBold} aria-label="Negrito">
           <Bold aria-hidden="true" />
         </Toggle>
-        <p className="text-xs text-muted-foreground">
-          Estado atual: <code className="font-mono">{String(isBold)}</code>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          Estado atual: <code className="nds-font-mono">{String(isBold)}</code>
         </p>
       </div>
     );

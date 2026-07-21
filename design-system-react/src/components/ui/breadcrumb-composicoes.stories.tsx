@@ -200,7 +200,7 @@ export const Responsive: Story = {
         <BreadcrumbItem>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex items-center gap-1"
+              className="nds-cluster" data-spacing="xs"
               aria-label="Expandir níveis ocultos"
             >
               <BreadcrumbEllipsis />

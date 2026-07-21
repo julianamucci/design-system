@@ -35,7 +35,7 @@ export const TagList: Story = {
   },
   render: () => (
     <div className="h-[300px] w-[280px]">
-      <ScrollArea className="h-full w-full rounded-md border">
+      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <div className="p-4">
           <h4 className="mb-3 text-sm font-medium leading-none">Tags</h4>
           {tags.map((tag, i) => (
@@ -108,7 +108,7 @@ export const DataMatrix: Story = {
     const cols = Array.from({ length: 15 }, (_, i) => i + 1);
     return (
       <div className="h-[280px] w-[500px]">
-        <ScrollArea className="h-full w-full rounded-md border">
+        <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
           <table className="w-max border-collapse text-xs">
             <tbody>
               {rows.map((r) => (
@@ -159,14 +159,14 @@ export const SidebarMenu: Story = {
     ];
     return (
       <div className="h-[320px] w-[240px]">
-        <ScrollArea className="h-full w-full rounded-md border">
-          <nav aria-label="Sidebar" className="p-3">
+        <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+          <nav aria-label="Sidebar" className="nds-p-2">
             {sections.map((sec) => (
               <div key={sec.name} className="mb-4">
                 <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {sec.name}
                 </div>
-                <ul className="space-y-1">
+                <ul className="nds-stack" data-spacing="xs">
                   {sec.items.map((item) => (
                     <li key={item}>
                       <a

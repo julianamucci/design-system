@@ -45,13 +45,13 @@ export const Fechado: Story = {
         <HoverCardTrigger asChild>
           <a
             href="/users/joana"
-            className="text-sm font-medium underline underline-offset-4 text-foreground"
+            className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
           >
             @joana
           </a>
         </HoverCardTrigger>
         <HoverCardContent>
-          <p className="text-sm">Conteúdo oculto</p>
+          <p className="nds-text-body">Conteúdo oculto</p>
         </HoverCardContent>
       </HoverCard>
     </div>
@@ -82,22 +82,22 @@ export const Aberto: Story = {
         <HoverCardTrigger asChild>
           <a
             href="/users/joana"
-            className="text-sm font-medium underline underline-offset-4 text-foreground"
+            className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
           >
             @joana
           </a>
         </HoverCardTrigger>
         <HoverCardContent>
-          <div className="flex gap-3">
+          <div className="nds-cluster" data-spacing="sm">
             <div
               aria-hidden="true"
               className="size-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-sm font-medium"
             >
               JS
             </div>
-            <div className="space-y-1">
-              <p className="text-sm font-medium leading-none">Joana Silva</p>
-              <p className="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+            <div className="nds-stack" data-spacing="xs">
+              <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Joana Silva</p>
+              <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
             </div>
           </div>
         </HoverCardContent>
@@ -125,8 +125,8 @@ export const Controlado: Story = {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div className="flex flex-col gap-3" style={wrapperStyle}>
-          <div className="flex gap-2">
+        <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
+          <div className="nds-cluster" data-spacing="sm">
             <Button onClick={() => setOpen(true)}>Abrir externamente</Button>
             <Button variant="outline" onClick={() => setOpen(false)}>
               Fechar externamente
@@ -136,15 +136,15 @@ export const Controlado: Story = {
             <HoverCardTrigger asChild>
               <a
                 href="/users/joana"
-                className="text-sm font-medium underline underline-offset-4 text-foreground"
+                className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
               >
                 @joana
               </a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div className="space-y-1">
-                <p className="text-sm font-medium leading-none">Joana Silva</p>
-                <p className="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+              <div className="nds-stack" data-spacing="xs">
+                <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Joana Silva</p>
+                <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
               </div>
             </HoverCardContent>
           </HoverCard>

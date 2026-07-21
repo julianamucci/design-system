@@ -103,7 +103,7 @@ export const Invalido: Story = {
           aria-describedby="estado-invalid-msg"
           class="resize-y min-h-[120px]"
         />
-        <p id="estado-invalid-msg" class="text-sm text-destructive">
+        <p id="estado-invalid-msg" class="nds-text-body nds-text-destructive">
           A descrição é obrigatória.
         </p>
       </div>

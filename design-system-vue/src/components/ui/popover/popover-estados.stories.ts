@@ -53,8 +53,8 @@ export const Fechado: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverTitle class="text-sm font-medium">Configuracoes</PopoverTitle>
-            <p class="text-xs text-muted-foreground">Conteúdo desmontado quando fechado.</p>
+            <PopoverTitle class="nds-text-body nds-font-medium">Configuracoes</PopoverTitle>
+            <p class="nds-text-caption nds-text-muted-foreground">Conteúdo desmontado quando fechado.</p>
           </PopoverContent>
         </Popover>
       </div>
@@ -87,8 +87,8 @@ export const Aberto: Story = {
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Configuracoes de exibição</PopoverTitle>
-            <p class="text-xs text-muted-foreground">Ajuste a aparência do conteúdo.</p>
+            <PopoverTitle class="nds-text-body nds-font-medium">Configuracoes de exibição</PopoverTitle>
+            <p class="nds-text-caption nds-text-muted-foreground">Ajuste a aparência do conteúdo.</p>
           </PopoverContent>
         </Popover>
       </div>
@@ -116,15 +116,15 @@ export const Controlado: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3" style="contain: layout; min-height: 260px;">
+      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 260px;">
         <Button @click="open = !open">Toggle externo ({{ open ? 'aberto' : 'fechado' }})</Button>
         <Popover :open="open" @update:open="(v) => open = v">
           <PopoverTrigger as-child>
             <Button variant="outline">Trigger interno</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Popover controlado</PopoverTitle>
-            <p class="text-xs text-muted-foreground">Estado vem de fora.</p>
+            <PopoverTitle class="nds-text-body nds-font-medium">Popover controlado</PopoverTitle>
+            <p class="nds-text-caption nds-text-muted-foreground">Estado vem de fora.</p>
           </PopoverContent>
         </Popover>
       </div>
@@ -171,8 +171,8 @@ export const Modal: Story = {
             <Button variant="outline">Abrir modal</Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start">
-            <PopoverTitle class="text-sm font-medium">Popover modal</PopoverTitle>
-            <p class="text-xs text-muted-foreground">Foco preso até fechar.</p>
+            <PopoverTitle class="nds-text-body nds-font-medium">Popover modal</PopoverTitle>
+            <p class="nds-text-caption nds-text-muted-foreground">Foco preso até fechar.</p>
           </PopoverContent>
         </Popover>
       </div>

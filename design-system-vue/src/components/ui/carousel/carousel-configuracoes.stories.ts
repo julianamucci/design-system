@@ -28,7 +28,7 @@ export const Single: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel class="w-full max-w-sm" aria-label="Galeria de item único">
+      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de item único">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">
@@ -51,7 +51,7 @@ export const MultiResponsive: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { slides: [1, 2, 3, 4, 5, 6] }; },
     template: `
-      <Carousel class="w-full max-w-md" aria-label="Galeria responsiva">
+      <Carousel class="nds-w-full nds-max-w-md" aria-label="Galeria responsiva">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n" class="md:basis-1/2 lg:basis-1/3">
             <Card class="flex aspect-square items-center justify-center p-4">
@@ -78,7 +78,7 @@ export const AutoplayStory: Story = {
       return { plugins, opts: { loop: true }, slides: [1, 2, 3, 4, 5] };
     },
     template: `
-      <Carousel :opts="opts" :plugins="plugins" class="w-full max-w-sm" aria-label="Galeria com autoplay">
+      <Carousel :opts="opts" :plugins="plugins" class="nds-w-full nds-max-w-sm" aria-label="Galeria com autoplay">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">

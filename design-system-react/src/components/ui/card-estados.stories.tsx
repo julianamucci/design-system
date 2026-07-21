@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>
@@ -40,7 +40,7 @@ export const Default: Story = {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-base font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
     </Card>
   ),
@@ -79,7 +79,7 @@ export const Clickable: Story = {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-base font-semibold">R$ 1.299,00</p>
+          <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
         </CardContent>
       </Card>
     </button>
@@ -127,13 +127,13 @@ export const Clickable: Story = {
 
 export const WithFooter: Story = {
   render: () => (
-    <Card className="w-full max-w-sm">
+    <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
         <CardDescription>Produto atualizado em 12/04.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm">R$ 1.299,00</p>
+        <p className="nds-text-body">R$ 1.299,00</p>
       </CardContent>
       <CardFooter className="justify-end gap-2">
         <Button

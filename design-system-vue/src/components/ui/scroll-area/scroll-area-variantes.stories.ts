@@ -38,7 +38,7 @@ export const Vertical: Story = {
         <ScrollArea class="h-full w-full">
           <div class="p-4">
             <h4 class="mb-3 text-sm font-medium leading-none">Tags</h4>
-            <div class="space-y-2">
+            <div class="nds-stack" data-spacing="sm">
               <div v-for="tag in tags" :key="tag" class="text-sm rounded-sm border px-2 py-1.5">
                 {{ tag }}
               </div>
@@ -77,7 +77,7 @@ export const Horizontal: Story = {
               :key="card.id"
               class="shrink-0 w-[160px] rounded-md border bg-muted p-4"
             >
-              <div class="text-sm font-medium">{{ card.title }}</div>
+              <div class="nds-text-body nds-font-medium">{{ card.title }}</div>
               <div class="mt-2 text-xs text-muted-foreground">Item horizontal</div>
             </figure>
           </div>

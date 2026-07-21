@@ -61,7 +61,7 @@ export const Playground: Story = {
     components: { Switch, Label },
     setup() { return { args }; },
     template: `
-      <div class="flex items-center space-x-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="playground-switch" v-bind="args" />
         <Label :for="'playground-switch'">Receber notificações por email</Label>
       </div>

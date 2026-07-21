@@ -58,7 +58,7 @@ export const ComTextoDeApoio: Story = {
       <div class="w-64 space-y-1.5">
         <Label for="email-apoio">Email</Label>
         <Input id="email-apoio" type="email" placeholder="ex: joao@empresa.com" />
-        <p class="text-sm text-muted-foreground">Usaremos este endereço para notificações.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Usaremos este endereço para notificações.</p>
       </div>
     `,
   }),
@@ -84,7 +84,7 @@ export const ComMensagemDeErro: Story = {
           aria-invalid="true"
           aria-describedby="email-erro-msg"
         />
-        <p id="email-erro-msg" class="text-sm text-destructive">
+        <p id="email-erro-msg" class="nds-text-body nds-text-destructive">
           Email inválido. Use o formato nome@dominio.com
         </p>
       </div>
@@ -113,7 +113,7 @@ export const CampoObrigatorio: Story = {
       <div class="w-64 space-y-1.5">
         <Label for="nome-obrig">
           Nome completo
-          <span class="text-destructive" aria-hidden="true">*</span>
+          <span class="nds-text-destructive" aria-hidden="true">*</span>
         </Label>
         <Input
           id="nome-obrig"
@@ -121,7 +121,7 @@ export const CampoObrigatorio: Story = {
           placeholder="ex: João da Silva"
           aria-required="true"
         />
-        <p class="text-xs text-muted-foreground">Campos com * são obrigatórios.</p>
+        <p class="nds-text-caption nds-text-muted-foreground">Campos com * são obrigatórios.</p>
       </div>
     `,
   }),

@@ -37,7 +37,7 @@ export const Idle: Story = {
           </ResizablePanel>
           <ResizableHandle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Painel B</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Painel B</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -62,7 +62,7 @@ export const WithHandle: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Painel B</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Painel B</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -88,7 +88,7 @@ export const Focus: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Painel B</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Painel B</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -122,7 +122,7 @@ export const Disabled: Story = {
           </ResizablePanel>
           <ResizableHandle disabled with-handle aria-label="Handle desativado" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm">Painel B</div>
+            <div class="nds-cluster nds-p-4 nds-text-body" data-justify="center" style="height: 100%">Painel B</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

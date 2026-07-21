@@ -115,3 +115,8 @@
 .nds-animate-spin {
   animation: nds-spin 1s linear infinite;
 }
+
+/* ── Alinhamento de texto ─────────────────────────────────────────────────── */
+.nds-text-left   { text-align: left; }
+.nds-text-center { text-align: center; }
+.nds-text-right  { text-align: right; }

@@ -119,11 +119,11 @@ export const Invalid: Story = {
     components: { Toggle, Bold },
     setup() { return {}; },
     template: `
-      <div class="space-y-2">
+      <div class="nds-stack" data-spacing="sm">
         <Toggle aria-label="Negrito" aria-invalid="true" aria-describedby="toggle-invalid-err">
           <Bold aria-hidden="true" />
         </Toggle>
-        <p id="toggle-invalid-err" class="text-sm text-destructive">
+        <p id="toggle-invalid-err" class="nds-text-body nds-text-destructive">
           Este campo é obrigatório.
         </p>
       </div>

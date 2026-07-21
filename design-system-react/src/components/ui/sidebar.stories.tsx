@@ -42,7 +42,7 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
     <SidebarProvider defaultOpen={defaultOpen ?? true}>
       <nav aria-label="Navegação principal">
         <Sidebar side={side} variant={variant} collapsible={collapsible}>
-          <SidebarHeader className="p-3">
+          <SidebarHeader className="nds-p-2">
             <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
@@ -105,9 +105,9 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
         </Sidebar>
       </nav>
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 border-b border-border">
+        <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
           <SidebarTrigger />
-          <span className="text-sm text-muted-foreground">Conteúdo principal</span>
+          <span className="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
         </header>
         <div className="p-6">
           <p className="text-muted-foreground text-sm">

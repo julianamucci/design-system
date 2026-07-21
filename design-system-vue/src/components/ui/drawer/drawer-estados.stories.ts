@@ -125,7 +125,7 @@ export const Controlado: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col gap-3" style="contain: layout">
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <Button @click="open = true">Abrir via estado externo</Button>
         <Drawer :open="open" @update:open="(v) => open = v">
           <DrawerContent>

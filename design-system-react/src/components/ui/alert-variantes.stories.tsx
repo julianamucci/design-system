@@ -71,7 +71,7 @@ export const Warning: Story = {
     <Alert className="bg-warning/10 border-warning/30 text-foreground [&_svg]:text-warning">
       <TriangleAlert aria-hidden="true" className="h-4 w-4" />
       <AlertTitle className="text-foreground">Assinatura expirando</AlertTitle>
-      <AlertDescription className="text-muted-foreground">
+      <AlertDescription className="nds-text-muted-foreground">
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
       </AlertDescription>
     </Alert>

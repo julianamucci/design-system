@@ -55,7 +55,7 @@ export const ComAcao: Story = {
 
 export const MultiplosTipos: Story = {
   render: () => (
-    <div className="space-y-3">
+    <div className="nds-stack" data-spacing="sm">
       <Alert>
         <Info aria-hidden="true" className="h-4 w-4" />
         <AlertTitle>Informação</AlertTitle>
@@ -74,7 +74,7 @@ export const MultiplosTipos: Story = {
       <Alert className="bg-warning/10 border-warning/30 text-foreground [&_svg]:text-warning">
         <TriangleAlert aria-hidden="true" className="h-4 w-4" />
         <AlertTitle className="text-foreground">Aviso</AlertTitle>
-        <AlertDescription className="text-muted-foreground">Aviso que requer atenção.</AlertDescription>
+        <AlertDescription className="nds-text-muted-foreground">Aviso que requer atenção.</AlertDescription>
       </Alert>
     </div>
   ),

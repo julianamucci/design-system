@@ -28,7 +28,7 @@
 </script>
 
 {#if withDescription}
-  <div class="flex gap-3">
+  <div class="nds-cluster" data-spacing="sm">
     <Checkbox
       {id}
       bind:checked
@@ -37,17 +37,17 @@
       aria-invalid={ariaInvalid || undefined}
       aria-labelledby="{id}-label"
       aria-describedby="{id}-description"
-      class="mt-0.5"
+      class="nds-mt-0-5"
     />
-    <div class="flex flex-col gap-1">
+    <div class="nds-stack" data-spacing="xs">
       <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
         {labelText}
       </Label>
-      <p id="{id}-description" class="text-sm text-muted-foreground">{descriptionText}</p>
+      <p id="{id}-description" class="nds-text-body nds-text-muted-foreground">{descriptionText}</p>
     </div>
   </div>
 {:else if withLabel}
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="sm">
     <Checkbox
       {id}
       bind:checked

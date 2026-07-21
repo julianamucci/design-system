@@ -29,7 +29,7 @@ type Story = StoryObj;
 export const ComIcones: Story = {
   name: "Com ícones",
   render: () => (
-    <Tabs defaultValue="profile" className="w-full max-w-lg">
+    <Tabs defaultValue="profile" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Configuracoes da conta">
         <TabsTrigger value="profile">
           <User aria-hidden="true" />
@@ -70,7 +70,7 @@ export const ComIcones: Story = {
 export const ComBadge: Story = {
   name: "Com badge",
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Painel do projeto">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="inbox">
@@ -106,7 +106,7 @@ function ControlledTabs() {
   const [value, setValue] = useState("overview");
   return (
     <div className="space-y-3 w-full max-w-lg">
-      <p className="text-xs text-muted-foreground">
+      <p className="nds-text-caption nds-text-muted-foreground">
         Tab ativa: <code>{value}</code>
       </p>
       <Tabs value={value} onValueChange={setValue}>
@@ -153,7 +153,7 @@ export const ManualActivation: Story = {
   render: () => (
     <Tabs
       defaultValue="overview"
-      className="w-full max-w-lg"
+      className="nds-w-full nds-max-w-lg"
     >
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">

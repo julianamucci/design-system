@@ -8,10 +8,10 @@
   import { Info, AlertTriangle, CheckCircle } from 'lucide-svelte';
 </script>
 
-<Accordion type="single" class="w-full max-w-lg">
+<Accordion type="single" class="nds-w-full nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
-      <span class="flex items-center gap-2">
+      <span class="nds-cluster" data-spacing="sm">
         <Info class="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
         Informações gerais
       </span>
@@ -22,7 +22,7 @@
   </AccordionItem>
   <AccordionItem value="aviso">
     <AccordionTrigger>
-      <span class="flex items-center gap-2">
+      <span class="nds-cluster" data-spacing="sm">
         <AlertTriangle class="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
         Atenção — leia antes de continuar
       </span>
@@ -33,7 +33,7 @@
   </AccordionItem>
   <AccordionItem value="sucesso">
     <AccordionTrigger>
-      <span class="flex items-center gap-2">
+      <span class="nds-cluster" data-spacing="sm">
         <CheckCircle class="h-4 w-4 text-green-500 shrink-0" aria-hidden="true" />
         Configuração concluída
       </span>

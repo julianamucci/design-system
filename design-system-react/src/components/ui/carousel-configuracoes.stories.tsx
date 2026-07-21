@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 function SlideCard({ label }: { label: string }) {
   return (
     <Card className="h-40 shadow-none">
-      <CardContent className="flex h-full items-center justify-center">
+      <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
         <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
@@ -42,7 +42,7 @@ function SlideCard({ label }: { label: string }) {
 
 export const Single: Story = {
   render: () => (
-    <Carousel className="w-full max-w-md" aria-label="Galeria de item único">
+    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de item único">
       <CarouselContent>
         {Array.from({ length: 3 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -84,7 +84,7 @@ export const MultiResponsive: Story = {
 export const Autoplay_: Story = {
   render: () => (
     <Carousel
-      className="w-full max-w-md"
+      className="nds-w-full nds-max-w-md"
       aria-label="Galeria com autoplay"
       opts={{ loop: true }}
       plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}

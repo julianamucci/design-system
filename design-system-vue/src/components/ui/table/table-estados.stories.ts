@@ -46,7 +46,7 @@ export const Empty: Story = {
             <TableHead scope="col">Fatura</TableHead>
             <TableHead scope="col">Status</TableHead>
             <TableHead scope="col">Método</TableHead>
-            <TableHead scope="col" class="text-right">Valor</TableHead>
+            <TableHead scope="col" class="nds-text-right">Valor</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -96,27 +96,27 @@ export const LinhaSelecionada: Story = {
             <TableHead scope="col">Fatura</TableHead>
             <TableHead scope="col">Status</TableHead>
             <TableHead scope="col">Método</TableHead>
-            <TableHead scope="col" class="text-right">Valor</TableHead>
+            <TableHead scope="col" class="nds-text-right">Valor</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell class="font-medium">#INV-001</TableCell>
+            <TableCell class="nds-font-medium">#INV-001</TableCell>
             <TableCell>Pago</TableCell>
             <TableCell>Cartão de crédito</TableCell>
-            <TableCell class="text-right">R$ 250,00</TableCell>
+            <TableCell class="nds-text-right">R$ 250,00</TableCell>
           </TableRow>
           <TableRow data-state="selected">
-            <TableCell class="font-medium">#INV-002</TableCell>
+            <TableCell class="nds-font-medium">#INV-002</TableCell>
             <TableCell>Pendente</TableCell>
             <TableCell>Boleto bancário</TableCell>
-            <TableCell class="text-right">R$ 150,00</TableCell>
+            <TableCell class="nds-text-right">R$ 150,00</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell class="font-medium">#INV-003</TableCell>
+            <TableCell class="nds-font-medium">#INV-003</TableCell>
             <TableCell>Cancelado</TableCell>
             <TableCell>Pix</TableCell>
-            <TableCell class="text-right">R$ 350,00</TableCell>
+            <TableCell class="nds-text-right">R$ 350,00</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -163,7 +163,7 @@ export const Carregando: Story = {
             <TableHead scope="col">Fatura</TableHead>
             <TableHead scope="col">Status</TableHead>
             <TableHead scope="col">Método</TableHead>
-            <TableHead scope="col" class="text-right">Valor</TableHead>
+            <TableHead scope="col" class="nds-text-right">Valor</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -171,7 +171,7 @@ export const Carregando: Story = {
             <TableCell><Skeleton class="h-4 w-20" /></TableCell>
             <TableCell><Skeleton class="h-4 w-16" /></TableCell>
             <TableCell><Skeleton class="h-4 w-28" /></TableCell>
-            <TableCell class="text-right"><Skeleton class="h-4 w-16 ml-auto" /></TableCell>
+            <TableCell class="nds-text-right"><Skeleton class="h-4 w-16 ml-auto" /></TableCell>
           </TableRow>
         </TableBody>
       </Table>

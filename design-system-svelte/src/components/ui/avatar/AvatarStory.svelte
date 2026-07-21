@@ -54,7 +54,7 @@
         {#if item.src}
           <AvatarImage src={item.src} alt={item.alt} />
         {/if}
-        <AvatarFallback class="text-xs">{item.initials}</AvatarFallback>
+        <AvatarFallback class="nds-text-caption">{item.initials}</AvatarFallback>
       </Avatar>
     {/each}
   </div>

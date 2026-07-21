@@ -25,7 +25,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -56,7 +56,7 @@ export const Default: Story = {
 
 export const Line: Story = {
   render: () => (
-    <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente" variant="line">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>

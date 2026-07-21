@@ -182,7 +182,7 @@ export const ComScroll: Story = {
                 className="border rounded-md px-3 py-2 flex justify-between"
               >
                 <span>Item {i + 1}</span>
-                <span className="text-muted-foreground">#{i + 1}</span>
+                <span className="nds-text-muted-foreground">#{i + 1}</span>
               </li>
             ))}
           </ul>

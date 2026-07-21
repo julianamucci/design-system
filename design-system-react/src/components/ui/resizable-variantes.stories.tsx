@@ -42,16 +42,16 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Conteúdo principal
           </div>
         </ResizablePanel>
@@ -77,16 +77,16 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="vertical">
         <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-          <div className="flex h-full items-center justify-center p-4 text-sm">
+          <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Topo
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Rodapé
           </div>
         </ResizablePanel>
@@ -112,10 +112,10 @@ export const Nested: Story = {
     },
   },
   render: () => (
-    <div className="rounded-lg border overflow-hidden" style={boxStyle}>
+    <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-          <div className="flex h-full items-center justify-center bg-muted p-4 text-sm">
+          <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
             Sidebar
           </div>
         </ResizablePanel>
@@ -123,7 +123,7 @@ export const Nested: Story = {
         <ResizablePanel defaultSize={75} minSize={50}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={70} minSize={30}>
-              <div className="flex h-full items-center justify-center p-4 text-sm">
+              <div className="nds-cluster nds-p-4 nds-text-body" data-justify="center" style={{ height: "100%" }}>
                 Editor
               </div>
             </ResizablePanel>

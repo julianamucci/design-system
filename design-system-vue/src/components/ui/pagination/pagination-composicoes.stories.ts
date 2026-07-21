@@ -172,7 +172,7 @@ export const Controlada: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-3">
-        <span class="text-sm text-muted-foreground">Página atual: {{ current }} de {{ totalPages }}</span>
+        <span class="nds-text-body nds-text-muted-foreground">Página atual: {{ current }} de {{ totalPages }}</span>
         <Pagination :total="50" :items-per-page="10" :page="current" @update:page="(v) => current = v">
           <PaginationContent>
             <PaginationItem>
@@ -219,7 +219,7 @@ export const CompletaTabela: Story = {
     components: sharedComponents,
     template: `
       <div class="w-full max-w-2xl border rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-sm text-muted-foreground">Mostrando 11–20 de 120 resultados</span>
+        <span class="nds-text-body nds-text-muted-foreground">Mostrando 11–20 de 120 resultados</span>
         <Pagination :total="120" :items-per-page="10" :default-page="2" :sibling-count="1" class="!justify-end !mx-0 !w-auto">
           <PaginationContent>
             <PaginationItem>

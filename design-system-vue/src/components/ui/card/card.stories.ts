@@ -47,7 +47,7 @@ export const Playground: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, Button, Badge },
     setup() { return { args }; },
     template: `
-      <Card v-bind="args" class="w-full max-w-sm">
+      <Card v-bind="args" class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>
@@ -57,7 +57,7 @@ export const Playground: Story = {
             <Badge variant="secondary">Em estoque</Badge>
           </CardAction>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
         <CardFooter class="justify-end gap-2">
           <Button variant="outline" size="sm" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
           <Button size="sm" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>

@@ -51,15 +51,15 @@ export const Playground: Story = {
         }}
         aria-label="Forma de pagamento"
       >
-        <div className="flex items-center gap-2">
+        <div className="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="pg-cartao" disabled={args.disabled} />
           <Label htmlFor="pg-cartao">Cartão de crédito</Label>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="pix" id="pg-pix" disabled={args.disabled} />
           <Label htmlFor="pg-pix">Pix</Label>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="boleto" id="pg-boleto" disabled={args.disabled} />
           <Label htmlFor="pg-boleto">Boleto bancário</Label>
         </div>

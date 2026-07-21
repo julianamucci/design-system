@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ComLabel: Story = {
   render: () => (
-    <div className="flex items-center space-x-2">
+    <div className="nds-cluster" data-spacing="sm">
       <Switch id="comp-label" />
       <Label htmlFor="comp-label">Receber notificações por email</Label>
     </div>
@@ -55,7 +55,7 @@ export const PainelDeConfiguracoes: Story = {
     <div className="flex items-center justify-between w-96 rounded-lg border p-4">
       <div className="space-y-0.5">
         <Label htmlFor="comp-marketing">Emails de marketing</Label>
-        <p className="text-sm text-muted-foreground">
+        <p className="nds-text-body nds-text-muted-foreground">
           Receba novidades e promoções da plataforma.
         </p>
       </div>
@@ -92,10 +92,10 @@ export const ListaDePreferencias: Story = {
         { id: "pref-push", label: "Notificações push", desc: "Alertas no navegador em tempo real." },
         { id: "pref-sms", label: "SMS de segurança", desc: "Códigos de verificação por SMS." },
       ].map(({ id, label, desc }) => (
-        <div key={id} className="flex items-center justify-between">
+        <div key={id} className="nds-cluster" data-justify="between">
           <div className="space-y-0.5 pr-4">
             <Label htmlFor={id}>{label}</Label>
-            <p className="text-xs text-muted-foreground">{desc}</p>
+            <p className="nds-text-caption nds-text-muted-foreground">{desc}</p>
           </div>
           <Switch id={id} />
         </div>
@@ -129,12 +129,12 @@ export const Controlado: Story = {
     const [enabled, setEnabled] = useState(false);
     return (
       <div className="flex flex-col items-start gap-3 w-80">
-        <div className="flex items-center space-x-2">
+        <div className="nds-cluster" data-spacing="sm">
           <Switch id="comp-controlled" checked={enabled} onCheckedChange={setEnabled} />
           <Label htmlFor="comp-controlled">Modo escuro</Label>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Estado atual: <code className="font-mono">{String(enabled)}</code>
+        <p className="nds-text-caption nds-text-muted-foreground">
+          Estado atual: <code className="nds-font-mono">{String(enabled)}</code>
         </p>
       </div>
     );
@@ -172,8 +172,8 @@ export const TamanhoCompacto: Story = {
         { id: "sm-bluetooth", label: "Bluetooth" },
         { id: "sm-airplane", label: "Modo avião" },
       ].map(({ id, label }) => (
-        <div key={id} className="flex items-center justify-between">
-          <Label htmlFor={id} className="text-sm">
+        <div key={id} className="nds-cluster" data-justify="between">
+          <Label htmlFor={id} className="nds-text-body">
             {label}
           </Label>
           <Switch id={id} size="sm" />

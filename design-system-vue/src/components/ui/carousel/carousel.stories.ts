@@ -33,7 +33,7 @@ export const Playground: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { args, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel v-bind="args" class="w-full max-w-sm" aria-label="Galeria de exemplos">
+      <Carousel v-bind="args" class="nds-w-full nds-max-w-sm" aria-label="Galeria de exemplos">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <Card class="flex aspect-square items-center justify-center p-6">

@@ -40,7 +40,7 @@ export const Playground: Story = {
           alt="Paisagem ao entardecer"
           loading="lazy"
           decoding="async"
-          className="rounded-md object-cover w-full h-full"
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%" }}
         />
       </AspectRatio>
     </div>

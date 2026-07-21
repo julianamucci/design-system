@@ -53,7 +53,7 @@ export const ComCheckbox: Story = {
     components: { Label, Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="termos" />
         <Label for="termos">Aceito os termos de uso</Label>
       </div>
@@ -82,7 +82,7 @@ export const CampoObrigatorio: Story = {
       <div class="flex flex-col gap-2 w-64">
         <Label for="email-obrigatorio">
           Email profissional
-          <span class="text-destructive" aria-hidden="true">*</span>
+          <span class="nds-text-destructive" aria-hidden="true">*</span>
         </Label>
         <Input
           id="email-obrigatorio"

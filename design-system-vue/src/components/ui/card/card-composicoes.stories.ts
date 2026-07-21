@@ -37,12 +37,12 @@ export const WithFooter: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
         <CardFooter class="justify-end gap-2">
           <Button variant="outline" size="sm" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
           <Button size="sm" aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>
@@ -59,7 +59,7 @@ export const WithAction: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, Button },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Em estoque</CardDescription>
@@ -67,7 +67,7 @@ export const WithAction: Story = {
             <Button variant="ghost" size="sm" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
           </CardAction>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
       </Card>
     `,
   }),
@@ -80,13 +80,13 @@ export const WithImage: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <div class="aspect-video w-full bg-muted" aria-hidden="true" />
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
         </CardHeader>
-        <CardContent class="text-base font-semibold">R$ 1.299,00</CardContent>
+        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
       </Card>
     `,
   }),
@@ -99,7 +99,7 @@ export const ProductCard: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, Button, Badge },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <div class="aspect-video w-full bg-muted" aria-hidden="true" />
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
@@ -141,7 +141,7 @@ export const MetricCard: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card size="sm" class="w-full max-w-xs">
+      <Card size="sm" class="nds-w-full nds-max-w-xs">
         <CardHeader>
           <CardTitle>Assinantes ativos</CardTitle>
           <CardDescription>+12% no mês</CardDescription>
@@ -159,7 +159,7 @@ export const ProfileCard: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button, Avatar, AvatarFallback },
     template: `
-      <Card class="w-full max-w-sm">
+      <Card class="nds-w-full nds-max-w-sm">
         <CardHeader class="flex-row items-center gap-3">
           <Avatar class="h-10 w-10">
             <AvatarFallback>MR</AvatarFallback>
@@ -169,7 +169,7 @@ export const ProfileCard: Story = {
             <CardDescription>Designer de produto · São Paulo, BR</CardDescription>
           </div>
         </CardHeader>
-        <CardContent class="text-sm text-muted-foreground">
+        <CardContent class="nds-text-body nds-text-muted-foreground">
           Atua há 8 anos com design de sistemas e experiência em produtos B2B.
         </CardContent>
         <CardFooter class="justify-end gap-2">

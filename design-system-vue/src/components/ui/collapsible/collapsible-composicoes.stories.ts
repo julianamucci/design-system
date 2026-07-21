@@ -27,7 +27,7 @@ export const ComIconeNoTrigger: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
     setup() { return {}; },
     template: `
-      <Collapsible class="w-80 space-y-2">
+      <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
         <CollapsibleTrigger class="flex w-full items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Filter aria-hidden="true" class="h-4 w-4 shrink-0" />
           <span class="flex-1 text-left">Filtros avançados</span>
@@ -36,7 +36,7 @@ export const ComIconeNoTrigger: Story = {
             class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
           />
         </CollapsibleTrigger>
-        <CollapsibleContent class="space-y-2">
+        <CollapsibleContent class="nds-stack" data-spacing="sm">
           <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
             Filtro avançado 1
           </div>
@@ -78,7 +78,7 @@ export const ComIconeGiratório: Story = {
     template: `
       <Collapsible class="w-80 rounded-md border border-input bg-background">
         <CollapsibleTrigger class="flex w-full items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
-          <div class="flex items-center gap-2">
+          <div class="nds-cluster" data-spacing="sm">
             <Settings aria-hidden="true" class="h-4 w-4" />
             <span>Configuracoes avançadas</span>
           </div>
@@ -90,15 +90,15 @@ export const ComIconeGiratório: Story = {
         <CollapsibleContent>
           <div class="border-t border-input px-4 py-3 space-y-2">
             <div class="flex items-center justify-between text-sm">
-              <span class="text-muted-foreground">Modo debug</span>
+              <span class="nds-text-muted-foreground">Modo debug</span>
               <span class="text-foreground font-medium">Desativado</span>
             </div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-muted-foreground">Cache</span>
+              <span class="nds-text-muted-foreground">Cache</span>
               <span class="text-foreground font-medium">Habilitado</span>
             </div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-muted-foreground">Timeout</span>
+              <span class="nds-text-muted-foreground">Timeout</span>
               <span class="text-foreground font-medium">30s</span>
             </div>
           </div>
