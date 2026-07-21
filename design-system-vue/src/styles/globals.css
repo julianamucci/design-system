@@ -4,17 +4,15 @@
  * sob outro @import. Repetimos aqui no topo p/ garantir o carregamento das
  * webfonts (Inter / Lexend / PT Serif / LXGW WenKai TC). Browser deduplica. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=PT+Serif:wght@400;700&family=LXGW+WenKai+TC:wght@400;700&display=swap');
-@import "tailwindcss";
-@import "tw-animate-css";
 
 /* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
 @import "@shared/styles/nds/index.css";
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
+/* Tokens de tema/escala como CSS custom properties (antes @theme do Tailwind
+ * v4; agora :root puro). As classes .nds-* consomem estas variáveis. */
+:root {
   /* Color Mappings */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -123,26 +121,28 @@
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
 
-  @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
-  }
-  @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
-  }
-  @keyframes progress-indeterminate {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-family);
-  }
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+@keyframes progress-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Reset base (antes @layer base + @apply do Tailwind) */
+* {
+  border-color: hsl(var(--border));
+  outline-color: hsl(var(--ring) / 0.5);
+}
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-family);
 }
