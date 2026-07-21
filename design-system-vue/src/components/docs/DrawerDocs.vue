@@ -236,12 +236,12 @@ const codeCompWithForm = `<Drawer>
       <DrawerTitle>Editar perfil</DrawerTitle>
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
-    <form class="grid gap-3 px-4">
-      <Label class="grid gap-1 text-sm">
+    <form class="nds-stack nds-px-4" data-spacing="sm">
+      <Label class="nds-stack nds-text-body" data-spacing="xs">
         Nome
         <Input default-value="Maria Souza" />
       </Label>
-      <Label class="grid gap-1 text-sm">
+      <Label class="nds-stack nds-text-body" data-spacing="xs">
         E-mail
         <Input type="email" default-value="maria@exemplo.com" />
       </Label>
@@ -284,7 +284,7 @@ const codeCompWithScroll = `<Drawer>
       <DrawerTitle>Termos de uso</DrawerTitle>
       <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
     </DrawerHeader>
-    <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
       <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
     </div>
     <DrawerFooter>
@@ -300,12 +300,12 @@ const codeCompRightPanel = `<Drawer direction="right">
   <DrawerTrigger as-child>
     <Button variant="outline">Abrir filtros</Button>
   </DrawerTrigger>
-  <DrawerContent class="max-w-md">
+  <DrawerContent class="nds-max-w-md">
     <DrawerHeader>
       <DrawerTitle>Filtros</DrawerTitle>
       <DrawerDescription>Refine os resultados.</DrawerDescription>
     </DrawerHeader>
-    <div class="px-4 text-sm text-muted-foreground">Conteúdo dos filtros…</div>
+    <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
     <DrawerFooter>
       <Button>Aplicar</Button>
       <DrawerClose as-child>
@@ -453,7 +453,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="flex flex-wrap items-center justify-center gap-4 w-full"
+        class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap"
         style="contain: layout"
       >
         <Drawer>
@@ -562,7 +562,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer :default-open="true">
             <DrawerContent>
@@ -585,12 +585,12 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer :default-open="true">
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle class="sr-only">
+                <DrawerTitle class="nds-sr-only">
                   Sem título visível
                 </DrawerTitle>
                 <DrawerDescription>Conteúdo sem título — leitor de tela não anuncia.</DrawerDescription>
@@ -609,7 +609,7 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer
             :default-open="true"
@@ -635,7 +635,7 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer :default-open="true">
             <DrawerContent>
@@ -670,7 +670,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer
             :default-open="true"
@@ -695,7 +695,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer
             :default-open="true"
@@ -720,7 +720,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer
             :default-open="true"
@@ -745,7 +745,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer
             :default-open="true"
@@ -779,7 +779,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer>
             <DrawerTrigger as-child>
@@ -792,12 +792,12 @@ const a11yCritCols = computed(() => ({
                 <DrawerTitle>Editar perfil</DrawerTitle>
                 <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
               </DrawerHeader>
-              <form class="grid gap-3 px-4">
-                <Label class="grid gap-1 text-sm">
+              <form class="nds-stack nds-px-4" data-spacing="sm">
+                <Label class="nds-stack nds-text-body" data-spacing="xs">
                   Nome
                   <Input default-value="Maria Souza" />
                 </Label>
-                <Label class="grid gap-1 text-sm">
+                <Label class="nds-stack nds-text-body" data-spacing="xs">
                   E-mail
                   <Input
                     type="email"
@@ -820,7 +820,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer>
             <DrawerTrigger as-child>
@@ -850,7 +850,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer>
             <DrawerTrigger as-child>
@@ -863,7 +863,7 @@ const a11yCritCols = computed(() => ({
                 <DrawerTitle>Termos de uso</DrawerTitle>
                 <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
               </DrawerHeader>
-              <div class="text-sm text-muted-foreground max-h-64 overflow-y-auto px-4 space-y-3">
+              <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
                 <p
                   v-for="i in 12"
                   :key="i"
@@ -886,7 +886,7 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout"
-          class="w-full"
+          class="nds-w-full"
         >
           <Drawer direction="right">
             <DrawerTrigger as-child>
@@ -894,12 +894,12 @@ const a11yCritCols = computed(() => ({
                 Abrir filtros
               </Button>
             </DrawerTrigger>
-            <DrawerContent class="max-w-md">
+            <DrawerContent class="nds-max-w-md">
               <DrawerHeader>
                 <DrawerTitle>Filtros</DrawerTitle>
                 <DrawerDescription>Refine os resultados.</DrawerDescription>
               </DrawerHeader>
-              <div class="px-4 text-sm text-muted-foreground">
+              <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
                 Conteúdo dos filtros…
               </div>
               <DrawerFooter>

@@ -123,7 +123,7 @@ const codeImportBasic = `import { Separator } from "@/components/ui/separator";`
 
 const codeHorizontal = `<Separator orientation="horizontal" />`;
 
-const codeVertical = `<div class="flex h-5 items-center gap-3">
+const codeVertical = `<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 3rem">
   <span>Início</span>
   <Separator orientation="vertical" />
   <span>Docs</span>
@@ -270,69 +270,69 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div class="space-y-2">
-          <div class="rounded-md border p-4 space-y-3">
-            <div class="text-sm font-medium">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-stack nds-rounded-md nds-border-default nds-p-4" data-spacing="sm">
+            <div class="nds-text-body nds-font-medium">
               Header
             </div>
             <Separator orientation="horizontal" />
-            <div class="text-xs text-muted-foreground">
+            <div class="nds-text-caption nds-text-muted-foreground">
               Conteúdo separado por divisor horizontal.
             </div>
           </div>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.horizontal') }}
           </p>
         </div>
 
-        <div class="space-y-2">
-          <div class="flex h-10 items-center gap-3 rounded-md border px-3 text-sm">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-cluster nds-border-default nds-rounded-md nds-px-4 nds-text-body" data-spacing="md" data-align="center" style="height: 4rem">
             <span>Início</span>
             <Separator orientation="vertical" />
             <span>Docs</span>
             <Separator orientation="vertical" />
             <span>Sobre</span>
           </div>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.vertical') }}
           </p>
         </div>
 
-        <div class="space-y-2">
-          <div class="rounded-md border p-3 space-y-2 text-sm">
-            <div class="font-medium text-xs uppercase text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-stack nds-rounded-md nds-border-default nds-p-4 nds-text-body" data-spacing="sm">
+            <div class="nds-font-medium nds-text-caption nds-uppercase nds-text-muted-foreground">
               Categoria A
             </div>
             <div>Item 1</div>
             <div>Item 2</div>
             <Separator orientation="horizontal" />
-            <div class="font-medium text-xs uppercase text-muted-foreground">
+            <div class="nds-font-medium nds-text-caption nds-uppercase nds-text-muted-foreground">
               Categoria B
             </div>
             <div>Item 3</div>
             <div>Item 4</div>
           </div>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.inMenu') }}
           </p>
         </div>
 
-        <div class="space-y-2">
-          <div class="rounded-md border bg-card text-card-foreground">
-            <div class="p-4 text-sm font-medium">
+        <div class="nds-stack" data-spacing="sm">
+          <div class="nds-rounded-md nds-border-default nds-bg-card nds-text-card-foreground">
+            <div class="nds-p-4 nds-text-body nds-font-medium">
               Card title
             </div>
             <Separator orientation="horizontal" />
-            <div class="p-4 text-sm text-muted-foreground">
+            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">
               Conteúdo do card abaixo do separator.
             </div>
             <Separator orientation="horizontal" />
-            <div class="p-4 text-xs text-muted-foreground">
+            <div class="nds-p-4 nds-text-caption nds-text-muted-foreground">
               Footer do card.
             </div>
           </div>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.inCard') }}
           </p>
         </div>
@@ -403,18 +403,18 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div class="w-full rounded-md border p-3 space-y-2 text-sm">
-          <div class="font-medium">
+        <div class="nds-stack nds-w-full nds-text-body nds-border-default nds-rounded-md nds-p-4" data-spacing="sm">
+          <div class="nds-font-medium">
             Grupo A
           </div>
           <Separator orientation="horizontal" />
-          <div class="font-medium">
+          <div class="nds-font-medium">
             Grupo B
           </div>
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="w-full rounded-md border p-3 space-y-3 text-sm">
+        <div class="nds-stack nds-w-full nds-text-body nds-border-default nds-rounded-md nds-p-4" data-spacing="sm">
           <div>Item 1</div>
           <Separator orientation="horizontal" />
           <div>Item 2</div>
@@ -423,14 +423,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #do-preview-1>
-        <div class="flex h-10 w-full items-center gap-3 rounded-md border px-3 text-sm">
+        <div class="nds-cluster nds-w-full nds-text-body nds-border-default nds-rounded-md nds-px-4" data-spacing="md" data-align="center" style="height: 2.5rem">
           <span>Início</span>
           <Separator orientation="vertical" />
           <span>Sobre</span>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="w-full rounded-md border p-3 text-sm">
+        <div class="nds-stack nds-w-full nds-text-body nds-border-default nds-rounded-md nds-p-4" data-spacing="sm">
           <span>Início</span>
           <Separator orientation="vertical" />
           <span>Sobre</span>
@@ -450,14 +450,14 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div class="w-full space-y-3 text-sm">
+        <div class="nds-stack nds-w-full nds-text-body" data-spacing="sm">
           <div>Conteúdo acima</div>
           <Separator orientation="horizontal" />
           <div>Conteúdo abaixo</div>
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="flex h-10 w-full items-center gap-3 text-sm">
+        <div class="nds-cluster nds-w-full nds-text-body" data-spacing="md" data-align="center" style="height: 2.5rem">
           <span>A</span>
           <Separator orientation="vertical" />
           <span>B</span>
