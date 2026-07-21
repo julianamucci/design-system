@@ -75,7 +75,7 @@ export const Indeterminate: Story = {
       <Progress
         value={null}
         aria-label="Processando"
-        className="[&>div]:animate-indeterminate"
+        className="nds-progress-indeterminate-wrap"
       />
     </div>
   ),

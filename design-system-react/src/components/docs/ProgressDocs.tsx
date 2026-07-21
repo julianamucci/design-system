@@ -162,7 +162,7 @@ export function ProgressDocs() {
   const codeIndeterminate = `<Progress
   value={null}
   aria-label="Processando dados"
-  className="[&>div]:animate-indeterminate"
+  className="nds-progress-indeterminate-wrap"
 />`;
 
   const codeWithLabel = `<Progress value={42} aria-label="Enviando arquivo">
@@ -246,7 +246,7 @@ interface ProgressProps extends Progress.Root.Props {
               <Progress
                 value={100}
                 aria-label={tContent("demonstration.labels.complete")}
-                className="[&>div]:bg-success"
+                className="nds-progress-success-wrap"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ interface ProgressProps extends Progress.Root.Props {
               <Progress
                 value={null}
                 aria-label={tContent("demonstration.labels.indeterminate")}
-                className="[&>div]:animate-indeterminate"
+                className="nds-progress-indeterminate-wrap"
               />
             </div>
           </div>
@@ -429,7 +429,7 @@ interface ProgressProps extends Progress.Root.Props {
                 <Progress
                   value={null}
                   aria-label="Processando dados"
-                  className="[&>div]:animate-indeterminate"
+                  className="nds-progress-indeterminate-wrap"
                 />
               </div>
             ),

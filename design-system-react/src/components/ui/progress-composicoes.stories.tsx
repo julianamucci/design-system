@@ -52,7 +52,7 @@ export const CorCustomizada: Story = {
       <Progress
         value={75}
         aria-label="Progresso de sucesso"
-        className="[&>div]:bg-success"
+        className="nds-progress-success-wrap"
       />
       <Progress
         value={40}

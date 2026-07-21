@@ -119,7 +119,7 @@
   const codeIndeterminate = `<Progress
   value={null}
   aria-label="Processando dados"
-  class="[&>div]:animate-indeterminate"
+  class="nds-progress-indeterminate-wrap"
 />`;
 
   const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
@@ -182,7 +182,7 @@ interface ProgressProps {
             <Progress
               value={100}
               aria-label={$tStore('demonstration.labels.complete')}
-              class="[&>div]:bg-success"
+              class="nds-progress-success-wrap"
             />
           </div>
         </div>
@@ -194,7 +194,7 @@ interface ProgressProps {
             <Progress
               value={null}
               aria-label={$tStore('demonstration.labels.indeterminate')}
-              class="[&>div]:animate-indeterminate"
+              class="nds-progress-indeterminate-wrap"
             />
           </div>
         </div>
@@ -343,7 +343,7 @@ interface ProgressProps {
   {/snippet}
   {#snippet variantIndeterminate()}
     <div class="nds-w-full">
-      <Progress value={null} aria-label="Processando dados" class="[&>div]:animate-indeterminate" />
+      <Progress value={null} aria-label="Processando dados" class="nds-progress-indeterminate-wrap" />
     </div>
   {/snippet}
   {#snippet variantWithLabel()}

@@ -208,3 +208,14 @@
   color: hsl(var(--foreground));
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
+
+/* ── animações de progresso indeterminado + accordion (auto-contidas) ────── */
+@keyframes nds-progress-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.nds-animate-indeterminate { animation: nds-progress-indeterminate 1.5s ease-in-out infinite; }
+
+/* ── progress indeterminado/success: animação/cor no filho indicador ──────── */
+.nds-progress-indeterminate-wrap > div { animation: nds-progress-indeterminate 1.5s ease-in-out infinite; }
+.nds-progress-success-wrap > div { background-color: hsl(var(--success)); }

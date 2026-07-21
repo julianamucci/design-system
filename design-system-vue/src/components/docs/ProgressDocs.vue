@@ -148,7 +148,7 @@ const codeDeterminate = `<Progress :model-value="50" aria-label="Progresso do up
 
 const codeIndeterminate = `<Progress
   :model-value="null"
-  class="[&>div]:animate-indeterminate"
+  class="nds-progress-indeterminate-wrap"
   aria-label="Processando dados"
 />`;
 
@@ -352,7 +352,7 @@ const visualTestItems = computed(() => [
           </div>
           <Progress
             :model-value="null"
-            class="[&>div]:animate-indeterminate"
+            class="nds-progress-indeterminate-wrap"
             :aria-label="tContent('demonstration.labels.indeterminate')"
           />
         </div>
@@ -365,7 +365,7 @@ const visualTestItems = computed(() => [
           </div>
           <Progress
             :model-value="75"
-            class="[&>div]:bg-success"
+            class="nds-progress-success-wrap"
             :aria-label="tContent('demonstration.labels.upload')"
           />
         </div>
@@ -526,7 +526,7 @@ const visualTestItems = computed(() => [
         <div class="nds-w-full">
           <Progress
             :model-value="null"
-            class="[&>div]:animate-indeterminate"
+            class="nds-progress-indeterminate-wrap"
             aria-label="Processando dados"
           />
         </div>
