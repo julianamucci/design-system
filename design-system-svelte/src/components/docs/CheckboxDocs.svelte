@@ -103,16 +103,16 @@ import { Label } from "@/components/ui/label";`;
 <\/script>
 <Checkbox id="selecionar-todos" bind:indeterminate />`;
 
-  const codeWithLabel = `<div class="flex items-center gap-2">
+  const codeWithLabel = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="termos" />
   <Label for="termos">Aceito os termos e condições</Label>
 </div>`;
 
-  const codeWithDescription = `<div class="flex gap-3">
-  <Checkbox id="newsletter" aria-describedby="newsletter-desc" class="mt-0.5" />
-  <div class="flex flex-col gap-1">
+  const codeWithDescription = `<div class="nds-cluster" data-spacing="xs" data-align="start">
+  <Checkbox id="newsletter" aria-describedby="newsletter-desc" style="margin-top: 0.125rem" />
+  <div class="nds-stack" data-spacing="xs">
     <Label for="newsletter">Receber novidades por email</Label>
-    <p id="newsletter-desc" class="text-sm text-muted-foreground">
+    <p id="newsletter-desc" class="nds-text-body nds-text-muted-foreground">
       Ao marcar esta opção, você concorda em receber comunicações de marketing.
     </p>
   </div>
@@ -191,32 +191,32 @@ import { Label } from "@/components/ui/label";`;
   let compInListNewsletter = $state(true);
 
   // ─── Composition code strings ────────────────────────────────────────────────
-  const codeCompWithLabel = `<div class="flex items-center gap-2">
+  const codeCompWithLabel = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="cb-tos" bind:checked />
   <Label for="cb-tos">Aceito os termos e condições</Label>
 </div>`;
 
-  const codeCompWithDescription = `<div class="flex gap-2 items-start">
-  <Checkbox id="cb-newsletter" bind:checked class="mt-0.5" aria-describedby="cb-newsletter-desc" />
-  <div class="flex flex-col gap-1">
+  const codeCompWithDescription = `<div class="nds-cluster" data-spacing="xs" data-align="start">
+  <Checkbox id="cb-newsletter" bind:checked style="margin-top: 0.125rem" aria-describedby="cb-newsletter-desc" />
+  <div class="nds-stack" data-spacing="xs">
     <Label for="cb-newsletter">Receber novidades por email</Label>
-    <p id="cb-newsletter-desc" class="text-sm text-muted-foreground">
+    <p id="cb-newsletter-desc" class="nds-text-body nds-text-muted-foreground">
       Enviaremos atualizações ocasionais sobre novos produtos.
     </p>
   </div>
 </div>`;
 
-  const codeCompFieldset = `<fieldset class="border rounded-lg p-4 space-y-3 w-72">
-  <legend class="text-sm font-medium px-1">Notificações</legend>
-  <div class="flex items-center gap-2">
+  const codeCompFieldset = `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
+  <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
+  <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-email" bind:checked={email} />
     <Label for="notif-email">Email</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-push" bind:checked={push} />
     <Label for="notif-push">Push</Label>
   </div>
-  <div class="flex items-center gap-2">
+  <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-sms" bind:checked={sms} />
     <Label for="notif-sms">SMS</Label>
   </div>
@@ -239,33 +239,33 @@ import { Label } from "@/components/ui/label";`;
   function toggleAll(v: boolean) { c1 = v; c2 = v; c3 = v; }
 <\/script>
 
-<div class="space-y-3 w-72">
-  <div class="flex items-center gap-2">
+<div class="nds-stack" data-spacing="sm" style="width: 18rem">
+  <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="sa-parent" checked={parent} {indeterminate} onCheckedChange={toggleAll} />
     <Label for="sa-parent">Selecionar todos</Label>
   </div>
-  <div class="pl-6 space-y-2">
-    <div class="flex items-center gap-2"><Checkbox id="sa-1" bind:checked={c1} /><Label for="sa-1">Opção 1</Label></div>
-    <div class="flex items-center gap-2"><Checkbox id="sa-2" bind:checked={c2} /><Label for="sa-2">Opção 2</Label></div>
-    <div class="flex items-center gap-2"><Checkbox id="sa-3" bind:checked={c3} /><Label for="sa-3">Opção 3</Label></div>
+  <div class="nds-stack" data-spacing="xs" style="padding-left: 1.5rem">
+    <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-1" bind:checked={c1} /><Label for="sa-1">Opção 1</Label></div>
+    <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-2" bind:checked={c2} /><Label for="sa-2">Opção 2</Label></div>
+    <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-3" bind:checked={c3} /><Label for="sa-3">Opção 3</Label></div>
   </div>
 </div>`;
 
-  const codeCompInList = `<div class="space-y-2 w-80">
-  <h3 class="text-sm font-medium">Preferências de contato</h3>
-  <div class="flex items-center gap-2 border rounded-md p-3">
+  const codeCompInList = `<div class="nds-stack" data-spacing="xs" style="width: 20rem">
+  <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
+  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
     <Checkbox id="list-email" bind:checked={email} />
     <Label for="list-email">Email</Label>
   </div>
-  <div class="flex items-center gap-2 border rounded-md p-3">
+  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
     <Checkbox id="list-push" bind:checked={push} />
     <Label for="list-push">Push</Label>
   </div>
-  <div class="flex items-center gap-2 border rounded-md p-3">
+  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
     <Checkbox id="list-sms" bind:checked={sms} />
     <Label for="list-sms">SMS</Label>
   </div>
-  <div class="flex items-center gap-2 border rounded-md p-3">
+  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
     <Checkbox id="list-newsletter" bind:checked={newsletter} />
     <Label for="list-newsletter">Newsletter</Label>
   </div>
@@ -286,20 +286,20 @@ import { Label } from "@/components/ui/label";`;
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="checkbox">
     {#snippet children()}
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-2">
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="demo-1" bind:checked={demoChecked1} data-track="demo" data-track-id="checkbox:demo:acceptTerms" data-track-label={$tStore('demonstration.labels.acceptTerms')} />
           <Label for="demo-1">{$tStore('demonstration.labels.acceptTerms')}</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="demo-2" bind:checked={demoChecked2} data-track="demo" data-track-id="checkbox:demo:newsletter" data-track-label={$tStore('demonstration.labels.newsletter')} />
           <Label for="demo-2">{$tStore('demonstration.labels.newsletter')}</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="demo-3" bind:checked={demoChecked3} data-track="demo" data-track-id="checkbox:demo:rememberMe" data-track-label={$tStore('demonstration.labels.rememberMe')} />
           <Label for="demo-3">{$tStore('demonstration.labels.rememberMe')}</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="demo-indeterminate" bind:checked={demoCheckedAll} bind:indeterminate={demoIndeterminate} data-track="demo" data-track-id="checkbox:demo:selectAll" data-track-label={$tStore('demonstration.labels.selectAll')} />
           <Label for="demo-indeterminate">{$tStore('demonstration.labels.selectAll')}</Label>
         </div>
@@ -391,27 +391,27 @@ import { Label } from "@/components/ui/label";`;
   />
 
   {#snippet doPair1Do()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="do-pair1-do" bind:checked={doPair1Checked} />
       <Label for="do-pair1-do">Receber notificações por email</Label>
     </div>
   {/snippet}
 
   {#snippet doPair1Dont()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="do-pair1-dont" />
       <Label for="do-pair1-dont">Email</Label>
     </div>
   {/snippet}
 
   {#snippet doPair2Do()}
-    <fieldset class="border border-border rounded-md p-3 space-y-2">
-      <legend class="text-xs font-medium px-1">Preferências</legend>
-      <div class="flex items-center gap-2">
+    <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full" data-spacing="xs" style="padding: 0.75rem">
+      <legend class="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-do-1" bind:checked={doPair2Checked1} />
         <Label for="do-pair2-do-1">Newsletter semanal</Label>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-do-2" bind:checked={doPair2Checked2} />
         <Label for="do-pair2-do-2">Atualizações de produto</Label>
       </div>
@@ -419,12 +419,12 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet doPair2Dont()}
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
+    <div class="nds-stack nds-w-full" data-spacing="xs">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-dont-1" bind:checked={doPair2Checked3} />
         <Label for="do-pair2-dont-1">Newsletter semanal</Label>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-dont-2" />
         <Label for="do-pair2-dont-2">Atualizações de produto</Label>
       </div>
@@ -490,18 +490,18 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet variantWithLabel()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="var-with-label" bind:checked={varWithLabelChecked} />
       <Label for="var-with-label">Aceito os termos e condições</Label>
     </div>
   {/snippet}
 
   {#snippet variantWithDescription()}
-    <div class="flex gap-3">
-      <Checkbox id="var-with-desc" bind:checked={varWithDescChecked} aria-describedby="var-with-desc-text" class="mt-0.5" />
-      <div class="flex flex-col gap-1">
+    <div class="nds-cluster" data-spacing="xs" data-align="start">
+      <Checkbox id="var-with-desc" bind:checked={varWithDescChecked} aria-describedby="var-with-desc-text" style="margin-top: 0.125rem" />
+      <div class="nds-stack" data-spacing="xs">
         <Label for="var-with-desc">Receber novidades por email</Label>
-        <p id="var-with-desc-text" class="text-sm text-muted-foreground">
+        <p id="var-with-desc-text" class="nds-text-body nds-text-muted-foreground">
           Ao marcar esta opção, você concorda em receber comunicações de marketing.
         </p>
       </div>
@@ -553,18 +553,18 @@ import { Label } from "@/components/ui/label";`;
   />
 
   {#snippet compWithLabel()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="xs">
       <Checkbox id="comp-tos" bind:checked={compWithLabelChecked} />
       <Label for="comp-tos">Aceito os termos e condições</Label>
     </div>
   {/snippet}
 
   {#snippet compWithDescription()}
-    <div class="flex gap-2 items-start">
-      <Checkbox id="comp-newsletter" bind:checked={compWithDescChecked} class="mt-0.5" aria-describedby="comp-newsletter-desc" />
-      <div class="flex flex-col gap-1">
+    <div class="nds-cluster" data-spacing="xs" data-align="start">
+      <Checkbox id="comp-newsletter" bind:checked={compWithDescChecked} style="margin-top: 0.125rem" aria-describedby="comp-newsletter-desc" />
+      <div class="nds-stack" data-spacing="xs">
         <Label for="comp-newsletter">Receber novidades por email</Label>
-        <p id="comp-newsletter-desc" class="text-sm text-muted-foreground">
+        <p id="comp-newsletter-desc" class="nds-text-body nds-text-muted-foreground">
           Enviaremos atualizações ocasionais sobre novos produtos.
         </p>
       </div>
@@ -572,17 +572,17 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet compFieldset()}
-    <fieldset class="border rounded-lg p-4 space-y-3 w-72">
-      <legend class="text-sm font-medium px-1">Notificações</legend>
-      <div class="flex items-center gap-2">
+    <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
+      <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="notif-email" bind:checked={compFieldsetEmail} />
         <Label for="notif-email">Email</Label>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="notif-push" bind:checked={compFieldsetPush} />
         <Label for="notif-push">Push</Label>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="notif-sms" bind:checked={compFieldsetSms} />
         <Label for="notif-sms">SMS</Label>
       </div>
@@ -590,8 +590,8 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet compSelectAll()}
-    <div class="space-y-3 w-72">
-      <div class="flex items-center gap-2">
+    <div class="nds-stack" data-spacing="sm" style="width: 18rem">
+      <div class="nds-cluster" data-spacing="xs">
         <Checkbox
           id="sa-parent"
           checked={compSelectAllParent}
@@ -600,16 +600,16 @@ import { Label } from "@/components/ui/label";`;
         />
         <Label for="sa-parent">Selecionar todos</Label>
       </div>
-      <div class="pl-6 space-y-2">
-        <div class="flex items-center gap-2">
+      <div class="nds-stack" data-spacing="xs" style="padding-left: 1.5rem">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="sa-1" bind:checked={compSelectAllChild1} />
           <Label for="sa-1">Opção 1</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="sa-2" bind:checked={compSelectAllChild2} />
           <Label for="sa-2">Opção 2</Label>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="sa-3" bind:checked={compSelectAllChild3} />
           <Label for="sa-3">Opção 3</Label>
         </div>
@@ -618,21 +618,21 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet compInList()}
-    <div class="space-y-2 w-80">
-      <h3 class="text-sm font-medium">Preferências de contato</h3>
-      <div class="flex items-center gap-2 border rounded-md p-3">
+    <div class="nds-stack" data-spacing="xs" style="width: 20rem">
+      <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
+      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
         <Checkbox id="list-email" bind:checked={compInListEmail} />
         <Label for="list-email">Email</Label>
       </div>
-      <div class="flex items-center gap-2 border rounded-md p-3">
+      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
         <Checkbox id="list-push" bind:checked={compInListPush} />
         <Label for="list-push">Push</Label>
       </div>
-      <div class="flex items-center gap-2 border rounded-md p-3">
+      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
         <Checkbox id="list-sms" bind:checked={compInListSms} />
         <Label for="list-sms">SMS</Label>
       </div>
-      <div class="flex items-center gap-2 border rounded-md p-3">
+      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
         <Checkbox id="list-newsletter" bind:checked={compInListNewsletter} />
         <Label for="list-newsletter">Newsletter</Label>
       </div>

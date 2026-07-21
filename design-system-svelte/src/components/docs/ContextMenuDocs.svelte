@@ -333,10 +333,13 @@ interface ContextMenuRadioGroupProps {
   <!-- ── Demonstração ──────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap gap-8 items-center justify-center">
+      <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
         <ContextMenu.Root>
           <ContextMenu.Trigger
-            class="flex h-32 w-64 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default"
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            data-align="center"
+            data-justify="center"
+            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
           >
             {$tStore('demonstration.labels.triggerLabel')}
           </ContextMenu.Trigger>
@@ -462,24 +465,24 @@ interface ContextMenuRadioGroupProps {
   />
 
   {#snippet doPair1()}
-    <div class="flex flex-col gap-2 items-start">
-      <p class="text-xs text-muted-foreground">Menu contextual + botão alternativo visível</p>
-      <div class="flex gap-2">
-        <div class="rounded border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">Área com right-click</div>
-        <button class="rounded border border-border px-3 py-1.5 text-xs hover:bg-accent">Ações</button>
+    <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
+      <p class="nds-text-caption nds-text-muted-foreground">Menu contextual + botão alternativo visível</p>
+      <div class="nds-cluster" data-spacing="sm">
+        <div class="nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground" style="border-style: dashed; padding: 0.5rem 0.75rem">Área com right-click</div>
+        <button class="nds-rounded nds-border-default nds-text-caption nds-hover-bg-accent" style="padding: 0.375rem 0.75rem">Ações</button>
       </div>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="flex flex-col gap-2 items-start">
-      <p class="text-xs text-muted-foreground">Apenas right-click, sem alternativa visível</p>
-      <div class="rounded border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">Área com right-click</div>
+    <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
+      <p class="nds-text-caption nds-text-muted-foreground">Apenas right-click, sem alternativa visível</p>
+      <div class="nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground" style="border-style: dashed; padding: 0.5rem 0.75rem">Área com right-click</div>
     </div>
   {/snippet}
 
   {#snippet doPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-16 w-48 items-center justify-center rounded border-2 border-dashed border-border text-xs text-muted-foreground cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -491,7 +494,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-16 w-48 items-center justify-center rounded border-2 border-dashed border-border text-xs text-muted-foreground cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -513,7 +516,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet doPair3()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-16 w-48 items-center justify-center rounded border-2 border-dashed border-border text-xs text-muted-foreground cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -525,8 +528,8 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
   {#snippet dontPair3()}
-    <div class="flex h-16 w-48 items-center justify-center rounded border-2 border-dashed border-border text-xs text-muted-foreground cursor-default">
-      Área sem nenhuma pista visual
+    <div class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-bg-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="border-style: dashed; user-select: none">
+      <span style="text-align: center">Área sem nenhuma pista visual</span>
     </div>
   {/snippet}
 
@@ -554,7 +557,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDefault()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -570,7 +573,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDestructive()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -586,7 +589,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantCheckbox()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -602,7 +605,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantRadio()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -617,7 +620,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantSubTrigger()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -634,7 +637,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantLabel()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -686,7 +689,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet compCheckboxPreview()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -711,7 +714,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet compRadioPreview()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -729,7 +732,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet compSubmenuPreview()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -748,7 +751,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet compShortcutsPreview()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="flex h-24 w-56 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground select-none cursor-default">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>

@@ -163,16 +163,14 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeVertical = `<div class="h-[260px]">
-  <Carousel orientation="vertical" aria-label="Galeria vertical">
-    <CarouselContent class="h-[260px]">
-      <CarouselItem>...</CarouselItem>
-      <CarouselItem>...</CarouselItem>
-    </CarouselContent>
-    <CarouselPrevious aria-label="Item anterior" />
-    <CarouselNext aria-label="Próximo item" />
-  </Carousel>
-</div>`;
+  const codeVertical = `<Carousel orientation="vertical" class="nds-w-full nds-max-w-xs" aria-label="Galeria vertical">
+  <CarouselContent style="height: 200px">
+    <CarouselItem>...</CarouselItem>
+    <CarouselItem>...</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`;
 
   const codeSingle = `<Carousel>
   <CarouselContent>
@@ -203,7 +201,7 @@ import Autoplay from "embla-carousel-autoplay";`;
   }
 <\/script>
 
-<div class="space-y-3">
+<div class="nds-stack" data-spacing="sm">
   <Carousel {setApi} aria-label="Galeria de fotos do produto">
     <CarouselContent>
       {#each slides as s, i}
@@ -213,30 +211,31 @@ import Autoplay from "embla-carousel-autoplay";`;
     <CarouselPrevious aria-label="Item anterior" />
     <CarouselNext aria-label="Próximo item" />
   </Carousel>
-  <div class="flex justify-center gap-2" aria-label="Ir para o slide">
+  <div class="nds-cluster" data-spacing="sm" data-justify="center" aria-label="Ir para o slide">
     {#each slides as _, i}
       <button
         type="button"
         aria-label={\`Ir para o slide \${i + 1} de \${slides.length}\`}
         aria-current={i === current ? 'true' : 'false'}
-        class={\`h-2 w-2 rounded-full \${i === current ? 'bg-primary' : 'bg-muted-foreground/30'}\`}
+        class={\`nds-rounded-full \${i === current ? 'nds-bg-primary' : ''}\`}
+        style="height: 0.5rem; width: 0.5rem"
         onclick={() => api?.scrollTo(i)}
       />
     {/each}
   </div>
 </div>`;
 
-  const codeCompositionGallery = `<Carousel class="w-full max-w-md" aria-label="Galeria de fotos do produto">
+  const codeCompositionGallery = `<Carousel class="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     {#each photos as photo}
       <CarouselItem>
-        <div class="overflow-hidden rounded-md border">
-          <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-            <span class="text-2xl font-semibold">{photo.title}</span>
+        <div class="nds-overflow-hidden nds-rounded-md nds-border-default nds-bg-card">
+          <div class="nds-cluster" data-justify="center" data-align="center" style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))">
+            <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{photo.title}</span>
           </div>
-          <div class="p-4">
-            <h3 class="font-semibold">{photo.title}</h3>
-            <p class="text-sm text-muted-foreground">{photo.description}</p>
+          <div style="padding: 0.75rem">
+            <h3 class="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+            <p class="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
           </div>
         </div>
       </CarouselItem>
@@ -264,11 +263,11 @@ import Autoplay from "embla-carousel-autoplay";`;
   <CarouselNext aria-label="Próximo item" />
 </Carousel>`;
 
-  const codeCompositionMultiResponsive = `<Carousel class="w-full max-w-2xl" aria-label="Cards de produto">
+  const codeCompositionMultiResponsive = `<Carousel class="nds-w-full" style="max-width: 42rem" aria-label="Cards de produto">
   <CarouselContent>
     {#each products as p}
       <CarouselItem class="md:basis-1/2 lg:basis-1/3">
-        <div class="rounded-md border p-4">{p.name}</div>
+        <div class="nds-rounded-md nds-border-default nds-p-4">{p.name}</div>
       </CarouselItem>
     {/each}
   </CarouselContent>
@@ -323,19 +322,21 @@ interface CarouselNavProps extends ButtonProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full max-w-sm mx-auto">
+      <div class="nds-w-full nds-max-w-sm" style="margin-inline: auto">
         <Carousel
           opts={{ loop: false }}
           setApi={setDemoApi}
           aria-label={stripHtml($tStore('description'))}
-          class="relative"
         >
           <CarouselContent>
             {#each [1, 2, 3, 4, 5] as i}
               <CarouselItem>
-                <div class="p-1">
+                <div class="nds-p-1">
                   <div
-                    class="flex aspect-square items-center justify-center rounded-md bg-muted text-3xl font-semibold text-muted-foreground select-none"
+                    class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground"
+                    data-justify="center"
+                    data-align="center"
+                    style="aspect-ratio: 1 / 1; font-size: 1.875rem; user-select: none"
                     aria-label={`${$tStore('demonstration.labels.slide')} ${i} ${$tStore('demonstration.labels.of')} 5`}
                   >
                     {i}
@@ -347,17 +348,16 @@ interface CarouselNavProps extends ButtonProps {
           <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
           <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
         </Carousel>
-        <div class="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Paginação">
+        <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação">
           {#each demoScrollSnaps as _, i}
             <button
               type="button"
               role="tab"
               aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1}`}
               aria-selected={demoSelectedIndex === i}
-              class="h-2 w-2 rounded-full transition-colors"
-              class:bg-primary={demoSelectedIndex === i}
-              class:bg-muted-foreground={demoSelectedIndex !== i}
-              class:opacity-40={demoSelectedIndex !== i}
+              class="nds-rounded-full"
+              class:nds-bg-primary={demoSelectedIndex === i}
+              style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${demoSelectedIndex !== i ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
               onclick={() => demoGoTo(i)}
             ></button>
           {/each}
@@ -465,13 +465,13 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full max-w-[240px] mx-auto">
-      <Carousel aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))} class="relative">
+    <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
+      <Carousel aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}>
         <CarouselContent>
           {#each [1, 2, 3] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -484,13 +484,13 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full max-w-[240px] mx-auto">
-      <Carousel class="relative">
+    <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
+      <Carousel>
         <CarouselContent>
           {#each [1, 2, 3] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -501,18 +501,17 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="w-full max-w-[240px] mx-auto">
+    <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
         aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}
-        class="relative"
       >
         <CarouselContent>
           {#each [1, 2, 3] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -525,17 +524,16 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full max-w-[240px] mx-auto">
+    <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 800, stopOnInteraction: false })]}
-        class="relative"
       >
         <CarouselContent>
           {#each [1, 2, 3] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -569,13 +567,13 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   {#snippet variantHorizontal()}
-    <div class="w-full max-w-[280px]">
-      <Carousel aria-label="Horizontal" class="relative">
+    <div class="nds-w-full" style="max-width: 280px">
+      <Carousel aria-label="Horizontal">
         <CarouselContent>
           {#each [1, 2, 3, 4] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -588,13 +586,13 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="w-full max-w-[200px] h-[220px]">
-      <Carousel orientation="vertical" aria-label="Vertical" class="relative">
-        <CarouselContent class="h-[220px]">
+    <div class="nds-w-full" style="max-width: 200px; height: 220px">
+      <Carousel orientation="vertical" aria-label="Vertical">
+        <CarouselContent style="height: 220px">
           {#each [1, 2, 3, 4] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -607,13 +605,13 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet variantSingle()}
-    <div class="w-full max-w-[260px]">
-      <Carousel aria-label="Single" class="relative">
+    <div class="nds-w-full" style="max-width: 260px">
+      <Carousel aria-label="Single">
         <CarouselContent>
           {#each [1, 2, 3] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -626,13 +624,13 @@ interface CarouselNavProps extends ButtonProps {
     </div>
   {/snippet}
   {#snippet variantMulti()}
-    <div class="w-full max-w-[480px]">
-      <Carousel aria-label="Multi responsivo" class="relative">
+    <div class="nds-w-full" style="max-width: 480px">
+      <Carousel aria-label="Multi responsivo">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5, 6] as i}
             <CarouselItem class="md:basis-1/2 lg:basis-1/3">
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
                   {i}
                 </div>
               </div>
@@ -683,13 +681,13 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   {#snippet compWithDots()}
-    <div class="w-full max-w-[280px] space-y-3">
+    <div class="nds-w-full nds-stack" data-spacing="sm" style="max-width: 280px">
       <Carousel setApi={setDotsApi} aria-label="Galeria">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -699,13 +697,15 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
         <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
       </Carousel>
-      <div class="flex items-center justify-center gap-2" aria-label={$tStore('demonstration.labels.goToSlide')}>
+      <div class="nds-cluster" data-align="center" data-justify="center" data-spacing="sm" aria-label={$tStore('demonstration.labels.goToSlide')}>
         {#each [1, 2, 3, 4, 5] as _, i}
           <button
             type="button"
             aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} 5`}
             aria-current={i === dotsCurrent ? 'true' : 'false'}
-            class={`h-2 w-2 rounded-full transition-colors ${i === dotsCurrent ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+            class="nds-rounded-full"
+            class:nds-bg-primary={i === dotsCurrent}
+            style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${i !== dotsCurrent ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
             onclick={() => dotsApi?.scrollTo(i)}
           ></button>
         {/each}
@@ -714,18 +714,18 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
 
   {#snippet compGallery()}
-    <div class="w-full max-w-[280px]">
+    <div class="nds-w-full" style="max-width: 280px">
       <Carousel aria-label="Galeria de fotos">
         <CarouselContent>
           {#each galleryPhotos as photo}
             <CarouselItem>
-              <div class="overflow-hidden rounded-md border bg-card">
-                <div class="aspect-video bg-gradient-to-br from-primary/20 to-muted flex items-center justify-center">
-                  <span class="text-2xl font-semibold text-foreground">{photo.title}</span>
+              <div class="nds-overflow-hidden nds-rounded-md nds-border-default nds-bg-card">
+                <div class="nds-cluster" data-justify="center" data-align="center" style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))">
+                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{photo.title}</span>
                 </div>
-                <div class="p-3">
-                  <h3 class="text-sm font-semibold text-foreground">{photo.title}</h3>
-                  <p class="text-xs text-muted-foreground">{photo.description}</p>
+                <div style="padding: 0.75rem">
+                  <h3 class="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+                  <p class="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
                 </div>
               </div>
             </CarouselItem>
@@ -738,7 +738,7 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
 
   {#snippet compAutoplay()}
-    <div class="w-full max-w-[280px]">
+    <div class="nds-w-full" style="max-width: 280px">
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
@@ -747,8 +747,8 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselContent>
           {#each [1, 2, 3, 4] as i}
             <CarouselItem>
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-2xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
                   {i}
                 </div>
               </div>
@@ -762,13 +762,13 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
 
   {#snippet compMultiResponsive()}
-    <div class="w-full max-w-[480px]">
+    <div class="nds-w-full" style="max-width: 480px">
       <Carousel aria-label="Multi responsivo">
         <CarouselContent>
           {#each [1, 2, 3, 4, 5, 6] as i}
             <CarouselItem class="md:basis-1/2 lg:basis-1/3">
-              <div class="p-1">
-                <div class="flex aspect-square items-center justify-center rounded-md bg-muted text-xl font-semibold text-muted-foreground">
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
                   {i}
                 </div>
               </div>

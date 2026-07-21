@@ -259,12 +259,12 @@ interface SidebarMenuButtonProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full min-h-[400px] border rounded-lg overflow-hidden" style="contain: layout">
+      <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 400px">
         <SidebarProvider defaultOpen={true}>
           <nav aria-label={$tStore('demonstration.labels.mainNav')}>
             <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-              <SidebarHeader class="px-4 py-3 border-b border-sidebar-border">
-                <span class="font-semibold text-sm text-sidebar-foreground">Design System</span>
+              <SidebarHeader class="nds-px-4" style="padding-block: 0.75rem; border-bottom: 1px solid var(--sidebar-border)">
+                <span class="nds-font-semibold nds-text-body" style="color: var(--sidebar-foreground)">Design System</span>
               </SidebarHeader>
               <SidebarContent>
                 <SidebarGroup>
@@ -287,19 +287,19 @@ interface SidebarMenuButtonProps {
                   </SidebarGroupContent>
                 </SidebarGroup>
               </SidebarContent>
-              <SidebarFooter class="px-4 py-3 border-t border-sidebar-border">
-                <span class="text-xs text-sidebar-foreground/60">{$tStore('demonstration.labels.profile')}</span>
+              <SidebarFooter class="nds-px-4" style="padding-block: 0.75rem; border-top: 1px solid var(--sidebar-border)">
+                <span class="nds-text-caption" style="color: var(--sidebar-foreground); opacity: 0.6">{$tStore('demonstration.labels.profile')}</span>
               </SidebarFooter>
               <SidebarRail />
             </Sidebar>
           </nav>
-          <SidebarInset class="flex flex-col flex-1 min-w-0">
-            <header class="flex h-12 items-center gap-2 border-b px-4">
+          <SidebarInset>
+            <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
               <SidebarTrigger />
-              <span class="text-sm font-medium text-muted-foreground">Dashboard</span>
+              <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Dashboard</span>
             </header>
-            <main id="main-content" tabindex="-1" class="flex-1 p-6">
-              <p class="text-sm text-muted-foreground">{$tStore('description')}</p>
+            <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
+              <p class="nds-text-body nds-text-muted-foreground">{$tStore('description')}</p>
             </main>
           </SidebarInset>
         </SidebarProvider>
@@ -411,7 +411,7 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full min-h-[200px] border rounded-lg overflow-hidden text-xs" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption" style="contain: layout; min-height: 200px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -431,25 +431,25 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 p-3">
+        <SidebarInset style="padding: 0.75rem">
           <SidebarTrigger />
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full min-h-[200px] border rounded-lg overflow-hidden p-3 text-xs text-muted-foreground">
-      <div class="border-r h-full p-2 float-left w-32">
-        <div class="font-medium text-foreground">Dashboard</div>
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-text-muted-foreground" style="min-height: 200px; padding: 0.75rem">
+      <div class="nds-p-2" style="border-right: 1px solid hsl(var(--border)); height: 100%; float: left; width: 8rem">
+        <div class="nds-font-medium nds-text-foreground">Dashboard</div>
         <div>Componentes</div>
         <div>Tokens</div>
       </div>
-      <p class="ml-36 text-xs">Estado open replicado manualmente fora do SidebarProvider</p>
+      <p class="nds-text-caption" style="margin-left: 9rem">Estado open replicado manualmente fora do SidebarProvider</p>
     </div>
   {/snippet}
 
   {#snippet doPair2()}
-    <div class="w-full border rounded-lg overflow-hidden text-xs">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="icon">
@@ -473,14 +473,14 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 p-2 min-h-[120px]">
-          <p class="text-xs text-muted-foreground">aria-current + tooltip no modo icon</p>
+        <SidebarInset class="nds-p-2" style="min-height: 120px">
+          <p class="nds-text-caption nds-text-muted-foreground">aria-current + tooltip no modo icon</p>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full border rounded-lg overflow-hidden text-xs">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="icon">
@@ -500,15 +500,15 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 p-2 min-h-[120px]">
-          <p class="text-xs text-muted-foreground">Sem tooltip — inacessível no modo colapsado</p>
+        <SidebarInset class="nds-p-2" style="min-height: 120px">
+          <p class="nds-text-caption nds-text-muted-foreground">Sem tooltip — inacessível no modo colapsado</p>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet doPair3()}
-    <div class="w-full border rounded-lg overflow-hidden text-xs">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -525,17 +525,17 @@ interface SidebarMenuButtonProps {
             <SidebarRail />
           </Sidebar>
         </nav>
-        <SidebarInset class="flex flex-col flex-1 min-w-0 min-h-[120px]">
-          <header class="flex h-10 items-center gap-2 border-b px-3">
-            <SidebarTrigger class="lg:hidden" />
-            <span class="text-xs text-muted-foreground">SidebarRail no desktop, Trigger no mobile</span>
+        <SidebarInset style="min-height: 120px">
+          <header class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="height: 2.5rem; padding-inline: 0.75rem">
+            <SidebarTrigger />
+            <span class="nds-text-caption nds-text-muted-foreground">SidebarRail no desktop, Trigger no mobile</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
   {#snippet dontPair3()}
-    <div class="w-full border rounded-lg overflow-hidden text-xs">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -551,10 +551,10 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex flex-col flex-1 min-w-0 min-h-[120px]">
-          <header class="flex h-10 items-center gap-2 border-b px-3">
+        <SidebarInset style="min-height: 120px">
+          <header class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="height: 2.5rem; padding-inline: 0.75rem">
             <SidebarTrigger />
-            <span class="text-xs text-muted-foreground">SidebarTrigger no desktop — ocupa espaço</span>
+            <span class="nds-text-caption nds-text-muted-foreground">SidebarTrigger no desktop — ocupa espaço</span>
           </header>
         </SidebarInset>
       </SidebarProvider>
@@ -584,7 +584,7 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet variantSidebar()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -607,15 +607,15 @@ interface SidebarMenuButtonProps {
             <SidebarRail />
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">variant="sidebar"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">variant="sidebar"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet variantFloating()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="floating" collapsible="offcanvas">
@@ -637,15 +637,15 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">variant="floating"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">variant="floating"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet variantInset()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="inset" collapsible="offcanvas">
@@ -667,15 +667,15 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">variant="inset"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">variant="inset"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet variantIcon()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={false}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="icon">
@@ -698,15 +698,15 @@ interface SidebarMenuButtonProps {
             <SidebarRail />
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">collapsible="icon"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">collapsible="icon"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet variantNone()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="none">
@@ -728,18 +728,18 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">collapsible="none"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">collapsible="none"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet variantRight()}
-    <div class="w-full min-h-[220px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
-        <SidebarInset class="flex-1 min-h-[220px] flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">side="right"</span>
+        <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">side="right"</span>
         </SidebarInset>
         <nav aria-label="Navegação principal">
           <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
@@ -835,15 +835,15 @@ interface SidebarMenuButtonProps {
         name: $tStore('variants.compositions.withSearch.name'),
         description: $tStore('variants.compositions.withSearch.description'),
         useWhen: $tStore('variants.compositions.withSearch.use'),
-        code: `<SidebarHeader class="gap-2">
-  <span class="font-semibold">Design System</span>
-  <div class="relative">
+        code: `<SidebarHeader style="gap: 0.5rem">
+  <span class="nds-font-semibold">Design System</span>
+  <div style="position: relative">
     <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."
       aria-label="Buscar navegação"
-      class="pl-7"
+      style="padding-left: 1.75rem"
     />
   </div>
 </SidebarHeader>`,
@@ -866,11 +866,11 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet compWithGroups()}
-    <div class="w-full min-h-[260px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader class="p-3 text-sm font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Principal</SidebarGroupLabel>
@@ -922,19 +922,19 @@ interface SidebarMenuButtonProps {
             <SidebarRail />
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">Dashboard</span>
+        <SidebarInset style="display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">Dashboard</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet compWithSubMenu()}
-    <div class="w-full min-h-[260px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader class="p-3 text-sm font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Componentes</SidebarGroupLabel>
@@ -985,23 +985,23 @@ interface SidebarMenuButtonProps {
             </SidebarFooter>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">Clique em "Componentes"</span>
+        <SidebarInset style="display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet compWithSearch()}
-    <div class="w-full min-h-[260px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader class="gap-2 p-3">
-              <span class="text-sm font-semibold text-sidebar-foreground">Design System</span>
-              <div class="relative">
+            <SidebarHeader style="gap: 0.5rem; padding: 0.75rem">
+              <span class="nds-text-body nds-font-semibold" style="color: var(--sidebar-foreground)">Design System</span>
+              <div style="position: relative">
                 <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none" />
-                <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" class="pl-7 h-8 text-xs" />
+                <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" class="nds-text-caption" style="padding-left: 1.75rem; height: 2rem" />
               </div>
             </SidebarHeader>
             <SidebarContent>
@@ -1029,19 +1029,19 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">Busca no header</span>
+        <SidebarInset style="display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">Busca no header</span>
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
 
   {#snippet compWithBadges()}
-    <div class="w-full min-h-[260px] border rounded-lg overflow-hidden" style="contain: layout">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader class="p-3 text-sm font-semibold text-sidebar-foreground">App</SidebarHeader>
+            <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">App</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupContent>
@@ -1072,8 +1072,8 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="flex-1 flex items-center justify-center">
-          <span class="text-xs text-muted-foreground">Inbox</span>
+        <SidebarInset style="display: flex; align-items: center; justify-content: center">
+          <span class="nds-text-caption nds-text-muted-foreground">Inbox</span>
         </SidebarInset>
       </SidebarProvider>
     </div>

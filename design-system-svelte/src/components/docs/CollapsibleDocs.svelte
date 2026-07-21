@@ -125,13 +125,13 @@ import {
 } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-svelte';`;
 
-  const codeUncontrolled = `<Collapsible>
-  <CollapsibleTrigger class="flex items-center gap-2 ...">
+  const codeUncontrolled = `<Collapsible class="nds-w-full">
+  <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
     Exibir filtros avançados
-    <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" />
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="...">Conteúdo colapsável</div>
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">Conteúdo colapsável</div>
   </CollapsibleContent>
 </Collapsible>`;
 
@@ -139,12 +139,12 @@ import { ChevronDown } from 'lucide-svelte';`;
   let open = $state(false);
 <\/script>
 
-<Collapsible bind:open>
-  <CollapsibleTrigger>
+<Collapsible bind:open class="nds-w-full">
+  <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
     {open ? 'Ocultar' : 'Exibir'} filtros avançados
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div>Conteúdo colapsável</div>
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">Conteúdo colapsável</div>
   </CollapsibleContent>
 </Collapsible>`;
 
@@ -192,51 +192,51 @@ interface CollapsibleContentProps {
   <!-- ── Demonstração ─────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full space-y-6">
+      <div class="nds-w-full nds-stack" data-spacing="xl">
         <!-- Demo 1: Não-controlado (padrão) -->
-        <div class="space-y-2">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
             Não-controlado
           </p>
-          <Collapsible class="w-full">
+          <Collapsible class="nds-w-full">
             <CollapsibleTrigger
-              class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
             >
               {$tStore('demonstration.labels.headerLabel')}
               <ChevronDown
                 aria-hidden="true"
-                class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+                class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
               />
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2 space-y-1">
+              <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                 <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
                 <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
               </div>
             </CollapsibleContent>
           </Collapsible>
-          <p class="text-xs text-muted-foreground">{$tStore('demonstration.labels.basicFilter')}</p>
+          <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.basicFilter')}</p>
         </div>
 
         <!-- Demo 2: Controlado -->
-        <div class="space-y-2">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
             Controlado
           </p>
-          <Collapsible bind:open={controlledOpen} class="w-full">
+          <Collapsible bind:open={controlledOpen} class="nds-w-full">
             <CollapsibleTrigger
-              class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
             >
               {controlledOpen
                 ? $tStore('demonstration.labels.triggerOpen')
                 : $tStore('demonstration.labels.triggerClosed')}
               <ChevronDown
                 aria-hidden="true"
-                class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+                class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
               />
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2 space-y-1">
+              <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
                 <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
                 <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
               </div>
@@ -245,19 +245,21 @@ interface CollapsibleContentProps {
         </div>
 
         <!-- Demo 3: Desabilitado -->
-        <div class="space-y-2">
-          <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
             Desabilitado
           </p>
-          <Collapsible disabled class="w-full">
+          <Collapsible disabled class="nds-w-full">
             <CollapsibleTrigger
               disabled
-              class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium"
+              data-justify="between"
+              style="opacity: 0.5; cursor: not-allowed"
             >
               {$tStore('demonstration.labels.triggerClosed')}
               <ChevronDown
                 aria-hidden="true"
-                class="h-4 w-4 shrink-0 text-muted-foreground"
+                class="nds-icon nds-shrink-0"
               />
             </CollapsibleTrigger>
           </Collapsible>
@@ -349,49 +351,49 @@ interface CollapsibleContentProps {
   />
 
   {#snippet doPair1()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         {$tStore('demonstration.labels.triggerClosed')}
-        <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0" />
+        <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />
       </CollapsibleTrigger>
     </Collapsible>
   {/snippet}
   {#snippet dontPair1()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         Ver mais
-        <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0" />
+        <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />
       </CollapsibleTrigger>
     </Collapsible>
   {/snippet}
   {#snippet doPair2()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         {$tStore('demonstration.labels.headerLabel')}
-        <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0" />
+        <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="rounded-md border border-border bg-muted/50 px-4 py-2 text-sm mt-1">
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           {$tStore('demonstration.labels.advancedFilter1')}
         </div>
       </CollapsibleContent>
     </Collapsible>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full space-y-1">
+    <div class="nds-w-full nds-stack" data-spacing="sm">
       {#each [1, 2] as i}
-        <Collapsible class="w-full">
+        <Collapsible class="nds-w-full">
           <CollapsibleTrigger
-            class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
           >
             Seção {i}
-            <ChevronDown aria-hidden="true" class="h-4 w-4 shrink-0" />
+            <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />
           </CollapsibleTrigger>
         </Collapsible>
       {/each}
@@ -428,18 +430,18 @@ interface CollapsibleContentProps {
   />
 
   {#snippet variantUncontrolled()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         {$tStore('demonstration.labels.triggerClosed')}
         <ChevronDown
           aria-hidden="true"
-          class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2">
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           {$tStore('demonstration.labels.advancedFilter1')}
         </div>
       </CollapsibleContent>
@@ -447,20 +449,20 @@ interface CollapsibleContentProps {
   {/snippet}
 
   {#snippet variantControlled()}
-    <Collapsible bind:open={demoOpen} class="w-full">
+    <Collapsible bind:open={demoOpen} class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         {demoOpen
           ? $tStore('demonstration.labels.triggerOpen')
           : $tStore('demonstration.labels.triggerClosed')}
         <ChevronDown
           aria-hidden="true"
-          class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2">
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           {$tStore('demonstration.labels.advancedFilter1')}
         </div>
       </CollapsibleContent>
@@ -477,12 +479,12 @@ interface CollapsibleContentProps {
         name: $tStore('variants.compositions.customButton.name'),
         description: $tStore('variants.compositions.customButton.description'),
         useWhen: $tStore('variants.compositions.customButton.use'),
-        code: `<Collapsible class="w-full max-w-sm">
-  <CollapsibleTrigger class="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium hover:bg-accent">
+        code: `<Collapsible class="nds-w-full nds-max-w-sm">
+  <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
     Exibir opções avançadas
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
       <p>Primeira opção avançada.</p>
       <p>Segunda opção avançada.</p>
       <p>Terceira opção avançada.</p>
@@ -495,13 +497,13 @@ interface CollapsibleContentProps {
         name: $tStore('variants.compositions.iconTrigger.name'),
         description: $tStore('variants.compositions.iconTrigger.description'),
         useWhen: $tStore('variants.compositions.iconTrigger.use'),
-        code: `<Collapsible class="w-full">
-  <CollapsibleTrigger class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
-    <Filter aria-hidden="true" class="h-4 w-4" />
+        code: `<Collapsible class="nds-w-full">
+  <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
+    <Filter aria-hidden="true" class="nds-icon nds-shrink-0" />
     Filtros avançados
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-1">
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
       <p>Categoria</p>
       <p>Preço</p>
       <p>Disponibilidade</p>
@@ -514,15 +516,15 @@ interface CollapsibleContentProps {
         name: $tStore('variants.compositions.rotatingChevron.name'),
         description: $tStore('variants.compositions.rotatingChevron.description'),
         useWhen: $tStore('variants.compositions.rotatingChevron.use'),
-        code: `<Collapsible class="w-full">
-  <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium hover:bg-accent">
+        code: `<Collapsible class="nds-w-full">
+  <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between">
     Configurações avançadas
-    <ChevronDown aria-hidden="true" class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
-      <div class="flex justify-between"><span class="text-muted-foreground">Timeout</span><span>30s</span></div>
-      <div class="flex justify-between"><span class="text-muted-foreground">Retries</span><span>3</span></div>
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+      <div class="nds-cluster" data-justify="between"><span class="nds-text-muted-foreground">Timeout</span><span>30s</span></div>
+      <div class="nds-cluster" data-justify="between"><span class="nds-text-muted-foreground">Retries</span><span>3</span></div>
     </div>
   </CollapsibleContent>
 </Collapsible>`,
@@ -532,17 +534,17 @@ interface CollapsibleContentProps {
         name: $tStore('variants.compositions.richContent.name'),
         description: $tStore('variants.compositions.richContent.description'),
         useWhen: $tStore('variants.compositions.richContent.use'),
-        code: `<Collapsible class="w-full">
-  <CollapsibleTrigger class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
-    <Settings aria-hidden="true" class="h-4 w-4" />
+        code: `<Collapsible class="nds-w-full">
+  <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
+    <Settings aria-hidden="true" class="nds-icon nds-shrink-0" />
     Configurações do sistema
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-3">
-      <p class="text-muted-foreground">Selecione as opções desejadas.</p>
-      <label class="flex items-center gap-2"><input type="checkbox" /> Notificações por e-mail</label>
-      <label class="flex items-center gap-2"><input type="checkbox" /> Sincronização automática</label>
-      <label class="flex items-center gap-2"><input type="checkbox" /> Modo escuro</label>
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+      <p class="nds-text-muted-foreground nds-text-caption">Selecione as opções desejadas.</p>
+      <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Notificações por e-mail</label>
+      <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Sincronização automática</label>
+      <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Modo escuro</label>
     </div>
   </CollapsibleContent>
 </Collapsible>`,
@@ -552,14 +554,14 @@ interface CollapsibleContentProps {
   />
 
   {#snippet compCustomButton()}
-    <Collapsible class="w-full max-w-sm">
+    <Collapsible class="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger
-        class="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex"
       >
         Exibir opções avançadas
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           <p>Primeira opção avançada disponível.</p>
           <p>Segunda opção avançada disponível.</p>
           <p>Terceira opção avançada disponível.</p>
@@ -569,15 +571,15 @@ interface CollapsibleContentProps {
   {/snippet}
 
   {#snippet compIconTrigger()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex"
       >
-        <Filter aria-hidden="true" class="h-4 w-4 text-muted-foreground" />
+        <Filter aria-hidden="true" class="nds-icon nds-shrink-0" />
         Filtros avançados
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-1">
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
           <p>Categoria</p>
           <p>Preço</p>
           <p>Disponibilidade</p>
@@ -587,39 +589,39 @@ interface CollapsibleContentProps {
   {/snippet}
 
   {#snippet compRotatingChevron()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
       >
         Configurações avançadas
         <ChevronDown
           aria-hidden="true"
-          class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+          class="nds-icon nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-2">
-          <div class="flex justify-between"><span class="text-muted-foreground">Timeout</span><span>30s</span></div>
-          <div class="flex justify-between"><span class="text-muted-foreground">Retries</span><span>3</span></div>
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between"><span class="nds-text-muted-foreground">Timeout</span><span>30s</span></div>
+          <div class="nds-cluster" data-justify="between"><span class="nds-text-muted-foreground">Retries</span><span>3</span></div>
         </div>
       </CollapsibleContent>
     </Collapsible>
   {/snippet}
 
   {#snippet compRichContent()}
-    <Collapsible class="w-full">
+    <Collapsible class="nds-w-full">
       <CollapsibleTrigger
-        class="flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex"
       >
-        <Settings aria-hidden="true" class="h-4 w-4 text-muted-foreground" />
+        <Settings aria-hidden="true" class="nds-icon nds-shrink-0" />
         Configurações do sistema
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="mt-2 rounded-md bg-muted/50 p-4 text-sm space-y-3">
-          <p class="text-muted-foreground text-xs">Selecione as opções desejadas.</p>
-          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Notificações por e-mail</label>
-          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Sincronização automática</label>
-          <label class="flex items-center gap-2"><input type="checkbox" class="rounded border-border" /> Modo escuro</label>
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <p class="nds-text-muted-foreground nds-text-caption">Selecione as opções desejadas.</p>
+          <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Notificações por e-mail</label>
+          <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Sincronização automática</label>
+          <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default" /> Modo escuro</label>
         </div>
       </CollapsibleContent>
     </Collapsible>

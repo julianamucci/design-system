@@ -118,14 +118,14 @@
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent side="bottom" align="start">
-    <div class="flex gap-3">
+    <div class="nds-cluster" data-spacing="sm">
       <Avatar>
         <AvatarImage src="/joana.jpg" alt="Joana" />
         <AvatarFallback>JS</AvatarFallback>
       </Avatar>
       <div>
-        <p class="font-medium">Joana Silva</p>
-        <p class="text-muted-foreground">Designer · 142 seguidores</p>
+        <p class="nds-font-medium">Joana Silva</p>
+        <p class="nds-text-muted-foreground">Designer · 142 seguidores</p>
       </div>
     </div>
   </HoverCardContent>
@@ -190,27 +190,27 @@ interface HoverCardContentProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
         <!-- Profile preview -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.userProfile')}
           </p>
           <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
             <HoverCardTrigger>
               {#snippet child({ props })}
-                <a href="#joana" class="text-primary underline-offset-4 hover:underline" {...props}>@joana</a>
+                <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
               {/snippet}
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex gap-3">
+              <div class="nds-cluster" data-spacing="sm">
                 <Avatar>
                   <AvatarImage src="" alt="" />
                   <AvatarFallback>JS</AvatarFallback>
                 </Avatar>
-                <div class="flex flex-col">
-                  <p class="font-medium text-sm">Joana Silva</p>
-                  <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+                <div class="nds-stack">
+                  <p class="nds-font-medium nds-text-body">Joana Silva</p>
+                  <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
                 </div>
               </div>
             </HoverCardContent>
@@ -218,42 +218,42 @@ interface HoverCardContentProps {
         </div>
 
         <!-- Link preview -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.linkPreview')}
           </p>
           <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
             <HoverCardTrigger>
               {#snippet child({ props })}
-                <a href="#link" class="text-primary underline-offset-4 hover:underline" {...props}>design-system.dev</a>
+                <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
               {/snippet}
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+              <div class="nds-stack" data-spacing="sm">
+                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center">D</span>
                   <span>design-system.dev</span>
                 </div>
-                <p class="font-medium">Guia de overlays acessíveis</p>
+                <p class="nds-font-medium">Guia de overlays acessíveis</p>
               </div>
             </HoverCardContent>
           </HoverCard>
         </div>
 
         <!-- Definition -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.definitionTooltip')}
           </p>
           <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
             <HoverCardTrigger>
               {#snippet child({ props })}
-                <a href="#wcag" class="text-primary underline-offset-4 hover:underline" {...props}>WCAG 2.1</a>
+                <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.1</a>
               {/snippet}
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="font-medium text-sm">WCAG 2.1</p>
-              <p class="text-xs text-muted-foreground">
+              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
               </p>
             </HoverCardContent>
@@ -261,20 +261,20 @@ interface HoverCardContentProps {
         </div>
 
         <!-- Metric -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-xs font-medium text-muted-foreground">
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {$tStore('demonstration.labels.metricExplainer')}
           </p>
           <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
             <HoverCardTrigger>
               {#snippet child({ props })}
-                <a href="#metric" class="text-primary underline-offset-4 hover:underline" {...props}>3,42%</a>
+                <a href="#metric" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>3,42%</a>
               {/snippet}
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="text-xs text-muted-foreground">Conversão (últimos 30d)</p>
-              <p class="text-2xl font-semibold">3,42%</p>
-              <p class="text-xs text-muted-foreground">Cliques no CTA / usuários únicos.</p>
+              <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
+              <p class="nds-text-h4 nds-font-semibold">3,42%</p>
+              <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos.</p>
             </HoverCardContent>
           </HoverCard>
         </div>
@@ -380,22 +380,22 @@ interface HoverCardContentProps {
   />
 
   {#snippet doPair1()}
-    <div class="text-sm space-y-1" style="contain: layout">
-      <div class="text-primary underline">@joana</div>
-      <div class="text-xs text-muted-foreground">+ link para /users/joana</div>
+    <div class="nds-text-body nds-stack" data-spacing="xs" style="contain: layout">
+      <div class="nds-text-primary" style="text-decoration: underline">@joana</div>
+      <div class="nds-text-caption nds-text-muted-foreground">+ link para /users/joana</div>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="text-sm" style="contain: layout">
-      <div class="text-primary underline">@joana</div>
-      <div class="text-xs text-muted-foreground italic">apenas hover (touch users perdem)</div>
+    <div class="nds-text-body" style="contain: layout">
+      <div class="nds-text-primary" style="text-decoration: underline">@joana</div>
+      <div class="nds-text-caption nds-text-muted-foreground nds-italic">apenas hover (touch users perdem)</div>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="text-sm font-mono" style="contain: layout">openDelay={'{500}'}</div>
+    <div class="nds-text-body nds-font-mono" style="contain: layout">openDelay={'{500}'}</div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="text-sm font-mono" style="contain: layout">openDelay={'{0}'}</div>
+    <div class="nds-text-body nds-font-mono" style="contain: layout">openDelay={'{0}'}</div>
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -415,12 +415,12 @@ interface HoverCardContentProps {
   />
 
   {#snippet variantDefault()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       openDelay=700 / closeDelay=300
     </div>
   {/snippet}
   {#snippet variantWithDelay()}
-    <div class="text-xs font-mono text-muted-foreground" style="contain: layout">
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
       openDelay=500 / closeDelay=200
     </div>
   {/snippet}
@@ -442,14 +442,14 @@ interface HoverCardContentProps {
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex gap-3">
+    <div class="nds-cluster" data-spacing="sm">
       <Avatar>
         <AvatarImage src="/joana.jpg" alt="" />
         <AvatarFallback>JS</AvatarFallback>
       </Avatar>
-      <div class="flex flex-col">
-        <p class="font-medium text-sm">Joana Silva</p>
-        <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+      <div class="nds-stack">
+        <p class="nds-font-medium nds-text-body">Joana Silva</p>
+        <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
       </div>
     </div>
   </HoverCardContent>
@@ -467,12 +467,12 @@ interface HoverCardContentProps {
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2 text-xs text-muted-foreground">
-        <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+        <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center">D</span>
         <span>design-system.dev</span>
       </div>
-      <p class="font-medium">Guia de overlays acessíveis</p>
+      <p class="nds-font-medium">Guia de overlays acessíveis</p>
     </div>
   </HoverCardContent>
 </HoverCard>`,
@@ -485,14 +485,14 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="underline decoration-dotted underline-offset-4" {...props}>
+      <button type="button" class="nds-text-primary nds-text-body nds-font-medium" style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help" {...props}>
         WCAG 2.1 AA
       </button>
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent>
-    <p class="font-medium text-sm">WCAG 2.1 AA</p>
-    <p class="text-xs text-muted-foreground">
+    <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+    <p class="nds-text-caption nds-text-muted-foreground">
       Web Content Accessibility Guidelines 2.1 — nível AA.
     </p>
   </HoverCardContent>
@@ -506,17 +506,17 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="underline decoration-dotted underline-offset-4" {...props}>
+      <button type="button" class="nds-text-primary nds-text-body nds-font-medium" style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help" {...props}>
         LCP 1.8s
       </button>
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent>
-    <div class="flex items-baseline justify-between gap-2">
-      <p class="text-sm font-medium">Largest Contentful Paint</p>
-      <span class="text-xs font-medium text-emerald-600">1.8s</span>
+    <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+      <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
+      <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
     </div>
-    <p class="text-xs text-muted-foreground">
+    <p class="nds-text-caption nds-text-muted-foreground">
       Tempo até o maior elemento visível. Bom: &lt;2.5s · Ruim: &gt;4s.
     </p>
   </HoverCardContent>
@@ -527,22 +527,22 @@ interface HoverCardContentProps {
   />
 
   {#snippet compUserProfile()}
-    <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#joana" class="text-primary underline-offset-4 hover:underline" {...props}>@joana</a>
+            <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
-          <div class="flex gap-3">
+          <div class="nds-cluster" data-spacing="sm">
             <Avatar>
               <AvatarImage src="" alt="" />
               <AvatarFallback>JS</AvatarFallback>
             </Avatar>
-            <div class="flex flex-col">
-              <p class="font-medium text-sm">Joana Silva</p>
-              <p class="text-xs text-muted-foreground">Designer · 142 seguidores</p>
+            <div class="nds-stack">
+              <p class="nds-font-medium nds-text-body">Joana Silva</p>
+              <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
             </div>
           </div>
         </HoverCardContent>
@@ -551,20 +551,20 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet compLinkPreview()}
-    <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#link" class="text-primary underline-offset-4 hover:underline" {...props}>design-system.dev</a>
+            <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-2 text-xs text-muted-foreground">
-              <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+          <div class="nds-stack" data-spacing="sm">
+            <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+              <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center">D</span>
               <span>design-system.dev</span>
             </div>
-            <p class="font-medium">Guia de overlays acessíveis</p>
+            <p class="nds-font-medium">Guia de overlays acessíveis</p>
           </div>
         </HoverCardContent>
       </HoverCard>
@@ -572,13 +572,14 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet compDefinition()}
-    <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <button
               type="button"
-              class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+              class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
+              style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help"
               {...props}
             >
               WCAG 2.1 AA
@@ -586,8 +587,8 @@ interface HoverCardContentProps {
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
-          <p class="font-medium text-sm">WCAG 2.1 AA</p>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+          <p class="nds-text-caption nds-text-muted-foreground">
             Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
           </p>
         </HoverCardContent>
@@ -596,13 +597,14 @@ interface HoverCardContentProps {
   {/snippet}
 
   {#snippet compMetric()}
-    <div style="contain: layout; min-height: 140px; position: relative;" class="w-full">
+    <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
             <button
               type="button"
-              class="bg-transparent border-0 p-0 text-primary text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help"
+              class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
+              style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help"
               {...props}
             >
               LCP 1.8s
@@ -610,11 +612,11 @@ interface HoverCardContentProps {
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
-          <div class="flex items-baseline justify-between gap-2">
-            <p class="text-sm font-medium">Largest Contentful Paint</p>
-            <span class="text-xs font-medium text-emerald-600">1.8s</span>
+          <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+            <p class="nds-text-body nds-font-medium">Largest Contentful Paint</p>
+            <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
           </div>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             Tempo até o maior elemento visível ser renderizado. Bom: &lt;2.5s · Ruim: &gt;4s.
           </p>
         </HoverCardContent>

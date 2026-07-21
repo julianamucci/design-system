@@ -6,6 +6,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+  import DOMPurify from 'dompurify';
   import iconsTranslations from '@shared/content/icons/translations.json';
 
   // ─── Catálogo de ícones ────────────────────────────────────────────────────
@@ -109,56 +110,56 @@
   });
 </script>
 
-<div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-  <div class="p-8 max-w-6xl mx-auto space-y-8">
+<div class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
+  <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
-    <header class="space-y-4 border-b border-border/50 pb-8">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
-            {$tStore('category')}
-          </Badge>
-          <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
-            {$tStore('type')}
-          </Badge>
+    <header class="nds-stack nds-border-b-soft nds-pb-8" style="padding-bottom: 2rem">
+      <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+        <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
+          {$tStore('category')}
+        </Badge>
+        <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
+          {$tStore('type')}
+        </Badge>
+        <div class="nds-spacer-start">
+          <LanguageSwitcher />
         </div>
-        <LanguageSwitcher />
       </div>
 
-      <h1 class="text-4xl font-bold tracking-tight text-foreground">
+      <h1 class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
         {$tStore('title')}
       </h1>
 
-      <p class="text-muted-foreground max-w-3xl leading-relaxed">
+      <p class="nds-text-muted-foreground nds-leading-relaxed" style="max-width: 48rem">
         {$tStore('description')}
       </p>
 
-      <div class="flex flex-wrap items-center gap-3 pt-1">
-        <span class="inline-flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md text-xs font-mono border border-border/50 text-muted-foreground">
+      <div class="nds-cluster" data-spacing="sm" data-align="center" style="padding-top: 0.25rem">
+        <span class="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default">
           <!-- Package icon inlined — avoid lucide-svelte (Svelte 4 compat issue) -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
           lucide-svelte
         </span>
-        <span class="text-sm text-muted-foreground/70">
+        <span class="nds-text-body nds-text-muted-foreground" style="opacity: 0.7">
           {iconsAvailableText}
         </span>
       </div>
     </header>
 
     <!-- ── Como usar ────────────────────────────────────────────────────── -->
-    <section class="space-y-6 border-t border-border/50 pt-8">
-      <h2 class="text-xl font-semibold text-foreground">{$tStore('howToUse.title')}</h2>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.individual.title')}</p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`import { Search, Settings, User } from 'lucide-svelte';
+    <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('howToUse.title')}</h2>
+      <div class="nds-grid" data-spacing="md" data-min="18rem">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('howToUse.individual.title')}</p>
+          <pre class="nds-docs-code"><code>{`import { Search, Settings, User } from 'lucide-svelte';
 
-<Search class="h-4 w-4" aria-hidden="true" />`}</code></pre>
+<Search class="nds-icon" aria-hidden="true" />`}</code></pre>
         </div>
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">{$tStore('howToUse.sizes.title')}</p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`h-3 w-3   // 12px — badges, captions
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('howToUse.sizes.title')}</p>
+          <pre class="nds-docs-code"><code>{`h-3 w-3   // 12px — badges, captions
 h-4 w-4   // 16px — padrão em texto e botões
 h-5 w-5   // 20px — destaque em headers
 h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
@@ -167,59 +168,59 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
     </section>
 
     <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
-    <section class="space-y-4 border-t border-border/50 pt-8">
-      <h2 class="text-xl font-semibold text-foreground">{$tStore('accessibility.title')}</h2>
-      <div class="grid gap-3 md:grid-cols-2">
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">
+    <section class="nds-stack nds-docs-section-divider" data-spacing="md">
+      <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('accessibility.title')}</h2>
+      <div class="nds-grid" data-spacing="sm" data-min="18rem">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-foreground">
             {$tStore('accessibility.decorative.title')}
           </p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`<Button>
-  <Save class="h-4 w-4" aria-hidden="true" />
+          <pre class="nds-docs-code"><code>{`<Button>
+  <Save class="nds-icon" aria-hidden="true" />
   Salvar
 </Button>`}</code></pre>
         </div>
-        <div class="space-y-2">
-          <p class="text-sm font-medium text-foreground">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-body nds-font-medium nds-text-foreground">
             {$tStore('accessibility.functional.title')}
           </p>
-          <pre class="bg-muted rounded-lg p-4 text-xs overflow-x-auto border border-border/50 font-mono leading-relaxed"><code>{`<Button
+          <pre class="nds-docs-code"><code>{`<Button
   size="icon"
   aria-label="Excluir produto"
 >
-  <Trash2 class="h-4 w-4" aria-hidden="true" />
+  <Trash2 class="nds-icon" aria-hidden="true" />
 </Button>`}</code></pre>
         </div>
       </div>
-      <ul class="space-y-1.5 text-sm text-muted-foreground list-none p-0 m-0">
+      <ul class="nds-stack nds-text-body nds-text-muted-foreground nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
         {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule}
-          <li class="flex gap-2 items-start list-none">
-            <span class="text-primary mt-0.5 shrink-0">✓</span>
+          <li class="nds-cluster nds-list-none" data-spacing="sm" data-align="start">
+            <span class="nds-text-primary nds-shrink-0 nds-mt-0-5">✓</span>
             <!-- eslint-disable svelte/no-at-html-tags -->
-            {@html $tStore(`accessibility.${rule}`)}
+            <span>{@html DOMPurify.sanitize($tStore(`accessibility.${rule}`))}</span>
           </li>
         {/each}
       </ul>
     </section>
 
     <!-- ── Busca ────────────────────────────────────────────────────────── -->
-    <section class="space-y-3 border-t border-border/50 pt-8">
-      <div class="space-y-1">
-        <h2 class="text-xl font-semibold text-foreground">{$tStore('search.title')}</h2>
-        <p class="text-sm text-muted-foreground">{$tStore('search.subtitle')}</p>
+    <section class="nds-stack nds-docs-section-divider" data-spacing="sm">
+      <div class="nds-stack" data-spacing="xs">
+        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('search.title')}</h2>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('search.subtitle')}</p>
       </div>
-      <div class="relative">
+      <div class="nds-icon-search-wrap">
         <!-- Search icon inlined -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nds-icon-search-svg" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input
           type="search"
           bind:value={search}
           placeholder={$tStore('search.placeholder')}
           aria-label={$tStore('search.placeholder')}
-          class="flex h-9 w-full rounded-md border border-input bg-input px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring pl-9"
+          class="nds-icon-search-input"
         />
       </div>
-      <p class="text-sm text-muted-foreground" aria-live="polite" aria-atomic="true">
+      <p class="nds-text-body nds-text-muted-foreground" aria-live="polite" aria-atomic="true">
         {searchCountText}
       </p>
     </section>
@@ -228,36 +229,35 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
 
     <!-- Empty state — sempre no DOM, CSS controla visibilidade -->
     <div
-      class="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground"
-      class:hidden={hasResults}
+      class="nds-icon-empty-state"
+      class:is-visible={!hasResults}
       role="status"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 opacity-25" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <p class="font-medium">{$tStore('search.noResults')}</p>
-      <p class="text-sm opacity-70">{$tStore('search.noResultsSub')}</p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nds-icon-empty-state-svg" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <p class="nds-font-medium">{$tStore('search.noResults')}</p>
+      <p class="nds-text-body" style="opacity: 0.7">{$tStore('search.noResultsSub')}</p>
     </div>
 
     <!-- Grade de ícones — todos no DOM, visibility via CSS -->
     <ul
-      class="grid gap-1 list-none p-0 m-0"
-      class:hidden={!hasResults}
-      style="grid-template-columns: repeat(auto-fill, minmax(96px, 1fr))"
+      class="nds-icon-grid"
+      class:is-hidden={!hasResults}
       aria-label={iconsAvailableText}
     >
       {#each ALL_ICON_NAMES as name}
         {@const isCopied = copied === name}
         <li
-          class="list-none"
-          class:hidden={visibleSet !== null && !visibleSet.has(name)}
+          class="nds-icon-grid-item"
+          class:is-hidden={visibleSet !== null && !visibleSet.has(name)}
         >
           <button
             type="button"
             aria-label={`${$tStore('copy.tooltip')} ${name}`}
-            class="group relative w-full flex flex-col items-center gap-2 p-3 rounded-lg border border-transparent hover:border-border hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors overflow-visible"
+            class="nds-icon-tile"
             onclick={() => handleCopy(name)}
           >
             <!-- Ícone / check — ambos no DOM, opacity via CSS -->
-            <span class="h-6 w-6 flex items-center justify-center relative">
+            <span class="nds-icon-tile-svg" style="position: relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -266,8 +266,8 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="absolute h-5 w-5 text-primary transition-opacity"
-                class:opacity-0={!isCopied}
+                class="nds-icon-lg nds-text-primary"
+                style="position: absolute; opacity: {isCopied ? 1 : 0}; transition: opacity var(--duration-fast)"
                 aria-hidden="true"
               >
                 <path d="M20 6 9 17l-5-5"/>
@@ -280,20 +280,21 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="h-5 w-5 text-foreground/80 group-hover:text-primary transition-colors transition-opacity"
-                class:opacity-0={isCopied}
+                class="nds-icon-lg"
+                style="opacity: {isCopied ? 0 : 1}; transition: opacity var(--duration-fast)"
                 aria-hidden="true"
               >
-                {@html ICON_SVG_INNER[name]}
+                {@html DOMPurify.sanitize(ICON_SVG_INNER[name])}
               </svg>
             </span>
 
-            <span class="text-[10px] text-muted-foreground text-center leading-tight break-all font-mono w-full line-clamp-2">
+            <span class="nds-icon-tile-name">
               {name}
             </span>
 
             <span
-              class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-900 px-2 py-1 text-[10px] text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+              class="nds-icon-tile-tooltip"
+              style="opacity: {isCopied ? 1 : 0}"
               aria-hidden="true"
             >
               {isCopied ? $tStore('copy.copied') : $tStore('copy.tooltip')}
