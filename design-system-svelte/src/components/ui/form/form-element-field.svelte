@@ -17,7 +17,7 @@
 
 <FormPrimitive.ElementField {form} {name}>
 	{#snippet children({ constraints, errors, tainted, value })}
-		<div bind:this={ref} class={cn("space-y-2", className)} {...restProps}>
+		<div bind:this={ref} class={cn("nds-form-field", className)} {...restProps}>
 			{@render childrenProp?.({ constraints, errors, tainted, value: value as T[U] })}
 		</div>
 	{/snippet}

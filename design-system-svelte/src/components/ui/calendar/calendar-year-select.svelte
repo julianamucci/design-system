@@ -40,7 +40,7 @@
 				aria-hidden="true"
 			>
 				{yearItems.find((item) => item.value === value)?.label || selectedYearItem.label}
-				<ChevronDownIcon class={cn("size-4", className)} />
+				<ChevronDownIcon class={cn("nds-size-4", className)} />
 			</span>
 		{/snippet}
 	</CalendarPrimitive.YearSelect>

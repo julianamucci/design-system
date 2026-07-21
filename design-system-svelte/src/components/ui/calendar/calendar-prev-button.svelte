@@ -16,7 +16,7 @@
 </script>
 
 {#snippet Fallback()}
-	<ChevronLeftIcon class={cn("size-4", className)} />
+	<ChevronLeftIcon class={cn("nds-size-4", className)} />
 {/snippet}
 
 <CalendarPrimitive.PrevButton
