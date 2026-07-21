@@ -34,13 +34,13 @@ export const Default: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Conteúdo da visão geral.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Lista de propriedades.
         </TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Exemplos de uso.
         </TabsContent>
       </Tabs>
@@ -72,13 +72,13 @@ export const Line: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Conteúdo da visão geral.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Lista de propriedades.
         </TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Exemplos de uso.
         </TabsContent>
       </Tabs>
@@ -100,19 +100,19 @@ export const Vertical: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="w-full max-w-xl">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-full max-w-xl">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="account">Conta</TabsTrigger>
           <TabsTrigger value="security">Segurança</TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" class="pl-4 text-sm text-muted-foreground">
+        <TabsContent value="profile" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
           Configuracoes do perfil — nome, foto e bio.
         </TabsContent>
-        <TabsContent value="account" class="pl-4 text-sm text-muted-foreground">
+        <TabsContent value="account" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
           Configuracoes da conta — e-mail, idioma e fuso.
         </TabsContent>
-        <TabsContent value="security" class="pl-4 text-sm text-muted-foreground">
+        <TabsContent value="security" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
           Configuracoes de segurança — senha e 2FA.
         </TabsContent>
       </Tabs>

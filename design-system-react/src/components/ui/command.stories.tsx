@@ -126,10 +126,10 @@ export const CommandPaletteDialog: Story = {
   render: () => {
     const [open, setOpen] = useState(false);
     return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="nds-stack" data-align="center" data-spacing="md">
+        <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-spacing="sm">
           <span>Pressione</span>
-          <kbd className="rounded border px-1.5 py-0.5 text-xs font-mono bg-muted">⌘K</kbd>
+          <kbd className="nds-rounded nds-border-default nds-text-caption nds-font-mono nds-bg-muted" style={{ paddingInline: "0.375rem", paddingBlock: "0.125rem" }}>⌘K</kbd>
         </div>
         <Button
           variant="outline"

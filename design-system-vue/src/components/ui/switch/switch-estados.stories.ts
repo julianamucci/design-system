@@ -120,9 +120,9 @@ export const Invalid: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="space-y-2 w-80">
-        <div class="flex items-center justify-between rounded-lg border border-destructive p-4">
-          <div class="space-y-0.5">
+      <div class="" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster nds-rounded-lg nds-border-default border-destructive nds-p-4" data-align="center" data-justify="between">
+          <div class="" data-spacing="xs">
             <Label :for="'est-invalid'">Aceitar termos</Label>
             <p class="nds-text-body nds-text-muted-foreground">
               Você precisa aceitar para continuar.

@@ -22,7 +22,7 @@ export const Completo: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
@@ -48,7 +48,7 @@ export const SemTitulo: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -101,7 +101,7 @@ export const InsercaoDinamica: Story = {
     template: `
       <div aria-live="polite">
         <Alert>
-          <Info class="h-4 w-4" aria-hidden="true" />
+          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
           <AlertTitle>Operação concluída</AlertTitle>
           <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
         </Alert>

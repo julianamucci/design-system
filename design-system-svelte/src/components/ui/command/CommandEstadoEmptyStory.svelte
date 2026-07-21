@@ -2,7 +2,7 @@
   import * as Command from '@/components/ui/command';
 </script>
 
-<div class="w-full max-w-sm rounded-xl border shadow-md">
+<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default shadow-md">
   <Command.Root>
     <Command.Input placeholder="Buscar componente..." aria-controls="cmd-empty-listbox" />
     <Command.List id="cmd-empty-listbox">

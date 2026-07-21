@@ -54,13 +54,13 @@ export const Playground: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Conteúdo da visão geral — resumo do componente e principais conceitos.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Lista de propriedades, tipos e valores padrão.
         </TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Exemplos de uso e snippets prontos para copiar.
         </TabsContent>
       </Tabs>

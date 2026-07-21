@@ -61,7 +61,7 @@ export const WithIcon: Story = {
     template: `
       <Avatar>
         <AvatarFallback role="img" aria-label="Usuário genérico">
-          <User class="h-5 w-5" aria-hidden="true" />
+          <User class="" style="height: 1.25rem; width: 1.25rem" aria-hidden="true" />
         </AvatarFallback>
       </Avatar>
     `,
@@ -75,7 +75,7 @@ export const Group: Story = {
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     template: `
-      <div class="flex -space-x-2" role="group" aria-label="Participantes">
+      <div class="nds-cluster -space-x-2" role="group" aria-label="Participantes">
         <Avatar class="ring-2 ring-background">
           <AvatarImage
             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format"
@@ -112,7 +112,7 @@ export const WithStatus: Story = {
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     template: `
-      <div class="relative inline-block">
+      <div class="nds-inline-block" style="position: relative">
         <Avatar>
           <AvatarImage
             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format"
@@ -121,7 +121,7 @@ export const WithStatus: Story = {
           <AvatarFallback>MR</AvatarFallback>
         </Avatar>
         <span
-          class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+          class="bottom-0 right-0 nds-rounded-full nds-bg-primary ring-2 ring-background" style="position: absolute; height: 0.625rem; width: 0.625rem"
           role="status"
           aria-label="online"
         />

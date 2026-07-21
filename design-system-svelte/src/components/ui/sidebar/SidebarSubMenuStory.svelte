@@ -31,12 +31,12 @@
   ];
 </script>
 
-<div class="min-h-[400px] w-full flex border rounded-lg overflow-hidden">
+<div class="nds-cluster min-h-[400px] nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
   <SidebarProvider defaultOpen={true}>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader class="px-4 py-3 border-b border-sidebar-border">
-          <span class="font-semibold text-sm text-sidebar-foreground">Design System</span>
+        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
+          <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
@@ -72,7 +72,7 @@
                               isActive={sub.isActive}
                               aria-current={sub.isActive ? 'page' : undefined}
                             >
-                              <Circle aria-hidden="true" class="size-2" />
+                              <Circle aria-hidden="true" class="" style="width: 0.5rem; height: 0.5rem" />
                               {sub.label}
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -99,18 +99,18 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="px-4 py-3 border-t border-sidebar-border">
-          <span class="text-xs text-sidebar-foreground/60">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
+          <span class="nds-text-caption text-sidebar-foreground/60">v1.0.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
-    <SidebarInset class="flex flex-col flex-1 min-w-0">
-      <header class="flex h-12 items-center gap-2 border-b px-4">
+    <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
+      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
         <SidebarTrigger />
-        <span class="text-sm font-medium text-muted-foreground">Com sub-menu</span>
+        <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com sub-menu</span>
       </header>
-      <main id="main-content" tabindex="-1" class="flex-1 p-6">
+      <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
         <p class="nds-text-body nds-text-muted-foreground">Sidebar com submenu expansível em "Componentes".</p>
       </main>
     </SidebarInset>

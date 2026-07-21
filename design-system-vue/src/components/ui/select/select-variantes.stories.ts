@@ -57,7 +57,7 @@ export const Default: Story = {
     template: `
       <div style="contain: layout; min-height: 260px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -101,7 +101,7 @@ export const WithGroups: Story = {
     template: `
       <div style="contain: layout; min-height: 360px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado por região" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado por região" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -149,20 +149,20 @@ export const WithIcon: Story = {
     template: `
       <div style="contain: layout; min-height: 280px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar idioma" class="w-56">
+          <SelectTrigger aria-label="Selecionar idioma" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="pt-BR">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe class="nds-size-4" aria-hidden="true" />
               <span>Português (BR)</span>
             </SelectItem>
             <SelectItem value="en">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe class="nds-size-4" aria-hidden="true" />
               <span>English</span>
             </SelectItem>
             <SelectItem value="es">
-              <Globe class="size-4" aria-hidden="true" />
+              <Globe class="nds-size-4" aria-hidden="true" />
               <span>Español</span>
             </SelectItem>
           </SelectContent>

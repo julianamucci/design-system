@@ -39,7 +39,7 @@ export const Playground: Story = {
       return (
         <div
           key={args.orientation}
-          className="flex items-center h-12 gap-4 text-sm"
+          className="nds-cluster nds-text-body" data-align="center" data-spacing="md" style={{ height: "3rem" }}
         >
           <span>Item 1</span>
           <Separator {...args} />

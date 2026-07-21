@@ -147,7 +147,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="space-y-2 w-full max-w-lg">
+      <div class="nds-w-full nds-max-w-lg" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Item aberto: <code>{{ value || 'nenhum' }}</code>
         </p>

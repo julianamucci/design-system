@@ -58,7 +58,7 @@ export const Playground: Story = {
           </CardAction>
         </CardHeader>
         <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
-        <CardFooter class="justify-end gap-2">
+        <CardFooter class="" data-justify="end" data-spacing="sm">
           <Button variant="outline" size="sm" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
           <Button size="sm" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
         </CardFooter>

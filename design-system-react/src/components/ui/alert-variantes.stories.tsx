@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
@@ -36,7 +36,7 @@ export const Default: Story = {
 export const Destructive: Story = {
   render: () => (
     <Alert variant="destructive">
-      <AlertCircle aria-hidden="true" className="h-4 w-4" />
+      <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Erro ao salvar</AlertTitle>
       <AlertDescription>
         Não foi possível salvar. Verifique sua conexão e tente novamente.
@@ -52,8 +52,8 @@ export const Destructive: Story = {
 
 export const Success: Story = {
   render: () => (
-    <Alert className="bg-success/10 text-success border-success/30">
-      <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+    <Alert className="bg-success/10 nds-text-success border-success/30">
+      <CheckCircle2 aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Perfil atualizado</AlertTitle>
       <AlertDescription>
         Suas informações foram salvas com sucesso.
@@ -68,9 +68,9 @@ export const Success: Story = {
 
 export const Warning: Story = {
   render: () => (
-    <Alert className="bg-warning/10 border-warning/30 text-foreground [&_svg]:text-warning">
-      <TriangleAlert aria-hidden="true" className="h-4 w-4" />
-      <AlertTitle className="text-foreground">Assinatura expirando</AlertTitle>
+    <Alert className="bg-warning/10 border-warning/30 nds-text-foreground [&_svg]:text-warning">
+      <TriangleAlert aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <AlertTitle className="nds-text-foreground">Assinatura expirando</AlertTitle>
       <AlertDescription className="nds-text-muted-foreground">
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
       </AlertDescription>

@@ -43,7 +43,7 @@ export const Playground: Story = {
         role="status"
         aria-busy="true"
         aria-label="Carregando conteúdo de exemplo"
-        class="w-[320px] space-y-3"
+        class="" data-spacing="sm" style="width: 320px"
       >
         <Skeleton :class="args.class + ' motion-reduce:animate-none'" aria-hidden="true" />
       </div>

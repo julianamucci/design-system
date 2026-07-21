@@ -32,10 +32,10 @@ export const Default: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -58,7 +58,7 @@ export const FocoVisivel: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <Label>Volume</Label>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -96,7 +96,7 @@ export const Disabled: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2 opacity-100">
+      <div class="opacity-100" data-spacing="sm" style="width: 18rem">
         <Label>Volume</Label>
         <Slider v-model="value" :disabled="true" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -126,10 +126,10 @@ export const NoMin: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -157,10 +157,10 @@ export const NoMax: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>

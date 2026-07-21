@@ -31,7 +31,7 @@ export const ComLabel: Story = {
         <Checkbox id="with-label" />
         <label
           for="with-label"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Aceito os termos e condições
         </label>
@@ -70,12 +70,12 @@ export const ComDescricao: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="flex items-start gap-2">
+      <div class="nds-cluster" data-align="start" data-spacing="sm">
         <Checkbox id="with-description" class="nds-mt-0-5" aria-describedby="desc-help" />
         <div class="nds-stack" data-spacing="xs">
           <label
             for="with-description"
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
           >
             Receber novidades por email
           </label>
@@ -116,23 +116,23 @@ export const GrupoFieldset: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <fieldset class="space-y-3 border rounded-lg p-4">
-        <legend class="text-sm font-semibold px-1">Preferências de notificação</legend>
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm">
+        <legend class="nds-text-body nds-font-semibold nds-px-1">Preferências de notificação</legend>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-email" />
-          <label for="notif-email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="notif-email" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Receber novidades por email
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-push" />
-          <label for="notif-push" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="notif-push" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Receber notificações push
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-session" />
-          <label for="notif-session" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="notif-session" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Manter sessão ativa
           </label>
         </div>
@@ -178,29 +178,29 @@ export const SelecionarTodos: Story = {
       return { items, checked };
     },
     template: `
-      <fieldset class="space-y-3 border rounded-lg p-4">
-        <legend class="text-sm font-semibold px-1">Preferências</legend>
-        <div class="flex items-center gap-2 pb-2 border-b">
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm">
+        <legend class="nds-text-body nds-font-semibold nds-px-1">Preferências</legend>
+        <div class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="padding-bottom: 0.5rem">
           <Checkbox id="select-all" />
-          <label for="select-all" class="text-sm font-semibold leading-none">
+          <label for="select-all" class="nds-text-body nds-font-semibold" style="line-height: 1">
             Selecionar todos os itens
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-email" />
-          <label for="item-email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="item-email" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Receber novidades por email
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-push" />
-          <label for="item-push" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="item-push" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Receber notificações push
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-session" />
-          <label for="item-session" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label for="item-session" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
             Manter sessão ativa
           </label>
         </div>
@@ -240,13 +240,13 @@ export const EmFormulario: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <form class="space-y-4 w-72" @submit.prevent>
+      <form class="" data-spacing="md" style="width: 18rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <label class="nds-text-body nds-font-medium">Nome</label>
           <input
             type="text"
             placeholder="Seu nome"
-            class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
         <div class="nds-stack" data-spacing="sm">
@@ -254,13 +254,13 @@ export const EmFormulario: Story = {
           <input
             type="email"
             placeholder="seu@email.com"
-            class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
-        <div class="flex items-start gap-2">
+        <div class="nds-cluster" data-align="start" data-spacing="sm">
           <Checkbox id="form-terms" value="accepted" required class="nds-mt-0-5" />
           <div class="nds-stack" data-spacing="xs">
-            <label for="form-terms" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <label for="form-terms" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
               Aceito os termos e condições
             </label>
             <p class="nds-text-caption nds-text-muted-foreground">
@@ -270,7 +270,7 @@ export const EmFormulario: Story = {
         </div>
         <button
           type="submit"
-          class="w-full h-(--height-default) px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
         >
           Criar conta
         </button>

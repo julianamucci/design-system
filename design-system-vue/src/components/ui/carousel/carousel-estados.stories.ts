@@ -30,8 +30,8 @@ export const PrimeiroSlide: Story = {
       <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no primeiro slide">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-6">
-              <span class="text-3xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-6" data-align="center" data-justify="center">
+              <span class="text-3xl nds-font-semibold">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>
@@ -63,8 +63,8 @@ export const UltimoSlide: Story = {
       <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no último slide">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-6">
-              <span class="text-3xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-6" data-align="center" data-justify="center">
+              <span class="text-3xl nds-font-semibold">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>

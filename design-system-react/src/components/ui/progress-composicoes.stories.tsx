@@ -30,7 +30,7 @@ type Story = StoryObj<typeof Progress>;
 
 export const MultiplosNiveis: Story = {
   render: () => (
-    <div className="w-80 space-y-4">
+    <div className="" data-spacing="md" style={{ width: "20rem" }}>
       <Progress value={0} aria-label="Etapa 1" />
       <Progress value={50} aria-label="Etapa 2" />
       <Progress value={100} aria-label="Etapa 3" />
@@ -48,7 +48,7 @@ export const MultiplosNiveis: Story = {
 
 export const CorCustomizada: Story = {
   render: () => (
-    <div className="w-80 space-y-4">
+    <div className="" data-spacing="md" style={{ width: "20rem" }}>
       <Progress
         value={75}
         aria-label="Progresso de sucesso"

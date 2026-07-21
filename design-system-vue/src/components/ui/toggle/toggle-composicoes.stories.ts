@@ -28,7 +28,7 @@ export const BarraDeFormatacao: Story = {
     components: { Toggle, Bold, Italic, Underline, List },
     setup() { return {}; },
     template: `
-      <div class="flex items-center gap-1 rounded-md border p-1">
+      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-align="center" data-spacing="xs">
         <Toggle aria-label="Negrito">
           <Bold aria-hidden="true" />
         </Toggle>
@@ -126,8 +126,8 @@ export const ToggleEmPainel: Story = {
     components: { Toggle, Eye },
     setup() { return {}; },
     template: `
-      <div class="flex items-center justify-between rounded-lg border p-4 w-80">
-        <div class="space-y-0.5">
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style="width: 20rem">
+        <div class="" data-spacing="xs">
           <p class="nds-text-body nds-font-medium">Mostrar arquivados</p>
           <p class="nds-text-body nds-text-muted-foreground">
             Inclui itens marcados como arquivados na lista.

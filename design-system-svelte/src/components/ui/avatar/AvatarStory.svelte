@@ -44,11 +44,11 @@
 {:else if variant === 'icon'}
   <Avatar class={sizeClass}>
     <AvatarFallback role="img" aria-label="Usuário genérico">
-      <User class="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+      <User class="nds-text-muted-foreground" style="height: 1rem; width: 1rem" aria-hidden="true" />
     </AvatarFallback>
   </Avatar>
 {:else if variant === 'group'}
-  <div class="flex -space-x-2" role="group" aria-label="Participantes">
+  <div class="nds-cluster -space-x-2" role="group" aria-label="Participantes">
     {#each groupImages as item}
       <Avatar class={`ring-2 ring-background ${sizeClass}`}>
         {#if item.src}
@@ -59,7 +59,7 @@
     {/each}
   </div>
 {:else if variant === 'withStatus'}
-  <div class="relative inline-block">
+  <div class="nds-inline-block" style="position: relative">
     <Avatar class={sizeClass}>
       <AvatarImage {src} {alt} />
       <AvatarFallback>{initials}</AvatarFallback>
@@ -67,7 +67,7 @@
     <span
       role="status"
       aria-label={statusLabel}
-      class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+      class="bottom-0 right-0 nds-rounded-full nds-bg-primary ring-2 ring-background" style="position: absolute; height: 0.625rem; width: 0.625rem"
     ></span>
   </div>
 {/if}

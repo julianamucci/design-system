@@ -53,7 +53,7 @@ export const Horizontal: Story = {
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[220px] gap-1 p-2">
+              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "220px" }}>
                 <li>
                   <NavigationMenuLink href="#">Plano Pro</NavigationMenuLink>
                 </li>
@@ -88,7 +88,7 @@ export const Vertical: Story = {
   render: () => (
     <div style={{ ...wrapperStyle, minWidth: 220 }}>
       <NavigationMenu aria-label="Navegação principal" orientation="vertical">
-        <NavigationMenuList className="flex-col items-stretch gap-1">
+        <NavigationMenuList className="items-stretch" data-spacing="xs">
           <NavigationMenuItem>
             <NavigationMenuLink href="#">Início</NavigationMenuLink>
           </NavigationMenuItem>

@@ -28,7 +28,7 @@ export const FormaDePagamento: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="cp-cartao" />
           <Label :for="'cp-cartao'">Cartão de crédito</Label>
@@ -67,8 +67,8 @@ export const ComFieldsetLegend: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <fieldset class="space-y-3 border rounded-lg p-4 w-80">
-        <legend class="text-sm font-semibold px-1">Forma de entrega</legend>
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm" style="width: 20rem">
+        <legend class="nds-text-body nds-font-semibold nds-px-1">Forma de entrega</legend>
         <RadioGroup aria-label="Forma de entrega" class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-spacing="sm">
             <RadioGroupItem value="standard" id="cfl-standard" />
@@ -102,19 +102,19 @@ export const EmFormulario: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <form class="space-y-4 w-80" @submit.prevent>
+      <form class="" data-spacing="md" style="width: 20rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <label class="nds-text-body nds-font-medium" for="form-email">Email</label>
           <input
             id="form-email"
             type="email"
             placeholder="seu@email.com"
-            class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
 
         <fieldset class="nds-stack" data-spacing="sm">
-          <legend class="text-sm font-medium mb-1">Forma de pagamento</legend>
+          <legend class="nds-text-body nds-font-medium nds-mb-1">Forma de pagamento</legend>
           <RadioGroup aria-label="Forma de pagamento" required class="nds-stack" data-spacing="sm">
             <div class="nds-cluster" data-spacing="sm">
               <RadioGroupItem value="cartao" id="form-cartao" />
@@ -133,7 +133,7 @@ export const EmFormulario: Story = {
 
         <button
           type="submit"
-          class="w-full h-(--height-default) px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
         >
           Finalizar pedido
         </button>
@@ -165,35 +165,35 @@ export const CartoesSelecionaveis: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Plano" class="grid gap-3 w-80">
+      <RadioGroup aria-label="Plano" class="nds-grid" data-spacing="sm" style="width: 20rem">
         <label
           for="card-basic"
-          class="flex items-start gap-3 rounded-lg border border-input p-4 cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
-          <RadioGroupItem value="basic" id="card-basic" class="mt-1" />
-          <div class="space-y-0.5">
-            <span class="block text-sm font-medium">Básico — R$ 19/mês</span>
-            <span class="block text-xs text-muted-foreground">Para uso pessoal e projetos pequenos.</span>
+          <RadioGroupItem value="basic" id="card-basic" class="nds-mt-1" />
+          <div class="" data-spacing="xs">
+            <span class="nds-block nds-text-body nds-font-medium">Básico — R$ 19/mês</span>
+            <span class="nds-block nds-text-caption nds-text-muted-foreground">Para uso pessoal e projetos pequenos.</span>
           </div>
         </label>
         <label
           for="card-pro"
-          class="flex items-start gap-3 rounded-lg border border-input p-4 cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
-          <RadioGroupItem value="pro" id="card-pro" class="mt-1" />
-          <div class="space-y-0.5">
-            <span class="block text-sm font-medium">Pro — R$ 49/mês</span>
-            <span class="block text-xs text-muted-foreground">Para times com até 5 pessoas.</span>
+          <RadioGroupItem value="pro" id="card-pro" class="nds-mt-1" />
+          <div class="" data-spacing="xs">
+            <span class="nds-block nds-text-body nds-font-medium">Pro — R$ 49/mês</span>
+            <span class="nds-block nds-text-caption nds-text-muted-foreground">Para times com até 5 pessoas.</span>
           </div>
         </label>
         <label
           for="card-enterprise"
-          class="flex items-start gap-3 rounded-lg border border-input p-4 cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
-          <RadioGroupItem value="enterprise" id="card-enterprise" class="mt-1" />
-          <div class="space-y-0.5">
-            <span class="block text-sm font-medium">Enterprise — Sob consulta</span>
-            <span class="block text-xs text-muted-foreground">Suporte dedicado e SLA personalizado.</span>
+          <RadioGroupItem value="enterprise" id="card-enterprise" class="nds-mt-1" />
+          <div class="" data-spacing="xs">
+            <span class="nds-block nds-text-body nds-font-medium">Enterprise — Sob consulta</span>
+            <span class="nds-block nds-text-caption nds-text-muted-foreground">Suporte dedicado e SLA personalizado.</span>
           </div>
         </label>
       </RadioGroup>

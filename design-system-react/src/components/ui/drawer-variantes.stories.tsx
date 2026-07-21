@@ -64,7 +64,7 @@ function makeStory(
                 Drawer com direction=&quot;{direction}&quot;.
               </DrawerDescription>
             </DrawerHeader>
-            <div className="px-4 pb-2 text-sm text-muted-foreground">
+            <div className="nds-px-4 nds-text-body nds-text-muted-foreground" style={{ paddingBottom: "0.5rem" }}>
               {description}
             </div>
             <DrawerFooter>

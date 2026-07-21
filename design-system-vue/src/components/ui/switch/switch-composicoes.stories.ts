@@ -28,9 +28,9 @@ export const PainelConfiguracoes: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="space-y-4 w-96">
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+      <div class="" data-spacing="md" style="width: 24rem">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
+          <div class="" data-spacing="xs">
             <Label :for="'pc-marketing'">Emails de marketing</Label>
             <p class="nds-text-body nds-text-muted-foreground">
               Receba novidades e promoções da plataforma.
@@ -39,8 +39,8 @@ export const PainelConfiguracoes: Story = {
           <Switch id="pc-marketing" :default-value="true" />
         </div>
 
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
+          <div class="" data-spacing="xs">
             <Label :for="'pc-security'">Alertas de segurança</Label>
             <p class="nds-text-body nds-text-muted-foreground">
               Notificações sobre acessos suspeitos à sua conta.
@@ -49,8 +49,8 @@ export const PainelConfiguracoes: Story = {
           <Switch id="pc-security" :default-value="true" />
         </div>
 
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
+          <div class="" data-spacing="xs">
             <Label :for="'pc-news'">Resumo semanal</Label>
             <p class="nds-text-body nds-text-muted-foreground">
               Receba um resumo das principais novidades toda segunda.
@@ -80,16 +80,16 @@ export const ListaDePreferencias: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <ul class="divide-y rounded-lg border w-80">
-        <li class="flex items-center justify-between p-4">
+      <ul class="divide-y nds-rounded-lg nds-border-default" style="width: 20rem">
+        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
           <Label :for="'lp-push'">Notificações push</Label>
           <Switch id="lp-push" :default-value="true" />
         </li>
-        <li class="flex items-center justify-between p-4">
+        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
           <Label :for="'lp-email'">Notificações por email</Label>
           <Switch id="lp-email" />
         </li>
-        <li class="flex items-center justify-between p-4">
+        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
           <Label :for="'lp-sms'">SMS</Label>
           <Switch id="lp-sms" />
         </li>
@@ -111,19 +111,19 @@ export const EmFormulario: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <form class="space-y-4 w-96" @submit.prevent>
+      <form class="" data-spacing="md" style="width: 24rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <label for="form-email" class="nds-text-body nds-font-medium">Email</label>
           <input
             id="form-email"
             type="email"
             placeholder="seu@email.com"
-            class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
 
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
+        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
+          <div class="" data-spacing="xs">
             <Label :for="'form-public'">Perfil público</Label>
             <p class="nds-text-body nds-text-muted-foreground">
               Qualquer pessoa pode visualizar seu perfil.
@@ -134,7 +134,7 @@ export const EmFormulario: Story = {
 
         <button
           type="submit"
-          class="w-full h-(--height-default) px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
         >
           Salvar preferências
         </button>
@@ -158,16 +158,16 @@ export const ItemDeMenuCompacto: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="rounded-md border p-2 w-64 space-y-1">
-        <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
+      <div class="nds-rounded-md nds-border-default nds-p-2" data-spacing="xs" style="width: 16rem">
+        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-darkmode'" class="nds-text-caption">Modo escuro</Label>
           <Switch id="menu-darkmode" size="sm" />
         </div>
-        <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
+        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-autosave'" class="nds-text-caption">Salvar automaticamente</Label>
           <Switch id="menu-autosave" size="sm" :default-value="true" />
         </div>
-        <div class="flex items-center justify-between rounded px-2 py-1.5 hover:bg-muted/40">
+        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-compact'" class="nds-text-caption">Visualização compacta</Label>
           <Switch id="menu-compact" size="sm" />
         </div>

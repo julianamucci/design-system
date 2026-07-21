@@ -75,7 +75,7 @@ export const EditarPerfil: Story = {
               type="email"
               defaultValue="joana@example.com"
             />
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end" data-spacing="sm">
               <Button variant="ghost" size="sm">
                 Cancelar
               </Button>
@@ -117,7 +117,7 @@ export const FiltrosRapidos: Story = {
           <PopoverHeader>
             <PopoverTitle>Filtrar por status</PopoverTitle>
           </PopoverHeader>
-          <div className="flex flex-col gap-1.5 text-sm">
+          <div className="nds-stack nds-text-body" data-spacing="xs">
             <label className="nds-cluster" data-spacing="sm">
               <input type="checkbox" defaultChecked />
               <span>Ativos</span>
@@ -131,7 +131,7 @@ export const FiltrosRapidos: Story = {
               <span>Rascunhos</span>
             </label>
           </div>
-          <div className="flex justify-end gap-2 pt-1">
+          <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">
               Limpar
             </Button>
@@ -180,7 +180,7 @@ export const SelecaoDeData: Story = {
               Data
             </Label>
             <Input id="comp-date" type="date" defaultValue="2026-05-07" />
-            <div className="flex justify-end pt-1">
+            <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end">
               <Button type="submit" size="sm">
                 Confirmar
               </Button>

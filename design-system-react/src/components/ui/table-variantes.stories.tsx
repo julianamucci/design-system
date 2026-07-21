@@ -167,7 +167,7 @@ export const ComAcoesPorLinha: Story = {
           <TableHead scope="col">Status</TableHead>
           <TableHead scope="col">Método</TableHead>
           <TableHead scope="col" className="nds-text-right">Valor</TableHead>
-          <TableHead scope="col" className="w-10">
+          <TableHead scope="col" className="" style={{ width: "2.5rem" }}>
             <span className="nds-sr-only">Ações</span>
           </TableHead>
         </TableRow>
@@ -185,7 +185,7 @@ export const ComAcoesPorLinha: Story = {
                 size="icon"
                 aria-label={`Ações para fatura ${invoice.id}`}
               >
-                <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+                <MoreHorizontal className="" style={{ height: "1rem", width: "1rem" }} aria-hidden="true" />
               </Button>
             </TableCell>
           </TableRow>

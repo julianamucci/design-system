@@ -40,10 +40,10 @@ export const UploadAnimado: Story = {
       return { value };
     },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-foreground">Enviando arquivo</span>
-          <span class="text-muted-foreground tabular-nums" aria-live="polite">{{ value }}%</span>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">Enviando arquivo</span>
+          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">{{ value }}%</span>
         </div>
         <Progress :model-value="value" aria-label="Progresso do upload" />
       </div>
@@ -80,11 +80,11 @@ export const ListaDeProgressos: Story = {
       return { items };
     },
     template: `
-      <ul class="space-y-4 w-[400px] m-0 p-0 list-none">
-        <li v-for="item in items" :key="item.name" class="space-y-1.5">
-          <div class="flex items-center justify-between text-sm">
-            <span class="text-foreground truncate">{{ item.name }}</span>
-            <span class="text-muted-foreground tabular-nums">{{ item.value }}%</span>
+      <ul class="m-0 nds-p-0 nds-list-none" data-spacing="md" style="width: 400px">
+        <li v-for="item in items" :key="item.name" class="" data-spacing="xs">
+          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+            <span class="nds-text-foreground nds-truncate">{{ item.name }}</span>
+            <span class="nds-text-muted-foreground tabular-nums">{{ item.value }}%</span>
           </div>
           <Progress :model-value="item.value" :aria-label="item.label" />
         </li>
@@ -117,11 +117,11 @@ export const CorCustomizada: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-3">
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between text-sm">
-            <span class="text-foreground">Espaço usado</span>
-            <span class="text-muted-foreground tabular-nums">75%</span>
+      <div class="" data-spacing="sm" style="width: 360px">
+        <div class="" data-spacing="xs">
+          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+            <span class="nds-text-foreground">Espaço usado</span>
+            <span class="nds-text-muted-foreground tabular-nums">75%</span>
           </div>
           <Progress
             :model-value="75"
@@ -129,10 +129,10 @@ export const CorCustomizada: Story = {
             aria-label="Espaço de armazenamento usado"
           />
         </div>
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between text-sm">
-            <span class="text-foreground">Quota</span>
-            <span class="text-muted-foreground tabular-nums">90%</span>
+        <div class="" data-spacing="xs">
+          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+            <span class="nds-text-foreground">Quota</span>
+            <span class="nds-text-muted-foreground tabular-nums">90%</span>
           </div>
           <Progress
             :model-value="90"
@@ -164,8 +164,8 @@ export const IndeterminateProcessing: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="text-sm text-foreground">Processando…</div>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-text-body nds-text-foreground">Processando…</div>
         <Progress
           :model-value="null"
           class="[&>div]:animate-indeterminate"

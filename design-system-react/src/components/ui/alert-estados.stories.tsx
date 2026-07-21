@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Completo: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
@@ -39,7 +39,7 @@ export const Completo: Story = {
 export const SemTitulo: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -88,7 +88,7 @@ export const InsercaoDinamica: Story = {
   render: () => (
     <div aria-live="polite">
       <Alert>
-        <Info aria-hidden="true" className="h-4 w-4" />
+        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
         <AlertTitle>Operação concluída</AlertTitle>
         <AlertDescription>
           O relatório foi gerado com sucesso.

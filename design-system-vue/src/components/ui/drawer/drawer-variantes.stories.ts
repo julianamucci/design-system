@@ -127,10 +127,10 @@ export const Left: Story = {
               <DrawerTitle>Menu</DrawerTitle>
               <DrawerDescription>Navegue pelas seções do app.</DrawerDescription>
             </DrawerHeader>
-            <nav class="px-4 py-2 text-sm space-y-2">
-              <a href="#" class="block">Início</a>
-              <a href="#" class="block">Pedidos</a>
-              <a href="#" class="block">Configuracoes</a>
+            <nav class="nds-px-4 nds-py-2 nds-text-body" data-spacing="sm">
+              <a href="#" class="nds-block">Início</a>
+              <a href="#" class="nds-block">Pedidos</a>
+              <a href="#" class="nds-block">Configuracoes</a>
             </nav>
             <DrawerFooter>
               <DrawerClose as-child>

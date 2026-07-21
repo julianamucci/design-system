@@ -58,7 +58,7 @@ export const KeyboardInteraction: Story = {
     const [value, setValue] = useState<number[]>([50]);
     return (
       <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
-        <span aria-live="polite" className="text-sm tabular-nums">
+        <span aria-live="polite" className="nds-text-body tabular-nums">
           {value[0]}
         </span>
         <Slider

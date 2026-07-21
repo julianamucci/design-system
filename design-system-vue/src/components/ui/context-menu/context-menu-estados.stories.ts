@@ -46,10 +46,10 @@ export const ItemDisabled: Story = {
     setup() {},
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-52">
+        <ContextMenuContent class="" style="width: 13rem">
           <ContextMenuGroup>
             <ContextMenuItem>
               Editar
@@ -101,10 +101,10 @@ export const ItemInset: Story = {
     setup() {},
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-52">
+        <ContextMenuContent class="" style="width: 13rem">
           <ContextMenuLabel inset>Arquivo</ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuGroup>
@@ -138,10 +138,10 @@ export const ItemDestructiveIsolado: Story = {
     setup() {},
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-52">
+        <ContextMenuContent class="" style="width: 13rem">
           <ContextMenuGroup>
             <ContextMenuItem>Editar</ContextMenuItem>
             <ContextMenuItem>Duplicar</ContextMenuItem>

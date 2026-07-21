@@ -15,7 +15,7 @@
   ];
 </script>
 
-<div class="w-full max-w-lg space-y-3">
+<div class="nds-w-full nds-max-w-lg" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Item ativo: <code class="nds-font-mono">{activeItem || '(nenhum)'}</code>
   </p>

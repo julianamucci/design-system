@@ -26,14 +26,14 @@ export const ComImagem: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="w-[480px]">
+      <div class="" style="width: 480px">
         <AspectRatio :ratio="16 / 9">
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
             alt="Paisagem ao amanhecer com montanhas e céu laranja"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
       </div>
@@ -48,7 +48,7 @@ export const ComIframe: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="w-[480px]">
+      <div class="" style="width: 480px">
         <AspectRatio :ratio="16 / 9">
           <iframe
             src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.63%2C-23.54&layer=mapnik"
@@ -69,13 +69,13 @@ export const ComVideo: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="w-[480px]">
+      <div class="" style="width: 480px">
         <AspectRatio :ratio="16 / 9">
           <video
             controls
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
             poster="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
           >
             <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
@@ -95,14 +95,14 @@ export const EmGrid: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="grid grid-cols-3 gap-4 w-[720px]">
+      <div class="nds-grid" data-spacing="md" style="width: 720px">
         <AspectRatio :ratio="1">
           <img
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format"
             alt="Miniatura 1"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
         <AspectRatio :ratio="1">
@@ -111,7 +111,7 @@ export const EmGrid: Story = {
             alt="Miniatura 2"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
         <AspectRatio :ratio="1">
@@ -120,7 +120,7 @@ export const EmGrid: Story = {
             alt="Miniatura 3"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
         <AspectRatio :ratio="1">
@@ -129,7 +129,7 @@ export const EmGrid: Story = {
             alt="Miniatura 4"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
         <AspectRatio :ratio="1">
@@ -138,7 +138,7 @@ export const EmGrid: Story = {
             alt="Miniatura 5"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
         <AspectRatio :ratio="1">
@@ -147,7 +147,7 @@ export const EmGrid: Story = {
             alt="Miniatura 6"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
       </div>
@@ -162,10 +162,10 @@ export const PlaceholderVazio: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="w-[480px]">
+      <div class="" style="width: 480px">
         <AspectRatio :ratio="16 / 9">
           <div
-            class="h-full w-full bg-muted rounded-md flex items-center justify-center text-sm text-muted-foreground"
+            class="nds-cluster nds-w-full nds-bg-muted nds-rounded-md nds-text-body nds-text-muted-foreground" data-align="center" data-justify="center" style="height: 100%"
             role="img"
             aria-label="Conteúdo carregando"
           >

@@ -87,7 +87,7 @@ export const Playground: Story = {
                 Atualize seus dados pessoais e foto. As mudanças são salvas ao confirmar.
               </DrawerDescription>
             </DrawerHeader>
-            <div class="px-4 pb-4 text-sm text-muted-foreground">
+            <div class="nds-px-4 nds-text-body nds-text-muted-foreground" style="padding-bottom: 1rem">
               Conteúdo do drawer.
             </div>
             <DrawerFooter>

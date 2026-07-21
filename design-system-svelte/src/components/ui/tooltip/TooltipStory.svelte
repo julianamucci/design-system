@@ -48,11 +48,11 @@
             {#snippet child({ props })}
               <Button variant="outline" size="icon" aria-label={ariaLabel} {...props}>
                 {#if variant === 'longText'}
-                  <Share2 aria-hidden="true" class="size-4" />
+                  <Share2 aria-hidden="true" class="nds-size-4" />
                 {:else if triggerLabel.toLowerCase().includes('excluir') || triggerLabel.toLowerCase().includes('delete') || triggerLabel.toLowerCase().includes('eliminar')}
-                  <Trash2 aria-hidden="true" class="size-4" />
+                  <Trash2 aria-hidden="true" class="nds-size-4" />
                 {:else}
-                  <Save aria-hidden="true" class="size-4" />
+                  <Save aria-hidden="true" class="nds-size-4" />
                 {/if}
               </Button>
             {/snippet}
@@ -60,8 +60,8 @@
           <TooltipContent {side} {align} {sideOffset}>
             {#if variant === 'withShortcut'}
               <span>{contentText.replace(/\s*\([^)]*\)\s*$/, '')}</span>
-              <kbd data-slot="kbd" class="bg-background/15 text-background ml-1 inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">Ctrl</kbd>
-              <kbd data-slot="kbd" class="bg-background/15 text-background inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">S</kbd>
+              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
+              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
             {:else if variant === 'longText'}
               {contentText}
             {:else}
@@ -75,11 +75,11 @@
             {#snippet child({ props })}
               <Button variant="outline" size="icon" aria-label={ariaLabel} {...props}>
                 {#if variant === 'longText'}
-                  <Share2 aria-hidden="true" class="size-4" />
+                  <Share2 aria-hidden="true" class="nds-size-4" />
                 {:else if triggerLabel.toLowerCase().includes('excluir') || triggerLabel.toLowerCase().includes('delete') || triggerLabel.toLowerCase().includes('eliminar')}
-                  <Trash2 aria-hidden="true" class="size-4" />
+                  <Trash2 aria-hidden="true" class="nds-size-4" />
                 {:else}
-                  <Save aria-hidden="true" class="size-4" />
+                  <Save aria-hidden="true" class="nds-size-4" />
                 {/if}
               </Button>
             {/snippet}
@@ -87,8 +87,8 @@
           <TooltipContent {side} {align} {sideOffset}>
             {#if variant === 'withShortcut'}
               <span>{contentText.replace(/\s*\([^)]*\)\s*$/, '')}</span>
-              <kbd data-slot="kbd" class="bg-background/15 text-background ml-1 inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">Ctrl</kbd>
-              <kbd data-slot="kbd" class="bg-background/15 text-background inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">S</kbd>
+              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
+              <kbd data-slot="kbd" class="nds-cluster bg-background/15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
             {:else if variant === 'longText'}
               {contentText}
             {:else}

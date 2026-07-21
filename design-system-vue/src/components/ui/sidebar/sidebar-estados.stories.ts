@@ -36,7 +36,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="min-h-[400px] flex w-full"><story /></div>',
+      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -64,7 +64,7 @@ export const Expanded: Story = {
       <SidebarProvider :default-open="true">
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
@@ -93,11 +93,11 @@ export const Expanded: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger />
-            <span class="text-xs text-muted-foreground font-mono">data-state="expanded"</span>
+            <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">data-state="expanded"</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Sidebar expandida.</p>
           </main>
         </SidebarInset>
@@ -139,7 +139,7 @@ export const CollapsedIcon: Story = {
       <SidebarProvider :default-open="false">
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="icon">
-            <SidebarHeader class="p-2 font-semibold text-sidebar-foreground overflow-hidden">
+            <SidebarHeader class="nds-p-2 nds-font-semibold nds-text-muted-foreground nds-overflow-hidden">
               <span class="group-data-[collapsible=icon]:hidden">Design System</span>
             </SidebarHeader>
             <SidebarContent>
@@ -174,11 +174,11 @@ export const CollapsedIcon: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger />
-            <span class="text-xs text-muted-foreground font-mono">collapsible="icon", data-state="collapsed"</span>
+            <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">collapsible="icon", data-state="collapsed"</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Sidebar no modo icon — apenas ícones visíveis com tooltip ao hover.</p>
           </main>
         </SidebarInset>
@@ -210,7 +210,7 @@ export const CollapsibleNone: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="none">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupContent>
@@ -237,10 +237,10 @@ export const CollapsibleNone: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
-            <span class="text-xs text-muted-foreground font-mono">collapsible="none" — sidebar sempre visível</span>
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
+            <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">collapsible="none" — sidebar sempre visível</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Sidebar fixa sem opção de recolhimento.</p>
           </main>
         </SidebarInset>
@@ -271,7 +271,7 @@ export const LoadingSkeleton: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Carregando...</SidebarGroupLabel>
@@ -287,10 +287,10 @@ export const LoadingSkeleton: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
-            <span class="text-xs text-muted-foreground font-mono">SidebarMenuSkeleton showIcon=true</span>
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
+            <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">SidebarMenuSkeleton showIcon=true</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Estado de carregamento com skeletons.</p>
           </main>
         </SidebarInset>
@@ -323,7 +323,7 @@ export const MobileOverlay: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupContent>
@@ -350,11 +350,11 @@ export const MobileOverlay: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger />
             <span class="nds-text-body nds-font-medium">Mobile — clique no trigger</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Em mobile, a sidebar aparece como Sheet overlay.</p>
           </main>
         </SidebarInset>

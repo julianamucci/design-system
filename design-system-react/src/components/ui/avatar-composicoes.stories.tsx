@@ -63,7 +63,7 @@ export const WithIcon: Story = {
   render: () => (
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">
-        <User aria-hidden="true" className="h-5 w-5" />
+        <User aria-hidden="true" className="" style={{ height: "1.25rem", width: "1.25rem" }} />
       </AvatarFallback>
     </Avatar>
   ),
@@ -81,7 +81,7 @@ export const Group: Story = {
     <div
       role="group"
       aria-label="Participantes"
-      className="flex -space-x-2"
+      className="nds-cluster -space-x-2"
     >
       <Avatar className="ring-2 ring-background">
         <AvatarImage src={IMG_MARIA} alt="" />
@@ -97,7 +97,7 @@ export const Group: Story = {
       </Avatar>
       <Avatar className="ring-2 ring-background">
         <AvatarFallback aria-hidden="true">
-          <User aria-hidden="true" className="h-5 w-5" />
+          <User aria-hidden="true" className="" style={{ height: "1.25rem", width: "1.25rem" }} />
         </AvatarFallback>
       </Avatar>
     </div>
@@ -113,7 +113,7 @@ export const Group: Story = {
 
 export const WithStatus: Story = {
   render: () => (
-    <div className="relative inline-block">
+    <div className="nds-inline-block" style={{ position: "relative" }}>
       <Avatar>
         <AvatarImage src={IMG_MARIA} alt="" />
         <AvatarFallback aria-hidden="true">MR</AvatarFallback>
@@ -121,7 +121,7 @@ export const WithStatus: Story = {
       <span
         role="status"
         aria-label="online"
-        className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+        className="bottom-0 right-0 nds-rounded-full nds-bg-primary ring-2 ring-background" style={{ position: "absolute", height: "0.625rem", width: "0.625rem" }}
       />
     </div>
   ),

@@ -34,11 +34,11 @@ export const Default: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Primeira tab ativa por padrão; demais inativas.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
       </Tabs>
     `,
   }),
@@ -70,11 +70,11 @@ export const Active: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Tab "Propriedades" ativa — data-active, fundo background, sombra suave.
         </TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
       </Tabs>
     `,
   }),
@@ -104,11 +104,11 @@ export const Focus: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Navegue com Tab para ver o focus ring ring-[3px] ring-ring/50.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
       </Tabs>
     `,
   }),
@@ -151,11 +151,11 @@ export const Disabled: Story = {
           <TabsTrigger value="properties" :disabled="true">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           A tab "Propriedades" está desabilitada (opacity-50 e pointer-events-none).
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">—</TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">Exemplos.</TabsContent>
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Exemplos.</TabsContent>
       </Tabs>
     `,
   }),

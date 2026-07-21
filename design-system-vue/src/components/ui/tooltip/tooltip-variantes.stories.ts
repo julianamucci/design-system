@@ -51,11 +51,11 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Salvar</TooltipContent>
@@ -81,14 +81,14 @@ export const ComAtalho: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom" class="gap-1">
+          <TooltipContent side="bottom" class="" data-spacing="xs">
             Salvar
             <Kbd>Ctrl</Kbd>
             <Kbd>S</Kbd>
@@ -115,14 +115,14 @@ export const TextoLongo: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom" class="max-w-xs">
+          <TooltipContent side="bottom" class="nds-max-w-xs">
             Salva alterações localmente e sincroniza com o servidor em segundo plano quando houver conexão.
           </TooltipContent>
         </Tooltip>

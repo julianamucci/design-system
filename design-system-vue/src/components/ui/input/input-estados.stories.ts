@@ -78,7 +78,7 @@ export const Erro: Story = {
   render: () => ({
     components: { Input },
     template: `
-      <div class="w-64 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 16rem">
         <Input type="email" placeholder="ex: joao@empresa.com" aria-invalid="true" />
         <p class="nds-text-body nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>
       </div>

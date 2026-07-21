@@ -11,10 +11,10 @@
   ];
 </script>
 
-<div class="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-3 gap-4">
+<div class="nds-grid nds-w-full max-w-4xl sm:grid-cols-3" data-spacing="md" data-cols="2">
   {#each items as item}
     <AspectRatio ratio={4 / 3}>
-      <img src={item.src} alt={item.alt} loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
+      <img src={item.src} alt={item.alt} loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover" />
     </AspectRatio>
   {/each}
 </div>

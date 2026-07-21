@@ -48,11 +48,11 @@ export const Fechado: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout;" class="flex items-center justify-center">
+      <div style="contain: layout;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Salvar</TooltipContent>
@@ -80,11 +80,11 @@ export const Aberto: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>
@@ -109,11 +109,11 @@ export const ComFoco: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>
@@ -159,14 +159,14 @@ export const Controlado: Story = {
       return { open };
     },
     template: `
-      <div class="flex flex-col items-center gap-3" style="contain: layout; min-height: 200px;">
+      <div class="nds-stack" data-align="center" data-spacing="sm" style="contain: layout; min-height: 200px;">
         <Button variant="secondary" @click="open = !open">
           Toggle externo ({{ open ? 'aberto' : 'fechado' }})
         </Button>
         <Tooltip :open="open" @update:open="(v) => open = v">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Salvar (Ctrl+S)</TooltipContent>

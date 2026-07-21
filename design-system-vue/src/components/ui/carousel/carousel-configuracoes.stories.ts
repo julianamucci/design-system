@@ -31,8 +31,8 @@ export const Single: Story = {
       <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de item único">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-6">
-              <span class="text-3xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-6" data-align="center" data-justify="center">
+              <span class="text-3xl nds-font-semibold">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>
@@ -54,8 +54,8 @@ export const MultiResponsive: Story = {
       <Carousel class="nds-w-full nds-max-w-md" aria-label="Galeria responsiva">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n" class="md:basis-1/2 lg:basis-1/3">
-            <Card class="flex aspect-square items-center justify-center p-4">
-              <span class="text-xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-4" data-align="center" data-justify="center">
+              <span class="nds-font-semibold" style="font-size: 1.25rem">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>
@@ -81,8 +81,8 @@ export const AutoplayStory: Story = {
       <Carousel :opts="opts" :plugins="plugins" class="nds-w-full nds-max-w-sm" aria-label="Galeria com autoplay">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-6">
-              <span class="text-3xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-6" data-align="center" data-justify="center">
+              <span class="text-3xl nds-font-semibold">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>

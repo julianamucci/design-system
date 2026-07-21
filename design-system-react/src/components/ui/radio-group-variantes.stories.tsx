@@ -71,7 +71,7 @@ export const Horizontal: Story = {
   },
   render: () => (
     <RadioGroup
-      className="flex flex-wrap gap-6"
+      className="nds-cluster" data-spacing="lg" style={{ flexWrap: "wrap" }}
       aria-label="Forma de entrega"
     >
       <div className="nds-cluster" data-spacing="sm">
@@ -112,28 +112,28 @@ export const WithDescription: Story = {
     },
   },
   render: () => (
-    <RadioGroup aria-label="Forma de entrega" className="max-w-md">
-      <div className="flex items-start gap-2">
+    <RadioGroup aria-label="Forma de entrega" className="nds-max-w-md">
+      <div className="nds-cluster" data-align="start" data-spacing="sm">
         <RadioGroupItem value="padrao" id="desc-padrao" className="nds-mt-0-5" />
-        <div className="flex flex-col gap-0.5">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-padrao">Padrão</Label>
           <p className="nds-text-body nds-text-muted-foreground">
             Entrega em até 5 dias úteis. Frete grátis acima de R$ 99.
           </p>
         </div>
       </div>
-      <div className="flex items-start gap-2">
+      <div className="nds-cluster" data-align="start" data-spacing="sm">
         <RadioGroupItem value="expressa" id="desc-expressa" className="nds-mt-0-5" />
-        <div className="flex flex-col gap-0.5">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-expressa">Expressa</Label>
           <p className="nds-text-body nds-text-muted-foreground">
             Entrega em 1 dia útil. Custo adicional de R$ 19,90.
           </p>
         </div>
       </div>
-      <div className="flex items-start gap-2">
+      <div className="nds-cluster" data-align="start" data-spacing="sm">
         <RadioGroupItem value="retirar" id="desc-retirar" className="nds-mt-0-5" />
-        <div className="flex flex-col gap-0.5">
+        <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-retirar">Retirar na loja</Label>
           <p className="nds-text-body nds-text-muted-foreground">
             Disponível em 2 horas após confirmação do pagamento.

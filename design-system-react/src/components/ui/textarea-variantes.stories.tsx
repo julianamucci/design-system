@@ -67,7 +67,7 @@ function WithCounterRender() {
         className="resize-y min-h-[120px]"
         maxLength={max}
       />
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
         <span>Descreva com clareza.</span>
         <span
           aria-live="polite"

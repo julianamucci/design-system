@@ -118,7 +118,7 @@ export const WithForm: Story = {
             </DialogDescription>
           </DialogHeader>
           <form
-            className="grid gap-4"
+            className="nds-grid" data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
               trackAction(t("demonstration.labels.action"));
@@ -173,7 +173,7 @@ export const WithScrollContent: Story = {
               Leia atentamente as condições antes de aceitar.
             </DialogDescription>
           </DialogHeader>
-          <div tabIndex={0} role="region" aria-label="Conteúdo rolável" className="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-3">
+          <div tabIndex={0} role="region" aria-label="Conteúdo rolável" className="max-h-[40vh] nds-overflow-y nds-text-body nds-text-muted-foreground" style={{ paddingRight: "0.5rem" }} data-spacing="sm">
             {Array.from({ length: 12 }).map((_, i) => (
               <p key={i}>
                 Cláusula {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing

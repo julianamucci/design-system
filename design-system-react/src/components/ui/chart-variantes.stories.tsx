@@ -40,7 +40,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
 
 export const Bar: Story = {
   render: () => (
-    <ChartContainer option={buildBarOption({ data: chartData })} className="h-[240px] w-[480px]" />
+    <ChartContainer option={buildBarOption({ data: chartData })} className="" style={{ height: "240px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Tipo bar — comparação entre categorias discretas.' } },
@@ -52,7 +52,7 @@ export const Bar: Story = {
 
 export const Linha: Story = {
   render: () => (
-    <ChartContainer option={buildLineOption({ data: chartData })} className="h-[240px] w-[480px]" />
+    <ChartContainer option={buildLineOption({ data: chartData })} className="" style={{ height: "240px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Tipo line — tendência contínua com pontos por dado.' } },
@@ -64,7 +64,7 @@ export const Linha: Story = {
 
 export const Area: Story = {
   render: () => (
-    <ChartContainer option={buildAreaOption({ data: chartData })} className="h-[240px] w-[480px]" />
+    <ChartContainer option={buildAreaOption({ data: chartData })} className="" style={{ height: "240px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Tipo area — linha com região preenchida embaixo.' } },
@@ -76,7 +76,7 @@ export const Area: Story = {
 
 export const Pie: Story = {
   render: () => (
-    <ChartContainer option={buildPieOption({ data: pieData })} className="h-[280px] w-[480px]" />
+    <ChartContainer option={buildPieOption({ data: pieData })} className="" style={{ height: "280px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Tipo pie (donut) — composição de um total dividido em categorias.' } },

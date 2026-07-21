@@ -30,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: (args) => (
     <Alert {...args}>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.

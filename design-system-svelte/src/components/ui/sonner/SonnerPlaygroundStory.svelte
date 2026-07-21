@@ -18,7 +18,7 @@
   }: Props = $props();
 </script>
 
-<div style="contain: layout" class="flex flex-wrap gap-2 p-4">
+<div style="contain: layout; flex-wrap: wrap" class="nds-cluster nds-p-4" data-spacing="sm" >
   <Toaster {position} {richColors} {expand} {duration} />
 
   <Button variant="outline" onclick={() => toast('Código copiado.')}>

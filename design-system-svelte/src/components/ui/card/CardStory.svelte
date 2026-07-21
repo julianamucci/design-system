@@ -89,7 +89,7 @@
     <CardContent>
       <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
     </CardContent>
-    <CardFooter class="justify-end gap-2">
+    <CardFooter class="" data-justify="end" data-spacing="sm">
       <Button variant="outline" size="sm">{actionCancel}</Button>
       <Button size="sm">{actionSave}</Button>
     </CardFooter>
@@ -109,7 +109,7 @@
   </Card>
 {:else if variant === 'withImage'}
   <Card class={className} {size}>
-    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] w-full object-cover" />
+    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] nds-w-full" style="object-fit: cover" />
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
@@ -122,7 +122,7 @@
   <a
     href="#card"
     aria-label={`Abrir ${title}`}
-    class="block rounded-(--radius-card) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    class="nds-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" style="border-radius: var(--radius-card)"
   >
     <Card class={className} {size}>
       <CardHeader>
@@ -136,7 +136,7 @@
   </a>
 {:else if variant === 'product'}
   <Card class={className} {size}>
-    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] w-full object-cover" />
+    <img src={imageSrc} alt={imageAlt} class="aspect-[4/3] nds-w-full" style="object-fit: cover" />
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>
@@ -147,7 +147,7 @@
     <CardContent>
       <p class="nds-text-base nds-font-semibold">{productPrice}</p>
     </CardContent>
-    <CardFooter class="justify-end gap-2">
+    <CardFooter class="" data-justify="end" data-spacing="sm">
       <Button variant="outline" size="sm" aria-label={`${actionEdit} produto ${title}`}>
         {actionEdit}
       </Button>
@@ -164,13 +164,13 @@
           <AvatarImage src="https://i.pravatar.cc/80?img=47" alt={title} />
           <AvatarFallback>MR</AvatarFallback>
         </Avatar>
-        <div class="flex flex-col">
+        <div class="nds-stack">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </div>
       </div>
     </CardHeader>
-    <CardFooter class="justify-end gap-2">
+    <CardFooter class="" data-justify="end" data-spacing="sm">
       <Button variant="outline" size="sm">{actionEdit}</Button>
     </CardFooter>
   </Card>
@@ -178,10 +178,10 @@
   <Card class={className} size="sm">
     <CardHeader>
       <CardDescription>{title}</CardDescription>
-      <CardTitle class="text-2xl font-semibold tabular-nums">{metricValue}</CardTitle>
+      <CardTitle class="nds-font-semibold tabular-nums" style="font-size: 1.5rem; line-height: 2rem">{metricValue}</CardTitle>
     </CardHeader>
     <CardContent>
-      <p class="text-xs text-emerald-700 dark:text-emerald-300">{metricTrend}</p>
+      <p class="nds-text-caption text-emerald-700 dark:text-emerald-300">{metricTrend}</p>
     </CardContent>
   </Card>
 {/if}

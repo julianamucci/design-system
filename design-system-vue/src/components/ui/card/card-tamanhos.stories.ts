@@ -60,7 +60,7 @@ export const Small: Story = {
           <CardTitle>Assinantes ativos</CardTitle>
           <CardDescription>+12% no mês</CardDescription>
         </CardHeader>
-        <CardContent class="text-2xl font-semibold">8.742</CardContent>
+        <CardContent class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">8.742</CardContent>
       </Card>
     `,
   }),

@@ -47,15 +47,15 @@ export const Playground: Story = {
       return { args, tags: TAGS };
     },
     template: `
-      <div class="w-[280px] h-[300px] rounded-md border overflow-hidden">
-        <ScrollArea v-bind="args" class="h-full w-full">
-          <div class="p-4">
-            <h4 class="mb-3 text-sm font-medium leading-none">Tags</h4>
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 300px">
+        <ScrollArea v-bind="args" class="nds-w-full" style="height: 100%">
+          <div class="nds-p-4">
+            <h4 class="mb-3 nds-text-body nds-font-medium" style="line-height: 1">Tags</h4>
             <div class="nds-stack" data-spacing="sm">
               <div
                 v-for="tag in tags"
                 :key="tag"
-                class="text-sm rounded-sm border px-2 py-1.5"
+                class="nds-text-body nds-rounded-sm nds-border-default nds-px-2" style="padding-block: 0.375rem"
               >
                 {{ tag }}
               </div>

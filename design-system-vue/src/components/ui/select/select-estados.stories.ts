@@ -48,7 +48,7 @@ export const Default: Story = {
     template: `
       <div style="contain: layout">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -80,7 +80,7 @@ export const Aberto: Story = {
     template: `
       <div style="contain: layout; min-height: 280px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -125,7 +125,7 @@ export const Disabled: Story = {
     template: `
       <div style="contain: layout">
         <Select disabled>
-          <SelectTrigger aria-label="Selecionar estado" class="w-56" disabled>
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem" disabled>
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -153,7 +153,7 @@ export const Invalid: Story = {
     template: `
       <div style="contain: layout">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" aria-invalid="true" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" aria-invalid="true" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -182,7 +182,7 @@ export const Sm: Story = {
     template: `
       <div style="contain: layout">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" size="sm" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" size="sm" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>

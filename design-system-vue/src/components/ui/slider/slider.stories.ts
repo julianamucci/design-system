@@ -81,10 +81,10 @@ export const Playground: Story = {
       return { args, value };
     },
     template: `
-      <div class="w-72 space-y-3">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider
           v-model="value"

@@ -59,15 +59,15 @@
   {#each options as opt (opt.value)}
     {@const id = `${idPrefix}-${opt.value}`}
     {#if withDescription}
-      <div class="flex items-start gap-2">
+      <div class="nds-cluster" data-align="start" data-spacing="sm">
         <RadioGroupItem
           value={opt.value}
           {id}
           disabled={opt.disabled || undefined}
           aria-describedby={opt.description ? `${id}-desc` : undefined}
-          class="mt-1"
+          class="nds-mt-1"
         />
-        <div class="flex flex-col gap-0.5">
+        <div class="nds-stack" data-spacing="xs">
           <Label for={id}>{opt.label}</Label>
           {#if opt.description}
             <p id="{id}-desc" class="nds-text-caption nds-text-muted-foreground">{opt.description}</p>

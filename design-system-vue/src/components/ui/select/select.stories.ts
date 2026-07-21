@@ -71,9 +71,9 @@ export const Playground: Story = {
     },
     setup() { return { args }; },
     template: `
-      <div style="contain: layout; min-height: 280px;" class="flex items-start justify-center">
+      <div style="contain: layout; min-height: 280px;" class="nds-cluster" data-align="start" data-justify="center">
         <Select v-bind="args">
-          <SelectTrigger aria-label="Selecionar estado" class="w-56" :disabled="args.disabled">
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem" :disabled="args.disabled">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>

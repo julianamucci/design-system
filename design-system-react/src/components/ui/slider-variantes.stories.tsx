@@ -29,7 +29,7 @@ export const Single: Story = {
       <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <div className="nds-cluster" data-justify="between">
           <span className="nds-text-body nds-text-muted-foreground">Volume</span>
-          <span aria-live="polite" className="text-sm tabular-nums">
+          <span aria-live="polite" className="nds-text-body tabular-nums">
             {value[0]}%
           </span>
         </div>
@@ -60,7 +60,7 @@ export const Range: Story = {
       <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <div className="nds-cluster" data-justify="between">
           <span className="nds-text-body nds-text-muted-foreground">Faixa de preço</span>
-          <span aria-live="polite" className="text-sm tabular-nums">
+          <span aria-live="polite" className="nds-text-body tabular-nums">
             R$ {value[0]} — R$ {value[1]}
           </span>
         </div>
@@ -89,8 +89,8 @@ export const Vertical: Story = {
   render: function VerticalRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
-      <div className="h-40 w-32 flex flex-col items-center gap-3">
-        <span aria-live="polite" className="text-sm tabular-nums">
+      <div className="nds-stack" data-align="center" data-spacing="sm" style={{ height: "10rem", width: "8rem" }}>
+        <span aria-live="polite" className="nds-text-body tabular-nums">
           {value[0]}%
         </span>
         <Slider

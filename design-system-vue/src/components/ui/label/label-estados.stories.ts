@@ -27,7 +27,7 @@ export const Padrao: Story = {
     template: `
       <div class="nds-stack" data-spacing="sm">
         <Label for="input-padrao">Nome completo</Label>
-        <input id="input-padrao" type="text" class="border rounded px-3 py-1 text-sm" placeholder="Digite aqui" />
+        <input id="input-padrao" type="text" class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem" placeholder="Digite aqui" />
       </div>
     `,
   }),
@@ -56,7 +56,7 @@ export const Disabled: Story = {
         <input
           id="input-disabled"
           type="text"
-          class="border rounded px-3 py-1 text-sm peer"
+          class="nds-border-default nds-rounded nds-py-1 nds-text-body peer" style="padding-inline: 0.75rem"
           placeholder="000.000.000-00"
           disabled
         />
@@ -84,12 +84,12 @@ export const DisabledViaGrupo: Story = {
     components: { Label },
     setup() { return {}; },
     template: `
-      <div class="group flex flex-col gap-2" data-disabled="true">
+      <div class="nds-stack group" data-spacing="sm" data-disabled="true">
         <Label for="input-group-disabled">CPF</Label>
         <input
           id="input-group-disabled"
           type="text"
-          class="border rounded px-3 py-1 text-sm"
+          class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem"
           placeholder="000.000.000-00"
           disabled
         />
@@ -124,7 +124,7 @@ export const Required: Story = {
         <input
           id="input-required"
           type="email"
-          class="border rounded px-3 py-1 text-sm"
+          class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem"
           placeholder="voce@empresa.com"
           aria-required="true"
         />

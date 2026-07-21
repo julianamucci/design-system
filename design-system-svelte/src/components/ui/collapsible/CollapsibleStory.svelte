@@ -27,17 +27,17 @@
 {#key defaultOpen}
   <Collapsible bind:open={internalOpen} {disabled} class={className}>
     <CollapsibleTrigger
-      class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+      class="nds-cluster nds-rounded-md nds-py-2 nds-text-body nds-font-medium transition-colors nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" data-align="center" data-spacing="sm" style="padding-inline: 0.75rem"
       {disabled}
     >
       {@html DOMPurify.sanitize(label)}
       <ChevronDown
         aria-hidden="true"
-        class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+        class="nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
       />
     </CollapsibleTrigger>
     <CollapsibleContent>
-      <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2">
+      <div class="nds-rounded-md nds-border-default bg-muted/50 nds-px-4 nds-text-body nds-mt-2" style="padding-block: 0.75rem">
         {contentText}
       </div>
     </CollapsibleContent>

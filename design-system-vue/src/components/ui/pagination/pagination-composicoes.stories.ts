@@ -52,7 +52,7 @@ export const Simples: Story = {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="hidden sm:block">Anterior</span>
+              <span class="nds-hidden sm:block">Anterior</span>
             </PaginationPrevious>
           </PaginationItem>
           <PaginationItem><PaginationLink :is-active="true" aria-label="Página atual, 1">1</PaginationLink></PaginationItem>
@@ -62,7 +62,7 @@ export const Simples: Story = {
           <PaginationItem><PaginationLink aria-label="Ir para página 5">5</PaginationLink></PaginationItem>
           <PaginationItem>
             <PaginationNext aria-label="Ir para a próxima página">
-              <span class="hidden sm:block">Próxima</span>
+              <span class="nds-hidden sm:block">Próxima</span>
             </PaginationNext>
           </PaginationItem>
         </PaginationContent>
@@ -94,7 +94,7 @@ export const ComEllipsis: Story = {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="hidden sm:block">Anterior</span>
+              <span class="nds-hidden sm:block">Anterior</span>
             </PaginationPrevious>
           </PaginationItem>
           <PaginationItem><PaginationLink aria-label="Ir para página 1">1</PaginationLink></PaginationItem>
@@ -106,7 +106,7 @@ export const ComEllipsis: Story = {
           <PaginationItem><PaginationLink aria-label="Ir para página 12">12</PaginationLink></PaginationItem>
           <PaginationItem>
             <PaginationNext aria-label="Ir para a próxima página">
-              <span class="hidden sm:block">Próxima</span>
+              <span class="nds-hidden sm:block">Próxima</span>
             </PaginationNext>
           </PaginationItem>
         </PaginationContent>
@@ -131,7 +131,7 @@ export const UltimaPagina: Story = {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="hidden sm:block">Anterior</span>
+              <span class="nds-hidden sm:block">Anterior</span>
             </PaginationPrevious>
           </PaginationItem>
           <PaginationItem><PaginationLink aria-label="Ir para página 1">1</PaginationLink></PaginationItem>
@@ -140,7 +140,7 @@ export const UltimaPagina: Story = {
           <PaginationItem><PaginationLink :is-active="true" aria-label="Página atual, 10">10</PaginationLink></PaginationItem>
           <PaginationItem>
             <PaginationNext aria-label="Ir para a próxima página">
-              <span class="hidden sm:block">Próxima</span>
+              <span class="nds-hidden sm:block">Próxima</span>
             </PaginationNext>
           </PaginationItem>
         </PaginationContent>
@@ -171,13 +171,13 @@ export const Controlada: Story = {
       return { current, totalPages };
     },
     template: `
-      <div class="flex flex-col items-center gap-3">
+      <div class="nds-stack" data-align="center" data-spacing="sm">
         <span class="nds-text-body nds-text-muted-foreground">Página atual: {{ current }} de {{ totalPages }}</span>
         <Pagination :total="50" :items-per-page="10" :page="current" @update:page="(v) => current = v">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious aria-label="Ir para a página anterior" @click="current = Math.max(1, current - 1)">
-                <span class="hidden sm:block">Anterior</span>
+                <span class="nds-hidden sm:block">Anterior</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem v-for="n in totalPages" :key="n">
@@ -191,7 +191,7 @@ export const Controlada: Story = {
             </PaginationItem>
             <PaginationItem>
               <PaginationNext aria-label="Ir para a próxima página" @click="current = Math.min(totalPages, current + 1)">
-                <span class="hidden sm:block">Próxima</span>
+                <span class="nds-hidden sm:block">Próxima</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>
@@ -218,13 +218,13 @@ export const CompletaTabela: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div class="w-full max-w-2xl border rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="nds-stack nds-w-full max-w-2xl nds-border-default nds-rounded-lg nds-p-4 sm:flex-row" data-align="center" data-justify="between" data-spacing="sm">
         <span class="nds-text-body nds-text-muted-foreground">Mostrando 11–20 de 120 resultados</span>
         <Pagination :total="120" :items-per-page="10" :default-page="2" :sibling-count="1" class="!justify-end !mx-0 !w-auto">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious aria-label="Ir para a página anterior">
-                <span class="hidden sm:block">Anterior</span>
+                <span class="nds-hidden sm:block">Anterior</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem><PaginationLink aria-label="Ir para página 1">1</PaginationLink></PaginationItem>
@@ -234,7 +234,7 @@ export const CompletaTabela: Story = {
             <PaginationItem><PaginationLink aria-label="Ir para página 12">12</PaginationLink></PaginationItem>
             <PaginationItem>
               <PaginationNext aria-label="Ir para a próxima página">
-                <span class="hidden sm:block">Próxima</span>
+                <span class="nds-hidden sm:block">Próxima</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>

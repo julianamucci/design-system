@@ -43,7 +43,7 @@ function SidebarStatePreview({
       <nav aria-label="Navegação principal">
         <Sidebar collapsible={collapsible}>
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -96,7 +96,7 @@ function SidebarStatePreview({
           <span className="nds-text-body nds-text-muted-foreground">{label}</span>
         </header>
         <div className="nds-p-6 nds-text-body nds-text-muted-foreground">
-          Use o botão acima ou <kbd className="font-mono bg-muted px-1 rounded text-xs">Ctrl+B</kbd> para alternar.
+          Use o botão acima ou <kbd className="nds-font-mono nds-bg-muted nds-px-1 nds-rounded nds-text-caption">Ctrl+B</kbd> para alternar.
         </div>
       </SidebarInset>
     </SidebarProvider>
@@ -109,7 +109,7 @@ function SidebarLoadingPreview() {
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="offcanvas">
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -156,7 +156,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="min-h-[400px] flex">
+      <div className="nds-cluster min-h-[400px]">
         <Story />
       </div>
     ),

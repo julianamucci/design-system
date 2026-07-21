@@ -31,12 +31,12 @@ export const CardDePerfil: Story = {
         role="status"
         aria-busy="true"
         aria-label="Carregando card de perfil"
-        class="flex items-center gap-4 w-[320px] rounded-md border p-4"
+        class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-align="center" data-spacing="md" style="width: 320px"
       >
-        <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
-        <div class="space-y-2 flex-1">
-          <Skeleton class="h-4 w-[180px] motion-reduce:animate-none" :aria-hidden="true" />
-          <Skeleton class="h-4 w-[140px] motion-reduce:animate-none" :aria-hidden="true" />
+        <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" :aria-hidden="true" />
+        <div class="nds-flex-1" data-spacing="sm">
+          <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 180px" :aria-hidden="true" />
+          <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 140px" :aria-hidden="true" />
         </div>
       </div>
     `,
@@ -71,13 +71,13 @@ export const ListaComAvatar: Story = {
         role="list"
         aria-busy="true"
         aria-label="Carregando lista de pedidos"
-        class="space-y-3 w-[360px] m-0 p-0 list-none"
+        class="m-0 nds-p-0 nds-list-none" data-spacing="sm" style="width: 360px"
       >
         <li v-for="i in 5" :key="i" class="nds-cluster" data-spacing="sm">
-          <Skeleton class="h-10 w-10 rounded-full motion-reduce:animate-none" :aria-hidden="true" />
-          <div class="space-y-2 flex-1">
-            <Skeleton class="h-3 w-[200px] motion-reduce:animate-none" :aria-hidden="true" />
-            <Skeleton class="h-3 w-[120px] motion-reduce:animate-none" :aria-hidden="true" />
+          <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 2.5rem; width: 2.5rem" :aria-hidden="true" />
+          <div class="nds-flex-1" data-spacing="sm">
+            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 200px" :aria-hidden="true" />
+            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 120px" :aria-hidden="true" />
           </div>
         </li>
       </ul>
@@ -108,10 +108,10 @@ export const ImagemEmAspectRatio: Story = {
         role="status"
         aria-busy="true"
         aria-label="Carregando imagem em proporção 16:9"
-        class="w-[480px]"
+        class="" style="width: 480px"
       >
         <AspectRatio :ratio="16 / 9">
-          <Skeleton class="h-full w-full rounded-md motion-reduce:animate-none" :aria-hidden="true" />
+          <Skeleton class="nds-w-full nds-rounded-md motion-reduce:animate-none" style="height: 100%" :aria-hidden="true" />
         </AspectRatio>
       </div>
     `,
@@ -140,11 +140,11 @@ export const Paragrafo: Story = {
         role="status"
         aria-busy="true"
         aria-label="Carregando parágrafo de texto"
-        class="space-y-2 w-[360px]"
+        class="" data-spacing="sm" style="width: 360px"
       >
-        <Skeleton class="h-4 w-full motion-reduce:animate-none" :aria-hidden="true" />
-        <Skeleton class="h-4 w-[92%] motion-reduce:animate-none" :aria-hidden="true" />
-        <Skeleton class="h-4 w-[60%] motion-reduce:animate-none" :aria-hidden="true" />
+        <Skeleton class="nds-w-full motion-reduce:animate-none" style="height: 1rem" :aria-hidden="true" />
+        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 92%" :aria-hidden="true" />
+        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 60%" :aria-hidden="true" />
       </div>
     `,
   }),

@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const ComIconeLucide: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Informação</AlertTitle>
       <AlertDescription>
         Ícone Lucide posicionado automaticamente via seletor CSS{" "}
@@ -37,9 +37,9 @@ export const ComIconeLucide: Story = {
 export const ComAcao: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="h-4 w-4" />
+      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-      <AlertDescription className="flex items-center justify-between gap-4 mt-1">
+      <AlertDescription className="nds-cluster nds-mt-1" data-align="center" data-justify="between" data-spacing="md">
         <span>Salve seu trabalho para não perder as alterações.</span>
         <Button size="sm" variant="outline">
           Salvar agora
@@ -57,23 +57,23 @@ export const MultiplosTipos: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       <Alert>
-        <Info aria-hidden="true" className="h-4 w-4" />
+        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
         <AlertTitle>Informação</AlertTitle>
         <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
-        <AlertCircle aria-hidden="true" className="h-4 w-4" />
+        <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
         <AlertTitle>Erro</AlertTitle>
         <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
       </Alert>
-      <Alert className="bg-success/10 text-success border-success/30">
-        <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+      <Alert className="bg-success/10 nds-text-success border-success/30">
+        <CheckCircle2 aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
         <AlertTitle>Sucesso</AlertTitle>
         <AlertDescription>Ação concluída com sucesso.</AlertDescription>
       </Alert>
-      <Alert className="bg-warning/10 border-warning/30 text-foreground [&_svg]:text-warning">
-        <TriangleAlert aria-hidden="true" className="h-4 w-4" />
-        <AlertTitle className="text-foreground">Aviso</AlertTitle>
+      <Alert className="bg-warning/10 border-warning/30 nds-text-foreground [&_svg]:text-warning">
+        <TriangleAlert aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <AlertTitle className="nds-text-foreground">Aviso</AlertTitle>
         <AlertDescription className="nds-text-muted-foreground">Aviso que requer atenção.</AlertDescription>
       </Alert>
     </div>
@@ -87,7 +87,7 @@ export const MultiplosTipos: Story = {
 export const SemTituloCompacto: Story = {
   render: () => (
     <Alert>
-      <AlertCircle aria-hidden="true" className="h-4 w-4" />
+      <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
       <AlertDescription>
         Formulário incompleto — preencha todos os campos obrigatórios.
       </AlertDescription>

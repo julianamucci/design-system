@@ -70,7 +70,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="min-h-[400px] flex w-full"><story /></div>',
+      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -107,7 +107,7 @@ export const Playground: Story = {
       <SidebarProvider :key="args.collapsible + args.variant + args.side">
         <nav aria-label="Navegação principal">
           <Sidebar v-bind="args">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
@@ -159,11 +159,11 @@ export const Playground: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger class="lg:hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Use os controles para alterar variant, collapsible e side.</p>
           </main>
         </SidebarInset>

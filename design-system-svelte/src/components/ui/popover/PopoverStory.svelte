@@ -71,29 +71,29 @@
               <PopoverDescription>{description}</PopoverDescription>
             </PopoverHeader>
             <form
-              class="grid gap-3 pt-1"
+              class="nds-grid" data-spacing="sm" style="padding-top: 0.25rem"
               onsubmit={(e) => {
                 e.preventDefault();
                 onAction?.();
               }}
             >
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">{nameLabel}</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">{nameLabel}</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">{emailLabel}</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">{emailLabel}</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="maria@exemplo.com"
                 />
               </label>
-              <div class="flex justify-end pt-1">
+              <div class="nds-cluster" data-justify="end" style="padding-top: 0.25rem">
                 <Button type="submit" size="sm">{submitLabel}</Button>
               </div>
             </form>
@@ -102,7 +102,7 @@
               <PopoverTitle>{title}</PopoverTitle>
               <PopoverDescription>{description}</PopoverDescription>
             </PopoverHeader>
-            <div class="flex justify-end gap-2 pt-1">
+            <div class="nds-cluster" data-justify="end" data-spacing="sm" style="padding-top: 0.25rem">
               <PopoverClose>
                 {#snippet child({ props })}
                   <Button variant="outline" size="sm" {...props} onclick={onCancel}>{cancelLabel}</Button>
@@ -129,29 +129,29 @@
               <PopoverDescription>{description}</PopoverDescription>
             </PopoverHeader>
             <form
-              class="grid gap-3 pt-1"
+              class="nds-grid" data-spacing="sm" style="padding-top: 0.25rem"
               onsubmit={(e) => {
                 e.preventDefault();
                 onAction?.();
               }}
             >
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">{nameLabel}</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">{nameLabel}</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">{emailLabel}</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">{emailLabel}</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="maria@exemplo.com"
                 />
               </label>
-              <div class="flex justify-end pt-1">
+              <div class="nds-cluster" data-justify="end" style="padding-top: 0.25rem">
                 <Button type="submit" size="sm">{submitLabel}</Button>
               </div>
             </form>
@@ -160,7 +160,7 @@
               <PopoverTitle>{title}</PopoverTitle>
               <PopoverDescription>{description}</PopoverDescription>
             </PopoverHeader>
-            <div class="flex justify-end gap-2 pt-1">
+            <div class="nds-cluster" data-justify="end" data-spacing="sm" style="padding-top: 0.25rem">
               <PopoverClose>
                 {#snippet child({ props })}
                   <Button variant="outline" size="sm" {...props} onclick={onCancel}>{cancelLabel}</Button>

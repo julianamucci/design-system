@@ -47,7 +47,7 @@
       <HoverCard bind:open {openDelay} {closeDelay}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#user-joana" class="text-primary underline-offset-4 hover:underline" {...props}
+            <a href="#user-joana" class="nds-text-primary underline-offset-4 nds-hover-underline" {...props}
               >{triggerLabel}</a
             >
           {/snippet}
@@ -55,8 +55,8 @@
         <HoverCardContent {side} {align} {sideOffset}>
           {#if variant === 'linkPreview'}
             <div class="nds-stack" data-spacing="sm">
-              <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+              <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-align="center" data-spacing="sm">
+                <span class="nds-cluster nds-rounded nds-bg-muted" data-align="center" data-justify="center" style="height: 1rem; width: 1rem">D</span>
                 <span>design-system.dev</span>
               </div>
               <p class="nds-font-medium">Guia de overlays acessíveis</p>
@@ -66,7 +66,7 @@
             </div>
           {:else if variant === 'definition'}
             <div class="nds-stack" data-spacing="xs">
-              <p class="font-medium text-sm">WCAG 2.1</p>
+              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.
@@ -75,7 +75,7 @@
           {:else if variant === 'metric'}
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-              <p class="text-2xl font-semibold">3,42%</p>
+              <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">3,42%</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Razão entre cliques no CTA e usuários únicos. Inclui apenas tráfego orgânico.
               </p>
@@ -86,10 +86,10 @@
                 <AvatarImage src="" alt="" />
                 <AvatarFallback>JS</AvatarFallback>
               </Avatar>
-              <div class="flex flex-col">
-                <p class="font-medium text-sm">Joana Silva</p>
+              <div class="nds-stack">
+                <p class="nds-font-medium nds-text-body">Joana Silva</p>
                 <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-                <p class="text-xs text-muted-foreground mt-1">Entrou em mar/2024</p>
+                <p class="nds-text-caption nds-text-muted-foreground nds-mt-1">Entrou em mar/2024</p>
               </div>
             </div>
           {/if}
@@ -99,7 +99,7 @@
       <HoverCard {defaultOpen} {openDelay} {closeDelay}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#user-joana" class="text-primary underline-offset-4 hover:underline" {...props}
+            <a href="#user-joana" class="nds-text-primary underline-offset-4 nds-hover-underline" {...props}
               >{triggerLabel}</a
             >
           {/snippet}
@@ -107,8 +107,8 @@
         <HoverCardContent {side} {align} {sideOffset}>
           {#if variant === 'linkPreview'}
             <div class="nds-stack" data-spacing="sm">
-              <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                <span class="inline-flex h-4 w-4 items-center justify-center rounded bg-muted">D</span>
+              <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-align="center" data-spacing="sm">
+                <span class="nds-cluster nds-rounded nds-bg-muted" data-align="center" data-justify="center" style="height: 1rem; width: 1rem">D</span>
                 <span>design-system.dev</span>
               </div>
               <p class="nds-font-medium">Guia de overlays acessíveis</p>
@@ -118,7 +118,7 @@
             </div>
           {:else if variant === 'definition'}
             <div class="nds-stack" data-spacing="xs">
-              <p class="font-medium text-sm">WCAG 2.1</p>
+              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.
@@ -127,7 +127,7 @@
           {:else if variant === 'metric'}
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-              <p class="text-2xl font-semibold">3,42%</p>
+              <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">3,42%</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Razão entre cliques no CTA e usuários únicos. Inclui apenas tráfego orgânico.
               </p>
@@ -138,10 +138,10 @@
                 <AvatarImage src="" alt="" />
                 <AvatarFallback>JS</AvatarFallback>
               </Avatar>
-              <div class="flex flex-col">
-                <p class="font-medium text-sm">Joana Silva</p>
+              <div class="nds-stack">
+                <p class="nds-font-medium nds-text-body">Joana Silva</p>
                 <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-                <p class="text-xs text-muted-foreground mt-1">Entrou em mar/2024</p>
+                <p class="nds-text-caption nds-text-muted-foreground nds-mt-1">Entrou em mar/2024</p>
               </div>
             </div>
           {/if}

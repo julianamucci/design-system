@@ -36,11 +36,11 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div className="h-[300px] w-[320px]">
+    <div className="" style={{ height: "300px", width: "320px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-        <div className="p-4 space-y-2">
+        <div className="nds-p-4" data-spacing="sm">
           {tags.map((n) => (
-            <div key={n} className="text-sm border-b pb-2 last:border-b-0">
+            <div key={n} className="nds-text-body nds-border-b last:border-b-0" style={{ paddingBottom: "0.5rem" }}>
               Tag {n}
             </div>
           ))}
@@ -70,13 +70,13 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <div className="h-[160px] w-[500px]">
-      <ScrollArea className="h-full w-full whitespace-nowrap rounded-md border">
-        <div className="flex w-max gap-3 p-3">
+    <div className="" style={{ height: "160px", width: "500px" }}>
+      <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+        <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
           {cards.map((n) => (
             <div
               key={n}
-              className="flex h-[120px] w-[140px] items-center justify-center rounded-md bg-muted text-sm shrink-0"
+              className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style={{ height: "120px", width: "140px" }}
             >
               Card {n}
             </div>
@@ -106,14 +106,14 @@ export const Both: Story = {
     },
   },
   render: () => (
-    <div className="h-[260px] w-[500px]">
+    <div className="" style={{ height: "260px", width: "500px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-        <table className="w-max border-collapse text-xs">
+        <table className="border-collapse nds-text-caption" style={{ width: "max-content" }}>
           <tbody>
             {rows.map((r) => (
               <tr key={r}>
                 {cols.map((c) => (
-                  <td key={c} className="border px-3 py-2 whitespace-nowrap">
+                  <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap" style={{ paddingInline: "0.75rem" }}>
                     R{r}·C{c}
                   </td>
                 ))}

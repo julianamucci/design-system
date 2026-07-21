@@ -6,21 +6,21 @@
   let opacity = $state<number[]>([100]);
 </script>
 
-<form class="space-y-6 w-80" onsubmit={(e) => e.preventDefault()}>
+<form class="" data-spacing="lg" style="width: 20rem" onsubmit={(e) => e.preventDefault()}>
   <div class="nds-stack" data-spacing="sm">
     <Label for="form-name">Nome do preset</Label>
     <input
       id="form-name"
       type="text"
       placeholder="Meu preset"
-      class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
     />
   </div>
 
   <div class="nds-stack" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <Label>Brilho</Label>
-      <span class="text-sm tabular-nums" aria-live="polite">{brightness[0]}%</span>
+      <span class="nds-text-body tabular-nums" aria-live="polite">{brightness[0]}%</span>
     </div>
     <Slider bind:value={brightness} min={0} max={100} aria-label="Brilho" />
   </div>
@@ -28,14 +28,14 @@
   <div class="nds-stack" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <Label>Opacidade</Label>
-      <span class="text-sm tabular-nums" aria-live="polite">{opacity[0]}%</span>
+      <span class="nds-text-body tabular-nums" aria-live="polite">{opacity[0]}%</span>
     </div>
     <Slider bind:value={opacity} min={0} max={100} aria-label="Opacidade" />
   </div>
 
   <button
     type="submit"
-    class="w-full h-(--height-default) px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+    class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
   >
     Salvar preset
   </button>

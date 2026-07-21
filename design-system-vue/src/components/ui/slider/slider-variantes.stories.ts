@@ -32,10 +32,10 @@ export const Single: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" :step="1" aria-label="Volume" />
       </div>
@@ -69,10 +69,10 @@ export const Range: Story = {
       return { value };
     },
     template: `
-      <div class="w-72 space-y-2">
+      <div class="" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">
+          <span aria-live="polite" class="nds-text-body tabular-nums">
             R$ {{ value[0] }} — R$ {{ value[1] }}
           </span>
         </div>
@@ -110,11 +110,11 @@ export const Vertical: Story = {
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <div class="flex items-center justify-between w-40">
+        <div class="nds-cluster" data-align="center" data-justify="between" style="width: 10rem">
           <Label>Brilho</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
-        <div class="h-40 flex justify-center">
+        <div class="nds-cluster" data-justify="center" style="height: 10rem">
           <Slider v-model="value" orientation="vertical" :min="0" :max="100" :step="1" aria-label="Brilho" />
         </div>
       </div>

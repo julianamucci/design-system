@@ -35,43 +35,43 @@
 </script>
 
 {#if variant === 'horizontal'}
-  <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
-    <PaneGroup direction="horizontal" class="h-full">
-      <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
+  <div class="nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height};">
+    <PaneGroup direction="horizontal" class="" style="height: 100%">
+      <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster bg-muted/40" data-align="center" data-justify="center">
         <span class="nds-text-body nds-text-muted-foreground">{sidebarLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
-      <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
-        <span class="text-sm text-foreground">{contentLabel}</span>
+      <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+        <span class="nds-text-body nds-text-foreground">{contentLabel}</span>
       </Pane>
     </PaneGroup>
   </div>
 {:else if variant === 'vertical'}
-  <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
-    <PaneGroup direction="vertical" class="h-full">
-      <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
+  <div class="nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height};">
+    <PaneGroup direction="vertical" class="" style="height: 100%">
+      <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster bg-muted/40" data-align="center" data-justify="center">
         <span class="nds-text-body nds-text-muted-foreground">{topLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
-      <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
-        <span class="text-sm text-foreground">{bottomLabel}</span>
+      <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+        <span class="nds-text-body nds-text-foreground">{bottomLabel}</span>
       </Pane>
     </PaneGroup>
   </div>
 {:else if variant === 'nested'}
-  <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
-    <PaneGroup direction="horizontal" class="h-full">
-      <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
+  <div class="nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height};">
+    <PaneGroup direction="horizontal" class="" style="height: 100%">
+      <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster bg-muted/40" data-align="center" data-justify="center">
         <span class="nds-text-body nds-text-muted-foreground">{sidebarLabel}</span>
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={40}>
-        <PaneGroup direction="vertical" class="h-full">
-          <Pane defaultSize={60} minSize={20} class="flex items-center justify-center">
-            <span class="text-sm text-foreground">{topLabel}</span>
+        <PaneGroup direction="vertical" class="" style="height: 100%">
+          <Pane defaultSize={60} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
+            <span class="nds-text-body nds-text-foreground">{topLabel}</span>
           </Pane>
           <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
-          <Pane defaultSize={40} minSize={20} class="flex items-center justify-center bg-muted/40">
+          <Pane defaultSize={40} minSize={20} class="nds-cluster bg-muted/40" data-align="center" data-justify="center">
             <span class="nds-text-body nds-text-muted-foreground">{bottomLabel}</span>
           </Pane>
         </PaneGroup>
@@ -79,14 +79,14 @@
     </PaneGroup>
   </div>
 {:else if variant === 'withHandle'}
-  <div class="w-full rounded-md border bg-background overflow-hidden {className}" style="height: {height};">
-    <PaneGroup {direction} class="h-full">
-      <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
+  <div class="nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height};">
+    <PaneGroup {direction} class="" style="height: 100%">
+      <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster bg-muted/40" data-align="center" data-justify="center">
         <span class="nds-text-body nds-text-muted-foreground">{leftLabel}</span>
       </Pane>
       <Handle withHandle aria-label={ariaLabel} />
-      <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
-        <span class="text-sm text-foreground">{rightLabel}</span>
+      <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+        <span class="nds-text-body nds-text-foreground">{rightLabel}</span>
       </Pane>
     </PaneGroup>
   </div>

@@ -42,7 +42,7 @@ export const Selected: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -68,7 +68,7 @@ export const Disabled: Story = {
         locale="pt-BR"
         :placeholder="placeholder"
         :is-date-disabled="isDateDisabled"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -88,7 +88,7 @@ export const Today: Story = {
       return { placeholder };
     },
     template: `
-      <Calendar locale="pt-BR" :placeholder="placeholder" class="rounded-md border" />
+      <Calendar locale="pt-BR" :placeholder="placeholder" class="nds-rounded-md nds-border-default" />
     `,
   }),
   play: async ({ canvasElement }) => {
@@ -111,7 +111,7 @@ export const WithOutsideDays: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -137,7 +137,7 @@ export const RangeWithMiddle: Story = {
         v-model="range"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),

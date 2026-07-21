@@ -40,9 +40,9 @@ export const Playground: Story = {
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, i) => (
           <CarouselItem key={i}>
-            <Card className="h-40 shadow-none">
+            <Card className="" style={{boxShadow: "none", height: "10rem" }} >
               <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
-                <span className="text-2xl font-semibold text-muted-foreground">
+                <span className="nds-font-semibold nds-text-muted-foreground" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>
                   Slide {i + 1}
                 </span>
               </CardContent>

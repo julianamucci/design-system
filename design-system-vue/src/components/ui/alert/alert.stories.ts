@@ -33,7 +33,7 @@ export const Playground: Story = {
     setup() { return { args }; },
     template: `
       <Alert v-bind="args">
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>

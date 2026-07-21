@@ -56,19 +56,19 @@ export const CardDePerfil: Story = {
       role="status"
       aria-busy="true"
       aria-label="Carregando card de perfil"
-      className="flex items-center gap-4 w-80 p-4 border rounded-md"
+      className="nds-cluster nds-p-4 nds-border-default nds-rounded-md" data-align="center" data-spacing="md" style={{ width: "20rem" }}
     >
       <Skeleton
-        className="h-12 w-12 rounded-full motion-reduce:animate-none"
+        className="nds-rounded-full motion-reduce:animate-none" style={{ height: "3rem", width: "3rem" }}
         aria-hidden="true"
       />
       <div className="nds-stack" data-spacing="sm">
         <Skeleton
-          className="h-4 w-[200px] motion-reduce:animate-none"
+          className="motion-reduce:animate-none" style={{ height: "1rem", width: "200px" }}
           aria-hidden="true"
         />
         <Skeleton
-          className="h-4 w-[160px] motion-reduce:animate-none"
+          className="motion-reduce:animate-none" style={{ height: "1rem", width: "160px" }}
           aria-hidden="true"
         />
       </div>
@@ -93,21 +93,21 @@ export const ListaComAvatar: Story = {
       role="status"
       aria-busy="true"
       aria-label="Carregando lista de pedidos"
-      className="w-96 space-y-4"
+      className="" data-spacing="md" style={{ width: "24rem" }}
     >
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="nds-cluster" data-spacing="sm">
           <Skeleton
-            className="h-10 w-10 rounded-md motion-reduce:animate-none"
+            className="nds-rounded-md motion-reduce:animate-none" style={{ height: "2.5rem", width: "2.5rem" }}
             aria-hidden="true"
           />
-          <div className="flex-1 space-y-2">
+          <div className="nds-flex-1" data-spacing="sm">
             <Skeleton
-              className="h-4 w-[60%] motion-reduce:animate-none"
+              className="motion-reduce:animate-none" style={{ height: "1rem", width: "60%" }}
               aria-hidden="true"
             />
             <Skeleton
-              className="h-3 w-[40%] motion-reduce:animate-none"
+              className="motion-reduce:animate-none" style={{ height: "0.75rem", width: "40%" }}
               aria-hidden="true"
             />
           </div>
@@ -137,7 +137,7 @@ export const ImagemEmAspectRatio: Story = {
     >
       <AspectRatio ratio={16 / 9}>
         <Skeleton
-          className="h-full w-full motion-reduce:animate-none"
+          className="nds-w-full motion-reduce:animate-none" style={{ height: "100%" }}
           aria-hidden="true"
         />
       </AspectRatio>
@@ -165,15 +165,15 @@ export const Paragrafo: Story = {
       className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}
     >
       <Skeleton
-        className="h-4 w-full motion-reduce:animate-none"
+        className="nds-w-full motion-reduce:animate-none" style={{ height: "1rem" }}
         aria-hidden="true"
       />
       <Skeleton
-        className="h-4 w-[90%] motion-reduce:animate-none"
+        className="motion-reduce:animate-none" style={{ height: "1rem", width: "90%" }}
         aria-hidden="true"
       />
       <Skeleton
-        className="h-4 w-[60%] motion-reduce:animate-none"
+        className="motion-reduce:animate-none" style={{ height: "1rem", width: "60%" }}
         aria-hidden="true"
       />
     </div>

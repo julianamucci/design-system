@@ -44,10 +44,10 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-foreground">Enviando arquivo</span>
-          <span class="text-muted-foreground tabular-nums" aria-live="polite">{{ args.modelValue }}%</span>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">Enviando arquivo</span>
+          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">{{ args.modelValue }}%</span>
         </div>
         <Progress v-bind="args" aria-label="Progresso do upload" />
       </div>

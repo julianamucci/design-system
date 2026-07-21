@@ -96,7 +96,7 @@ export const ComDropdown: Story = {
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[260px] gap-1 p-2">
+              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
                 <li>
                   <NavigationMenuLink href="#">Plano Starter</NavigationMenuLink>
                 </li>
@@ -149,7 +149,7 @@ export const MegaMenuGrid: Story = {
           <NavigationMenuItem value="solucoes">
             <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[460px] grid-cols-2 gap-2 p-3">
+              <ul className="nds-grid" data-spacing="sm" data-cols="2" style={{ width: "460px", padding: "0.75rem" }}>
                 <li>
                   <NavigationMenuLink href="#">
                     <div>
@@ -230,8 +230,8 @@ export const ComCardDestacado: Story = {
           <NavigationMenuItem value="recursos">
             <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="grid w-[480px] grid-cols-[1fr_180px] gap-3 p-3">
-                <ul className="grid gap-1">
+              <div className="nds-grid grid-cols-[1fr_180px]" data-spacing="sm" style={{ width: "480px", padding: "0.75rem" }}>
+                <ul className="nds-grid" data-spacing="xs">
                   <li>
                     <NavigationMenuLink href="#">Documentação</NavigationMenuLink>
                   </li>
@@ -247,9 +247,9 @@ export const ComCardDestacado: Story = {
                 </ul>
                 <a
                   href="#"
-                  className="flex flex-col justify-end rounded-md bg-gradient-to-b from-muted to-accent p-3 text-xs no-underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  className="nds-stack nds-rounded-md bg-gradient-to-b from-muted to-accent nds-text-caption no-underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50" data-justify="end" style={{ padding: "0.75rem" }}
                 >
-                  <div className="text-sm font-medium mb-1">Tokens v2</div>
+                  <div className="nds-text-body nds-font-medium nds-mb-1">Tokens v2</div>
                   <p className="nds-text-muted-foreground">
                     Conheça a nova arquitetura de tokens.
                   </p>

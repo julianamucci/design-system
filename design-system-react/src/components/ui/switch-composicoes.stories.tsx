@@ -52,8 +52,8 @@ export const ComLabel: Story = {
 
 export const PainelDeConfiguracoes: Story = {
   render: () => (
-    <div className="flex items-center justify-between w-96 rounded-lg border p-4">
-      <div className="space-y-0.5">
+    <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style={{ width: "24rem" }}>
+      <div className="" data-spacing="xs">
         <Label htmlFor="comp-marketing">Emails de marketing</Label>
         <p className="nds-text-body nds-text-muted-foreground">
           Receba novidades e promoções da plataforma.
@@ -85,15 +85,15 @@ export const PainelDeConfiguracoes: Story = {
 
 export const ListaDePreferencias: Story = {
   render: () => (
-    <fieldset className="border-none p-0 m-0 space-y-4 w-80">
-      <legend className="text-sm font-semibold mb-2">Notificações</legend>
+    <fieldset className="border-none nds-p-0 m-0" data-spacing="md" style={{ width: "20rem" }}>
+      <legend className="nds-text-body nds-font-semibold nds-mb-2">Notificações</legend>
       {[
         { id: "pref-email", label: "Receber emails", desc: "Resumos diários por email." },
         { id: "pref-push", label: "Notificações push", desc: "Alertas no navegador em tempo real." },
         { id: "pref-sms", label: "SMS de segurança", desc: "Códigos de verificação por SMS." },
       ].map(({ id, label, desc }) => (
         <div key={id} className="nds-cluster" data-justify="between">
-          <div className="space-y-0.5 pr-4">
+          <div className="" style={{ paddingRight: "1rem" }} data-spacing="xs">
             <Label htmlFor={id}>{label}</Label>
             <p className="nds-text-caption nds-text-muted-foreground">{desc}</p>
           </div>
@@ -128,7 +128,7 @@ export const Controlado: Story = {
   render: function ControladoRender() {
     const [enabled, setEnabled] = useState(false);
     return (
-      <div className="flex flex-col items-start gap-3 w-80">
+      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "20rem" }}>
         <div className="nds-cluster" data-spacing="sm">
           <Switch id="comp-controlled" checked={enabled} onCheckedChange={setEnabled} />
           <Label htmlFor="comp-controlled">Modo escuro</Label>
@@ -166,7 +166,7 @@ export const Controlado: Story = {
 
 export const TamanhoCompacto: Story = {
   render: () => (
-    <div className="flex flex-col gap-3 w-72">
+    <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
       {[
         { id: "sm-wifi", label: "Wi-Fi" },
         { id: "sm-bluetooth", label: "Bluetooth" },

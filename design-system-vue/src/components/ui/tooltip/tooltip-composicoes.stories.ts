@@ -51,11 +51,11 @@ export const BotaoIconOnly: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Salvar</TooltipContent>
@@ -84,12 +84,12 @@ export const BarraDeAcoes: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 120px;" class="flex items-center justify-center">
-        <div role="toolbar" aria-label="Ações do documento" class="inline-flex items-center gap-1 rounded-md border bg-card p-1">
+      <div style="contain: layout; min-height: 120px;" class="nds-cluster" data-align="center" data-justify="center">
+        <div role="toolbar" aria-label="Ações do documento" class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1" data-align="center" data-spacing="xs">
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Salvar">
-                <Save aria-hidden="true" class="size-4" />
+                <Save aria-hidden="true" class="nds-size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Salvar</TooltipContent>
@@ -98,7 +98,7 @@ export const BarraDeAcoes: Story = {
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Copiar">
-                <Copy aria-hidden="true" class="size-4" />
+                <Copy aria-hidden="true" class="nds-size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Copiar</TooltipContent>
@@ -107,7 +107,7 @@ export const BarraDeAcoes: Story = {
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Editar">
-                <Pencil aria-hidden="true" class="size-4" />
+                <Pencil aria-hidden="true" class="nds-size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Editar</TooltipContent>
@@ -116,7 +116,7 @@ export const BarraDeAcoes: Story = {
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Compartilhar">
-                <Share2 aria-hidden="true" class="size-4" />
+                <Share2 aria-hidden="true" class="nds-size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Compartilhar</TooltipContent>
@@ -125,7 +125,7 @@ export const BarraDeAcoes: Story = {
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="ghost" size="icon" aria-label="Excluir">
-                <Trash2 aria-hidden="true" class="size-4" />
+                <Trash2 aria-hidden="true" class="nds-size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Excluir</TooltipContent>
@@ -158,14 +158,14 @@ export const AtalhoDeTeclado: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom" class="gap-1">
+          <TooltipContent side="bottom" class="" data-spacing="xs">
             Salvar
             <Kbd>Ctrl</Kbd>
             <Kbd>S</Kbd>
@@ -195,7 +195,7 @@ export const QuatroLados: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="grid grid-cols-2 gap-12 place-items-center p-12">
+      <div style="contain: layout; min-height: 280px; padding: 3rem" class="nds-grid place-items-center" data-spacing="2xl" data-cols="2" >
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="sm">Top</Button>

@@ -72,7 +72,7 @@ export const Playground: Story = {
             <NavigationMenuItem value="produtos">
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[260px] gap-1 p-2">
+                <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
                   <li>
                     <NavigationMenuLink href="#">Plano Starter</NavigationMenuLink>
                   </li>
@@ -88,7 +88,7 @@ export const Playground: Story = {
             <NavigationMenuItem value="solucoes">
               <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[260px] gap-1 p-2">
+                <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
                   <li>
                     <NavigationMenuLink href="#">Para Times</NavigationMenuLink>
                   </li>

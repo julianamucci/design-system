@@ -72,7 +72,7 @@ export const Clickable: Story = {
       <button
         type="button"
         aria-label="Ver detalhes do produto Cadeira Gamer Pro"
-        class="w-full max-w-sm text-left rounded-(--radius-card) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        class="nds-w-full nds-max-w-sm nds-text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" style="border-radius: var(--radius-card)"
         @click="handleClick"
       >
         <Card>
@@ -129,7 +129,7 @@ export const WithFooter: Story = {
           <CardDescription>Em estoque</CardDescription>
         </CardHeader>
         <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
-        <CardFooter class="justify-end gap-2">
+        <CardFooter class="" data-justify="end" data-spacing="sm">
           <Button variant="outline" size="sm" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
           <Button size="sm" aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>
         </CardFooter>

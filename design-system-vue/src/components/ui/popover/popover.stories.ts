@@ -84,7 +84,7 @@ export const Playground: Story = {
       return { args, onSave, onCancel };
     },
     template: `
-      <div style="contain: layout; min-height: 260px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 260px;" class="nds-cluster" data-align="center" data-justify="center">
         <Popover
           :key="String(args.defaultOpen) + String(args.modal)"
           :default-open="args.defaultOpen"
@@ -100,7 +100,7 @@ export const Playground: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
-            <div class="flex justify-end gap-2 pt-1">
+            <div class="nds-cluster" data-justify="end" data-spacing="sm" style="padding-top: 0.25rem">
               <Button variant="outline" size="sm" @click="onCancel">Cancelar</Button>
               <Button size="sm" @click="onSave">Salvar</Button>
             </div>

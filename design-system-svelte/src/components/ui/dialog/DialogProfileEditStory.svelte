@@ -46,12 +46,12 @@
         Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
       </DialogDescription>
     </DialogHeader>
-    <form class="grid gap-3" onsubmit={handleSubmit}>
-      <div class="grid gap-1.5">
+    <form class="nds-grid" data-spacing="sm" onsubmit={handleSubmit}>
+      <div class="nds-grid" data-spacing="xs">
         <Label for="profile-name">Nome completo</Label>
         <Input id="profile-name" defaultValue="Maria Silva" />
       </div>
-      <div class="grid gap-1.5">
+      <div class="nds-grid" data-spacing="xs">
         <Label for="profile-username">Nome de usuário</Label>
         <Input id="profile-username" defaultValue="@mariasilva" />
       </div>

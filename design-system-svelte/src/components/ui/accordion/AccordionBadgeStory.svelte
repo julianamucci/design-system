@@ -20,7 +20,7 @@
         <AccordionTrigger>
           <span class="nds-cluster" data-spacing="sm">
             {item.label}
-            <Badge variant={item.badgeVariant} class="text-[10px] h-4">{item.badge}</Badge>
+            <Badge variant={item.badgeVariant} class="" style="font-size: 10px; height: 1rem">{item.badge}</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>{item.content}</AccordionContent>

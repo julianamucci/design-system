@@ -44,7 +44,7 @@ function SidebarWithNavGroups() {
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="offcanvas">
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -131,7 +131,7 @@ function SidebarWithSubMenu() {
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="icon">
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -245,8 +245,8 @@ function SidebarWithSearch() {
     <SidebarProvider defaultOpen>
       <nav aria-label="Navegação principal">
         <Sidebar collapsible="offcanvas">
-          <SidebarHeader className="p-3 gap-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+          <SidebarHeader className="" data-spacing="sm" style={{ padding: "0.75rem" }}>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
             <SidebarInput
               placeholder="Buscar..."
               value={query}
@@ -270,7 +270,7 @@ function SidebarWithSearch() {
                     </SidebarMenuItem>
                   ))}
                   {filtered.length === 0 && (
-                    <li className="px-2 py-3 text-xs text-sidebar-foreground/60">
+                    <li className="nds-px-2 nds-text-caption text-sidebar-foreground/60" style={{ paddingBlock: "0.75rem" }}>
                       Nenhum item encontrado.
                     </li>
                   )}
@@ -309,7 +309,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="min-h-[400px] flex">
+      <div className="nds-cluster min-h-[400px]">
         <Story />
       </div>
     ),

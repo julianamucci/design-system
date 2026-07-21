@@ -53,7 +53,7 @@ export const Fechado: Story = {
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[220px] gap-1 p-2">
+              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "220px" }}>
                 <li>
                   <NavigationMenuLink href="#">Plano Pro</NavigationMenuLink>
                 </li>
@@ -100,7 +100,7 @@ export const Aberto: Story = {
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[260px] gap-1 p-2">
+              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
                 <li>
                   <NavigationMenuLink href="#">Plano Starter</NavigationMenuLink>
                 </li>

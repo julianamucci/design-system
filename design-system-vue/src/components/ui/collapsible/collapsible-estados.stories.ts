@@ -29,18 +29,18 @@ export const NaoControlado: Story = {
     setup() { return {}; },
     template: `
       <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between">
           Exibir filtros avançados
           <ChevronDown
             aria-hidden="true"
-            class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+            class="transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
           />
         </CollapsibleTrigger>
         <CollapsibleContent class="nds-stack" data-spacing="sm">
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 1
           </div>
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 2
           </div>
         </CollapsibleContent>
@@ -89,25 +89,25 @@ export const Controlado: Story = {
             Estado externo: <strong>{{ isOpen ? 'aberto' : 'fechado' }}</strong>
           </span>
           <button
-            class="rounded-md border border-input bg-background px-3 py-1 text-xs font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="padding-inline: 0.75rem"
             @click="toggle"
           >
             {{ isOpen ? 'Fechar' : 'Abrir' }} externamente
           </button>
         </div>
         <Collapsible :open="isOpen" @update:open="(v) => isOpen = v" class="nds-stack" data-spacing="sm">
-          <CollapsibleTrigger class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between">
             {{ isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}
             <ChevronDown
               aria-hidden="true"
-              class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+              class="transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
             />
           </CollapsibleTrigger>
           <CollapsibleContent class="nds-stack" data-spacing="sm">
-            <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+            <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
               Filtro avançado 1
             </div>
-            <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+            <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
               Filtro avançado 2
             </div>
           </CollapsibleContent>
@@ -150,13 +150,13 @@ export const Desabilitado: Story = {
       <Collapsible disabled class="nds-stack" data-spacing="sm" style="width: 20rem">
         <CollapsibleTrigger
           disabled
-          class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium opacity-50 cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between"
         >
           Filtros avançados (desabilitado)
-          <ChevronDown aria-hidden="true" class="h-4 w-4" />
+          <ChevronDown aria-hidden="true" class="" style="height: 1rem; width: 1rem" />
         </CollapsibleTrigger>
         <CollapsibleContent class="nds-stack" data-spacing="sm">
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Este conteúdo não deve aparecer
           </div>
         </CollapsibleContent>

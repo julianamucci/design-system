@@ -27,7 +27,7 @@ export const ComIconeNoTrigger: Story = {
       <AccordionItem value="info">
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
-            <Info className="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
+            <Info className="text-blue-500 nds-shrink-0" style={{ height: "1rem", width: "1rem" }} aria-hidden="true" />
             Informações gerais
           </span>
         </AccordionTrigger>
@@ -38,7 +38,7 @@ export const ComIconeNoTrigger: Story = {
       <AccordionItem value="aviso">
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
-            <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
+            <AlertTriangle className="text-amber-500 nds-shrink-0" style={{ height: "1rem", width: "1rem" }} aria-hidden="true" />
             Atenção — leia antes de continuar
           </span>
         </AccordionTrigger>
@@ -49,7 +49,7 @@ export const ComIconeNoTrigger: Story = {
       <AccordionItem value="sucesso">
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
-            <CheckCircle className="h-4 w-4 text-green-500 shrink-0" aria-hidden="true" />
+            <CheckCircle className="text-green-500 nds-shrink-0" style={{ height: "1rem", width: "1rem" }} aria-hidden="true" />
             Configuração concluída
           </span>
         </AccordionTrigger>
@@ -93,7 +93,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Novidades da versão 3.0
-            <Badge variant="default" className="text-[10px] h-4">Novo</Badge>
+            <Badge variant="default" className="" style={{fontSize: "10px", height: "1rem" }} >Novo</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -104,7 +104,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Funcionalidades em beta
-            <Badge variant="secondary" className="text-[10px] h-4">Beta</Badge>
+            <Badge variant="secondary" className="" style={{fontSize: "10px", height: "1rem" }} >Beta</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -147,8 +147,8 @@ export const ConteudoRico: Story = {
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-2 text-sm">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div className="nds-text-body" data-spacing="sm">
+            <div className="nds-grid" data-cols="2">
               <span className="nds-text-muted-foreground">Processador</span>
               <span>Intel Core i7-12700</span>
               <span className="nds-text-muted-foreground">Memória RAM</span>
@@ -164,7 +164,7 @@ export const ConteudoRico: Story = {
       <AccordionItem value="descricao">
         <AccordionTrigger>Descrição detalhada</AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-3 text-sm text-muted-foreground">
+          <div className="nds-text-body nds-text-muted-foreground" data-spacing="sm">
             <p>
               Computador de alto desempenho voltado para profissionais criativos e
               desenvolvedores que necessitam de processamento intensivo.
@@ -213,7 +213,7 @@ export const ConteudoRico: Story = {
 
 export const FAQ: Story = {
   render: () => (
-    <div className="w-full max-w-lg space-y-2">
+    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
       <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
       <Accordion>
         {[

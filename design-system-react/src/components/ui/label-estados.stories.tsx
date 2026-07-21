@@ -79,7 +79,7 @@ export const Disabled: Story = {
 
 export const DisabledViaGrupo: Story = {
   render: () => (
-    <div className="group flex flex-col gap-1.5 w-64" data-disabled="true">
+    <div className="nds-stack group" data-spacing="xs" style={{ width: "16rem" }} data-disabled="true">
       <Label htmlFor="estado-grupo-disabled">Documento</Label>
       <Input id="estado-grupo-disabled" disabled placeholder="ex: 000.000.000-00" />
     </div>

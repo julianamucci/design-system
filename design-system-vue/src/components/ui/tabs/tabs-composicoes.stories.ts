@@ -34,7 +34,7 @@ export const Controlado: Story = {
       return { value };
     },
     template: `
-      <div class="w-full max-w-md space-y-2">
+      <div class="nds-w-full nds-max-w-md" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Tab ativa: <code>{{ value }}</code>
         </p>
@@ -48,13 +48,13 @@ export const Controlado: Story = {
             <TabsTrigger value="properties">Propriedades</TabsTrigger>
             <TabsTrigger value="examples">Exemplos</TabsTrigger>
           </TabsList>
-          <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+          <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
             Estado gerenciado externamente via model-value + @update:model-value.
           </TabsContent>
-          <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+          <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
             Útil para sincronizar com URL, query string ou outro componente.
           </TabsContent>
-          <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+          <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
             Permite disparar analytics no @update:model-value.
           </TabsContent>
         </Tabs>
@@ -88,25 +88,25 @@ export const ComIcones: Story = {
       <Tabs default-value="preview" class="nds-w-full nds-max-w-md">
         <TabsList variant="line" aria-label="Modos de visualização">
           <TabsTrigger value="preview">
-            <Eye class="size-4" aria-hidden="true" />
+            <Eye class="nds-size-4" aria-hidden="true" />
             Preview
           </TabsTrigger>
           <TabsTrigger value="code">
-            <Code2 class="size-4" aria-hidden="true" />
+            <Code2 class="nds-size-4" aria-hidden="true" />
             Código
           </TabsTrigger>
           <TabsTrigger value="settings">
-            <Settings2 class="size-4" aria-hidden="true" />
+            <Settings2 class="nds-size-4" aria-hidden="true" />
             Ajustes
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="preview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="preview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Visualização renderizada do componente.
         </TabsContent>
-        <TabsContent value="code" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="code" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Snippet copiável em React/Vue/Svelte.
         </TabsContent>
-        <TabsContent value="settings" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="settings" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Ajustes de tema, locale e variantes.
         </TabsContent>
       </Tabs>
@@ -128,32 +128,32 @@ export const VerticalConfiguracoes: Story = {
   render: () => ({
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="w-full max-w-2xl">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-full max-w-2xl">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">
-            <User class="size-4" aria-hidden="true" />
+            <User class="nds-size-4" aria-hidden="true" />
             Perfil
           </TabsTrigger>
           <TabsTrigger value="account">
-            <Settings2 class="size-4" aria-hidden="true" />
+            <Settings2 class="nds-size-4" aria-hidden="true" />
             Conta
           </TabsTrigger>
           <TabsTrigger value="security">
-            <Shield class="size-4" aria-hidden="true" />
+            <Shield class="nds-size-4" aria-hidden="true" />
             Segurança
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" class="pl-4 text-sm">
-          <h3 class="font-medium text-foreground">Perfil público</h3>
-          <p class="mt-1 text-muted-foreground">Nome, foto e bio visíveis para outros usuários.</p>
+        <TabsContent value="profile" class="nds-text-body" style="padding-left: 1rem">
+          <h3 class="nds-font-medium nds-text-foreground">Perfil público</h3>
+          <p class="nds-mt-1 nds-text-muted-foreground">Nome, foto e bio visíveis para outros usuários.</p>
         </TabsContent>
-        <TabsContent value="account" class="pl-4 text-sm">
-          <h3 class="font-medium text-foreground">Conta</h3>
-          <p class="mt-1 text-muted-foreground">E-mail, idioma e preferências regionais.</p>
+        <TabsContent value="account" class="nds-text-body" style="padding-left: 1rem">
+          <h3 class="nds-font-medium nds-text-foreground">Conta</h3>
+          <p class="nds-mt-1 nds-text-muted-foreground">E-mail, idioma e preferências regionais.</p>
         </TabsContent>
-        <TabsContent value="security" class="pl-4 text-sm">
-          <h3 class="font-medium text-foreground">Segurança</h3>
-          <p class="mt-1 text-muted-foreground">Senha, autenticação em dois fatores e sessões.</p>
+        <TabsContent value="security" class="nds-text-body" style="padding-left: 1rem">
+          <h3 class="nds-font-medium nds-text-foreground">Segurança</h3>
+          <p class="nds-mt-1 nds-text-muted-foreground">Senha, autenticação em dois fatores e sessões.</p>
         </TabsContent>
       </Tabs>
     `,
@@ -192,13 +192,13 @@ export const ModoManual: Story = {
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           activation-mode="manual": setas movem o foco mas não ativam a tab. Pressione Enter ou Space para ativar.
         </TabsContent>
-        <TabsContent value="properties" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Indicado quando trocar de tab tem custo (fetch de dados, animação pesada).
         </TabsContent>
-        <TabsContent value="examples" class="pt-3 text-sm text-muted-foreground">
+        <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Exemplos de uso.
         </TabsContent>
       </Tabs>

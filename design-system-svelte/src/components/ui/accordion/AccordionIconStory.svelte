@@ -12,7 +12,7 @@
   <AccordionItem value="info">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
-        <Info class="h-4 w-4 text-blue-500 shrink-0" aria-hidden="true" />
+        <Info class="text-blue-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
         Informações gerais
       </span>
     </AccordionTrigger>
@@ -23,7 +23,7 @@
   <AccordionItem value="aviso">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
-        <AlertTriangle class="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
+        <AlertTriangle class="text-amber-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
         Atenção — leia antes de continuar
       </span>
     </AccordionTrigger>
@@ -34,7 +34,7 @@
   <AccordionItem value="sucesso">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
-        <CheckCircle class="h-4 w-4 text-green-500 shrink-0" aria-hidden="true" />
+        <CheckCircle class="text-green-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
         Configuração concluída
       </span>
     </AccordionTrigger>

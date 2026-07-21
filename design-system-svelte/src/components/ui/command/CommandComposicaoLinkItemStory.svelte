@@ -7,19 +7,19 @@
   import Github from '@lucide/svelte/icons/code-2';
 </script>
 
-<div class="w-full max-w-sm rounded-xl border shadow-md">
+<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default shadow-md">
   <Command.Root>
     <Command.Input placeholder="Buscar recurso..." aria-controls="cmd-link-listbox" />
     <Command.List id="cmd-link-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Documentação">
         <Command.LinkItem href="/docs/button" value="docs-button">
-          <BookOpen class="mr-2" aria-hidden="true" />
+          <BookOpen class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Button — Docs
           <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
         </Command.LinkItem>
         <Command.LinkItem href="/docs/input" value="docs-input">
-          <BookOpen class="mr-2" aria-hidden="true" />
+          <BookOpen class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Input — Docs
           <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
         </Command.LinkItem>
@@ -27,7 +27,7 @@
       <Command.Separator />
       <Command.Group heading="Links Externos">
         <Command.LinkItem href="https://github.com" value="github" target="_blank">
-          <Github class="mr-2" aria-hidden="true" />
+          <Github class="" style="margin-right: 0.5rem" aria-hidden="true" />
           GitHub
           <ExternalLink class="ml-auto opacity-50" aria-hidden="true" />
         </Command.LinkItem>

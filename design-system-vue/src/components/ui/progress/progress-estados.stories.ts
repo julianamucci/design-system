@@ -26,7 +26,7 @@ export const Default: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px]">
+      <div class="" style="width: 360px">
         <Progress :model-value="0" aria-label="Progresso do upload" />
       </div>
     `,
@@ -48,10 +48,10 @@ export const Loading: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-foreground">Carregando dados</span>
-          <span class="text-muted-foreground tabular-nums" aria-live="polite">50%</span>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">Carregando dados</span>
+          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">50%</span>
         </div>
         <Progress :model-value="50" aria-label="Progresso do carregamento" />
       </div>
@@ -74,10 +74,10 @@ export const Complete: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-foreground">Concluído</span>
-          <span class="text-muted-foreground tabular-nums">100%</span>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">Concluído</span>
+          <span class="nds-text-muted-foreground tabular-nums">100%</span>
         </div>
         <Progress :model-value="100" aria-label="Operação concluída" />
       </div>
@@ -101,8 +101,8 @@ export const Indeterminate: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="text-sm text-foreground">Processando…</div>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-text-body nds-text-foreground">Processando…</div>
         <Progress
           :model-value="null"
           class="[&>div]:animate-indeterminate"

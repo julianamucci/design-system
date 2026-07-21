@@ -26,7 +26,7 @@ export const Horizontal: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="w-[360px] space-y-3">
+      <div class="" data-spacing="sm" style="width: 360px">
         <div class="nds-text-body">Section A — conteúdo acima do divisor.</div>
         <Separator orientation="horizontal" />
         <div class="nds-text-body">Section B — conteúdo abaixo do divisor.</div>
@@ -45,7 +45,7 @@ export const Vertical: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="flex h-10 items-center gap-4 text-sm">
+      <div class="nds-cluster nds-text-body" data-align="center" data-spacing="md" style="height: 2.5rem">
         <span>Início</span>
         <Separator orientation="vertical" />
         <span>Docs</span>

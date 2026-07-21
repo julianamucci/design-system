@@ -14,7 +14,7 @@
   } = $props();
 </script>
 
-<div class="w-full max-w-sm rounded-xl border shadow-md">
+<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default shadow-md">
   <Command.Root {...rest}>
     <Command.Input {placeholder} aria-controls="command-story-listbox" />
     <Command.List id="command-story-listbox">

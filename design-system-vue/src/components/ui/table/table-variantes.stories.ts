@@ -176,7 +176,7 @@ export const CaptionSrOnly: Story = {
     setup() { return {}; },
     template: `
       <div>
-        <h2 class="text-lg font-semibold mb-4">Faturas recentes</h2>
+        <h2 class="nds-text-base nds-font-semibold nds-mb-4">Faturas recentes</h2>
         <Table>
           <TableCaption class="nds-sr-only">Lista de faturas recentes</TableCaption>
           <TableHeader>

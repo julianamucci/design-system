@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ComLabelEDescricao: Story = {
   render: () => (
-    <div className="w-96 space-y-2">
+    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
       <Label htmlFor="comp-desc">Descrição</Label>
       <Textarea
         id="comp-desc"
@@ -67,7 +67,7 @@ function ComContadorRender() {
   const [value, setValue] = useState("");
   const max = 280;
   return (
-    <div className="w-96 space-y-2">
+    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
       <Label htmlFor="comp-counter">Mensagem</Label>
       <Textarea
         id="comp-counter"
@@ -77,7 +77,7 @@ function ComContadorRender() {
         className="resize-y min-h-[120px]"
         maxLength={max}
       />
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
         <span>Limite: 280 caracteres.</span>
         <span
           aria-live="polite"
@@ -122,7 +122,7 @@ function EmFormularioRender() {
   const max = 500;
   return (
     <form
-      className="w-96 space-y-4"
+      className="" data-spacing="md" style={{ width: "24rem" }}
       onSubmit={(e) => {
         e.preventDefault();
         setSubmitted(bio);
@@ -140,7 +140,7 @@ function EmFormularioRender() {
           maxLength={max}
           required
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Aparece no seu perfil público.</span>
           <span
             aria-live="polite"
@@ -186,7 +186,7 @@ export const EmFormulario: Story = {
 function ControladoRender() {
   const [value, setValue] = useState("Texto inicial controlado.");
   return (
-    <div className="w-96 space-y-2">
+    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
       <Label htmlFor="comp-controlled">Observações</Label>
       <Textarea
         id="comp-controlled"

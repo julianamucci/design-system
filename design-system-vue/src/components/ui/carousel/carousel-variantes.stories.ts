@@ -30,8 +30,8 @@ export const Horizontal: Story = {
       <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de exemplos">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-6">
-              <span class="text-3xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-6" data-align="center" data-justify="center">
+              <span class="text-3xl nds-font-semibold">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>
@@ -60,10 +60,10 @@ export const Vertical: Story = {
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
       <Carousel orientation="vertical" class="nds-w-full nds-max-w-xs" aria-label="Galeria vertical">
-        <CarouselContent class="h-[200px]">
+        <CarouselContent class="" style="height: 200px">
           <CarouselItem v-for="n in slides" :key="n">
-            <Card class="flex aspect-square items-center justify-center p-4">
-              <span class="text-2xl font-semibold">{{ n }}</span>
+            <Card class="nds-cluster aspect-square nds-p-4" data-align="center" data-justify="center">
+              <span class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">{{ n }}</span>
             </Card>
           </CarouselItem>
         </CarouselContent>

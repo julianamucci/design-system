@@ -63,7 +63,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu
           :key="String(args.defaultValue) + String(args.delayDuration) + String(args.orientation)"
           v-bind="args"
@@ -76,7 +76,7 @@ export const Playground: Story = {
             <NavigationMenuItem value="produtos">
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[400px] gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 400px">
                   <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Produto C</NavigationMenuLink></li>
@@ -86,7 +86,7 @@ export const Playground: Story = {
             <NavigationMenuItem value="solucoes">
               <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[600px] grid-cols-2 gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-spacing="sm" data-cols="2" style="width: 600px">
                   <li><NavigationMenuLink href="#">Solução 1</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Solução 2</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Solução 3</NavigationMenuLink></li>

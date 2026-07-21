@@ -45,7 +45,7 @@ export const Playground: Story = {
       <Checkbox id="playground-checkbox" {...args} />
       <label
         htmlFor="playground-checkbox"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{ lineHeight: 1 }}
       >
         Aceito os termos e condições
       </label>

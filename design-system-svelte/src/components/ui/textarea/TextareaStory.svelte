@@ -49,7 +49,7 @@
   );
 </script>
 
-<div class="flex flex-col gap-1.5 w-80">
+<div class="nds-stack" data-spacing="xs" style="width: 20rem">
   <Label for={id}>{labelText}</Label>
   <Textarea
     {id}
@@ -63,7 +63,7 @@
     {...rest}
   />
   {#if showCounter && maxLength}
-    <div class="flex justify-between text-xs text-muted-foreground">
+    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
       <span>{helpText}</span>
       <span aria-live="polite" aria-label={counterAriaLabel}>
         {(value ?? '').length}/{maxLength}

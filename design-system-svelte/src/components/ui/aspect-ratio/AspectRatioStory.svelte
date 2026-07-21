@@ -28,15 +28,15 @@
   }: Props = $props();
 </script>
 
-<div class="{width} w-full {className}">
+<div class="{width} nds-w-full {className}">
   <AspectRatio {ratio}>
     {#if child === 'img'}
-      <img src={src} alt={alt} loading="lazy" decoding="async" class="w-full h-full object-cover rounded-md" />
+      <img src={src} alt={alt} loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover" />
     {:else if child === 'iframe'}
       <iframe
         {src}
         {title}
-        class="w-full h-full rounded-md border-0"
+        class="nds-w-full nds-rounded-md border-0" style="height: 100%"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
@@ -46,10 +46,10 @@
         {src}
         poster={poster || undefined}
         controls
-        class="w-full h-full object-cover rounded-md bg-muted"
+        class="nds-w-full nds-rounded-md nds-bg-muted" style="height: 100%; object-fit: cover"
       ></video>
     {:else}
-      <div class="w-full h-full flex items-center justify-center rounded-md bg-muted text-muted-foreground text-sm">
+      <div class="nds-cluster nds-w-full nds-rounded-md nds-bg-muted nds-text-muted-foreground nds-text-body" data-align="center" data-justify="center" style="height: 100%">
         {label}
       </div>
     {/if}

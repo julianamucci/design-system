@@ -81,12 +81,12 @@ export const ComFormulario: Story = {
               Atualize seu nome e e-mail.
             </DrawerDescription>
           </DrawerHeader>
-          <form className="grid gap-3 px-4 pb-2">
-            <div className="grid gap-1.5">
+          <form className="nds-grid nds-px-4" style={{ paddingBottom: "0.5rem" }} data-spacing="sm">
+            <div className="nds-grid" data-spacing="xs">
               <Label htmlFor="drawer-name">Nome</Label>
               <Input id="drawer-name" defaultValue="Juliana" />
             </div>
-            <div className="grid gap-1.5">
+            <div className="nds-grid" data-spacing="xs">
               <Label htmlFor="drawer-email">E-mail</Label>
               <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
             </div>
@@ -175,11 +175,11 @@ export const ComScroll: Story = {
               30 itens — role o conteúdo para ver mais.
             </DrawerDescription>
           </DrawerHeader>
-          <ul className="px-4 pb-2 overflow-y-auto space-y-2 text-sm">
+          <ul className="nds-px-4 nds-overflow-y nds-text-body" style={{ paddingBottom: "0.5rem" }} data-spacing="sm">
             {Array.from({ length: 30 }).map((_, i) => (
               <li
                 key={i}
-                className="border rounded-md px-3 py-2 flex justify-between"
+                className="nds-cluster nds-border-default nds-rounded-md nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}
               >
                 <span>Item {i + 1}</span>
                 <span className="nds-text-muted-foreground">#{i + 1}</span>

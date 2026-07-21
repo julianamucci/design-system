@@ -61,30 +61,30 @@
           </DrawerHeader>
 
           {#if variant === 'withForm'}
-            <form class="grid gap-3 px-4">
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Nome</span>
+            <form class="nds-grid nds-px-4" data-spacing="sm">
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Nome</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   defaultValue="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Email</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Email</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   defaultValue="maria@exemplo.com"
                 />
               </label>
             </form>
           {:else if variant === 'withConfirmation'}
-            <div class="px-4 text-sm text-muted-foreground">
+            <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
               <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita posteriormente.</p>
             </div>
           {:else if variant === 'withScroll'}
-            <div class="max-h-[50vh] overflow-y-auto px-4 text-sm text-muted-foreground space-y-2">
+            <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 12 }) as _, i}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
               {/each}
@@ -115,30 +115,30 @@
           </DrawerHeader>
 
           {#if variant === 'withForm'}
-            <form class="grid gap-3 px-4">
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Nome</span>
+            <form class="nds-grid nds-px-4" data-spacing="sm">
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Nome</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   defaultValue="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Email</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Email</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   defaultValue="maria@exemplo.com"
                 />
               </label>
             </form>
           {:else if variant === 'withConfirmation'}
-            <div class="px-4 text-sm text-muted-foreground">
+            <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
               <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita posteriormente.</p>
             </div>
           {:else if variant === 'withScroll'}
-            <div class="max-h-[50vh] overflow-y-auto px-4 text-sm text-muted-foreground space-y-2">
+            <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 12 }) as _, i}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
               {/each}

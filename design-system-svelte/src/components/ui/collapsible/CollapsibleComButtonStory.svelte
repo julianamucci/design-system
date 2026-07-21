@@ -5,21 +5,21 @@
   let open = $state(false);
 </script>
 
-<div class="flex flex-col gap-3 w-72">
+<div class="nds-stack" data-spacing="sm" style="width: 18rem">
   <div class="nds-cluster" data-justify="between">
     <span class="nds-text-body nds-font-medium">Filtros avançados</span>
     <Collapsible bind:open>
       <CollapsibleTrigger
-        class="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="nds-cluster nds-rounded-md nds-text-body nds-font-medium transition-colors nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-spacing="xs" style="padding-inline: 0.75rem; padding-block: 0.375rem"
       >
         {open ? 'Ocultar' : 'Exibir'}
         <ChevronDown
           aria-hidden="true"
-          class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+          class="transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
         />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2 space-y-1">
+        <div class="nds-rounded-md nds-border-default bg-muted/50 nds-px-4 nds-text-body nds-mt-2" data-spacing="xs" style="padding-block: 0.75rem">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </div>

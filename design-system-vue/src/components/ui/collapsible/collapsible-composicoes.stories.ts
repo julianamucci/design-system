@@ -28,19 +28,19 @@ export const ComIconeNoTrigger: Story = {
     setup() { return {}; },
     template: `
       <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger class="flex w-full items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-          <Filter aria-hidden="true" class="h-4 w-4 shrink-0" />
-          <span class="flex-1 text-left">Filtros avançados</span>
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-spacing="sm">
+          <Filter aria-hidden="true" class="nds-shrink-0" style="height: 1rem; width: 1rem" />
+          <span class="nds-flex-1 nds-text-left">Filtros avançados</span>
           <ChevronDown
             aria-hidden="true"
-            class="h-4 w-4 shrink-0 transition-transform [[data-state=open]_&]:rotate-180"
+            class="nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
           />
         </CollapsibleTrigger>
         <CollapsibleContent class="nds-stack" data-spacing="sm">
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 1
           </div>
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 2
           </div>
         </CollapsibleContent>
@@ -76,30 +76,30 @@ export const ComIconeGiratório: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Settings },
     setup() { return {}; },
     template: `
-      <Collapsible class="w-80 rounded-md border border-input bg-background">
-        <CollapsibleTrigger class="flex w-full items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+      <Collapsible class="nds-rounded-md nds-border-default nds-border-default nds-bg-background" style="width: 20rem">
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-px-4 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring nds-rounded-md" data-align="center" data-justify="between" style="padding-block: 0.75rem">
           <div class="nds-cluster" data-spacing="sm">
-            <Settings aria-hidden="true" class="h-4 w-4" />
+            <Settings aria-hidden="true" class="" style="height: 1rem; width: 1rem" />
             <span>Configuracoes avançadas</span>
           </div>
           <ChevronDown
             aria-hidden="true"
-            class="h-4 w-4 transition-transform duration-200 [[data-state=open]_&]:rotate-180"
+            class="transition-transform duration-200 [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
           />
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div class="border-t border-input px-4 py-3 space-y-2">
-            <div class="flex items-center justify-between text-sm">
+          <div class="border-t nds-border-default nds-px-4" data-spacing="sm" style="padding-block: 0.75rem">
+            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
               <span class="nds-text-muted-foreground">Modo debug</span>
-              <span class="text-foreground font-medium">Desativado</span>
+              <span class="nds-text-foreground nds-font-medium">Desativado</span>
             </div>
-            <div class="flex items-center justify-between text-sm">
+            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
               <span class="nds-text-muted-foreground">Cache</span>
-              <span class="text-foreground font-medium">Habilitado</span>
+              <span class="nds-text-foreground nds-font-medium">Habilitado</span>
             </div>
-            <div class="flex items-center justify-between text-sm">
+            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
               <span class="nds-text-muted-foreground">Timeout</span>
-              <span class="text-foreground font-medium">30s</span>
+              <span class="nds-text-foreground nds-font-medium">30s</span>
             </div>
           </div>
         </CollapsibleContent>

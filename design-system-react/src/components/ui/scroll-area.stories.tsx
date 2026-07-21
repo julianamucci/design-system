@@ -63,18 +63,18 @@ export const Playground: Story = {
         // key re-monta ao mudar orientation/type (são props de montagem da lib)
         <div
           key={`${orientation}-${type}`}
-          className="h-[160px] w-[500px]"
+          className="" style={{ height: "160px", width: "500px" }}
         >
           <ScrollArea
             type={type}
             scrollHideDelay={scrollHideDelay}
-            className="h-full w-full whitespace-nowrap rounded-md border"
+            className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}
           >
-            <div className="flex w-max gap-3 p-3">
+            <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
               {items.map((n) => (
                 <div
                   key={n}
-                  className="flex h-[120px] w-[140px] items-center justify-center rounded-md bg-muted text-sm shrink-0"
+                  className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style={{ height: "120px", width: "140px" }}
                 >
                   Card {n}
                 </div>
@@ -92,19 +92,19 @@ export const Playground: Story = {
       return (
         <div
           key={`${orientation}-${type}`}
-          className="h-[260px] w-[500px]"
+          className="" style={{ height: "260px", width: "500px" }}
         >
           <ScrollArea
             type={type}
             scrollHideDelay={scrollHideDelay}
             className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
           >
-            <table className="w-max border-collapse text-xs">
+            <table className="border-collapse nds-text-caption" style={{ width: "max-content" }}>
               <tbody>
                 {rows.map((r) => (
                   <tr key={r}>
                     {cols.map((c) => (
-                      <td key={c} className="border px-3 py-2 whitespace-nowrap">
+                      <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap" style={{ paddingInline: "0.75rem" }}>
                         R{r}·C{c}
                       </td>
                     ))}
@@ -122,18 +122,18 @@ export const Playground: Story = {
     return (
       <div
         key={`${orientation}-${type}`}
-        className="h-[300px] w-[320px]"
+        className="" style={{ height: "300px", width: "320px" }}
       >
         <ScrollArea
           type={type}
           scrollHideDelay={scrollHideDelay}
           className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
         >
-          <div className="p-4 space-y-2">
+          <div className="nds-p-4" data-spacing="sm">
             {items.map((n) => (
               <div
                 key={n}
-                className="text-sm border-b pb-2 last:border-b-0"
+                className="nds-text-body nds-border-b last:border-b-0" style={{ paddingBottom: "0.5rem" }}
               >
                 Tag {n}
               </div>

@@ -37,7 +37,7 @@ export const EstadoVazio: Story = {
       return {};
     },
     template: `
-      <div class="w-72 rounded-xl border border-border shadow-md overflow-hidden">
+      <div class="rounded-xl nds-border-default shadow-md nds-overflow-hidden" style="width: 18rem">
         <Command>
           <CommandInput placeholder="Buscar componente..." model-value="zzz" />
           <CommandList>
@@ -73,7 +73,7 @@ export const ItemDesabilitado: Story = {
       return {};
     },
     template: `
-      <div class="w-72 rounded-xl border border-border shadow-md overflow-hidden">
+      <div class="rounded-xl nds-border-default shadow-md nds-overflow-hidden" style="width: 18rem">
         <Command>
           <CommandInput placeholder="Buscar..." />
           <CommandList>

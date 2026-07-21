@@ -45,14 +45,14 @@ export const Horizontal: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 240px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 240px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[300px] gap-2 p-3">
+                <ul class="nds-grid" data-spacing="sm" style="width: 300px; padding: 0.75rem">
                   <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
                 </ul>
@@ -79,9 +79,9 @@ export const Vertical: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 240px;" class="w-full flex justify-start">
+      <div style="contain: layout; min-height: 240px;" class="nds-cluster nds-w-full" data-justify="start">
         <NavigationMenu orientation="vertical" aria-label="Navegação lateral" :delay-duration="80">
-          <NavigationMenuList class="flex-col items-start gap-1">
+          <NavigationMenuList class="" data-align="start" data-spacing="xs">
             <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem><NavigationMenuLink href="#">Contato</NavigationMenuLink></NavigationMenuItem>

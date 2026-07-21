@@ -122,7 +122,7 @@
         {#each options as opt (opt.value)}
           <SelectItem value={opt.value} label={opt.label}>
             {#snippet children()}
-              <MapPinIcon class="size-4 text-muted-foreground" />
+              <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
               <span>{opt.label}</span>
             {/snippet}
           </SelectItem>

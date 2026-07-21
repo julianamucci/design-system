@@ -30,10 +30,10 @@ export const EditorComPreview: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[640px] h-[300px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 640px; height: 300px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Arquivos</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Arquivos</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar lista de arquivos — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="30">
@@ -41,7 +41,7 @@ export const EditorComPreview: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar editor e preview — use setas para ajustar" />
           <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Preview</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Preview</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -61,10 +61,10 @@ export const VerticalCabecalhoConteudoRodape: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[420px] h-[400px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 420px; height: 400px">
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel :default-size="20" :min-size="10" :max-size="40">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Cabeçalho</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Cabeçalho</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar cabeçalho — use setas para ajustar" />
           <ResizablePanel :default-size="60" :min-size="30">
@@ -72,7 +72,7 @@ export const VerticalCabecalhoConteudoRodape: Story = {
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar rodapé — use setas para ajustar" />
           <ResizablePanel :default-size="20" :min-size="10" :max-size="40">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Rodapé</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Rodapé</div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -87,10 +87,10 @@ export const SidebarComConsole: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[640px] h-[360px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 640px; height: 360px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Sidebar</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Sidebar</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar sidebar e área principal — use setas" />
           <ResizablePanel :default-size="70" :min-size="50">
@@ -100,7 +100,7 @@ export const SidebarComConsole: Story = {
               </ResizablePanel>
               <ResizableHandle with-handle aria-label="Redimensionar workspace e console — use setas" />
               <ResizablePanel :default-size="35" :min-size="15" :max-size="60">
-                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Console</div>
+                <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Console</div>
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>

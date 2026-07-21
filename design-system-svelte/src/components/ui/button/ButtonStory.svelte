@@ -72,7 +72,7 @@
     {/if}
     {label}
     {#if EndIcon}
-      <EndIcon class="h-4 w-4" aria-hidden="true" />
+      <EndIcon class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
     {/if}
   {/if}
 </Button>

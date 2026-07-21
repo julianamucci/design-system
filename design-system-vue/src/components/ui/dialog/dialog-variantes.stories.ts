@@ -97,12 +97,12 @@ export const WithForm: Story = {
             <DialogTitle>Editar perfil</DialogTitle>
             <DialogDescription>Atualize seu nome e email. As mudanças entram em vigor após salvar.</DialogDescription>
           </DialogHeader>
-          <form class="grid gap-3">
-            <div class="grid gap-1.5">
+          <form class="nds-grid" data-spacing="sm">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="name">Nome</Label>
               <Input id="name" defaultValue="Juliana Mucci" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="email">Email</Label>
               <Input id="email" type="email" defaultValue="juliana@example.com" />
             </div>
@@ -139,12 +139,12 @@ export const WithScrollContent: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
-        <DialogScrollContent class="max-w-lg">
+        <DialogScrollContent class="nds-max-w-lg">
           <DialogHeader>
             <DialogTitle>Termos de serviço</DialogTitle>
             <DialogDescription>Leia atentamente os termos antes de aceitar.</DialogDescription>
           </DialogHeader>
-          <div class="space-y-3 text-sm text-muted-foreground max-h-72 overflow-y-auto">
+          <div class="nds-text-body nds-text-muted-foreground max-h-72 nds-overflow-y" data-spacing="sm">
             <p v-for="i in 12" :key="i">
               Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -249,7 +249,7 @@ export const CustomCloseInFooter: Story = {
             <DialogTitle>Configuracoes de notificação</DialogTitle>
             <DialogDescription>Escolha como deseja ser avisado sobre novas atividades.</DialogDescription>
           </DialogHeader>
-          <DialogFooter class="flex-col gap-2 sm:flex-col">
+          <DialogFooter class="sm:flex-col" data-spacing="sm">
             <Button>Salvar preferências</Button>
             <DialogClose as-child>
               <Button variant="ghost">Fechar</Button>

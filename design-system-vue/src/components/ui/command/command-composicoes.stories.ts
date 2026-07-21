@@ -51,7 +51,7 @@ export const ComGrupos: Story = {
       return {};
     },
     template: `
-      <div class="w-72 rounded-xl border border-border shadow-md overflow-hidden">
+      <div class="rounded-xl nds-border-default shadow-md nds-overflow-hidden" style="width: 18rem">
         <Command>
           <CommandInput placeholder="Buscar componente..." />
           <CommandList>
@@ -94,7 +94,7 @@ export const ComShortcuts: Story = {
       return {};
     },
     template: `
-      <div class="w-72 rounded-xl border border-border shadow-md overflow-hidden">
+      <div class="rounded-xl nds-border-default shadow-md nds-overflow-hidden" style="width: 18rem">
         <Command>
           <CommandInput placeholder="Buscar ação..." />
           <CommandList>
@@ -176,14 +176,14 @@ export const ComoCombobox: Story = {
             role="combobox"
             aria-label="Selecionar item"
             :aria-expanded="open"
-            class="w-56 justify-between"
+            class="" data-justify="between" style="width: 14rem"
           >
             {{ selectedValue
               ? items.find(i => i.value === selectedValue)?.label
               : 'Selecione um item...' }}
           </Button>
         </PopoverTrigger>
-        <PopoverContent class="w-56 p-0">
+        <PopoverContent class="nds-p-0" style="width: 14rem">
           <Command>
             <CommandInput placeholder="Buscar item..." />
             <CommandList>
@@ -249,10 +249,10 @@ export const CommandPalette: Story = {
       return { open, openPalette, closeAndSelect };
     },
     template: `
-      <div class="flex flex-col items-center gap-4">
-        <div class="flex items-center gap-2 text-sm text-muted-foreground">
+      <div class="nds-stack" data-align="center" data-spacing="md">
+        <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-spacing="sm">
           <span>Pressione</span>
-          <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+          <kbd class="nds-cluster pointer-events-none nds-rounded nds-border-default nds-bg-muted nds-font-mono nds-font-medium nds-text-muted-foreground" style="user-select: none; height: 1.25rem; padding-inline: 0.375rem; font-size: 10px" data-align="center" data-spacing="xs" >
             ⌘K
           </kbd>
         </div>

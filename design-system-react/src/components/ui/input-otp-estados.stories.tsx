@@ -225,7 +225,7 @@ export const Erro: Story = {
           ))}
         </InputOTPGroup>
       </InputOTP>
-      <p id="otp-error-msg" className="text-xs text-destructive">
+      <p id="otp-error-msg" className="nds-text-caption nds-text-destructive">
         Código incorreto. Verifique e tente novamente.
       </p>
     </div>

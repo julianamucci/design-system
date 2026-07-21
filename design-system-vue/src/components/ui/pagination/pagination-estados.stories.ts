@@ -116,7 +116,7 @@ export const Disabled: Story = {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="hidden sm:block">Anterior</span>
+              <span class="nds-hidden sm:block">Anterior</span>
             </PaginationPrevious>
           </PaginationItem>
           <PaginationItem><PaginationLink :is-active="true" aria-label="Página atual, 1">1</PaginationLink></PaginationItem>

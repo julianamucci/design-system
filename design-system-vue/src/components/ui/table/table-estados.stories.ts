@@ -168,10 +168,10 @@ export const Carregando: Story = {
         </TableHeader>
         <TableBody>
           <TableRow v-for="i in 5" :key="i">
-            <TableCell><Skeleton class="h-4 w-20" /></TableCell>
-            <TableCell><Skeleton class="h-4 w-16" /></TableCell>
-            <TableCell><Skeleton class="h-4 w-28" /></TableCell>
-            <TableCell class="nds-text-right"><Skeleton class="h-4 w-16 ml-auto" /></TableCell>
+            <TableCell><Skeleton class="" style="height: 1rem; width: 5rem" /></TableCell>
+            <TableCell><Skeleton class="" style="height: 1rem; width: 4rem" /></TableCell>
+            <TableCell><Skeleton class="" style="height: 1rem; width: 7rem" /></TableCell>
+            <TableCell class="nds-text-right"><Skeleton class="ml-auto" style="height: 1rem; width: 4rem" /></TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -44,10 +44,10 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup :direction="args.direction" :key="args.direction">
           <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Sidebar</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Sidebar</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="70" :min-size="50">

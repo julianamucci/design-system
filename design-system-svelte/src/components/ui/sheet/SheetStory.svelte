@@ -59,26 +59,26 @@
           </SheetHeader>
 
           {#if variant === 'withForm'}
-            <form class="grid gap-3 px-4">
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Nome</span>
+            <form class="nds-grid nds-px-4" data-spacing="sm">
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Nome</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Email</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Email</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="maria@exemplo.com"
                 />
               </label>
             </form>
           {:else if variant === 'withScrollContent'}
-            <div class="max-h-[60vh] overflow-y-auto px-4 text-sm text-muted-foreground space-y-2">
+            <div class="max-h-[60vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 14 }) as _, i}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
@@ -118,26 +118,26 @@
           </SheetHeader>
 
           {#if variant === 'withForm'}
-            <form class="grid gap-3 px-4">
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Nome</span>
+            <form class="nds-grid nds-px-4" data-spacing="sm">
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Nome</span>
                 <input
                   type="text"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="Maria Silva"
                 />
               </label>
-              <label class="grid gap-1 text-sm">
-                <span class="text-foreground">Email</span>
+              <label class="nds-grid nds-text-body" data-spacing="xs">
+                <span class="nds-text-foreground">Email</span>
                 <input
                   type="email"
-                  class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
                   value="maria@exemplo.com"
                 />
               </label>
             </form>
           {:else if variant === 'withScrollContent'}
-            <div class="max-h-[60vh] overflow-y-auto px-4 text-sm text-muted-foreground space-y-2">
+            <div class="max-h-[60vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 14 }) as _, i}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}

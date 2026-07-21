@@ -57,7 +57,7 @@ export const PerfilDeUsuario: Story = {
             <div className="nds-cluster" data-spacing="sm">
               <div
                 aria-hidden="true"
-                className="size-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-sm font-medium"
+                className="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium" data-align="center" data-justify="center"
               >
                 JS
               </div>
@@ -66,7 +66,7 @@ export const PerfilDeUsuario: Story = {
                 <p className="nds-text-caption nds-text-muted-foreground">
                   Designer focada em design systems e acessibilidade.
                 </p>
-                <p className="text-xs text-muted-foreground pt-1">142 seguidores</p>
+                <p className="nds-text-caption nds-text-muted-foreground" style={{ paddingTop: "0.25rem" }}>142 seguidores</p>
               </div>
             </div>
           </HoverCardContent>
@@ -113,13 +113,13 @@ export const PreviewDeLink: Story = {
               <div className="nds-cluster" data-spacing="sm">
                 <div
                   aria-hidden="true"
-                  className="size-4 rounded-sm bg-muted-foreground/20"
+                  className="nds-size-4 nds-rounded-sm bg-muted-foreground/20"
                 />
-                <span className="text-xs text-muted-foreground truncate">
+                <span className="nds-text-caption nds-text-muted-foreground nds-truncate">
                   https://example.com
                 </span>
               </div>
-              <p className="text-sm font-medium leading-snug">
+              <p className="nds-text-body nds-font-medium leading-snug">
                 Example Domain — IANA reservado
               </p>
               <p className="nds-text-caption nds-text-muted-foreground">
@@ -159,7 +159,7 @@ export const DefinicaoDeTermo: Story = {
           <HoverCardTrigger asChild>
             <button
               type="button"
-              className="text-sm font-medium underline decoration-dotted underline-offset-4 text-foreground cursor-help"
+              className="nds-text-body nds-font-medium underline decoration-dotted underline-offset-4 nds-text-foreground cursor-help"
             >
               WCAG 2.1 AA
             </button>
@@ -201,16 +201,16 @@ export const MetricaExplicada: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <div className="rounded-lg border border-border bg-card p-4 w-56">
+      <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-4" style={{ width: "14rem" }}>
         <p className="nds-text-caption nds-text-muted-foreground">NPS últimos 30 dias</p>
-        <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-2xl font-semibold tracking-tight">72</span>
+        <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-align="baseline" data-spacing="sm">
+          <span className="nds-font-semibold tracking-tight" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>72</span>
           <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
             <HoverCardTrigger asChild>
               <button
                 type="button"
                 aria-label="Como o NPS é calculado"
-                className="size-5 rounded-full border border-border text-xs text-muted-foreground hover:bg-accent flex items-center justify-center"
+                className="nds-cluster nds-rounded-full nds-border-default nds-text-caption nds-text-muted-foreground nds-hover-bg-accent" data-align="center" data-justify="center" style={{ width: "1.25rem", height: "1.25rem" }}
               >
                 ?
               </button>

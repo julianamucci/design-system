@@ -69,10 +69,10 @@ export const ComCheckbox: Story = {
     },
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-56">
+        <ContextMenuContent class="" style="width: 14rem">
           <ContextMenuLabel inset>Visualização</ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuGroup>
@@ -122,10 +122,10 @@ export const ComRadioGroup: Story = {
     },
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-52">
+        <ContextMenuContent class="" style="width: 13rem">
           <ContextMenuLabel inset>Layout</ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuRadioGroup :model-value="layout" @update:model-value="layout = $event">
@@ -168,10 +168,10 @@ export const ComSubmenu: Story = {
     setup() {},
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-52">
+        <ContextMenuContent class="" style="width: 13rem">
           <ContextMenuGroup>
             <ContextMenuItem>
               Editar
@@ -180,7 +180,7 @@ export const ComSubmenu: Story = {
             <ContextMenuItem>Duplicar</ContextMenuItem>
             <ContextMenuSub>
               <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-              <ContextMenuSubContent class="w-40">
+              <ContextMenuSubContent class="" style="width: 10rem">
                 <ContextMenuItem>Por e-mail</ContextMenuItem>
                 <ContextMenuItem>Por link</ContextMenuItem>
               </ContextMenuSubContent>
@@ -234,10 +234,10 @@ export const Completo: Story = {
     },
     template: `
       <ContextMenu>
-        <ContextMenuTrigger class="flex h-(--height-default) w-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground select-none cursor-default">
+        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
           Clique com o botão direito aqui
         </ContextMenuTrigger>
-        <ContextMenuContent class="w-56">
+        <ContextMenuContent class="" style="width: 14rem">
           <ContextMenuGroup>
             <ContextMenuItem>
               Editar
@@ -246,7 +246,7 @@ export const Completo: Story = {
             <ContextMenuItem>Duplicar</ContextMenuItem>
             <ContextMenuSub>
               <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-              <ContextMenuSubContent class="w-40">
+              <ContextMenuSubContent class="" style="width: 10rem">
                 <ContextMenuItem>Por e-mail</ContextMenuItem>
                 <ContextMenuItem>Por link</ContextMenuItem>
               </ContextMenuSubContent>

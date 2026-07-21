@@ -264,7 +264,7 @@ export const ComOnPageChange: Story = {
       };
       return (
         <div className="nds-stack" data-spacing="sm">
-          <p className="text-xs font-mono text-muted-foreground">
+          <p className="nds-text-caption nds-font-mono nds-text-muted-foreground">
             Página atual: {page} / {total}
           </p>
           <Pagination>

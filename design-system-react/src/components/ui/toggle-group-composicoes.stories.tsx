@@ -31,7 +31,7 @@ export const AlinhamentoSingle: Story = {
   render: function AlinhamentoSingleRender() {
     const [alignment, setAlignment] = useState<string[]>(["left"]);
     return (
-      <div className="flex flex-col items-start gap-3 w-72">
+      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
         <ToggleGroup
           value={alignment}
           onValueChange={(v: string[]) => v.length && setAlignment([v[v.length - 1]])}
@@ -85,7 +85,7 @@ export const FormatacaoMultiple: Story = {
   render: function FormatacaoMultipleRender() {
     const [formats, setFormats] = useState<string[]>(["bold"]);
     return (
-      <div className="flex flex-col items-start gap-3 w-72">
+      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
         <ToggleGroup
           value={formats}
           onValueChange={(v: string[]) => setFormats(v)}

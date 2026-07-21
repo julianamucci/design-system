@@ -98,7 +98,7 @@ export const Playground: Story = {
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious aria-label="Anterior">
-                <span class="hidden sm:block">Anterior</span>
+                <span class="nds-hidden sm:block">Anterior</span>
               </PaginationPrevious>
             </PaginationItem>
             <PaginationItem>
@@ -118,7 +118,7 @@ export const Playground: Story = {
             </PaginationItem>
             <PaginationItem>
               <PaginationNext aria-label="Próxima">
-                <span class="hidden sm:block">Próxima</span>
+                <span class="nds-hidden sm:block">Próxima</span>
               </PaginationNext>
             </PaginationItem>
           </PaginationContent>

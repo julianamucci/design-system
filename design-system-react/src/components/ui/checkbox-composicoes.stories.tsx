@@ -21,7 +21,7 @@ export const ComLabel: Story = {
       <Checkbox id="with-label" />
       <label
         htmlFor="with-label"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{ lineHeight: 1 }}
       >
         Aceito os termos e condições
       </label>
@@ -51,10 +51,10 @@ export const ComDescricao: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="with-desc" className="nds-mt-0-5" />
-      <div className="flex flex-col gap-0.5">
+      <div className="nds-stack" data-spacing="xs">
         <label
           htmlFor="with-desc"
-          className="text-sm font-medium leading-none cursor-pointer"
+          className="nds-text-body nds-font-medium nds-cursor-pointer" style={{ lineHeight: 1 }}
         >
           Receber novidades por email
         </label>
@@ -86,8 +86,8 @@ export const ComDescricao: Story = {
 
 export const GrupoComFieldset: Story = {
   render: () => (
-    <fieldset className="space-y-3 border-none p-0 m-0">
-      <legend className="text-sm font-semibold mb-3">Preferências de contato</legend>
+    <fieldset className="border-none nds-p-0 m-0" data-spacing="sm">
+      <legend className="nds-text-body nds-font-semibold mb-3">Preferências de contato</legend>
       {[
         { id: "contact-email", label: "Email" },
         { id: "contact-sms", label: "SMS" },
@@ -130,11 +130,11 @@ export const SelecionarTodos: Story = {
   render: function SelecionarTodosRender() {
     return (
       <div className="nds-stack" data-spacing="sm">
-        <div className="flex items-center gap-2 pb-2 border-b border-border">
+        <div className="nds-cluster nds-border-b" style={{ paddingBottom: "0.5rem" }} data-align="center" data-spacing="sm">
           <Checkbox id="select-all" />
           <label
             htmlFor="select-all"
-            className="text-sm font-semibold leading-none cursor-pointer"
+            className="nds-text-body nds-font-semibold nds-cursor-pointer" style={{ lineHeight: 1 }}
           >
             Selecionar todos os itens
           </label>
@@ -144,7 +144,7 @@ export const SelecionarTodos: Story = {
           { id: "item-2", label: "Relatório trimestral" },
           { id: "item-3", label: "Relatório anual" },
         ].map(({ id, label }) => (
-          <div key={id} className="flex items-center gap-2 pl-4">
+          <div key={id} className="nds-cluster" style={{ paddingLeft: "1rem" }} data-align="center" data-spacing="sm">
             <Checkbox id={id} />
             <label htmlFor={id} className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
               {label}
@@ -174,13 +174,13 @@ export const SelecionarTodos: Story = {
 
 export const DentroDeCard: Story = {
   render: () => (
-    <div className="rounded-lg border border-border p-4 shadow-sm max-w-sm">
-      <div className="flex items-start gap-3">
+    <div className="nds-rounded-lg nds-border-default nds-p-4 shadow-sm nds-max-w-sm">
+      <div className="nds-cluster" data-align="start" data-spacing="sm">
         <Checkbox id="card-checkbox" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">
           <label
             htmlFor="card-checkbox"
-            className="text-sm font-medium leading-none cursor-pointer"
+            className="nds-text-body nds-font-medium nds-cursor-pointer" style={{ lineHeight: 1 }}
           >
             Plano Pro
           </label>

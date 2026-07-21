@@ -61,7 +61,7 @@ export const Playground: Story = {
     template: `
       <div style="contain: layout; position: relative; min-height: 160px;">
         <Toaster v-bind="args" />
-        <div class="flex flex-wrap gap-2">
+        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
           <Button variant="outline" size="sm" @click="fireDefault">Disparar default</Button>
           <Button variant="outline" size="sm" @click="fireSuccess">Disparar success</Button>
           <Button variant="outline" size="sm" @click="fireError">Disparar error</Button>

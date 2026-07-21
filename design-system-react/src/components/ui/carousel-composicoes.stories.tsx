@@ -35,9 +35,9 @@ type Story = StoryObj<typeof meta>;
 
 function SlideCard({ label }: { label: string }) {
   return (
-    <Card className="h-40 shadow-none">
+    <Card className="" style={{boxShadow: "none", height: "10rem" }} >
       <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
-        <span className="text-2xl font-semibold text-muted-foreground">{label}</span>
+        <span className="nds-font-semibold nds-text-muted-foreground" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>{label}</span>
       </CardContent>
     </Card>
   );
@@ -76,7 +76,7 @@ function ComDotsCarousel() {
         <CarouselNext aria-label="Próximo item" />
       </Carousel>
       <div
-        className="mt-4 flex justify-center gap-2"
+        className="nds-cluster nds-mt-4" data-justify="center" data-spacing="sm"
         role="tablist"
         aria-label="Slides do carrossel"
       >
@@ -130,11 +130,11 @@ export const Galeria: Story = {
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, i) => (
           <CarouselItem key={i}>
-            <Card className="shadow-none">
+            <Card className="" style={{ boxShadow: "none" }}>
               <img
                 src={`https://picsum.photos/seed/carousel-${i + 1}/640/360`}
                 alt={`Imagem de exemplo ${i + 1}`}
-                className="block w-full aspect-[16/9] object-cover"
+                className="nds-block nds-w-full aspect-[16/9]" style={{ objectFit: "cover" }}
               />
               <CardContent>
                 <p className="nds-text-body nds-font-medium">Imagem {i + 1}</p>

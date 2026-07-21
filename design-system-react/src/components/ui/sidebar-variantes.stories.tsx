@@ -38,7 +38,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
       <nav aria-label="Navegação principal">
         <Sidebar variant={variant} collapsible={collapsible} side={side}>
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -117,7 +117,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="min-h-[400px] flex">
+      <div className="nds-cluster min-h-[400px]">
         <Story />
       </div>
     ),

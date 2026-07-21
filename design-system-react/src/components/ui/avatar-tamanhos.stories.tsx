@@ -28,9 +28,9 @@ type Story = StoryObj<typeof meta>;
 export const Size6: Story = {
   name: "h-6 w-6 (compacto)",
   render: () => (
-    <Avatar className="h-6 w-6">
+    <Avatar className="" style={{ height: "1.5rem", width: "1.5rem" }}>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback className="text-[10px]">MR</AvatarFallback>
+      <AvatarFallback className="" style={{ fontSize: "10px" }}>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
@@ -43,7 +43,7 @@ export const Size6: Story = {
 export const Size8: Story = {
   name: "h-8 w-8 (médio-compacto)",
   render: () => (
-    <Avatar className="h-8 w-8">
+    <Avatar className="" style={{ height: "2rem", width: "2rem" }}>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
       <AvatarFallback className="nds-text-caption">MR</AvatarFallback>
     </Avatar>
@@ -76,7 +76,7 @@ export const Size10: Story = {
 export const Size12: Story = {
   name: "h-12 w-12 (grande)",
   render: () => (
-    <Avatar className="h-12 w-12">
+    <Avatar className="" style={{ height: "3rem", width: "3rem" }}>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
       <AvatarFallback>MR</AvatarFallback>
     </Avatar>

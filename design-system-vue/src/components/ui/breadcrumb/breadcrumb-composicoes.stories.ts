@@ -170,7 +170,7 @@ export const Responsive: Story = {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger class="flex items-center gap-1 hover:text-foreground transition-colors" aria-label="Abrir níveis ocultos">
+              <DropdownMenuTrigger class="nds-cluster nds-hover-text-foreground transition-colors" data-align="center" data-spacing="xs" aria-label="Abrir níveis ocultos">
                 <BreadcrumbEllipsis />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">

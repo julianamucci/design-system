@@ -38,21 +38,21 @@
 </script>
 
 {#if variant === 'vertical'}
-  <div class="rounded-md border bg-background overflow-hidden {className}" style="height: {height}; width: {width};">
-    <ScrollArea orientation="vertical" {type} {scrollHideDelay} class="h-full w-full">
-      <div class="p-4 space-y-2">
+  <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height}; width: {width};">
+    <ScrollArea orientation="vertical" {type} {scrollHideDelay} class="nds-w-full" style="height: 100%">
+      <div class="nds-p-4" data-spacing="sm">
         {#each tags as n}
-          <div class="text-sm border-b pb-2 last:border-b-0">{tagLabel} {n}</div>
+          <div class="nds-text-body nds-border-b last:border-b-0" style="padding-bottom: 0.5rem">{tagLabel} {n}</div>
         {/each}
       </div>
     </ScrollArea>
   </div>
 {:else if variant === 'horizontal'}
-  <div class="rounded-md border bg-background overflow-hidden {className}" style="height: {height}; width: {width};">
-    <ScrollArea orientation="horizontal" {type} {scrollHideDelay} class="h-full w-full whitespace-nowrap">
-      <div class="flex w-max gap-4 p-4">
+  <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height}; width: {width};">
+    <ScrollArea orientation="horizontal" {type} {scrollHideDelay} class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+      <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
         {#each cards as n}
-          <div class="flex h-[120px] w-[140px] items-center justify-center rounded-md bg-muted text-sm shrink-0">
+          <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style="height: 120px; width: 140px">
             {cardLabel} {n}
           </div>
         {/each}
@@ -60,14 +60,14 @@
     </ScrollArea>
   </div>
 {:else if variant === 'both'}
-  <div class="rounded-md border bg-background overflow-hidden {className}" style="height: {height}; width: {width};">
-    <ScrollArea orientation="both" {type} {scrollHideDelay} class="h-full w-full">
-      <table class="w-max border-collapse text-xs">
+  <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height}; width: {width};">
+    <ScrollArea orientation="both" {type} {scrollHideDelay} class="nds-w-full" style="height: 100%">
+      <table class="border-collapse nds-text-caption" style="width: max-content">
         <tbody>
           {#each rows as r}
             <tr>
               {#each cols as c}
-                <td class="border px-3 py-2 whitespace-nowrap">R{r}·C{c}</td>
+                <td class="nds-border-default nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem">R{r}·C{c}</td>
               {/each}
             </tr>
           {/each}

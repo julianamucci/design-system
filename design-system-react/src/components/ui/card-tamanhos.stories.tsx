@@ -58,7 +58,7 @@ export const Small: Story = {
     <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>
         <CardDescription>Assinantes ativos</CardDescription>
-        <CardTitle className="text-2xl">8.742</CardTitle>
+        <CardTitle className="" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>8.742</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="nds-text-caption nds-text-muted-foreground">+12% no mês</p>

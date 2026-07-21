@@ -47,8 +47,8 @@ export const Controlled: Story = {
       const [value, setValue] = useState<string>("");
       return (
         <div
-          className="flex flex-col gap-4 min-w-[280px]"
-          style={{ contain: "layout", minHeight: 160, position: "relative" }}
+          className="nds-stack" style={{minWidth: "280px", contain: "layout", minHeight: 160, position: "relative" }} data-spacing="md"
+          
         >
           <Select value={value} onValueChange={(v) => setValue(v ?? "")}>
             <SelectTrigger aria-label="Selecionar estado">
@@ -102,8 +102,8 @@ export const EmFormulario: Story = {
       const onSubmit = fn();
       return (
         <form
-          className="flex flex-col gap-4 min-w-[280px]"
-          style={{ contain: "layout", minHeight: 200, position: "relative" }}
+          className="nds-stack" style={{minWidth: "280px", contain: "layout", minHeight: 200, position: "relative" }} data-spacing="md"
+          
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit({ state: value });
@@ -176,8 +176,8 @@ export const WithLabel: Story = {
       const [value, setValue] = useState<string>("");
       return (
         <div
-          className="flex flex-col gap-2 min-w-[280px]"
-          style={{ contain: "layout", minHeight: 140, position: "relative" }}
+          className="nds-stack" style={{minWidth: "280px", contain: "layout", minHeight: 140, position: "relative" }} data-spacing="sm"
+          
         >
           <Label htmlFor="labeled-state">Estado de residência</Label>
           <Select value={value} onValueChange={(v) => setValue(v ?? "")}>

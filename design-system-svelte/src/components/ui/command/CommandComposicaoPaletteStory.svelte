@@ -26,18 +26,18 @@
   });
 </script>
 
-<div class="flex flex-col items-center gap-4">
+<div class="nds-stack" data-align="center" data-spacing="md">
   <Button
     variant="outline"
-    class="w-[280px] justify-between text-muted-foreground"
+    class="nds-text-muted-foreground" data-justify="between" style="width: 280px"
     onclick={() => { open = true; }}
     aria-label="Abrir command palette"
   >
     <span class="nds-cluster" data-spacing="sm">
-      <Search class="size-4" aria-hidden="true" />
+      <Search class="nds-size-4" aria-hidden="true" />
       Buscar...
     </span>
-    <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+    <kbd class="nds-cluster pointer-events-none nds-rounded nds-border-default nds-bg-muted nds-font-mono nds-font-medium opacity-100" style="user-select: none; height: 1.25rem; padding-inline: 0.375rem; font-size: 10px" data-align="center" data-spacing="xs" >
       <span class="nds-text-caption">⌘</span>K
     </kbd>
   </Button>
@@ -48,23 +48,23 @@
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Páginas">
         <Command.Item value="dashboard" onselect={() => handleSelect('dashboard')}>
-          <LayoutDashboard class="mr-2" aria-hidden="true" />
+          <LayoutDashboard class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Dashboard
           <Command.Shortcut>⌘D</Command.Shortcut>
         </Command.Item>
         <Command.Item value="documents" onselect={() => handleSelect('documents')}>
-          <FileText class="mr-2" aria-hidden="true" />
+          <FileText class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Documentos
         </Command.Item>
         <Command.Item value="users" onselect={() => handleSelect('users')}>
-          <Users class="mr-2" aria-hidden="true" />
+          <Users class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Usuários
         </Command.Item>
       </Command.Group>
       <Command.Separator />
       <Command.Group heading="Configurações">
         <Command.Item value="settings" onselect={() => handleSelect('settings')}>
-          <Settings class="mr-2" aria-hidden="true" />
+          <Settings class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Configurações
           <Command.Shortcut>⌘,</Command.Shortcut>
         </Command.Item>

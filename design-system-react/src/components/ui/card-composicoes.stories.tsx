@@ -50,7 +50,7 @@ export const WithFooter: Story = {
       <CardContent>
         <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="" data-justify="end" data-spacing="sm">
         <Button
           variant="outline"
           aria-label="Cancelar edição de Cadeira Gamer Pro"
@@ -89,7 +89,7 @@ export const WithAction: Story = {
             size="icon"
             aria-label="Ações do produto Cadeira Gamer Pro"
           >
-            <MoreVertical aria-hidden="true" className="h-4 w-4" />
+            <MoreVertical aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
           </Button>
         </CardAction>
       </CardHeader>
@@ -120,7 +120,7 @@ export const WithImage: Story = {
       <ImageWithFallback
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro em fundo neutro"
-        className="h-40 w-full object-cover"
+        className="nds-w-full" style={{objectFit: "cover", height: "10rem" }} 
       />
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
@@ -129,7 +129,7 @@ export const WithImage: Story = {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-body nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
     </Card>
   ),
@@ -156,7 +156,7 @@ export const ProductCard: Story = {
       <ImageWithFallback
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro em fundo neutro"
-        className="h-40 w-full object-cover"
+        className="nds-w-full" style={{objectFit: "cover", height: "10rem" }} 
       />
       <CardHeader>
         <CardTitle>Cadeira Gamer Pro</CardTitle>
@@ -168,9 +168,9 @@ export const ProductCard: Story = {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="text-lg font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="" data-justify="end" data-spacing="sm">
         <Button
           variant="outline"
           aria-label="Editar produto Cadeira Gamer Pro"
@@ -207,11 +207,11 @@ export const MetricCard: Story = {
     <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>
         <CardDescription>Assinantes ativos</CardDescription>
-        <CardTitle className="text-2xl">8.742</CardTitle>
+        <CardTitle className="" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>8.742</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <TrendingUp aria-hidden="true" className="h-3.5 w-3.5" />
+        <p className="nds-cluster nds-text-caption nds-text-muted-foreground" data-align="center" data-spacing="xs">
+          <TrendingUp aria-hidden="true" className="" style={{ height: "0.875rem", width: "0.875rem" }} />
           +12% no mês
         </p>
       </CardContent>
@@ -233,8 +233,8 @@ export const MetricCard: Story = {
 
 export const ProfileCard: Story = {
   render: () => (
-    <Card className="max-w-sm w-[24rem]">
-      <CardHeader className="flex flex-row items-center gap-3">
+    <Card className="nds-max-w-sm" style={{ width: "24rem" }}>
+      <CardHeader className="nds-cluster" data-align="center" data-spacing="sm">
         <Avatar>
           <AvatarImage
             src={DEMO_IMAGE_AVATAR}
@@ -242,7 +242,7 @@ export const ProfileCard: Story = {
           />
           <AvatarFallback>MR</AvatarFallback>
         </Avatar>
-        <div className="flex-1">
+        <div className="nds-flex-1">
           <CardTitle>Maria Rodrigues</CardTitle>
           <CardDescription>Designer de produto · São Paulo, BR</CardDescription>
         </div>

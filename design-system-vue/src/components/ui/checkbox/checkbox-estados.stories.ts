@@ -31,7 +31,7 @@ export const Unchecked: Story = {
         <Checkbox id="unchecked" />
         <label
           for="unchecked"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Aceito os termos e condições
         </label>
@@ -62,7 +62,7 @@ export const Checked: Story = {
         <Checkbox id="checked" :checked="true" />
         <label
           for="checked"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Aceito os termos e condições
         </label>
@@ -93,7 +93,7 @@ export const Disabled: Story = {
         <Checkbox id="disabled" :disabled="true" />
         <label
           for="disabled"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Manter sessão ativa
         </label>
@@ -125,7 +125,7 @@ export const DisabledChecked: Story = {
         <Checkbox id="disabled-checked" :disabled="true" :checked="true" />
         <label
           for="disabled-checked"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Receber notificações push
         </label>
@@ -158,7 +158,7 @@ export const Error: Story = {
             Aceito os termos e condições
           </label>
         </div>
-        <p id="error-msg" class="text-sm text-destructive pl-6">
+        <p id="error-msg" class="nds-text-body nds-text-destructive" style="padding-left: 1.5rem">
           Você precisa aceitar os termos para continuar.
         </p>
       </div>
@@ -192,7 +192,7 @@ export const FocoVisivel: Story = {
         <Checkbox id="focus" />
         <label
           for="focus"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Foco visível via teclado
         </label>

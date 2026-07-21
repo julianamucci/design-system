@@ -27,7 +27,7 @@ export const Default: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="var-default">Descrição</Label>
         <Textarea
           id="var-default"
@@ -57,7 +57,7 @@ export const WithCounter: Story = {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="var-counter">Descrição</Label>
         <Textarea
           id="var-counter"
@@ -66,7 +66,7 @@ export const WithCounter: Story = {
           placeholder="ex: Descreva o produto..."
           class="resize-y min-h-[120px]"
         />
-        <div class="flex justify-between text-xs text-muted-foreground">
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva com clareza.</span>
           <span
             aria-live="polite"
@@ -110,7 +110,7 @@ export const NoResize: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="var-noresize">Mensagem</Label>
         <Textarea
           id="var-noresize"

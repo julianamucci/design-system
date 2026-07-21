@@ -27,7 +27,7 @@ export const ComInput: Story = {
     components: { Label, Input },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-2 w-64">
+      <div class="nds-stack" data-spacing="sm" style="width: 16rem">
         <Label for="telefone">Telefone</Label>
         <Input id="telefone" type="tel" placeholder="+55 (11) 99999-9999" />
       </div>
@@ -79,7 +79,7 @@ export const CampoObrigatorio: Story = {
     components: { Label, Input },
     setup() { return {}; },
     template: `
-      <div class="flex flex-col gap-2 w-64">
+      <div class="nds-stack" data-spacing="sm" style="width: 16rem">
         <Label for="email-obrigatorio">
           Email profissional
           <span class="nds-text-destructive" aria-hidden="true">*</span>

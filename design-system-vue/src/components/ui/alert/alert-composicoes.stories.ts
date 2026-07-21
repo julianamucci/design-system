@@ -23,7 +23,7 @@ export const ComIcone: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Informação</AlertTitle>
         <AlertDescription>Ícone posicionado automaticamente via CSS grid.</AlertDescription>
       </Alert>
@@ -40,9 +40,9 @@ export const ComAcao: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-        <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+        <AlertDescription class="nds-cluster nds-mt-1" data-align="center" data-justify="between" data-spacing="md">
           <span>Salve seu trabalho para não perder as alterações.</span>
           <Button size="sm" variant="outline">Salvar agora</Button>
         </AlertDescription>
@@ -61,24 +61,24 @@ export const MultiplosTipos: Story = {
     template: `
       <div class="nds-stack" data-spacing="sm">
         <Alert>
-          <Info class="h-4 w-4" aria-hidden="true" />
+          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
           <AlertTitle>Informação</AlertTitle>
           <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
         </Alert>
         <Alert variant="destructive">
-          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+          <AlertCircle class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
           <AlertTitle>Erro</AlertTitle>
           <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
         </Alert>
-        <Alert class="bg-success/10 text-success border-success/30">
-          <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+        <Alert class="bg-success/10 nds-text-success border-success/30">
+          <CheckCircle2 class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
           <AlertTitle>Sucesso</AlertTitle>
           <AlertDescription>Ação concluída com sucesso.</AlertDescription>
         </Alert>
-        <Alert class="bg-warning/10 border-warning/30 text-foreground [&>svg]:text-warning">
-          <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+        <Alert class="bg-warning/10 border-warning/30 nds-text-foreground [&>svg]:text-warning">
+          <TriangleAlert class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
           <AlertTitle>Aviso</AlertTitle>
-          <AlertDescription class="text-foreground">Aviso que requer atenção.</AlertDescription>
+          <AlertDescription class="nds-text-foreground">Aviso que requer atenção.</AlertDescription>
         </Alert>
       </div>
     `,
@@ -94,7 +94,7 @@ export const SemTituloCompacto: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <AlertCircle class="h-4 w-4" aria-hidden="true" />
+        <AlertCircle class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertDescription>Formulário incompleto — preencha todos os campos obrigatórios.</AlertDescription>
       </Alert>
     `,

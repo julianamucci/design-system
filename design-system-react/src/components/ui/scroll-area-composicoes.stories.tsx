@@ -34,13 +34,13 @@ export const TagList: Story = {
     },
   },
   render: () => (
-    <div className="h-[300px] w-[280px]">
+    <div className="" style={{ height: "300px", width: "280px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-        <div className="p-4">
-          <h4 className="mb-3 text-sm font-medium leading-none">Tags</h4>
+        <div className="nds-p-4">
+          <h4 className="mb-3 nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Tags</h4>
           {tags.map((tag, i) => (
             <div key={tag}>
-              <div className="text-sm py-1">{tag}</div>
+              <div className="nds-text-body nds-py-1">{tag}</div>
               {i < tags.length - 1 && <Separator className="my-1" />}
             </div>
           ))}
@@ -66,15 +66,15 @@ export const CardCarousel: Story = {
     },
   },
   render: () => (
-    <div className="h-[200px] w-[500px]">
-      <ScrollArea className="h-full w-full whitespace-nowrap rounded-md border">
-        <div className="flex w-max gap-4 p-4">
+    <div className="" style={{ height: "200px", width: "500px" }}>
+      <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+        <div className="nds-cluster nds-p-4" style={{ width: "max-content" }} data-spacing="md">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
-            <figure key={n} className="shrink-0">
-              <div className="flex h-[140px] w-[160px] items-center justify-center rounded-md bg-muted text-sm">
+            <figure key={n} className="nds-shrink-0">
+              <div className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body" data-align="center" data-justify="center" style={{ height: "140px", width: "160px" }}>
                 Imagem {n}
               </div>
-              <figcaption className="pt-2 text-xs text-muted-foreground">
+              <figcaption className="nds-text-caption nds-text-muted-foreground" style={{ paddingTop: "0.5rem" }}>
                 Foto {n} — autor {n}
               </figcaption>
             </figure>
@@ -107,14 +107,14 @@ export const DataMatrix: Story = {
     const rows = Array.from({ length: 15 }, (_, i) => i + 1);
     const cols = Array.from({ length: 15 }, (_, i) => i + 1);
     return (
-      <div className="h-[280px] w-[500px]">
+      <div className="" style={{ height: "280px", width: "500px" }}>
         <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-          <table className="w-max border-collapse text-xs">
+          <table className="border-collapse nds-text-caption" style={{ width: "max-content" }}>
             <tbody>
               {rows.map((r) => (
                 <tr key={r}>
                   {cols.map((c) => (
-                    <td key={c} className="border px-3 py-2 whitespace-nowrap">
+                    <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap" style={{ paddingInline: "0.75rem" }}>
                       R{r}·C{c}
                     </td>
                   ))}
@@ -158,12 +158,12 @@ export const SidebarMenu: Story = {
       { name: "Feedback", items: ["Alert", "Toast", "Sonner", "Progress", "Skeleton"] },
     ];
     return (
-      <div className="h-[320px] w-[240px]">
+      <div className="" style={{ height: "320px", width: "240px" }}>
         <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
           <nav aria-label="Sidebar" className="nds-p-2">
             {sections.map((sec) => (
-              <div key={sec.name} className="mb-4">
-                <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+              <div key={sec.name} className="nds-mb-4">
+                <div className="nds-text-caption nds-font-medium nds-text-muted-foreground nds-mb-2 uppercase tracking-wide">
                   {sec.name}
                 </div>
                 <ul className="nds-stack" data-spacing="xs">
@@ -171,7 +171,7 @@ export const SidebarMenu: Story = {
                     <li key={item}>
                       <a
                         href={`#${item.toLowerCase()}`}
-                        className="block rounded-md px-2 py-1 text-sm hover:bg-muted focus-visible:bg-muted outline-none"
+                        className="nds-block nds-rounded-md nds-px-2 nds-py-1 nds-text-body nds-hover-bg-muted-soft focus-visible:bg-muted outline-none"
                       >
                         {item}
                       </a>

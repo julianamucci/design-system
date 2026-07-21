@@ -164,7 +164,7 @@ export const Invalid: Story = {
         <Switch id="state-invalid" aria-invalid="true" />
         <Label htmlFor="state-invalid">Aceitar política de privacidade</Label>
       </div>
-      <p className="text-sm text-destructive pl-1">
+      <p className="nds-text-body nds-text-destructive" style={{ paddingLeft: "0.25rem" }}>
         Você precisa aceitar a política para continuar.
       </p>
     </div>

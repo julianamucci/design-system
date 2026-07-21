@@ -78,7 +78,7 @@ export const Playground: Story = {
         v-bind="args"
         v-model="selected"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),

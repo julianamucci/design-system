@@ -27,7 +27,7 @@ export const Padrao: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="estado-default">Descrição</Label>
         <Textarea id="estado-default" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />
       </div>
@@ -47,7 +47,7 @@ export const Preenchido: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="estado-filled">Biografia</Label>
         <Textarea
           id="estado-filled"
@@ -70,7 +70,7 @@ export const Desabilitado: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="estado-disabled">Descrição</Label>
         <Textarea id="estado-disabled" placeholder="Não disponível" disabled class="resize-y min-h-[120px]" />
       </div>
@@ -94,7 +94,7 @@ export const Invalido: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="estado-invalid">Descrição</Label>
         <Textarea
           id="estado-invalid"
@@ -129,7 +129,7 @@ export const SomenteLeitura: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="estado-readonly">Termo</Label>
         <Textarea
           id="estado-readonly"

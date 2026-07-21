@@ -28,7 +28,7 @@ export const Vertical: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="grid gap-2 w-72">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="vert-cartao" />
           <Label :for="'vert-cartao'">Cartão de crédito</Label>
@@ -61,7 +61,7 @@ export const Horizontal: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup orientation="horizontal" aria-label="Forma de entrega" class="flex flex-wrap gap-6">
+      <RadioGroup orientation="horizontal" aria-label="Forma de entrega" class="nds-cluster" data-spacing="lg" style="flex-wrap: wrap">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="standard" id="horiz-standard" />
           <Label :for="'horiz-standard'">Padrão</Label>
@@ -94,28 +94,28 @@ export const WithDescription: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="grid gap-3 w-80">
-        <div class="flex items-start gap-2">
-          <RadioGroupItem value="cartao" id="wd-cartao" class="mt-1" aria-describedby="wd-cartao-desc" />
-          <div class="space-y-0.5">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 20rem">
+        <div class="nds-cluster" data-align="start" data-spacing="sm">
+          <RadioGroupItem value="cartao" id="wd-cartao" class="nds-mt-1" aria-describedby="wd-cartao-desc" />
+          <div class="" data-spacing="xs">
             <Label :for="'wd-cartao'">Cartão de crédito</Label>
             <p id="wd-cartao-desc" class="nds-text-caption nds-text-muted-foreground">
               Aprovação imediata em até 12x.
             </p>
           </div>
         </div>
-        <div class="flex items-start gap-2">
-          <RadioGroupItem value="pix" id="wd-pix" class="mt-1" aria-describedby="wd-pix-desc" />
-          <div class="space-y-0.5">
+        <div class="nds-cluster" data-align="start" data-spacing="sm">
+          <RadioGroupItem value="pix" id="wd-pix" class="nds-mt-1" aria-describedby="wd-pix-desc" />
+          <div class="" data-spacing="xs">
             <Label :for="'wd-pix'">Pix</Label>
             <p id="wd-pix-desc" class="nds-text-caption nds-text-muted-foreground">
               Pagamento instantâneo com 5% de desconto.
             </p>
           </div>
         </div>
-        <div class="flex items-start gap-2">
-          <RadioGroupItem value="boleto" id="wd-boleto" class="mt-1" aria-describedby="wd-boleto-desc" />
-          <div class="space-y-0.5">
+        <div class="nds-cluster" data-align="start" data-spacing="sm">
+          <RadioGroupItem value="boleto" id="wd-boleto" class="nds-mt-1" aria-describedby="wd-boleto-desc" />
+          <div class="" data-spacing="xs">
             <Label :for="'wd-boleto'">Boleto bancário</Label>
             <p id="wd-boleto-desc" class="nds-text-caption nds-text-muted-foreground">
               Compensação em até 3 dias úteis.

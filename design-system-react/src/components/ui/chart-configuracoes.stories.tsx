@@ -33,7 +33,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
 
 export const ComTooltip: Story = {
   render: () => (
-    <ChartContainer option={buildBarOption({ data: singleSeries })} className="h-[240px] w-[480px]" />
+    <ChartContainer option={buildBarOption({ data: singleSeries })} className="" style={{ height: "240px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Tooltip nativo do ECharts — passe o mouse sobre uma barra.' } },
@@ -47,7 +47,7 @@ export const ComLegenda: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      className="h-[260px] w-[480px]"
+      className="" style={{ height: "260px", width: "480px" }}
     />
   ),
   parameters: {
@@ -62,7 +62,7 @@ export const MultiSeries: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' })}
-      className="h-[280px] w-[500px]"
+      className="" style={{ height: "280px", width: "500px" }}
     />
   ),
   parameters: {

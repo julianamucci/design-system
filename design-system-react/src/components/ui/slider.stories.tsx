@@ -58,13 +58,13 @@ export const Playground: Story = {
 
     return (
       <div className={isVertical ? "h-40 w-32 flex flex-col items-center gap-3" : "w-80 space-y-3"}>
-        <div className="flex items-center justify-between w-full">
+        <div className="nds-cluster nds-w-full" data-align="center" data-justify="between">
           <span className="nds-text-body nds-text-muted-foreground">
             {args["aria-label"]}
           </span>
           <span
             aria-live="polite"
-            className="text-sm tabular-nums text-foreground"
+            className="nds-text-body tabular-nums nds-text-foreground"
           >
             {value[0]}
           </span>

@@ -41,7 +41,7 @@ export const ComImagem: Story = {
     },
   },
   render: () => (
-    <div className="w-[480px] max-w-full">
+    <div className="" style={{maxWidth: "100%", width: "480px" }} >
       <AspectRatio ratio={16 / 9}>
         <ImageWithFallback
           src={LANDSCAPE_SRC}
@@ -70,12 +70,12 @@ export const ComIframe: Story = {
     },
   },
   render: () => (
-    <div className="w-[520px] max-w-full">
+    <div className="" style={{maxWidth: "100%", width: "520px" }} >
       <AspectRatio ratio={16 / 9}>
         <iframe
           title="Mapa do escritório em São Paulo"
           src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.57%2C-46.62%2C-23.54&layer=mapnik"
-          className="w-full h-full rounded-md border-0"
+          className="nds-w-full nds-rounded-md border-0" style={{ height: "100%" }}
           loading="lazy"
         />
       </AspectRatio>
@@ -100,12 +100,12 @@ export const ComVideo: Story = {
     },
   },
   render: () => (
-    <div className="w-[520px] max-w-full">
+    <div className="" style={{maxWidth: "100%", width: "520px" }} >
       <AspectRatio ratio={16 / 9}>
         <video
           controls
           preload="metadata"
-          className="rounded-md object-cover w-full h-full bg-black"
+          className="nds-rounded-md nds-w-full bg-black" style={{objectFit: "cover", height: "100%" }} 
           aria-label="Vídeo demonstrativo"
         >
           <source
@@ -134,7 +134,7 @@ export const GridConsistente: Story = {
     },
   },
   render: () => (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-[760px] max-w-full">
+    <div className="nds-grid sm:grid-cols-3" style={{maxWidth: "100%", width: "760px" }} data-spacing="md" >
       {[
         { src: LANDSCAPE_SRC, alt: "Paisagem ao entardecer" },
         { src: PRODUCT_SRC, alt: "Tênis de corrida" },
@@ -171,7 +171,7 @@ export const ComImagemDecorativa: Story = {
     },
   },
   render: () => (
-    <div className="w-[420px] max-w-full">
+    <div className="" style={{maxWidth: "100%", width: "420px" }} >
       <AspectRatio ratio={16 / 9}>
         <ImageWithFallback
           src={LANDSCAPE_SRC}

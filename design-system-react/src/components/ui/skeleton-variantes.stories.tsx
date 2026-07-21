@@ -32,7 +32,7 @@ export const Retangulo: Story = {
   },
   render: () => (
     <div role="status" aria-busy="true" aria-label="Carregando bloco" className="nds-w-xs">
-      <Skeleton className="h-20 w-full motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton className="nds-w-full motion-reduce:animate-none" style={{ height: "5rem" }} aria-hidden="true" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -59,7 +59,7 @@ export const Circulo: Story = {
   },
   render: () => (
     <div role="status" aria-busy="true" aria-label="Carregando avatar">
-      <Skeleton className="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton className="nds-rounded-full motion-reduce:animate-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
@@ -86,7 +86,7 @@ export const LinhaDeTexto: Story = {
   },
   render: () => (
     <div role="status" aria-busy="true" aria-label="Carregando texto">
-      <Skeleton className="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton className="motion-reduce:animate-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {

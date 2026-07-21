@@ -52,7 +52,7 @@ export const Default: Story = {
           <div className="nds-cluster" data-spacing="sm">
             <div
               aria-hidden="true"
-              className="size-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-sm font-medium"
+              className="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium" data-align="center" data-justify="center"
             >
               JS
             </div>

@@ -39,7 +39,7 @@
     <div
       role="img"
       aria-label="Imagem ilustrativa de pôr-do-sol em gradiente laranja"
-      class="aspect-video w-full rounded-md bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600"
+      class="aspect-video nds-w-full nds-rounded-md bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600"
     ></div>
   </DialogContent>
 </Dialog>

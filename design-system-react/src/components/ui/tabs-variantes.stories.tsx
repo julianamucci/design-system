@@ -89,7 +89,7 @@ export const Vertical: Story = {
     <Tabs
       orientation="vertical"
       defaultValue="overview"
-      className="w-full max-w-2xl"
+      className="nds-w-full max-w-2xl"
     >
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>

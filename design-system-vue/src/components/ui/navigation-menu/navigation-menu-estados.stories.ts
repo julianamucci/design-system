@@ -45,14 +45,14 @@ export const Fechado: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 80px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 80px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[300px] gap-2 p-3"><li><NavigationMenuLink href="#">A</NavigationMenuLink></li></ul>
+                <ul class="nds-grid" data-spacing="sm" style="width: 300px; padding: 0.75rem"><li><NavigationMenuLink href="#">A</NavigationMenuLink></li></ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -76,14 +76,14 @@ export const Aberto: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem value="produtos">
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[400px] gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 400px">
                   <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Produto C</NavigationMenuLink></li>
@@ -110,7 +110,7 @@ export const Ativo: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 80px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 80px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>

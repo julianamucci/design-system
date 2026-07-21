@@ -11,8 +11,8 @@
   <AccordionItem value="especificacoes">
     <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>
-      <div class="space-y-2 text-sm">
-        <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+      <div class="nds-text-body" data-spacing="sm">
+        <div class="nds-grid" data-cols="2">
           <span class="nds-text-muted-foreground">Processador</span>
           <span>Intel Core i7-12700</span>
           <span class="nds-text-muted-foreground">Memória RAM</span>
@@ -28,7 +28,7 @@
   <AccordionItem value="descricao">
     <AccordionTrigger>Descrição detalhada</AccordionTrigger>
     <AccordionContent>
-      <div class="space-y-3 text-sm text-muted-foreground">
+      <div class="nds-text-body nds-text-muted-foreground" data-spacing="sm">
         <p>
           Computador de alto desempenho voltado para profissionais criativos e
           desenvolvedores que necessitam de processamento intensivo.

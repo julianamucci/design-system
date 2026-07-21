@@ -43,11 +43,11 @@ export const PerfilDeUsuario: Story = {
       <div style="contain: layout; min-height: 240px;">
         <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
-            <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
+            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start">
             <div class="nds-cluster" data-spacing="sm">
-              <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
+              <div class="nds-size-10 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
               <div class="nds-stack" data-spacing="xs">
                 <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
                 <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
@@ -81,15 +81,15 @@ export const PreviewDeLink: Story = {
       <div style="contain: layout; min-height: 220px;">
         <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
-            <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">design-system.dev</a>
+            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">design-system.dev</a>
           </HoverCardTrigger>
           <HoverCardContent side="bottom" align="start" class="nds-w-full nds-max-w-xs">
             <div class="nds-stack" data-spacing="sm">
               <div class="nds-cluster" data-spacing="sm">
-                <div class="size-4 rounded bg-muted" aria-hidden="true"></div>
-                <span class="text-xs text-muted-foreground truncate">design-system.dev</span>
+                <div class="nds-size-4 nds-rounded nds-bg-muted" aria-hidden="true"></div>
+                <span class="nds-text-caption nds-text-muted-foreground nds-truncate">design-system.dev</span>
               </div>
-              <p class="text-sm font-medium leading-snug">Design System — Documentação técnica</p>
+              <p class="nds-text-body nds-font-medium leading-snug">Design System — Documentação técnica</p>
               <p class="nds-text-caption nds-text-muted-foreground">Componentes acessíveis em React, Vue, Svelte e Basecoat.</p>
             </div>
           </HoverCardContent>
@@ -121,7 +121,7 @@ export const DefinicaoDeTermo: Story = {
           O conteúdo é renderizado em um
           <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
             <HoverCardTrigger as-child>
-              <a href="#" class="font-medium text-primary underline-offset-4 underline decoration-dotted">portal</a>
+              <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 underline decoration-dotted">portal</a>
             </HoverCardTrigger>
             <HoverCardContent side="top" align="center">
               <div class="nds-stack" data-spacing="xs">
@@ -157,8 +157,8 @@ export const MetricaExplicada: Story = {
       <div style="contain: layout; min-height: 240px;">
         <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
           <HoverCardTrigger as-child>
-            <a href="#" class="inline-flex items-baseline gap-1 font-medium text-primary underline-offset-4 underline decoration-dotted">
-              <span class="text-2xl">87%</span>
+            <a href="#" class="nds-cluster nds-font-medium nds-text-primary underline-offset-4 underline decoration-dotted" data-align="baseline" data-spacing="xs">
+              <span class="" style="font-size: 1.5rem; line-height: 2rem">87%</span>
               <span class="nds-text-caption">CSAT</span>
             </a>
           </HoverCardTrigger>

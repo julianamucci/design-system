@@ -3,14 +3,14 @@
   import { Loader2 } from 'lucide-svelte';
 </script>
 
-<div class="w-full max-w-sm rounded-xl border shadow-md">
+<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default shadow-md">
   <Command.Root>
     <Command.Input placeholder="Buscar componente..." aria-controls="cmd-loading-listbox" />
     <Command.List id="cmd-loading-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Loading>
-        <div class="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
-          <Loader2 class="size-4 animate-spin" aria-hidden="true" />
+        <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-justify="center" data-spacing="sm" style="padding-block: 1rem">
+          <Loader2 class="nds-size-4 animate-spin" aria-hidden="true" />
           <span>Carregando resultados...</span>
         </div>
       </Command.Loading>

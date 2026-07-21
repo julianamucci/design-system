@@ -46,7 +46,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="min-h-[400px] flex w-full"><story /></div>',
+      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -86,7 +86,7 @@ export const WithNavGroups: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <!-- Grupo 1: Aplicação -->
               <SidebarGroup>
@@ -148,7 +148,7 @@ export const WithNavGroups: Story = {
                 </SidebarGroupContent>
               </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter class="p-2">
+            <SidebarFooter class="nds-p-2">
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton tooltip="Perfil">
@@ -162,11 +162,11 @@ export const WithNavGroups: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger class="lg:hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com grupos e badges</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos de navegação, badges e ações.</p>
           </main>
         </SidebarInset>
@@ -207,7 +207,7 @@ export const WithSubMenu: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Documentação</SidebarGroupLabel>
@@ -281,11 +281,11 @@ export const WithSubMenu: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger class="lg:hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com sub-menus</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Sidebar com SidebarMenuSub para hierarquia de navegação aninhada.</p>
           </main>
         </SidebarInset>
@@ -326,8 +326,8 @@ export const WithSearch: Story = {
       <SidebarProvider>
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
-            <SidebarHeader class="p-2 gap-2">
-              <span class="px-2 font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">Design System</span>
+            <SidebarHeader class="nds-p-2" data-spacing="sm">
+              <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground group-data-[collapsible=icon]:hidden">Design System</span>
               <SidebarInput placeholder="Buscar..." />
             </SidebarHeader>
             <SidebarContent>
@@ -367,11 +367,11 @@ export const WithSearch: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
             <SidebarTrigger class="lg:hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com busca no header</span>
           </header>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">SidebarInput no header para busca inline.</p>
           </main>
         </SidebarInset>

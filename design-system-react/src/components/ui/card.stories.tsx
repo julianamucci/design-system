@@ -63,14 +63,14 @@ export const Playground: Story = {
             aria-label="Ações do produto Cadeira Gamer Pro"
             onClick={fn()}
           >
-            <MoreVertical aria-hidden="true" className="h-4 w-4" />
+            <MoreVertical aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
           </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
         <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
       </CardContent>
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="" data-justify="end" data-spacing="sm">
         <Button
           variant="outline"
           aria-label="Cancelar edição de Cadeira Gamer Pro"

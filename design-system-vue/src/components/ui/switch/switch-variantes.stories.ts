@@ -52,8 +52,8 @@ export const WithDescription: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="flex items-center justify-between rounded-lg border p-4 w-80">
-        <div class="space-y-0.5">
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style="width: 20rem">
+        <div class="" data-spacing="xs">
           <Label :for="'var-marketing'">Emails de marketing</Label>
           <p class="nds-text-body nds-text-muted-foreground">
             Receba novidades e promoções da plataforma.

@@ -66,7 +66,7 @@ export const ConfirmEmail: Story = {
               Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
             </DialogDescription>
           </DialogHeader>
-          <div class="grid gap-1.5">
+          <div class="nds-grid" data-spacing="xs">
             <Label for="new-email">Novo email</Label>
             <Input id="new-email" type="email" placeholder="voce@example.com" />
           </div>
@@ -104,16 +104,16 @@ export const ProfileEdit: Story = {
             <DialogTitle>Editar perfil</DialogTitle>
             <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
           </DialogHeader>
-          <form class="grid gap-3">
-            <div class="grid gap-1.5">
+          <form class="nds-grid" data-spacing="sm">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-name">Nome</Label>
               <Input id="profile-name" defaultValue="Juliana Mucci" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-handle">Username</Label>
               <Input id="profile-handle" defaultValue="@julianamucci" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-bio">Bio</Label>
               <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
             </div>
@@ -152,7 +152,7 @@ export const MediaPreview: Story = {
             <DialogTitle>Pré-visualização da imagem</DialogTitle>
             <DialogDescription>captura-de-tela.png · 1920×1080 · 248 KB</DialogDescription>
           </DialogHeader>
-          <div class="flex items-center justify-center rounded-md border border-border bg-muted/50 aspect-video text-muted-foreground text-sm">
+          <div class="nds-cluster nds-rounded-md nds-border-default bg-muted/50 aspect-video nds-text-muted-foreground nds-text-body" data-align="center" data-justify="center">
             Imagem em destaque
           </div>
         </DialogContent>

@@ -189,7 +189,7 @@ export const ComoCombobox: Story = {
             aria-haspopup="listbox"
             aria-controls={open ? listboxId : undefined}
             aria-label="Selecionar framework"
-            className="w-56 justify-between"
+            className="" data-justify="between" style={{ width: "14rem" }}
           >
             {value
               ? FRAMEWORKS.find((f) => f.value === value)?.label
@@ -197,7 +197,7 @@ export const ComoCombobox: Story = {
             <ChevronsUpDownIcon className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-56 p-0" id={listboxId}>
+        <PopoverContent className="nds-p-0" style={{ width: "14rem" }} id={listboxId}>
           <Command>
             <CommandInput placeholder="Buscar item..." />
             <CommandList>
@@ -270,10 +270,10 @@ export const CommandPalette: Story = {
     const [open, setOpen] = useState(false);
 
     return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="nds-stack" data-align="center" data-spacing="md">
+        <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-spacing="sm">
           <span>Pressione</span>
-          <kbd className="rounded border px-1.5 py-0.5 text-xs font-mono bg-muted">⌘K</kbd>
+          <kbd className="nds-rounded nds-border-default nds-text-caption nds-font-mono nds-bg-muted" style={{ paddingInline: "0.375rem", paddingBlock: "0.125rem" }}>⌘K</kbd>
         </div>
         <Button
           variant="outline"

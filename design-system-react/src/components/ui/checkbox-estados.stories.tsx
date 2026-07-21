@@ -83,7 +83,7 @@ export const Desabilitado: Story = {
       <Checkbox id="disabled" disabled />
       <label
         htmlFor="disabled"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{ lineHeight: 1 }}
       >
         Receber notificações push
       </label>
@@ -119,7 +119,7 @@ export const DesabilitadoMarcado: Story = {
       <Checkbox id="disabled-checked" disabled defaultChecked />
       <label
         htmlFor="disabled-checked"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style={{ lineHeight: 1 }}
       >
         Selecionar todos os itens
       </label>
@@ -156,7 +156,7 @@ export const Erro: Story = {
           Aceito os termos e condições
         </label>
       </div>
-      <p className="text-sm text-destructive pl-6">
+      <p className="nds-text-body nds-text-destructive" style={{ paddingLeft: "1.5rem" }}>
         Você precisa aceitar os termos para continuar.
       </p>
     </div>

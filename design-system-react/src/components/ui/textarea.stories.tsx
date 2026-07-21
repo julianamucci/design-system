@@ -52,7 +52,7 @@ function PlaygroundRender(args: React.ComponentProps<typeof Textarea>) {
   const [value, setValue] = useState("");
   const max = args.maxLength ?? 500;
   return (
-    <div className="w-full max-w-md space-y-2">
+    <div className="nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="playground-textarea">Descrição</Label>
       <Textarea
         id="playground-textarea"
@@ -69,7 +69,7 @@ function PlaygroundRender(args: React.ComponentProps<typeof Textarea>) {
         rows={args.rows}
         className="resize-y min-h-[120px]"
       />
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
         <span>Descreva o produto com clareza.</span>
         <span
           aria-live="polite"

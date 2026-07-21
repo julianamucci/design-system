@@ -26,7 +26,7 @@ export const Determinate: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px]">
+      <div class="" style="width: 360px">
         <Progress :model-value="50" aria-label="Progresso do upload" />
       </div>
     `,
@@ -50,7 +50,7 @@ export const Indeterminate: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px]">
+      <div class="" style="width: 360px">
         <Progress
           :model-value="null"
           class="[&>div]:animate-indeterminate"
@@ -82,10 +82,10 @@ export const WithLabel: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="w-[360px] space-y-1.5">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-foreground">Enviando arquivo</span>
-          <span class="text-muted-foreground tabular-nums" aria-live="polite">42%</span>
+      <div class="" data-spacing="xs" style="width: 360px">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">Enviando arquivo</span>
+          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">42%</span>
         </div>
         <Progress :model-value="42" aria-label="Progresso do upload" />
       </div>

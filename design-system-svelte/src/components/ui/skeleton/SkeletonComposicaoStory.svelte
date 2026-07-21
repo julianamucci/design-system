@@ -15,36 +15,36 @@
     role="status"
     aria-busy="true"
     aria-label="Carregando perfil"
-    class="flex items-center gap-4 w-80 rounded-md border p-4"
+    class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-align="center" data-spacing="md" style="width: 20rem"
   >
-    <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-    <div class="space-y-2 flex-1">
-      <Skeleton class="h-4 w-[180px] motion-reduce:animate-none" aria-hidden="true" />
-      <Skeleton class="h-4 w-[140px] motion-reduce:animate-none" aria-hidden="true" />
+    <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+    <div class="nds-flex-1" data-spacing="sm">
+      <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 180px" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 140px" aria-hidden="true" />
     </div>
   </div>
 {:else if variant === 'listaComAvatar'}
-  <ul aria-busy="true" aria-label="Carregando lista de itens" class="space-y-3 w-80">
+  <ul aria-busy="true" aria-label="Carregando lista de itens" class="" data-spacing="sm" style="width: 20rem">
     {#each Array.from({ length: 5 }) as _, i (i)}
-      <li class="flex items-center gap-3 rounded-md border p-3">
-        <Skeleton class="h-10 w-10 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-        <div class="space-y-2 flex-1">
-          <Skeleton class="h-3 w-[160px] motion-reduce:animate-none" aria-hidden="true" />
-          <Skeleton class="h-3 w-[120px] motion-reduce:animate-none" aria-hidden="true" />
+      <li class="nds-cluster nds-rounded-md nds-border-default" data-align="center" data-spacing="sm" style="padding: 0.75rem">
+        <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 2.5rem; width: 2.5rem" aria-hidden="true" />
+        <div class="nds-flex-1" data-spacing="sm">
+          <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 160px" aria-hidden="true" />
+          <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 120px" aria-hidden="true" />
         </div>
       </li>
     {/each}
   </ul>
 {:else if variant === 'imagemEmAspectRatio'}
   <div role="status" aria-busy="true" aria-label="Carregando imagem" class="nds-w-sm">
-    <div class="relative w-full" style="aspect-ratio: 16 / 9;">
-      <Skeleton class="absolute inset-0 h-full w-full motion-reduce:animate-none" aria-hidden="true" />
+    <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;" >
+      <Skeleton class="inset-0 nds-w-full motion-reduce:animate-none" style="position: absolute; height: 100%" aria-hidden="true" />
     </div>
   </div>
 {:else if variant === 'paragrafo'}
-  <div role="status" aria-busy="true" aria-label="Carregando parágrafo" class="space-y-2 w-80">
-    <Skeleton class="h-3 w-full motion-reduce:animate-none" aria-hidden="true" />
-    <Skeleton class="h-3 w-[90%] motion-reduce:animate-none" aria-hidden="true" />
-    <Skeleton class="h-3 w-[75%] motion-reduce:animate-none" aria-hidden="true" />
+  <div role="status" aria-busy="true" aria-label="Carregando parágrafo" class="" data-spacing="sm" style="width: 20rem">
+    <Skeleton class="nds-w-full motion-reduce:animate-none" style="height: 0.75rem" aria-hidden="true" />
+    <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
+    <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
   </div>
 {/if}

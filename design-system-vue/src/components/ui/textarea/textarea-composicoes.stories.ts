@@ -27,7 +27,7 @@ export const ComLabel: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="comp-label">Descrição</Label>
         <Textarea id="comp-label" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />
       </div>
@@ -52,7 +52,7 @@ export const ComTextoDeApoio: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="comp-apoio">Biografia</Label>
         <Textarea
           id="comp-apoio"
@@ -86,7 +86,7 @@ export const ComContador: Story = {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="comp-counter">Descrição</Label>
         <Textarea
           id="comp-counter"
@@ -95,7 +95,7 @@ export const ComContador: Story = {
           placeholder="ex: Descreva o produto..."
           class="resize-y min-h-[120px]"
         />
-        <div class="flex justify-between text-xs text-muted-foreground">
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva com clareza.</span>
           <span
             aria-live="polite"
@@ -130,7 +130,7 @@ export const ComMensagemDeErro: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="comp-erro">Descrição</Label>
         <Textarea
           id="comp-erro"
@@ -165,7 +165,7 @@ export const CampoObrigatorio: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="comp-obrig">
           Feedback
           <span class="nds-text-destructive" aria-hidden="true">*</span>

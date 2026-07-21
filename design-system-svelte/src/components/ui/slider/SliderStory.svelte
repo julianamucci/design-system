@@ -48,14 +48,14 @@
 {#if orientation === 'vertical'}
   <div class="nds-stack" data-spacing="sm">
     {#if label || showValue}
-      <div class="flex items-center justify-between w-40">
+      <div class="nds-cluster" data-align="center" data-justify="between" style="width: 10rem">
         {#if label}<Label>{label}</Label>{/if}
         {#if showValue}
-          <span class="text-sm tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
+          <span class="nds-text-body tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
         {/if}
       </div>
     {/if}
-    <div class="{verticalHeight} flex justify-center">
+    <div class="nds-cluster {verticalHeight}" data-justify="center">
       <Slider
         bind:value={current}
         {min}
@@ -69,16 +69,16 @@
     </div>
   </div>
 {:else}
-  <div class="{width} space-y-2">
+  <div class="{width}" data-spacing="sm">
     {#if label || showValue || showRangeValue}
       <div class="nds-cluster" data-justify="between">
         {#if label}<Label>{label}</Label>{/if}
         {#if showRangeValue}
-          <span class="text-sm tabular-nums" aria-live="polite">
+          <span class="nds-text-body tabular-nums" aria-live="polite">
             {rangePrefix}{current[0]}{valueSuffix} — {rangePrefix}{current[1]}{valueSuffix}
           </span>
         {:else if showValue}
-          <span class="text-sm tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
+          <span class="nds-text-body tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
         {/if}
       </div>
     {/if}

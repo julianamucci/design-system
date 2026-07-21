@@ -31,7 +31,7 @@ export const Size6: Story = {
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { demoSrc, demoAlt }; },
     template: `
-      <Avatar class="h-6 w-6">
+      <Avatar class="" style="height: 1.5rem; width: 1.5rem">
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
         <AvatarFallback class="text-[0.625rem]">MR</AvatarFallback>
       </Avatar>
@@ -64,7 +64,7 @@ export const Size10: Story = {
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { demoSrc, demoAlt }; },
     template: `
-      <Avatar class="h-10 w-10">
+      <Avatar class="" style="height: 2.5rem; width: 2.5rem">
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
@@ -80,7 +80,7 @@ export const Size12: Story = {
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { demoSrc, demoAlt }; },
     template: `
-      <Avatar class="h-12 w-12">
+      <Avatar class="" style="height: 3rem; width: 3rem">
         <AvatarImage :src="demoSrc" :alt="demoAlt" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>

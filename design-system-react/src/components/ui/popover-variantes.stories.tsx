@@ -94,7 +94,7 @@ export const ComTitulo: Story = {
               Ajuste a aparência do conteúdo da página.
             </PopoverDescription>
           </PopoverHeader>
-          <div className="flex justify-end gap-2 pt-1">
+          <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">
               Cancelar
             </Button>
@@ -149,7 +149,7 @@ export const Form: Story = {
               type="email"
               defaultValue="joana@example.com"
             />
-            <Button type="submit" size="sm" className="mt-1">
+            <Button type="submit" size="sm" className="nds-mt-1">
               Atualizar
             </Button>
           </form>

@@ -55,7 +55,7 @@ export const Playground: Story = {
       return { args, value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 80px;" class="nds-cluster" data-align="center" data-justify="center">
         <InputOTP
           :key="String(args.maxLength) + String(args.disabled) + String(args.autoFocus)"
           :max-length="args.maxLength"

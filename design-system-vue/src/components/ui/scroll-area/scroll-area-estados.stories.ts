@@ -25,14 +25,14 @@ type Story = StoryObj<typeof meta>;
 const TAGS = Array.from({ length: 30 }, (_, i) => `Tag ${i + 1}`);
 
 const wrapTemplate = (typeAttr: string) => `
-  <div class="w-[280px] h-[260px] rounded-md border overflow-hidden">
-    <ScrollArea ${typeAttr} class="h-full w-full">
-      <div class="p-4 space-y-2">
+  <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 260px">
+    <ScrollArea ${typeAttr} class="nds-w-full" style="height: 100%">
+      <div class="nds-p-4" data-spacing="sm">
         <a
           v-for="tag in tags"
           :key="tag"
           href="#"
-          class="block text-sm rounded-sm border px-2 py-1.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          class="nds-block nds-text-body nds-rounded-sm nds-border-default nds-px-2 outline-none focus-visible:ring-2 focus-visible:ring-ring" style="padding-block: 0.375rem"
         >
           {{ tag }}
         </a>

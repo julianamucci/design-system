@@ -66,7 +66,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div class="w-72 rounded-xl border border-border shadow-md overflow-hidden">
+      <div class="rounded-xl nds-border-default shadow-md nds-overflow-hidden" style="width: 18rem">
         <Command v-bind="args">
           <CommandInput placeholder="Buscar componente..." />
           <CommandList>

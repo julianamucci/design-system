@@ -83,7 +83,7 @@
 
 <div class="nds-stack" data-spacing="sm" style="contain: layout">
   {#if showLabel && label}
-    <label for={fieldId} class="text-sm font-medium block">{label}</label>
+    <label for={fieldId} class="nds-text-body nds-font-medium nds-block">{label}</label>
   {/if}
 
   {#key renderKey}
@@ -145,13 +145,13 @@
   {/if}
 
   {#if showErrorMessage && errorMessage}
-    <p id={errorId} class="text-xs text-destructive" role="alert">{errorMessage}</p>
+    <p id={errorId} class="nds-text-caption nds-text-destructive" role="alert">{errorMessage}</p>
   {/if}
 
   {#if showResendButton}
     <button
       type="button"
-      class="text-xs text-primary underline-offset-4 hover:underline"
+      class="nds-text-caption nds-text-primary underline-offset-4 nds-hover-underline"
     >
       Reenviar código
     </button>

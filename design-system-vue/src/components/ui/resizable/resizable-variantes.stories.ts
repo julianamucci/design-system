@@ -30,10 +30,10 @@ export const Horizontal: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Esquerda</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Esquerda</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="70" :min-size="50">
@@ -55,10 +55,10 @@ export const Vertical: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[360px] h-[300px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 360px; height: 300px">
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Topo</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Topo</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
@@ -80,10 +80,10 @@ export const Nested: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[560px] h-[300px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 560px; height: 300px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Sidebar</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Sidebar</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar sidebar e conteúdo — use setas" />
           <ResizablePanel :default-size="70" :min-size="50">
@@ -93,7 +93,7 @@ export const Nested: Story = {
               </ResizablePanel>
               <ResizableHandle with-handle aria-label="Redimensionar conteúdo e console — use setas" />
               <ResizablePanel :default-size="40" :min-size="20">
-                <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Console</div>
+                <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Console</div>
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>

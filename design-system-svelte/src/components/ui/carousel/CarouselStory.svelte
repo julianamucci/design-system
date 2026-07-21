@@ -115,25 +115,25 @@
     orientation={variant === 'vertical' ? 'vertical' : orientation}
     setApi={setApi}
     aria-label={ariaLabel}
-    class="relative"
+    class="" style="position: relative"
   >
     <CarouselContent class={variant === 'vertical' ? 'h-[260px]' : ''}>
       {#each slides as slide, i}
         <CarouselItem class={effectiveBasis}>
           {#if variant === 'gallery' && slide.src}
-            <div class="p-1">
+            <div class="nds-p-1">
               <img
                 src={slide.src}
                 alt={slide.alt}
                 loading="lazy"
                 decoding="async"
-                class="aspect-square w-full object-cover rounded-md bg-muted"
+                class="aspect-square nds-w-full nds-rounded-md nds-bg-muted" style="object-fit: cover"
               />
             </div>
           {:else}
-            <div class="p-1">
+            <div class="nds-p-1">
               <div
-                class="flex aspect-square items-center justify-center rounded-md bg-muted text-3xl font-semibold text-muted-foreground select-none"
+                class="nds-cluster aspect-square nds-rounded-md nds-bg-muted text-3xl nds-font-semibold nds-text-muted-foreground" style="user-select: none" data-align="center" data-justify="center"
                 aria-label={`${slideLabel} ${i + 1} ${ofLabel} ${slides.length}`}
               >
                 {i + 1}
@@ -148,14 +148,14 @@
   </Carousel>
 
   {#if variant === 'withDots'}
-    <div class="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Paginação do carrossel">
+    <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação do carrossel">
       {#each scrollSnaps as _, i}
         <button
           type="button"
           role="tab"
           aria-label={`${goToSlideLabel} ${i + 1}`}
           aria-selected={selectedIndex === i}
-          class="h-2 w-2 rounded-full transition-colors"
+          class="nds-rounded-full transition-colors" style="height: 0.5rem; width: 0.5rem"
           class:bg-primary={selectedIndex === i}
           class:bg-muted-foreground={selectedIndex !== i}
           class:opacity-40={selectedIndex !== i}

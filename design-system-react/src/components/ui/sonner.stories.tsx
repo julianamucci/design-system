@@ -32,7 +32,7 @@ export const Playground: Story = {
   render: () => (
     <div style={{ contain: "layout", minHeight: 120, position: "relative" }}>
       <Toaster position="top-right" richColors />
-      <div className="flex flex-wrap gap-2">
+      <div className="nds-cluster" data-spacing="sm" style={{ flexWrap: "wrap" }}>
         <Button
           variant="outline"
           size="sm"

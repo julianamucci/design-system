@@ -35,7 +35,7 @@ export const VolumeComValor: Story = {
       <div class="nds-stack" data-spacing="sm" style="width: 20rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" :step="1" aria-label="Volume" />
       </div>
@@ -68,12 +68,12 @@ export const FaixaDePreco: Story = {
       <div class="nds-stack" data-spacing="sm" style="width: 20rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">
+          <span aria-live="polite" class="nds-text-body tabular-nums">
             R$ {{ value[0] }} — R$ {{ value[1] }}
           </span>
         </div>
         <Slider v-model="value" :min="0" :max="500" :step="10" aria-label="Faixa de preço" />
-        <div class="flex justify-between text-xs text-muted-foreground">
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>R$ 0</span>
           <span>R$ 500</span>
         </div>
@@ -103,21 +103,21 @@ export const EmFormulario: Story = {
       return { brightness, opacity };
     },
     template: `
-      <form class="space-y-6 w-80" @submit.prevent>
+      <form class="" data-spacing="lg" style="width: 20rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <Label for="form-name">Nome do preset</Label>
           <input
             id="form-name"
             type="text"
             placeholder="Meu preset"
-            class="w-full h-(--height-default) px-3 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
 
         <div class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <Label>Brilho</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">{{ brightness[0] }}%</span>
+            <span aria-live="polite" class="nds-text-body tabular-nums">{{ brightness[0] }}%</span>
           </div>
           <Slider v-model="brightness" :min="0" :max="100" aria-label="Brilho" />
         </div>
@@ -125,14 +125,14 @@ export const EmFormulario: Story = {
         <div class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <Label>Opacidade</Label>
-            <span aria-live="polite" class="text-sm tabular-nums">{{ opacity[0] }}%</span>
+            <span aria-live="polite" class="nds-text-body tabular-nums">{{ opacity[0] }}%</span>
           </div>
           <Slider v-model="opacity" :min="0" :max="100" aria-label="Opacidade" />
         </div>
 
         <button
           type="submit"
-          class="w-full h-(--height-default) px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
         >
           Salvar preset
         </button>
@@ -170,10 +170,10 @@ export const StepGrosso: Story = {
       <div class="nds-stack" data-spacing="sm" style="width: 20rem">
         <div class="nds-cluster" data-justify="between">
           <Label>Avaliação</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{{ value[0] }} / 5</span>
+          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }} / 5</span>
         </div>
         <Slider v-model="value" :min="1" :max="5" :step="1" aria-label="Avaliação" />
-        <div class="flex justify-between text-xs text-muted-foreground">
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
         </div>
       </div>

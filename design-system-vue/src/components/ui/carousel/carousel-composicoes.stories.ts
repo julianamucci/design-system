@@ -133,9 +133,9 @@ export const Galeria: Story = {
       <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de fotos">
         <CarouselContent>
           <CarouselItem v-for="(slide, i) in slides" :key="i">
-            <Card class="overflow-hidden p-0">
-              <div :class="['aspect-video bg-gradient-to-br flex items-end p-4', slide.gradient]">
-                <span class="text-white text-sm font-semibold drop-shadow">{{ slide.label }}</span>
+            <Card class="nds-overflow-hidden nds-p-0">
+              <div :class="nds-cluster ['aspect-video bg-gradient-to-br p-4', slide.gradient]" data-align="end">
+                <span class="text-white nds-text-body nds-font-semibold drop-shadow">{{ slide.label }}</span>
               </div>
             </Card>
           </CarouselItem>

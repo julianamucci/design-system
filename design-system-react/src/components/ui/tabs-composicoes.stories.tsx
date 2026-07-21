@@ -75,7 +75,7 @@ export const ComBadge: Story = {
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="inbox">
           Inbox
-          <Badge variant="secondary" className="text-[10px] h-4">
+          <Badge variant="secondary" className="" style={{fontSize: "10px", height: "1rem" }} >
             12
           </Badge>
         </TabsTrigger>
@@ -105,7 +105,7 @@ export const ComBadge: Story = {
 function ControlledTabs() {
   const [value, setValue] = useState("overview");
   return (
-    <div className="space-y-3 w-full max-w-lg">
+    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Tab ativa: <code>{value}</code>
       </p>

@@ -43,7 +43,7 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
     accessorKey: "amount",
     header: "Valor",
     cell: ({ row }) => (
-      <span className="font-medium tabular-nums">
+      <span className="nds-font-medium tabular-nums">
         {currency.format(row.original.amount)}
       </span>
     ),
@@ -99,7 +99,7 @@ const editableColumns: DataTableColumn<Invoice>[] = [
     header: "Valor",
     meta: { editable: true },
     cell: ({ row }) => (
-      <span className="font-medium tabular-nums">
+      <span className="nds-font-medium tabular-nums">
         {currency.format(row.original.amount)}
       </span>
     ),

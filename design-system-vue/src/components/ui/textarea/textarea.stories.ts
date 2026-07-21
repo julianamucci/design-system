@@ -37,7 +37,7 @@ export const Playground: Story = {
     components: { Textarea, Label },
     setup() { return { args }; },
     template: `
-      <div class="w-80 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 20rem">
         <Label for="playground-textarea">Descrição</Label>
         <Textarea id="playground-textarea" v-bind="args" class="resize-y min-h-[120px]" />
       </div>

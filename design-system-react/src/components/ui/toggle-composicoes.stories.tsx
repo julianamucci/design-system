@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const BarraDeFormatacao: Story = {
   render: () => (
-    <div className="flex items-center gap-1 rounded-lg border p-1">
+    <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-align="center" data-spacing="xs">
       <Toggle aria-label="Negrito">
         <Bold aria-hidden="true" />
       </Toggle>
@@ -128,7 +128,7 @@ export const Controlado: Story = {
   render: function ControladoRender() {
     const [isBold, setIsBold] = useState(false);
     return (
-      <div className="flex flex-col items-start gap-3 w-72">
+      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
         <Toggle pressed={isBold} onPressedChange={setIsBold} aria-label="Negrito">
           <Bold aria-hidden="true" />
         </Toggle>

@@ -69,16 +69,16 @@ export const AdvancedFilters: Story = {
             <SheetTitle>Filtros avançados</SheetTitle>
             <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
-          <div class="grid gap-4 px-4">
-            <div class="grid gap-1.5">
+          <div class="nds-grid nds-px-4" data-spacing="md">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="cat">Categoria</Label>
               <Input id="cat" defaultValue="Componentes" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="status">Status</Label>
               <Input id="status" defaultValue="Estável" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="lang">Idioma</Label>
               <Input id="lang" defaultValue="Português" />
             </div>
@@ -117,16 +117,16 @@ export const ProfileEdit: Story = {
             <SheetTitle>Editar perfil</SheetTitle>
             <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
           </SheetHeader>
-          <form class="grid gap-3 px-4">
-            <div class="grid gap-1.5">
+          <form class="nds-grid nds-px-4" data-spacing="sm">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-name">Nome</Label>
               <Input id="profile-name" defaultValue="Juliana Mucci" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-handle">Username</Label>
               <Input id="profile-handle" defaultValue="@julianamucci" />
             </div>
-            <div class="grid gap-1.5">
+            <div class="nds-grid" data-spacing="xs">
               <Label for="profile-bio">Bio</Label>
               <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
             </div>
@@ -165,12 +165,12 @@ export const SecondaryNavigation: Story = {
             <SheetTitle>Navegação</SheetTitle>
             <SheetDescription>Acesse as seções principais da aplicação.</SheetDescription>
           </SheetHeader>
-          <nav class="flex flex-col gap-1 px-4">
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Dashboard</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Componentes</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Tokens</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Documentação</a>
-            <a href="#" class="rounded-md px-3 py-2 text-sm hover:bg-muted">Configuracoes</a>
+          <nav class="nds-stack nds-px-4" data-spacing="xs">
+            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Dashboard</a>
+            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Componentes</a>
+            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Tokens</a>
+            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Documentação</a>
+            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Configuracoes</a>
           </nav>
         </SheetContent>
       </Sheet>
@@ -194,14 +194,14 @@ export const LongFormScroll: Story = {
     components: sharedComponents,
     template: `
       <Sheet default-open :modal="false">
-        <SheetContent side="right" class="flex flex-col">
+        <SheetContent side="right" class="nds-stack">
           <SheetHeader>
             <SheetTitle>Preferências de notificação</SheetTitle>
             <SheetDescription>Configure cada tipo de notificação individualmente.</SheetDescription>
           </SheetHeader>
-          <div class="flex-1 overflow-y-auto px-4">
-            <div class="grid gap-3 py-2">
-              <div v-for="i in 12" :key="i" class="grid gap-1.5">
+          <div class="nds-flex-1 nds-overflow-y nds-px-4">
+            <div class="nds-grid nds-py-2" data-spacing="sm">
+              <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">
                 <Label :for="'notif-' + i">Categoria {{ i }}</Label>
                 <Input :id="'notif-' + i" :defaultValue="'Configuração ' + i" />
               </div>

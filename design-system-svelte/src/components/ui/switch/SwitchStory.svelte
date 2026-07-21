@@ -32,8 +32,8 @@
 </script>
 
 {#if withDescription}
-  <div class="flex items-center justify-between w-80 gap-4">
-    <div class="flex flex-col gap-0.5">
+  <div class="nds-cluster" data-align="center" data-justify="between" data-spacing="md" style="width: 20rem">
+    <div class="nds-stack" data-spacing="xs">
       <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
         {labelText}
       </Label>

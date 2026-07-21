@@ -43,7 +43,7 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
       <nav aria-label="Navegação principal">
         <Sidebar side={side} variant={variant} collapsible={collapsible}>
           <SidebarHeader className="nds-p-2">
-            <span className="font-semibold text-sm text-sidebar-foreground">Design System</span>
+            <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -109,8 +109,8 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
           <SidebarTrigger />
           <span className="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
         </header>
-        <div className="p-6">
-          <p className="text-muted-foreground text-sm">
+        <div className="nds-p-6">
+          <p className="nds-text-muted-foreground nds-text-body">
             Use os controles do painel para alterar <code>variant</code>, <code>collapsible</code> e <code>side</code>.
           </p>
         </div>
@@ -131,7 +131,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="min-h-[400px] flex">
+      <div className="nds-cluster min-h-[400px]">
         <Story />
       </div>
     ),

@@ -88,7 +88,7 @@ export const NoImage: Story = {
   render: () => (
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">
-        <User aria-hidden="true" className="h-5 w-5" />
+        <User aria-hidden="true" className="" style={{ height: "1.25rem", width: "1.25rem" }} />
       </AvatarFallback>
     </Avatar>
   ),

@@ -27,7 +27,7 @@ export const ComLabel: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
-      <div class="w-64 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 16rem">
         <Label for="nome-completo">Nome completo</Label>
         <Input id="nome-completo" type="text" placeholder="ex: João da Silva" />
       </div>
@@ -55,7 +55,7 @@ export const ComTextoDeApoio: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
-      <div class="w-64 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 16rem">
         <Label for="email-apoio">Email</Label>
         <Input id="email-apoio" type="email" placeholder="ex: joao@empresa.com" />
         <p class="nds-text-body nds-text-muted-foreground">Usaremos este endereço para notificações.</p>
@@ -75,7 +75,7 @@ export const ComMensagemDeErro: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
-      <div class="w-64 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 16rem">
         <Label for="email-erro">Email</Label>
         <Input
           id="email-erro"
@@ -110,7 +110,7 @@ export const CampoObrigatorio: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
-      <div class="w-64 space-y-1.5">
+      <div class="" data-spacing="xs" style="width: 16rem">
         <Label for="nome-obrig">
           Nome completo
           <span class="nds-text-destructive" aria-hidden="true">*</span>

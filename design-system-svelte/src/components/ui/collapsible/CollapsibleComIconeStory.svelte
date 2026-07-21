@@ -7,25 +7,25 @@
 
 <Collapsible bind:open class="nds-w-full nds-max-w-xs">
   <CollapsibleTrigger
-    class="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-card nds-px-4 nds-text-body nds-font-medium transition-colors nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between" style="padding-block: 0.75rem"
   >
     <span class="nds-cluster" data-spacing="sm">
-      <Settings2 aria-hidden="true" class="h-4 w-4 text-muted-foreground" />
+      <Settings2 aria-hidden="true" class="nds-text-muted-foreground" style="height: 1rem; width: 1rem" />
       {open ? 'Ocultar filtros avançados' : 'Exibir filtros avançados'}
     </span>
     <ChevronDown
       aria-hidden="true"
-      class="h-4 w-4 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180"
+      class="nds-shrink-0 nds-text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
     />
   </CollapsibleTrigger>
   <CollapsibleContent>
-    <div class="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm mt-2 space-y-2">
-      <div class="flex items-center gap-2 text-muted-foreground">
-        <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+    <div class="nds-rounded-md nds-border-default bg-muted/50 nds-px-4 nds-text-body nds-mt-2" data-spacing="sm" style="padding-block: 0.75rem">
+      <div class="nds-cluster nds-text-muted-foreground" data-align="center" data-spacing="sm">
+        <span class="nds-rounded-full nds-bg-primary" style="height: 0.375rem; width: 0.375rem"></span>
         Filtro avançado 1
       </div>
-      <div class="flex items-center gap-2 text-muted-foreground">
-        <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+      <div class="nds-cluster nds-text-muted-foreground" data-align="center" data-spacing="sm">
+        <span class="nds-rounded-full nds-bg-primary" style="height: 0.375rem; width: 0.375rem"></span>
         Filtro avançado 2
       </div>
     </div>

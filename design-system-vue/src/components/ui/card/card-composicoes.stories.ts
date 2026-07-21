@@ -43,7 +43,7 @@ export const WithFooter: Story = {
           <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
         </CardHeader>
         <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
-        <CardFooter class="justify-end gap-2">
+        <CardFooter class="" data-justify="end" data-spacing="sm">
           <Button variant="outline" size="sm" aria-label="Cancelar edição de Cadeira Gamer Pro">Cancelar</Button>
           <Button size="sm" aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>
         </CardFooter>
@@ -81,7 +81,7 @@ export const WithImage: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
       <Card class="nds-w-full nds-max-w-sm">
-        <div class="aspect-video w-full bg-muted" aria-hidden="true" />
+        <div class="aspect-video nds-w-full nds-bg-muted" aria-hidden="true" />
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
@@ -100,7 +100,7 @@ export const ProductCard: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, Button, Badge },
     template: `
       <Card class="nds-w-full nds-max-w-sm">
-        <div class="aspect-video w-full bg-muted" aria-hidden="true" />
+        <div class="aspect-video nds-w-full nds-bg-muted" aria-hidden="true" />
         <CardHeader>
           <CardTitle>Cadeira Gamer Pro</CardTitle>
           <CardDescription>Estrutura ergonômica com ajuste de altura e apoio lombar.</CardDescription>
@@ -108,8 +108,8 @@ export const ProductCard: Story = {
             <Badge variant="secondary">Em estoque</Badge>
           </CardAction>
         </CardHeader>
-        <CardContent class="text-xl font-semibold">R$ 1.299,00</CardContent>
-        <CardFooter class="justify-end gap-2">
+        <CardContent class="nds-font-semibold" style="font-size: 1.25rem">R$ 1.299,00</CardContent>
+        <CardFooter class="" data-justify="end" data-spacing="sm">
           <Button variant="outline" size="sm" aria-label="Ver detalhes de Cadeira Gamer Pro">Detalhes</Button>
           <Button size="sm" aria-label="Comprar Cadeira Gamer Pro">Comprar</Button>
         </CardFooter>
@@ -146,7 +146,7 @@ export const MetricCard: Story = {
           <CardTitle>Assinantes ativos</CardTitle>
           <CardDescription>+12% no mês</CardDescription>
         </CardHeader>
-        <CardContent class="text-3xl font-semibold">8.742</CardContent>
+        <CardContent class="text-3xl nds-font-semibold">8.742</CardContent>
       </Card>
     `,
   }),
@@ -160,11 +160,11 @@ export const ProfileCard: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button, Avatar, AvatarFallback },
     template: `
       <Card class="nds-w-full nds-max-w-sm">
-        <CardHeader class="flex-row items-center gap-3">
-          <Avatar class="h-10 w-10">
+        <CardHeader class="" data-align="center" data-spacing="sm">
+          <Avatar class="" style="height: 2.5rem; width: 2.5rem">
             <AvatarFallback>MR</AvatarFallback>
           </Avatar>
-          <div class="flex-1">
+          <div class="nds-flex-1">
             <CardTitle>Maria Rodrigues</CardTitle>
             <CardDescription>Designer de produto · São Paulo, BR</CardDescription>
           </div>
@@ -172,7 +172,7 @@ export const ProfileCard: Story = {
         <CardContent class="nds-text-body nds-text-muted-foreground">
           Atua há 8 anos com design de sistemas e experiência em produtos B2B.
         </CardContent>
-        <CardFooter class="justify-end gap-2">
+        <CardFooter class="" data-justify="end" data-spacing="sm">
           <Button variant="outline" size="sm" aria-label="Ver perfil de Maria Rodrigues">Ver perfil</Button>
           <Button size="sm" aria-label="Enviar mensagem para Maria Rodrigues">Mensagem</Button>
         </CardFooter>

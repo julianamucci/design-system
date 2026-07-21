@@ -22,7 +22,7 @@ export const Default: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="h-4 w-4" aria-hidden="true" />
+        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
@@ -39,7 +39,7 @@ export const Destructive: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="destructive">
-        <AlertCircle class="h-4 w-4" aria-hidden="true" />
+        <AlertCircle class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Erro ao salvar</AlertTitle>
         <AlertDescription>Não foi possível salvar. Verifique sua conexão e tente novamente.</AlertDescription>
       </Alert>
@@ -55,8 +55,8 @@ export const Success: Story = {
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() { return {}; },
     template: `
-      <Alert class="bg-success/10 text-success border-success/30">
-        <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+      <Alert class="bg-success/10 nds-text-success border-success/30">
+        <CheckCircle2 class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Perfil atualizado</AlertTitle>
         <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
       </Alert>
@@ -72,10 +72,10 @@ export const Warning: Story = {
     components: { Alert, AlertTitle, AlertDescription, TriangleAlert },
     setup() { return {}; },
     template: `
-      <Alert class="bg-warning/10 border-warning/30 text-foreground [&>svg]:text-warning">
-        <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+      <Alert class="bg-warning/10 border-warning/30 nds-text-foreground [&>svg]:text-warning">
+        <TriangleAlert class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
         <AlertTitle>Assinatura expirando</AlertTitle>
-        <AlertDescription class="text-foreground">Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
+        <AlertDescription class="nds-text-foreground">Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
       </Alert>
     `,
   }),

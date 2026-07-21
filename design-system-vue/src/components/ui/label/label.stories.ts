@@ -37,7 +37,7 @@ export const Playground: Story = {
     template: `
       <div class="nds-stack" data-spacing="sm">
         <Label v-bind="args">Nome completo</Label>
-        <input id="demo-input" type="text" class="border rounded px-3 py-1 text-sm" placeholder="Digite aqui" />
+        <input id="demo-input" type="text" class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem" placeholder="Digite aqui" />
       </div>
     `,
   }),

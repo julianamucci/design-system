@@ -34,12 +34,12 @@ export const Vertical: Story = {
       return { tags: TAGS };
     },
     template: `
-      <div class="w-[280px] h-[300px] rounded-md border overflow-hidden">
-        <ScrollArea class="h-full w-full">
-          <div class="p-4">
-            <h4 class="mb-3 text-sm font-medium leading-none">Tags</h4>
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 300px">
+        <ScrollArea class="nds-w-full" style="height: 100%">
+          <div class="nds-p-4">
+            <h4 class="mb-3 nds-text-body nds-font-medium" style="line-height: 1">Tags</h4>
             <div class="nds-stack" data-spacing="sm">
-              <div v-for="tag in tags" :key="tag" class="text-sm rounded-sm border px-2 py-1.5">
+              <div v-for="tag in tags" :key="tag" class="nds-text-body nds-rounded-sm nds-border-default nds-px-2" style="padding-block: 0.375rem">
                 {{ tag }}
               </div>
             </div>
@@ -69,16 +69,16 @@ export const Horizontal: Story = {
       return { cards: CARDS };
     },
     template: `
-      <div class="w-[500px] h-[180px] rounded-md border overflow-hidden">
-        <ScrollArea class="h-full w-full whitespace-nowrap">
-          <div class="flex w-max gap-4 p-4">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px; height: 180px">
+        <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+          <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
             <figure
               v-for="card in cards"
               :key="card.id"
-              class="shrink-0 w-[160px] rounded-md border bg-muted p-4"
+              class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted nds-p-4" style="width: 160px"
             >
               <div class="nds-text-body nds-font-medium">{{ card.title }}</div>
-              <div class="mt-2 text-xs text-muted-foreground">Item horizontal</div>
+              <div class="nds-mt-2 nds-text-caption nds-text-muted-foreground">Item horizontal</div>
             </figure>
           </div>
           <ScrollBar orientation="horizontal" />
@@ -110,16 +110,16 @@ export const Both: Story = {
       return { cols: COLS, rows: ROWS };
     },
     template: `
-      <div class="w-[500px] h-[280px] rounded-md border overflow-hidden">
-        <ScrollArea class="h-full w-full">
-          <table class="border-collapse text-sm">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px; height: 280px">
+        <ScrollArea class="nds-w-full" style="height: 100%">
+          <table class="border-collapse nds-text-body">
             <thead>
               <tr>
-                <th class="sticky top-0 z-10 bg-background border px-3 py-2 text-left">#</th>
+                <th class="sticky top-0 z-10 nds-bg-background nds-border-default nds-py-2 nds-text-left" style="padding-inline: 0.75rem">#</th>
                 <th
                   v-for="col in cols"
                   :key="col"
-                  class="sticky top-0 z-10 bg-background border px-3 py-2 text-left whitespace-nowrap"
+                  class="sticky top-0 z-10 nds-bg-background nds-border-default nds-py-2 nds-text-left nds-whitespace-nowrap" style="padding-inline: 0.75rem"
                 >
                   {{ col }}
                 </th>
@@ -127,11 +127,11 @@ export const Both: Story = {
             </thead>
             <tbody>
               <tr v-for="row in rows" :key="row">
-                <th class="border px-3 py-2 text-left whitespace-nowrap bg-muted">{{ row }}</th>
+                <th class="nds-border-default nds-py-2 nds-text-left nds-whitespace-nowrap nds-bg-muted" style="padding-inline: 0.75rem">{{ row }}</th>
                 <td
                   v-for="col in cols"
                   :key="col"
-                  class="border px-3 py-2 whitespace-nowrap"
+                  class="nds-border-default nds-py-2 nds-whitespace-nowrap" style="padding-inline: 0.75rem"
                 >
                   {{ row }}-{{ col }}
                 </td>

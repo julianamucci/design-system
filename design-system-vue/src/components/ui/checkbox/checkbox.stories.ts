@@ -58,7 +58,7 @@ export const Playground: Story = {
         <Checkbox id="playground-checkbox" v-bind="args" />
         <label
           for="playground-checkbox"
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
         >
           Aceito os termos e condições
         </label>

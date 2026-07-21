@@ -29,7 +29,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
 
 export const Vazio: Story = {
   render: () => (
-    <ChartContainer option={buildBarOption({ data: [] })} className="h-[200px] w-[480px]" />
+    <ChartContainer option={buildBarOption({ data: [] })} className="" style={{ height: "200px", width: "480px" }} />
   ),
   parameters: {
     docs: { description: { story: 'Estado vazio — ECharts mostra "No data" automaticamente quando series é vazia.' } },
@@ -40,7 +40,7 @@ export const UmaSerie: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
-      className="h-[240px] w-[480px]"
+      className="" style={{ height: "240px", width: "480px" }}
     />
   ),
   parameters: {
@@ -55,7 +55,7 @@ export const MultiplasSeries: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multipleSeries })}
-      className="h-[280px] w-[500px]"
+      className="" style={{ height: "280px", width: "500px" }}
     />
   ),
   parameters: {

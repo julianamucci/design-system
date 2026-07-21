@@ -37,14 +37,14 @@ export const Playground: Story = {
     components: { AspectRatio },
     setup() { return { args }; },
     template: `
-      <div class="w-[480px]">
+      <div class="" style="width: 480px">
         <AspectRatio v-bind="args">
           <img
             src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format"
             alt="Paisagem ao amanhecer"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover"
           />
         </AspectRatio>
       </div>

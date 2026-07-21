@@ -47,14 +47,14 @@
   );
 </script>
 
-<div class="w-72 space-y-2">
+<div class="" data-spacing="sm" style="width: 18rem">
   {#if showLabel || showValue}
-    <div class="flex items-center justify-between text-sm">
+    <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
       {#if showLabel}
-        <span class="font-medium text-foreground">{label}</span>
+        <span class="nds-font-medium nds-text-foreground">{label}</span>
       {/if}
       {#if showValue && percent !== null}
-        <span class="text-muted-foreground tabular-nums" aria-live="polite">{percent}%</span>
+        <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">{percent}%</span>
       {/if}
     </div>
   {/if}

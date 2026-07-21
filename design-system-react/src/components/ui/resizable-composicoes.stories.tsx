@@ -50,10 +50,10 @@ export const EditorPreview: Story = {
           minSize={30}
           maxSize={70}
         >
-          <div className="flex h-full flex-col p-4 text-xs font-mono">
-            <div className="text-muted-foreground mb-2">editor.tsx</div>
+          <div className="nds-stack nds-p-4 nds-text-caption nds-font-mono" style={{ height: "100%" }}>
+            <div className="nds-text-muted-foreground nds-mb-2">editor.tsx</div>
             <div>export function App() {`{`}</div>
-            <div className="pl-4">return &lt;Hello /&gt;;</div>
+            <div className="" style={{ paddingLeft: "1rem" }}>return &lt;Hello /&gt;;</div>
             <div>{`}`}</div>
           </div>
         </ResizablePanel>
@@ -94,26 +94,26 @@ export const IDELayout: Story = {
           minSize={15}
           maxSize={35}
         >
-          <div className="flex h-full flex-col bg-muted p-3 text-xs">
-            <div className="font-medium mb-2">Explorer</div>
+          <div className="nds-stack nds-bg-muted nds-text-caption" style={{ height: "100%", padding: "0.75rem" }}>
+            <div className="nds-font-medium nds-mb-2">Explorer</div>
             <div>📁 src</div>
-            <div className="pl-3">📄 App.tsx</div>
-            <div className="pl-3">📄 main.tsx</div>
+            <div className="" style={{ paddingLeft: "0.75rem" }}>📄 App.tsx</div>
+            <div className="" style={{ paddingLeft: "0.75rem" }}>📄 main.tsx</div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={80} minSize={50}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel id="editor" defaultSize={70} minSize={30}>
-              <div className="flex h-full p-3 text-xs font-mono">
+              <div className="nds-cluster nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
                 <div className="nds-text-muted-foreground">App.tsx (1:1)</div>
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle aria-label={ariaLabel} />
             <ResizablePanel id="console" defaultSize={30} minSize={15}>
-              <div className="flex h-full bg-muted/60 p-3 text-xs font-mono">
+              <div className="nds-cluster bg-muted/60 nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
                 <span className="nds-text-muted-foreground">{">"}</span>
-                <span className="ml-2">npm run dev</span>
+                <span className="" style={{ marginLeft: "0.5rem" }}>npm run dev</span>
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
@@ -143,19 +143,19 @@ export const TripleSplit: Story = {
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-          <div className="flex h-full items-center justify-center bg-muted p-3 text-xs">
+          <div className="nds-cluster nds-bg-muted nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
             Lista
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={50} minSize={25}>
-          <div className="flex h-full items-center justify-center p-3 text-xs">
+          <div className="nds-cluster nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
             Mensagens
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-          <div className="flex h-full items-center justify-center bg-muted p-3 text-xs">
+          <div className="nds-cluster nds-bg-muted nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
             Leitura
           </div>
         </ResizablePanel>

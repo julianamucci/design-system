@@ -31,7 +31,7 @@
 
 <Alert {variant} class={className}>
   {#if showIcon}
-    <IconComponent class="h-4 w-4" aria-hidden="true" />
+    <IconComponent class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
   {/if}
   {#if title}
     <AlertTitle>{title}</AlertTitle>

@@ -39,18 +39,18 @@ export const Playground: Story = {
     setup() { return { args }; },
     template: `
       <Collapsible :key="String(args.defaultOpen)" v-bind="args" class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger :disabled="args.disabled" class="flex w-full items-center justify-between rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+        <CollapsibleTrigger :disabled="args.disabled" class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" data-align="center" data-justify="between">
           Exibir filtros avançados
           <ChevronDown
             aria-hidden="true"
-            class="h-4 w-4 transition-transform [[data-state=open]_&]:rotate-180"
+            class="transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
           />
         </CollapsibleTrigger>
         <CollapsibleContent class="nds-stack" data-spacing="sm">
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 1
           </div>
-          <div class="rounded-md border border-input bg-muted px-4 py-2 text-sm">
+          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
             Filtro avançado 2
           </div>
         </CollapsibleContent>

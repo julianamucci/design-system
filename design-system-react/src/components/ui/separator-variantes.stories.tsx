@@ -58,7 +58,7 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div className="flex items-center h-12 gap-4 text-sm">
+    <div className="nds-cluster nds-text-body" data-align="center" data-spacing="md" style={{ height: "3rem" }}>
       <span>Item esquerda</span>
       <Separator orientation="vertical" />
       <span>Item direita</span>

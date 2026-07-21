@@ -148,7 +148,7 @@ export const Multiple: Story = {
 function ControlledAccordion() {
   const [value, setValue] = useState<string[]>(["item-1"]);
   return (
-    <div className="space-y-2 w-full max-w-lg">
+    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Item aberto: <code>{value[0] || "nenhum"}</code>
       </p>

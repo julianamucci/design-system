@@ -45,7 +45,7 @@
         Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
       </DialogDescription>
     </DialogHeader>
-    <div class="grid gap-1.5">
+    <div class="nds-grid" data-spacing="xs">
       <Label for="confirm-new-email">Novo email</Label>
       <Input id="confirm-new-email" type="email" placeholder="voce@example.com" />
     </div>

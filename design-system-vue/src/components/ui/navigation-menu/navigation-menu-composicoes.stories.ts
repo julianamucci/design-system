@@ -45,7 +45,7 @@ export const LinkSimples: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 80px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 80px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
@@ -72,14 +72,14 @@ export const ComDropdown: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
           <NavigationMenuList>
             <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem value="produtos">
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[320px] gap-2 p-3">
+                <ul class="nds-grid" data-spacing="sm" style="width: 320px; padding: 0.75rem">
                   <li><NavigationMenuLink href="#">Plano Pro</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Plano Empresa</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">API</NavigationMenuLink></li>
@@ -107,13 +107,13 @@ export const MegaMenuGrid: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 320px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="solucoes">
           <NavigationMenuList>
             <NavigationMenuItem value="solucoes">
               <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[600px] grid-cols-2 gap-3 p-4">
+                <ul class="nds-grid nds-p-4" data-spacing="sm" data-cols="2" style="width: 600px">
                   <li><NavigationMenuLink href="#">Para Startups</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Para Enterprise</NavigationMenuLink></li>
                   <li><NavigationMenuLink href="#">Para Agências</NavigationMenuLink></li>
@@ -144,20 +144,20 @@ export const ComCardDestacado: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 340px;" class="w-full flex justify-center">
+      <div style="contain: layout; min-height: 340px;" class="nds-cluster nds-w-full" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="recursos">
           <NavigationMenuList>
             <NavigationMenuItem value="recursos">
               <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[600px] grid-cols-[.75fr_1fr] gap-3 p-4">
+                <ul class="nds-grid grid-cols-[.75fr_1fr] nds-p-4" data-spacing="sm" style="width: 600px">
                   <li class="row-span-3">
                     <NavigationMenuLink
                       href="#"
-                      class="from-muted/50 to-muted flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b p-6 no-underline outline-hidden focus:shadow-md"
+                      class="nds-stack from-muted/50 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-6 no-underline outline-hidden focus:shadow-md" style="user-select: none; height: 100%" data-justify="end" 
                     >
-                      <div class="mt-4 mb-2 text-lg font-medium">Novidade · v3.0</div>
-                      <p class="text-muted-foreground text-sm leading-tight">
+                      <div class="nds-mt-4 nds-mb-2 nds-text-base nds-font-medium">Novidade · v3.0</div>
+                      <p class="nds-text-muted-foreground nds-text-body leading-tight">
                         Conheça nossa nova plataforma de design.
                       </p>
                     </NavigationMenuLink>

@@ -41,7 +41,7 @@ export const CaptionLabel: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -65,7 +65,7 @@ export const CaptionDropdown: Story = {
         layout="month-and-year"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -89,7 +89,7 @@ export const TwoMonths: Story = {
         :number-of-months="2"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),
@@ -123,7 +123,7 @@ export const WithFixedWeeks: Story = {
         fixed-weeks
         locale="pt-BR"
         :placeholder="placeholder"
-        class="rounded-md border"
+        class="nds-rounded-md nds-border-default"
       />
     `,
   }),

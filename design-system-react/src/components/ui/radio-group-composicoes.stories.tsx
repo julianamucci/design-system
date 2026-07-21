@@ -37,7 +37,7 @@ export const Controlled: Story = {
     function ControlledRadio() {
       const [value, setValue] = useState<string>("");
       return (
-        <div className="flex flex-col gap-4 min-w-[280px]">
+        <div className="nds-stack" style={{ minWidth: "280px" }} data-spacing="md">
           <RadioGroup
             value={value}
             onValueChange={setValue}
@@ -94,7 +94,7 @@ export const EmFormulario: Story = {
       const onSubmit = fn();
       return (
         <form
-          className="flex flex-col gap-4 min-w-[280px]"
+          className="nds-stack" style={{ minWidth: "280px" }} data-spacing="md"
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit({ payment: value });
@@ -166,19 +166,19 @@ export const CardSelection: Story = {
           value={value}
           onValueChange={setValue}
           aria-label="Forma de entrega"
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-[480px]"
+          className="nds-grid sm:grid-cols-3" style={{ minWidth: "480px" }} data-spacing="sm"
         >
           {options.map((opt) => (
             <Label
               key={opt.value}
               htmlFor={`card-${opt.value}`}
-              className="flex flex-col items-start gap-1 rounded-lg border p-3 cursor-pointer hover:bg-accent has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5"
+              className="nds-stack nds-rounded-lg nds-border-default nds-cursor-pointer nds-hover-bg-accent has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="xs" style={{ padding: "0.75rem" }}
             >
-              <div className="flex items-center justify-between w-full">
+              <div className="nds-cluster nds-w-full" data-align="center" data-justify="between">
                 <span className="nds-text-body nds-font-medium">{opt.title}</span>
                 <RadioGroupItem value={opt.value} id={`card-${opt.value}`} />
               </div>
-              <p className="text-xs text-muted-foreground font-normal">
+              <p className="nds-text-caption nds-text-muted-foreground nds-font-normal">
                 {opt.description}
               </p>
             </Label>

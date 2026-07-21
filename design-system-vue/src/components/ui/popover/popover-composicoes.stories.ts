@@ -112,7 +112,7 @@ export const SeletorDeDimensoes: Story = {
                 Largura e altura em pixels.
               </PopoverDescription>
             </PopoverHeader>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="nds-grid" data-spacing="sm" data-cols="2">
               <div class="nds-stack" data-spacing="xs">
                 <Label for="popover-comp-w" class="nds-text-caption">Largura</Label>
                 <Input id="popover-comp-w" type="number" value="320" />
@@ -161,18 +161,18 @@ export const ConfiguracoesRapidas: Story = {
             <PopoverHeader>
               <PopoverTitle class="nds-text-body nds-font-medium">Preferências</PopoverTitle>
             </PopoverHeader>
-            <div class="grid gap-2 text-sm">
-              <label class="flex items-center justify-between cursor-pointer">
+            <div class="nds-grid nds-text-body" data-spacing="sm">
+              <label class="nds-cluster nds-cursor-pointer" data-align="center" data-justify="between">
                 <span>Tema escuro</span>
-                <input type="checkbox" v-model="dark" class="size-4" />
+                <input type="checkbox" v-model="dark" class="nds-size-4" />
               </label>
-              <label class="flex items-center justify-between cursor-pointer">
+              <label class="nds-cluster nds-cursor-pointer" data-align="center" data-justify="between">
                 <span>Modo compacto</span>
-                <input type="checkbox" v-model="compact" class="size-4" />
+                <input type="checkbox" v-model="compact" class="nds-size-4" />
               </label>
-              <label class="flex items-center justify-between cursor-pointer">
+              <label class="nds-cluster nds-cursor-pointer" data-align="center" data-justify="between">
                 <span>Notificações</span>
-                <input type="checkbox" v-model="notify" class="size-4" />
+                <input type="checkbox" v-model="notify" class="nds-size-4" />
               </label>
             </div>
           </PopoverContent>
@@ -208,19 +208,19 @@ export const SeletorDeCor: Story = {
           <PopoverTrigger as-child>
             <Button variant="outline">Cor de destaque</Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" class="w-56">
+          <PopoverContent side="bottom" align="start" class="" style="width: 14rem">
             <PopoverHeader>
               <PopoverTitle class="nds-text-body nds-font-medium">Cor de destaque</PopoverTitle>
               <PopoverDescription class="nds-text-caption nds-text-muted-foreground">
                 Selecione uma cor da paleta.
               </PopoverDescription>
             </PopoverHeader>
-            <div class="grid grid-cols-4 gap-2">
+            <div class="nds-grid" data-spacing="sm">
               <button
                 v-for="color in palette"
                 :key="color"
                 type="button"
-                class="size-8 rounded-md ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                class="nds-size-8 nds-rounded-md ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 :style="{ backgroundColor: color }"
                 :aria-label="'Cor ' + color"
               />

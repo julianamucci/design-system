@@ -76,7 +76,7 @@
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul class="grid w-[280px] gap-1 p-2">
+              <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 280px">
                 <li><NavigationMenuLink href="/produtos/a">Produto A</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/produtos/b">Produto B</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/produtos/c">Produto C</NavigationMenuLink></li>
@@ -88,7 +88,7 @@
           <NavigationMenuItem value="solucoes">
             <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul class="grid w-[480px] grid-cols-2 gap-2 p-3">
+              <ul class="nds-grid" data-spacing="sm" data-cols="2" style="width: 480px; padding: 0.75rem">
                 <li><NavigationMenuLink href="/solucoes/startups">Startups</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/solucoes/empresas">Empresas</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/solucoes/agencias">Agências</NavigationMenuLink></li>
@@ -102,14 +102,14 @@
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul class="grid w-[520px] grid-cols-[.9fr_1fr] gap-2 p-3">
+              <ul class="nds-grid grid-cols-[.9fr_1fr]" data-spacing="sm" style="width: 520px; padding: 0.75rem">
                 <li class="row-span-3">
                   <NavigationMenuLink
                     href="/produtos/destaque"
-                    class="from-muted/40 to-muted flex h-full w-full flex-col justify-end rounded-md bg-gradient-to-b p-4 no-underline outline-none focus:shadow-md"
+                    class="nds-stack from-muted/40 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-4 no-underline outline-none focus:shadow-md" data-justify="end" style="height: 100%"
                   >
-                    <div class="mt-3 mb-1 text-base font-medium">Plano Empresarial</div>
-                    <p class="text-muted-foreground text-xs">
+                    <div class="mt-3 nds-mb-1 nds-text-base nds-font-medium">Plano Empresarial</div>
+                    <p class="nds-text-muted-foreground nds-text-caption">
                       Solução completa com SLA dedicado e suporte premium.
                     </p>
                   </NavigationMenuLink>
@@ -133,7 +133,7 @@
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul class="grid w-[280px] gap-1 p-2">
+              <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 280px">
                 <li><NavigationMenuLink href="/produtos/a">Produto A</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/produtos/b">Produto B</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/produtos/c">Produto C</NavigationMenuLink></li>
@@ -143,7 +143,7 @@
           <NavigationMenuItem value="solucoes">
             <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul class="grid w-[440px] grid-cols-2 gap-2 p-3">
+              <ul class="nds-grid" data-spacing="sm" data-cols="2" style="width: 440px; padding: 0.75rem">
                 <li><NavigationMenuLink href="/solucoes/startups">Startups</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/solucoes/empresas">Empresas</NavigationMenuLink></li>
                 <li><NavigationMenuLink href="/solucoes/agencias">Agências</NavigationMenuLink></li>

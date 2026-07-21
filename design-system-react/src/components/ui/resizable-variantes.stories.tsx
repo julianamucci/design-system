@@ -129,7 +129,7 @@ export const Nested: Story = {
             </ResizablePanel>
             <ResizableHandle withHandle aria-label={ariaLabel} />
             <ResizablePanel defaultSize={30} minSize={15}>
-              <div className="flex h-full items-center justify-center bg-muted/60 p-4 text-sm">
+              <div className="nds-cluster bg-muted/60 nds-p-4 nds-text-body" data-align="center" data-justify="center" style={{ height: "100%" }}>
                 Console
               </div>
             </ResizablePanel>

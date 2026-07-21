@@ -55,7 +55,7 @@ export const Empty: Story = {
         <TableRow>
           <TableCell
             colSpan={4}
-            className="h-24 text-center text-muted-foreground"
+            className="nds-text-center nds-text-muted-foreground" style={{ height: "6rem" }}
           >
             Nenhum dado encontrado.
           </TableCell>
@@ -136,10 +136,10 @@ export const Carregando: Story = {
       <TableBody>
         {Array.from({ length: 3 }).map((_, i) => (
           <TableRow key={i}>
-            <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-full" /></TableCell>
+            <TableCell><Skeleton className="nds-w-full" style={{ height: "1rem" }} /></TableCell>
+            <TableCell><Skeleton className="nds-w-full" style={{ height: "1rem" }} /></TableCell>
+            <TableCell><Skeleton className="nds-w-full" style={{ height: "1rem" }} /></TableCell>
+            <TableCell><Skeleton className="nds-w-full" style={{ height: "1rem" }} /></TableCell>
           </TableRow>
         ))}
       </TableBody>

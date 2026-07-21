@@ -69,7 +69,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div style="contain: layout; min-height: 220px;" class="flex items-center justify-center">
+      <div style="contain: layout; min-height: 220px;" class="nds-cluster" data-align="center" data-justify="center">
         <HoverCard
           :key="String(args.defaultOpen) + String(args.openDelay) + String(args.closeDelay)"
           :default-open="args.defaultOpen"
@@ -77,11 +77,11 @@ export const Playground: Story = {
           :close-delay="args.closeDelay"
         >
           <HoverCardTrigger as-child>
-            <a href="#" class="font-medium text-primary underline-offset-4 hover:underline">@joana</a>
+            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
           </HoverCardTrigger>
           <HoverCardContent :side="args.side" :align="args.align">
             <div class="nds-cluster" data-spacing="sm">
-              <div class="size-10 rounded-full bg-muted" aria-hidden="true"></div>
+              <div class="nds-size-10 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
               <div class="nds-stack" data-spacing="xs">
                 <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
                 <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>

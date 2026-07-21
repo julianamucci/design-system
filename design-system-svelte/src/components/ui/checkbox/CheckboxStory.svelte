@@ -40,7 +40,7 @@
       class="nds-mt-0-5"
     />
     <div class="nds-stack" data-spacing="xs">
-      <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
+      <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 nds-text-body nds-font-medium" style="line-height: 1">
         {labelText}
       </Label>
       <p id="{id}-description" class="nds-text-body nds-text-muted-foreground">{descriptionText}</p>
@@ -56,7 +56,7 @@
       aria-invalid={ariaInvalid || undefined}
       aria-labelledby="{id}-label"
     />
-    <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none">
+    <Label id="{id}-label" for={id} class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 nds-text-body nds-font-medium" style="line-height: 1">
       {labelText}
     </Label>
   </div>

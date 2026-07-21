@@ -65,12 +65,12 @@ export const ComFormulario: Story = {
               <DrawerTitle>Editar perfil</DrawerTitle>
               <DrawerDescription>Atualize seu nome e email. As mudanças entram em vigor após salvar.</DrawerDescription>
             </DrawerHeader>
-            <form class="grid gap-3 px-4 pb-4">
-              <div class="grid gap-1.5">
+            <form class="nds-grid nds-px-4" data-spacing="sm" style="padding-bottom: 1rem">
+              <div class="nds-grid" data-spacing="xs">
                 <Label for="drawer-name">Nome</Label>
                 <Input id="drawer-name" defaultValue="Juliana Mucci" />
               </div>
-              <div class="grid gap-1.5">
+              <div class="nds-grid" data-spacing="xs">
                 <Label for="drawer-email">Email</Label>
                 <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
               </div>
@@ -152,7 +152,7 @@ export const ComScroll: Story = {
               <DrawerTitle>Termos de serviço</DrawerTitle>
               <DrawerDescription>Leia atentamente os termos antes de aceitar.</DrawerDescription>
             </DrawerHeader>
-            <div tabindex="0" role="region" aria-label="Conteúdo dos termos" class="space-y-3 text-sm text-muted-foreground max-h-72 overflow-y-auto px-4">
+            <div tabindex="0" role="region" aria-label="Conteúdo dos termos" class="nds-text-body nds-text-muted-foreground max-h-72 nds-overflow-y nds-px-4" data-spacing="sm">
               <p v-for="i in 12" :key="i">
                 Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation

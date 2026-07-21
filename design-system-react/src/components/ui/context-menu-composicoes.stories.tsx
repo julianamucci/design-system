@@ -44,7 +44,7 @@ type Story = StoryObj<typeof meta>;
 
 function TriggerArea({ children }: { children: React.ReactNode }) {
   return (
-    <ContextMenuTrigger className="flex items-center justify-center rounded-lg border border-dashed border-border px-10 py-6 text-sm text-muted-foreground select-none">
+    <ContextMenuTrigger className="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground" style={{userSelect: "none", paddingInline: "2.5rem", paddingBlock: "1.5rem" }} data-align="center" data-justify="center" >
       {children}
     </ContextMenuTrigger>
   );

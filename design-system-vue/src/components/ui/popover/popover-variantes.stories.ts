@@ -99,7 +99,7 @@ export const ComTitulo: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
-            <div class="flex justify-end gap-2 pt-1">
+            <div class="nds-cluster" data-justify="end" data-spacing="sm" style="padding-top: 0.25rem">
               <Button variant="outline" size="sm">Cancelar</Button>
               <Button size="sm">Salvar</Button>
             </div>

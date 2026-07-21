@@ -65,7 +65,7 @@ export const FiltersPanel: Story = {
         <SheetTrigger render={<Button variant="outline" />}>
           Abrir filtros
         </SheetTrigger>
-        <SheetContent side="right" className="w-[400px] sm:w-[420px]">
+        <SheetContent side="right" className="sm:w-[420px]" style={{ width: "400px" }}>
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>
@@ -73,7 +73,7 @@ export const FiltersPanel: Story = {
             </SheetDescription>
           </SheetHeader>
           <form
-            className="grid gap-4 px-4"
+            className="nds-grid nds-px-4" data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
               trackConfirm("Aplicar filtros", location);
@@ -136,13 +136,13 @@ export const SecondaryNavigation: Story = {
               Acesse as seções principais do aplicativo.
             </SheetDescription>
           </SheetHeader>
-          <nav className="flex flex-col gap-1 px-4" aria-label="Seções">
+          <nav className="nds-stack nds-px-4" data-spacing="xs" aria-label="Seções">
             {["Dashboard", "Projetos", "Equipe", "Configuracoes"].map(
               (label) => (
                 <Button
                   key={label}
                   variant="ghost"
-                  className="justify-start"
+                  className="" data-justify="start"
                   onClick={() =>
                     track("dialog_confirm", {
                       component: "sheet",
@@ -192,7 +192,7 @@ export const BottomPanel: Story = {
               Escolha uma das ações disponíveis para este item.
             </SheetDescription>
           </SheetHeader>
-          <div className="flex flex-wrap gap-2 px-4">
+          <div className="nds-cluster nds-px-4" data-spacing="sm" style={{ flexWrap: "wrap" }}>
             <Button
               variant="outline"
               onClick={() => trackConfirm("Compartilhar", location)}

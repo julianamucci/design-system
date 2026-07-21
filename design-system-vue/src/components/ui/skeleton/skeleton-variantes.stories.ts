@@ -26,8 +26,8 @@ export const Retangulo: Story = {
   render: () => ({
     components: { Skeleton },
     template: `
-      <div role="status" aria-busy="true" aria-label="Carregando bloco retangular" class="w-[320px]">
-        <Skeleton class="h-24 w-full rounded-md motion-reduce:animate-none" aria-hidden="true" />
+      <div role="status" aria-busy="true" aria-label="Carregando bloco retangular" class="" style="width: 320px">
+        <Skeleton class="nds-w-full nds-rounded-md motion-reduce:animate-none" style="height: 6rem" aria-hidden="true" />
       </div>
     `,
   }),
@@ -46,8 +46,8 @@ export const Circulo: Story = {
   render: () => ({
     components: { Skeleton },
     template: `
-      <div role="status" aria-busy="true" aria-label="Carregando avatar circular" class="w-[80px]">
-        <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
+      <div role="status" aria-busy="true" aria-label="Carregando avatar circular" class="" style="width: 80px">
+        <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
       </div>
     `,
   }),
@@ -66,10 +66,10 @@ export const LinhaDeTexto: Story = {
   render: () => ({
     components: { Skeleton },
     template: `
-      <div role="status" aria-busy="true" aria-label="Carregando linhas de texto" class="w-[320px] space-y-2">
-        <Skeleton class="h-4 w-[250px] motion-reduce:animate-none" aria-hidden="true" />
-        <Skeleton class="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />
-        <Skeleton class="h-4 w-[160px] motion-reduce:animate-none" aria-hidden="true" />
+      <div role="status" aria-busy="true" aria-label="Carregando linhas de texto" class="" data-spacing="sm" style="width: 320px">
+        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 250px" aria-hidden="true" />
+        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 200px" aria-hidden="true" />
+        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 160px" aria-hidden="true" />
       </div>
     `,
   }),

@@ -56,7 +56,7 @@ export const ComLabel: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 280px;">
-        <div class="grid gap-2 w-72">
+        <div class="nds-grid" data-spacing="sm" style="width: 18rem">
           <Label for="comp-estado">Estado</Label>
           <Select>
             <SelectTrigger id="comp-estado" aria-labelledby="comp-estado-label" class="nds-w-full">
@@ -92,7 +92,7 @@ export const Controlado: Story = {
       return { value };
     },
     template: `
-      <div class="grid gap-3 w-72" style="contain: layout; min-height: 320px;">
+      <div class="nds-grid" data-spacing="sm" style="width: 18rem; contain: layout; min-height: 320px;" >
         <div class="nds-stack" data-spacing="sm">
           <Label for="ctrl-estado">Estado</Label>
           <Select :model-value="value" @update:model-value="(v) => value = v">
@@ -134,7 +134,7 @@ export const EmFormulario: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 320px;">
-        <form class="grid gap-3 w-72" @submit.prevent>
+        <form class="nds-grid" data-spacing="sm" style="width: 18rem" @submit.prevent>
           <div class="nds-stack" data-spacing="sm">
             <Label for="form-estado">Estado</Label>
             <Select name="estado">
@@ -148,7 +148,7 @@ export const EmFormulario: Story = {
               </SelectContent>
             </Select>
           </div>
-          <button type="submit" class="h-(--height-sm) rounded-md bg-primary px-3 text-sm text-primary-foreground">
+          <button type="submit" class="nds-rounded-md nds-bg-primary nds-text-body text-primary-foreground" style="height: var(--height-sm); padding-inline: 0.75rem" >
             Enviar
           </button>
         </form>
@@ -173,7 +173,7 @@ export const ComSeparator: Story = {
     template: `
       <div style="contain: layout; min-height: 400px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="w-56">
+          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>

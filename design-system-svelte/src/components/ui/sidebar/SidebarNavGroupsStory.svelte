@@ -33,11 +33,11 @@
   ];
 </script>
 
-<div class="min-h-[400px] w-full flex border rounded-lg overflow-hidden">
+<div class="nds-cluster min-h-[400px] nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
   <SidebarProvider defaultOpen={true}>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader class="px-3 py-2 border-b border-sidebar-border">
+        <SidebarHeader class="nds-py-2 nds-border-b border-sidebar-border" style="padding-inline: 0.75rem">
           <SidebarInput placeholder="Buscar..." />
         </SidebarHeader>
         <SidebarContent>
@@ -86,18 +86,18 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="px-4 py-3 border-t border-sidebar-border">
-          <span class="text-xs text-sidebar-foreground/60">Design System v1.0</span>
+        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
+          <span class="nds-text-caption text-sidebar-foreground/60">Design System v1.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
-    <SidebarInset class="flex flex-col flex-1 min-w-0">
-      <header class="flex h-12 items-center gap-2 border-b px-4">
+    <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
+      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
         <SidebarTrigger />
-        <span class="text-sm font-medium text-muted-foreground">Com grupos de navegação</span>
+        <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com grupos de navegação</span>
       </header>
-      <main id="main-content" tabindex="-1" class="flex-1 p-6">
+      <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
         <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos, badges e campo de busca.</p>
       </main>
     </SidebarInset>

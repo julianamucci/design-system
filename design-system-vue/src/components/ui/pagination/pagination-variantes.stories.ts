@@ -96,12 +96,12 @@ export const Directional: Story = {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="hidden sm:block">Anterior</span>
+              <span class="nds-hidden sm:block">Anterior</span>
             </PaginationPrevious>
           </PaginationItem>
           <PaginationItem>
             <PaginationNext aria-label="Ir para a próxima página">
-              <span class="hidden sm:block">Próxima</span>
+              <span class="nds-hidden sm:block">Próxima</span>
             </PaginationNext>
           </PaginationItem>
         </PaginationContent>

@@ -46,7 +46,7 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <div :class="args.orientation === 'vertical' ? 'flex h-16 items-center gap-4 w-[320px]' : 'w-[320px] space-y-4'">
+      <div :class="args.orientation === 'vertical' ? 'flex w-[320px]' : 'w-[320px]" data-align="center" data-spacing="md" style="height: 4rem">
         <div class="nds-text-body nds-text-muted-foreground">{{ args.orientation === 'vertical' ? 'Item A' : 'Bloco superior' }}</div>
         <Separator :orientation="args.orientation" :decorative="args.decorative" />
         <div class="nds-text-body nds-text-muted-foreground">{{ args.orientation === 'vertical' ? 'Item B' : 'Bloco inferior' }}</div>

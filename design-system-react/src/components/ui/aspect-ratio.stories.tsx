@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <div className="w-[480px] max-w-full">
+    <div className="" style={{maxWidth: "100%", width: "480px" }} >
       <AspectRatio {...args}>
         <ImageWithFallback
           src={LANDSCAPE_SRC}

@@ -55,7 +55,7 @@ export const IconBarToolbar: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle} className="flex items-center gap-1 rounded-md border border-border p-1 bg-card">
+    <div style={wrapperStyle} className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card" data-align="center" data-spacing="xs">
       <Tooltip>
         <TooltipTrigger
           render={(props) => (
@@ -111,7 +111,7 @@ export const ComAtalhoTeclado: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle} className="flex items-center gap-1 rounded-md border border-border p-1 bg-card">
+    <div style={wrapperStyle} className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card" data-align="center" data-spacing="xs">
       <Tooltip defaultOpen>
         <TooltipTrigger
           render={(props) => (
@@ -178,7 +178,7 @@ export const SidesPosicionamento: Story = {
     },
   },
   render: () => (
-    <div className="grid grid-cols-2 gap-12 p-12" style={{ contain: "layout", minHeight: 280, position: "relative" }}>
+    <div className="nds-grid" data-spacing="2xl" data-cols="2" style={{padding: "3rem", contain: "layout", minHeight: 280, position: "relative" }} >
       <Tooltip defaultOpen>
         <TooltipTrigger
           render={(props) => (

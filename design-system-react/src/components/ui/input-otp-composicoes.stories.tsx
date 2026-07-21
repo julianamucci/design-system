@@ -159,7 +159,7 @@ export const ComErrorMessage: Story = {
               ))}
             </InputOTPGroup>
           </InputOTP>
-          <p id="otp-err-msg" role="alert" className="text-xs text-destructive">
+          <p id="otp-err-msg" role="alert" className="nds-text-caption nds-text-destructive">
             Código incorreto. Verifique e tente novamente.
           </p>
         </div>

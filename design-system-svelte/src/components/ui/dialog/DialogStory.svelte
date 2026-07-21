@@ -54,26 +54,26 @@
       </DialogHeader>
 
       {#if variant === 'withForm'}
-        <form class="grid gap-3" onsubmit={(e) => { e.preventDefault(); onAction?.(); }}>
-          <label class="grid gap-1 text-sm">
-            <span class="text-foreground">Nome</span>
+        <form class="nds-grid" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); onAction?.(); }}>
+          <label class="nds-grid nds-text-body" data-spacing="xs">
+            <span class="nds-text-foreground">Nome</span>
             <input
               type="text"
-              class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+              class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
               defaultValue="Maria Silva"
             />
           </label>
-          <label class="grid gap-1 text-sm">
-            <span class="text-foreground">Email</span>
+          <label class="nds-grid nds-text-body" data-spacing="xs">
+            <span class="nds-text-foreground">Email</span>
             <input
               type="email"
-              class="bg-background border border-input rounded-(--radius-input) px-3 h-(--height-default) text-sm"
+              class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
               defaultValue="maria@exemplo.com"
             />
           </label>
         </form>
       {:else if variant === 'withScrollContent'}
-        <div class="max-h-[40vh] overflow-y-auto pr-2 text-sm text-muted-foreground space-y-2" tabindex="0" role="region" aria-label="Conteúdo rolável">
+        <div class="max-h-[40vh] nds-overflow-y nds-text-body nds-text-muted-foreground" data-spacing="sm" style="padding-right: 0.5rem" tabindex="0" role="region" aria-label="Conteúdo rolável">
           {#each Array.from({ length: 14 }) as _, i}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a altura disponível em viewport.</p>
           {/each}

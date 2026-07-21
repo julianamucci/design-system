@@ -35,7 +35,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="min-h-[400px] flex w-full"><story /></div>',
+      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -61,7 +61,7 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
         <SidebarProvider>
           <nav aria-label="Navegação principal">
             <Sidebar :variant="variant" collapsible="offcanvas" side="left">
-              <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Design System</SidebarHeader>
+              <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
               <SidebarContent>
                 <SidebarGroup>
                   <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
@@ -95,7 +95,7 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
                   </SidebarGroupContent>
                 </SidebarGroup>
               </SidebarContent>
-              <SidebarFooter class="p-2">
+              <SidebarFooter class="nds-p-2">
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton tooltip="Perfil">
@@ -109,11 +109,11 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
             </Sidebar>
           </nav>
           <SidebarInset>
-            <header class="flex h-12 items-center gap-2 px-4 border-b border-border">
+            <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
               <SidebarTrigger class="lg:hidden" />
-              <span class="text-xs text-muted-foreground font-mono">variant="{{ variant }}"</span>
+              <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">variant="{{ variant }}"</span>
             </header>
-            <main id="main-content" class="p-4">
+            <main id="main-content" class="nds-p-4">
               <p class="nds-text-body nds-text-muted-foreground">Conteúdo principal adjacente à sidebar.</p>
             </main>
           </SidebarInset>
@@ -206,13 +206,13 @@ export const SideRight: Story = {
     template: `
       <SidebarProvider>
         <SidebarInset>
-          <main id="main-content" class="p-4">
+          <main id="main-content" class="nds-p-4">
             <p class="nds-text-body nds-text-muted-foreground">Conteúdo principal à esquerda.</p>
           </main>
         </SidebarInset>
         <nav aria-label="Navegação principal">
           <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
-            <SidebarHeader class="p-4 font-semibold text-sidebar-foreground">Detalhes</SidebarHeader>
+            <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Detalhes</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupContent>

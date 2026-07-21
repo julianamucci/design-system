@@ -28,7 +28,7 @@ export const WithIcon: Story = {
     setup() { return {}; },
     template: `
       <Badge>
-        <Check class="h-3 w-3" aria-hidden="true" />
+        <Check class="" style="height: 0.75rem; width: 0.75rem" aria-hidden="true" />
         Ativo
       </Badge>
     `,
@@ -46,7 +46,7 @@ export const AsLink: Story = {
       <a
         href="#filtro-design"
         aria-label="Filtrar conteúdo pela categoria Design"
-        class="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+        class="nds-cluster focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 nds-rounded-md"
       >
         <Badge variant="secondary">Design</Badge>
       </a>
@@ -65,7 +65,7 @@ export const AsButton: Story = {
       <button
         type="button"
         aria-label="Remover tag React"
-        class="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+        class="nds-cluster focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 nds-rounded-md"
       >
         <Badge variant="outline">React</Badge>
       </button>
@@ -82,14 +82,14 @@ export const CountBadge: Story = {
     setup() { return {}; },
     template: `
       <div
-        class="relative inline-flex"
+        class="nds-cluster" style="position: relative"
         role="status"
         aria-label="12 notificações não lidas"
       >
-        <Bell class="h-6 w-6 text-foreground" aria-hidden="true" />
+        <Bell class="nds-text-foreground" style="height: 1.5rem; width: 1.5rem" aria-hidden="true" />
         <Badge
           variant="destructive"
-          class="absolute -top-2 -right-3 min-w-[1.25rem] justify-center px-1"
+          class="-top-2 -right-3 nds-px-1" data-justify="center" style="position: absolute; min-width: 1.25rem"
         >
           12
         </Badge>

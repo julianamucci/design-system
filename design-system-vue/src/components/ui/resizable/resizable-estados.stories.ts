@@ -30,10 +30,10 @@ export const Idle: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Painel A</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Painel A</div>
           </ResizablePanel>
           <ResizableHandle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
@@ -55,10 +55,10 @@ export const WithHandle: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Painel A</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Painel A</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
@@ -81,10 +81,10 @@ export const Focus: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Painel A</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Painel A</div>
           </ResizablePanel>
           <ResizableHandle with-handle aria-label="Redimensionar painéis — use setas para ajustar" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
@@ -115,10 +115,10 @@ export const Disabled: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="w-[480px] h-[240px] rounded-md border">
+      <div class="nds-rounded-md nds-border-default" style="width: 480px; height: 240px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">
-            <div class="flex h-full items-center justify-center p-4 text-sm bg-muted">Painel A</div>
+            <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Painel A</div>
           </ResizablePanel>
           <ResizableHandle disabled with-handle aria-label="Handle desativado" />
           <ResizablePanel :default-size="50" :min-size="20" :max-size="80">

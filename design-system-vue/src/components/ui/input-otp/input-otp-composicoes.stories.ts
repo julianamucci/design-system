@@ -149,7 +149,7 @@ export const ComErrorMessage: Story = {
             </InputOTPGroup>
           </template>
         </InputOTP>
-        <p id="otp-error-msg" class="text-xs text-destructive">Código incorreto. Verifique e tente novamente.</p>
+        <p id="otp-error-msg" class="nds-text-caption nds-text-destructive">Código incorreto. Verifique e tente novamente.</p>
       </div>
     `,
   }),
@@ -193,9 +193,9 @@ export const ComResendButton: Story = {
             </InputOTPGroup>
           </template>
         </InputOTP>
-        <div class="flex items-center gap-2 text-xs text-muted-foreground">
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-align="center" data-spacing="sm">
           <span>Não recebeu?</span>
-          <Button variant="link" class="h-auto p-0 text-xs" @click="resends++">
+          <Button variant="link" class="h-auto nds-p-0 nds-text-caption" @click="resends++">
             Reenviar código
           </Button>
           <span v-if="resends > 0" data-testid="resend-count">({{ resends }})</span>

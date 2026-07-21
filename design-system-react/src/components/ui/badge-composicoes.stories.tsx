@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 export const WithIcon: Story = {
   render: () => (
     <Badge variant="secondary">
-      <CheckCircle2 aria-hidden="true" className="mr-1 h-3 w-3" />
+      <CheckCircle2 aria-hidden="true" className="" style={{marginRight: "0.25rem", height: "0.75rem", width: "0.75rem" }}  />
       Ativo
     </Badge>
   ),
@@ -39,14 +39,14 @@ export const WithIcon: Story = {
 export const CountBadge: Story = {
   render: () => (
     <span
-      className="relative inline-flex"
+      className="nds-cluster" style={{ position: "relative" }}
       role="status"
       aria-label="12 notificações não lidas"
     >
-      <Bell aria-hidden="true" className="h-6 w-6 text-foreground" />
+      <Bell aria-hidden="true" className="nds-text-foreground" style={{ height: "1.5rem", width: "1.5rem" }} />
       <Badge
         variant="destructive"
-        className="absolute -right-2 -top-2 min-w-[1.25rem] justify-center px-1"
+        className="-right-2 -top-2 nds-px-1" style={{minWidth: "1.25rem", position: "absolute" }} data-justify="center" 
       >
         12
       </Badge>
@@ -64,7 +64,7 @@ export const AsLink: Story = {
     <a
       href="#design"
       aria-label="Ver todos os itens da categoria Design"
-      className="inline-flex rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="nds-cluster nds-rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
     >
       <Badge variant="outline">Design</Badge>
     </a>
@@ -80,7 +80,7 @@ export const AsButton: Story = {
     <button
       type="button"
       aria-label="Filtrar por React"
-      className="inline-flex rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="nds-cluster nds-rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
     >
       <Badge variant="secondary">React</Badge>
     </button>

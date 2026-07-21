@@ -25,9 +25,9 @@ const items = Array.from({ length: 24 }, (_, i) => i + 1);
 
 function List() {
   return (
-    <div className="p-4 space-y-2">
+    <div className="nds-p-4" data-spacing="sm">
       {items.map((n) => (
-        <div key={n} className="text-sm border-b pb-2 last:border-b-0">
+        <div key={n} className="nds-text-body nds-border-b last:border-b-0" style={{ paddingBottom: "0.5rem" }}>
           Item {n}
         </div>
       ))}
@@ -45,7 +45,7 @@ export const Idle: Story = {
     },
   },
   render: () => (
-    <div className="h-[260px] w-[300px]">
+    <div className="" style={{ height: "260px", width: "300px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
@@ -71,7 +71,7 @@ export const AlwaysVisible: Story = {
     },
   },
   render: () => (
-    <div className="h-[260px] w-[300px]">
+    <div className="" style={{ height: "260px", width: "300px" }}>
       <ScrollArea type="always" className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
@@ -97,7 +97,7 @@ export const Hover: Story = {
     },
   },
   render: () => (
-    <div className="h-[260px] w-[300px]">
+    <div className="" style={{ height: "260px", width: "300px" }}>
       <ScrollArea
         type="hover"
         scrollHideDelay={300}
@@ -125,7 +125,7 @@ export const Focus: Story = {
     },
   },
   render: () => (
-    <div className="h-[260px] w-[300px]">
+    <div className="" style={{ height: "260px", width: "300px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <List />
       </ScrollArea>
