@@ -138,16 +138,16 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
+      <TableHead scope="col" style="text-align: right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell class="text-right">{invoice.amount}</TableCell>
+        <TableCell style="text-align: right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>
@@ -160,30 +160,30 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
+      <TableHead scope="col" style="text-align: right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell class="text-right">{invoice.amount}</TableCell>
+        <TableCell style="text-align: right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>
   <TableFooter>
     <TableRow>
       <TableCell colspan={3}>Total</TableCell>
-      <TableCell class="text-right">R$ 1.000,00</TableCell>
+      <TableCell style="text-align: right">R$ 1.000,00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>`;
 
   const codeSrOnlyCaption = `<Table>
   <!-- Caption visualmente oculto — título já está acima -->
-  <TableCaption class="sr-only">Lista de faturas recentes</TableCaption>
+  <TableCaption class="nds-sr-only">Lista de faturas recentes</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
@@ -207,7 +207,7 @@
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <!-- ... -->
         <TableCell>
           <Button
@@ -226,7 +226,7 @@
   const codeEmptyState = `<TableBody>
   {#if invoices.length === 0}
     <TableRow>
-      <TableCell colspan={4} class="h-24 text-center text-muted-foreground">
+      <TableCell colspan={4} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
         Nenhuma fatura encontrada.
       </TableCell>
     </TableRow>
@@ -244,10 +244,10 @@
   const codeLoading = `<TableBody>
   {#each skeletonRows as row (row)}
     <TableRow>
-      <TableCell><Skeleton class="h-4 w-20" /></TableCell>
-      <TableCell><Skeleton class="h-4 w-16" /></TableCell>
-      <TableCell><Skeleton class="h-4 w-32" /></TableCell>
-      <TableCell><Skeleton class="h-4 w-16 ml-auto" /></TableCell>
+      <TableCell><Skeleton style="height: 1rem; width: 5rem" /></TableCell>
+      <TableCell><Skeleton style="height: 1rem; width: 4rem" /></TableCell>
+      <TableCell><Skeleton style="height: 1rem; width: 8rem" /></TableCell>
+      <TableCell><Skeleton style="height: 1rem; width: 4rem; margin-left: auto" /></TableCell>
     </TableRow>
   {/each}
 </TableBody>`;
@@ -310,23 +310,23 @@ interface TableRowProps {
                 <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
                 <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
                 <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
-                <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+                <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {#each invoiceIds as key, i (key)}
                 <TableRow>
-                  <TableCell class="font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
+                  <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
                   <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
                   <TableCell>{$tStore(`demonstration.labels.${invoices[i].method}`)}</TableCell>
-                  <TableCell class="text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                  <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
                 </TableRow>
               {/each}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TableCell colspan={3}>{$tStore('demonstration.labels.total')}</TableCell>
-                <TableCell class="text-right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
+                <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
               </TableRow>
             </TableFooter>
           </Table>
@@ -446,7 +446,7 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>R$ 250,00</TableCell>
             </TableRow>
           </TableBody>
@@ -479,7 +479,7 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colspan={2} class="h-24 text-center text-muted-foreground">
+              <TableCell colspan={2} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
                 {$tStore('demonstration.labels.emptyState')}
               </TableCell>
             </TableRow>
@@ -526,19 +526,19 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-              <TableCell class="text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
-              <TableCell class="text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -551,25 +551,25 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-              <TableCell class="text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
-              <TableCell class="text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colspan={2}>{$tStore('demonstration.labels.total')}</TableCell>
-              <TableCell class="text-right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -577,21 +577,21 @@ interface TableRowProps {
 
       {#snippet variantSrOnlyCaption()}
         <div>
-          <p class="text-sm font-medium mb-2">{$tStore('demonstration.labels.caption')}</p>
+          <p class="nds-text-body nds-font-semibold nds-mb-2">{$tStore('demonstration.labels.caption')}</p>
           <Table>
-            <TableCaption class="sr-only">{$tStore('demonstration.labels.caption')}</TableCaption>
+            <TableCaption class="nds-sr-only">{$tStore('demonstration.labels.caption')}</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
                 <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-                <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+                <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-                <TableCell class="text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
+                <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -605,16 +605,16 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
-              <TableHead scope="col" class="w-[80px]">{$tStore('demonstration.labels.actions')}</TableHead>
+              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" style="width: 80px">{$tStore('demonstration.labels.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {#each invoiceIds.slice(0, 3) as key, i (key)}
               <TableRow>
-                <TableCell class="font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
+                <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
                 <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
-                <TableCell class="text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -638,12 +638,12 @@ interface TableRowProps {
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
-              <TableHead scope="col" class="text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colspan={4} class="h-24 text-center text-muted-foreground">
+              <TableCell colspan={4} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
                 {$tStore('demonstration.labels.emptyState')}
               </TableCell>
             </TableRow>
@@ -661,8 +661,8 @@ interface TableRowProps {
             name: $tStore('variants.compositions.filterableToolbar.name'),
             description: $tStore('variants.compositions.filterableToolbar.description'),
             useWhen: $tStore('variants.compositions.filterableToolbar.use'),
-            code: `<div class="flex flex-col gap-3">
-  <div class="flex items-center gap-2">
+            code: `<div class="nds-stack" data-spacing="sm">
+  <div class="nds-cluster" data-align="center" data-spacing="sm">
     <Input placeholder="Filtrar faturas..." />
     <Button variant="outline">Status</Button>
   </div>
@@ -671,7 +671,7 @@ interface TableRowProps {
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
         <TableHead scope="col">Status</TableHead>
-        <TableHead scope="col" class="text-right">Valor</TableHead>
+        <TableHead scope="col" style="text-align: right">Valor</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -679,7 +679,7 @@ interface TableRowProps {
         <TableRow>
           <TableCell>{invoice.id}</TableCell>
           <TableCell>{invoice.status}</TableCell>
-          <TableCell class="text-right">{invoice.amount}</TableCell>
+          <TableCell style="text-align: right">{invoice.amount}</TableCell>
         </TableRow>
       {/each}
     </TableBody>
@@ -692,7 +692,7 @@ interface TableRowProps {
             description: $tStore('variants.compositions.sortableHeaders.description'),
             useWhen: $tStore('variants.compositions.sortableHeaders.use'),
             code: `<TableHead scope="col" aria-sort="ascending">
-  <Button variant="ghost" size="sm" class="-ml-2">
+  <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
     Fatura
     <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
   </Button>
@@ -720,7 +720,7 @@ interface TableRowProps {
             name: $tStore('variants.compositions.withPagination.name'),
             description: $tStore('variants.compositions.withPagination.description'),
             useWhen: $tStore('variants.compositions.withPagination.use'),
-            code: `<div class="flex flex-col gap-3">
+            code: `<div class="nds-stack" data-spacing="sm">
   <Table><!-- linhas --></Table>
   <Pagination>
     <PaginationContent>
@@ -737,33 +737,33 @@ interface TableRowProps {
       />
 
       {#snippet compFilterableToolbar()}
-        <div class="w-full flex flex-col gap-3">
-          <div class="flex items-center gap-2">
-            <div class="relative w-full max-w-sm">
-              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <Input placeholder="Filtrar faturas..." class="pl-8" />
+        <div class="nds-w-full nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-align="center" data-spacing="sm">
+            <div class="nds-w-full nds-max-w-sm" style="position: relative">
+              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+              <Input placeholder="Filtrar faturas..." style="padding-left: 2rem" />
             </div>
             <Button variant="outline">Status</Button>
           </div>
           <Table>
-            <TableCaption class="sr-only">Lista de faturas filtráveis</TableCaption>
+            <TableCaption class="nds-sr-only">Lista de faturas filtráveis</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead scope="col">Fatura</TableHead>
                 <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" class="text-right">Valor</TableHead>
+                <TableHead scope="col" style="text-align: right">Valor</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell class="text-right">R$ 250,00</TableCell>
+                <TableCell style="text-align: right">R$ 250,00</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell class="nds-font-medium">#INV-002</TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell class="text-right">R$ 150,00</TableCell>
+                <TableCell style="text-align: right">R$ 150,00</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -772,23 +772,23 @@ interface TableRowProps {
 
       {#snippet compSortableHeaders()}
         <Table>
-          <TableCaption class="sr-only">Faturas ordenáveis</TableCaption>
+          <TableCaption class="nds-sr-only">Faturas ordenáveis</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead scope="col" aria-sort="ascending">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Fatura
                   <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
               </TableHead>
               <TableHead scope="col" aria-sort="none">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Status
                   <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
               </TableHead>
-              <TableHead scope="col" aria-sort="none" class="text-right">
-                <Button variant="ghost" size="sm" class="-ml-2 h-8">
+              <TableHead scope="col" aria-sort="none" style="text-align: right">
+                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Valor
                   <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
@@ -797,14 +797,14 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell style="text-align: right">R$ 250,00</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell style="text-align: right">R$ 150,00</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -812,15 +812,15 @@ interface TableRowProps {
 
       {#snippet compSelectableRows()}
         <Table>
-          <TableCaption class="sr-only">Faturas com seleção</TableCaption>
+          <TableCaption class="nds-sr-only">Faturas com seleção</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col" class="w-10">
+              <TableHead scope="col" style="width: 2.5rem">
                 <Checkbox aria-label="Selecionar todas as linhas" />
               </TableHead>
               <TableHead scope="col">Fatura</TableHead>
               <TableHead scope="col">Status</TableHead>
-              <TableHead scope="col" class="text-right">Valor</TableHead>
+              <TableHead scope="col" style="text-align: right">Valor</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -828,43 +828,43 @@ interface TableRowProps {
               <TableCell>
                 <Checkbox checked aria-label="Selecionar fatura #INV-001" />
               </TableCell>
-              <TableCell class="font-medium">#INV-001</TableCell>
+              <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell class="text-right">R$ 250,00</TableCell>
+              <TableCell style="text-align: right">R$ 250,00</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Checkbox aria-label="Selecionar fatura #INV-002" />
               </TableCell>
-              <TableCell class="font-medium">#INV-002</TableCell>
+              <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell class="text-right">R$ 150,00</TableCell>
+              <TableCell style="text-align: right">R$ 150,00</TableCell>
             </TableRow>
           </TableBody>
         </Table>
       {/snippet}
 
       {#snippet compWithPagination()}
-        <div class="w-full flex flex-col gap-3">
+        <div class="nds-w-full nds-stack" data-spacing="sm">
           <Table>
-            <TableCaption class="sr-only">Faturas paginadas</TableCaption>
+            <TableCaption class="nds-sr-only">Faturas paginadas</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead scope="col">Fatura</TableHead>
                 <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" class="text-right">Valor</TableHead>
+                <TableHead scope="col" style="text-align: right">Valor</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell class="font-medium">#INV-001</TableCell>
+                <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell class="text-right">R$ 250,00</TableCell>
+                <TableCell style="text-align: right">R$ 250,00</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell class="font-medium">#INV-002</TableCell>
+                <TableCell class="nds-font-medium">#INV-002</TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell class="text-right">R$ 150,00</TableCell>
+                <TableCell style="text-align: right">R$ 150,00</TableCell>
               </TableRow>
             </TableBody>
           </Table>

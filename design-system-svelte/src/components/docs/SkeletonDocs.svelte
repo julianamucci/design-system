@@ -90,13 +90,13 @@
   const codeImportUsage = `import { Skeleton } from "@/components/ui/skeleton";
 
 <div aria-busy={isLoading} aria-label="Carregando perfil">
-  <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-  <Skeleton class="h-4 w-[250px] motion-reduce:animate-none" aria-hidden="true" />
+  <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+  <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 250px" aria-hidden="true" />
 </div>`;
 
-  const codeRectangle = `<Skeleton class="h-20 w-64 motion-reduce:animate-none" aria-hidden="true" />`;
-  const codeCircle = `<Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />`;
-  const codeLine = `<Skeleton class="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />`;
+  const codeRectangle = `<Skeleton class="motion-reduce:animate-none" style="height: 5rem; width: 16rem" aria-hidden="true" />`;
+  const codeCircle = `<Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />`;
+  const codeLine = `<Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 200px" aria-hidden="true" />`;
 
   const interfaceCode = `interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   class?: string;
@@ -117,53 +117,55 @@
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
         <!-- Card de perfil -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
           <div
             aria-busy="true"
             aria-label={$tStore('demonstration.labels.card')}
-            class="flex items-center gap-4 rounded-md border p-4"
+            class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+            data-spacing="md"
+            data-align="center"
           >
-            <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-            <div class="space-y-2 flex-1">
-              <Skeleton class="h-4 w-[180px] motion-reduce:animate-none" aria-hidden="true" />
-              <Skeleton class="h-4 w-[140px] motion-reduce:animate-none" aria-hidden="true" />
+            <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+            <div class="nds-stack nds-flex-1" data-spacing="sm">
+              <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 180px" aria-hidden="true" />
+              <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 140px" aria-hidden="true" />
             </div>
           </div>
         </div>
 
         <!-- Lista -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
-          <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="space-y-2">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
+          <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack" data-spacing="sm">
             {#each Array.from({ length: 3 }) as _, i (i)}
-              <li class="flex items-center gap-3 rounded-md border p-2">
-                <Skeleton class="h-8 w-8 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-                <Skeleton class="h-3 w-[140px] motion-reduce:animate-none" aria-hidden="true" />
+              <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
+                <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 2rem; width: 2rem" aria-hidden="true" />
+                <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 140px" aria-hidden="true" />
               </li>
             {/each}
           </ul>
         </div>
 
         <!-- Imagem AspectRatio -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
           <div aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
-            <div class="relative w-full" style="aspect-ratio: 16 / 9;">
-              <Skeleton class="absolute inset-0 h-full w-full motion-reduce:animate-none" aria-hidden="true" />
+            <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;">
+              <Skeleton class="nds-w-full motion-reduce:animate-none" style="position: absolute; inset: 0; height: 100%" aria-hidden="true" />
             </div>
           </div>
         </div>
 
         <!-- Parágrafo -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
-          <div aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="space-y-2 rounded-md border p-4">
-            <Skeleton class="h-3 w-full motion-reduce:animate-none" aria-hidden="true" />
-            <Skeleton class="h-3 w-[90%] motion-reduce:animate-none" aria-hidden="true" />
-            <Skeleton class="h-3 w-[75%] motion-reduce:animate-none" aria-hidden="true" />
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
+          <div aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+            <Skeleton class="nds-w-full motion-reduce:animate-none" style="height: 0.75rem" aria-hidden="true" />
+            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
+            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
           </div>
         </div>
       </div>
@@ -253,27 +255,27 @@
   />
 
   {#snippet doPair1()}
-    <div aria-busy="true" aria-label="Carregando card" class="w-full max-w-xs rounded-md border p-3 space-y-2">
-      <Skeleton class="h-20 w-full motion-reduce:animate-none" aria-hidden="true" />
-      <Skeleton class="h-4 w-[180px] motion-reduce:animate-none" aria-hidden="true" />
-      <Skeleton class="h-4 w-[140px] motion-reduce:animate-none" aria-hidden="true" />
+    <div aria-busy="true" aria-label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+      <Skeleton class="nds-w-full motion-reduce:animate-none" style="height: 5rem" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 180px" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 140px" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div aria-busy="true" aria-label="Carregando" class="w-full max-w-xs rounded-md border p-3">
-      <Skeleton class="h-6 w-[60px] motion-reduce:animate-none" aria-hidden="true" />
+    <div aria-busy="true" aria-label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
+      <Skeleton class="motion-reduce:animate-none" style="height: 1.5rem; width: 60px" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div aria-busy="true" aria-label="Carregando avatar" class="flex items-center gap-3">
-      <Skeleton class="h-10 w-10 rounded-full motion-reduce:animate-none" aria-hidden="true" />
-      <Skeleton class="h-3 w-[120px] motion-reduce:animate-none" aria-hidden="true" />
+    <div aria-busy="true" aria-label="Carregando avatar" class="nds-cluster" data-spacing="sm" data-align="center">
+      <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 2.5rem; width: 2.5rem" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 120px" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="flex items-center gap-3">
-      <Skeleton class="h-10 w-10 rounded-full" />
-      <Skeleton class="h-3 w-[120px]" />
+    <div class="nds-cluster" data-spacing="sm" data-align="center">
+      <Skeleton class="nds-rounded-full" style="height: 2.5rem; width: 2.5rem" />
+      <Skeleton style="height: 0.75rem; width: 120px" />
     </div>
   {/snippet}
 
@@ -296,17 +298,17 @@
 
   {#snippet variantRectangle()}
     <div aria-busy="true" aria-label="Carregando bloco">
-      <Skeleton class="h-20 w-64 motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 5rem; width: 16rem" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet variantCircle()}
     <div aria-busy="true" aria-label="Carregando avatar">
-      <Skeleton class="h-12 w-12 rounded-full motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet variantLine()}
     <div aria-busy="true" aria-label="Carregando texto">
-      <Skeleton class="h-4 w-[200px] motion-reduce:animate-none" aria-hidden="true" />
+      <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 200px" aria-hidden="true" />
     </div>
   {/snippet}
 

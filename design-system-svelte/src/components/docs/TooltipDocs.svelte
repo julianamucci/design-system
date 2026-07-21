@@ -124,7 +124,7 @@
   <TooltipTrigger>
     {#snippet child({ props })}
       <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
-        <Save aria-hidden="true" class="size-4" />
+        <Save aria-hidden="true" class="nds-icon" />
       </Button>
     {/snippet}
   </TooltipTrigger>
@@ -135,7 +135,7 @@
   <TooltipTrigger>
     {#snippet child({ props })}
       <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-        <Save aria-hidden="true" class="size-4" />
+        <Save aria-hidden="true" class="nds-icon" />
       </Button>
     {/snippet}
   </TooltipTrigger>
@@ -146,7 +146,7 @@
   <TooltipTrigger>
     {#snippet child({ props })}
       <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-        <Save aria-hidden="true" class="size-4" />
+        <Save aria-hidden="true" class="nds-icon" />
       </Button>
     {/snippet}
   </TooltipTrigger>
@@ -161,7 +161,7 @@
   <TooltipTrigger>
     {#snippet child({ props })}
       <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
-        <Share2 aria-hidden="true" class="size-4" />
+        <Share2 aria-hidden="true" class="nds-icon" />
       </Button>
     {/snippet}
   </TooltipTrigger>
@@ -231,12 +231,12 @@ interface TooltipTriggerProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
       <TooltipProvider delayDuration={200}>
-        <div class="flex flex-wrap items-center justify-center gap-6 w-full py-6">
+        <div class="nds-cluster nds-w-full" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; min-height: 120px; position: relative;">
           <Tooltip>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-                  <Save aria-hidden="true" class="size-4" />
+                  <Save aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
             </TooltipTrigger>
@@ -247,7 +247,7 @@ interface TooltipTriggerProps {
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
-                  <Trash2 aria-hidden="true" class="size-4" />
+                  <Trash2 aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
             </TooltipTrigger>
@@ -258,7 +258,7 @@ interface TooltipTriggerProps {
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
-                  <Share2 aria-hidden="true" class="size-4" />
+                  <Share2 aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
             </TooltipTrigger>
@@ -372,7 +372,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -386,7 +386,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -400,7 +400,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -414,7 +414,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -448,7 +448,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -462,14 +462,14 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
         <TooltipContent>
           <span>Salvar</span>
-          <kbd data-slot="kbd" class="bg-background/15 text-background ml-1 inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">Ctrl</kbd>
-          <kbd data-slot="kbd" class="bg-background/15 text-background inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">S</kbd>
+          <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
+          <kbd data-slot="kbd" class="nds-kbd">S</kbd>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -480,7 +480,7 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="icon" aria-label="Compartilhar link" {...props}>
-              <Share2 aria-hidden="true" class="size-4" />
+              <Share2 aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
@@ -519,9 +519,9 @@ interface TooltipTriggerProps {
         name: $tStore('variants.compositions.formFieldHelp.name'),
         description: $tStore('variants.compositions.formFieldHelp.description'),
         useWhen: $tStore('variants.compositions.formFieldHelp.use'),
-        code: `<div class="flex flex-col gap-2">
-  <div class="flex items-center gap-2">
-    <label for="api-token" class="text-sm font-medium">Token de API</label>
+        code: `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="xs">
+    <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
@@ -530,12 +530,12 @@ interface TooltipTriggerProps {
           </Button>
         {/snippet}
       </TooltipTrigger>
-      <TooltipContent side="right" class="max-w-xs">
+      <TooltipContent side="right" class="nds-max-w-xs">
         Cole o token gerado em Configurações &gt; Integrações.
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" class="input w-64" placeholder="sk-..." />
+  <input id="api-token" type="text" class="nds-input" style="width: 16rem" placeholder="sk-..." />
 </div>`,
         preview: compFormHelp,
       },
@@ -543,9 +543,9 @@ interface TooltipTriggerProps {
         name: $tStore('variants.compositions.metricDescription.name'),
         description: $tStore('variants.compositions.metricDescription.description'),
         useWhen: $tStore('variants.compositions.metricDescription.use'),
-        code: `<div class="flex flex-col gap-1">
-  <div class="flex items-center gap-2">
-    <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+        code: `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="xs">
+    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger>
         {#snippet child({ props })}
@@ -554,12 +554,12 @@ interface TooltipTriggerProps {
           </Button>
         {/snippet}
       </TooltipTrigger>
-      <TooltipContent side="top" class="max-w-xs">
+      <TooltipContent side="top" class="nds-max-w-xs">
         Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="text-2xl font-semibold">1.8s</p>
+  <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
 </div>`,
         preview: compMetric,
       },
@@ -567,7 +567,7 @@ interface TooltipTriggerProps {
         name: $tStore('variants.compositions.positioningSides.name'),
         description: $tStore('variants.compositions.positioningSides.description'),
         useWhen: $tStore('variants.compositions.positioningSides.use'),
-        code: `<div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+        code: `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
   {#each ['top','right','bottom','left'] as s}
     <Tooltip>
       <TooltipTrigger>
@@ -590,14 +590,14 @@ interface TooltipTriggerProps {
         <TooltipTrigger>
           {#snippet child({ props })}
             <Button variant="ghost" size="icon" aria-label="Salvar" {...props}>
-              <Save aria-hidden="true" class="size-4" />
+              <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}
         </TooltipTrigger>
         <TooltipContent>
           <span>Salvar</span>
-          <kbd data-slot="kbd" class="bg-background/15 text-background ml-1 inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">Ctrl</kbd>
-          <kbd data-slot="kbd" class="bg-background/15 text-background inline-flex h-4 items-center rounded px-1 text-[10px] font-medium">S</kbd>
+          <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
+          <kbd data-slot="kbd" class="nds-kbd">S</kbd>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -605,18 +605,18 @@ interface TooltipTriggerProps {
 
   {#snippet compFormHelp()}
     <TooltipProvider delayDuration={0}>
-      <div class="flex flex-col gap-2 items-start">
-        <div class="flex items-center gap-2">
-          <label for="api-token-svelte-comp" class="text-sm font-medium">Token de API</label>
+      <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
+        <div class="nds-cluster" data-spacing="xs">
+          <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">Token de API</label>
           <Tooltip>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API" {...props}>
-                  <HelpCircle aria-hidden="true" class="size-4" />
+                  <HelpCircle aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="right" class="max-w-xs">
+            <TooltipContent side="right" class="nds-max-w-xs">
               Cole o token gerado em Configurações &gt; Integrações.
             </TooltipContent>
           </Tooltip>
@@ -624,7 +624,7 @@ interface TooltipTriggerProps {
         <input
           id="api-token-svelte-comp"
           type="text"
-          class="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+          class="nds-input" style="width: 16rem"
           placeholder="sk-..."
         />
       </div>
@@ -633,30 +633,30 @@ interface TooltipTriggerProps {
 
   {#snippet compMetric()}
     <TooltipProvider delayDuration={0}>
-      <div class="flex flex-col gap-1 items-start">
-        <div class="flex items-center gap-2">
-          <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+      <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
+        <div class="nds-cluster" data-spacing="xs">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
           <Tooltip>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="ghost" size="icon" aria-label="O que é LCP" {...props}>
-                  <Info aria-hidden="true" class="size-4" />
+                  <Info aria-hidden="true" class="nds-icon" />
                 </Button>
               {/snippet}
             </TooltipTrigger>
-            <TooltipContent side="top" class="max-w-xs">
+            <TooltipContent side="top" class="nds-max-w-xs">
               Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
             </TooltipContent>
           </Tooltip>
         </div>
-        <p class="text-2xl font-semibold">1.8s</p>
+        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
       </div>
     </TooltipProvider>
   {/snippet}
 
   {#snippet compSides()}
     <TooltipProvider delayDuration={0}>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full" style="contain: layout; min-height: 160px;">
+      <div class="nds-grid nds-w-full" style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;">
         <Tooltip>
           <TooltipTrigger>
             {#snippet child({ props })}

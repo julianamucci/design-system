@@ -145,45 +145,45 @@
 
 </script>
 
-<div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-  <div class="p-8 max-w-6xl mx-auto space-y-8">
+<div class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
+  <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
-    <header class="space-y-4 pb-8">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <Badge variant="secondary" class="rounded-md bg-primary/5 text-primary border-primary/10 hover:bg-primary/5 font-medium px-2 py-0">
+    <header class="nds-stack nds-pb-8" style="padding-bottom: 2rem">
+      <div class="nds-cluster" data-justify="between">
+        <div class="nds-cluster" data-spacing="sm" data-align="center">
+          <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
             {$tStore('category')}
           </Badge>
-          <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
+          <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
             {$tStore('type')}
           </Badge>
         </div>
         <LanguageSwitcher />
       </div>
 
-      <h1 class="text-4xl font-bold tracking-tight text-foreground">
+      <h1 class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
         {$tStore('title')}
       </h1>
 
-      <p class="text-muted-foreground max-w-3xl leading-relaxed">
+      <p class="nds-text-muted-foreground nds-leading-relaxed" style="max-width: 48rem">
         {$tStore('description')}
       </p>
     </header>
 
     <!-- ── Paleta semântica ──────────────────────────────────────────────── -->
-    <section class="space-y-6 border-t border-border/50 pt-8">
-      <div class="space-y-1">
-        <h2 class="text-xl font-semibold text-foreground">{$tStore('palette.title')}</h2>
-        <p class="text-sm text-muted-foreground">{$tStore('palette.subtitle')}</p>
+    <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <div class="nds-stack" data-spacing="xs">
+        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('palette.title')}</h2>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('palette.subtitle')}</p>
       </div>
 
       {#each PALETTE_GROUPS as group}
-        <div class="space-y-3">
-          <h3 class="text-sm font-medium text-foreground">{$tStore(`palette.groups.${group.key}`)}</h3>
-          <ul class="grid gap-3 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))">
+        <div class="nds-swatch-group">
+          <h3 class="nds-swatch-group-title">{$tStore(`palette.groups.${group.key}`)}</h3>
+          <ul class="nds-swatch-grid">
             {#each group.tokens as token}
-              <li class="list-none">
+              <li class="nds-swatch-grid-item">
                 <Swatch
                   {token}
                   orientation="horizontal"
@@ -199,17 +199,17 @@
     </section>
 
     <!-- ── Temas de marca ──────────────────────────────────────────────── -->
-    <section class="space-y-4 border-t border-border/50 pt-8">
-      <div class="space-y-1">
-        <h2 class="text-xl font-semibold text-foreground">{$tStore('brand.title')}</h2>
-        <p class="text-sm text-muted-foreground">{$tStore('brand.subtitle')}</p>
+    <section class="nds-stack nds-docs-section-divider" data-spacing="md">
+      <div class="nds-stack" data-spacing="xs">
+        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('brand.title')}</h2>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('brand.subtitle')}</p>
       </div>
-      <div class="grid gap-4 md:grid-cols-3">
+      <div class="nds-theme-card-grid">
         {#each BRAND_THEMES as theme}
-          <div class="rounded-lg border border-border/50 overflow-hidden">
-            <div class={`${theme.className}${paginaDark ? ' dark' : ''} bg-background text-foreground p-4 space-y-3`}>
-              <span class="block text-sm font-medium text-foreground">{$tStore(`brand.themes.${theme.key}`)}</span>
-              <div class="flex flex-wrap gap-3">
+          <div class="nds-theme-card">
+            <div class={`nds-theme-card-scope ${theme.className}${paginaDark ? ' dark' : ''}`}>
+              <span class="nds-theme-card-label">{$tStore(`brand.themes.${theme.key}`)}</span>
+              <div class="nds-miniswatch-row">
                 {#each MINI_TOKENS as token}
                   <Swatch {token} orientation="vertical" />
                 {/each}
@@ -221,17 +221,17 @@
     </section>
 
     <!-- ── Light e Dark ──────────────────────────────────────────────────── -->
-    <section class="space-y-4 border-t border-border/50 pt-8">
-      <div class="space-y-1">
-        <h2 class="text-xl font-semibold text-foreground">{$tStore('modes.title')}</h2>
-        <p class="text-sm text-muted-foreground">{$tStore('modes.subtitle')}</p>
+    <section class="nds-stack nds-docs-section-divider" data-spacing="md">
+      <div class="nds-stack" data-spacing="xs">
+        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('modes.title')}</h2>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('modes.subtitle')}</p>
       </div>
-      <div class="grid gap-4 md:grid-cols-2">
+      <div class="nds-theme-card-grid">
         {#each MODES as mode}
-          <div class="rounded-lg border border-border/50 overflow-hidden">
-            <div class={`${temaAtivo}${mode.className ? ` ${mode.className}` : ''} bg-background text-foreground p-4 space-y-3`}>
-              <span class="block text-sm font-medium text-foreground">{$tStore(`modes.${mode.key}`)}</span>
-              <div class="flex flex-wrap gap-3">
+          <div class="nds-theme-card">
+            <div class={`nds-theme-card-scope ${temaAtivo}${mode.className ? ` ${mode.className}` : ''}`}>
+              <span class="nds-theme-card-label">{$tStore(`modes.${mode.key}`)}</span>
+              <div class="nds-miniswatch-row">
                 {#each MINI_TOKENS as token}
                   <Swatch {token} orientation="vertical" />
                 {/each}
@@ -243,24 +243,24 @@
     </section>
 
     <!-- ── Densidade e Fontes ──────────────────────────────────────────── -->
-    <section class="space-y-6 border-t border-border/50 pt-8">
-      <div class="space-y-1">
-        <h2 class="text-xl font-semibold text-foreground">{$tStore('axes.title')}</h2>
-        <p class="text-sm text-muted-foreground">{$tStore('axes.subtitle')}</p>
+    <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <div class="nds-stack" data-spacing="xs">
+        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('axes.title')}</h2>
+        <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.subtitle')}</p>
       </div>
 
       <!-- Densidade -->
-      <div class="space-y-3">
-        <div class="space-y-1">
-          <h3 class="text-sm font-medium text-foreground">{$tStore('axes.density.title')}</h3>
-          <p class="text-sm text-muted-foreground">{$tStore('axes.density.subtitle')}</p>
+      <div class="nds-stack" data-spacing="md">
+        <div class="nds-stack" data-spacing="xs">
+          <h3 class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('axes.density.title')}</h3>
+          <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.density.subtitle')}</p>
         </div>
-        <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))">
+        <div class="nds-axis-grid">
           {#each DENSITY_ITEMS as item}
-            <div class="space-y-2 rounded-lg border border-border/50 p-4">
-              <span class="block text-xs font-medium text-muted-foreground">{$tStore(`axes.density.items.${item.key}`)}</span>
-              <div class={item.className}>
-                <Table>
+            <div class="nds-axis-sample">
+              <span class="nds-axis-sample-label">{$tStore(`axes.density.items.${item.key}`)}</span>
+              <div class={`nds-axis-scope ${item.className}`}>
+                <Table class="nds-axis-density-table">
                   <TableHeader>
                     <TableRow>
                       {#each densityData.tableCols as col}
@@ -285,21 +285,17 @@
       </div>
 
       <!-- Fontes -->
-      <div class="space-y-3">
-        <div class="space-y-1">
-          <h3 class="text-sm font-medium text-foreground">{$tStore('axes.fonts.title')}</h3>
-          <p class="text-sm text-muted-foreground">{$tStore('axes.fonts.subtitle')}</p>
+      <div class="nds-stack" data-spacing="md">
+        <div class="nds-stack" data-spacing="xs">
+          <h3 class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('axes.fonts.title')}</h3>
+          <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.fonts.subtitle')}</p>
         </div>
-        <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))">
+        <div class="nds-axis-grid" data-cols="4">
           {#each FONT_ITEMS as item}
-            <div class="space-y-2 rounded-lg border border-border/50 p-4">
-              <span class="block text-xs font-medium text-muted-foreground">{$tStore(`axes.fonts.items.${item.key}`)}</span>
+            <div class="nds-axis-sample">
+              <span class="nds-axis-sample-label">{$tStore(`axes.fonts.items.${item.key}`)}</span>
               <div class={item.className}>
-                <!-- font-family inline: o span precisa USAR var(--font-family-active)
-                     para o escopo .fonte-* deste card valer (senão herda do <body>). -->
-                <span class="text-2xl text-foreground" style="font-family: var(--font-family-active);">
-                  Aa Bb Cc 123
-                </span>
+                <span class="nds-font-sample">Aa Bb Cc 123</span>
               </div>
             </div>
           {/each}

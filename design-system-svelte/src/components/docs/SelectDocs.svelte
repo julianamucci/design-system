@@ -235,7 +235,7 @@
   <SelectContent>
     <SelectItem value="sp" label="São Paulo">
       {#snippet children()}
-        <MapPinIcon class="size-4 text-muted-foreground" />
+        <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
         <span>São Paulo</span>
       {/snippet}
     </SelectItem>
@@ -281,13 +281,13 @@ interface SelectItemProps {
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="select">
     {#snippet children()}
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
         <!-- Demo 1: default -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-sm font-semibold">{demoLabels.stateLabel}</p>
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</p>
           <Select type="single" bind:value={demoStateValue}>
             <SelectTrigger
-              class="w-full"
+              class="nds-w-full"
               aria-label={demoLabels.stateLabel}
               data-track="demo"
               data-track-id="select:demo:state"
@@ -296,7 +296,7 @@ interface SelectItemProps {
               {#if demoStateValue}
                 <span>{findLabel(stateOptions, demoStateValue)}</span>
               {:else}
-                <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
               {/if}
             </SelectTrigger>
             <SelectContent>
@@ -308,11 +308,11 @@ interface SelectItemProps {
         </div>
 
         <!-- Demo 2: groups -->
-        <div class="space-y-2" style="contain: layout">
-          <p class="text-sm font-semibold">{demoLabels.regionLabel}</p>
+        <div class="nds-stack" data-spacing="sm" style="contain: layout">
+          <p class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</p>
           <Select type="single" bind:value={demoRegionValue}>
             <SelectTrigger
-              class="w-full"
+              class="nds-w-full"
               aria-label={demoLabels.regionLabel}
               data-track="demo"
               data-track-id="select:demo:region"
@@ -321,7 +321,7 @@ interface SelectItemProps {
               {#if demoRegionValue}
                 <span>{findLabelInGroups(regionGroups, demoRegionValue)}</span>
               {:else}
-                <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
               {/if}
             </SelectTrigger>
             <SelectContent>
@@ -338,12 +338,12 @@ interface SelectItemProps {
         </div>
 
         <!-- Demo 3: size sm -->
-        <div class="space-y-2 sm:col-span-2" style="contain: layout">
-          <p class="text-sm font-semibold">{demoLabels.stateLabel} (sm)</p>
+        <div class="nds-stack" data-spacing="sm" style="contain: layout; grid-column: 1 / -1;">
+          <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel} (sm)</p>
           <Select type="single" bind:value={demoSmValue}>
             <SelectTrigger
               size="sm"
-              class="w-56"
+              style="width: 14rem;"
               aria-label={demoLabels.stateLabel}
               data-track="demo"
               data-track-id="select:demo:state-sm"
@@ -352,7 +352,7 @@ interface SelectItemProps {
               {#if demoSmValue}
                 <span>{findLabel(stateOptions, demoSmValue)}</span>
               {:else}
-                <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
               {/if}
             </SelectTrigger>
             <SelectContent>
@@ -483,11 +483,11 @@ interface SelectItemProps {
   {#snippet dd1Do()}
     <div style="contain: layout">
       <Select type="single" bind:value={dd1DoValue}>
-        <SelectTrigger class="w-56" aria-label="Estado">
+        <SelectTrigger style="width: 14rem;" aria-label="Estado">
           {#if dd1DoValue}
             <span>{findLabel(stateOptions, dd1DoValue)}</span>
           {:else}
-            <span class="text-muted-foreground">Selecione...</span>
+            <span class="nds-text-muted-foreground">Selecione...</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -502,11 +502,11 @@ interface SelectItemProps {
   {#snippet dd1Dont()}
     <div style="contain: layout">
       <Select type="single" bind:value={dd1DontValue}>
-        <SelectTrigger class="w-56" aria-label="Estado">
+        <SelectTrigger style="width: 14rem;" aria-label="Estado">
           {#if dd1DontValue}
             <span>{dd1DontValue.toUpperCase()}</span>
           {:else}
-            <span class="text-muted-foreground">Selecione...</span>
+            <span class="nds-text-muted-foreground">Selecione...</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -521,11 +521,11 @@ interface SelectItemProps {
   {#snippet dd2Do()}
     <div style="contain: layout">
       <Select type="single" bind:value={dd2DoValue}>
-        <SelectTrigger class="w-56" aria-label="Região">
+        <SelectTrigger style="width: 14rem;" aria-label="Região">
           {#if dd2DoValue}
             <span>{findLabelInGroups(regionGroups, dd2DoValue)}</span>
           {:else}
-            <span class="text-muted-foreground">Selecione...</span>
+            <span class="nds-text-muted-foreground">Selecione...</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -547,11 +547,11 @@ interface SelectItemProps {
   {#snippet dd2Dont()}
     <div style="contain: layout">
       <Select type="single" bind:value={dd2DontValue}>
-        <SelectTrigger class="w-56" aria-label="Região">
+        <SelectTrigger style="width: 14rem;" aria-label="Região">
           {#if dd2DontValue}
             <span>{dd2DontValue}</span>
           {:else}
-            <span class="text-muted-foreground">Selecione...</span>
+            <span class="nds-text-muted-foreground">Selecione...</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -605,11 +605,11 @@ interface SelectItemProps {
   {#snippet variantDefault()}
     <div style="contain: layout">
       <Select type="single" bind:value={varDefaultValue}>
-        <SelectTrigger class="w-56" aria-label={demoLabels.stateLabel}>
+        <SelectTrigger style="width: 14rem;" aria-label={demoLabels.stateLabel}>
           {#if varDefaultValue}
             <span>{findLabel(stateOptions, varDefaultValue)}</span>
           {:else}
-            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -624,11 +624,11 @@ interface SelectItemProps {
   {#snippet variantWithGroups()}
     <div style="contain: layout">
       <Select type="single" bind:value={varGroupsValue}>
-        <SelectTrigger class="w-56" aria-label={demoLabels.regionLabel}>
+        <SelectTrigger style="width: 14rem;" aria-label={demoLabels.regionLabel}>
           {#if varGroupsValue}
             <span>{findLabelInGroups(regionGroups, varGroupsValue)}</span>
           {:else}
-            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -648,21 +648,21 @@ interface SelectItemProps {
   {#snippet variantWithIcon()}
     <div style="contain: layout">
       <Select type="single" bind:value={varIconValue}>
-        <SelectTrigger class="w-56" aria-label={demoLabels.stateLabel}>
+        <SelectTrigger style="width: 14rem;" aria-label={demoLabels.stateLabel}>
           {#if varIconValue}
-            <span class="flex items-center gap-2">
-              <MapPinIcon class="size-4 text-muted-foreground" />
+            <span class="nds-cluster">
+              <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
               <span>{findLabel(stateOptions, varIconValue)}</span>
             </span>
           {:else}
-            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
           {#each stateOptions as opt (opt.value)}
             <SelectItem value={opt.value} label={opt.label}>
               {#snippet children()}
-                <MapPinIcon class="size-4 text-muted-foreground" />
+                <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
                 <span>{opt.label}</span>
               {/snippet}
             </SelectItem>
@@ -682,10 +682,10 @@ interface SelectItemProps {
         name: $tStore('variants.compositions.states.name'),
         description: $tStore('variants.compositions.states.description'),
         useWhen: $tStore('variants.compositions.states.use'),
-        code: `<div class="flex flex-col gap-2 w-80">
-  <label for="state" class="text-sm font-semibold">Estado</label>
+        code: `<div class="nds-stack nds-w-sm" data-spacing="sm">
+  <label for="state" class="nds-text-body nds-font-semibold">Estado</label>
   <Select type="single" bind:value>
-    <SelectTrigger id="state" aria-label="Estado" class="w-full" />
+    <SelectTrigger id="state" aria-label="Estado" class="nds-w-full" />
     <SelectContent>
       {#each stateOptions as opt (opt.value)}
         <SelectItem value={opt.value} label={opt.label} />
@@ -699,10 +699,10 @@ interface SelectItemProps {
         name: $tStore('variants.compositions.regionGroups.name'),
         description: $tStore('variants.compositions.regionGroups.description'),
         useWhen: $tStore('variants.compositions.regionGroups.use'),
-        code: `<div class="flex flex-col gap-2 w-80">
-  <label for="region" class="text-sm font-semibold">Região</label>
+        code: `<div class="nds-stack nds-w-sm" data-spacing="sm">
+  <label for="region" class="nds-text-body nds-font-semibold">Região</label>
   <Select type="single" bind:value>
-    <SelectTrigger id="region" aria-label="Região" class="w-full" />
+    <SelectTrigger id="region" aria-label="Região" class="nds-w-full" />
     <SelectContent>
       {#each regionGroups as group (group.label)}
         <SelectGroup>
@@ -722,17 +722,17 @@ interface SelectItemProps {
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
         code: `<form
-  class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
   onsubmit={(e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     console.log('Estado:', data.get('state'));
   }}
 >
-  <div class="flex flex-col gap-2">
-    <label for="form-state" class="text-sm font-semibold">Estado</label>
+  <div class="nds-stack" data-spacing="sm">
+    <label for="form-state" class="nds-text-body nds-font-semibold">Estado</label>
     <Select type="single" name="state" required bind:value>
-      <SelectTrigger id="form-state" aria-label="Estado" class="w-full" />
+      <SelectTrigger id="form-state" aria-label="Estado" class="nds-w-full" />
       <SelectContent>
         {#each stateOptions as opt (opt.value)}
           <SelectItem value={opt.value} label={opt.label} />
@@ -740,7 +740,7 @@ interface SelectItemProps {
       </SelectContent>
     </Select>
   </div>
-  <button type="submit" class="self-end">Continuar</button>
+  <button type="submit" style="align-self: flex-end;">Continuar</button>
 </form>`,
         preview: compFormSnippet,
       },
@@ -748,14 +748,14 @@ interface SelectItemProps {
   />
 
   {#snippet compStatesSnippet()}
-    <div class="flex flex-col gap-2 w-80" style="contain: layout">
-      <label for="comp-state" class="text-sm font-semibold">{demoLabels.stateLabel}</label>
+    <div class="nds-stack nds-w-sm" data-spacing="sm" style="contain: layout">
+      <label for="comp-state" class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</label>
       <Select type="single" bind:value={compStatesValue}>
-        <SelectTrigger id="comp-state" class="w-full" aria-label={demoLabels.stateLabel}>
+        <SelectTrigger id="comp-state" class="nds-w-full" aria-label={demoLabels.stateLabel}>
           {#if compStatesValue}
             <span>{findLabel(stateOptions, compStatesValue)}</span>
           {:else}
-            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -768,14 +768,14 @@ interface SelectItemProps {
   {/snippet}
 
   {#snippet compGroupsSnippet()}
-    <div class="flex flex-col gap-2 w-80" style="contain: layout">
-      <label for="comp-region" class="text-sm font-semibold">{demoLabels.regionLabel}</label>
+    <div class="nds-stack nds-w-sm" data-spacing="sm" style="contain: layout">
+      <label for="comp-region" class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</label>
       <Select type="single" bind:value={compGroupsValue}>
-        <SelectTrigger id="comp-region" class="w-full" aria-label={demoLabels.regionLabel}>
+        <SelectTrigger id="comp-region" class="nds-w-full" aria-label={demoLabels.regionLabel}>
           {#if compGroupsValue}
             <span>{findLabelInGroups(regionGroups, compGroupsValue)}</span>
           {:else}
-            <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
           {/if}
         </SelectTrigger>
         <SelectContent>
@@ -794,18 +794,18 @@ interface SelectItemProps {
 
   {#snippet compFormSnippet()}
     <form
-      class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+      class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
       style="contain: layout"
       onsubmit={(e) => e.preventDefault()}
     >
-      <div class="flex flex-col gap-2">
-        <label for="comp-form-state" class="text-sm font-semibold">{demoLabels.stateLabel}</label>
+      <div class="nds-stack" data-spacing="sm">
+        <label for="comp-form-state" class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</label>
         <Select type="single" name="state" bind:value={compFormValue}>
-          <SelectTrigger id="comp-form-state" class="w-full" aria-label={demoLabels.stateLabel}>
+          <SelectTrigger id="comp-form-state" class="nds-w-full" aria-label={demoLabels.stateLabel}>
             {#if compFormValue}
               <span>{findLabel(stateOptions, compFormValue)}</span>
             {:else}
-              <span class="text-muted-foreground">{demoLabels.placeholder}</span>
+              <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
             {/if}
           </SelectTrigger>
           <SelectContent>
@@ -817,7 +817,8 @@ interface SelectItemProps {
       </div>
       <button
         type="submit"
-        class="self-end inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium"
+        class="nds-rounded-md nds-bg-primary nds-text-body nds-font-medium"
+        style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-end; padding: 0.375rem 0.75rem; color: var(--primary-foreground);"
       >
         Continuar
       </button>

@@ -127,7 +127,7 @@
 
 <Slider bind:value min={0} max={100} step={1} aria-label="Faixa de preço" />`;
 
-  const codeVertical = `<div class="h-40 flex justify-center">
+  const codeVertical = `<div class="nds-cluster" data-justify="center" style="height: 10rem;">
   <Slider
     bind:value
     orientation="vertical"
@@ -141,10 +141,10 @@
   let value = $state([50]);
 <\/script>
 
-<div class="space-y-3 w-72">
-  <div class="flex items-center justify-between">
+<div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+  <div class="nds-cluster" data-justify="between">
     <Label>Volume</Label>
-    <span aria-live="polite" class="text-sm tabular-nums">{value[0]}%</span>
+    <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{value[0]}%</span>
   </div>
   <Slider bind:value min={0} max={100} aria-label="Volume" />
 </div>`;
@@ -215,14 +215,14 @@ interface SliderProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
         <!-- Single — Volume -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.single')}</p>
-          <div class="p-4 border rounded-md space-y-3">
-            <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.single')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-justify="between">
               <Label>{$tStore('demonstration.labels.volume')}</Label>
-              <span class="text-sm tabular-nums" aria-live="polite">{demoVolume[0]}%</span>
+              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoVolume[0]}%</span>
             </div>
             <Slider
               bind:value={demoVolume}
@@ -235,12 +235,12 @@ interface SliderProps {
         </div>
 
         <!-- Range — Preço -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.range')}</p>
-          <div class="p-4 border rounded-md space-y-3">
-            <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.range')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-justify="between">
               <Label>{$tStore('demonstration.labels.priceRange')}</Label>
-              <span class="text-sm tabular-nums" aria-live="polite">
+              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">
                 R$ {demoPriceRange[0]} — R$ {demoPriceRange[1]}
               </span>
             </div>
@@ -255,14 +255,14 @@ interface SliderProps {
         </div>
 
         <!-- Vertical — Brilho -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-          <div class="p-4 border rounded-md space-y-3">
-            <div class="flex items-center justify-between w-40">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-justify="between" style="width: 10rem;">
               <Label>{$tStore('demonstration.labels.brightness')}</Label>
-              <span class="text-sm tabular-nums" aria-live="polite">{demoBrightness[0]}%</span>
+              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoBrightness[0]}%</span>
             </div>
-            <div class="h-40 flex justify-center">
+            <div class="nds-cluster" data-justify="center" style="height: 10rem;">
               <Slider
                 bind:value={demoBrightness}
                 orientation="vertical"
@@ -276,12 +276,12 @@ interface SliderProps {
         </div>
 
         <!-- Disabled -->
-        <div class="space-y-2">
-          <p class="text-xs font-medium text-muted-foreground">Disabled</p>
-          <div class="p-4 border rounded-md space-y-3">
-            <div class="flex items-center justify-between">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">Disabled</p>
+          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-justify="between">
               <Label>{$tStore('demonstration.labels.volume')}</Label>
-              <span class="text-sm tabular-nums">30%</span>
+              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;">30%</span>
             </div>
             <Slider value={[30]} min={0} max={100} disabled aria-label={$tStore('demonstration.labels.volume')} />
           </div>
@@ -389,27 +389,27 @@ interface SliderProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full space-y-2">
-      <div class="flex items-center justify-between">
+    <div class="nds-w-full nds-stack" data-spacing="sm">
+      <div class="nds-cluster" data-justify="between">
         <Label>Volume</Label>
-        <span class="text-sm tabular-nums" aria-live="polite">60%</span>
+        <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">60%</span>
       </div>
       <Slider value={[60]} min={0} max={100} aria-label="Volume" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full space-y-2">
+    <div class="nds-w-full nds-stack" data-spacing="sm">
       <Label>Volume</Label>
       <Slider value={[60]} min={0} max={100} aria-label="Volume" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Slider value={[60]} min={0} max={100} aria-label="Volume" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full">
+    <div class="nds-w-full">
       <Slider value={[60]} min={0} max={100} aria-label="Slider" />
     </div>
   {/snippet}
@@ -428,17 +428,17 @@ interface SliderProps {
   />
 
   {#snippet variantSingle()}
-    <div class="w-64">
+    <div class="nds-w-xs">
       <Slider value={[50]} min={0} max={100} aria-label="Volume" />
     </div>
   {/snippet}
   {#snippet variantRange()}
-    <div class="w-64">
+    <div class="nds-w-xs">
       <Slider value={[20, 80]} min={0} max={100} aria-label="Faixa" />
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="h-40 flex justify-center">
+    <div class="nds-cluster" data-justify="center" style="height: 10rem;">
       <Slider value={[50]} orientation="vertical" min={0} max={100} aria-label="Brilho" />
     </div>
   {/snippet}
@@ -481,30 +481,30 @@ interface SliderProps {
   />
 
   {#snippet compVolumePreview()}
-    <div class="space-y-3 w-72">
-      <div class="flex items-center justify-between">
+    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+      <div class="nds-cluster" data-justify="between">
         <Label>Volume</Label>
-        <span aria-live="polite" class="text-sm tabular-nums">{compVolume[0]}%</span>
+        <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compVolume[0]}%</span>
       </div>
       <Slider bind:value={compVolume} min={0} max={100} aria-label="Volume" />
     </div>
   {/snippet}
 
   {#snippet compBrightnessPreview()}
-    <div class="space-y-3 w-72">
-      <div class="flex items-center justify-between">
+    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+      <div class="nds-cluster" data-justify="between">
         <Label>Brilho</Label>
-        <span aria-live="polite" class="text-sm tabular-nums">{compBrightness[0]}%</span>
+        <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compBrightness[0]}%</span>
       </div>
       <Slider bind:value={compBrightness} min={0} max={100} step={5} aria-label="Brilho" />
     </div>
   {/snippet}
 
   {#snippet compPricePreview()}
-    <div class="space-y-3 w-72">
-      <div class="flex items-center justify-between">
+    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+      <div class="nds-cluster" data-justify="between">
         <Label>Faixa de preço</Label>
-        <span aria-live="polite" class="text-sm tabular-nums">
+        <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">
           R$ {compPrice[0]} — R$ {compPrice[1]}
         </span>
       </div>
@@ -515,13 +515,13 @@ interface SliderProps {
   {#snippet compFormPreview()}
     <form
       aria-label="Configurações de áudio"
-      class="flex flex-col gap-4 w-72"
+      class="nds-stack" data-spacing="md" style="width: 18rem;"
       onsubmit={onCompFormSubmit}
     >
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="text-sm tabular-nums">{compFormVolume[0]}%</span>
+          <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compFormVolume[0]}%</span>
         </div>
         <Slider
           bind:value={compFormVolume}
@@ -531,8 +531,8 @@ interface SliderProps {
           aria-label="Volume"
         />
       </div>
-      <Button type="submit" size="sm" class="self-start">Salvar</Button>
-      <p class="text-xs text-muted-foreground" aria-live="polite">
+      <Button type="submit" size="sm" style="align-self: flex-start;">Salvar</Button>
+      <p class="nds-text-caption nds-text-muted-foreground" aria-live="polite">
         Último commit: {compFormCommitted}%
       </p>
     </form>

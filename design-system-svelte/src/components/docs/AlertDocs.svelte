@@ -98,7 +98,7 @@
 import { Info } from "lucide-svelte";`;
 
   const codeDefault = `<Alert>
-  <Info aria-hidden="true" class="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
@@ -106,23 +106,23 @@ import { Info } from "lucide-svelte";`;
 </Alert>`;
 
   const codeDestructive = `<Alert variant="destructive">
-  <AlertCircle aria-hidden="true" class="h-4 w-4" />
+  <AlertCircle aria-hidden="true" />
   <AlertTitle>Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
 </Alert>`;
 
-  const codeSuccess = `<Alert class="bg-success/10 text-success border-success/30">
-  <CheckCircle2 aria-hidden="true" class="h-4 w-4" />
+  const codeSuccess = `<Alert class="nds-alert-success">
+  <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
 </Alert>`;
 
-  const codeWarning = `<Alert class="bg-warning/10 text-warning border-warning/30">
-  <TriangleAlert aria-hidden="true" class="h-4 w-4" />
+  const codeWarning = `<Alert class="nds-alert-warning">
+  <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
@@ -130,7 +130,7 @@ import { Info } from "lucide-svelte";`;
 </Alert>`;
 
   const codeWithoutTitle = `<Alert>
-  <Info aria-hidden="true" class="h-4 w-4" />
+  <Info aria-hidden="true" />
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -171,24 +171,24 @@ interface AlertProps {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <div class="w-full space-y-3">
+          <div class="nds-w-full nds-stack" data-spacing="sm">
             <Alert>
-              <Info class="h-4 w-4" aria-hidden="true" />
+              <Info aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
             </Alert>
             <Alert variant="destructive">
-              <AlertCircle class="h-4 w-4" aria-hidden="true" />
+              <AlertCircle aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
             </Alert>
-            <Alert class="bg-success/10 text-success border-success/30">
-              <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+            <Alert class="nds-alert-success">
+              <CheckCircle2 aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
             </Alert>
-            <Alert class="bg-warning/10 text-warning border-warning/30">
-              <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+            <Alert class="nds-alert-warning">
+              <TriangleAlert aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
             </Alert>
@@ -294,7 +294,7 @@ interface AlertProps {
 
       {#snippet doPair1()}
         <Alert>
-          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
         </Alert>
@@ -304,7 +304,7 @@ interface AlertProps {
       {/snippet}
       {#snippet doPair2()}
         <Alert variant="destructive">
-          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
@@ -338,36 +338,36 @@ interface AlertProps {
       />
 
       {#snippet variantDefault()}
-        <Alert class="w-full">
-          <Info class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full">
+          <Info aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDestructive()}
-        <Alert variant="destructive" class="w-full">
-          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+        <Alert variant="destructive" class="nds-w-full">
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantSuccess()}
-        <Alert class="w-full bg-success/10 text-success border-success/30">
-          <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full nds-alert-success">
+          <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWarning()}
-        <Alert class="w-full bg-warning/10 text-warning border-warning/30">
-          <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full nds-alert-warning">
+          <TriangleAlert aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWithoutTitle()}
-        <Alert class="w-full">
-          <Info class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full">
+          <Info aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
@@ -382,75 +382,75 @@ interface AlertProps {
             name: $tStore('variants.compositions.withIcon.name'),
             description: $tStore('variants.compositions.withIcon.description'),
             useWhen: $tStore('variants.compositions.withIcon.use'),
-            code: `<Alert><Info class="h-4 w-4" aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
+            code: `<Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription></Alert>`,
             preview: compWithIcon,
           },
           {
             name: $tStore('variants.compositions.withAction.name'),
             description: $tStore('variants.compositions.withAction.description'),
             useWhen: $tStore('variants.compositions.withAction.use'),
-            code: `<Alert>\n  <Info class="h-4 w-4" aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="flex items-center justify-between gap-4 mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
             preview: compWithAction,
           },
           {
             name: $tStore('variants.compositions.compact.name'),
             description: $tStore('variants.compositions.compact.description'),
             useWhen: $tStore('variants.compositions.compact.use'),
-            code: `<Alert variant="destructive"><AlertCircle class="h-4 w-4" aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
+            code: `<Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
             preview: compCompact,
           },
           {
             name: $tStore('variants.compositions.multipleTypes.name'),
             description: $tStore('variants.compositions.multipleTypes.description'),
             useWhen: $tStore('variants.compositions.multipleTypes.use'),
-            code: `<div class="space-y-3">\n  <Alert><Info class="h-4 w-4" aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle class="h-4 w-4" aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert class="bg-success/10 text-success border-success/30"><CheckCircle2 class="h-4 w-4" aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert class="bg-warning/10 text-warning border-warning/30"><TriangleAlert class="h-4 w-4" aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
+            code: `<div class="nds-stack" data-spacing="sm">\n  <Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert class="nds-alert-success"><CheckCircle2 aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert class="nds-alert-warning"><TriangleAlert aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
             preview: compMultipleTypes,
           },
         ]}
       />
 
       {#snippet compWithIcon()}
-        <Alert class="w-full">
-          <Info class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full">
+          <Info aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compWithAction()}
-        <Alert class="w-full">
-          <Info class="h-4 w-4" aria-hidden="true" />
+        <Alert class="nds-w-full">
+          <Info aria-hidden="true" />
           <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-          <AlertDescription class="flex items-center justify-between gap-4 mt-1">
+          <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button size="sm" variant="outline">Salvar agora</Button>
           </AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compCompact()}
-        <Alert variant="destructive" class="w-full">
-          <AlertCircle class="h-4 w-4" aria-hidden="true" />
+        <Alert variant="destructive" class="nds-w-full">
+          <AlertCircle aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compMultipleTypes()}
-        <div class="space-y-3 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="sm">
           <Alert>
-            <Info class="h-4 w-4" aria-hidden="true" />
+            <Info aria-hidden="true" />
             <AlertTitle>Informação</AlertTitle>
             <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
           </Alert>
           <Alert variant="destructive">
-            <AlertCircle class="h-4 w-4" aria-hidden="true" />
+            <AlertCircle aria-hidden="true" />
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
           </Alert>
-          <Alert class="bg-success/10 text-success border-success/30">
-            <CheckCircle2 class="h-4 w-4" aria-hidden="true" />
+          <Alert class="nds-alert-success">
+            <CheckCircle2 aria-hidden="true" />
             <AlertTitle>Sucesso</AlertTitle>
             <AlertDescription>Ação concluída com sucesso.</AlertDescription>
           </Alert>
-          <Alert class="bg-warning/10 text-warning border-warning/30">
-            <TriangleAlert class="h-4 w-4" aria-hidden="true" />
+          <Alert class="nds-alert-warning">
+            <TriangleAlert aria-hidden="true" />
             <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>Aviso que requer atenção.</AlertDescription>
           </Alert>
