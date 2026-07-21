@@ -103,7 +103,7 @@ import {
   ResizableHandle,
 } from "@/components/ui/resizable";`;
 
-  const codeHorizontal = `<PaneGroup direction="horizontal" class="h-60">
+  const codeHorizontal = `<PaneGroup direction="horizontal" style="height: 15rem">
   <Pane defaultSize={30} minSize={20} maxSize={50}>
     <!-- Sidebar -->
   </Pane>
@@ -113,7 +113,7 @@ import {
   </Pane>
 </PaneGroup>`;
 
-  const codeVertical = `<PaneGroup direction="vertical" class="h-80">
+  const codeVertical = `<PaneGroup direction="vertical" style="height: 20rem">
   <Pane defaultSize={50} minSize={20}>
     <!-- Topo -->
   </Pane>
@@ -123,13 +123,13 @@ import {
   </Pane>
 </PaneGroup>`;
 
-  const codeNested = `<PaneGroup direction="horizontal" class="h-80">
+  const codeNested = `<PaneGroup direction="horizontal" style="height: 20rem">
   <Pane defaultSize={30} minSize={20}>
     <!-- Sidebar -->
   </Pane>
   <Handle withHandle aria-label="Redimensionar sidebar — use setas" />
   <Pane defaultSize={70}>
-    <PaneGroup direction="vertical" class="h-full">
+    <PaneGroup direction="vertical" style="height: 100%">
       <Pane defaultSize={60}><!-- Editor --></Pane>
       <Handle withHandle aria-label="Redimensionar editor — use setas" />
       <Pane defaultSize={40}><!-- Console --></Pane>
@@ -197,53 +197,53 @@ interface HandleProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="w-full space-y-6">
-        <div>
-          <p class="text-xs text-muted-foreground mb-2">{$tStore('demonstration.labels.horizontal')}</p>
-          <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 200px;">
-            <PaneGroup direction="horizontal" class="h-full">
-              <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-                <span class="text-sm text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
+      <div class="nds-stack nds-w-full" data-spacing="lg">
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
+          <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px;">
+            <PaneGroup direction="horizontal" style="height: 100%">
+              <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+                <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
               </Pane>
               <Handle withHandle aria-label="Redimensionar painéis — use setas para ajustar" />
-              <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
-                <span class="text-sm text-foreground">{$tStore('demonstration.labels.content')}</span>
+              <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+                <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.content')}</span>
               </Pane>
             </PaneGroup>
           </div>
         </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground mb-2">{$tStore('demonstration.labels.vertical')}</p>
-          <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 240px;">
-            <PaneGroup direction="vertical" class="h-full">
-              <Pane defaultSize={50} minSize={20} class="flex items-center justify-center bg-muted/40">
-                <span class="text-sm text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
+          <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 240px;">
+            <PaneGroup direction="vertical" style="height: 100%">
+              <Pane defaultSize={50} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+                <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
               </Pane>
               <Handle withHandle aria-label="Redimensionar painéis verticalmente — use setas" />
-              <Pane defaultSize={50} minSize={20} class="flex items-center justify-center">
-                <span class="text-sm text-foreground">{$tStore('demonstration.labels.bottom')}</span>
+              <Pane defaultSize={50} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
+                <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.bottom')}</span>
               </Pane>
             </PaneGroup>
           </div>
         </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground mb-2">{$tStore('demonstration.labels.nested')}</p>
-          <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 280px;">
-            <PaneGroup direction="horizontal" class="h-full">
-              <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-                <span class="text-sm text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
+        <div class="nds-stack" data-spacing="sm">
+          <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.nested')}</p>
+          <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 280px;">
+            <PaneGroup direction="horizontal" style="height: 100%">
+              <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+                <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
               </Pane>
               <Handle withHandle aria-label="Redimensionar sidebar — use setas" />
               <Pane defaultSize={70} minSize={40}>
-                <PaneGroup direction="vertical" class="h-full">
-                  <Pane defaultSize={60} minSize={20} class="flex items-center justify-center">
-                    <span class="text-sm text-foreground">{$tStore('demonstration.labels.top')}</span>
+                <PaneGroup direction="vertical" style="height: 100%">
+                  <Pane defaultSize={60} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
+                    <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.top')}</span>
                   </Pane>
                   <Handle withHandle aria-label="Redimensionar editor — use setas" />
-                  <Pane defaultSize={40} minSize={20} class="flex items-center justify-center bg-muted/40">
-                    <span class="text-sm text-muted-foreground">{$tStore('demonstration.labels.bottom')}</span>
+                  <Pane defaultSize={40} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+                    <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.bottom')}</span>
                   </Pane>
                 </PaneGroup>
               </Pane>
@@ -351,53 +351,53 @@ interface HandleProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 140px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar painéis — use setas" />
-        <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.content')}</span>
+        <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.content')}</span>
         </Pane>
       </PaneGroup>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 140px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar" />
-        <Pane class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.content')}</span>
+        <Pane class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.content')}</span>
         </Pane>
       </PaneGroup>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 140px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar painéis — use setas para ajustar" />
-        <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.right')}</span>
+        <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.right')}</span>
         </Pane>
       </PaneGroup>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 140px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
         </Pane>
         <Handle withHandle aria-label="Handle" />
-        <Pane defaultSize={50} minSize={20} maxSize={80} class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.right')}</span>
+        <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.right')}</span>
         </Pane>
       </PaneGroup>
     </div>
@@ -421,46 +421,46 @@ interface HandleProps {
   />
 
   {#snippet variantHorizontal()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 180px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane defaultSize={30} minSize={20} maxSize={50} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 180px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar painéis — use setas" />
-        <Pane defaultSize={70} minSize={50} maxSize={80} class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.right')}</span>
+        <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.right')}</span>
         </Pane>
       </PaneGroup>
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 200px;">
-      <PaneGroup direction="vertical" class="h-full">
-        <Pane defaultSize={50} minSize={20} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px;">
+      <PaneGroup direction="vertical" style="height: 100%">
+        <Pane defaultSize={50} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar painéis verticalmente — use setas" />
-        <Pane defaultSize={50} minSize={20} class="flex items-center justify-center">
-          <span class="text-xs text-foreground">{$tStore('demonstration.labels.bottom')}</span>
+        <Pane defaultSize={50} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.bottom')}</span>
         </Pane>
       </PaneGroup>
     </div>
   {/snippet}
   {#snippet variantNested()}
-    <div class="w-full rounded-md border bg-background overflow-hidden" style="height: 240px;">
-      <PaneGroup direction="horizontal" class="h-full">
-        <Pane defaultSize={30} minSize={20} class="flex items-center justify-center bg-muted/40">
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
+    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 240px;">
+      <PaneGroup direction="horizontal" style="height: 100%">
+        <Pane defaultSize={30} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
         </Pane>
         <Handle withHandle aria-label="Redimensionar sidebar — use setas" />
         <Pane defaultSize={70} minSize={40}>
-          <PaneGroup direction="vertical" class="h-full">
-            <Pane defaultSize={60} class="flex items-center justify-center">
-              <span class="text-xs text-foreground">{$tStore('demonstration.labels.top')}</span>
+          <PaneGroup direction="vertical" style="height: 100%">
+            <Pane defaultSize={60} class="nds-cluster" data-align="center" data-justify="center">
+              <span class="nds-text-caption nds-text-foreground">{$tStore('demonstration.labels.top')}</span>
             </Pane>
             <Handle withHandle aria-label="Redimensionar editor — use setas" />
-            <Pane defaultSize={40} class="flex items-center justify-center bg-muted/40">
-              <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.bottom')}</span>
+            <Pane defaultSize={40} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
+              <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.bottom')}</span>
             </Pane>
           </PaneGroup>
         </Pane>

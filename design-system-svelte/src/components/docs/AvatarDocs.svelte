@@ -108,32 +108,32 @@ import { User } from "lucide-svelte";`;
 
   const codeIcon = `<Avatar>
   <AvatarFallback aria-label="Usuário genérico">
-    <User class="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+    <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
   </AvatarFallback>
 </Avatar>`;
 
-  const codeGroup = `<div class="flex -space-x-2" role="group" aria-label="Participantes">
-  <Avatar class="ring-2 ring-background">
+  const codeGroup = `<div style="display: flex" role="group" aria-label="Participantes">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
     <AvatarImage src="/maria.jpg" alt="" />
-    <AvatarFallback class="text-xs">MR</AvatarFallback>
+    <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
     <AvatarImage src="/joao.jpg" alt="" />
-    <AvatarFallback class="text-xs">JP</AvatarFallback>
+    <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
-    <AvatarFallback class="text-xs">+2</AvatarFallback>
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+    <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
   </Avatar>
 </div>`;
 
-  const codeStatus = `<div class="relative inline-block">
+  const codeStatus = `<div style="position: relative; display: inline-block">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <span
     aria-label="online"
-    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+    class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
   />
 </div>`;
 
@@ -182,60 +182,60 @@ interface AvatarFallbackProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex flex-wrap items-end justify-center gap-8">
-        <div class="flex flex-col items-center gap-2">
+      <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
             <AvatarFallback delayMs={600}>MR</AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarFallback>{$tStore('demonstration.labels.withFallbackInitials')}</AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withFallback')}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withFallback')}</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
           <Avatar>
             <AvatarFallback aria-label={$tStore('demonstration.labels.withIcon')}>
-              <User class="h-5 w-5" aria-hidden="true" />
+              <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
             </AvatarFallback>
           </Avatar>
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="flex -space-x-2" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
-            <Avatar class="ring-2 ring-background">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+          <div style="display: flex" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
+            <Avatar style="box-shadow: 0 0 0 2px var(--background)">
               <AvatarImage src={IMG_MARIA} alt="" />
-              <AvatarFallback class="text-xs">MR</AvatarFallback>
+              <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
               <AvatarImage src={IMG_JOAO} alt="" />
-              <AvatarFallback class="text-xs">JP</AvatarFallback>
+              <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
               <AvatarImage src={IMG_ANA} alt="" />
-              <AvatarFallback class="text-xs">AS</AvatarFallback>
+              <AvatarFallback class="nds-text-caption">AS</AvatarFallback>
             </Avatar>
-            <Avatar class="ring-2 ring-background">
-              <AvatarFallback class="text-xs">+2</AvatarFallback>
+            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+              <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
             </Avatar>
           </div>
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.groupTitle')}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.groupTitle')}</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="relative inline-block">
+        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+          <div style="position: relative; display: inline-block">
             <Avatar>
               <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
               <AvatarFallback>MR</AvatarFallback>
             </Avatar>
             <span
               aria-label={$tStore('demonstration.labels.statusOnline')}
-              class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+              class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
             ></span>
           </div>
-          <span class="text-xs text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>
+          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>
         </div>
       </div>
     {/snippet}
@@ -338,7 +338,7 @@ interface AvatarFallbackProps {
   />
 
   {#snippet doPair1()}
-    <div class="flex items-center justify-center w-full">
+    <div class="nds-cluster nds-w-full" data-justify="center">
       <Avatar>
         <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback delayMs={600}>MR</AvatarFallback>
@@ -346,21 +346,21 @@ interface AvatarFallbackProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="flex items-center justify-center w-full">
+    <div class="nds-cluster nds-w-full" data-justify="center">
       <Avatar>
         <AvatarImage src="https://invalid.example.com/x.jpg" alt="Avatar" />
       </Avatar>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="flex items-center justify-center w-full">
+    <div class="nds-cluster nds-w-full" data-justify="center">
       <Avatar>
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="flex items-center justify-center w-full">
+    <div class="nds-cluster nds-w-full" data-justify="center">
       <Avatar>
         <AvatarFallback>mar</AvatarFallback>
       </Avatar>
@@ -402,38 +402,38 @@ interface AvatarFallbackProps {
   {#snippet variantIcon()}
     <Avatar>
       <AvatarFallback aria-label="Usuário genérico">
-        <User class="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+        <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
       </AvatarFallback>
     </Avatar>
   {/snippet}
   {#snippet variantGroup()}
-    <div class="flex -space-x-2" role="group" aria-label="Participantes">
-      <Avatar class="ring-2 ring-background">
+    <div style="display: flex" role="group" aria-label="Participantes">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background)">
         <AvatarImage src={IMG_MARIA} alt="" />
-        <AvatarFallback class="text-xs">MR</AvatarFallback>
+        <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
         <AvatarImage src={IMG_JOAO} alt="" />
-        <AvatarFallback class="text-xs">JP</AvatarFallback>
+        <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
         <AvatarImage src={IMG_ANA} alt="" />
-        <AvatarFallback class="text-xs">AS</AvatarFallback>
+        <AvatarFallback class="nds-text-caption">AS</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
-        <AvatarFallback class="text-xs">+2</AvatarFallback>
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+        <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
       </Avatar>
     </div>
   {/snippet}
   {#snippet variantStatus()}
-    <div class="relative inline-block">
+    <div style="position: relative; display: inline-block">
       <Avatar>
         <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <span
         aria-label="online"
-        class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+        class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
       ></span>
     </div>
   {/snippet}
@@ -469,7 +469,7 @@ interface AvatarFallbackProps {
         useWhen: $tStore('variants.compositions.withIcon.use'),
         code: `<Avatar>
   <AvatarFallback role="img" aria-label="Usuário genérico">
-    <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
+    <User aria-hidden="true" class="nds-icon nds-text-muted-foreground" />
   </AvatarFallback>
 </Avatar>`,
         preview: compWithIcon,
@@ -478,18 +478,18 @@ interface AvatarFallbackProps {
         name: $tStore('variants.compositions.group.name'),
         description: $tStore('variants.compositions.group.description'),
         useWhen: $tStore('variants.compositions.group.use'),
-        code: `<div class="flex -space-x-2" role="group" aria-label="Participantes">
-  <Avatar class="ring-2 ring-background">
+        code: `<div style="display: flex" role="group" aria-label="Participantes">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
     <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
     <AvatarFallback>JP</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
     <AvatarFallback>AL</AvatarFallback>
   </Avatar>
-  <Avatar class="ring-2 ring-background">
+  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
     <AvatarFallback>+3</AvatarFallback>
   </Avatar>
 </div>`,
@@ -499,7 +499,7 @@ interface AvatarFallbackProps {
         name: $tStore('variants.compositions.withStatus.name'),
         description: $tStore('variants.compositions.withStatus.description'),
         useWhen: $tStore('variants.compositions.withStatus.use'),
-        code: `<div class="relative inline-block">
+        code: `<div style="position: relative; display: inline-block">
   <Avatar>
     <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
     <AvatarFallback>MR</AvatarFallback>
@@ -507,7 +507,7 @@ interface AvatarFallbackProps {
   <span
     role="status"
     aria-label="online"
-    class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+    class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
   ></span>
 </div>`,
         preview: compWithStatus,
@@ -529,29 +529,29 @@ interface AvatarFallbackProps {
   {#snippet compWithIcon()}
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">
-        <User aria-hidden="true" class="h-5 w-5 text-muted-foreground" />
+        <User aria-hidden="true" class="nds-icon nds-text-muted-foreground" />
       </AvatarFallback>
     </Avatar>
   {/snippet}
   {#snippet compGroup()}
-    <div class="flex -space-x-2" role="group" aria-label="Participantes">
-      <Avatar class="ring-2 ring-background">
+    <div style="display: flex" role="group" aria-label="Participantes">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background)">
         <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
         <AvatarFallback>JP</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
         <AvatarFallback>AL</AvatarFallback>
       </Avatar>
-      <Avatar class="ring-2 ring-background">
+      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
         <AvatarFallback>+3</AvatarFallback>
       </Avatar>
     </div>
   {/snippet}
   {#snippet compWithStatus()}
-    <div class="relative inline-block">
+    <div style="position: relative; display: inline-block">
       <Avatar>
         <AvatarImage src="https://github.com/shadcn.png" alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback>MR</AvatarFallback>
@@ -559,7 +559,7 @@ interface AvatarFallbackProps {
       <span
         role="status"
         aria-label="online"
-        class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background"
+        class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
       ></span>
     </div>
   {/snippet}

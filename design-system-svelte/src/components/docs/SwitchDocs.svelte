@@ -133,7 +133,7 @@ import { Label } from "@/components/ui/label";`;
   const codeDefault = `<script lang="ts">
   let checked = $state(false);
 <\/script>
-<div class="flex items-center gap-2">
+<div class="nds-cluster" data-spacing="sm">
   <Switch id="notifications" bind:checked />
   <Label for="notifications">Receber notificações por email</Label>
 </div>`;
@@ -141,17 +141,17 @@ import { Label } from "@/components/ui/label";`;
   const codeWithDescription = `<script lang="ts">
   let marketing = $state(false);
 <\/script>
-<div class="flex items-center justify-between">
-  <div class="flex flex-col gap-0.5">
+<div class="nds-cluster" data-justify="between">
+  <div class="nds-stack" data-spacing="xs">
     <Label for="marketing">Emails de marketing</Label>
-    <p class="text-sm text-muted-foreground">
+    <p class="nds-text-body nds-text-muted-foreground">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
   <Switch id="marketing" bind:checked={marketing} />
 </div>`;
 
-  const codeSm = `<div class="flex items-center gap-2">
+  const codeSm = `<div class="nds-cluster" data-spacing="sm">
   <Switch id="compact" size="sm" />
   <Label for="compact">Tamanho compacto</Label>
 </div>`;
@@ -195,9 +195,9 @@ interface SwitchProps {
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="switch">
     {#snippet children()}
-      <div class="flex flex-col gap-6 w-80">
+      <div class="nds-stack nds-w-sm" data-spacing="lg">
         <!-- Default -->
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch
             id="demo-notifications"
             bind:checked={demoNotifications}
@@ -209,10 +209,10 @@ interface SwitchProps {
         </div>
 
         <!-- With description (panel) -->
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex flex-col gap-0.5">
+        <div class="nds-cluster" data-justify="between">
+          <div class="nds-stack" data-spacing="xs">
             <Label for="demo-marketing">{$tStore('demonstration.labels.marketing')}</Label>
-            <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.marketingDesc')}</p>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.marketingDesc')}</p>
           </div>
           <Switch
             id="demo-marketing"
@@ -224,10 +224,10 @@ interface SwitchProps {
         </div>
 
         <!-- Dark mode (panel) -->
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex flex-col gap-0.5">
+        <div class="nds-cluster" data-justify="between">
+          <div class="nds-stack" data-spacing="xs">
             <Label for="demo-darkmode">{$tStore('demonstration.labels.darkMode')}</Label>
-            <p class="text-sm text-muted-foreground">{$tStore('demonstration.labels.darkModeDesc')}</p>
+            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.darkModeDesc')}</p>
           </div>
           <Switch
             id="demo-darkmode"
@@ -239,7 +239,7 @@ interface SwitchProps {
         </div>
 
         <!-- Sm -->
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Switch
             id="demo-sm"
             size="sm"
@@ -366,30 +366,30 @@ interface SwitchProps {
   />
 
   {#snippet dd1Do()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="dd1-do" bind:checked={dd1DoChecked} />
       <Label for="dd1-do">Receber notificações por email</Label>
     </div>
   {/snippet}
 
   {#snippet dd1Dont()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="dd1-dont" bind:checked={dd1DontChecked} />
       <Label for="dd1-dont">Notificações</Label>
     </div>
   {/snippet}
 
   {#snippet dd2Do()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="dd2-do" bind:checked={dd2DoChecked} />
       <Label for="dd2-do">Modo escuro</Label>
     </div>
   {/snippet}
 
   {#snippet dd2Dont()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="dd2-dont" bind:checked={dd2DontChecked} />
-      <span class="text-sm">Modo escuro</span>
+      <span class="nds-text-body">Modo escuro</span>
     </div>
   {/snippet}
 
@@ -427,24 +427,24 @@ interface SwitchProps {
   />
 
   {#snippet variantDefault()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="var-default" bind:checked={varDefault} />
       <Label for="var-default">Receber notificações por email</Label>
     </div>
   {/snippet}
 
   {#snippet variantWithDescription()}
-    <div class="flex items-center justify-between gap-4 w-80">
-      <div class="flex flex-col gap-0.5">
+    <div class="nds-cluster nds-w-sm" data-justify="between">
+      <div class="nds-stack" data-spacing="xs">
         <Label for="var-with-desc">Emails de marketing</Label>
-        <p class="text-sm text-muted-foreground">Receba novidades e promoções da plataforma.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>
       </div>
       <Switch id="var-with-desc" bind:checked={varWithDesc} />
     </div>
   {/snippet}
 
   {#snippet variantSm()}
-    <div class="flex items-center gap-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="var-sm" size="sm" bind:checked={varSm} />
       <Label for="var-sm">Tamanho compacto</Label>
     </div>
@@ -460,71 +460,71 @@ interface SwitchProps {
         name: $tStore('variants.compositions.withLabel.name'),
         description: $tStore('variants.compositions.withLabel.description'),
         useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: `<div class="flex items-center space-x-2">\n  <Switch id="sw-email" />\n  <Label for="sw-email">Receber notificações por email</Label>\n</div>`,
+        code: `<div class="nds-cluster" data-spacing="sm">\n  <Switch id="sw-email" />\n  <Label for="sw-email">Receber notificações por email</Label>\n</div>`,
         preview: compWithLabel,
       },
       {
         name: $tStore('variants.compositions.withDescription.name'),
         description: $tStore('variants.compositions.withDescription.description'),
         useWhen: $tStore('variants.compositions.withDescription.use'),
-        code: `<div class="flex items-center justify-between rounded-lg border p-3 w-80">\n  <div class="flex flex-col gap-0.5 pr-3">\n    <Label for="sw-mkt">Emails de marketing</Label>\n    <p class="text-sm text-muted-foreground">Receba novidades e promoções da plataforma.</p>\n  </div>\n  <Switch id="sw-mkt" checked />\n</div>`,
+        code: `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">\n  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n    <Label for="sw-mkt">Emails de marketing</Label>\n    <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>\n  </div>\n  <Switch id="sw-mkt" checked />\n</div>`,
         preview: compWithDescription,
       },
       {
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
-        code: `<div class="space-y-2 w-96">\n  <h4 class="text-sm font-medium">Preferências de notificação</h4>\n  <div class="flex items-center justify-between rounded-lg border p-3">\n    <div class="flex flex-col gap-0.5 pr-3">\n      <Label for="sw-list-email">Email</Label>\n      <p class="text-sm text-muted-foreground">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
+        code: `<div class="nds-stack" data-spacing="sm" style="width: 24rem">\n  <h4 class="nds-text-body nds-font-medium">Preferências de notificação</h4>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body nds-text-muted-foreground">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
         preview: compSettingsList,
       },
       {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
-        code: `<form class="flex flex-col gap-3 w-80" on:submit|preventDefault={handleSubmit}>\n  <div class="flex items-center space-x-2">\n    <Switch id="sw-newsletter" name="newsletter" checked />\n    <Label for="sw-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
+        code: `<form class="nds-stack nds-w-sm" data-spacing="sm" on:submit|preventDefault={handleSubmit}>\n  <div class="nds-cluster" data-spacing="sm">\n    <Switch id="sw-newsletter" name="newsletter" checked />\n    <Label for="sw-newsletter">Aceitar newsletter semanal</Label>\n  </div>\n  <Button type="submit">Salvar preferências</Button>\n</form>`,
         preview: compInForm,
       },
     ]}
   />
 
   {#snippet compWithLabel()}
-    <div class="flex items-center space-x-2">
+    <div class="nds-cluster" data-spacing="sm">
       <Switch id="comp-sw-email" bind:checked={compEmail} />
       <Label for="comp-sw-email">Receber notificações por email</Label>
     </div>
   {/snippet}
 
   {#snippet compWithDescription()}
-    <div class="flex items-center justify-between rounded-lg border p-3 w-80">
-      <div class="flex flex-col gap-0.5 pr-3">
+    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
+      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
         <Label for="comp-sw-mkt">Emails de marketing</Label>
-        <p class="text-sm text-muted-foreground">Receba novidades e promoções da plataforma.</p>
+        <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>
       </div>
       <Switch id="comp-sw-mkt" bind:checked={compMarketing} />
     </div>
   {/snippet}
 
   {#snippet compSettingsList()}
-    <div class="space-y-2 w-96">
-      <h4 class="text-sm font-medium">Preferências de notificação</h4>
-      <div class="flex items-center justify-between rounded-lg border p-3">
-        <div class="flex flex-col gap-0.5 pr-3">
+    <div class="nds-stack" data-spacing="sm" style="width: 24rem">
+      <h4 class="nds-text-body nds-font-medium">Preferências de notificação</h4>
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-email">Email</Label>
-          <p class="text-sm text-muted-foreground">Receba avisos importantes por email.</p>
+          <p class="nds-text-body nds-text-muted-foreground">Receba avisos importantes por email.</p>
         </div>
         <Switch id="comp-sw-list-email" bind:checked={compSettingsEmail} />
       </div>
-      <div class="flex items-center justify-between rounded-lg border p-3">
-        <div class="flex flex-col gap-0.5 pr-3">
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-push">Push</Label>
-          <p class="text-sm text-muted-foreground">Notificações em tempo real no dispositivo.</p>
+          <p class="nds-text-body nds-text-muted-foreground">Notificações em tempo real no dispositivo.</p>
         </div>
         <Switch id="comp-sw-list-push" bind:checked={compSettingsPush} />
       </div>
-      <div class="flex items-center justify-between rounded-lg border p-3">
-        <div class="flex flex-col gap-0.5 pr-3">
+      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
+        <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-sms">SMS</Label>
-          <p class="text-sm text-muted-foreground">Alertas críticos por mensagem de texto.</p>
+          <p class="nds-text-body nds-text-muted-foreground">Alertas críticos por mensagem de texto.</p>
         </div>
         <Switch id="comp-sw-list-sms" bind:checked={compSettingsSms} />
       </div>
@@ -532,8 +532,8 @@ interface SwitchProps {
   {/snippet}
 
   {#snippet compInForm()}
-    <form class="flex flex-col gap-3 w-80" on:submit={handleCompFormSubmit}>
-      <div class="flex items-center space-x-2">
+    <form class="nds-stack nds-w-sm" data-spacing="sm" on:submit={handleCompFormSubmit}>
+      <div class="nds-cluster" data-spacing="sm">
         <Switch id="comp-sw-newsletter" name="newsletter" bind:checked={compNewsletter} />
         <Label for="comp-sw-newsletter">Aceitar newsletter semanal</Label>
       </div>

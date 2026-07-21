@@ -2,7 +2,6 @@
   import * as Command from '@/components/ui/command';
   import { Button } from '@/components/ui/button';
   import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-  import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
   import CheckIcon from '@lucide/svelte/icons/check';
   import Search from '@lucide/svelte/icons/search';
@@ -176,8 +175,8 @@ import uiTranslations from '@/i18n/ui.json';
     <Command.Empty>Nenhum resultado.</Command.Empty>
     {#if loading}
       <Command.Loading>
-        <div class="flex items-center gap-2 py-4 text-sm text-muted-foreground" role="progressbar">
-          <Loader2 class="size-4 animate-spin" aria-hidden="true" />
+        <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" role="progressbar" style="padding-block: 1rem">
+          <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
           <span>Carregando resultados...</span>
         </div>
       </Command.Loading>
@@ -251,11 +250,11 @@ import uiTranslations from '@/i18n/ui.json';
 
 <Popover bind:open>
   <PopoverTrigger asChild>
-    <Button variant="outline" role="combobox" aria-expanded={open} class="w-56 justify-between">
+    <Button variant="outline" role="combobox" aria-expanded={open} class="nds-cluster" data-justify="between" style="width: 14rem">
       {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
     </Button>
   </PopoverTrigger>
-  <PopoverContent class="w-56 p-0">
+  <PopoverContent class="nds-p-0" style="width: 14rem">
     <Command.Root>
       <Command.Input placeholder="Buscar item..." />
       <Command.List>
@@ -428,22 +427,18 @@ interface CommandLoadingProps {
       category={$tStore('category')}
       type={$tStore('type')}
       installNote="npx shadcn-svelte@latest add command"
-    >
-      {#snippet languageSwitcher()}
-        <LanguageSwitcher />
-      {/snippet}
-    </DocsHeader>
+    />
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="flex w-full flex-col items-center gap-8">
+      <div class="nds-w-full nds-stack" data-spacing="xl" style="align-items: center">
 
         <!-- Demo 1: Inline -->
-        <div class="w-full max-w-sm">
-          <p class="mb-2 text-sm font-medium text-muted-foreground">Inline</p>
-          <div class="rounded-xl border shadow-md">
+        <div class="nds-w-full nds-max-w-sm">
+          <p class="nds-mb-2 nds-text-body nds-font-medium nds-text-muted-foreground">Inline</p>
+          <div class="nds-rounded-md nds-border-default nds-shadow-md">
             <Command.Root>
               <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
               <Command.List>
@@ -462,16 +457,16 @@ interface CommandLoadingProps {
         </div>
 
         <!-- Demo 2: Com CommandLoading -->
-        <div class="w-full max-w-sm">
-          <p class="mb-2 text-sm font-medium text-muted-foreground">Com CommandLoading</p>
-          <div class="rounded-xl border shadow-md">
+        <div class="nds-w-full nds-max-w-sm">
+          <p class="nds-mb-2 nds-text-body nds-font-medium nds-text-muted-foreground">Com CommandLoading</p>
+          <div class="nds-rounded-md nds-border-default nds-shadow-md">
             <Command.Root>
               <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
               <Command.List>
                 <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
                 <Command.Loading>
-                  <div class="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground" role="progressbar" aria-label="Carregando resultados">
-                    <Loader2 class="size-4 animate-spin" aria-hidden="true" />
+                  <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" data-justify="center" role="progressbar" aria-label="Carregando resultados" style="padding-block: 1rem">
+                    <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
                     <span>Carregando resultados...</span>
                   </div>
                 </Command.Loading>
@@ -481,19 +476,21 @@ interface CommandLoadingProps {
         </div>
 
         <!-- Demo 3: Command Palette -->
-        <div class="flex flex-col items-center gap-3">
-          <p class="text-sm font-medium text-muted-foreground">Command Palette</p>
+        <div class="nds-stack" data-spacing="sm" style="align-items: center">
+          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">Command Palette</p>
           <Button
             variant="outline"
-            class="w-[280px] justify-between text-muted-foreground"
+            class="nds-cluster nds-text-muted-foreground"
+            data-justify="between"
+            style="width: 280px"
             onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button', locale: $locale }); }}
           >
-            <span class="flex items-center gap-2">
-              <Search class="size-4" aria-hidden="true" />
+            <span class="nds-cluster" data-spacing="sm">
+              <Search class="nds-size-4" aria-hidden="true" />
               {$tStore('demonstration.labels.openPalette')}
             </span>
-            <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-              <span class="text-xs">⌘</span>K
+            <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+              <span class="nds-text-caption">⌘</span>K
             </kbd>
           </Button>
           <Command.Dialog bind:open={paletteOpen} title={$tStore('demonstration.labels.dialogTitle')} description={$tStore('demonstration.labels.dialogDescription')}>
@@ -502,23 +499,23 @@ interface CommandLoadingProps {
               <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
               <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
                 <Command.Item value="dashboard" onselect={() => { paletteOpen = false; }}>
-                  <LayoutDashboard class="mr-2" aria-hidden="true" />
+                  <LayoutDashboard aria-hidden="true" />
                   Dashboard
                   <Command.Shortcut>⌘D</Command.Shortcut>
                 </Command.Item>
                 <Command.Item value="documents" onselect={() => { paletteOpen = false; }}>
-                  <FileText class="mr-2" aria-hidden="true" />
+                  <FileText aria-hidden="true" />
                   Documentos
                 </Command.Item>
                 <Command.Item value="users" onselect={() => { paletteOpen = false; }}>
-                  <Users class="mr-2" aria-hidden="true" />
+                  <Users aria-hidden="true" />
                   Usuários
                 </Command.Item>
               </Command.Group>
               <Command.Separator />
               <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
                 <Command.Item value="settings" onselect={() => { paletteOpen = false; }}>
-                  <Settings class="mr-2" aria-hidden="true" />
+                  <Settings aria-hidden="true" />
                   Configurações
                   <Command.Shortcut>⌘,</Command.Shortcut>
                 </Command.Item>
@@ -623,7 +620,7 @@ interface CommandLoadingProps {
   />
 
   {#snippet doPair1()}
-    <div class="w-full rounded-xl border shadow-sm">
+    <div class="nds-w-full nds-rounded-md nds-border-default nds-shadow-sm">
       <Command.Root>
         <Command.Input placeholder="Buscar..." />
         <Command.List>
@@ -636,7 +633,7 @@ interface CommandLoadingProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="w-full rounded-xl border shadow-sm">
+    <div class="nds-w-full nds-rounded-md nds-border-default nds-shadow-sm">
       <Command.Root>
         <Command.Input placeholder="Buscar..." />
         <Command.List>
@@ -651,21 +648,22 @@ interface CommandLoadingProps {
   {#snippet doPair2()}
     <Button
       variant="outline"
-      class="w-full justify-between text-muted-foreground"
+      class="nds-cluster nds-w-full nds-text-muted-foreground"
+      data-justify="between"
     >
-      <span class="flex items-center gap-2">
-        <Search class="size-4" aria-hidden="true" />
+      <span class="nds-cluster" data-spacing="sm">
+        <Search class="nds-size-4" aria-hidden="true" />
         Buscar...
       </span>
-      <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-        <span class="text-xs">⌘</span>K
+      <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+        <span class="nds-text-caption">⌘</span>K
       </kbd>
     </Button>
   {/snippet}
   {#snippet dontPair2()}
     <Button
       variant="outline"
-      class="w-full"
+      class="nds-w-full"
     >
       Abrir painel
     </Button>
@@ -697,13 +695,15 @@ interface CommandLoadingProps {
           variant="outline"
           role="combobox"
           aria-expanded={comboboxOpen}
-          class="w-56 justify-between"
+          class="nds-cluster"
+          data-justify="between"
+          style="width: 14rem"
         >
           {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
-          <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" aria-hidden="true" />
+          <ChevronsUpDown class="nds-text-muted-foreground" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent class="w-56 p-0">
+      <PopoverContent class="nds-p-0" style="width: 14rem">
         <Command.Root>
           <Command.Input placeholder={$tStore('demonstration.labels.comboboxSearch')} />
           <Command.List>
@@ -716,7 +716,7 @@ interface CommandLoadingProps {
                 >
                   {item.label}
                   {#if comboboxValue === item.value}
-                    <CheckIcon class="ml-auto size-4" aria-hidden="true" />
+                    <CheckIcon class="nds-spacer-start nds-size-4" aria-hidden="true" />
                   {/if}
                 </Command.Item>
               {/each}
@@ -728,7 +728,7 @@ interface CommandLoadingProps {
   {/snippet}
 
   {#snippet variantInline()}
-    <div class="w-full max-w-sm rounded-xl border shadow-md">
+    <div class="nds-w-full nds-max-w-sm nds-rounded-md nds-border-default nds-shadow-md">
       <Command.Root>
         <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
         <Command.List>
@@ -742,10 +742,10 @@ interface CommandLoadingProps {
     </div>
   {/snippet}
   {#snippet variantPalette()}
-    <div class="flex flex-col items-center gap-2">
-      <p class="text-xs text-muted-foreground">{$tStore('demonstration.labels.shortcutHint')} {$tStore('demonstration.labels.shortcutKey')} {$tStore('demonstration.labels.openPalette')}</p>
-      <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-        <span class="text-xs">⌘</span>K
+    <div class="nds-stack" data-spacing="sm" style="align-items: center">
+      <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.shortcutHint')} {$tStore('demonstration.labels.shortcutKey')} {$tStore('demonstration.labels.openPalette')}</p>
+      <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+        <span class="nds-text-caption">⌘</span>K
       </kbd>
     </div>
   {/snippet}
@@ -781,7 +781,7 @@ interface CommandLoadingProps {
   />
 
   {#snippet compWithGroups()}
-    <div class="w-full max-w-xs rounded-md border shadow-md">
+    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
       <Command.Root>
         <Command.Input placeholder="Buscar componente..." />
         <Command.List>
@@ -804,7 +804,7 @@ interface CommandLoadingProps {
   {/snippet}
 
   {#snippet compWithDisabled()}
-    <div class="w-full max-w-xs rounded-md border shadow-md">
+    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
       <Command.Root>
         <Command.Input placeholder="Buscar..." />
         <Command.List>
@@ -826,7 +826,7 @@ interface CommandLoadingProps {
   {/snippet}
 
   {#snippet compLongList()}
-    <div class="w-full max-w-xs rounded-md border shadow-md">
+    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
       <Command.Root>
         <Command.Input placeholder="Buscar componente..." />
         <Command.List>

@@ -89,37 +89,37 @@
   const codeImportWithLabel = `import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
-  const codeDefault = `<div class="flex flex-col gap-1.5">
+  const codeDefault = `<div class="nds-stack" data-spacing="xs">
   <Label for="nome">Nome completo</Label>
   <Input id="nome" type="text" placeholder="ex: João da Silva" />
 </div>`;
 
-  const codeEmail = `<div class="flex flex-col gap-1.5">
+  const codeEmail = `<div class="nds-stack" data-spacing="xs">
   <Label for="email">Email</Label>
   <Input id="email" type="email" placeholder="ex: joao@empresa.com" />
 </div>`;
 
-  const codePassword = `<div class="flex flex-col gap-1.5">
+  const codePassword = `<div class="nds-stack" data-spacing="xs">
   <Label for="senha">Senha</Label>
   <Input id="senha" type="password" placeholder="Mínimo 8 caracteres" />
 </div>`;
 
-  const codeDisabled = `<div class="flex flex-col gap-1.5">
+  const codeDisabled = `<div class="nds-stack" data-spacing="xs">
   <Label for="campo-disabled">Campo desabilitado</Label>
   <Input id="campo-disabled" type="text" disabled placeholder="Não disponível" />
 </div>`;
 
-  const codeError = `<div class="flex flex-col gap-1.5">
+  const codeError = `<div class="nds-stack" data-spacing="xs">
   <Label for="email-erro">Email</Label>
   <Input id="email-erro" type="email" aria-invalid="true"
     aria-describedby="email-msg"
     placeholder="ex: joao@empresa.com" />
-  <p id="email-msg" class="text-sm text-destructive">
+  <p id="email-msg" class="nds-text-caption nds-text-destructive">
     Email inválido. Use o formato nome@dominio.com
   </p>
 </div>`;
 
-  const codeFile = `<div class="flex flex-col gap-1.5">
+  const codeFile = `<div class="nds-stack" data-spacing="xs">
   <Label for="arquivo">Arquivo</Label>
   <Input id="arquivo" type="file" />
 </div>`;
@@ -151,28 +151,28 @@ interface InputProps extends HTMLInputAttributes {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <div class="w-full space-y-4 max-w-sm">
-            <div class="flex flex-col gap-1.5">
+          <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-nome">{$tStore('demonstration.labels.defaultLabel')}</Label>
               <Input id="demo-nome" type="text" placeholder={$tStore('demonstration.labels.defaultPlaceholder')} />
             </div>
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-email">{$tStore('demonstration.labels.emailLabel')}</Label>
               <Input id="demo-email" type="email" placeholder={$tStore('demonstration.labels.emailPlaceholder')} />
             </div>
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-senha">{$tStore('demonstration.labels.passwordLabel')}</Label>
               <Input id="demo-senha" type="password" placeholder={$tStore('demonstration.labels.passwordPlaceholder')} />
             </div>
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-busca">{$tStore('demonstration.labels.searchLabel')}</Label>
               <Input id="demo-busca" type="search" placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
             </div>
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-disabled">{$tStore('demonstration.labels.disabledLabel')}</Label>
               <Input id="demo-disabled" type="text" disabled placeholder={$tStore('demonstration.labels.disabledPlaceholder')} />
             </div>
-            <div class="flex flex-col gap-1.5">
+            <div class="nds-stack" data-spacing="xs">
               <Label for="demo-error">{$tStore('demonstration.labels.errorLabel')}</Label>
               <Input
                 id="demo-error"
@@ -181,7 +181,7 @@ interface InputProps extends HTMLInputAttributes {
                 aria-describedby="demo-error-msg"
                 placeholder={$tStore('demonstration.labels.errorPlaceholder')}
               />
-              <p id="demo-error-msg" class="text-sm text-destructive">{$tStore('demonstration.labels.errorMessage')}</p>
+              <p id="demo-error-msg" class="nds-text-caption nds-text-destructive">{$tStore('demonstration.labels.errorMessage')}</p>
             </div>
           </div>
         {/snippet}
@@ -197,7 +197,7 @@ interface InputProps extends HTMLInputAttributes {
           $tStore('anatomy.item4'),
         ]}
         structureLabel={$tStore('anatomy.structureLabel')}
-        structureCode={`<div class="flex flex-col gap-1.5">
+        structureCode={`<div class="nds-stack" data-spacing="xs">
   <Label for="email">Email</Label>       <!-- Label obrigatório -->
   <Input
     id="email"
@@ -205,7 +205,7 @@ interface InputProps extends HTMLInputAttributes {
     placeholder="ex: joao@empresa.com"
     aria-describedby="email-hint"
   />
-  <p id="email-hint" class="text-sm text-muted-foreground">
+  <p id="email-hint" class="nds-text-caption nds-text-muted-foreground">
     Texto de apoio.
   </p>
 </div>`}
@@ -291,39 +291,39 @@ interface InputProps extends HTMLInputAttributes {
       />
 
       {#snippet doPair1()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="do1-email">Email</Label>
           <Input id="do1-email" type="email" placeholder="ex: joao@empresa.com" />
         </div>
       {/snippet}
       {#snippet dontPair1()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="dont1-email">Email</Label>
           <Input id="dont1-email" type="email" placeholder="Digite seu email" />
         </div>
       {/snippet}
 
       {#snippet doPair2()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="do2-email">Email</Label>
           <Input id="do2-email" type="email" placeholder="ex: joao@empresa.com" />
         </div>
       {/snippet}
       {#snippet dontPair2()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="dont2-email">Email</Label>
           <Input id="dont2-email" type="text" placeholder="ex: joao@empresa.com" />
         </div>
       {/snippet}
 
       {#snippet doPair3()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="do3-nome">Nome completo</Label>
           <Input id="do3-nome" type="text" placeholder="ex: João da Silva" />
         </div>
       {/snippet}
       {#snippet dontPair3()}
-        <div class="flex flex-col gap-1.5 w-full">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Input type="text" placeholder="Nome completo" />
         </div>
       {/snippet}
@@ -352,38 +352,38 @@ interface InputProps extends HTMLInputAttributes {
       />
 
       {#snippet variantText()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-text">Nome completo</Label>
           <Input id="v-text" type="text" placeholder="ex: João da Silva" />
         </div>
       {/snippet}
       {#snippet variantEmail()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-email">Email</Label>
           <Input id="v-email" type="email" placeholder="ex: joao@empresa.com" />
         </div>
       {/snippet}
       {#snippet variantPassword()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-password">Senha</Label>
           <Input id="v-password" type="password" placeholder="Mínimo 8 caracteres" />
         </div>
       {/snippet}
       {#snippet variantDisabled()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-disabled">Campo desabilitado</Label>
           <Input id="v-disabled" type="text" disabled placeholder="Não disponível" />
         </div>
       {/snippet}
       {#snippet variantError()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-error">Email</Label>
           <Input id="v-error" type="email" aria-invalid="true" aria-describedby="v-error-msg" placeholder="ex: joao@empresa.com" />
-          <p id="v-error-msg" class="text-sm text-destructive">Email inválido. Use o formato nome@dominio.com</p>
+          <p id="v-error-msg" class="nds-text-caption nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>
         </div>
       {/snippet}
       {#snippet variantFile()}
-        <div class="flex flex-col gap-1.5 w-64">
+        <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-file">Arquivo</Label>
           <Input id="v-file" type="file" />
         </div>
@@ -399,59 +399,59 @@ interface InputProps extends HTMLInputAttributes {
             name: $tStore('variants.compositions.withLabel.name'),
             description: $tStore('variants.compositions.withLabel.description'),
             useWhen: $tStore('variants.compositions.withLabel.use'),
-            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
+            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-nome">Nome completo</Label>\n  <Input id="input-nome" type="text" placeholder="ex: João da Silva" />\n</div>`,
             preview: compWithLabel,
           },
           {
             name: $tStore('variants.compositions.withHint.name'),
             description: $tStore('variants.compositions.withHint.description'),
             useWhen: $tStore('variants.compositions.withHint.use'),
-            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-email">Email</Label>\n  <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />\n  <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
+            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-email">Email</Label>\n  <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />\n  <p class="nds-text-caption nds-text-muted-foreground">Usaremos este email para envio de notificações.</p>\n</div>`,
             preview: compWithHint,
           },
           {
             name: $tStore('variants.compositions.withError.name'),
             description: $tStore('variants.compositions.withError.description'),
             useWhen: $tStore('variants.compositions.withError.use'),
-            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-email-error">Email</Label>\n  <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />\n  <p id="input-email-error-error" class="text-xs text-destructive">Email inválido. Use o formato nome@dominio.com</p>\n</div>`,
+            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-email-error">Email</Label>\n  <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />\n  <p id="input-email-error-error" class="nds-text-caption nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>\n</div>`,
             preview: compWithError,
           },
           {
             name: $tStore('variants.compositions.withPrefix.name'),
             description: $tStore('variants.compositions.withPrefix.description'),
             useWhen: $tStore('variants.compositions.withPrefix.use'),
-            code: `<div class="flex flex-col gap-1.5 w-full max-w-sm">\n  <Label for="input-url">URL do site</Label>\n  <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">\n    <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>\n    <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />\n  </div>\n</div>`,
+            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-url">URL do site</Label>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">\n    <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>\n    <Input class="nds-flex-1" style="border: 0" type="url" id="input-url" placeholder="meusite.com" />\n  </div>\n</div>`,
             preview: compWithPrefix,
           },
         ]}
       />
 
       {#snippet compWithLabel()}
-        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
           <Label for="input-nome">Nome completo</Label>
           <Input id="input-nome" type="text" placeholder="ex: João da Silva" />
         </div>
       {/snippet}
       {#snippet compWithHint()}
-        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
           <Label for="input-email">Email</Label>
           <Input id="input-email" type="email" placeholder="ex: joao@empresa.com" />
-          <p class="text-xs text-muted-foreground">Usaremos este email para envio de notificações.</p>
+          <p class="nds-text-caption nds-text-muted-foreground">Usaremos este email para envio de notificações.</p>
         </div>
       {/snippet}
       {#snippet compWithError()}
-        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
           <Label for="input-email-error">Email</Label>
           <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />
-          <p id="input-email-error-error" class="text-xs text-destructive">Email inválido. Use o formato nome@dominio.com</p>
+          <p id="input-email-error-error" class="nds-text-caption nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>
         </div>
       {/snippet}
       {#snippet compWithPrefix()}
-        <div class="flex flex-col gap-1.5 w-full max-w-sm">
+        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
           <Label for="input-url">URL do site</Label>
-          <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring/50 overflow-hidden">
-            <span class="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input shrink-0">https://</span>
-            <Input class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" type="url" id="input-url" placeholder="meusite.com" />
+          <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
+            <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>
+            <Input class="nds-flex-1" style="border: 0" type="url" id="input-url" placeholder="meusite.com" />
           </div>
         </div>
       {/snippet}
