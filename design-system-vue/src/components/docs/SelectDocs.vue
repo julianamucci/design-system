@@ -186,11 +186,11 @@ const codeWithIcon = `<Select>
   </SelectTrigger>
   <SelectContent>
     <SelectItem value="pt-BR">
-      <Globe class="size-4" aria-hidden="true" />
+      <Globe class="nds-icon" aria-hidden="true" />
       <span>Português (BR)</span>
     </SelectItem>
     <SelectItem value="en">
-      <Globe class="size-4" aria-hidden="true" />
+      <Globe class="nds-icon" aria-hidden="true" />
       <span>English</span>
     </SelectItem>
   </SelectContent>
@@ -241,7 +241,7 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.withIcon'),   description: stripHtml(tContent('variants.styles.withIcon')),   code: codeWithIcon   },
 ]);
 
-const codeCompStates = `<div class="flex flex-col gap-2 w-80">
+const codeCompStates = `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <Label for="state">Estado</Label>
   <Select>
     <SelectTrigger id="state" aria-label="Estado">
@@ -256,7 +256,7 @@ const codeCompStates = `<div class="flex flex-col gap-2 w-80">
   </Select>
 </div>`;
 
-const codeCompRegionGroups = `<div class="flex flex-col gap-2 w-80">
+const codeCompRegionGroups = `<div class="nds-stack nds-w-sm" data-spacing="sm">
   <Label for="region">Região</Label>
   <Select>
     <SelectTrigger id="region" aria-label="Região">
@@ -278,13 +278,13 @@ const codeCompRegionGroups = `<div class="flex flex-col gap-2 w-80">
 </div>`;
 
 const codeCompInForm = `<form
-  class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+  class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
   @submit.prevent="(e) => {
     const data = new FormData(e.target as HTMLFormElement);
     console.log('Estado:', data.get('state'));
   }"
 >
-  <div class="flex flex-col gap-2">
+  <div class="nds-stack" data-spacing="sm">
     <Label for="form-state">Estado</Label>
     <Select name="state" required>
       <SelectTrigger id="form-state" aria-label="Estado">
@@ -297,7 +297,7 @@ const codeCompInForm = `<form
       </SelectContent>
     </Select>
   </div>
-  <button type="submit" class="self-end">Continuar</button>
+  <button type="submit" style="align-self: flex-end">Continuar</button>
 </form>`;
 
 const compositionItems = computed(() => [
@@ -463,15 +463,15 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full max-w-md grid gap-6">
+      <div class="nds-w-full nds-max-w-md nds-stack" data-spacing="lg">
         <!-- Default -->
-        <div class="grid gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-estado">{{ tContent('demonstration.labels.stateLabel') }}</Label>
           <Select>
             <SelectTrigger
               id="demo-estado"
               :aria-label="tContent('demonstration.labels.stateLabel')"
-              class="w-full"
+              class="nds-w-full"
             >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
@@ -493,13 +493,13 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- With groups -->
-        <div class="grid gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-regiao">{{ tContent('demonstration.labels.regionLabel') }}</Label>
           <Select>
             <SelectTrigger
               id="demo-regiao"
               :aria-label="tContent('demonstration.labels.regionLabel')"
-              class="w-full"
+              class="nds-w-full"
             >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
@@ -536,14 +536,14 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Sm -->
-        <div class="grid gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="demo-sm">{{ tContent('demonstration.labels.stateLabel') }} (sm)</Label>
           <Select>
             <SelectTrigger
               id="demo-sm"
               size="sm"
               :aria-label="tContent('demonstration.labels.stateLabel')"
-              class="w-full"
+              class="nds-w-full"
             >
               <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
             </SelectTrigger>
@@ -655,7 +655,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Estado (do)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
@@ -676,7 +676,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Estado (dont)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="-- Escolha --" />
           </SelectTrigger>
@@ -699,7 +699,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Região (do)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
@@ -729,7 +729,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Região (dont)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
@@ -768,7 +768,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Selecionar estado (default)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
@@ -794,7 +794,7 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Selecionar estado (grupos)"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
@@ -826,28 +826,28 @@ const visualTestItems = computed(() => [
         <Select>
           <SelectTrigger
             aria-label="Selecionar idioma"
-            class="w-full"
+            class="nds-w-full"
           >
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="pt-BR">
               <Globe
-                class="size-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               <span>Português (BR)</span>
             </SelectItem>
             <SelectItem value="en">
               <Globe
-                class="size-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               <span>English</span>
             </SelectItem>
             <SelectItem value="es">
               <Globe
-                class="size-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               <span>Español</span>
@@ -866,7 +866,7 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
-          class="flex flex-col gap-2 w-80"
+          class="nds-stack nds-w-sm" data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative"
         >
           <Label for="comp-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
@@ -897,7 +897,7 @@ const visualTestItems = computed(() => [
 
       <template #variant-preview-1>
         <div
-          class="flex flex-col gap-2 w-80"
+          class="nds-stack nds-w-sm" data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative"
         >
           <Label for="comp-region">{{ tContent('demonstration.labels.regionLabel') }}</Label>
@@ -943,11 +943,11 @@ const visualTestItems = computed(() => [
 
       <template #variant-preview-2>
         <form
-          class="flex flex-col gap-4 w-80 p-4 border rounded-lg"
+          class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
           style="contain: layout; min-height: 180px; position: relative"
           @submit.prevent
         >
-          <div class="flex flex-col gap-2">
+          <div class="nds-stack" data-spacing="sm">
             <Label for="comp-form-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
             <Select name="state">
               <SelectTrigger
@@ -971,7 +971,8 @@ const visualTestItems = computed(() => [
           </div>
           <button
             type="submit"
-            class="self-end inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium"
+            class="nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium"
+            style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-end; padding: 0.375rem 0.75rem"
           >
             Continuar
           </button>

@@ -202,7 +202,7 @@ const variantItems = computed(() => [
   },
 ]);
 
-const codeCompLabel = `<div class="flex flex-col gap-2">
+const codeCompLabel = `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-code">Código de verificação</Label>
   <InputOTP id="otp-code" :max-length="6" v-model="code" autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup>
@@ -216,35 +216,35 @@ const codeCompLabel = `<div class="flex flex-col gap-2">
   </InputOTP>
 </div>`;
 
-const codeCompHelp = `<div class="flex flex-col gap-2">
+const codeCompHelp = `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-help">Código de verificação</Label>
   <InputOTP id="otp-help" :max-length="6" aria-describedby="otp-help-text"
     autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <p id="otp-help-text" class="text-xs text-muted-foreground">
+  <p id="otp-help-text" class="nds-text-caption nds-text-muted-foreground">
     Enviamos por SMS, expira em 5 min.
   </p>
 </div>`;
 
-const codeCompError = `<div class="flex flex-col gap-2">
+const codeCompError = `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-err">Código de verificação</Label>
   <InputOTP id="otp-err" :max-length="6" aria-invalid="true"
     aria-describedby="otp-err-text" autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <p id="otp-err-text" class="text-xs text-destructive">
+  <p id="otp-err-text" class="nds-text-caption nds-text-destructive">
     Código incorreto. Verifique e tente novamente.
   </p>
 </div>`;
 
-const codeCompResend = `<div class="flex flex-col gap-3">
+const codeCompResend = `<div class="nds-stack" data-spacing="sm">
   <Label for="otp-resend">Código de verificação</Label>
   <InputOTP id="otp-resend" :max-length="6" autocomplete="one-time-code" inputmode="numeric">
     <InputOTPGroup><!-- 6 slots --></InputOTPGroup>
   </InputOTP>
-  <div class="flex items-center justify-between gap-3">
-    <p class="text-xs text-muted-foreground">Não recebeu?</p>
+  <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+    <p class="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
     <Button variant="link" size="sm">Reenviar código</Button>
   </div>
 </div>`;
@@ -398,14 +398,15 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
         <!-- 6 dígitos -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.sixDigits'))"
           />
           <InputOTP
@@ -429,11 +430,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- 4 dígitos -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.fourDigits'))"
           />
           <InputOTP
@@ -456,11 +458,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Com Separator -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.withSeparator'))"
           />
           <InputOTP
@@ -487,11 +490,12 @@ const a11yCritCols = computed(() => ({
 
         <!-- Alfanumérico -->
         <div
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px;"
         >
           <p
-            class="text-xs font-medium text-muted-foreground"
+            class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('demonstration.labels.alphanumeric'))"
           />
           <InputOTP
@@ -581,9 +585,9 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             autocomplete="one-time-code"
           </div>
         </div>
@@ -591,9 +595,9 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground italic">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic">
             sem autocomplete
           </div>
         </div>
@@ -601,9 +605,9 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs">
+          <div class="nds-text-caption">
             Label: Código de verificação
           </div>
         </div>
@@ -611,9 +615,9 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs italic">
+          <div class="nds-text-caption nds-italic">
             (sem label)
           </div>
         </div>
@@ -634,9 +638,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             maxLength=6
           </div>
         </div>
@@ -644,9 +648,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             maxLength=4
           </div>
         </div>
@@ -654,9 +658,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             3 + Separator + 3
           </div>
         </div>
@@ -664,9 +668,9 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 60px;"
-          class="w-full"
+          class="nds-w-full"
         >
-          <div class="text-xs font-mono text-muted-foreground">
+          <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
             REGEXP_ONLY_DIGITS_AND_CHARS
           </div>
         </div>
@@ -681,7 +685,7 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="comp-label-otp">Código de verificação</Label>
           <InputOTP
             id="comp-label-otp"
@@ -706,7 +710,7 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-1>
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="comp-help-otp">Código de verificação</Label>
           <InputOTP
             id="comp-help-otp"
@@ -730,7 +734,7 @@ const a11yCritCols = computed(() => ({
           </InputOTP>
           <p
             id="comp-help-otp-text"
-            class="text-xs text-muted-foreground"
+            class="nds-text-caption nds-text-muted-foreground"
           >
             Enviamos por SMS, expira em 5 min.
           </p>
@@ -738,7 +742,7 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-2>
-        <div class="flex flex-col gap-2">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="comp-err-otp">Código de verificação</Label>
           <InputOTP
             id="comp-err-otp"
@@ -763,7 +767,7 @@ const a11yCritCols = computed(() => ({
           </InputOTP>
           <p
             id="comp-err-otp-text"
-            class="text-xs text-destructive"
+            class="nds-text-caption nds-text-destructive"
           >
             Código incorreto. Verifique e tente novamente.
           </p>
@@ -771,7 +775,7 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-3>
-        <div class="flex flex-col gap-3">
+        <div class="nds-stack" data-spacing="sm">
           <Label for="comp-resend-otp">Código de verificação</Label>
           <InputOTP
             id="comp-resend-otp"
@@ -792,8 +796,8 @@ const a11yCritCols = computed(() => ({
               </InputOTPGroup>
             </template>
           </InputOTP>
-          <div class="flex items-center justify-between gap-3">
-            <p class="text-xs text-muted-foreground">
+          <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+            <p class="nds-text-caption nds-text-muted-foreground">
               Não recebeu?
             </p>
             <Button

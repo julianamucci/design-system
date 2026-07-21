@@ -130,23 +130,23 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 const codeImportBasic = `import { AspectRatio } from "@/components/ui/aspect-ratio";`;
 
 const codeSixteenNine = `<AspectRatio :ratio="16 / 9">
-  <img src="/hero.jpg" alt="Paisagem" class="h-full w-full object-cover rounded-md" />
+  <img src="/hero.jpg" alt="Paisagem" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
 </AspectRatio>`;
 
 const codeFourThree = `<AspectRatio :ratio="4 / 3">
-  <img src="/product.jpg" alt="Foto do produto" class="h-full w-full object-cover rounded-md" />
+  <img src="/product.jpg" alt="Foto do produto" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
 </AspectRatio>`;
 
 const codeSquare = `<AspectRatio :ratio="1">
-  <img src="/avatar.jpg" alt="Foto de perfil" class="h-full w-full object-cover rounded-md" />
+  <img src="/avatar.jpg" alt="Foto de perfil" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
 </AspectRatio>`;
 
 const codeThreeFour = `<AspectRatio :ratio="3 / 4">
-  <img src="/cover.jpg" alt="Capa vertical" class="h-full w-full object-cover rounded-md" />
+  <img src="/cover.jpg" alt="Capa vertical" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
 </AspectRatio>`;
 
 const codeUltraWide = `<AspectRatio :ratio="21 / 9">
-  <img src="/pano.jpg" alt="Cabeçalho panorâmico" class="h-full w-full object-cover rounded-md" />
+  <img src="/pano.jpg" alt="Cabeçalho panorâmico" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
 </AspectRatio>`;
 
 const codeCustomizationTokens = `<!-- Tokens no FILHO, nunca no AspectRatio -->
@@ -154,7 +154,7 @@ const codeCustomizationTokens = `<!-- Tokens no FILHO, nunca no AspectRatio -->
   <img
     src="/hero.jpg"
     alt="Paisagem"
-    class="h-full w-full object-cover rounded-md border"
+    class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
   />
 </AspectRatio>`;
 
@@ -169,7 +169,7 @@ const anatomyStructure = `<AspectRatio ratio={16 / 9}>          // 1. Root wrapp
   <img                                 // 2. Slot (conteúdo filho)
     src="/hero.jpg"
     alt="Paisagem"
-    class="h-full w-full object-cover"
+    class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
   />
 </AspectRatio>`;
 
@@ -297,60 +297,60 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div class="space-y-2">
+      <div class="nds-grid nds-w-full" style="gap: var(--spacing-6)">
+        <div class="nds-stack" data-spacing="xs">
           <AspectRatio :ratio="16 / 9">
             <img
               :src="imgLandscape"
               :alt="tContent('demonstration.labels.sixteenNine')"
               loading="lazy"
               decoding="async"
-              class="h-full w-full object-cover rounded-md"
+              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.sixteenNine') }}
           </p>
         </div>
-        <div class="space-y-2">
+        <div class="nds-stack" data-spacing="xs">
           <AspectRatio :ratio="4 / 3">
             <img
               :src="imgProduct"
               :alt="tContent('demonstration.labels.fourThree')"
               loading="lazy"
               decoding="async"
-              class="h-full w-full object-cover rounded-md"
+              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.fourThree') }}
           </p>
         </div>
-        <div class="space-y-2">
+        <div class="nds-stack" data-spacing="xs">
           <AspectRatio :ratio="1">
             <img
               :src="imgAvatar"
               :alt="tContent('demonstration.labels.square')"
               loading="lazy"
               decoding="async"
-              class="h-full w-full object-cover rounded-md"
+              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.square') }}
           </p>
         </div>
-        <div class="space-y-2">
+        <div class="nds-stack" data-spacing="xs">
           <AspectRatio :ratio="3 / 4">
             <img
               :src="imgPortrait"
               :alt="tContent('demonstration.labels.threeFour')"
               loading="lazy"
               decoding="async"
-              class="h-full w-full object-cover rounded-md"
+              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
-          <p class="text-xs text-muted-foreground">
+          <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.threeFour') }}
           </p>
         </div>
@@ -423,56 +423,56 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <AspectRatio
           :ratio="16 / 9"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgLandscape"
             alt="Paisagem"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #dont-preview-0>
         <AspectRatio
           :ratio="16 / 9"
-          class="w-full bg-muted"
+          class="nds-w-full nds-bg-muted"
         >
           <img
             :src="imgLandscape"
             alt="Paisagem"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-contain rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: contain; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #do-preview-1>
         <AspectRatio
           :ratio="4 / 3"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgProduct"
             alt="Produto"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #dont-preview-1>
         <AspectRatio
           :ratio="4 / 3"
-          class="w-full rounded-md border"
+          class="nds-w-full nds-rounded-md nds-border-default"
         >
           <img
             :src="imgProduct"
             alt="Produto"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -492,70 +492,70 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <AspectRatio
           :ratio="16 / 9"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgLandscape"
             alt="Paisagem 16:9"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #variant-preview-1>
         <AspectRatio
           :ratio="4 / 3"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgProduct"
             alt="Produto 4:3"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #variant-preview-2>
         <AspectRatio
           :ratio="1"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgAvatar"
             alt="Avatar 1:1"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #variant-preview-3>
         <AspectRatio
           :ratio="3 / 4"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgPortrait"
             alt="Retrato 3:4"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
       <template #variant-preview-4>
         <AspectRatio
           :ratio="21 / 9"
-          class="w-full"
+          class="nds-w-full"
         >
           <img
             :src="imgUltraWide"
             alt="Ultra-wide 21:9"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover rounded-md"
+            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>

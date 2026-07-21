@@ -172,7 +172,7 @@ const codeLongText = `<Tooltip>
       <Info aria-hidden="true" />
     </Button>
   </TooltipTrigger>
-  <TooltipContent class="max-w-xs">
+  <TooltipContent class="nds-max-w-xs">
     Texto longo que ocupa até o tamanho máximo e quebra naturalmente.
   </TooltipContent>
 </Tooltip>`;
@@ -224,41 +224,41 @@ const codeCompIconShortcut = `<Tooltip>
   </TooltipContent>
 </Tooltip>`;
 
-const codeCompFormHelp = `<div class="flex flex-col gap-2">
-  <div class="flex items-center gap-2">
-    <label for="api-token" class="text-sm font-medium">Token de API</label>
+const codeCompFormHelp = `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="xs">
+    <label for="api-token" class="nds-text-body nds-font-medium">Token de API</label>
     <Tooltip>
       <TooltipTrigger as-child>
         <Button variant="ghost" size="icon" aria-label="Ajuda sobre Token de API">
           <HelpCircle aria-hidden="true" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="right" class="max-w-xs">
+      <TooltipContent side="right" class="nds-max-w-xs">
         Cole o token gerado em Configurações &gt; Integrações.
       </TooltipContent>
     </Tooltip>
   </div>
-  <input id="api-token" type="text" class="input w-64" placeholder="sk-..." />
+  <input id="api-token" type="text" class="nds-input" style="width: 16rem" placeholder="sk-..." />
 </div>`;
 
-const codeCompMetric = `<div class="flex flex-col gap-1">
-  <div class="flex items-center gap-2">
-    <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">LCP</p>
+const codeCompMetric = `<div class="nds-stack" data-spacing="xs">
+  <div class="nds-cluster" data-spacing="xs">
+    <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">LCP</p>
     <Tooltip>
       <TooltipTrigger as-child>
         <Button variant="ghost" size="icon" aria-label="O que é LCP">
           <Info aria-hidden="true" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="top" class="max-w-xs">
+      <TooltipContent side="top" class="nds-max-w-xs">
         Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
       </TooltipContent>
     </Tooltip>
   </div>
-  <p class="text-2xl font-semibold">1.8s</p>
+  <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.8s</p>
 </div>`;
 
-const codeCompSides = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center">
+const codeCompSides = `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
   <Tooltip v-for="s in ['top','right','bottom','left']" :key="s">
     <TooltipTrigger as-child>
       <Button variant="outline">{{ s }}</Button>
@@ -408,8 +408,11 @@ const a11yCritCols = computed(() => ({
       <!-- ── Demonstração ─────────────────────────────────────────── -->
       <DocsDemonstration :title="tContent('demonstration.title')">
         <div
-          class="flex flex-wrap items-center justify-center gap-6 w-full"
-          style="contain: layout; min-height: 120px;"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
+          data-align="center"
+          data-spacing="lg"
+          style="contain: layout; min-height: 120px; position: relative;"
         >
           <Tooltip>
             <TooltipTrigger as-child>
@@ -418,10 +421,7 @@ const a11yCritCols = computed(() => ({
                 size="icon"
                 :aria-label="tContent('demonstration.labels.saveButton')"
               >
-                <Save
-                  aria-hidden="true"
-                  class="size-4"
-                />
+                <Save aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -436,10 +436,7 @@ const a11yCritCols = computed(() => ({
                 size="icon"
                 :aria-label="tContent('demonstration.labels.deleteButton')"
               >
-                <Trash2
-                  aria-hidden="true"
-                  class="size-4"
-                />
+                <Trash2 aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -454,10 +451,7 @@ const a11yCritCols = computed(() => ({
                 size="icon"
                 :aria-label="tContent('demonstration.labels.shareButton')"
               >
-                <Share2
-                  aria-hidden="true"
-                  class="size-4"
-                />
+                <Share2 aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -547,7 +541,9 @@ const a11yCritCols = computed(() => ({
         <template #do-preview-0>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -556,10 +552,7 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Salvar"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -571,7 +564,9 @@ const a11yCritCols = computed(() => ({
         <template #dont-preview-0>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -579,10 +574,7 @@ const a11yCritCols = computed(() => ({
                   variant="outline"
                   size="icon"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -594,7 +586,9 @@ const a11yCritCols = computed(() => ({
         <template #do-preview-1>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -603,15 +597,12 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Salvar"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
-                class="gap-1"
+                style="gap: 0.25rem"
               >
                 Salvar
                 <Kbd>Ctrl</Kbd>
@@ -623,9 +614,14 @@ const a11yCritCols = computed(() => ({
         <template #dont-preview-1>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
-            <div class="text-xs font-mono text-muted-foreground italic max-w-[200px] text-center">
+            <div
+              class="nds-text-caption nds-font-mono nds-text-muted-foreground nds-italic"
+              style="max-width: 200px; text-align: center"
+            >
               "Clique aqui para salvar o documento e voltar à tela inicial."
             </div>
           </div>
@@ -646,7 +642,9 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-0>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -655,10 +653,7 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Salvar"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
@@ -670,7 +665,9 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-1>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -679,15 +676,12 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Salvar"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
-                class="gap-1"
+                style="gap: 0.25rem"
               >
                 Salvar
                 <Kbd>Ctrl</Kbd>
@@ -699,7 +693,9 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-2>
           <div
             style="contain: layout; min-height: 80px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -708,15 +704,12 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Info"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
-                class="max-w-xs"
+                class="nds-max-w-xs"
               >
                 Texto longo que ocupa até o tamanho máximo e quebra naturalmente em múltiplas linhas sem ser um parágrafo.
               </TooltipContent>
@@ -735,7 +728,9 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-0>
           <div
             style="contain: layout; min-height: 100px;"
-            class="flex items-center justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="center"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -744,15 +739,12 @@ const a11yCritCols = computed(() => ({
                   size="icon"
                   aria-label="Salvar"
                 >
-                  <Save
-                    aria-hidden="true"
-                    class="size-4"
-                  />
+                  <Save aria-hidden="true" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
-                class="gap-1"
+                style="gap: 0.25rem"
               >
                 Salvar
                 <Kbd>Ctrl</Kbd>
@@ -764,13 +756,15 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-1>
           <div
             style="contain: layout; min-height: 120px;"
-            class="flex items-start justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="start"
           >
-            <div class="flex flex-col gap-2 items-start">
-              <div class="flex items-center gap-2">
+            <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
+              <div class="nds-cluster" data-spacing="xs">
                 <label
                   for="api-token-vue-comp"
-                  class="text-sm font-medium"
+                  class="nds-text-body nds-font-medium"
                 >Token de API</label>
                 <Tooltip>
                   <TooltipTrigger as-child>
@@ -779,15 +773,12 @@ const a11yCritCols = computed(() => ({
                       size="icon"
                       aria-label="Ajuda sobre Token de API"
                     >
-                      <HelpCircle
-                        aria-hidden="true"
-                        class="size-4"
-                      />
+                      <HelpCircle aria-hidden="true" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent
                     side="right"
-                    class="max-w-xs"
+                    class="nds-max-w-xs"
                   >
                     Cole o token gerado em Configurações &gt; Integrações.
                   </TooltipContent>
@@ -796,7 +787,8 @@ const a11yCritCols = computed(() => ({
               <input
                 id="api-token-vue-comp"
                 type="text"
-                class="h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                class="nds-input"
+                style="width: 16rem"
                 placeholder="sk-..."
               >
             </div>
@@ -805,11 +797,13 @@ const a11yCritCols = computed(() => ({
         <template #variant-preview-2>
           <div
             style="contain: layout; min-height: 120px;"
-            class="flex items-start justify-center w-full"
+            class="nds-cluster nds-w-full"
+            data-justify="center"
+            data-align="start"
           >
-            <div class="flex flex-col gap-1 items-start">
-              <div class="flex items-center gap-2">
-                <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
+              <div class="nds-cluster" data-spacing="xs">
+                <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
                   LCP
                 </p>
                 <Tooltip>
@@ -819,21 +813,18 @@ const a11yCritCols = computed(() => ({
                       size="icon"
                       aria-label="O que é LCP"
                     >
-                      <Info
-                        aria-hidden="true"
-                        class="size-4"
-                      />
+                      <Info aria-hidden="true" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent
                     side="top"
-                    class="max-w-xs"
+                    class="nds-max-w-xs nds-whitespace-normal"
                   >
                     Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <p class="text-2xl font-semibold">
+              <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">
                 1.8s
               </p>
             </div>
@@ -841,8 +832,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-3>
           <div
-            style="contain: layout; min-height: 160px;"
-            class="grid grid-cols-2 sm:grid-cols-4 gap-8 place-items-center w-full"
+            style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;"
+            class="nds-grid nds-w-full"
           >
             <Tooltip>
               <TooltipTrigger as-child>

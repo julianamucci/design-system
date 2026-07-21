@@ -196,32 +196,32 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.withLabel')), description: stripHtml(tContent('variants.styles.withLabel')), code: codeWithLabel },
 ]);
 
-const codeToolbar = `<div role="group" aria-label="Formatação de texto" class="flex items-center gap-1 rounded-md border border-input p-1">
-  <Toggle aria-label="Negrito" :model-value="true"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
-  <Toggle aria-label="Itálico"><Italic class="h-4 w-4" aria-hidden="true" /></Toggle>
-  <Toggle aria-label="Sublinhado"><Underline class="h-4 w-4" aria-hidden="true" /></Toggle>
+const codeToolbar = `<div role="group" aria-label="Formatação de texto" class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
+  <Toggle aria-label="Negrito" :model-value="true"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Itálico"><Italic class="nds-icon" aria-hidden="true" /></Toggle>
+  <Toggle aria-label="Sublinhado"><Underline class="nds-icon" aria-hidden="true" /></Toggle>
 </div>`;
 
 const codeFilterWithLabel = `<Toggle variant="outline">
-  <Eye class="h-4 w-4" aria-hidden="true" />
+  <Eye class="nds-icon" aria-hidden="true" />
   Mostrar ocultos
 </Toggle>`;
 
-const codeSizes = `<div class="flex items-center gap-3">
-  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
-  <Toggle variant="outline" aria-label="Negrito (default)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
-  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold class="h-4 w-4" aria-hidden="true" /></Toggle>
+const codeSizes = `<div class="nds-cluster" data-spacing="sm">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" aria-label="Negrito (default)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
 </div>`;
 
-const codeFilterList = `<div class="flex flex-col gap-2 w-72">
-  <span class="text-sm font-medium">Filtros de exibição</span>
-  <div class="flex flex-wrap gap-2">
+const codeFilterList = `<div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+  <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
+  <div class="nds-cluster" data-spacing="sm">
     <Toggle variant="outline">
-      <Eye class="h-4 w-4" aria-hidden="true" />
+      <Eye class="nds-icon" aria-hidden="true" />
       Mostrar ocultos
     </Toggle>
     <Toggle variant="outline" :model-value="true">
-      <List class="h-4 w-4" aria-hidden="true" />
+      <List class="nds-icon" aria-hidden="true" />
       Visão compacta
     </Toggle>
   </div>
@@ -370,9 +370,9 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="flex flex-col gap-6 w-full max-w-md">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
         <!-- Barra de formatação icon-only -->
-        <div class="flex items-center gap-1 rounded-md border p-1">
+        <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
           <Toggle
             :model-value="demoBold"
             :aria-label="tContent('demonstration.labels.bold')"
@@ -397,7 +397,7 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Toggle com label visível -->
-        <div class="flex items-center gap-2">
+        <div class="nds-cluster" data-spacing="sm">
           <Toggle
             variant="outline"
             :model-value="demoShowHidden"
@@ -534,7 +534,7 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: ToggleGroup vs múltiplos Toggle soltos -->
       <template #do-preview-1>
-        <div class="flex items-center gap-1 rounded-md border p-1">
+        <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
           <Toggle aria-label="Negrito">
             <Bold aria-hidden="true" />
           </Toggle>
@@ -547,7 +547,7 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="flex items-center gap-3">
+        <div class="nds-cluster" data-spacing="sm">
           <Toggle aria-label="Negrito">
             <Bold aria-hidden="true" />
           </Toggle>
@@ -610,26 +610,27 @@ const visualTestItems = computed(() => [
         <div
           role="group"
           aria-label="Formatação de texto"
-          class="flex items-center gap-1 rounded-md border border-input p-1"
+          class="nds-cluster nds-rounded-md nds-border-default nds-p-1"
+          data-spacing="xs"
         >
           <Toggle
             aria-label="Negrito"
             :model-value="true"
           >
             <Bold
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
           <Toggle aria-label="Itálico">
             <Italic
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
           <Toggle aria-label="Sublinhado">
             <Underline
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
@@ -638,21 +639,21 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <Toggle variant="outline">
           <Eye
-            class="h-4 w-4"
+            class="nds-icon"
             aria-hidden="true"
           />
           Mostrar ocultos
         </Toggle>
       </template>
       <template #variant-preview-2>
-        <div class="flex items-center gap-3">
+        <div class="nds-cluster" data-spacing="sm">
           <Toggle
             variant="outline"
             size="sm"
             aria-label="Negrito (sm)"
           >
             <Bold
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
@@ -661,7 +662,7 @@ const visualTestItems = computed(() => [
             aria-label="Negrito (default)"
           >
             <Bold
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
@@ -671,19 +672,19 @@ const visualTestItems = computed(() => [
             aria-label="Negrito (lg)"
           >
             <Bold
-              class="h-4 w-4"
+              class="nds-icon"
               aria-hidden="true"
             />
           </Toggle>
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="flex flex-col gap-2 w-72">
-          <span class="text-sm font-medium">Filtros de exibição</span>
-          <div class="flex flex-wrap gap-2">
+        <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+          <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
+          <div class="nds-cluster" data-spacing="sm">
             <Toggle variant="outline">
               <Eye
-                class="h-4 w-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               Mostrar ocultos
@@ -693,7 +694,7 @@ const visualTestItems = computed(() => [
               :model-value="true"
             >
               <List
-                class="h-4 w-4"
+                class="nds-icon"
                 aria-hidden="true"
               />
               Visão compacta

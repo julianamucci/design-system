@@ -179,7 +179,7 @@ const codeWithFooter = `<Card>
     <CardDescription>Em estoque</CardDescription>
   </CardHeader>
   <CardContent>R$ 1.299,00</CardContent>
-  <CardFooter class="justify-end gap-2">
+  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
     <Button variant="outline" aria-label="Cancelar edição">Cancelar</Button>
     <Button aria-label="Salvar Cadeira Gamer Pro">Salvar</Button>
   </CardFooter>
@@ -206,7 +206,8 @@ const codeWithImage = `<Card>
   <img
     src="/product.jpg"
     alt="Cadeira Gamer Pro em fundo branco"
-    class="aspect-video w-full object-cover"
+    class="nds-w-full"
+    style="aspect-ratio: 16 / 9; object-fit: cover"
   />
   <CardHeader>
     <CardTitle>Cadeira Gamer Pro</CardTitle>
@@ -272,19 +273,19 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withFooter.name'),
     description: tContent('variants.compositions.withFooter.description'),
     useWhen: tContent('variants.compositions.withFooter.use'),
-    code: `<Card class="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p class="text-lg font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter class="justify-end gap-2">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
+    code: `<Card class="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p class="nds-text-lead nds-font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
   },
   {
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
-    code: `<Card class="w-full max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p class="text-2xl font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
+    code: `<Card class="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p class="nds-text-h4 nds-font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
   },
   {
     name: tContent('variants.compositions.withImage.name'),
     description: tContent('variants.compositions.withImage.description'),
     useWhen: tContent('variants.compositions.withImage.use'),
-    code: `<Card class="w-full max-w-sm">\n  <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt="Cadeira Gamer Pro" class="w-full h-40 object-cover" />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
+    code: `<Card class="nds-w-full nds-max-w-sm">\n  <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80" alt="Cadeira Gamer Pro" class="nds-w-full" style="height: 10rem; object-fit: cover" />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
   },
 ]);
 
@@ -413,7 +414,7 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+      <div class="nds-w-full nds-grid" data-cols="2" data-spacing="md" data-min="18rem">
         <Card>
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
@@ -424,10 +425,10 @@ const visualTestItems = computed(() => [
               </Badge>
             </CardAction>
           </CardHeader>
-          <CardContent class="text-base font-semibold">
+          <CardContent class="nds-text-base nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -448,13 +449,13 @@ const visualTestItems = computed(() => [
             <CardTitle>{{ tContent('demonstration.labels.metricTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.metricTrend') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-2xl font-semibold">
+          <CardContent class="nds-text-h4 nds-font-semibold">
             {{ tContent('demonstration.labels.metricValue') }}
           </CardContent>
         </Card>
-        <Card class="w-full max-w-sm">
+        <Card class="nds-w-full nds-max-w-sm">
           <CardHeader>
-            <div class="flex items-center gap-3">
+            <div class="nds-cluster" data-spacing="sm">
               <Avatar>
                 <AvatarImage
                   :src="DEMO_IMAGE_AVATAR"
@@ -462,7 +463,7 @@ const visualTestItems = computed(() => [
                 />
                 <AvatarFallback>MR</AvatarFallback>
               </Avatar>
-              <div class="min-w-0">
+              <div class="nds-min-w-0">
                 <CardTitle>{{ tContent('demonstration.labels.profileTitle') }}</CardTitle>
                 <CardDescription>{{ tContent('demonstration.labels.profileDescription') }}</CardDescription>
               </div>
@@ -553,15 +554,15 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">
+          <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -575,18 +576,18 @@ const visualTestItems = computed(() => [
         </Card>
       </template>
       <template #dont-preview-0>
-        <Card class="w-full">
-          <CardContent class="py-2 text-sm text-muted-foreground">
+        <Card class="nds-w-full">
+          <CardContent class="nds-py-2 nds-text-body nds-text-muted-foreground">
             —
           </CardContent>
         </Card>
       </template>
       <template #do-preview-1>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
           </CardHeader>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -604,11 +605,11 @@ const visualTestItems = computed(() => [
         </Card>
       </template>
       <template #dont-preview-1>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
           </CardHeader>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -638,12 +639,12 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">
+          <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
         </Card>
@@ -651,27 +652,27 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <Card
           size="sm"
-          class="w-full"
+          class="nds-w-full"
         >
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.metricTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.metricTrend') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-xl font-semibold">
+          <CardContent class="nds-text-lead nds-font-semibold">
             {{ tContent('demonstration.labels.metricValue') }}
           </CardContent>
         </Card>
       </template>
       <template #variant-preview-2>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productStock') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">
+          <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               size="sm"
@@ -685,7 +686,7 @@ const visualTestItems = computed(() => [
         </Card>
       </template>
       <template #variant-preview-3>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productStock') }}</CardDescription>
@@ -699,22 +700,23 @@ const visualTestItems = computed(() => [
               </Button>
             </CardAction>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">
+          <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
         </Card>
       </template>
       <template #variant-preview-4>
-        <Card class="w-full">
+        <Card class="nds-w-full">
           <div
-            class="aspect-video w-full bg-muted"
+            class="nds-w-full nds-bg-muted"
+            style="aspect-ratio: 16 / 9"
             aria-hidden="true"
           />
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
             <CardDescription>{{ tContent('demonstration.labels.productDescription') }}</CardDescription>
           </CardHeader>
-          <CardContent class="text-sm font-semibold">
+          <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
         </Card>
@@ -729,17 +731,17 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Card class="w-full max-w-sm">
+        <Card class="nds-w-full nds-max-w-sm">
           <CardHeader>
             <CardTitle>Cadeira Gamer Pro</CardTitle>
             <CardDescription>Estrutura ergonômica.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p class="text-lg font-semibold">
+            <p class="nds-text-lead nds-font-semibold">
               R$ 1.299,00
             </p>
           </CardContent>
-          <CardFooter class="justify-end gap-2">
+          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
             <Button
               variant="outline"
               aria-label="Editar produto Cadeira Gamer Pro"
@@ -756,7 +758,7 @@ const visualTestItems = computed(() => [
         </Card>
       </template>
       <template #variant-preview-1>
-        <Card class="w-full max-w-sm">
+        <Card class="nds-w-full nds-max-w-sm">
           <CardHeader>
             <CardTitle>Assinantes ativos</CardTitle>
             <CardDescription>+12% no mês</CardDescription>
@@ -771,18 +773,18 @@ const visualTestItems = computed(() => [
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p class="text-2xl font-semibold">
+            <p class="nds-text-h4 nds-font-semibold">
               8.742
             </p>
           </CardContent>
         </Card>
       </template>
       <template #variant-preview-2>
-        <Card class="w-full max-w-sm">
+        <Card class="nds-w-full nds-max-w-sm">
           <img
             src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"
             alt="Cadeira Gamer Pro"
-            class="w-full h-40 object-cover"
+            class="nds-w-full" style="height: 10rem; object-fit: cover"
           >
           <CardHeader>
             <CardTitle>Cadeira Gamer Pro</CardTitle>
