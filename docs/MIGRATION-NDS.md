@@ -54,14 +54,31 @@ Objetivo: remover o Tailwind das 3 stacks framework, adotando o CSS standalone
 - [x] **Fase 3 — Svelte UI** (9 lotes; bits-ui 2.18.1 já estava no lock).
   Helpers pendentes do Svelte (input-group e afins) entram no mesmo sub-lote
   registrado na Fase 2.
-- [ ] **Fase 4 — Docs pages + stories** das 3 stacks: substituir utilitários
-  Tailwind pelas classes de docs da vanilla (`nds-stack`, `nds-cluster`,
-  `nds-max-w-prose`, `docs-*`…). Os arquivos vanilla em
-  `src/components/docs/` são a referência 1:1 de mapeamento.
+- [x] **Fase 4 — Docs pages** das 3 stacks: as ~62 docs pages de cada stack
+  (React, Vue, Svelte) + os 16 containers de seção compartilhados migrados
+  para `.nds-*`, usando os arquivos vanilla em `src/components/docs/` como
+  spec 1:1 (React migrado primeiro; Vue e Svelte espelharam React+Vue como
+  referência dupla). Snippets de código sincronizados com os previews.
+  Build-storybook verde nas 3 stacks. `dangerouslySetInnerHTML`/`v-html`/
+  `{@html}` de conteúdo dinâmico com `DOMPurify.sanitize()` no call site.
+  Removido dead code de slots `#badges`/`#language-switcher` (DocsHeader não
+  os define). **Resíduos Tailwind intencionais** (mecanismo sem equivalente
+  nds, presentes na própria spec vanilla — resolver na Fase 5): chevrons
+  `transition-transform`/`rotate-180`/`duration-200` (Collapsible/Sidebar/
+  Accordion), `grid-flow-col auto-cols-max gap-6` (RadioGroup horizontal),
+  `basis-1/2`/`md:basis-1/2`/`lg:basis-1/3` (Carousel), `resize-*` +
+  `min-h-[*]` + `tabular-nums` de contador (Textarea), `motion-reduce:
+  animate-none` (Skeleton), `[&>div]:animate-indeterminate`/`[&>div]:
+  bg-success` (Progress), ícone de busca `absolute`/`-translate-y-1/2`/
+  `size-3.5`/`text-sidebar-foreground/60` (Sidebar/Table), `last:border-b-0`
+  (ScrollArea), `h-4 w-4`/`ml-2` em ícones lucide (Table), `peer` +
+  `peer-disabled:` (Label), `hidden sm:block` (Pagination Vue).
+  Ver também [[project_nds_latent_noop_classes]] (nds-p-3/leading-snug/pb-8).
 - [ ] **Fase 5 — Remoção**: tirar `@import "tailwindcss"`, `tailwind-merge`,
   `tw-animate-css` e configs de cada stack; simplificar `cn()` para `clsx` puro
-  (como na vanilla); atualizar guidelines (04-10, 11-consistencia, 12-tokenizacao)
-  e o `scripts/audit.mjs` (regras de dimensão hardcoded mudam de alvo).
+  (como na vanilla); resolver os resíduos Tailwind da Fase 4 (criar utilitários
+  nds equivalentes ou CSS dedicado por componente); atualizar guidelines
+  (04-10, 11-consistencia, 12-tokenizacao) e o `scripts/audit.mjs`.
 
 ## Validação por lote
 
