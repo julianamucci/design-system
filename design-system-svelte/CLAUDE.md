@@ -4,7 +4,7 @@ Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
 
 **Componentes existentes têm prioridade absoluta sobre código inline.** Antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`, etc.), verifique se existe um componente em `./components/ui/` que atenda ao caso. Se existir, use-o — sem exceção.
 
-**Stack**: Svelte 5 + Bits UI + lucide-svelte + Tailwind CSS 4.
+**Stack**: Svelte 5 + Bits UI + lucide-svelte + CSS standalone `.nds-*`.
 
 **Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` (Storybook é a interface principal).
 

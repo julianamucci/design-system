@@ -6,10 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **multi-stack design system monorepo**. The same design system is implemented in 4 stacks that share content, themes, and guidelines:
 
-- `design-system-react/` — React 19 + `@base-ui/react` + Tailwind 4 — port **6006**
-- `design-system-vue/` — Vue 3 + `reka-ui` + Tailwind 4 — port **6007**
-- `design-system-svelte/` — Svelte 5 + `bits-ui` + Tailwind 4 — port **6008**
-- `nortear-design-system/` — Vanilla TS factories + `basecoat-css` + Tailwind 4 — port **6009**
+- `design-system-react/` — React 19 + `@base-ui/react` — port **6006**
+- `design-system-vue/` — Vue 3 + `reka-ui` — port **6007**
+- `design-system-svelte/` — Svelte 5 + `bits-ui` — port **6008**
+- `nortear-design-system/` — Vanilla TS factories + `basecoat-css` — port **6009**
 
 Shared (read by all stacks):
 - `docs/shared/content/<slug>/translations.json` — pt-BR/en/es content per component
@@ -106,7 +106,7 @@ When `*Docs.tsx` iterates `translations[locale].props.<group>.items` directly (b
 ## Conventions To Respect
 
 - **Never register new components in `App.tsx`/`main.ts`** — they're sandboxes; the source of truth for docs is the Storybook story tree.
-- **Never include emojis or ✓/✗ glyphs in `translations.json`** — those are rendered by the docs page code (Tailwind pills + lucide icons). Including them in text causes visual duplication.
+- **Never include emojis or ✓/✗ glyphs in `translations.json`** — those are rendered by the docs page code (.nds-* pills + lucide icons). Including them in text causes visual duplication.
 - **Never reference one stack by name from another stack's text or notes** (e.g. "In React, value is always an array. In Vue…"). Each stack's docs are consumed standalone; cross-stack comparisons leak.
 - **Never call `gtag()` directly** — use `track()` from `src/lib/analytics.ts`. GA4 lives in the manager, not the iframe.
 - **`useSeoEffect` is mandatory** in every `*Docs.*` for title, description, hreflang, og:*, and JSON-LD. Don't write meta tags inline.
