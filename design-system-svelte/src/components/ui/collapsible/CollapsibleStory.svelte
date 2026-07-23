@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from './index';
-  import { ChevronDown } from 'lucide-svelte';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
   import DOMPurify from 'dompurify';
 
   interface Props {
@@ -21,7 +22,7 @@
     class: className = '',
   }: Props = $props();
 
-  let internalOpen = $state(defaultOpen || open);
+  let internalOpen = $state(untrack(() => (defaultOpen || open)));
 </script>
 
 {#key defaultOpen}

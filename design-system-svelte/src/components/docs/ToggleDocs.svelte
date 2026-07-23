@@ -1,6 +1,12 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Toggle } from '@/components/ui/toggle';
-  import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-svelte';
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Underline from '@lucide/svelte/icons/underline';
+  import List from '@lucide/svelte/icons/list';
+  import Eye from '@lucide/svelte/icons/eye';
+  import LayoutGrid from '@lucide/svelte/icons/layout-grid';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -76,7 +82,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'toggle', locale: $locale });
   });
@@ -119,7 +125,7 @@
 
   const codeDefault = `<script lang="ts">
   import { Toggle } from "@/components/ui/toggle";
-  import { Bold } from "lucide-svelte";
+  import Bold from '@lucide/svelte/icons/bold';
   let pressed = $state(false);
 <\/script>
 
@@ -129,7 +135,7 @@
 
   const codeOutline = `<script lang="ts">
   import { Toggle } from "@/components/ui/toggle";
-  import { Italic } from "lucide-svelte";
+  import Italic from '@lucide/svelte/icons/italic';
   let pressed = $state(false);
 <\/script>
 
@@ -139,7 +145,7 @@
 
   const codeWithLabel = `<script lang="ts">
   import { Toggle } from "@/components/ui/toggle";
-  import { Eye } from "lucide-svelte";
+  import Eye from '@lucide/svelte/icons/eye';
   let showHidden = $state(false);
 <\/script>
 

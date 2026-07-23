@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Pagination,
     PaginationContent,
@@ -34,7 +35,7 @@
   }: Props = $props();
 
   // estado controlado para a composição "controlada"
-  let currentPage = $state(initialPage);
+  let currentPage = $state(untrack(() => initialPage));
   $effect(() => {
     currentPage = initialPage;
   });

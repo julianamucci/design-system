@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Tabs, TabsList, TabsTrigger, TabsContent, type TabsListVariant } from './index';
 
   interface TabItem {
@@ -36,7 +37,7 @@
     contentClass = '',
   }: Props = $props();
 
-  let value = $state<string>(defaultValue ?? items[0]?.value ?? '');
+  let value = $state<string>(untrack(() => (defaultValue ?? items[0]?.value ?? '')));
 </script>
 
 <Tabs bind:value {orientation} {activationMode} class={className}>

@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
   import { Badge } from '@/components/ui/badge';
-  import { User, Settings, Shield } from 'lucide-svelte';
+  import User from '@lucide/svelte/icons/user';
+  import Settings from '@lucide/svelte/icons/settings';
+  import Shield from '@lucide/svelte/icons/shield';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -79,7 +82,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'tabs', locale: $locale });
   });

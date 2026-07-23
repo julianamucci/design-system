@@ -1,7 +1,11 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
   import { Button } from '@/components/ui/button';
-  import { Info, AlertCircle, CheckCircle2, TriangleAlert } from 'lucide-svelte';
+  import Info from '@lucide/svelte/icons/info';
+  import AlertCircle from '@lucide/svelte/icons/circle-alert';
+  import CheckCircle2 from '@lucide/svelte/icons/circle-check-big';
+  import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -69,7 +73,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'alert', locale: $locale });
   });
@@ -95,7 +99,7 @@
 
   const codeImportBasic = `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`;
   const codeImportWithIcon = `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Info } from "lucide-svelte";`;
+import Info from '@lucide/svelte/icons/info';`;
 
   const codeDefault = `<Alert>
   <Info aria-hidden="true" />

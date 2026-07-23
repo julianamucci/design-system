@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-  import {
-    AlignLeft, AlignCenter, AlignRight,
-    Bold, Italic, Underline,
-    LayoutGrid, List, Eye,
-  } from 'lucide-svelte';
+  import AlignLeft from '@lucide/svelte/icons/text-align-start';
+  import AlignCenter from '@lucide/svelte/icons/text-align-center';
+  import AlignRight from '@lucide/svelte/icons/text-align-end';
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Underline from '@lucide/svelte/icons/underline';
+  import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+  import List from '@lucide/svelte/icons/list';
+  import Eye from '@lucide/svelte/icons/eye';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -80,7 +85,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'toggle-group', locale: $locale });
   });
@@ -128,7 +133,9 @@
 
   const codeSingle = `<script lang="ts">
   import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-  import { AlignLeft, AlignCenter, AlignRight } from "lucide-svelte";
+  import AlignLeft from '@lucide/svelte/icons/text-align-start';
+  import AlignCenter from '@lucide/svelte/icons/text-align-center';
+  import AlignRight from '@lucide/svelte/icons/text-align-end';
   let alignment = $state("left");
 <\/script>
 
@@ -146,7 +153,9 @@
 
   const codeMultiple = `<script lang="ts">
   import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-  import { Bold, Italic, Underline } from "lucide-svelte";
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Underline from '@lucide/svelte/icons/underline';
   let formats = $state<string[]>([]);
 <\/script>
 

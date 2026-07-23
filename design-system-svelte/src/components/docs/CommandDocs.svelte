@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import * as Command from '@/components/ui/command';
   import { Button } from '@/components/ui/button';
   import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -91,7 +92,7 @@ import uiTranslations from '@/i18n/ui.json';
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'command', locale: $locale });
   });
@@ -163,7 +164,7 @@ import uiTranslations from '@/i18n/ui.json';
 </Command.Root>`;
 
   const codeWithLoading = `<script lang="ts">
-  import { Loader2 } from "lucide-svelte";
+  import Loader2 from '@lucide/svelte/icons/loader-circle';
   import * as Command from "@/components/ui/command";
 
   let loading = $state(true);

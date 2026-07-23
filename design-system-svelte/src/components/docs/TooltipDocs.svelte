@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Tooltip,
     TooltipTrigger,
@@ -6,7 +7,11 @@
     TooltipProvider,
   } from '@/components/ui/tooltip';
   import { Button } from '@/components/ui/button';
-  import { Save, Trash2, Share2, HelpCircle, Info } from 'lucide-svelte';
+  import Save from '@lucide/svelte/icons/save';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
+  import Share2 from '@lucide/svelte/icons/share-2';
+  import HelpCircle from '@lucide/svelte/icons/circle-question-mark';
+  import Info from '@lucide/svelte/icons/info';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -84,7 +89,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'tooltip', locale: $locale });
   });

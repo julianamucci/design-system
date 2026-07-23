@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-  import { User } from 'lucide-svelte';
+  import User from '@lucide/svelte/icons/user';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -68,7 +69,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'avatar', locale: $locale });
   });
@@ -95,7 +96,7 @@
 
   const codeImportBasic = `import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";`;
   const codeImportWithIcon = `import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { User } from "lucide-svelte";`;
+import User from '@lucide/svelte/icons/user';`;
 
   const codeImage = `<Avatar>
   <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Accordion,
     AccordionContent,
@@ -35,9 +36,9 @@
   // bits-ui não expõe defaultValue — usamos `value` bindable inicializado com
   // o valor recebido. Mantém comportamento "uncontrolled" do ponto de vista do consumidor
   // (qualquer clique atualiza `value` localmente).
-  let singleValue = $state<string>(type === 'single' ? (defaultValue ?? '') : '');
+  let singleValue = $state<string>(untrack(() => (type === 'single' ? (defaultValue ?? '') : '')));
   let multipleValue = $state<string[]>(
-    type === 'multiple' && defaultValue ? [defaultValue] : []
+    untrack(() => (type === 'multiple' && defaultValue ? [defaultValue] : []))
   );
 </script>
 

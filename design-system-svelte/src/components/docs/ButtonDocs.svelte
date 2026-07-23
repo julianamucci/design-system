@@ -1,6 +1,11 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Button } from '@/components/ui/button';
-  import { Plus, Trash2, Pencil, ChevronRight, Download } from 'lucide-svelte';
+  import Plus from '@lucide/svelte/icons/plus';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
+  import Pencil from '@lucide/svelte/icons/pencil';
+  import ChevronRight from '@lucide/svelte/icons/chevron-right';
+  import Download from '@lucide/svelte/icons/download';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -69,7 +74,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'button', locale: $locale });
   });
@@ -95,7 +100,7 @@
 
   const codeImportBasic = `import { Button } from "@/components/ui/button";`;
   const codeImportWithIcon = `import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-svelte";`;
+import Plus from '@lucide/svelte/icons/plus';`;
 
   const codeDefault = `<Button>Salvar</Button>`;
   const codeDestructive = `<Button variant="destructive">Excluir item</Button>`;

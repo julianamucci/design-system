@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Progress } from './index';
 
   interface Props {
@@ -27,7 +28,7 @@
     showValue = false,
   }: Props = $props();
 
-  let current = $state<number | null>(initialValue);
+  let current = $state<number | null>(untrack(() => initialValue));
 
   $effect(() => {
     current = initialValue;

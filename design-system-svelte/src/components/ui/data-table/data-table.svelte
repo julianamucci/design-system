@@ -1,4 +1,5 @@
 <script lang="ts" generics="TData">
+  import { untrack } from 'svelte';
   import {
     createTable,
     getCoreRowModel,
@@ -17,16 +18,14 @@
     type VisibilityState,
   } from '@tanstack/table-core';
   import { createVirtualizer } from '@tanstack/svelte-virtual';
-  import {
-    ArrowDown,
-    ArrowUp,
-    ArrowUpDown,
-    GripVertical,
-    Pin,
-    PinOff,
-    Search,
-    Settings2,
-  } from 'lucide-svelte';
+  import ArrowDown from '@lucide/svelte/icons/arrow-down';
+  import ArrowUp from '@lucide/svelte/icons/arrow-up';
+  import ArrowUpDown from '@lucide/svelte/icons/arrow-up-down';
+  import GripVertical from '@lucide/svelte/icons/grip-vertical';
+  import Pin from '@lucide/svelte/icons/pin';
+  import PinOff from '@lucide/svelte/icons/pin-off';
+  import Search from '@lucide/svelte/icons/search';
+  import Settings2 from '@lucide/svelte/icons/settings-2';
 
   import { cn } from '@/lib/utils';
   import { Badge } from '@/components/ui/badge';
@@ -117,7 +116,7 @@
     columnSizingStart: [],
   });
   let draggedColumnId = $state<string | null>(null);
-  let pagination = $state<{ pageIndex: number; pageSize: number }>({ pageIndex: 0, pageSize });
+  let pagination = $state<{ pageIndex: number; pageSize: number }>(untrack(() => ({ pageIndex: 0, pageSize })));
 
   function apply<T>(prev: T, updater: Updater<T>): T {
     return typeof updater === 'function' ? (updater as (old: T) => T)(prev) : updater;

@@ -5,6 +5,7 @@
    * aplica SEO e dispara analytics, e itera as seções top-level do JSON
    * delegando a renderização para FoundationSection.
    */
+  import { untrack } from 'svelte';
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -19,7 +20,10 @@
 
   let { translations, componentSlug }: Props = $props();
 
-  const { tStore } = useTranslation(translations);
+  // translations é um import estático por página (não muda em runtime); tStore
+  // continua reativo ao locale internamente (useTranslation deriva do store de
+  // locale). untrack silencia o aviso state_referenced_locally do Svelte 5.
+  const { tStore } = untrack(() => useTranslation(translations));
 
   const META_KEYS = new Set(['title', 'category', 'type', 'description', 'seo', 'nav']);
 

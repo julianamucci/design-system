@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Calendar } from '@/components/ui/calendar';
   import CalendarStory from '@/components/ui/calendar/CalendarStory.svelte';
   import { CalendarDate, type DateValue } from '@internationalized/date';
@@ -69,7 +70,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'calendar', locale: $locale });
   });

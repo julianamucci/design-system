@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { icons } from 'lucide';
+  // Catálogo de ícones como JSON único (1 módulo) em vez de `import { icons }
+  // from 'lucide'` (que puxava ~5.5k módulos por-ícone e dominava o build).
+  // Regenerar quando atualizar o lucide:
+  //   node --input-type=module -e "import {icons} from 'lucide'; import {writeFileSync} from 'fs'; writeFileSync('src/lib/lucide-icons.json', JSON.stringify(icons))"
+  import icons from '@/lib/lucide-icons.json';
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -137,9 +141,9 @@
 
       <div class="nds-cluster" data-spacing="sm" data-align="center" style="padding-top: 0.25rem">
         <span class="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default">
-          <!-- Package icon inlined — avoid lucide-svelte (Svelte 4 compat issue) -->
+          <!-- Package icon inlined (SVG) — sem depender de componente de ícone -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
-          lucide-svelte
+          @lucide/svelte
         </span>
         <span class="nds-text-body nds-text-muted-foreground" style="opacity: 0.7">
           {iconsAvailableText}
@@ -153,7 +157,7 @@
       <div class="nds-grid" data-spacing="md" data-min="18rem">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('howToUse.individual.title')}</p>
-          <pre class="nds-docs-code"><code>{`import { Search, Settings, User } from 'lucide-svelte';
+          <pre class="nds-docs-code"><code>{`import Search from '@lucide/svelte/icons/search';
 
 <Search class="nds-icon" aria-hidden="true" />`}</code></pre>
         </div>

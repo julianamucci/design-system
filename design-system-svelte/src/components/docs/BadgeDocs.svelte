@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Badge } from '@/components/ui/badge';
-  import { Check, Tag as TagIcon, Bell } from 'lucide-svelte';
+  import Check from '@lucide/svelte/icons/check';
+  import TagIcon from '@lucide/svelte/icons/tag';
+  import Bell from '@lucide/svelte/icons/bell';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -68,7 +71,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'badge', locale: $locale });
   });
@@ -90,7 +93,7 @@
 
   const codeImportBasic = `import { Badge } from "@/components/ui/badge";`;
   const codeImportWithIcon = `import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-svelte";`;
+import Check from '@lucide/svelte/icons/check';`;
 
   const codeDefault = `<Badge variant="default">Novo</Badge>`;
   const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;

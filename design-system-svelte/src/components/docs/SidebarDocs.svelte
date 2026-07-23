@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     SidebarProvider,
     Sidebar,
@@ -21,7 +22,16 @@
     SidebarRail,
     SidebarSeparator,
   } from '@/components/ui/sidebar';
-  import { LayoutDashboard, Box, Blocks, Coins, Palette, Settings, User, Bell, Search, ChevronDown } from 'lucide-svelte';
+  import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
+  import Box from '@lucide/svelte/icons/box';
+  import Blocks from '@lucide/svelte/icons/blocks';
+  import Coins from '@lucide/svelte/icons/coins';
+  import Palette from '@lucide/svelte/icons/palette';
+  import Settings from '@lucide/svelte/icons/settings';
+  import User from '@lucide/svelte/icons/user';
+  import Bell from '@lucide/svelte/icons/bell';
+  import Search from '@lucide/svelte/icons/search';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
 
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -103,7 +113,7 @@ import uiTranslations from '@/i18n/ui.json';
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'sidebar', locale: $locale });
   });

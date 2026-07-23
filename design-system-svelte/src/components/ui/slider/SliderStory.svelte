@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Slider } from './index';
   import { Label } from '@/components/ui/label';
 
@@ -38,7 +39,7 @@
     onValueCommit,
   }: Props = $props();
 
-  let current = $state<number[]>([...initialValue]);
+  let current = $state<number[]>(untrack(() => [...initialValue]));
 
   $effect(() => {
     current = [...initialValue];

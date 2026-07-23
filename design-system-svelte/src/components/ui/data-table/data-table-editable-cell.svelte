@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Input } from '@/components/ui/input';
 
   const {
@@ -12,7 +13,7 @@
     onCommit: (value: unknown) => void;
   } = $props();
 
-  let value = $state<string>(initial == null ? '' : String(initial));
+  let value = $state<string>(untrack(() => (initial == null ? '' : String(initial))));
   let editing = $state(false);
 
   $effect(() => {

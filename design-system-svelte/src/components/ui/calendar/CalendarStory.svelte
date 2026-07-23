@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Calendar } from './index';
   import { CalendarDate, type DateValue } from '@internationalized/date';
 
@@ -29,10 +30,10 @@
 
   // Intentional: initial state captured once at mount (stories mount fresh per render)
   let single = $state<DateValue | undefined>(
-    variant === 'selected' || variant === 'single' ? refSingle : undefined,
+    untrack(() => (variant === 'selected' || variant === 'single' ? refSingle : undefined)),
   );
   let multiple = $state<DateValue[]>(
-    variant === 'multiple' ? [refPrev, refSingle, refNext] : [],
+    untrack(() => (variant === 'multiple' ? [refPrev, refSingle, refNext] : [])),
   );
 
   // Disabled matcher for stories that need it.

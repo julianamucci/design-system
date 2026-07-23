@@ -24,9 +24,9 @@
     id = 'input-field',
   }: Props = $props();
 
-  const hintId = `${id}-hint`;
-  const errorId = `${id}-error`;
-  const describedBy = [hint ? hintId : '', errorMessage ? errorId : ''].filter(Boolean).join(' ') || undefined;
+  const hintId = $derived(`${id}-hint`);
+  const errorId = $derived(`${id}-error`);
+  const describedBy = $derived([hint ? hintId : '', errorMessage ? errorId : ''].filter(Boolean).join(' ') || undefined);
 </script>
 
 <div class="nds-stack" data-spacing="xs" style="width: 16rem">

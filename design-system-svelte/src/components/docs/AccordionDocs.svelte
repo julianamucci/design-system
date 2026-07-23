@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
   } from '@/components/ui/accordion';
-  import { Info, AlertTriangle, CheckCircle2 } from 'lucide-svelte';
+  import Info from '@lucide/svelte/icons/info';
+  import AlertTriangle from '@lucide/svelte/icons/triangle-alert';
+  import CheckCircle2 from '@lucide/svelte/icons/circle-check-big';
   import { Badge } from '@/components/ui/badge';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -74,7 +77,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'accordion', locale: $locale });
   });

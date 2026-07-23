@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Breadcrumb,
     BreadcrumbList,
@@ -14,7 +15,7 @@
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from '@/components/ui/dropdown-menu';
-  import { Slash } from 'lucide-svelte';
+  import Slash from '@lucide/svelte/icons/slash';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -82,7 +83,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'breadcrumb', locale: $locale });
   });
@@ -164,7 +165,7 @@ import {
 </Breadcrumb>`;
 
   const codeCustomSeparator = `<script lang="ts">
-  import { Slash } from 'lucide-svelte';
+  import Slash from '@lucide/svelte/icons/slash';
 <\/script>
 
 <Breadcrumb>

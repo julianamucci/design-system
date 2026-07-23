@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-  import { ChevronDown, Filter, Settings } from 'lucide-svelte';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
+  import Filter from '@lucide/svelte/icons/funnel';
+  import Settings from '@lucide/svelte/icons/settings';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -81,7 +84,7 @@
     ];
   });
 
-  const sectionIds = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id));
+  const sectionIds = untrack(() => NAV_GROUPS.flatMap(g => g.sections.map(s => s.id)));
   const section = createActiveSection(sectionIds, (id) => {
     track('docs_section_viewed', { section_id: id, component_name: 'collapsible', locale: $locale });
   });
@@ -123,7 +126,7 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-svelte';`;
+import ChevronDown from '@lucide/svelte/icons/chevron-down';`;
 
   const codeUncontrolled = `<Collapsible class="nds-w-full">
   <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
