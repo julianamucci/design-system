@@ -5,7 +5,9 @@
     AccordionItem,
     AccordionTrigger,
   } from './index';
-  import { Info, AlertTriangle, CheckCircle } from 'lucide-svelte';
+  import Info from '@lucide/svelte/icons/info';
+  import AlertTriangle from '@lucide/svelte/icons/triangle-alert';
+  import CheckCircle from '@lucide/svelte/icons/circle-check';
 </script>
 
 <Accordion type="single" class="nds-w-full nds-max-w-lg">

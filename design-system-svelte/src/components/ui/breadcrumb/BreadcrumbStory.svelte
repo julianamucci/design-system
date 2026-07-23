@@ -14,7 +14,7 @@
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from '@/components/ui/dropdown-menu';
-  import { Slash } from 'lucide-svelte';
+  import Slash from '@lucide/svelte/icons/slash';
 
   type Variant = 'default' | 'withEllipsis' | 'customSeparator' | 'responsive' | 'asChildLink';
 

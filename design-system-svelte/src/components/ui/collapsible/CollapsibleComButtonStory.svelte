@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Collapsible, CollapsibleTrigger, CollapsibleContent } from './index';
-  import { ChevronDown } from 'lucide-svelte';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
 
   let open = $state(false);
 </script>

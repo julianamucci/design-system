@@ -13,7 +13,11 @@
     SidebarMenuButton,
     SidebarInset,
   } from '@/components/ui/sidebar';
-  import { LayoutDashboard, Box, Palette, Settings, User } from 'lucide-svelte';
+  import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
+  import Box from '@lucide/svelte/icons/box';
+  import Palette from '@lucide/svelte/icons/palette';
+  import Settings from '@lucide/svelte/icons/settings';
+  import User from '@lucide/svelte/icons/user';
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard',    isActive: true  },

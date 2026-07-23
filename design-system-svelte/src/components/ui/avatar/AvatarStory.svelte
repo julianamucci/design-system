@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Avatar, AvatarImage, AvatarFallback } from './index';
-  import { User } from 'lucide-svelte';
+  import User from '@lucide/svelte/icons/user';
 
   type Variant = 'image' | 'initials' | 'icon' | 'group' | 'withStatus';
 

@@ -6,7 +6,9 @@
     TooltipProvider,
   } from './index';
   import { Button } from '@/components/ui/button';
-  import { Save, Trash2, Share2 } from 'lucide-svelte';
+  import Save from '@lucide/svelte/icons/save';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
+  import Share2 from '@lucide/svelte/icons/share-2';
 
   type Side = 'top' | 'bottom' | 'left' | 'right';
   type Align = 'start' | 'center' | 'end';

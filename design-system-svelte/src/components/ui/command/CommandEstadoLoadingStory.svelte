@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as Command from '@/components/ui/command';
-  import { Loader2 } from 'lucide-svelte';
+  import Loader2 from '@lucide/svelte/icons/loader-circle';
 </script>
 
 <div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default nds-shadow-md">

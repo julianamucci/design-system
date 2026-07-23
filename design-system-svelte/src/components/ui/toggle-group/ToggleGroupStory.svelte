@@ -1,10 +1,14 @@
 <script lang="ts">
   import { ToggleGroup, ToggleGroupItem } from './index';
-  import {
-    AlignLeft, AlignCenter, AlignRight, AlignJustify,
-    Bold, Italic, Underline,
-    LayoutGrid, List,
-  } from 'lucide-svelte';
+  import AlignLeft from '@lucide/svelte/icons/text-align-start';
+  import AlignCenter from '@lucide/svelte/icons/text-align-center';
+  import AlignRight from '@lucide/svelte/icons/text-align-end';
+  import AlignJustify from '@lucide/svelte/icons/text-align-justify';
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Underline from '@lucide/svelte/icons/underline';
+  import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+  import List from '@lucide/svelte/icons/list';
 
   type GroupKind = 'alignment' | 'formatting' | 'view';
 

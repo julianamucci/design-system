@@ -18,7 +18,12 @@
     SidebarInset,
     SidebarRail,
   } from '@/components/ui/sidebar';
-  import { LayoutDashboard, Box, ChevronDown, Circle, Palette, Settings } from 'lucide-svelte';
+  import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
+  import Box from '@lucide/svelte/icons/box';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
+  import Circle from '@lucide/svelte/icons/circle';
+  import Palette from '@lucide/svelte/icons/palette';
+  import Settings from '@lucide/svelte/icons/settings';
   import { slide } from 'svelte/transition';
 
   let componentsOpen = $state(true);

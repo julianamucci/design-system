@@ -1,7 +1,10 @@
 <script lang="ts">
   import { Badge } from './index';
   import type { BadgeVariant } from './index';
-  import { Check, Star, AlertTriangle, Tag as TagIcon } from 'lucide-svelte';
+  import Check from '@lucide/svelte/icons/check';
+  import Star from '@lucide/svelte/icons/star';
+  import AlertTriangle from '@lucide/svelte/icons/triangle-alert';
+  import TagIcon from '@lucide/svelte/icons/tag';
 
   type IconType = 'check' | 'star' | 'warning' | 'tag' | 'none';
 

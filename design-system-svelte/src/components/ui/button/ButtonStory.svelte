@@ -1,7 +1,12 @@
 <script lang="ts">
   import { Button } from './index';
   import type { ButtonVariant, ButtonSize } from './index';
-  import { Plus, Trash2, Pencil, ChevronRight, Download, Loader2 } from 'lucide-svelte';
+  import Plus from '@lucide/svelte/icons/plus';
+  import Trash2 from '@lucide/svelte/icons/trash-2';
+  import Pencil from '@lucide/svelte/icons/pencil';
+  import ChevronRight from '@lucide/svelte/icons/chevron-right';
+  import Download from '@lucide/svelte/icons/download';
+  import Loader2 from '@lucide/svelte/icons/loader-circle';
 
   type IconKind = 'plus' | 'trash' | 'pencil' | 'chevron-right' | 'download' | 'loader' | 'none';
 

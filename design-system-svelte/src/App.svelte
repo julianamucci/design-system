@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Moon, Sun, Home, MousePointer, Database } from 'lucide-svelte';
+  import Moon from '@lucide/svelte/icons/moon';
+  import Sun from '@lucide/svelte/icons/sun';
+  import Home from '@lucide/svelte/icons/house';
+  import MousePointer from '@lucide/svelte/icons/mouse-pointer';
+  import Database from '@lucide/svelte/icons/database';
   import DocsEditor from './admin/DocsEditor.svelte';
 
   const isAdminView = new URLSearchParams(window.location.search).get('view') === 'admin';

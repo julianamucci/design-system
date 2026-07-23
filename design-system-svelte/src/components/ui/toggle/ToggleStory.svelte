@@ -1,6 +1,11 @@
 <script lang="ts">
   import { Toggle } from './index';
-  import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-svelte';
+  import Bold from '@lucide/svelte/icons/bold';
+  import Italic from '@lucide/svelte/icons/italic';
+  import Underline from '@lucide/svelte/icons/underline';
+  import List from '@lucide/svelte/icons/list';
+  import Eye from '@lucide/svelte/icons/eye';
+  import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 
   type IconKey = 'bold' | 'italic' | 'underline' | 'list' | 'eye' | 'layout';
 

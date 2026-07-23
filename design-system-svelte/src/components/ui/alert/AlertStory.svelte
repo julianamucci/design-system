@@ -1,7 +1,10 @@
 <script lang="ts">
   import { Alert, AlertTitle, AlertDescription } from './index';
   import type { AlertVariant } from './index';
-  import { Info, AlertCircle, CheckCircle2, TriangleAlert } from 'lucide-svelte';
+  import Info from '@lucide/svelte/icons/info';
+  import AlertCircle from '@lucide/svelte/icons/circle-alert';
+  import CheckCircle2 from '@lucide/svelte/icons/circle-check-big';
+  import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
   type IconType = 'info' | 'error' | 'success' | 'warning';
 
