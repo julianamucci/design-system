@@ -427,7 +427,10 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack nds-w-full" data-spacing="lg">
+      <div
+        class="nds-stack nds-w-full"
+        data-spacing="lg"
+      >
         <Pagination
           :total="50"
           :items-per-page="10"
@@ -868,14 +871,18 @@ const a11yCritCols = computed(() => ({
               <PaginationNext
                 aria-disabled="true"
                 tabindex="-1"
-                class="nds-cursor-default" style="pointer-events: none; opacity: 0.5"
+                class="nds-cursor-default"
+                style="pointer-events: none; opacity: 0.5"
               />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </template>
       <template #variant-preview-3>
-        <div class="nds-stack nds-w-full" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="sm"
+        >
           <Pagination
             :total="80"
             :items-per-page="10"
@@ -913,7 +920,10 @@ const a11yCritCols = computed(() => ({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          <p class="nds-text-body" style="text-align: center">
+          <p
+            class="nds-text-body"
+            style="text-align: center"
+          >
             Página {{ compInteractiveCurrent }} de 8
           </p>
         </div>

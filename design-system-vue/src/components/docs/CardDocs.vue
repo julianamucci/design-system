@@ -413,7 +413,12 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-grid" data-cols="2" data-spacing="md" data-min="18rem">
+      <div
+        class="nds-w-full nds-grid"
+        data-cols="2"
+        data-spacing="md"
+        data-min="18rem"
+      >
         <Card>
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
@@ -427,7 +432,11 @@ const visualTestItems = computed(() => [
           <CardContent class="nds-text-base nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -454,7 +463,10 @@ const visualTestItems = computed(() => [
         </Card>
         <Card class="nds-w-full nds-max-w-sm">
           <CardHeader>
-            <div class="nds-cluster" data-spacing="sm">
+            <div
+              class="nds-cluster"
+              data-spacing="sm"
+            >
               <Avatar>
                 <AvatarImage
                   :src="DEMO_IMAGE_AVATAR"
@@ -561,7 +573,11 @@ const visualTestItems = computed(() => [
           <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -586,7 +602,11 @@ const visualTestItems = computed(() => [
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
           </CardHeader>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -608,7 +628,11 @@ const visualTestItems = computed(() => [
           <CardHeader>
             <CardTitle>{{ tContent('demonstration.labels.productTitle') }}</CardTitle>
           </CardHeader>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -671,7 +695,11 @@ const visualTestItems = computed(() => [
           <CardContent class="nds-text-body nds-font-semibold">
             {{ tContent('demonstration.labels.productPrice') }}
           </CardContent>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -740,7 +768,11 @@ const visualTestItems = computed(() => [
               R$ 1.299,00
             </p>
           </CardContent>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <CardFooter
+            class="nds-cluster"
+            data-justify="end"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               aria-label="Editar produto Cadeira Gamer Pro"
@@ -783,7 +815,8 @@ const visualTestItems = computed(() => [
           <img
             src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"
             alt="Cadeira Gamer Pro"
-            class="nds-w-full" style="height: 10rem; object-fit: cover"
+            class="nds-w-full"
+            style="height: 10rem; object-fit: cover"
           >
           <CardHeader>
             <CardTitle>Cadeira Gamer Pro</CardTitle>

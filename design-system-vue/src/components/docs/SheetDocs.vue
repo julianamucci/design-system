@@ -436,7 +436,12 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap;">
+      <div
+        class="nds-cluster nds-w-full"
+        data-justify="center"
+        data-spacing="sm"
+        style="flex-wrap: wrap;"
+      >
         <Sheet>
           <SheetTrigger as-child>
             <Button variant="outline">
@@ -448,7 +453,10 @@ const a11yCritCols = computed(() => ({
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
-            <div class="nds-grid nds-px-4" data-spacing="md">
+            <div
+              class="nds-grid nds-px-4"
+              data-spacing="md"
+            >
               <Label for="demo-category">{{ tContent('demonstration.labels.section') }}</Label>
               <Input id="demo-category" />
             </div>
@@ -710,7 +718,10 @@ const a11yCritCols = computed(() => ({
                 <SheetTitle>Filtros avançados</SheetTitle>
                 <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
               </SheetHeader>
-              <form class="nds-grid nds-px-4" data-spacing="md">
+              <form
+                class="nds-grid nds-px-4"
+                data-spacing="md"
+              >
                 <Label for="comp-cat">Categoria</Label>
                 <Input
                   id="comp-cat"
@@ -748,23 +759,28 @@ const a11yCritCols = computed(() => ({
               </SheetHeader>
               <nav
                 aria-label="Navegação secundária"
-                class="nds-stack nds-px-4" data-spacing="xs"
+                class="nds-stack nds-px-4"
+                data-spacing="xs"
               >
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
+                  style="padding: 0.5rem 0.75rem;"
                 >Dashboard</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
+                  style="padding: 0.5rem 0.75rem;"
                 >Projetos</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
+                  style="padding: 0.5rem 0.75rem;"
                 >Equipe</a>
                 <a
                   href="#"
-                  class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;"
+                  class="nds-rounded-md nds-text-body nds-hover-bg-accent"
+                  style="padding: 0.5rem 0.75rem;"
                 >Configurações</a>
               </nav>
             </SheetContent>
@@ -782,22 +798,32 @@ const a11yCritCols = computed(() => ({
                 <SheetTitle>Ações rápidas</SheetTitle>
                 <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
               </SheetHeader>
-              <div class="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
+              <div
+                class="nds-grid nds-px-4 nds-text-body"
+                data-cols="3"
+                data-spacing="sm"
+              >
                 <button
                   type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;"
+                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
+                  data-spacing="xs"
+                  style="align-items: center; padding: 0.75rem;"
                 >
                   Compartilhar
                 </button>
                 <button
                   type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;"
+                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
+                  data-spacing="xs"
+                  style="align-items: center; padding: 0.75rem;"
                 >
                   Editar
                 </button>
                 <button
                   type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;"
+                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
+                  data-spacing="xs"
+                  style="align-items: center; padding: 0.75rem;"
                 >
                   Excluir
                 </button>
@@ -817,7 +843,11 @@ const a11yCritCols = computed(() => ({
                 <SheetTitle>Termos de uso</SheetTitle>
                 <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
               </SheetHeader>
-              <div class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground nds-overflow-y" data-spacing="sm" style="max-height: 16rem;">
+              <div
+                class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground nds-overflow-y"
+                data-spacing="sm"
+                style="max-height: 16rem;"
+              >
                 <p
                   v-for="i in 12"
                   :key="i"

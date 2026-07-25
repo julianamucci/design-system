@@ -472,7 +472,10 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+      <div
+        class="nds-stack nds-w-full nds-max-w-md"
+        data-spacing="lg"
+      >
         <!-- Single — alignment -->
         <ToggleGroup
           type="single"
@@ -686,7 +689,10 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #dont-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <ToggleGroup
             type="single"
             aria-label="A"
@@ -968,7 +974,11 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #variant-preview-4>
-        <div class="nds-stack" data-spacing="sm" style="width: 18rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="width: 18rem"
+        >
           <span>Filtros de exibição</span>
           <ToggleGroup
             type="multiple"

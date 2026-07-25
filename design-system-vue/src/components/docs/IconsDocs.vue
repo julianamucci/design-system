@@ -167,12 +167,22 @@ onUnmounted(() => {
       </header>
 
       <!-- ── Como usar ────────────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="lg"
+      >
         <h2 class="nds-text-h2 nds-text-foreground">
           {{ t('howToUse.title') }}
         </h2>
-        <div class="nds-grid" data-spacing="md" data-min="18rem">
-          <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-grid"
+          data-spacing="md"
+          data-min="18rem"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <p class="nds-text-body nds-font-medium">
               {{ t('howToUse.individual.title') }}
             </p>
@@ -180,7 +190,10 @@ onUnmounted(() => {
 
 &lt;Search class="nds-icon" aria-hidden="true" /&gt;</code></pre>
           </div>
-          <div class="nds-stack" data-spacing="sm">
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <p class="nds-text-body nds-font-medium">
               {{ t('howToUse.sizes.title') }}
             </p>
@@ -193,12 +206,22 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
       </section>
 
       <!-- ── Acessibilidade ─────────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="md">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="md"
+      >
         <h2 class="nds-text-h2 nds-text-foreground">
           {{ t('accessibility.title') }}
         </h2>
-        <div class="nds-grid" data-spacing="sm" data-min="18rem">
-          <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-grid"
+          data-spacing="sm"
+          data-min="18rem"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <p class="nds-text-body nds-font-medium">
               {{ t('accessibility.decorative.title') }}
             </p>
@@ -207,7 +230,10 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
   Salvar
 &lt;/Button&gt;</code></pre>
           </div>
-          <div class="nds-stack" data-spacing="sm">
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <p class="nds-text-body nds-font-medium">
               {{ t('accessibility.functional.title') }}
             </p>
@@ -238,8 +264,14 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
       </section>
 
       <!-- ── Busca ────────────────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="sm">
-        <div class="nds-stack" data-spacing="xs">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="sm"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('search.title') }}
           </h2>
@@ -282,7 +314,10 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         <p class="nds-font-medium">
           {{ t('search.noResults') }}
         </p>
-        <p class="nds-text-body" style="opacity: 0.7">
+        <p
+          class="nds-text-body"
+          style="opacity: 0.7"
+        >
           {{ t('search.noResultsSub') }}
         </p>
       </div>
@@ -303,7 +338,10 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
             class="nds-icon-tile"
             @click="handleCopy(name)"
           >
-            <span class="nds-icon-tile-svg" style="position: relative">
+            <span
+              class="nds-icon-tile-svg"
+              style="position: relative"
+            >
               <Check
                 class="nds-icon-lg nds-text-primary"
                 :style="{ position: 'absolute', opacity: copied === name ? 1 : 0, transition: 'opacity var(--duration-fast)' }"

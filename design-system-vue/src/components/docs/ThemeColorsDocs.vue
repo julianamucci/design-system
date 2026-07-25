@@ -147,12 +147,29 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
-    <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
+  <div
+    class="sb-unstyled nds-flex-1 nds-w-full ds-docs"
+    style="height: 100%; overflow: auto"
+  >
+    <div
+      class="nds-p-8 nds-stack"
+      data-spacing="xl"
+      style="max-width: 72rem; margin-inline: auto"
+    >
       <!-- ── Header ──────────────────────────────────────────────────────── -->
-      <header class="nds-stack nds-pb-8" style="padding-bottom: 2rem">
-        <div class="nds-cluster" data-justify="between">
-          <div class="nds-cluster" data-spacing="sm" data-align="center">
+      <header
+        class="nds-stack nds-pb-8"
+        style="padding-bottom: 2rem"
+      >
+        <div
+          class="nds-cluster"
+          data-justify="between"
+        >
+          <div
+            class="nds-cluster"
+            data-spacing="sm"
+            data-align="center"
+          >
             <Badge
               variant="secondary"
               class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
@@ -173,14 +190,23 @@ onUnmounted(() => {
           {{ t('title') }}
         </h1>
 
-        <p class="nds-text-muted-foreground nds-leading-relaxed" style="max-width: 48rem">
+        <p
+          class="nds-text-muted-foreground nds-leading-relaxed"
+          style="max-width: 48rem"
+        >
           {{ t('description') }}
         </p>
       </header>
 
       <!-- ── Paleta semântica ───────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
-        <div class="nds-stack" data-spacing="xs">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="lg"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('palette.title') }}
           </h2>
@@ -216,8 +242,14 @@ onUnmounted(() => {
       </section>
 
       <!-- ── Temas de marca ─────────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-        <div class="nds-stack" data-spacing="xs">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="md"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('brand.title') }}
           </h2>
@@ -249,8 +281,14 @@ onUnmounted(() => {
       </section>
 
       <!-- ── Light e Dark ───────────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-        <div class="nds-stack" data-spacing="xs">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="md"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('modes.title') }}
           </h2>
@@ -282,8 +320,14 @@ onUnmounted(() => {
       </section>
 
       <!-- ── Densidade e Fontes ─────────────────────────────────────────────── -->
-      <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
-        <div class="nds-stack" data-spacing="xs">
+      <section
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="lg"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('axes.title') }}
           </h2>
@@ -293,8 +337,14 @@ onUnmounted(() => {
         </div>
 
         <!-- Densidade -->
-        <div class="nds-stack" data-spacing="md">
-          <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="md"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <h3 class="nds-text-body nds-font-medium">
               {{ t('axes.density.title') }}
             </h3>
@@ -343,8 +393,14 @@ onUnmounted(() => {
         </div>
 
         <!-- Fontes -->
-        <div class="nds-stack" data-spacing="md">
-          <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="md"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <h3 class="nds-text-body nds-font-medium">
               {{ t('axes.fonts.title') }}
             </h3>
@@ -352,7 +408,10 @@ onUnmounted(() => {
               {{ t('axes.fonts.subtitle') }}
             </p>
           </div>
-          <div class="nds-axis-grid" data-cols="4">
+          <div
+            class="nds-axis-grid"
+            data-cols="4"
+          >
             <div
               v-for="item in FONT_ITEMS"
               :key="item.key"

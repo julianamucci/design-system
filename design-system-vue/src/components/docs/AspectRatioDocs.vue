@@ -296,57 +296,76 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-grid nds-w-full" style="gap: var(--spacing-6)">
-        <div class="nds-stack" data-spacing="xs">
+      <div
+        class="nds-grid nds-w-full"
+        style="gap: var(--spacing-6)"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <AspectRatio :ratio="16 / 9">
             <img
               :src="imgLandscape"
               :alt="tContent('demonstration.labels.sixteenNine')"
               loading="lazy"
               decoding="async"
-              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+              class="nds-w-full nds-rounded-md"
+              style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
           <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.sixteenNine') }}
           </p>
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <AspectRatio :ratio="4 / 3">
             <img
               :src="imgProduct"
               :alt="tContent('demonstration.labels.fourThree')"
               loading="lazy"
               decoding="async"
-              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+              class="nds-w-full nds-rounded-md"
+              style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
           <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.fourThree') }}
           </p>
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <AspectRatio :ratio="1">
             <img
               :src="imgAvatar"
               :alt="tContent('demonstration.labels.square')"
               loading="lazy"
               decoding="async"
-              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+              class="nds-w-full nds-rounded-md"
+              style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
           <p class="nds-text-caption nds-text-muted-foreground">
             {{ tContent('demonstration.labels.square') }}
           </p>
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <AspectRatio :ratio="3 / 4">
             <img
               :src="imgPortrait"
               :alt="tContent('demonstration.labels.threeFour')"
               loading="lazy"
               decoding="async"
-              class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+              class="nds-w-full nds-rounded-md"
+              style="object-fit: cover; height: 100%"
             >
           </AspectRatio>
           <p class="nds-text-caption nds-text-muted-foreground">
@@ -429,7 +448,8 @@ const visualTestItems = computed(() => [
             alt="Paisagem"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -443,7 +463,8 @@ const visualTestItems = computed(() => [
             alt="Paisagem"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: contain; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: contain; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -457,7 +478,8 @@ const visualTestItems = computed(() => [
             alt="Produto"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -471,7 +493,8 @@ const visualTestItems = computed(() => [
             alt="Produto"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -498,7 +521,8 @@ const visualTestItems = computed(() => [
             alt="Paisagem 16:9"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -512,7 +536,8 @@ const visualTestItems = computed(() => [
             alt="Produto 4:3"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -526,7 +551,8 @@ const visualTestItems = computed(() => [
             alt="Avatar 1:1"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -540,7 +566,8 @@ const visualTestItems = computed(() => [
             alt="Retrato 3:4"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>
@@ -554,7 +581,8 @@ const visualTestItems = computed(() => [
             alt="Ultra-wide 21:9"
             loading="lazy"
             decoding="async"
-            class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%"
+            class="nds-w-full nds-rounded-md"
+            style="object-fit: cover; height: 100%"
           >
         </AspectRatio>
       </template>

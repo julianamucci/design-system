@@ -537,7 +537,10 @@ const compositionItems = computed(() => [
         <SidebarProvider>
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
             <Sidebar collapsible="offcanvas">
-              <SidebarHeader class="nds-p-4 nds-font-semibold" style="color: var(--sidebar-foreground)">
+              <SidebarHeader
+                class="nds-p-4 nds-font-semibold"
+                style="color: var(--sidebar-foreground)"
+              >
                 Design System
               </SidebarHeader>
               <SidebarContent>
@@ -681,7 +684,10 @@ const compositionItems = computed(() => [
                 collapsible="none"
                 style="width: 8rem"
               >
-                <SidebarHeader class="nds-p-2 nds-font-semibold nds-text-caption" style="color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-p-2 nds-font-semibold nds-text-caption"
+                  style="color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -721,7 +727,10 @@ const compositionItems = computed(() => [
           data-justify="center"
           style="min-height: 200px"
         >
-          <p class="nds-text-caption nds-text-destructive" style="text-align: center">
+          <p
+            class="nds-text-caption nds-text-destructive"
+            style="text-align: center"
+          >
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="DOMPurify.sanitize(tContent('doDont.pair1.dont'))" />
           </p>
@@ -732,15 +741,15 @@ const compositionItems = computed(() => [
       <template #do-preview-1>
         <div class="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
           <code class="nds-whitespace-pre">aria-current="page"
-tooltip="Dashboard"</code>
+            tooltip="Dashboard"</code>
         </div>
       </template>
       <template #dont-preview-1>
         <div class="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
           <code class="nds-whitespace-pre">// Ícone sem tooltip no modo icon
-&lt;SidebarMenuButton&gt;
-  &lt;Icon /&gt;
-&lt;/SidebarMenuButton&gt;</code>
+            &lt;SidebarMenuButton&gt;
+            &lt;Icon /&gt;
+            &lt;/SidebarMenuButton&gt;</code>
         </div>
       </template>
 
@@ -748,14 +757,14 @@ tooltip="Dashboard"</code>
       <template #do-preview-2>
         <div class="nds-rounded-lg nds-border-default nds-p-4 nds-bg-muted-soft nds-text-caption nds-text-foreground nds-font-mono">
           <code class="nds-whitespace-pre">// Trigger apenas em mobile
-&lt;SidebarTrigger className="nds-lg-hidden" /&gt;</code>
+            &lt;SidebarTrigger className="nds-lg-hidden" /&gt;</code>
         </div>
       </template>
       <template #dont-preview-2>
         <div class="nds-rounded-lg nds-border-destructive-soft nds-p-4 nds-bg-destructive-soft nds-text-caption nds-text-destructive nds-font-mono">
           <code class="nds-whitespace-pre">// Trigger visível em desktop
-&lt;SidebarTrigger /&gt;
-{/* ocupa espaço do conteúdo */}</code>
+            &lt;SidebarTrigger /&gt;
+            {/* ocupa espaço do conteúdo */}</code>
         </div>
       </template>
     </DocsDoDont>
@@ -786,7 +795,10 @@ tooltip="Dashboard"</code>
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -839,7 +851,10 @@ tooltip="Dashboard"</code>
                 variant="floating"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -892,7 +907,10 @@ tooltip="Dashboard"</code>
                 variant="inset"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1007,7 +1025,10 @@ tooltip="Dashboard"</code>
                 variant="sidebar"
                 collapsible="none"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1069,7 +1090,10 @@ tooltip="Dashboard"</code>
                 collapsible="offcanvas"
                 side="right"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>
@@ -1116,7 +1140,10 @@ tooltip="Dashboard"</code>
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   Design System
                 </SidebarHeader>
                 <SidebarContent>
@@ -1200,7 +1227,10 @@ tooltip="Dashboard"</code>
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   Design System
                 </SidebarHeader>
                 <SidebarContent>
@@ -1286,7 +1316,10 @@ tooltip="Dashboard"</code>
                 collapsible="offcanvas"
               >
                 <SidebarHeader style="gap: 0.5rem; padding: 0.75rem">
-                  <span class="nds-font-semibold nds-text-body" style="color: var(--sidebar-foreground)">Design System</span>
+                  <span
+                    class="nds-font-semibold nds-text-body"
+                    style="color: var(--sidebar-foreground)"
+                  >Design System</span>
                   <div style="position: relative">
                     <Search
                       aria-hidden="true"
@@ -1362,7 +1395,10 @@ tooltip="Dashboard"</code>
                 variant="sidebar"
                 collapsible="offcanvas"
               >
-                <SidebarHeader class="nds-font-semibold nds-text-body" style="padding: 0.75rem; color: var(--sidebar-foreground)">
+                <SidebarHeader
+                  class="nds-font-semibold nds-text-body"
+                  style="padding: 0.75rem; color: var(--sidebar-foreground)"
+                >
                   App
                 </SidebarHeader>
                 <SidebarContent>

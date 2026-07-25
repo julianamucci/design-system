@@ -440,7 +440,8 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-cluster nds-w-full" data-justify="center"
+        class="nds-cluster nds-w-full"
+        data-justify="center"
         style="contain: layout; min-height: 320px;"
       >
         <NavigationMenu
@@ -459,7 +460,11 @@ const a11yCritCols = computed(() => ({
             <NavigationMenuItem>
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withDropdown')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 400px">
+                <ul
+                  class="nds-grid nds-p-4"
+                  data-spacing="sm"
+                  style="width: 400px"
+                >
                   <li>
                     <NavigationMenuLink href="#">
                       Produto A
@@ -481,7 +486,12 @@ const a11yCritCols = computed(() => ({
             <NavigationMenuItem>
               <NavigationMenuTrigger>{{ stripHtml(tContent('demonstration.labels.withGrid')) }}</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 600px">
+                <ul
+                  class="nds-grid nds-p-4"
+                  data-cols="2"
+                  data-spacing="sm"
+                  style="width: 600px"
+                >
                   <li>
                     <NavigationMenuLink href="#">
                       Solução 1
@@ -597,7 +607,8 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -624,7 +635,8 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-0>
         <div
           style="contain: layout; min-height: 80px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu :delay-duration="80">
             <NavigationMenuList>
@@ -645,7 +657,8 @@ const a11yCritCols = computed(() => ({
       <template #do-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -656,7 +669,12 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 400px">
+                  <ul
+                    class="nds-grid nds-p-4"
+                    data-cols="2"
+                    data-spacing="sm"
+                    style="width: 400px"
+                  >
                     <li>
                       <NavigationMenuLink href="#">
                         Plano Pro
@@ -687,7 +705,8 @@ const a11yCritCols = computed(() => ({
       <template #dont-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -698,7 +717,11 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="todos">
                 <NavigationMenuTrigger>Todos os links</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="nds-grid nds-p-4 nds-text-caption" data-spacing="xs" style="width: 400px">
+                  <ul
+                    class="nds-grid nds-p-4 nds-text-caption"
+                    data-spacing="xs"
+                    style="width: 400px"
+                  >
                     <li
                       v-for="i in 12"
                       :key="i"
@@ -730,7 +753,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 220px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -748,7 +772,11 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="nds-grid nds-p-4" data-spacing="sm" style="width: 300px">
+                  <ul
+                    class="nds-grid nds-p-4"
+                    data-spacing="sm"
+                    style="width: 300px"
+                  >
                     <li>
                       <NavigationMenuLink href="#">
                         Produto A
@@ -774,7 +802,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 220px;"
-          class="nds-cluster nds-w-full" data-justify="start"
+          class="nds-cluster nds-w-full"
+          data-justify="start"
         >
           <NavigationMenu
             orientation="vertical"
@@ -816,7 +845,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-0>
         <div
           style="contain: layout; min-height: 200px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -845,7 +875,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-1>
         <div
           style="contain: layout; min-height: 280px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -861,7 +892,11 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="produtos">
                 <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 240px">
+                  <ul
+                    class="nds-grid nds-p-2"
+                    data-spacing="xs"
+                    style="width: 240px"
+                  >
                     <li>
                       <NavigationMenuLink href="#">
                         Plano Inicial
@@ -892,7 +927,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 320px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -903,7 +939,12 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="solucoes">
                 <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 560px">
+                  <ul
+                    class="nds-grid nds-p-4"
+                    data-cols="2"
+                    data-spacing="sm"
+                    style="width: 560px"
+                  >
                     <li>
                       <NavigationMenuLink href="#">
                         <div class="nds-text-body nds-font-medium">
@@ -968,7 +1009,8 @@ const a11yCritCols = computed(() => ({
       <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 320px;"
-          class="nds-cluster nds-w-full" data-justify="center"
+          class="nds-cluster nds-w-full"
+          data-justify="center"
         >
           <NavigationMenu
             aria-label="Navegação principal"
@@ -979,17 +1021,25 @@ const a11yCritCols = computed(() => ({
               <NavigationMenuItem value="recursos">
                 <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div class="nds-cluster nds-p-4" data-spacing="md" style="width: 560px">
+                  <div
+                    class="nds-cluster nds-p-4"
+                    data-spacing="md"
+                    style="width: 560px"
+                  >
                     <a
                       href="#"
-                      class="nds-stack nds-rounded-md nds-p-4" style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))"
+                      class="nds-stack nds-rounded-md nds-p-4"
+                      style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))"
                     >
                       <div class="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
                       <p class="nds-mt-2 nds-text-body nds-leading-tight">
                         Crie sua primeira integração com nosso quickstart.
                       </p>
                     </a>
-                    <ul class="nds-stack nds-flex-1" data-spacing="xs">
+                    <ul
+                      class="nds-stack nds-flex-1"
+                      data-spacing="xs"
+                    >
                       <li>
                         <NavigationMenuLink href="#">
                           Documentação

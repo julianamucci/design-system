@@ -840,7 +840,10 @@ function handleTabChange(value: string) {
         >
           <TabsList aria-label="Configurações">
             <TabsTrigger value="profile">
-              <span class="nds-cluster" data-spacing="sm">
+              <span
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 <User
                   aria-hidden="true"
                   class="nds-icon nds-shrink-0"
@@ -848,7 +851,10 @@ function handleTabChange(value: string) {
               </span>
             </TabsTrigger>
             <TabsTrigger value="account">
-              <span class="nds-cluster" data-spacing="sm">
+              <span
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 <Settings
                   aria-hidden="true"
                   class="nds-icon nds-shrink-0"
@@ -856,7 +862,10 @@ function handleTabChange(value: string) {
               </span>
             </TabsTrigger>
             <TabsTrigger value="security">
-              <span class="nds-cluster" data-spacing="sm">
+              <span
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 <Shield
                   aria-hidden="true"
                   class="nds-icon nds-shrink-0"
@@ -865,7 +874,10 @@ function handleTabChange(value: string) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Perfil
               </h3>
@@ -875,7 +887,10 @@ function handleTabChange(value: string) {
             </div>
           </TabsContent>
           <TabsContent value="account">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Conta
               </h3>
@@ -885,7 +900,10 @@ function handleTabChange(value: string) {
             </div>
           </TabsContent>
           <TabsContent value="security">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Segurança
               </h3>
@@ -905,13 +923,22 @@ function handleTabChange(value: string) {
         >
           <TabsList aria-label="Caixas de mensagem">
             <TabsTrigger value="inbox">
-              <span class="nds-cluster" data-spacing="sm">
+              <span
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 Caixa de entrada <Badge style="font-size: 10px; height: 1rem">12</Badge>
               </span>
             </TabsTrigger>
             <TabsTrigger value="spam">
-              <span class="nds-cluster" data-spacing="sm">
-                Spam <Badge variant="destructive" style="font-size: 10px; height: 1rem">3</Badge>
+              <span
+                class="nds-cluster"
+                data-spacing="sm"
+              >
+                Spam <Badge
+                  variant="destructive"
+                  style="font-size: 10px; height: 1rem"
+                >3</Badge>
               </span>
             </TabsTrigger>
             <TabsTrigger value="trash">
@@ -919,7 +946,10 @@ function handleTabChange(value: string) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="inbox">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Caixa de entrada
               </h3>
@@ -929,7 +959,10 @@ function handleTabChange(value: string) {
             </div>
           </TabsContent>
           <TabsContent value="spam">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Spam
               </h3>
@@ -939,7 +972,10 @@ function handleTabChange(value: string) {
             </div>
           </TabsContent>
           <TabsContent value="trash">
-            <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+            <div
+              class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+              data-spacing="sm"
+            >
               <h3 class="nds-text-body nds-font-semibold">
                 Lixeira
               </h3>
@@ -975,7 +1011,10 @@ function handleTabChange(value: string) {
           </TabsList>
           <div class="nds-flex-1">
             <TabsContent value="profile">
-              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <div
+                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+                data-spacing="sm"
+              >
                 <h3 class="nds-text-body nds-font-semibold">
                   Perfil
                 </h3>
@@ -985,7 +1024,10 @@ function handleTabChange(value: string) {
               </div>
             </TabsContent>
             <TabsContent value="account">
-              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <div
+                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+                data-spacing="sm"
+              >
                 <h3 class="nds-text-body nds-font-semibold">
                   Conta
                 </h3>
@@ -995,7 +1037,10 @@ function handleTabChange(value: string) {
               </div>
             </TabsContent>
             <TabsContent value="security">
-              <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
+              <div
+                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
+                data-spacing="sm"
+              >
                 <h3 class="nds-text-body nds-font-semibold">
                   Segurança
                 </h3>

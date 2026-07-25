@@ -392,8 +392,14 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
-        <div class="nds-stack" data-spacing="sm">
+      <div
+        class="nds-stack nds-w-full nds-max-w-md"
+        data-spacing="lg"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label :for="'demo-description'">{{ tContent('demonstration.labels.descriptionLabel') }}</Label>
           <Textarea
             id="demo-description"
@@ -403,7 +409,11 @@ const visualTestItems = computed(() => [
             class="nds-resize-y nds-min-h-30"
             @update:model-value="(v) => demoDescription = String(v)"
           />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
+          <div
+            class="nds-cluster nds-text-caption nds-text-muted-foreground"
+            data-justify="between"
+            data-spacing="sm"
+          >
             <span>{{ tContent('demonstration.labels.descriptionHelp') }}</span>
             <span
               aria-live="polite"
@@ -414,7 +424,10 @@ const visualTestItems = computed(() => [
           </div>
         </div>
 
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label :for="'demo-bio'">{{ tContent('demonstration.labels.bioLabel') }}</Label>
           <Textarea
             id="demo-bio"
@@ -425,7 +438,10 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label :for="'demo-feedback'">{{ tContent('demonstration.labels.feedbackLabel') }}</Label>
           <Textarea
             id="demo-feedback"
@@ -540,7 +556,10 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: maxlength com contador vs sem contador -->
       <template #do-preview-0>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'dodont-do-1'">Descrição</Label>
           <Textarea
             id="dodont-do-1"
@@ -548,7 +567,10 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             class="nds-resize-y nds-min-h-25"
           />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
+          <div
+            class="nds-cluster nds-text-caption nds-text-muted-foreground"
+            data-justify="end"
+          >
             <span
               aria-live="polite"
               aria-label="0 de 500 caracteres usados"
@@ -557,7 +579,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'dodont-dont-1'">Descrição</Label>
           <Textarea
             id="dodont-dont-1"
@@ -570,7 +595,10 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: resize-y vs resize livre -->
       <template #do-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'dodont-do-2'">Biografia</Label>
           <Textarea
             id="dodont-do-2"
@@ -580,7 +608,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'dodont-dont-2'">Biografia</Label>
           <Textarea
             id="dodont-dont-2"
@@ -606,7 +637,10 @@ const visualTestItems = computed(() => [
     >
       <!-- default -->
       <template #variant-preview-0>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'variant-default'">Descrição</Label>
           <Textarea
             id="variant-default"
@@ -618,7 +652,10 @@ const visualTestItems = computed(() => [
 
       <!-- withCounter -->
       <template #variant-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'variant-counter'">Descrição</Label>
           <Textarea
             id="variant-counter"
@@ -626,7 +663,10 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             class="nds-resize-y nds-min-h-25"
           />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
+          <div
+            class="nds-cluster nds-text-caption nds-text-muted-foreground"
+            data-justify="end"
+          >
             <span
               aria-live="polite"
               aria-label="0 de 500 caracteres usados"
@@ -637,7 +677,10 @@ const visualTestItems = computed(() => [
 
       <!-- noResize -->
       <template #variant-preview-2>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Label :for="'variant-noresize'">Mensagem</Label>
           <Textarea
             id="variant-noresize"
@@ -657,7 +700,10 @@ const visualTestItems = computed(() => [
     >
       <!-- 0: withLabel -->
       <template #variant-preview-0>
-        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-md"
+          data-spacing="xs"
+        >
           <Label :for="'ta-label'">Descrição</Label>
           <Textarea
             id="ta-label"
@@ -669,7 +715,10 @@ const visualTestItems = computed(() => [
 
       <!-- 1: withHint -->
       <template #variant-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-md"
+          data-spacing="xs"
+        >
           <Label :for="'ta-hint'">Descrição</Label>
           <Textarea
             id="ta-hint"
@@ -684,7 +733,10 @@ const visualTestItems = computed(() => [
 
       <!-- 2: withCounter -->
       <template #variant-preview-2>
-        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-md"
+          data-spacing="xs"
+        >
           <Label :for="'ta-counter'">Descrição</Label>
           <Textarea
             id="ta-counter"
@@ -694,7 +746,12 @@ const visualTestItems = computed(() => [
             placeholder="ex: Descreva o produto..."
             @update:model-value="(v) => compCounterValue = String(v)"
           />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
+          <div
+            class="nds-cluster nds-text-caption nds-text-muted-foreground"
+            data-justify="between"
+            data-align="start"
+            data-spacing="sm"
+          >
             <span>Descreva com clareza.</span>
             <span
               class="nds-tabular-nums nds-shrink-0"
@@ -709,7 +766,10 @@ const visualTestItems = computed(() => [
 
       <!-- 3: withError -->
       <template #variant-preview-3>
-        <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-md"
+          data-spacing="xs"
+        >
           <Label :for="'ta-error'">Descrição</Label>
           <Textarea
             id="ta-error"
@@ -735,7 +795,10 @@ const visualTestItems = computed(() => [
           aria-label="Formulário de feedback"
           @submit.prevent="handleCompFormSubmit"
         >
-          <div class="nds-stack" data-spacing="xs">
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <Label :for="'ta-form'">Feedback</Label>
             <Textarea
               id="ta-form"
@@ -746,7 +809,10 @@ const visualTestItems = computed(() => [
               placeholder="O que poderíamos melhorar?"
               @update:model-value="(v) => compFormValue = String(v)"
             />
-            <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
+            <div
+              class="nds-cluster nds-text-caption nds-text-muted-foreground"
+              data-justify="end"
+            >
               <span
                 class="nds-tabular-nums"
                 aria-live="polite"

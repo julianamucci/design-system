@@ -565,9 +565,15 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-stack" data-spacing="xl">
+      <div
+        class="nds-w-full nds-stack"
+        data-spacing="xl"
+      >
         <!-- Demo 1: Inline -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Inline
           </p>
@@ -596,7 +602,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 2: Combobox -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Combobox
           </p>
@@ -617,7 +626,10 @@ const visualTestItems = computed(() => [
                 }}
               </Button>
             </PopoverTrigger>
-            <PopoverContent class="nds-p-0" style="width: 14rem">
+            <PopoverContent
+              class="nds-p-0"
+              style="width: 14rem"
+            >
               <Command>
                 <CommandInput :placeholder="tContent('demonstration.labels.comboboxSearch')" />
                 <CommandList>
@@ -639,20 +651,33 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 3: Command Palette -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
             Command Palette
           </p>
-          <div class="nds-cluster" data-align="center" data-spacing="sm">
+          <div
+            class="nds-cluster"
+            data-align="center"
+            data-spacing="sm"
+          >
             <Button
               variant="outline"
               @click="openPalette"
             >
               {{ tContent('demonstration.labels.openPalette') }}
             </Button>
-            <span class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
+            <span
+              class="nds-cluster nds-text-body nds-text-muted-foreground"
+              data-spacing="xs"
+            >
               {{ tContent('demonstration.labels.shortcutHint') }}
-              <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">
+              <kbd
+                class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
+                style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
+              >
                 {{ tContent('demonstration.labels.shortcutKey') }}
               </kbd>
             </span>
@@ -783,16 +808,26 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: shortcut hint -->
       <template #do-preview-1>
-        <div class="nds-cluster" data-align="center" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-align="center"
+          data-spacing="sm"
+        >
           <Button
             variant="outline"
             size="sm"
           >
             Buscar
           </Button>
-          <span class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
+          <span
+            class="nds-cluster nds-text-body nds-text-muted-foreground"
+            data-spacing="xs"
+          >
             Pressione
-            <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">⌘K</kbd>
+            <kbd
+              class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
+              style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
+            >⌘K</kbd>
           </span>
         </div>
       </template>
@@ -856,7 +891,10 @@ const visualTestItems = computed(() => [
               Selecione um item...
             </Button>
           </PopoverTrigger>
-          <PopoverContent class="nds-p-0" style="width: 12rem">
+          <PopoverContent
+            class="nds-p-0"
+            style="width: 12rem"
+          >
             <Command>
               <CommandInput placeholder="Buscar item..." />
               <CommandList>
@@ -877,14 +915,21 @@ const visualTestItems = computed(() => [
 
       <!-- palette preview -->
       <template #variant-preview-2>
-        <div class="nds-cluster" data-align="center" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-align="center"
+          data-spacing="sm"
+        >
           <Button
             variant="outline"
             size="sm"
           >
             Buscar
           </Button>
-          <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem">⌘K</kbd>
+          <kbd
+            class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
+            style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
+          >⌘K</kbd>
         </div>
       </template>
     </DocsVariants>
@@ -897,7 +942,10 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
+        <div
+          class="nds-border-default nds-rounded-md nds-shadow-md"
+          style="width: 320px"
+        >
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
@@ -933,7 +981,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
+        <div
+          class="nds-border-default nds-rounded-md nds-shadow-md"
+          style="width: 320px"
+        >
           <Command>
             <CommandInput placeholder="Buscar..." />
             <CommandList>
@@ -975,7 +1026,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-border-default nds-rounded-md nds-shadow-md" style="width: 320px">
+        <div
+          class="nds-border-default nds-rounded-md nds-shadow-md"
+          style="width: 320px"
+        >
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>

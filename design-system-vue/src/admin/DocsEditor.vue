@@ -136,10 +136,10 @@ function handleKeyDown(e: KeyboardEvent) {
           class="max-w-2xl space-y-6"
         >
           <FieldEditor
-            v-for="(value, key) in localeData"
+            v-for="(fieldValue, key) in localeData"
             :key="key"
             :field-key="String(key)"
-            :value="value"
+            :value="fieldValue"
             @change="updateField"
           />
         </div>

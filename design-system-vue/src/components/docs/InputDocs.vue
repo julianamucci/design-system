@@ -351,8 +351,14 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
-        <div class="nds-stack" data-spacing="xs">
+      <div
+        class="nds-w-full nds-max-w-sm nds-stack"
+        data-spacing="md"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <Label for="demo-nome">{{ tContent('demonstration.labels.defaultLabel') }}</Label>
           <Input
             id="demo-nome"
@@ -360,7 +366,10 @@ const visualTestItems = computed(() => [
             :placeholder="tContent('demonstration.labels.defaultPlaceholder')"
           />
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <Label for="demo-email">{{ tContent('demonstration.labels.emailLabel') }}</Label>
           <Input
             id="demo-email"
@@ -368,7 +377,10 @@ const visualTestItems = computed(() => [
             :placeholder="tContent('demonstration.labels.emailPlaceholder')"
           />
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <Label for="demo-senha">{{ tContent('demonstration.labels.passwordLabel') }}</Label>
           <Input
             id="demo-senha"
@@ -376,7 +388,10 @@ const visualTestItems = computed(() => [
             :placeholder="tContent('demonstration.labels.passwordPlaceholder')"
           />
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <Label for="demo-disabled">{{ tContent('demonstration.labels.disabledLabel') }}</Label>
           <Input
             id="demo-disabled"
@@ -385,7 +400,10 @@ const visualTestItems = computed(() => [
             disabled
           />
         </div>
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <Label for="demo-error">{{ tContent('demonstration.labels.errorLabel') }}</Label>
           <Input
             id="demo-error"
@@ -452,7 +470,10 @@ const visualTestItems = computed(() => [
     >
       <!-- Par 1: placeholder como exemplo vs instrução -->
       <template #do-preview-0>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Label for="dodont-do-1">Email</Label>
           <Input
             id="dodont-do-1"
@@ -462,7 +483,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Label for="dodont-dont-1">Email</Label>
           <Input
             id="dodont-dont-1"
@@ -474,7 +498,10 @@ const visualTestItems = computed(() => [
 
       <!-- Par 2: type=email vs type=text -->
       <template #do-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Label for="dodont-do-2">Email</Label>
           <Input
             id="dodont-do-2"
@@ -484,7 +511,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Label for="dodont-dont-2">Email</Label>
           <Input
             id="dodont-dont-2"
@@ -496,7 +526,10 @@ const visualTestItems = computed(() => [
 
       <!-- Par 3: com label visível vs sem label -->
       <template #do-preview-2>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Label for="dodont-do-3">Nome completo</Label>
           <Input
             id="dodont-do-3"
@@ -506,7 +539,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-2>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input
             type="text"
             placeholder="Nome completo"
@@ -531,7 +567,10 @@ const visualTestItems = computed(() => [
     >
       <!-- text -->
       <template #variant-preview-0>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input
             type="text"
             placeholder="ex: João da Silva"
@@ -540,7 +579,10 @@ const visualTestItems = computed(() => [
       </template>
       <!-- email -->
       <template #variant-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input
             type="email"
             placeholder="ex: joao@empresa.com"
@@ -549,7 +591,10 @@ const visualTestItems = computed(() => [
       </template>
       <!-- password -->
       <template #variant-preview-2>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input
             type="password"
             placeholder="Mínimo 8 caracteres"
@@ -558,7 +603,10 @@ const visualTestItems = computed(() => [
       </template>
       <!-- number -->
       <template #variant-preview-3>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input
             type="number"
             placeholder="0"
@@ -567,7 +615,10 @@ const visualTestItems = computed(() => [
       </template>
       <!-- file -->
       <template #variant-preview-4>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
           <Input type="file" />
         </div>
       </template>
@@ -581,7 +632,10 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-sm"
+          data-spacing="xs"
+        >
           <Label for="input-nome">Nome completo</Label>
           <Input
             id="input-nome"
@@ -591,7 +645,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-sm"
+          data-spacing="xs"
+        >
           <Label for="input-email">Email</Label>
           <Input
             id="input-email"
@@ -604,7 +661,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-sm"
+          data-spacing="xs"
+        >
           <Label for="input-email-error">Email</Label>
           <Input
             id="input-email-error"
@@ -622,10 +682,16 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
+        <div
+          class="nds-stack nds-w-full nds-max-w-sm"
+          data-spacing="xs"
+        >
           <Label for="input-url">URL do site</Label>
           <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
-            <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>
+            <span
+              class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0"
+              style="border-right: 1px solid var(--input)"
+            >https://</span>
             <Input
               id="input-url"
               class="nds-flex-1"

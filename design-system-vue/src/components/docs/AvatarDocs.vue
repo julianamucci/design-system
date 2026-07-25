@@ -458,8 +458,17 @@ const testesVisual = computed(() => ({
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+      <div
+        class="nds-cluster"
+        data-justify="center"
+        data-spacing="xl"
+        style="align-items: flex-end; flex-wrap: wrap"
+      >
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+          style="align-items: center"
+        >
           <Avatar>
             <AvatarImage
               :src="imgMaria"
@@ -472,14 +481,22 @@ const testesVisual = computed(() => ({
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withImage') }}</span>
         </div>
 
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+          style="align-items: center"
+        >
           <Avatar>
             <AvatarFallback>{{ tContent('demonstration.labels.withFallbackInitials') }}</AvatarFallback>
           </Avatar>
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withFallback') }}</span>
         </div>
 
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+          style="align-items: center"
+        >
           <Avatar>
             <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
               <User
@@ -491,7 +508,11 @@ const testesVisual = computed(() => ({
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.withIcon') }}</span>
         </div>
 
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+          style="align-items: center"
+        >
           <div style="display: flex">
             <Avatar style="box-shadow: 0 0 0 2px var(--background)">
               <AvatarImage
@@ -532,7 +553,11 @@ const testesVisual = computed(() => ({
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
         </div>
 
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+          style="align-items: center"
+        >
           <div style="position: relative; display: inline-block">
             <Avatar>
               <AvatarImage

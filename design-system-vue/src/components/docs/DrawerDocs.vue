@@ -452,7 +452,9 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap"
+        class="nds-cluster nds-w-full"
+        data-justify="center"
+        data-spacing="md"
         style="contain: layout"
       >
         <Drawer>
@@ -791,12 +793,21 @@ const a11yCritCols = computed(() => ({
                 <DrawerTitle>Editar perfil</DrawerTitle>
                 <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
               </DrawerHeader>
-              <form class="nds-stack nds-px-4" data-spacing="sm">
-                <Label class="nds-stack nds-text-body" data-spacing="xs">
+              <form
+                class="nds-stack nds-px-4"
+                data-spacing="sm"
+              >
+                <Label
+                  class="nds-stack nds-text-body"
+                  data-spacing="xs"
+                >
                   Nome
                   <Input default-value="Maria Souza" />
                 </Label>
-                <Label class="nds-stack nds-text-body" data-spacing="xs">
+                <Label
+                  class="nds-stack nds-text-body"
+                  data-spacing="xs"
+                >
                   E-mail
                   <Input
                     type="email"
@@ -862,7 +873,11 @@ const a11yCritCols = computed(() => ({
                 <DrawerTitle>Termos de uso</DrawerTitle>
                 <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
               </DrawerHeader>
-              <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+              <div
+                class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+                data-spacing="sm"
+                style="max-height: 16rem"
+              >
                 <p
                   v-for="i in 12"
                   :key="i"

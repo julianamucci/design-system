@@ -626,7 +626,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
         >
           <AccordionItem value="info">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">
+              <span
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 <Info
                   class="nds-icon-sm nds-shrink-0"
                   aria-hidden="true"
@@ -638,7 +641,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
           </AccordionItem>
           <AccordionItem value="aviso">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">
+              <span
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 <AlertTriangle
                   class="nds-icon-sm nds-shrink-0"
                   aria-hidden="true"
@@ -650,7 +656,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
           </AccordionItem>
           <AccordionItem value="sucesso">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">
+              <span
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 <CheckCircle2
                   class="nds-icon-sm nds-shrink-0"
                   aria-hidden="true"
@@ -670,7 +679,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
         >
           <AccordionItem value="novo">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">
+              <span
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 Novidades da versão
                 <Badge>Novo</Badge>
               </span>
@@ -679,7 +691,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
           </AccordionItem>
           <AccordionItem value="beta">
             <AccordionTrigger>
-              <span class="nds-cluster" data-spacing="xs">
+              <span
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 Funcionalidades em teste
                 <Badge variant="secondary">Beta</Badge>
               </span>
@@ -699,21 +714,30 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
               <table class="nds-w-full nds-text-body nds-border-collapse">
                 <tbody>
                   <tr class="nds-border-b">
-                    <td class="nds-py-1" style="padding-right: 1rem">
+                    <td
+                      class="nds-py-1"
+                      style="padding-right: 1rem"
+                    >
                       CPU
                     </td><td class="nds-py-1">
                       Intel Core i7-12700
                     </td>
                   </tr>
                   <tr class="nds-border-b">
-                    <td class="nds-py-1" style="padding-right: 1rem">
+                    <td
+                      class="nds-py-1"
+                      style="padding-right: 1rem"
+                    >
                       RAM
                     </td><td class="nds-py-1">
                       16GB DDR5
                     </td>
                   </tr>
                   <tr>
-                    <td class="nds-py-1" style="padding-right: 1rem">
+                    <td
+                      class="nds-py-1"
+                      style="padding-right: 1rem"
+                    >
                       SSD
                     </td><td class="nds-py-1">
                       512GB NVMe
@@ -726,7 +750,10 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
           <AccordionItem value="inclui">
             <AccordionTrigger>O que está incluso</AccordionTrigger>
             <AccordionContent>
-              <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
+              <ul
+                class="nds-stack nds-text-body nds-list-disc"
+                data-spacing="xs"
+              >
                 <li>Cabo de alimentação</li>
                 <li>Manual do usuário</li>
                 <li>Garantia de 24 meses</li>

@@ -325,15 +325,30 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack nds-w-full" data-spacing="md">
-        <div class="nds-grid" data-cols="2">
+      <div
+        class="nds-stack nds-w-full"
+        data-spacing="md"
+      >
+        <div
+          class="nds-grid"
+          data-cols="2"
+        >
           <div>
             <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.verticalTitle') }}
             </p>
-            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 260px">
-              <ScrollArea class="nds-w-full" style="height: 100%">
-                <div class="nds-stack nds-p-4" data-spacing="sm">
+            <div
+              class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+              style="height: 260px"
+            >
+              <ScrollArea
+                class="nds-w-full"
+                style="height: 100%"
+              >
+                <div
+                  class="nds-stack nds-p-4"
+                  data-spacing="sm"
+                >
                   <div
                     v-for="tag in verticalTags"
                     :key="tag"
@@ -350,9 +365,19 @@ const visualTestItems = computed(() => [
             <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.horizontalTitle') }}
             </p>
-            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
-              <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
-                <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
+            <div
+              class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+              style="height: 180px"
+            >
+              <ScrollArea
+                class="nds-w-full nds-whitespace-nowrap"
+                style="height: 100%"
+              >
+                <div
+                  class="nds-cluster nds-p-4"
+                  data-spacing="sm"
+                  style="width: max-content"
+                >
                   <figure
                     v-for="card in horizontalCards"
                     :key="card.id"
@@ -373,12 +398,21 @@ const visualTestItems = computed(() => [
           <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.bothTitle') }}
           </p>
-          <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 260px">
-            <ScrollArea class="nds-w-full" style="height: 100%">
+          <div
+            class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+            style="height: 260px"
+          >
+            <ScrollArea
+              class="nds-w-full"
+              style="height: 100%"
+            >
               <table class="nds-border-collapse nds-text-body">
                 <thead>
                   <tr>
-                    <th class="nds-bg-background nds-border-default" style="position: sticky; top: 0; z-index: 10; padding: 0.5rem 0.75rem; text-align: left">
+                    <th
+                      class="nds-bg-background nds-border-default"
+                      style="position: sticky; top: 0; z-index: 10; padding: 0.5rem 0.75rem; text-align: left"
+                    >
                       #
                     </th>
                     <th
@@ -396,7 +430,10 @@ const visualTestItems = computed(() => [
                     v-for="row in matrixRows"
                     :key="row"
                   >
-                    <th class="nds-border-default nds-whitespace-nowrap nds-bg-muted" style="padding: 0.5rem 0.75rem; text-align: left">
+                    <th
+                      class="nds-border-default nds-whitespace-nowrap nds-bg-muted"
+                      style="padding: 0.5rem 0.75rem; text-align: left"
+                    >
                       {{ row }}
                     </th>
                     <td
@@ -495,9 +532,19 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
-            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
+        <div
+          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 180px"
+        >
+          <ScrollArea
+            class="nds-w-full"
+            style="height: 100%"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="sm"
+              style="padding: 0.75rem"
+            >
               <div
                 v-for="i in 18"
                 :key="i"
@@ -510,7 +557,11 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="nds-w-full nds-rounded-md nds-border-default nds-stack" data-spacing="sm" style="padding: 0.75rem">
+        <div
+          class="nds-w-full nds-rounded-md nds-border-default nds-stack"
+          data-spacing="sm"
+          style="padding: 0.75rem"
+        >
           <div
             v-for="i in 6"
             :key="i"
@@ -518,15 +569,28 @@ const visualTestItems = computed(() => [
           >
             Item {{ i }}
           </div>
-          <p class="nds-text-muted-foreground" style="font-size: 10px">
+          <p
+            class="nds-text-muted-foreground"
+            style="font-size: 10px"
+          >
             Sem altura — conteúdo expande
           </p>
         </div>
       </template>
       <template #do-preview-1>
-        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
-            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
+        <div
+          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 180px"
+        >
+          <ScrollArea
+            class="nds-w-full"
+            style="height: 100%"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="sm"
+              style="padding: 0.75rem"
+            >
               <div
                 v-for="i in 14"
                 :key="i"
@@ -539,10 +603,23 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 180px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
-            <ScrollArea class="nds-w-full" style="height: 100px">
-              <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
+        <div
+          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 180px"
+        >
+          <ScrollArea
+            class="nds-w-full"
+            style="height: 100%"
+          >
+            <ScrollArea
+              class="nds-w-full"
+              style="height: 100px"
+            >
+              <div
+                class="nds-stack"
+                data-spacing="sm"
+                style="padding: 0.75rem"
+              >
                 <div
                   v-for="i in 10"
                   :key="i"
@@ -569,9 +646,19 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 200px; width: 260px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
-            <div class="nds-stack" data-spacing="sm" style="padding: 0.75rem">
+        <div
+          class="nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 200px; width: 260px"
+        >
+          <ScrollArea
+            class="nds-w-full"
+            style="height: 100%"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="sm"
+              style="padding: 0.75rem"
+            >
               <div
                 v-for="i in 20"
                 :key="i"
@@ -584,9 +671,19 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 140px; width: 420px">
-          <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
-            <div class="nds-cluster" data-spacing="sm" style="width: max-content; padding: 0.75rem">
+        <div
+          class="nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 140px; width: 420px"
+        >
+          <ScrollArea
+            class="nds-w-full nds-whitespace-nowrap"
+            style="height: 100%"
+          >
+            <div
+              class="nds-cluster"
+              data-spacing="sm"
+              style="width: max-content; padding: 0.75rem"
+            >
               <figure
                 v-for="i in 10"
                 :key="i"
@@ -601,8 +698,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 200px; width: 420px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
+        <div
+          class="nds-overflow-hidden nds-rounded-md nds-border-default"
+          style="height: 200px; width: 420px"
+        >
+          <ScrollArea
+            class="nds-w-full"
+            style="height: 100%"
+          >
             <table class="nds-border-collapse nds-text-caption">
               <tbody>
                 <tr

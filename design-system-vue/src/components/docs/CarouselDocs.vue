@@ -492,7 +492,11 @@ const demoSlides = [1, 2, 3, 4, 5];
       :title="tContent('demonstration.title')"
       component-slug="carousel"
     >
-      <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+      <div
+        class="nds-w-full nds-cluster"
+        data-justify="center"
+        data-align="center"
+      >
         <Carousel
           class="nds-w-full nds-max-w-sm"
           :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -502,8 +506,16 @@ const demoSlides = [1, 2, 3, 4, 5];
               v-for="n in demoSlides"
               :key="n"
             >
-              <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.875rem">{{ n }}</span>
+              <Card
+                class="nds-cluster nds-p-6"
+                data-align="center"
+                data-justify="center"
+                style="aspect-ratio: 1 / 1"
+              >
+                <span
+                  class="nds-font-semibold nds-text-foreground"
+                  style="font-size: 1.875rem"
+                >{{ n }}</span>
               </Card>
             </CarouselItem>
           </CarouselContent>
@@ -576,7 +588,11 @@ const demoSlides = [1, 2, 3, 4, 5];
       ]"
     >
       <template #do-preview-0>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full"
             style="max-width: 200px"
@@ -587,8 +603,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-4"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.25rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -598,15 +622,30 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
-          <Carousel class="nds-w-full" style="max-width: 200px">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
+          <Carousel
+            class="nds-w-full"
+            style="max-width: 200px"
+          >
             <CarouselContent>
               <CarouselItem
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-4"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.25rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -614,7 +653,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #do-preview-1>
-        <div class="nds-stack" data-spacing="sm" data-align="center">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          data-align="center"
+        >
           <div
             class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
             data-spacing="sm"
@@ -628,13 +671,20 @@ const demoSlides = [1, 2, 3, 4, 5];
             />
             <code>Autoplay({ delay: 3000, stopOnInteraction: true })</code>
           </div>
-          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
+          <p
+            class="nds-text-caption nds-text-muted-foreground nds-max-w-xs"
+            style="text-align: center"
+          >
             loop: true + stopOnInteraction respeita WCAG 2.2.2
           </p>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-stack" data-spacing="sm" data-align="center">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          data-align="center"
+        >
           <div
             class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
             data-spacing="sm"
@@ -648,7 +698,10 @@ const demoSlides = [1, 2, 3, 4, 5];
             />
             <code>Autoplay({ delay: 800 })</code>
           </div>
-          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
+          <p
+            class="nds-text-caption nds-text-muted-foreground nds-max-w-xs"
+            style="text-align: center"
+          >
             Avanço rápido sem pausa quebra WCAG 2.2.2
           </p>
         </div>
@@ -671,7 +724,11 @@ const demoSlides = [1, 2, 3, 4, 5];
       component-slug="carousel"
     >
       <template #variant-preview-0>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-xs"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -681,8 +738,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-6"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -692,7 +757,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             orientation="vertical"
             class="nds-w-full"
@@ -704,8 +773,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-4"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -715,7 +792,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-xs"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -725,8 +806,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-6"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -736,7 +825,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-md"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -747,8 +840,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 :key="n"
                 class="nds-md-basis-half nds-lg-basis-third"
               >
-                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-4"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.25rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -767,7 +868,10 @@ const demoSlides = [1, 2, 3, 4, 5];
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="nds-w-full nds-max-w-md nds-stack" data-spacing="sm">
+        <div
+          class="nds-w-full nds-max-w-md nds-stack"
+          data-spacing="sm"
+        >
           <Carousel
             class="nds-w-full"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -778,8 +882,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-6"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -808,7 +920,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-sm"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -825,7 +941,10 @@ const demoSlides = [1, 2, 3, 4, 5];
                     data-align="center"
                     style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))"
                   >
-                    <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
+                    <span
+                      class="nds-font-semibold nds-text-foreground"
+                      style="font-size: 1.5rem"
+                    >{{ photo.title }}</span>
                   </div>
                   <div class="nds-p-4">
                     <h3 class="nds-text-body nds-font-semibold">
@@ -844,7 +963,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-xs"
             :opts="{ loop: true }"
@@ -855,8 +978,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card class="nds-cluster nds-p-6" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-6"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>
@@ -866,7 +997,11 @@ const demoSlides = [1, 2, 3, 4, 5];
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
           <Carousel
             class="nds-w-full nds-max-w-md"
             :aria-label="tContent('usage.uxWriting.table.caption.good')"
@@ -877,8 +1012,16 @@ const demoSlides = [1, 2, 3, 4, 5];
                 :key="n"
                 class="nds-md-basis-half nds-lg-basis-third"
               >
-                <Card class="nds-cluster nds-p-4" data-align="center" data-justify="center" style="aspect-ratio: 1 / 1">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.25rem">{{ n }}</span>
+                <Card
+                  class="nds-cluster nds-p-4"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.25rem"
+                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>

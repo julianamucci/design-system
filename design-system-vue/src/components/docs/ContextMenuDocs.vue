@@ -574,7 +574,11 @@ const compositionItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
+      <div
+        class="nds-cluster nds-w-full nds-p-8"
+        data-align="center"
+        data-justify="center"
+      >
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -659,7 +663,10 @@ const compositionItems = computed(() => [
     >
       <!-- Par 1: alternativa explícita -->
       <template #do-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <ContextMenu>
             <ContextMenuTrigger
               class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"

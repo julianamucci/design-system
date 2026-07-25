@@ -1007,9 +1007,19 @@ const visualTestItems = computed(() => [
     >
       <!-- Toolbar de filtros -->
       <template #variant-preview-0>
-        <div class="nds-w-full nds-stack" data-spacing="sm">
-          <div class="nds-cluster" data-align="center" data-spacing="sm">
-            <div class="nds-w-full nds-max-w-sm" style="position: relative">
+        <div
+          class="nds-w-full nds-stack"
+          data-spacing="sm"
+        >
+          <div
+            class="nds-cluster"
+            data-align="center"
+            data-spacing="sm"
+          >
+            <div
+              class="nds-w-full nds-max-w-sm"
+              style="position: relative"
+            >
               <Search
                 class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground"
                 aria-hidden="true"
@@ -1208,7 +1218,10 @@ const visualTestItems = computed(() => [
       </template>
       <!-- Com paginação -->
       <template #variant-preview-3>
-        <div class="nds-w-full nds-stack" data-spacing="sm">
+        <div
+          class="nds-w-full nds-stack"
+          data-spacing="sm"
+        >
           <Table>
             <TableCaption class="nds-sr-only">
               Faturas paginadas

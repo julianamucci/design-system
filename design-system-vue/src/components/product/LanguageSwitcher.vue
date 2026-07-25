@@ -26,7 +26,11 @@ function handleChange(value: 'pt-BR' | 'en' | 'es') {
 </script>
 
 <template>
-  <div class="nds-lang-switcher" role="group" aria-label="Idioma">
+  <div
+    class="nds-lang-switcher"
+    role="group"
+    aria-label="Idioma"
+  >
     <button
       v-for="lang in locales"
       :key="lang.value"

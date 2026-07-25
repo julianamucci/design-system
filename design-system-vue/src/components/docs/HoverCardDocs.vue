@@ -429,7 +429,10 @@ const a11yCritCols = computed(() => ({
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="nds-cluster" data-spacing="sm">
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 <Avatar>
                   <AvatarImage
                     src=""
@@ -473,9 +476,18 @@ const a11yCritCols = computed(() => ({
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="nds-stack" data-spacing="sm">
-                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
+              <div
+                class="nds-stack"
+                data-spacing="sm"
+              >
+                <div
+                  class="nds-cluster nds-text-caption nds-text-muted-foreground"
+                  data-spacing="sm"
+                >
+                  <span
+                    class="nds-icon nds-rounded-sm nds-bg-muted"
+                    style="display: inline-flex; align-items: center; justify-content: center;"
+                  >D</span>
                   <span>design-system.dev</span>
                 </div>
                 <p class="nds-font-medium">
@@ -640,8 +652,14 @@ const a11yCritCols = computed(() => ({
           style="contain: layout; min-height: 80px;"
           class="nds-w-full"
         >
-          <div class="nds-text-body nds-stack" data-spacing="xs">
-            <div class="nds-text-primary" style="text-decoration: underline;">
+          <div
+            class="nds-text-body nds-stack"
+            data-spacing="xs"
+          >
+            <div
+              class="nds-text-primary"
+              style="text-decoration: underline;"
+            >
               @joana
             </div>
             <div class="nds-text-caption nds-text-muted-foreground">
@@ -656,7 +674,10 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <div class="nds-text-body">
-            <div class="nds-text-primary" style="text-decoration: underline;">
+            <div
+              class="nds-text-primary"
+              style="text-decoration: underline;"
+            >
               @joana
             </div>
             <div class="nds-text-caption nds-text-muted-foreground nds-italic">
@@ -745,7 +766,10 @@ const a11yCritCols = computed(() => ({
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="nds-cluster" data-spacing="sm">
+              <div
+                class="nds-cluster"
+                data-spacing="sm"
+              >
                 <Avatar>
                   <AvatarImage
                     src=""
@@ -784,9 +808,18 @@ const a11yCritCols = computed(() => ({
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="nds-stack" data-spacing="sm">
-                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center;">D</span>
+              <div
+                class="nds-stack"
+                data-spacing="sm"
+              >
+                <div
+                  class="nds-cluster nds-text-caption nds-text-muted-foreground"
+                  data-spacing="sm"
+                >
+                  <span
+                    class="nds-icon nds-rounded-sm nds-bg-muted"
+                    style="display: inline-flex; align-items: center; justify-content: center;"
+                  >D</span>
                   <span>design-system.dev</span>
                 </div>
                 <p class="nds-font-medium">
@@ -847,7 +880,12 @@ const a11yCritCols = computed(() => ({
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div class="nds-cluster" data-align="baseline" data-justify="between" data-spacing="sm">
+              <div
+                class="nds-cluster"
+                data-align="baseline"
+                data-justify="between"
+                data-spacing="sm"
+              >
                 <p class="nds-text-body nds-font-medium">
                   Largest Contentful Paint
                 </p>

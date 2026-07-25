@@ -474,7 +474,12 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
+      <div
+        class="nds-cluster nds-w-full"
+        data-justify="center"
+        data-spacing="md"
+        style="flex-wrap: wrap"
+      >
         <Dialog>
           <DialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.triggerLabel') }}</Button>
@@ -695,12 +700,21 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
             </DialogHeader>
-            <form class="nds-stack" data-spacing="sm">
-              <div class="nds-stack" data-spacing="xs">
+            <form
+              class="nds-stack"
+              data-spacing="sm"
+            >
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
                 <Label for="docs-form-name">Nome</Label>
                 <Input id="docs-form-name" />
               </div>
-              <div class="nds-stack" data-spacing="xs">
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
                 <Label for="docs-form-email">Email</Label>
                 <Input
                   id="docs-form-email"
@@ -728,7 +742,11 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Termos de serviço</DialogTitle>
               <DialogDescription>Leia atentamente os termos.</DialogDescription>
             </DialogHeader>
-            <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y" data-spacing="sm" style="max-height: 14rem">
+            <div
+              class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y"
+              data-spacing="sm"
+              style="max-height: 14rem"
+            >
               <p
                 v-for="i in 8"
                 :key="i"
@@ -784,7 +802,10 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Configurações de notificação</DialogTitle>
               <DialogDescription>Escolha como deseja ser avisado.</DialogDescription>
             </DialogHeader>
-            <DialogFooter class="nds-stack" data-spacing="sm">
+            <DialogFooter
+              class="nds-stack"
+              data-spacing="sm"
+            >
               <Button>Salvar preferências</Button>
               <DialogClose as-child>
                 <Button variant="ghost">
@@ -832,15 +853,24 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
             </DialogHeader>
-            <form class="nds-stack" data-spacing="sm">
-              <div class="nds-stack" data-spacing="xs">
+            <form
+              class="nds-stack"
+              data-spacing="sm"
+            >
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
                 <Label for="docs-comp-name">Nome de exibição</Label>
                 <Input
                   id="docs-comp-name"
                   model-value="Maria Souza"
                 />
               </div>
-              <div class="nds-stack" data-spacing="xs">
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
                 <Label for="docs-comp-role">Função</Label>
                 <Input
                   id="docs-comp-role"
@@ -866,7 +896,10 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Capa do post</DialogTitle>
               <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
             </DialogHeader>
-            <div class="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground" style="aspect-ratio: 16/9; display: grid; place-items: center">
+            <div
+              class="nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground"
+              style="aspect-ratio: 16/9; display: grid; place-items: center"
+            >
               Pré-visualização da mídia
             </div>
           </DialogContent>

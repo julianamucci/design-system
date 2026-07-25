@@ -358,7 +358,11 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+      <div
+        class="nds-cluster"
+        data-spacing="sm"
+        style="flex-wrap: wrap"
+      >
         <Button @click="handleDemoClick('default')">
           {{ tContent('demonstration.labels.primary') }}
         </Button>
@@ -459,7 +463,10 @@ function handleDemoClick(variant: string) {
         <Button>Clique aqui</Button>
       </template>
       <template #do-preview-1>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Button variant="outline">
             Cancelar
           </Button>
@@ -467,7 +474,10 @@ function handleDemoClick(variant: string) {
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Button>Cancelar</Button>
           <Button>Confirmar</Button>
         </div>
@@ -597,7 +607,10 @@ function handleDemoClick(variant: string) {
         </Button>
       </template>
       <template #variant-preview-4>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Button variant="outline">
             Cancelar
           </Button>

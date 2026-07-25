@@ -395,8 +395,14 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="sm">
+      <div
+        class="nds-stack"
+        data-spacing="sm"
+      >
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch
             id="demo-notifications"
             :model-value="demoNotifications"
@@ -405,8 +411,16 @@ const visualTestItems = computed(() => [
           <Label :for="'demo-notifications'">{{ tContent('demonstration.labels.notifications') }}</Label>
         </div>
 
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
-          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <div
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          data-justify="between"
+          style="width: 20rem;"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+            style="padding-right: var(--spacing-2);"
+          >
             <Label :for="'demo-marketing'">{{ tContent('demonstration.labels.marketing') }}</Label>
             <p class="nds-text-body">
               {{ tContent('demonstration.labels.marketingDesc') }}
@@ -419,8 +433,16 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
-          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <div
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          data-justify="between"
+          style="width: 20rem;"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+            style="padding-right: var(--spacing-2);"
+          >
             <Label :for="'demo-darkmode'">{{ tContent('demonstration.labels.darkMode') }}</Label>
             <p class="nds-text-body">
               {{ tContent('demonstration.labels.darkModeDesc') }}
@@ -433,7 +455,10 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch
             id="demo-sm"
             size="sm"
@@ -554,13 +579,19 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: label semântica vs label genérica -->
       <template #do-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch id="dodont-do-1" />
           <Label :for="'dodont-do-1'">Receber notificações</Label>
         </div>
       </template>
       <template #dont-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch id="dodont-dont-1" />
           <Label :for="'dodont-dont-1'">Notificações</Label>
         </div>
@@ -568,13 +599,19 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: Label associado via htmlFor vs texto solto -->
       <template #do-preview-1>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch id="dodont-do-2" />
           <Label :for="'dodont-do-2'">Modo escuro</Label>
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch />
           <span class="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
         </div>
@@ -595,7 +632,10 @@ const visualTestItems = computed(() => [
     >
       <!-- default -->
       <template #variant-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch id="variant-default" />
           <Label :for="'variant-default'">Receber notificações por email</Label>
         </div>
@@ -603,8 +643,16 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-1>
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
-          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <div
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          data-justify="between"
+          style="width: 20rem;"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+            style="padding-right: var(--spacing-2);"
+          >
             <Label :for="'variant-marketing'">Emails de marketing</Label>
             <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
@@ -616,7 +664,10 @@ const visualTestItems = computed(() => [
 
       <!-- sm -->
       <template #variant-preview-2>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch
             id="variant-sm"
             size="sm"
@@ -638,7 +689,10 @@ const visualTestItems = computed(() => [
     >
       <!-- withLabel -->
       <template #variant-preview-0>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Switch id="sw-email" />
           <Label
             :for="'sw-email'"
@@ -651,8 +705,16 @@ const visualTestItems = computed(() => [
 
       <!-- withDescription -->
       <template #variant-preview-1>
-        <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
-          <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+        <div
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          data-justify="between"
+          style="width: 20rem;"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+            style="padding-right: var(--spacing-2);"
+          >
             <Label :for="'sw-marketing'">Emails de marketing</Label>
             <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
@@ -667,12 +729,23 @@ const visualTestItems = computed(() => [
 
       <!-- settingsList -->
       <template #variant-preview-2>
-        <div class="nds-stack" data-spacing="sm" style="width: 24rem;">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="width: 24rem;"
+        >
           <p class="nds-text-body nds-font-semibold nds-mb-2">
             Preferências de notificação
           </p>
-          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+            data-justify="between"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="xs"
+              style="padding-right: var(--spacing-2);"
+            >
               <Label :for="'pref-email'">Receber novidades por email</Label>
               <p class="nds-text-body">
                 Resumo semanal sobre o produto.
@@ -683,8 +756,15 @@ const visualTestItems = computed(() => [
               :model-value="true"
             />
           </div>
-          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+            data-justify="between"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="xs"
+              style="padding-right: var(--spacing-2);"
+            >
               <Label :for="'pref-push'">Receber notificações push</Label>
               <p class="nds-text-body">
                 Alertas no dispositivo em tempo real.
@@ -692,8 +772,15 @@ const visualTestItems = computed(() => [
             </div>
             <Switch id="pref-push" />
           </div>
-          <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
-            <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
+          <div
+            class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+            data-justify="between"
+          >
+            <div
+              class="nds-stack"
+              data-spacing="xs"
+              style="padding-right: var(--spacing-2);"
+            >
               <Label :for="'pref-sms'">Alertas por SMS</Label>
               <p class="nds-text-body">
                 Eventos críticos via mensagem de texto.
@@ -711,7 +798,10 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
           @submit.prevent
         >
-          <div class="nds-cluster" data-spacing="sm">
+          <div
+            class="nds-cluster"
+            data-spacing="sm"
+          >
             <Switch
               id="sw-form-newsletter"
               name="newsletter"

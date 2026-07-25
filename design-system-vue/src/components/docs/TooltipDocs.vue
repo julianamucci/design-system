@@ -759,8 +759,15 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="start"
           >
-            <div class="nds-stack" data-spacing="sm" style="align-items: flex-start">
-              <div class="nds-cluster" data-spacing="xs">
+            <div
+              class="nds-stack"
+              data-spacing="sm"
+              style="align-items: flex-start"
+            >
+              <div
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 <label
                   for="api-token-vue-comp"
                   class="nds-text-body nds-font-medium"
@@ -800,8 +807,15 @@ const a11yCritCols = computed(() => ({
             data-justify="center"
             data-align="start"
           >
-            <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
-              <div class="nds-cluster" data-spacing="xs">
+            <div
+              class="nds-stack"
+              data-spacing="xs"
+              style="align-items: flex-start"
+            >
+              <div
+                class="nds-cluster"
+                data-spacing="xs"
+              >
                 <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
                   LCP
                 </p>
@@ -823,7 +837,10 @@ const a11yCritCols = computed(() => ({
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">
+              <p
+                class="nds-font-semibold"
+                style="font-size: 1.5rem; line-height: 2rem"
+              >
                 1.8s
               </p>
             </div>

@@ -339,28 +339,27 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-stack" data-spacing="sm">
+      <div
+        class="nds-w-full nds-stack"
+        data-spacing="sm"
+      >
         <Alert>
-          <Info            aria-hidden="true"
-          />
+          <Info aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
         <Alert variant="destructive">
-          <AlertCircle            aria-hidden="true"
-          />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
         <Alert class="nds-alert-success">
-          <CheckCircle2            aria-hidden="true"
-          />
+          <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
         <Alert class="nds-alert-warning">
-          <TriangleAlert            aria-hidden="true"
-          />
+          <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
         </Alert>
@@ -416,8 +415,7 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <Alert>
-          <AlertCircle            aria-hidden="true"
-          />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
         </Alert>
@@ -427,8 +425,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <Alert variant="destructive">
-          <AlertCircle            aria-hidden="true"
-          />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>Erro ao salvar</AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
@@ -457,8 +454,7 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <Alert class="nds-w-full">
-          <Info            aria-hidden="true"
-          />
+          <Info aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
@@ -468,32 +464,28 @@ const visualTestItems = computed(() => [
           variant="destructive"
           class="nds-w-full"
         >
-          <AlertCircle            aria-hidden="true"
-          />
+          <AlertCircle aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-2>
         <Alert class="nds-w-full nds-alert-success">
-          <CheckCircle2            aria-hidden="true"
-          />
+          <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
         <Alert class="nds-w-full nds-alert-warning">
-          <TriangleAlert            aria-hidden="true"
-          />
+          <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-4>
         <Alert class="nds-w-full">
-          <Info            aria-hidden="true"
-          />
+          <Info aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -508,18 +500,21 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <Alert class="nds-w-full">
-          <Info            aria-hidden="true"
-          />
+          <Info aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-1>
         <Alert class="nds-w-full">
-          <Info            aria-hidden="true"
-          />
+          <Info aria-hidden="true" />
           <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
-          <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">
+          <AlertDescription
+            class="nds-cluster"
+            data-align="center"
+            data-justify="between"
+            style="margin-top: var(--spacing-1);"
+          >
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button
               size="sm"
@@ -535,34 +530,32 @@ const visualTestItems = computed(() => [
           variant="destructive"
           class="nds-w-full"
         >
-          <AlertCircle            aria-hidden="true"
-          />
+          <AlertCircle aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
-        <div class="nds-stack nds-w-full" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="sm"
+        >
           <Alert>
-            <Info              aria-hidden="true"
-            />
+            <Info aria-hidden="true" />
             <AlertTitle>Informação</AlertTitle>
             <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
           </Alert>
           <Alert variant="destructive">
-            <AlertCircle              aria-hidden="true"
-            />
+            <AlertCircle aria-hidden="true" />
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
           </Alert>
           <Alert class="nds-alert-success">
-            <CheckCircle2              aria-hidden="true"
-            />
+            <CheckCircle2 aria-hidden="true" />
             <AlertTitle>Sucesso</AlertTitle>
             <AlertDescription>Ação concluída com sucesso.</AlertDescription>
           </Alert>
           <Alert class="nds-alert-warning">
-            <TriangleAlert              aria-hidden="true"
-            />
+            <TriangleAlert aria-hidden="true" />
             <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>Aviso que requer atenção.</AlertDescription>
           </Alert>

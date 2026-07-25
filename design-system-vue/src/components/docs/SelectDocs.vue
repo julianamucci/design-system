@@ -462,9 +462,15 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-max-w-md nds-stack" data-spacing="lg">
+      <div
+        class="nds-w-full nds-max-w-md nds-stack"
+        data-spacing="lg"
+      >
         <!-- Default -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="demo-estado">{{ tContent('demonstration.labels.stateLabel') }}</Label>
           <Select>
             <SelectTrigger
@@ -492,7 +498,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- With groups -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="demo-regiao">{{ tContent('demonstration.labels.regionLabel') }}</Label>
           <Select>
             <SelectTrigger
@@ -535,7 +544,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Sm -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="demo-sm">{{ tContent('demonstration.labels.stateLabel') }} (sm)</Label>
           <Select>
             <SelectTrigger
@@ -865,7 +877,8 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
-          class="nds-stack nds-w-sm" data-spacing="sm"
+          class="nds-stack nds-w-sm"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative"
         >
           <Label for="comp-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
@@ -896,7 +909,8 @@ const visualTestItems = computed(() => [
 
       <template #variant-preview-1>
         <div
-          class="nds-stack nds-w-sm" data-spacing="sm"
+          class="nds-stack nds-w-sm"
+          data-spacing="sm"
           style="contain: layout; min-height: 100px; position: relative"
         >
           <Label for="comp-region">{{ tContent('demonstration.labels.regionLabel') }}</Label>
@@ -942,11 +956,15 @@ const visualTestItems = computed(() => [
 
       <template #variant-preview-2>
         <form
-          class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
+          class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
+          data-spacing="md"
           style="contain: layout; min-height: 180px; position: relative"
           @submit.prevent
         >
-          <div class="nds-stack" data-spacing="sm">
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
             <Label for="comp-form-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
             <Select name="state">
               <SelectTrigger

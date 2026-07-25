@@ -21,7 +21,12 @@ const delegatedProps = reactiveOmit(props, 'class')
       :class="cn( 'nds-data-table-empty', props.class, )"
       v-bind="delegatedProps"
     >
-      <div class="nds-cluster" data-justify="center" data-align="center" style="padding-block: 2.5rem">
+      <div
+        class="nds-cluster"
+        data-justify="center"
+        data-align="center"
+        style="padding-block: 2.5rem"
+      >
         <slot />
       </div>
     </TableCell>

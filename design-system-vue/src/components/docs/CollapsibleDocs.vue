@@ -421,21 +421,33 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="lg">
+      <div
+        class="nds-w-full nds-max-w-sm nds-stack"
+        data-spacing="lg"
+      >
         <!-- Demo 1: Default (não-controlado) -->
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <p class="nds-text-body nds-font-medium">
             Default (não-controlado)
           </p>
           <Collapsible class="nds-w-full">
-            <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+            <CollapsibleTrigger
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+              data-justify="between"
+            >
               <span>{{ tContent('demonstration.labels.triggerClosed') }}</span>
               <ChevronDown
                 aria-hidden="true"
                 class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
               />
             </CollapsibleTrigger>
-            <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+            <CollapsibleContent
+              class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+              data-spacing="sm"
+            >
               <p>{{ tContent('demonstration.labels.advancedFilter1') }}</p>
               <p>{{ tContent('demonstration.labels.advancedFilter2') }}</p>
             </CollapsibleContent>
@@ -443,12 +455,21 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 2: Controlado -->
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <p class="nds-text-body nds-font-medium">
             Controlado (v-model:open)
           </p>
-          <div class="nds-stack" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between">
+          <div
+            class="nds-stack"
+            data-spacing="sm"
+          >
+            <div
+              class="nds-cluster"
+              data-justify="between"
+            >
               <span class="nds-text-caption nds-text-muted-foreground">
                 Estado: <strong>{{ demoControlledOpen ? 'aberto' : 'fechado' }}</strong>
               </span>
@@ -465,14 +486,20 @@ const visualTestItems = computed(() => [
               class="nds-w-full"
               @update:open="(v) => demoControlledOpen = v"
             >
-              <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+              <CollapsibleTrigger
+                class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+                data-justify="between"
+              >
                 <span>{{ demoControlledOpen ? tContent('demonstration.labels.triggerOpen') : tContent('demonstration.labels.triggerClosed') }}</span>
                 <ChevronDown
                   aria-hidden="true"
                   class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+              <CollapsibleContent
+                class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+                data-spacing="sm"
+              >
                 <p>{{ tContent('demonstration.labels.advancedFilter1') }}</p>
                 <p>{{ tContent('demonstration.labels.advancedFilter2') }}</p>
               </CollapsibleContent>
@@ -481,7 +508,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Demo 3: Desabilitado -->
-        <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack"
+          data-spacing="xs"
+        >
           <p class="nds-text-body nds-font-medium">
             Desabilitado
           </p>
@@ -556,81 +586,120 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <Collapsible class="nds-w-full nds-max-w-xs nds-text-body">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>Exibir filtros avançados</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>Filtro avançado 1</p>
           </CollapsibleContent>
         </Collapsible>
       </template>
       <template #dont-preview-0>
         <Collapsible class="nds-w-full nds-max-w-xs nds-text-body">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>Ver mais</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>Filtro avançado 1</p>
           </CollapsibleContent>
         </Collapsible>
       </template>
       <template #do-preview-1>
         <Collapsible class="nds-w-full nds-max-w-xs nds-text-body">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>Filtros avançados</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>Filtro avançado 1</p>
           </CollapsibleContent>
         </Collapsible>
       </template>
       <template #dont-preview-1>
-        <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+        <div
+          class="nds-stack nds-w-full nds-max-w-xs"
+          data-spacing="sm"
+        >
           <Collapsible class="nds-w-full nds-text-body">
-            <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+            <CollapsibleTrigger
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+              data-justify="between"
+            >
               <span>Seção 1</span>
               <ChevronDown
                 aria-hidden="true"
                 class="nds-icon-sm nds-shrink-0"
               />
             </CollapsibleTrigger>
-            <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+            <CollapsibleContent
+              class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+              data-spacing="sm"
+            >
               Conteúdo 1
             </CollapsibleContent>
           </Collapsible>
           <Collapsible class="nds-w-full nds-text-body">
-            <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+            <CollapsibleTrigger
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+              data-justify="between"
+            >
               <span>Seção 2</span>
               <ChevronDown
                 aria-hidden="true"
                 class="nds-icon-sm nds-shrink-0"
               />
             </CollapsibleTrigger>
-            <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+            <CollapsibleContent
+              class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+              data-spacing="sm"
+            >
               Conteúdo 2
             </CollapsibleContent>
           </Collapsible>
           <Collapsible class="nds-w-full nds-text-body">
-            <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+            <CollapsibleTrigger
+              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+              data-justify="between"
+            >
               <span>Seção 3</span>
               <ChevronDown
                 aria-hidden="true"
                 class="nds-icon-sm nds-shrink-0"
               />
             </CollapsibleTrigger>
-            <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+            <CollapsibleContent
+              class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+              data-spacing="sm"
+            >
               Conteúdo 3
             </CollapsibleContent>
           </Collapsible>
@@ -656,14 +725,20 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <!-- Não-controlado -->
         <Collapsible class="nds-w-full nds-max-w-sm nds-text-body">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>{{ tContent('demonstration.labels.triggerClosed') }}</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>{{ tContent('demonstration.labels.advancedFilter1') }}</p>
             <p>{{ tContent('demonstration.labels.advancedFilter2') }}</p>
           </CollapsibleContent>
@@ -675,14 +750,20 @@ const visualTestItems = computed(() => [
           :open="true"
           class="nds-w-full nds-max-w-sm nds-text-body"
         >
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>{{ tContent('demonstration.labels.triggerOpen') }}</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>{{ tContent('demonstration.labels.advancedFilter1') }}</p>
           </CollapsibleContent>
         </Collapsible>
@@ -698,10 +779,17 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <Collapsible class="nds-w-full nds-max-w-sm">
-          <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
+          <CollapsibleTrigger
+            class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
+            data-spacing="sm"
+            style="display: inline-flex"
+          >
             Exibir opções avançadas
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>Opção avançada 1</p>
             <p>Opção avançada 2</p>
             <p>Opção avançada 3</p>
@@ -710,8 +798,14 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <Collapsible class="nds-w-full nds-max-w-sm">
-          <CollapsibleTrigger class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" style="display: inline-flex">
-            <span class="nds-cluster" data-spacing="sm">
+          <CollapsibleTrigger
+            class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
+            style="display: inline-flex"
+          >
+            <span
+              class="nds-cluster"
+              data-spacing="sm"
+            >
               <Filter
                 class="nds-icon nds-shrink-0"
                 aria-hidden="true"
@@ -719,7 +813,10 @@ const visualTestItems = computed(() => [
               Filtros avançados
             </span>
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p>Filtro por categoria</p>
             <p>Filtro por data</p>
             <p>Filtro por status</p>
@@ -728,18 +825,30 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <Collapsible class="nds-w-full nds-max-w-sm">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between">
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
+            data-justify="between"
+          >
             <span>Configurações avançadas</span>
             <ChevronDown
               aria-hidden="true"
               class="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
             />
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
+            <div
+              class="nds-cluster"
+              data-justify="between"
+            >
               <span class="nds-text-muted-foreground">Notificações</span><span class="nds-font-medium">Ativadas</span>
             </div>
-            <div class="nds-cluster" data-justify="between">
+            <div
+              class="nds-cluster"
+              data-justify="between"
+            >
               <span class="nds-text-muted-foreground">Privacidade</span><span class="nds-font-medium">Modo estrito</span>
             </div>
           </CollapsibleContent>
@@ -747,8 +856,14 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-3>
         <Collapsible class="nds-w-full nds-max-w-sm">
-          <CollapsibleTrigger class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" style="display: inline-flex">
-            <span class="nds-cluster" data-spacing="sm">
+          <CollapsibleTrigger
+            class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
+            style="display: inline-flex"
+          >
+            <span
+              class="nds-cluster"
+              data-spacing="sm"
+            >
               <Settings
                 class="nds-icon nds-shrink-0"
                 aria-hidden="true"
@@ -756,13 +871,34 @@ const visualTestItems = computed(() => [
               Configurações do sistema
             </span>
           </CollapsibleTrigger>
-          <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <CollapsibleContent
+            class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+            data-spacing="sm"
+          >
             <p class="nds-text-muted-foreground nds-text-caption">
               Ajuste as preferências do sistema.
             </p>
-            <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default"><span>Modo escuro</span></label>
-            <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default"><span>Notificações push</span></label>
-            <label class="nds-cluster nds-cursor-pointer" data-spacing="sm"><input type="checkbox" class="nds-icon nds-rounded-sm nds-border-default"><span>Analytics</span></label>
+            <label
+              class="nds-cluster nds-cursor-pointer"
+              data-spacing="sm"
+            ><input
+              type="checkbox"
+              class="nds-icon nds-rounded-sm nds-border-default"
+            ><span>Modo escuro</span></label>
+            <label
+              class="nds-cluster nds-cursor-pointer"
+              data-spacing="sm"
+            ><input
+              type="checkbox"
+              class="nds-icon nds-rounded-sm nds-border-default"
+            ><span>Notificações push</span></label>
+            <label
+              class="nds-cluster nds-cursor-pointer"
+              data-spacing="sm"
+            ><input
+              type="checkbox"
+              class="nds-icon nds-rounded-sm nds-border-default"
+            ><span>Analytics</span></label>
           </CollapsibleContent>
         </Collapsible>
       </template>

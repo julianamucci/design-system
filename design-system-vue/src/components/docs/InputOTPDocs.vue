@@ -397,7 +397,11 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+      <div
+        class="nds-grid nds-w-full"
+        data-spacing="lg"
+        data-min="18rem"
+      >
         <!-- 6 dígitos -->
         <div
           class="nds-stack"
@@ -684,7 +688,10 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="comp-label-otp">Código de verificação</Label>
           <InputOTP
             id="comp-label-otp"
@@ -709,7 +716,10 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-1>
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="comp-help-otp">Código de verificação</Label>
           <InputOTP
             id="comp-help-otp"
@@ -741,7 +751,10 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-2>
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="comp-err-otp">Código de verificação</Label>
           <InputOTP
             id="comp-err-otp"
@@ -774,7 +787,10 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <template #variant-preview-3>
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <Label for="comp-resend-otp">Código de verificação</Label>
           <InputOTP
             id="comp-resend-otp"
@@ -795,7 +811,12 @@ const a11yCritCols = computed(() => ({
               </InputOTPGroup>
             </template>
           </InputOTP>
-          <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
+          <div
+            class="nds-cluster"
+            data-spacing="sm"
+            data-align="center"
+            data-justify="between"
+          >
             <p class="nds-text-caption nds-text-muted-foreground">
               Não recebeu?
             </p>

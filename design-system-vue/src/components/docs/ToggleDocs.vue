@@ -369,9 +369,15 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+      <div
+        class="nds-stack nds-w-full nds-max-w-md"
+        data-spacing="lg"
+      >
         <!-- Barra de formatação icon-only -->
-        <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
+        <div
+          class="nds-cluster nds-rounded-md nds-border-default nds-p-1"
+          data-spacing="xs"
+        >
           <Toggle
             :model-value="demoBold"
             :aria-label="tContent('demonstration.labels.bold')"
@@ -396,7 +402,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Toggle com label visível -->
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Toggle
             variant="outline"
             :model-value="demoShowHidden"
@@ -533,7 +542,10 @@ const visualTestItems = computed(() => [
 
       <!-- Pair 2: ToggleGroup vs múltiplos Toggle soltos -->
       <template #do-preview-1>
-        <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
+        <div
+          class="nds-cluster nds-rounded-md nds-border-default nds-p-1"
+          data-spacing="xs"
+        >
           <Toggle aria-label="Negrito">
             <Bold aria-hidden="true" />
           </Toggle>
@@ -546,7 +558,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Toggle aria-label="Negrito">
             <Bold aria-hidden="true" />
           </Toggle>
@@ -645,7 +660,10 @@ const visualTestItems = computed(() => [
         </Toggle>
       </template>
       <template #variant-preview-2>
-        <div class="nds-cluster" data-spacing="sm">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
           <Toggle
             variant="outline"
             size="sm"
@@ -678,9 +696,16 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-3>
-        <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="width: 18rem;"
+        >
           <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
-          <div class="nds-cluster" data-spacing="sm">
+          <div
+            class="nds-cluster"
+            data-spacing="sm"
+          >
             <Toggle variant="outline">
               <Eye
                 class="nds-icon"

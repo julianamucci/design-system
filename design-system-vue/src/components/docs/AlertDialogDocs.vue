@@ -435,7 +435,12 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
+      <div
+        class="nds-cluster nds-w-full"
+        data-justify="center"
+        data-spacing="md"
+        style="flex-wrap: wrap"
+      >
         <AlertDialog>
           <AlertDialogTrigger as-child>
             <Button variant="destructive">

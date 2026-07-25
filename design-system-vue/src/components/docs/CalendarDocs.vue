@@ -444,7 +444,13 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster" data-justify="center" data-align="start" data-spacing="lg" style="flex-wrap: wrap">
+      <div
+        class="nds-cluster"
+        data-justify="center"
+        data-align="start"
+        data-spacing="lg"
+        style="flex-wrap: wrap"
+      >
         <Calendar
           v-model="demoSelectedSingle"
           :locale="rekaLocale"

@@ -26,7 +26,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <InputGroup>
     <InputGroupAddon>
-      <SearchIcon class="nds-size-4 nds-shrink-0" style="opacity: 0.5" />
+      <SearchIcon
+        class="nds-size-4 nds-shrink-0"
+        style="opacity: 0.5"
+      />
     </InputGroupAddon>
     <ComboboxInput
       data-slot="combobox-input"

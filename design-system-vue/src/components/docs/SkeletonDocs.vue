@@ -264,9 +264,17 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+      <div
+        class="nds-grid nds-w-full"
+        data-cols="2"
+        data-spacing="lg"
+        data-min="16rem"
+      >
         <!-- Card de perfil -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.card') }}
           </p>
@@ -282,7 +290,10 @@ const visualTestItems = computed(() => [
               style="height: 3rem; width: 3rem"
               :aria-hidden="true"
             />
-            <div class="nds-stack nds-flex-1" data-spacing="sm">
+            <div
+              class="nds-stack nds-flex-1"
+              data-spacing="sm"
+            >
               <Skeleton
                 class="nds-motion-reduce-none"
                 style="height: 1rem; width: 70%"
@@ -298,7 +309,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Lista -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.list') }}
           </p>
@@ -320,7 +334,10 @@ const visualTestItems = computed(() => [
                 style="height: 2rem; width: 2rem"
                 :aria-hidden="true"
               />
-              <div class="nds-flex-1 nds-stack" data-spacing="xs">
+              <div
+                class="nds-flex-1 nds-stack"
+                data-spacing="xs"
+              >
                 <Skeleton
                   class="nds-motion-reduce-none"
                   style="height: 0.75rem; width: 60%"
@@ -337,7 +354,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Imagem em AspectRatio -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.image') }}
           </p>
@@ -356,7 +376,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Parágrafo -->
-        <div class="nds-stack" data-spacing="sm">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.paragraph') }}
           </p>
@@ -499,7 +522,11 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+        <div
+          class="nds-cluster nds-w-full"
+          data-spacing="sm"
+          data-align="center"
+        >
           <Skeleton
             class="nds-rounded-full nds-motion-reduce-none"
             style="height: 2.5rem; width: 2.5rem"

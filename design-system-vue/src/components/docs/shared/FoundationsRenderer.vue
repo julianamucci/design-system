@@ -158,10 +158,17 @@ track('docs_page_view', {
 
 <template>
   <div class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
-    <div class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
+    <div
+      class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
+      data-spacing="xl"
+    >
       <!-- Header -->
       <header class="nds-stack nds-pb-8">
-        <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+        <div
+          class="nds-cluster nds-w-full"
+          data-spacing="sm"
+          data-align="center"
+        >
           <Badge
             variant="secondary"
             class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
@@ -267,7 +274,10 @@ track('docs_page_view', {
               :key="item.key"
             >
               <CardHeader>
-                <CardTitle v-if="itemTitle(item.value)" as="h3">
+                <CardTitle
+                  v-if="itemTitle(item.value)"
+                  as="h3"
+                >
                   <span v-html="itemTitle(item.value)" />
                 </CardTitle>
                 <CardDescription v-if="itemBody(item.value)">

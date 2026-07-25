@@ -16,7 +16,7 @@ const forwarded = useForwardProps(delegatedProps)
   <StepperIndicator
     v-slot="slotProps"
     v-bind="forwarded"
-    :class="cn( 'nds-stepper-indicator', // Disabled '', // Active '', // Completed props.class, )"
+    :class="cn('nds-stepper-indicator', props.class)"
   >
     <slot v-bind="slotProps" />
   </StepperIndicator>

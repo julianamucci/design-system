@@ -306,7 +306,11 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+      <div
+        class="nds-cluster"
+        data-spacing="sm"
+        style="flex-wrap: wrap"
+      >
         <Badge>{{ tContent('demonstration.labels.defaultLabel') }}</Badge>
         <Badge variant="secondary">
           {{ tContent('demonstration.labels.secondaryLabel') }}
@@ -478,7 +482,8 @@ const visualTestItems = computed(() => [
         <span
           role="status"
           aria-label="12 notificações não lidas"
-          class="nds-cluster" data-spacing="sm"
+          class="nds-cluster"
+          data-spacing="sm"
         >
           <Bell
             class="nds-icon-lg"
@@ -500,7 +505,8 @@ const visualTestItems = computed(() => [
         <button
           type="button"
           aria-label="Filtrar por React"
-          class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style="padding: 0; border: 0"
+          class="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
+          style="padding: 0; border: 0"
         >
           <Badge variant="outline">
             React

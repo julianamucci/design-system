@@ -377,7 +377,11 @@ const visualTestItems = computed(() => [
           position="top-right"
           :rich-colors="true"
         />
-        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+          style="flex-wrap: wrap"
+        >
           <Button
             variant="outline"
             size="sm"

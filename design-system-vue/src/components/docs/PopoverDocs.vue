@@ -437,7 +437,11 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-grid nds-w-full" data-cols="3" data-spacing="lg">
+      <div
+        class="nds-grid nds-w-full"
+        data-cols="3"
+        data-spacing="lg"
+      >
         <!-- Default -->
         <div
           class="nds-stack"
@@ -496,7 +500,11 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.description') }}
                 </PopoverDescription>
               </PopoverHeader>
-              <div class="nds-cluster" data-spacing="xs" data-justify="end">
+              <div
+                class="nds-cluster"
+                data-spacing="xs"
+                data-justify="end"
+              >
                 <Button
                   variant="outline"
                   size="sm"
@@ -649,7 +657,10 @@ const a11yCritCols = computed(() => ({
           style="contain: layout; min-height: 80px;"
           class="nds-w-full"
         >
-          <div class="nds-text-body nds-stack" data-spacing="xs">
+          <div
+            class="nds-text-body nds-stack"
+            data-spacing="xs"
+          >
             <div class="nds-font-medium">
               Configurações de exibição
             </div>
@@ -775,7 +786,10 @@ const a11yCritCols = computed(() => ({
                 data-spacing="xs"
                 @submit.prevent
               >
-                <div class="nds-stack" data-spacing="xs">
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
                   <Label
                     for="pc-name-vue"
                     class="nds-text-caption"
@@ -785,7 +799,10 @@ const a11yCritCols = computed(() => ({
                     model-value="Joana Silva"
                   />
                 </div>
-                <div class="nds-stack" data-spacing="xs">
+                <div
+                  class="nds-stack"
+                  data-spacing="xs"
+                >
                   <Label
                     for="pc-email-vue"
                     class="nds-text-caption"
@@ -828,28 +845,45 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Filtrar por status</PopoverTitle>
               </PopoverHeader>
-              <div class="nds-stack" data-spacing="xs">
-                <label class="nds-cluster nds-text-body" data-spacing="xs">
+              <div
+                class="nds-stack"
+                data-spacing="xs"
+              >
+                <label
+                  class="nds-cluster nds-text-body"
+                  data-spacing="xs"
+                >
                   <input
                     type="checkbox"
                     checked
                     class="nds-icon-sm"
                   > Ativo
                 </label>
-                <label class="nds-cluster nds-text-body" data-spacing="xs">
+                <label
+                  class="nds-cluster nds-text-body"
+                  data-spacing="xs"
+                >
                   <input
                     type="checkbox"
                     class="nds-icon-sm"
                   > Pendente
                 </label>
-                <label class="nds-cluster nds-text-body" data-spacing="xs">
+                <label
+                  class="nds-cluster nds-text-body"
+                  data-spacing="xs"
+                >
                   <input
                     type="checkbox"
                     class="nds-icon-sm"
                   > Arquivado
                 </label>
               </div>
-              <div class="nds-cluster" data-spacing="xs" data-justify="end" style="padding-top: 0.5rem">
+              <div
+                class="nds-cluster"
+                data-spacing="xs"
+                data-justify="end"
+                style="padding-top: 0.5rem"
+              >
                 <Button
                   variant="ghost"
                   size="sm"
@@ -885,7 +919,11 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Selecionar cor</PopoverTitle>
               </PopoverHeader>
-              <div class="nds-grid" data-cols="6" data-spacing="xs">
+              <div
+                class="nds-grid"
+                data-cols="6"
+                data-spacing="xs"
+              >
                 <button
                   type="button"
                   aria-label="Vermelho"
@@ -948,8 +986,15 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>Preferências rápidas</PopoverTitle>
               </PopoverHeader>
-              <div class="nds-stack" data-spacing="sm">
-                <div class="nds-cluster" data-spacing="sm" data-justify="between">
+              <div
+                class="nds-stack"
+                data-spacing="sm"
+              >
+                <div
+                  class="nds-cluster"
+                  data-spacing="sm"
+                  data-justify="between"
+                >
                   <Label for="cfg-notifs-vue">Notificações</Label>
                   <input
                     id="cfg-notifs-vue"
@@ -958,7 +1003,11 @@ const a11yCritCols = computed(() => ({
                     class="nds-icon-sm"
                   >
                 </div>
-                <div class="nds-cluster" data-spacing="sm" data-justify="between">
+                <div
+                  class="nds-cluster"
+                  data-spacing="sm"
+                  data-justify="between"
+                >
                   <Label for="cfg-dark-vue">Modo escuro</Label>
                   <input
                     id="cfg-dark-vue"
@@ -966,7 +1015,11 @@ const a11yCritCols = computed(() => ({
                     class="nds-icon-sm"
                   >
                 </div>
-                <div class="nds-cluster" data-spacing="sm" data-justify="between">
+                <div
+                  class="nds-cluster"
+                  data-spacing="sm"
+                  data-justify="between"
+                >
                   <Label for="cfg-compact-vue">Modo compacto</Label>
                   <input
                     id="cfg-compact-vue"

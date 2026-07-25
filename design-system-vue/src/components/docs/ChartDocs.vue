@@ -421,10 +421,15 @@ const visualTestItems = computed(() => [
       :title="tContent('demonstration.title')"
       component-slug="chart"
     >
-      <div class="nds-stack nds-w-full" data-spacing="md" style="align-items: center; justify-content: center; padding-block: 2rem">
+      <div
+        class="nds-stack nds-w-full"
+        data-spacing="md"
+        style="align-items: center; justify-content: center; padding-block: 2rem"
+      >
         <ChartContainer
           :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-          class="nds-w-full nds-max-w-lg" style="height: 240px"
+          class="nds-w-full nds-max-w-lg"
+          style="height: 240px"
           :aria-label="tContent('demonstration.labels.chartTitle')"
         />
       </div>
@@ -497,20 +502,30 @@ const visualTestItems = computed(() => [
     >
       <!-- Pair 1: DO — com legenda visível -->
       <template #do-preview-0>
-        <div class="nds-stack" data-spacing="sm" style="align-items: center; justify-content: center; padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="align-items: center; justify-content: center; padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full nds-max-w-xs" style="height: 120px"
+            class="nds-w-full nds-max-w-xs"
+            style="height: 120px"
             aria-label="Bar chart com legenda"
           />
         </div>
       </template>
       <!-- Pair 1: DON'T — sem legenda -->
       <template #dont-preview-0>
-        <div class="nds-stack" data-spacing="sm" style="align-items: center; justify-content: center; padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="align-items: center; justify-content: center; padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full nds-max-w-xs" style="height: 120px"
+            class="nds-w-full nds-max-w-xs"
+            style="height: 120px"
           />
           <p class="nds-text-caption nds-text-muted-foreground nds-italic">
             Sem legenda — séries indistinguíveis
@@ -519,8 +534,16 @@ const visualTestItems = computed(() => [
       </template>
       <!-- Pair 2: DO — com aria-label -->
       <template #do-preview-1>
-        <div class="nds-stack" data-spacing="sm" style="align-items: center; justify-content: center; padding-block: 1rem">
-          <div class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono" data-spacing="sm" style="display: inline-flex; padding: 0.375rem 0.75rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="align-items: center; justify-content: center; padding-block: 1rem"
+        >
+          <div
+            class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
+            data-spacing="sm"
+            style="display: inline-flex; padding: 0.375rem 0.75rem"
+          >
             <span
               class="nds-rounded-full nds-bg-success"
               style="width: 0.5rem; height: 0.5rem"
@@ -528,15 +551,26 @@ const visualTestItems = computed(() => [
             />
             <code>aria-label="Gráfico de barras: acessos mensais"</code>
           </div>
-          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
+          <p
+            class="nds-text-caption nds-text-muted-foreground nds-max-w-xs"
+            style="text-align: center"
+          >
             aria-label descritivo garante acessibilidade para leitores de tela
           </p>
         </div>
       </template>
       <!-- Pair 2: DON'T — sem aria-label -->
       <template #dont-preview-1>
-        <div class="nds-stack" data-spacing="sm" style="align-items: center; justify-content: center; padding-block: 1rem">
-          <div class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono" data-spacing="sm" style="display: inline-flex; padding: 0.375rem 0.75rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="align-items: center; justify-content: center; padding-block: 1rem"
+        >
+          <div
+            class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
+            data-spacing="sm"
+            style="display: inline-flex; padding: 0.375rem 0.75rem"
+          >
             <span
               class="nds-rounded-full nds-bg-destructive"
               style="width: 0.5rem; height: 0.5rem"
@@ -544,7 +578,10 @@ const visualTestItems = computed(() => [
             />
             <code>&lt;ChartContainer :config="..."&gt;</code>
           </div>
-          <p class="nds-text-caption nds-text-muted-foreground nds-max-w-xs" style="text-align: center">
+          <p
+            class="nds-text-caption nds-text-muted-foreground nds-max-w-xs"
+            style="text-align: center"
+          >
             Sem aria-label — gráfico inacessível para leitores de tela
           </p>
         </div>
@@ -568,37 +605,56 @@ const visualTestItems = computed(() => [
     >
       <!-- Bar chart -->
       <template #variant-preview-0>
-        <div class="nds-stack" data-spacing="sm" style="padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full" style="height: 180px"
+            class="nds-w-full"
+            style="height: 180px"
             aria-label="Bar chart"
           />
         </div>
       </template>
       <!-- Line chart -->
       <template #variant-preview-1>
-        <div class="nds-stack" data-spacing="sm" style="padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full" style="height: 180px"
+            class="nds-w-full"
+            style="height: 180px"
             aria-label="Line chart"
           />
         </div>
       </template>
       <!-- Area chart -->
       <template #variant-preview-2>
-        <div class="nds-stack" data-spacing="sm" style="padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full" style="height: 180px"
+            class="nds-w-full"
+            style="height: 180px"
             aria-label="Area chart"
           />
         </div>
       </template>
       <!-- Pie chart -->
       <template #variant-preview-3>
-        <div class="nds-stack" data-spacing="sm" style="padding: 1.5rem 1rem">
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="padding: 1.5rem 1rem"
+        >
           <ChartContainer
             :option="buildPieOption({ data: pieData })"
             style="height: 180px; width: 260px"
@@ -623,7 +679,8 @@ const visualTestItems = computed(() => [
           <CardContent>
             <ChartContainer
               :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-              class="nds-w-full" style="height: 200px"
+              class="nds-w-full"
+              style="height: 200px"
               aria-label="Gráfico de barras: acessos mensais por dispositivo"
             />
           </CardContent>
@@ -631,22 +688,34 @@ const visualTestItems = computed(() => [
       </template>
 
       <template #variant-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="sm" style="align-items: center">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="sm"
+          style="align-items: center"
+        >
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full nds-max-w-md" style="height: 200px"
+            class="nds-w-full nds-max-w-md"
+            style="height: 200px"
             aria-label="Gráfico multi-séries: Desktop e Mobile"
           />
         </div>
       </template>
 
       <template #variant-preview-2>
-        <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
+        <div
+          class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
+          data-spacing="md"
+          style="width: fit-content"
+        >
           <div>
             <p class="nds-text-caption nds-text-muted-foreground">
               Acessos
             </p>
-            <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">
+            <p
+              class="nds-font-semibold"
+              style="font-size: 1.5rem; line-height: 2rem"
+            >
               1.224
             </p>
           </div>
@@ -661,7 +730,9 @@ const visualTestItems = computed(() => [
       <template #variant-preview-3>
         <div
           role="status"
-          class="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style="height: 200px; align-items: center; border: 1px dashed var(--border)"
+          class="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground"
+          data-justify="center"
+          style="height: 200px; align-items: center; border: 1px dashed var(--border)"
         >
           Nenhum dado disponível para o período selecionado.
         </div>

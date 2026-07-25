@@ -296,10 +296,20 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+      <div
+        class="nds-grid nds-w-full"
+        data-cols="2"
+        data-spacing="lg"
+      >
         <!-- Upload animado -->
-        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+          data-spacing="sm"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
             <span
               class="nds-text-muted-foreground"
@@ -314,8 +324,14 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Estados estáticos -->
-        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" style="--stack-gap: var(--spacing-3);">
-          <div class="nds-stack" data-spacing="xs">
+        <div
+          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+          style="--stack-gap: var(--spacing-3);"
+        >
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <div class="nds-text-body nds-text-muted-foreground">
               value=0
             </div>
@@ -324,7 +340,10 @@ const visualTestItems = computed(() => [
               :aria-label="tContent('demonstration.labels.loading')"
             />
           </div>
-          <div class="nds-stack" data-spacing="xs">
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <div class="nds-text-body nds-text-muted-foreground">
               value=50
             </div>
@@ -333,7 +352,10 @@ const visualTestItems = computed(() => [
               :aria-label="tContent('demonstration.labels.loading')"
             />
           </div>
-          <div class="nds-stack" data-spacing="xs">
+          <div
+            class="nds-stack"
+            data-spacing="xs"
+          >
             <div class="nds-text-body nds-text-muted-foreground">
               value=100
             </div>
@@ -345,7 +367,10 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Indeterminate -->
-        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+        <div
+          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+          data-spacing="sm"
+        >
           <div class="nds-text-body">
             {{ tContent('demonstration.labels.indeterminate') }}
           </div>
@@ -357,10 +382,19 @@ const visualTestItems = computed(() => [
         </div>
 
         <!-- Cor customizada -->
-        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+          data-spacing="sm"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
-            <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;">75%</span>
+            <span
+              class="nds-text-muted-foreground"
+              style="font-variant-numeric: tabular-nums;"
+            >75%</span>
           </div>
           <Progress
             :model-value="75"
@@ -449,10 +483,19 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">Enviando arquivo</span>
-            <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;">42%</span>
+            <span
+              class="nds-text-muted-foreground"
+              style="font-variant-numeric: tabular-nums;"
+            >42%</span>
           </div>
           <Progress
             :model-value="42"
@@ -469,8 +512,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #do-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">Enviando</span>
             <span
               class="nds-text-muted-foreground"
@@ -485,8 +534,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">Enviando</span>
             <span
               class="nds-text-muted-foreground"
@@ -531,10 +586,19 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-2>
-        <div class="nds-stack nds-w-full" data-spacing="xs">
-          <div class="nds-cluster nds-text-body" data-justify="between">
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-justify="between"
+          >
             <span class="nds-text-foreground">Enviando arquivo</span>
-            <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;">42%</span>
+            <span
+              class="nds-text-muted-foreground"
+              style="font-variant-numeric: tabular-nums;"
+            >42%</span>
           </div>
           <Progress
             :model-value="42"
