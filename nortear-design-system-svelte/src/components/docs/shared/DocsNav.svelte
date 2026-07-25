@@ -23,28 +23,20 @@
   }
 </script>
 
-<div class="space-y-6">
+<div class="nds-docs-nav">
   {#each groups as group (group.label)}
-    <div>
-      <p class="text-xs font-semibold text-muted-foreground nds-uppercase nds-tracking-wider mb-2 px-2">
-        {group.label}
-      </p>
-      <ul class="list-none space-y-1 p-0 m-0">
+    <div class="nds-docs-nav-group">
+      <p class="nds-docs-nav-label">{group.label}</p>
+      <ul class="nds-docs-nav-list">
         {#each group.sections as section (section.id)}
-          <li class="list-none">
+          <li>
             <button
               type="button"
+              class="nds-docs-nav-button"
               aria-current={activeSection === section.id ? 'location' : undefined}
               data-track="nav"
               data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
               data-track-label={section.label}
-              class={[
-                'w-full text-left px-2 py-1.5 text-sm rounded-(--radius-button) transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                activeSection === section.id
-                  ? 'bg-primary/10 text-primary font-medium'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
-              ].join(' ')}
               onclick={() => scrollTo(section.id)}
             >
               {section.label}

@@ -1150,7 +1150,7 @@ interface CommandDialogProps
         items={[
           { token: "--popover", value: "bg-popover", description: tContent("tokens.table.popoverBg") },
           { token: "--popover-foreground", value: "text-popover-foreground", description: tContent("tokens.table.popoverFg") },
-          { token: "--muted-foreground", value: "text-muted-foreground", description: tContent("tokens.table.mutedFg") },
+          { token: "--muted-foreground", value: "nds-text-muted-foreground", description: tContent("tokens.table.mutedFg") },
           { token: "--input", value: "bg-input/30", description: tContent("tokens.table.inputBg") },
           { token: "--input", value: "border-input/30", description: tContent("tokens.table.inputBorder") },
           { token: "--muted", value: "data-selected:bg-muted", description: stripHtml(tContent("tokens.table.selectedBg")) },

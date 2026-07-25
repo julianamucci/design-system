@@ -499,7 +499,7 @@ interface CalendarProps {
       { token: '--primary',          value: 'data-[selected]:bg-primary',     description: $tStore('tokens.table.primary')         },
       { token: '--primary-foreground', value: 'data-[selected]:text-primary-foreground', description: 'Texto da data selecionada'  },
       { token: '--accent',           value: '[&[data-today]]:bg-accent',      description: stripHtml($tStore('tokens.table.muted')) },
-      { token: '--muted-foreground', value: 'text-muted-foreground',          description: stripHtml($tStore('tokens.table.mutedForeground')) },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',          description: stripHtml($tStore('tokens.table.mutedForeground')) },
       { token: '--foreground',       value: 'text-foreground',                description: $tStore('tokens.table.foreground')      },
       { token: '--ring',             value: 'focus:ring-ring/50',             description: $tStore('tokens.table.ring')            },
       { token: '--cell-radius',      value: 'rounded-(--cell-radius)',        description: stripHtml($tStore('tokens.table.cellRadius')) },

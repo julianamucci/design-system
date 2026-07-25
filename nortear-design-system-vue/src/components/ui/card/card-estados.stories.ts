@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Estados e variações do Card: default (passivo), Clickable (envolvido em <button> com aria-label — padrão asChild) e WithFooter (border-t + bg-muted/50). Cards clicáveis emitem card_click no wrapper, não no Card root.',
+          'Estados e variações do Card: default (passivo), Clickable (envolvido em <button> com aria-label — padrão asChild) e WithFooter (border-t + nds-bg-muted-50). Cards clicáveis emitem card_click no wrapper, não no Card root.',
       },
     },
   },
@@ -72,7 +72,7 @@ export const Clickable: Story = {
       <button
         type="button"
         aria-label="Ver detalhes do produto Cadeira Gamer Pro"
-        class="nds-w-full nds-max-w-sm nds-text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" style="border-radius: var(--radius-card)"
+        class="nds-w-full nds-max-w-sm nds-text-left nds-focus-ring" style="border-radius: var(--radius-card)"
         @click="handleClick"
       >
         <Card>
@@ -137,7 +137,7 @@ export const WithFooter: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('CardFooter presente com border-t e bg-muted/50', async () => {
+    await step('CardFooter presente com border-t e nds-bg-muted-50', async () => {
       const footer = canvasElement.querySelector('[data-slot="card-footer"]');
       await expect(footer).toBeInTheDocument();
       await expect(footer).toHaveClass('nds-card-footer');

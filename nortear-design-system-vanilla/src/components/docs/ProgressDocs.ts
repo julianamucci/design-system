@@ -528,7 +528,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--primary',            value: 'bg-primary/20', description: 'Fundo da trilha (Nortear factory usa primary/20 ao invés de bg-muted)' },
+            { token: '--primary',            value: 'nds-bg-primary-20', description: 'Fundo da trilha (Nortear factory usa primary/20 ao invés de bg-muted)' },
             { token: '--primary',            value: t('tokens.table.primary.class'),           description: t('tokens.table.primary.part') },
             { token: '--primary-foreground', value: t('tokens.table.primaryForeground.class'), description: t('tokens.table.primaryForeground.part') },
             { token: '--foreground',         value: t('tokens.table.foreground.class'),        description: t('tokens.table.foreground.part') },

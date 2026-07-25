@@ -26,10 +26,10 @@
   <TableBody>
     {#each skeletonRows as row (row)}
       <TableRow>
-        <TableCell><Skeleton class="h-4 w-20" /></TableCell>
-        <TableCell><Skeleton class="h-4 w-16" /></TableCell>
-        <TableCell><Skeleton class="h-4 w-32" /></TableCell>
-        <TableCell class="text-right"><Skeleton class="h-4 w-16 ml-auto" /></TableCell>
+        <TableCell><Skeleton style="height: 1rem; width: 5rem" /></TableCell>
+        <TableCell><Skeleton style="height: 1rem; width: 4rem" /></TableCell>
+        <TableCell><Skeleton style="height: 1rem; width: 8rem" /></TableCell>
+        <TableCell class="nds-text-right"><Skeleton class="nds-spacer-start" style="height: 1rem; width: 4rem" /></TableCell>
       </TableRow>
     {/each}
   </TableBody>

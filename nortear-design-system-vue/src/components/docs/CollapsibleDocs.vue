@@ -332,7 +332,7 @@ const tokenRows = computed(() => [
   { token: '--border',     value: 'border-input',       description: tContent('tokens.table.border')      },
   { token: '--muted',      value: 'bg-muted',           description: tContent('tokens.table.background')  },
   { token: '--radius',     value: 'rounded-md',         description: tContent('tokens.table.radius')      },
-  { token: '--accent',     value: 'hover:bg-accent',    description: tContent('tokens.table.triggerHover') },
+  { token: '--accent',     value: 'nds-hover-bg-accent',    description: tContent('tokens.table.triggerHover') },
   { token: '--ring',       value: 'ring-ring',          description: tContent('tokens.table.triggerFocus') },
   { token: 'transition',   value: 'transition-all',     description: tContent('tokens.table.transition')  },
 ]);

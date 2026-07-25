@@ -658,7 +658,8 @@ interface RadioGroupItemProps {
                 <RadioGroup
                   name="delivery"
                   aria-labelledby="comp-delivery-legend"
-                  className="grid grid-flow-col auto-cols-max gap-6"
+                  className="nds-cluster"
+                  data-spacing="lg"
                 >
                   <div className="nds-cluster" data-spacing="xs">
                     <RadioGroupItem value="standard" id="r-standard" />

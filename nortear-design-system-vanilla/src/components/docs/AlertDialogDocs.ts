@@ -359,7 +359,7 @@ const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
 const actionButton = createButton({
   variant: 'default',
   label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
 });
 
 const dialog = createAlertDialog({
@@ -377,7 +377,7 @@ const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
 const actionButton = createButton({
   variant: 'default',
   label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
 });
 
 createAlertDialog({ trigger, title: 'Excluir conta', description: '...', cancelButton, actionButton });`;
@@ -435,7 +435,7 @@ createAlertDialog({ trigger, title: 'Sair da conta', description: '...', cancelB
               useWhen: t('variants.compositions.destructive.use'),
               code: `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-const action = createButton({ variant: 'default', label: 'Excluir conta', class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90' });
+const action = createButton({ variant: 'default', label: 'Excluir conta', class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90' });
 const dialog = createAlertDialog({
   trigger,
   title: 'Excluir sua conta?',
@@ -449,7 +449,7 @@ const dialog = createAlertDialog({
                 const action = createButton({
                   variant: 'default',
                   label: 'Excluir conta',
-                  class: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+                  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
                 });
                 return createAlertDialog({
                   trigger,
@@ -608,7 +608,7 @@ export interface AlertDialogOptions {
             { token: '--background',             value: 'bg-background',                description: t('tokens.table.contentBg') },
             { token: '--foreground',             value: 'text-foreground',              description: t('tokens.table.contentForeground') },
             { token: '--border',                 value: 'border',                       description: t('tokens.table.border') },
-            { token: '--muted-foreground',       value: 'text-muted-foreground',        description: t('tokens.table.mutedForeground') },
+            { token: '--muted-foreground',       value: 'nds-text-muted-foreground',        description: t('tokens.table.mutedForeground') },
             { token: '--destructive',            value: 'bg-destructive',               description: t('tokens.table.destructive') },
             { token: '--destructive-foreground', value: 'text-destructive-foreground',  description: t('tokens.table.destructiveForeground') },
             { token: '--radius',                 value: 'sm:rounded-lg',                description: t('tokens.table.radius') },

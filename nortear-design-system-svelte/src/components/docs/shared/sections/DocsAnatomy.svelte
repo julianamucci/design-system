@@ -17,7 +17,7 @@
     <div class="nds-stack nds-w-full" data-spacing="md">
         <ol class="nds-stack nds-text-body nds-list-none" data-spacing="sm">
           {#each items as item, i}
-            <li class="nds-row list-none" data-spacing="sm" data-align="start">
+            <li class="nds-row nds-list-none" data-spacing="sm" data-align="start">
               <span class="nds-pill" data-tone="primary">
                 {i + 1}
               </span>

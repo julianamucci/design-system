@@ -1025,8 +1025,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           { token: "--background",    value: "bg-background",  description: tContent("tokens.table.background") },
           { token: "--foreground",    value: "text-foreground", description: tContent("tokens.table.foreground") },
           { token: "--border",        value: "border",          description: tContent("tokens.table.border") },
-          { token: "--accent",        value: "hover:bg-accent", description: tContent("tokens.table.accent") },
-          { token: "--ring",          value: "focus-visible:ring-ring", description: tContent("tokens.table.ring") },
+          { token: "--accent",        value: "nds-hover-bg-accent", description: tContent("tokens.table.accent") },
+          { token: "--ring",          value: "nds-focus-ring", description: tContent("tokens.table.ring") },
           { token: "--radius-button", value: "rounded-(--radius-button)", description: tContent("tokens.table.radiusButton") },
           { token: "--primary",       value: "bg-primary",      description: tContent("tokens.table.primary") },
         ]}

@@ -81,7 +81,7 @@ export const Clickable: Story = {
 
     await step('Wrapper tem classe de focus ring', async () => {
       const link = canvas.getByRole('link', { name: /Abrir Cadeira Gamer Pro/ });
-      await expect(link).toHaveClass('focus-visible:ring-2');
+      await expect(link).toHaveClass('nds-focus-ring');
     });
   },
 };

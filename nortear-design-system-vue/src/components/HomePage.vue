@@ -28,7 +28,7 @@ const popularComponents = [
         <h1 class="text-5xl font-extrabold nds-tracking-tight">
           Documentação do Design System
         </h1>
-        <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p class="text-lg nds-text-muted-foreground max-w-2xl mx-auto">
           Biblioteca de componentes reutilizáveis construída com Vue 3 e CSS standalone .nds-*.
           Copie e cole os componentes que precisar em seu projeto.
         </p>
@@ -62,7 +62,7 @@ const popularComponents = [
           <h2 class="text-3xl font-semibold">
             Por que usar o Design System?
           </h2>
-          <p class="text-muted-foreground">
+          <p class="nds-text-muted-foreground">
             Uma biblioteca moderna e flexível para desenvolvimento rápido
           </p>
         </div>
@@ -80,7 +80,7 @@ const popularComponents = [
                 Rápido
               </h3>
             </div>
-            <p class="text-sm text-muted-foreground">
+            <p class="text-sm nds-text-muted-foreground">
               Componentes prontos para uso que aceleram o desenvolvimento.
             </p>
           </div>
@@ -97,7 +97,7 @@ const popularComponents = [
                 Personalizável
               </h3>
             </div>
-            <p class="text-sm text-muted-foreground">
+            <p class="text-sm nds-text-muted-foreground">
               Sistema de design flexível baseado em variáveis CSS.
             </p>
           </div>
@@ -114,7 +114,7 @@ const popularComponents = [
                 Acessível
               </h3>
             </div>
-            <p class="text-sm text-muted-foreground">
+            <p class="text-sm nds-text-muted-foreground">
               Construído seguindo diretrizes WCAG 2.2 AA de acessibilidade.
             </p>
           </div>
@@ -127,7 +127,7 @@ const popularComponents = [
           <h2 class="text-3xl font-semibold">
             Componentes Populares
           </h2>
-          <p class="text-muted-foreground">
+          <p class="nds-text-muted-foreground">
             Comece com os componentes mais utilizados
           </p>
         </div>
@@ -143,7 +143,7 @@ const popularComponents = [
             <p class="font-semibold mb-1">
               {{ component.name }}
             </p>
-            <p class="text-sm text-muted-foreground">
+            <p class="text-sm nds-text-muted-foreground">
               {{ component.description }}
             </p>
           </button>
@@ -156,7 +156,7 @@ const popularComponents = [
           <h2 class="text-3xl font-semibold">
             Como Navegar na Documentação
           </h2>
-          <p class="text-muted-foreground">
+          <p class="nds-text-muted-foreground">
             Guia rápido para aproveitar ao máximo esta documentação
           </p>
         </div>
@@ -179,7 +179,7 @@ const popularComponents = [
               </h3>
             </div>
             <p
-              class="text-sm text-muted-foreground"
+              class="text-sm nds-text-muted-foreground"
               v-html="step.desc"
             />
           </div>
@@ -197,7 +197,7 @@ const popularComponents = [
         <h3 class="text-xl font-semibold">
           Pronto para começar?
         </h3>
-        <p class="text-muted-foreground max-w-md mx-auto">
+        <p class="nds-text-muted-foreground max-w-md mx-auto">
           Explore os componentes na sidebar ou comece com os componentes populares acima.
         </p>
         <button

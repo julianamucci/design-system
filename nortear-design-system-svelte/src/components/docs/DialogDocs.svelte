@@ -791,7 +791,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { token: '--popover',            value: 'bg-popover',            description: $tStore('tokens.table.popover')           },
       { token: '--popover-foreground', value: 'text-popover-foreground', description: $tStore('tokens.table.popoverForeground') },
       { token: '--foreground',         value: 'ring-foreground/10',    description: $tStore('tokens.table.foreground')        },
-      { token: '--muted',              value: 'bg-muted/50',           description: $tStore('tokens.table.muted')             },
+      { token: '--muted',              value: 'nds-bg-muted-50',           description: $tStore('tokens.table.muted')             },
       { token: '--border',             value: 'border-t',              description: $tStore('tokens.table.border')            },
       { token: '--radius-xl',          value: 'rounded-xl',            description: $tStore('tokens.table.radius')            },
       { token: 'z-50',                 value: 'z-50',                  description: $tStore('tokens.table.zIndex')            },

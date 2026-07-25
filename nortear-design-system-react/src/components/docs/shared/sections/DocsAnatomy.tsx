@@ -17,7 +17,7 @@ export function DocsAnatomy({ title, items, structureCode, structureLabel }: Doc
         <div className="nds-stack nds-w-full" data-spacing="md">
           <ol className="nds-stack nds-text-body nds-list-none" data-spacing="sm">
             {items.map((item, i) => (
-              <li key={i} className="nds-row list-none" data-spacing="sm" data-align="start">
+              <li key={i} className="nds-row nds-list-none" data-spacing="sm" data-align="start">
                 <span className="nds-pill" data-tone="primary">
                   {i + 1}
                 </span>

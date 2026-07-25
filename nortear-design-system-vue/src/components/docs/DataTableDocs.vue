@@ -282,8 +282,8 @@ const columnMetaItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: 'border-input',          value: stripHtml(tContent('tokens.table.border')),           description: tContent('tokens.table.borderPart')           },
-  { token: 'bg-muted/50',           value: stripHtml(tContent('tokens.table.muted')),            description: tContent('tokens.table.mutedPart')            },
-  { token: 'text-muted-foreground', value: stripHtml(tContent('tokens.table.mutedForeground')),  description: tContent('tokens.table.mutedForegroundPart')  },
+  { token: 'nds-bg-muted-50',           value: stripHtml(tContent('tokens.table.muted')),            description: tContent('tokens.table.mutedPart')            },
+  { token: 'nds-text-muted-foreground', value: stripHtml(tContent('tokens.table.mutedForeground')),  description: tContent('tokens.table.mutedForegroundPart')  },
   { token: 'text-primary',          value: stripHtml(tContent('tokens.table.primary')),          description: tContent('tokens.table.primaryPart')          },
   { token: 'bg-background',         value: stripHtml(tContent('tokens.table.background')),       description: tContent('tokens.table.backgroundPart')       },
   { token: 'ring-ring/50',          value: stripHtml(tContent('tokens.table.ring')),             description: tContent('tokens.table.ringPart')             },

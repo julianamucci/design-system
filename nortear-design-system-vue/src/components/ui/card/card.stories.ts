@@ -86,7 +86,7 @@ export const Playground: Story = {
       await expect(canvas.getByText(/Estrutura ergonômica/)).toBeVisible();
     });
 
-    await step('CardFooter ganha border-t e bg-muted/50', async () => {
+    await step('CardFooter ganha border-t e nds-bg-muted-50', async () => {
       const footer = canvasElement.querySelector('[data-slot="card-footer"]');
       await expect(footer).toBeInTheDocument();
       await expect(footer).toHaveClass('nds-card-footer');

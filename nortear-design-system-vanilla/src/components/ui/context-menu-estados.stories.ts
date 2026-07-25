@@ -99,7 +99,7 @@ export const ItemInset: Story = {
     // Label normal
     const lbl = document.createElement('li');
     lbl.setAttribute('role', 'presentation');
-    lbl.className = 'px-2 py-1.5 text-xs font-semibold text-muted-foreground';
+    lbl.className = 'nds-dropdown-menu-label';
     lbl.textContent = 'Ações';
     menu.appendChild(lbl);
 
@@ -142,7 +142,7 @@ export const ItemInset: Story = {
 
     const sep = document.createElement('li');
     sep.setAttribute('role', 'separator');
-    sep.className = '-mx-1 my-1 h-px bg-muted';
+    sep.className = 'nds-dropdown-menu-separator';
     menu.appendChild(sep);
 
     // Item destrutivo
@@ -238,7 +238,7 @@ export const ItemDestructive: Story = {
 
     const sep = document.createElement('li');
     sep.setAttribute('role', 'separator');
-    sep.className = '-mx-1 my-1 h-px bg-muted';
+    sep.className = 'nds-dropdown-menu-separator';
 
     menu.append(
       makeItem('Editar'),

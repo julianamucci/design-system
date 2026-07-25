@@ -71,7 +71,7 @@ export const WithFooter: Story = {
     docs: {
       description: {
         story:
-          "CardFooter ganha `border-t` + `bg-muted/50`; o Card absorve `pb-0` via `has-data-[slot=card-footer]` para alinhar a borda.",
+          "CardFooter ganha `border-t` + `nds-bg-muted-50`; o Card absorve `pb-0` via `has-data-[slot=card-footer]` para alinhar a borda.",
       },
     },
   },

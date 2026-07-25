@@ -695,7 +695,7 @@ import { Label } from "@/components/ui/label";`;
       { token: '--primary',            value: 'bg-primary / border-primary',         description: $tStore('tokens.table.primary') },
       { token: '--primary-foreground', value: 'text-primary-foreground',             description: $tStore('tokens.table.primaryForeground') },
       { token: '--input',              value: 'border-input',                        description: $tStore('tokens.table.input') },
-      { token: '--ring',               value: 'focus-visible:ring-ring/50',          description: $tStore('tokens.table.ring') },
+      { token: '--ring',               value: 'nds-focus-ring',          description: $tStore('tokens.table.ring') },
       { token: '--destructive',        value: 'border-destructive ring-destructive', description: $tStore('tokens.table.destructive') },
       { token: '--border',             value: 'border',                              description: $tStore('tokens.table.border') },
     ]}

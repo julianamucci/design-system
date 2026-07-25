@@ -264,7 +264,7 @@ const tokenRows = computed(() => [
   { token: '--destructive',        value: 'bg-destructive',        description: tContent('tokens.table.destructive')        },
   { token: '--border',             value: 'border',                description: tContent('tokens.table.border')             },
   { token: '--accent',             value: 'bg-accent',             description: tContent('tokens.table.accent')             },
-  { token: '--ring',               value: 'focus-visible:ring-ring/50', description: tContent('tokens.table.ring')          },
+  { token: '--ring',               value: 'nds-focus-ring', description: tContent('tokens.table.ring')          },
   { token: '--radius',             value: 'rounded-md',            description: tContent('tokens.table.radius')             },
 ]);
 

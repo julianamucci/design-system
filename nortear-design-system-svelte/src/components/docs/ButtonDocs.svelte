@@ -524,8 +524,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           { token: '--secondary',          value: 'bg-secondary',                description: $tStore('tokens.table.secondary') },
           { token: '--destructive',        value: 'bg-destructive text-white',   description: $tStore('tokens.table.destructive') },
           { token: '--border',             value: 'border',                      description: $tStore('tokens.table.border') },
-          { token: '--accent',             value: 'hover:bg-accent',             description: $tStore('tokens.table.accent') },
-          { token: '--ring',               value: 'focus-visible:ring-ring/50',  description: $tStore('tokens.table.ring') },
+          { token: '--accent',             value: 'nds-hover-bg-accent',             description: $tStore('tokens.table.accent') },
+          { token: '--ring',               value: 'nds-focus-ring',  description: $tStore('tokens.table.ring') },
           { token: '--radius',             value: 'rounded-lg',                  description: $tStore('tokens.table.radius') },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}

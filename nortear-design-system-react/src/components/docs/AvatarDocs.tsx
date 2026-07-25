@@ -790,12 +790,12 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
         }}
         items={[
           { token: "--muted",             value: "bg-muted",                 description: tContent("tokens.table.muted") },
-          { token: "--muted-foreground",  value: "text-muted-foreground",    description: tContent("tokens.table.mutedForeground") },
+          { token: "--muted-foreground",  value: "nds-text-muted-foreground",    description: tContent("tokens.table.mutedForeground") },
           { token: "--background",        value: "ring-background",          description: stripHtml(tContent("tokens.table.background")) },
           { token: "--border",            value: "border",                   description: tContent("tokens.table.border") },
           { token: "--primary",           value: "bg-primary",               description: tContent("tokens.table.primary") },
           { token: "--radius",            value: "rounded-full",             description: stripHtml(tContent("tokens.table.radius")) },
-          { token: "--ring",              value: "focus-visible:ring-ring",  description: tContent("tokens.table.ring") },
+          { token: "--ring",              value: "nds-focus-ring",  description: tContent("tokens.table.ring") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

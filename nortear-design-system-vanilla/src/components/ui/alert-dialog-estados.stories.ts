@@ -54,7 +54,7 @@ function buildDemo(opts: DemoOptions): HTMLElement {
     onClick: opts.onConfirm,
     class:
       opts.tone === 'destructive'
-        ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+        ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
         : '',
   });
   const dialog = createAlertDialog({

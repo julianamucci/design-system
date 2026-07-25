@@ -80,7 +80,7 @@ export const Focus: Story = {
       handle.focus();
       await expect(handle).toHaveFocus();
     });
-    await step('Handle focado tem classe focus-visible:ring', async () => {
+    await step('Handle focado tem classe nds-focus-ring', async () => {
       const handle = canvas.getByRole('separator');
       await expect(handle.className).toMatch(/nds-resizable-handle/);
     });

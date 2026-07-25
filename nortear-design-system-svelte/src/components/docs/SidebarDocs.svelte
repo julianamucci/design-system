@@ -847,7 +847,7 @@ interface SidebarMenuButtonProps {
         code: `<SidebarHeader style="gap: 0.5rem">
   <span class="nds-font-semibold">Design System</span>
   <div style="position: relative">
-    <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
+    <Search aria-hidden="true" class="nds-icon-input-start nds-icon-sm nds-text-muted-foreground" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."
@@ -1009,7 +1009,7 @@ interface SidebarMenuButtonProps {
             <SidebarHeader style="gap: 0.5rem; padding: 0.75rem">
               <span class="nds-text-body nds-font-semibold" style="color: var(--sidebar-foreground)">Design System</span>
               <div style="position: relative">
-                <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none" />
+                <Search aria-hidden="true" class="nds-icon-input-start nds-icon-sm nds-text-muted-foreground" />
                 <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" class="nds-text-caption" style="padding-left: 1.75rem; height: 2rem" />
               </div>
             </SidebarHeader>

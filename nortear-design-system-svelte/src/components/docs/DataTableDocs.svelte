@@ -412,8 +412,8 @@ const columns: DataTableColumn<Invoice>[] = [
     }}
     items={[
       { token: '--border',           value: 'border-input',                description: stripHtml($tStore('tokens.table.borderPart'))          },
-      { token: '--muted',            value: 'bg-muted/50',                 description: stripHtml($tStore('tokens.table.mutedPart'))           },
-      { token: '--muted-foreground', value: 'text-muted-foreground',       description: stripHtml($tStore('tokens.table.mutedForegroundPart')) },
+      { token: '--muted',            value: 'nds-bg-muted-50',                 description: stripHtml($tStore('tokens.table.mutedPart'))           },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',       description: stripHtml($tStore('tokens.table.mutedForegroundPart')) },
       { token: '--primary',          value: 'text-primary',                description: stripHtml($tStore('tokens.table.primaryPart'))         },
       { token: '--background',       value: 'bg-background',               description: stripHtml($tStore('tokens.table.backgroundPart'))      },
       { token: '--ring',             value: 'ring-ring/50',                description: stripHtml($tStore('tokens.table.ringPart'))            },

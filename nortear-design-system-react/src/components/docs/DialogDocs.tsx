@@ -945,7 +945,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
           { token: "--popover",            value: "bg-popover",            description: tContent("tokens.table.popover") },
           { token: "--popover-foreground", value: "text-popover-foreground", description: tContent("tokens.table.popoverForeground") },
           { token: "--foreground",         value: "ring-foreground/10",    description: tContent("tokens.table.foreground") },
-          { token: "--muted",              value: "bg-muted/50",           description: tContent("tokens.table.muted") },
+          { token: "--muted",              value: "nds-bg-muted-50",           description: tContent("tokens.table.muted") },
           { token: "--border",             value: "border-t",              description: tContent("tokens.table.border") },
           { token: "--radius",             value: "rounded-xl",            description: tContent("tokens.table.radius") },
           { token: "z-index",              value: "z-50",                  description: tContent("tokens.table.zIndex") },

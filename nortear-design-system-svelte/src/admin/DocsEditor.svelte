@@ -56,12 +56,12 @@
 
     <nav class="flex-1 overflow-y-auto py-2">
       {#if !components.length}
-        <p class="px-4 text-xs text-muted-foreground">Carregando...</p>
+        <p class="px-4 text-xs nds-text-muted-foreground">Carregando...</p>
       {/if}
       {#each components as comp}
         <button
           onclick={() => changeComponent(comp)}
-          class="w-full px-4 py-2 text-left text-sm nds-transition-colors {activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'text-muted-foreground nds-hover-bg-muted-50 hover:text-foreground'}"
+          class="w-full px-4 py-2 text-left text-sm nds-transition-colors {activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'nds-text-muted-foreground nds-hover-bg-muted-50 nds-hover-text-foreground'}"
         >
           {comp}
         </button>
@@ -73,7 +73,7 @@
       {#each LOCALES as l}
         <button
           onclick={() => locale.set(l)}
-          class="flex-1 rounded py-1 text-xs nds-transition-colors {$locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}"
+          class="flex-1 rounded py-1 text-xs nds-transition-colors {$locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted nds-text-muted-foreground nds-hover-bg-muted-80'}"
         >
           {LOCALE_LABELS[l]}
         </button>
@@ -87,7 +87,7 @@
     <!-- Toolbar -->
     <header class="flex h-14 items-center gap-3 border-b border-border px-6">
       <h1 class="text-sm font-semibold">{activeComponent}</h1>
-      <span class="text-xs text-muted-foreground">{LOCALE_LABELS[$locale]}</span>
+      <span class="text-xs nds-text-muted-foreground">{LOCALE_LABELS[$locale]}</span>
       {#if $error}
         <span class="text-xs text-destructive">Erro: {$error}</span>
       {/if}
@@ -102,7 +102,7 @@
         >
           {$saving ? 'Salvando...' : 'Salvar'}
         </button>
-        <span class="text-xs text-muted-foreground">Ctrl+S</span>
+        <span class="text-xs nds-text-muted-foreground">Ctrl+S</span>
       </div>
     </header>
 
@@ -131,19 +131,19 @@
 
   {#if isNested}
     <div class="{depth > 0 ? 'pl-4 border-l border-border' : ''} space-y-3">
-      <p class="text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">{label}</p>
+      <p class="text-xs font-semibold nds-uppercase nds-tracking-wide nds-text-muted-foreground">{label}</p>
       {#each Object.entries(value as Record<string, unknown>) as [k, v]}
         {@render FieldEditorSnippet(`${fieldKey}.${k}`, v, depth + 1, onchange)}
       {/each}
     </div>
   {:else if isHtml}
     <div class="space-y-1">
-      <label class="text-xs font-medium text-muted-foreground">{label}</label>
+      <label class="text-xs font-medium nds-text-muted-foreground">{label}</label>
       <QuillField {fieldKey} value={String(value ?? '')} {onchange} />
     </div>
   {:else if !Array.isArray(value)}
     <div class="space-y-1">
-      <label class="text-xs font-medium text-muted-foreground">{label}</label>
+      <label class="text-xs font-medium nds-text-muted-foreground">{label}</label>
       <input
         type="text"
         value={String(value ?? '')}

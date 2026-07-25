@@ -57,7 +57,11 @@ export const Playground: Story = {
     const isVertical = args.orientation === "vertical";
 
     return (
-      <div className={isVertical ? "h-40 w-32 flex flex-col items-center gap-3" : "w-80 space-y-3"}>
+      <div
+        className={isVertical ? "nds-stack" : "nds-stack nds-w-sm"}
+        data-spacing="sm"
+        style={isVertical ? { height: "10rem", width: "8rem", alignItems: "center" } : undefined}
+      >
         <div className="nds-cluster nds-w-full" data-align="center" data-justify="between">
           <span className="nds-text-body nds-text-muted-foreground">
             {args["aria-label"]}

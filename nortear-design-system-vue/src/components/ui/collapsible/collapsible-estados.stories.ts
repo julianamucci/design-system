@@ -29,7 +29,7 @@ export const NaoControlado: Story = {
     setup() { return {}; },
     template: `
       <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between">
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring" data-align="center" data-justify="between">
           Exibir filtros avançados
           <ChevronDown
             aria-hidden="true"
@@ -89,14 +89,14 @@ export const Controlado: Story = {
             Estado externo: <strong>{{ isOpen ? 'aberto' : 'fechado' }}</strong>
           </span>
           <button
-            class="nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="padding-inline: 0.75rem"
+            class="nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring" style="padding-inline: 0.75rem"
             @click="toggle"
           >
             {{ isOpen ? 'Fechar' : 'Abrir' }} externamente
           </button>
         </div>
         <Collapsible :open="isOpen" @update:open="(v) => isOpen = v" class="nds-stack" data-spacing="sm">
-          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between">
+          <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring" data-align="center" data-justify="between">
             {{ isOpen ? 'Ocultar filtros avançados' : 'Exibir filtros avançados' }}
             <ChevronDown
               aria-hidden="true"
@@ -150,7 +150,7 @@ export const Desabilitado: Story = {
       <Collapsible disabled class="nds-stack" data-spacing="sm" style="width: 20rem">
         <CollapsibleTrigger
           disabled
-          class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium opacity-50 cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-justify="between"
+          class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium opacity-50 cursor-not-allowed nds-focus-ring" data-align="center" data-justify="between"
         >
           Filtros avançados (desabilitado)
           <ChevronDown aria-hidden="true" class="" style="height: 1rem; width: 1rem" />

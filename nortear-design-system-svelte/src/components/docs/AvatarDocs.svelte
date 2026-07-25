@@ -645,7 +645,7 @@ interface AvatarFallbackProps {
     }}
     items={[
       { token: '--muted',            value: 'bg-muted',             description: $tStore('tokens.table.muted')           },
-      { token: '--muted-foreground', value: 'text-muted-foreground', description: $tStore('tokens.table.mutedForeground') },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: $tStore('tokens.table.mutedForeground') },
       { token: '--background',       value: 'ring-background',      description: stripHtml($tStore('tokens.table.background')) },
       { token: '--border',           value: 'border',               description: $tStore('tokens.table.border')          },
       { token: '--primary',          value: 'bg-primary',           description: $tStore('tokens.table.primary')         },

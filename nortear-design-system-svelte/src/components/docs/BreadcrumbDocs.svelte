@@ -839,9 +839,9 @@ interface BreadcrumbEllipsisProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--muted-foreground', value: 'text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
-      { token: '--foreground',       value: 'hover:text-foreground',   description: $tStore('tokens.table.foreground')      },
-      { token: '--ring',             value: 'focus-visible:ring-ring', description: $tStore('tokens.table.ring')            },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
+      { token: '--foreground',       value: 'nds-hover-text-foreground',   description: $tStore('tokens.table.foreground')      },
+      { token: '--ring',             value: 'nds-focus-ring', description: $tStore('tokens.table.ring')            },
       { token: 'font-size',          value: 'text-sm',                 description: $tStore('tokens.table.textSm')          },
       { token: 'gap',                value: 'gap-1.5',                 description: $tStore('tokens.table.gap')             },
       { token: 'icon-size',          value: '[&>svg]:size-3.5',        description: $tStore('tokens.table.sizeSeparator')   },

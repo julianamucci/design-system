@@ -32,7 +32,7 @@ const wrapTemplate = (typeAttr: string) => `
           v-for="tag in tags"
           :key="tag"
           href="#"
-          class="nds-block nds-text-body nds-rounded-sm nds-border-default nds-px-2 outline-none focus-visible:ring-2 focus-visible:ring-ring" style="padding-block: 0.375rem"
+          class="nds-block nds-text-body nds-rounded-sm nds-border-default nds-px-2 outline-none nds-focus-ring" style="padding-block: 0.375rem"
         >
           {{ tag }}
         </a>

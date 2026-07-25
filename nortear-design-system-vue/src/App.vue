@@ -121,7 +121,7 @@ function isCategoryOpen(name: string) {
             <!-- Home -->
             <button
               class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm nds-transition-colors"
-              :class="currentPage === 'home' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent hover:text-sidebar-accent-foreground'"
+              :class="currentPage === 'home' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground'"
               @click="navigateTo('home')"
             >
               <Home
@@ -173,7 +173,7 @@ function isCategoryOpen(name: string) {
                   v-for="item in category.items"
                   :key="item.path"
                   class="w-full flex items-center justify-start px-2 h-7 rounded-md text-sm nds-transition-colors"
-                  :class="currentPage === item.path ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent hover:text-sidebar-accent-foreground'"
+                  :class="currentPage === item.path ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent nds-hover-text-sidebar-accent-foreground'"
                   @click="navigateTo(item.path)"
                 >
                   {{ item.name }}
@@ -234,7 +234,7 @@ function isCategoryOpen(name: string) {
           </template>
           <template #fallback>
             <div
-              class="flex items-center justify-center h-64 text-muted-foreground"
+              class="flex items-center justify-center h-64 nds-text-muted-foreground"
               aria-live="polite"
             >
               <span class="nds-animate-pulse text-sm">Carregando...</span>

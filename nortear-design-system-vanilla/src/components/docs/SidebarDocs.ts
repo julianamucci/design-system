@@ -706,7 +706,7 @@ export function createSidebarDocs(): HTMLElement {
           searchWrapper.style.paddingBottom = 'var(--spacing-1)';
           searchWrapper.setAttribute('data-sidebar', 'input');
           const searchIcon = makeIcon(ICON_SEARCH, 14);
-          searchIcon.classList.add('absolute', 'left-3', 'top-1/2', '-translate-y-1/2', 'nds-text-muted-foreground', 'pointer-events-none');
+          searchIcon.classList.add('nds-icon-input-start', 'nds-icon-sm', 'nds-text-muted-foreground');
           const searchInput = document.createElement('input');
           searchInput.type = 'search';
           searchInput.placeholder = 'Buscar...';
@@ -860,7 +860,7 @@ export function createSidebarDocs(): HTMLElement {
           `searchWrapper.className = 'relative nds-px-1 nds-pb-1';`,
           ``,
           `const icon = makeIcon(ICON_SEARCH, 14);`,
-          `icon.classList.add('absolute', 'left-3', 'top-1/2', '-translate-y-1/2', 'nds-text-muted-foreground');`,
+          `icon.classList.add('nds-icon-input-start', 'nds-icon-sm', 'nds-text-muted-foreground');`,
           ``,
           `const input = document.createElement('input');`,
           `input.type = 'search';`,

@@ -945,7 +945,7 @@ interface CommandLoadingProps {
     items={[
       { token: '--popover',            value: 'bg-popover',          description: $tStore('tokens.table.popoverBg')   },
       { token: '--popover-foreground', value: 'text-popover-foreground', description: $tStore('tokens.table.popoverFg') },
-      { token: '--muted-foreground',   value: 'text-muted-foreground',  description: $tStore('tokens.table.mutedFg')   },
+      { token: '--muted-foreground',   value: 'nds-text-muted-foreground',  description: $tStore('tokens.table.mutedFg')   },
       { token: '--input',              value: 'bg-input/30',            description: $tStore('tokens.table.inputBg')   },
       { token: '--input',              value: 'border-input/30',        description: $tStore('tokens.table.inputBorder') },
       { token: '--muted',              value: 'data-selected:bg-muted', description: $tStore('tokens.table.selectedBg') },

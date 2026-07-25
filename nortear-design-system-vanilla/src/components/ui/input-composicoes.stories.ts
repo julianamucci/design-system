@@ -150,7 +150,7 @@ export const ComPrefixoTexto: Story = {
     prefix.textContent = 'https://';
 
     const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });
-    input.className = 'input border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1';
+    input.className = 'input border-0 flex-1';
 
     row.appendChild(prefix);
     row.appendChild(input);

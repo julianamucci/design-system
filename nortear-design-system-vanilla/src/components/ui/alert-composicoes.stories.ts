@@ -46,7 +46,8 @@ export const SemTituloCompacto: Story = {
 export const MultiplosTipos: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-3';
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
 
     const a1 = createAlert();
     a1.appendChild(createAlertIcon('info'));

@@ -665,7 +665,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         items={[
           { token: "--primary",            value: "bg-primary text-primary-foreground", description: tContent("tokens.table.primary") },
           { token: "--muted",              value: "bg-muted",                           description: tContent("tokens.table.muted") },
-          { token: "--muted-foreground",   value: "text-muted-foreground",              description: tContent("tokens.table.mutedForeground") },
+          { token: "--muted-foreground",   value: "nds-text-muted-foreground",              description: tContent("tokens.table.mutedForeground") },
           { token: "--foreground",         value: "text-foreground",                    description: tContent("tokens.table.foreground") },
           { token: "--ring",               value: "ring-ring",                          description: tContent("tokens.table.ring") },
           { token: "--cell-radius",        value: "rounded-(--cell-radius)",            description: stripHtml(tContent("tokens.table.cellRadius")) },

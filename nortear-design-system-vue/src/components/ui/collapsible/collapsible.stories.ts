@@ -39,7 +39,7 @@ export const Playground: Story = {
     setup() { return { args }; },
     template: `
       <Collapsible :key="String(args.defaultOpen)" v-bind="args" class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger :disabled="args.disabled" class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" data-align="center" data-justify="between">
+        <CollapsibleTrigger :disabled="args.disabled" class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring disabled:pointer-events-none disabled:opacity-50" data-align="center" data-justify="between">
           Exibir filtros avançados
           <ChevronDown
             aria-hidden="true"

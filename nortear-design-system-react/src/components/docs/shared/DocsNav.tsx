@@ -22,37 +22,26 @@ function scrollTo(id: string) {
 
 export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) {
   return (
-    <div className="space-y-6">
+    <div className="nds-docs-nav">
       {groups.map((group) => (
-        <div key={group.label}>
-          <p className="text-xs font-semibold text-muted-foreground nds-uppercase nds-tracking-wider mb-2 px-2">
-            {group.label}
-          </p>
-          <ul className="list-none space-y-1 p-0 m-0">
-            {group.sections.map((section) => {
-              const isActive = activeSection === section.id;
-              return (
-                <li key={section.id} className="list-none">
-                  <button
-                    type="button"
-                    onClick={() => scrollTo(section.id)}
-                    aria-current={isActive ? 'location' : undefined}
-                    data-track="nav"
-                    data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
-                    data-track-label={section.label}
-                    className={[
-                      'w-full text-left px-2 py-1.5 text-sm rounded-(--radius-button) transition-colors',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                      isActive
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
-                    ].join(' ')}
-                  >
-                    {section.label}
-                  </button>
-                </li>
-              );
-            })}
+        <div key={group.label} className="nds-docs-nav-group">
+          <p className="nds-docs-nav-label">{group.label}</p>
+          <ul className="nds-docs-nav-list">
+            {group.sections.map((section) => (
+              <li key={section.id}>
+                <button
+                  type="button"
+                  className="nds-docs-nav-button"
+                  onClick={() => scrollTo(section.id)}
+                  aria-current={activeSection === section.id ? 'location' : undefined}
+                  data-track="nav"
+                  data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
+                  data-track-label={section.label}
+                >
+                  {section.label}
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       ))}

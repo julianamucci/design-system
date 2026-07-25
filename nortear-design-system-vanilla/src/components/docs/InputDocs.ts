@@ -467,7 +467,7 @@ export function createInputDocs(): HTMLElement {
           `prefix.className = 'nds-cluster nds-px-3 nds-text-body nds-text-muted-foreground nds-bg-muted border-r border-input nds-shrink-0';\n` +
           `prefix.textContent = 'https://';\n` +
           `const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });\n` +
-          `input.className = 'border-0 focus-visible:ring-0 focus-visible:ring-offset-0 nds-flex-1';\n` +
+          `input.className = 'border-0 nds-flex-1';\n` +
           `row.append(prefix, input);\n` +
           `wrapper.append(label, row);`;
 
@@ -655,7 +655,7 @@ export type InputOptions = {
             { token: '--destructive',    value: 'border-destructive',    description: t('tokens.table.borderError') },
             { token: '--destructive',    value: 'ring-destructive/20',   description: t('tokens.table.ringError') },
             { token: '--input',          value: 'bg-input/50',           description: t('tokens.table.bgDisabled') },
-            { token: '--muted-foreground', value: 'text-muted-foreground', description: t('tokens.table.placeholder') },
+            { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.placeholder') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

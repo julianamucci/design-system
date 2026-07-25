@@ -103,20 +103,20 @@
     <div class="flex h-14 items-center gap-2 border-b border-border px-4">
       <div class="h-6 w-6 rounded bg-primary"></div>
       <span class="font-semibold text-sidebar-foreground">Design System</span>
-      <span class="ml-auto text-xs text-muted-foreground">Svelte</span>
+      <span class="ml-auto text-xs nds-text-muted-foreground">Svelte</span>
     </div>
 
     <!-- Nav -->
     <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
       {#each Object.entries(groups) as [groupName, items]}
         <div>
-          <p class="mb-1 px-2 text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">
+          <p class="mb-1 px-2 text-xs font-semibold nds-uppercase nds-tracking-wide nds-text-muted-foreground">
             {groupName}
           </p>
           {#each items as item}
             <button
               onclick={() => navigate(item.id)}
-              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm nds-transition-colors {activeComponent === item.id ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground' : 'text-sidebar-foreground hover:bg-sidebar-accent/50'}"
+              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm nds-transition-colors {activeComponent === item.id ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent-50'}"
             >
               <item.icon class="h-4 w-4 shrink-0" />
               {item.label}
@@ -142,7 +142,7 @@
         </svg>
       </button>
 
-      <span class="flex-1 text-sm text-muted-foreground">
+      <span class="flex-1 text-sm nds-text-muted-foreground">
         {activeComponent ? activeComponent : 'Início'}
       </span>
 
@@ -172,7 +172,7 @@
         <!-- Home page -->
         <div class="p-8 max-w-2xl">
           <h1 class="text-3xl font-bold nds-tracking-tight mb-2">Design System</h1>
-          <p class="text-muted-foreground mb-6">
+          <p class="nds-text-muted-foreground mb-6">
             Biblioteca de componentes em <strong>Svelte 5</strong> usando o design system-svelte e bits-ui.
           </p>
           <div class="grid gap-3 nds-sm-grid-2">
@@ -181,7 +181,7 @@
               class="rounded-lg border border-border p-4 text-left nds-hover-bg-muted-50 nds-transition-colors"
             >
               <p class="font-medium">Alert</p>
-              <p class="text-sm text-muted-foreground">Feedback visual para o usuário</p>
+              <p class="text-sm nds-text-muted-foreground">Feedback visual para o usuário</p>
             </button>
           </div>
         </div>

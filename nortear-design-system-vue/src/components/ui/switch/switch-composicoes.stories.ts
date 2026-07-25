@@ -118,7 +118,7 @@ export const EmFormulario: Story = {
             id="form-email"
             type="email"
             placeholder="seu@email.com"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
 
@@ -134,7 +134,7 @@ export const EmFormulario: Story = {
 
         <button
           type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
         >
           Salvar preferências
         </button>
@@ -159,15 +159,15 @@ export const ItemDeMenuCompacto: Story = {
     setup() { return {}; },
     template: `
       <div class="nds-rounded-md nds-border-default nds-p-2" data-spacing="xs" style="width: 16rem">
-        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-darkmode'" class="nds-text-caption">Modo escuro</Label>
           <Switch id="menu-darkmode" size="sm" />
         </div>
-        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-autosave'" class="nds-text-caption">Salvar automaticamente</Label>
           <Switch id="menu-autosave" size="sm" :default-value="true" />
         </div>
-        <div class="nds-cluster nds-rounded nds-px-2 hover:bg-muted/40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
           <Label :for="'menu-compact'" class="nds-text-caption">Visualização compacta</Label>
           <Switch id="menu-compact" size="sm" />
         </div>

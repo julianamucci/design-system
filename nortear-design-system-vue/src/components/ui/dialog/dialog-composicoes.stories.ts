@@ -152,7 +152,7 @@ export const MediaPreview: Story = {
             <DialogTitle>Pré-visualização da imagem</DialogTitle>
             <DialogDescription>captura-de-tela.png · 1920×1080 · 248 KB</DialogDescription>
           </DialogHeader>
-          <div class="nds-cluster nds-rounded-md nds-border-default bg-muted/50 aspect-video nds-text-muted-foreground nds-text-body" data-align="center" data-justify="center">
+          <div class="nds-cluster nds-rounded-md nds-border-default nds-bg-muted-50 aspect-video nds-text-muted-foreground nds-text-body" data-align="center" data-justify="center">
             Imagem em destaque
           </div>
         </DialogContent>

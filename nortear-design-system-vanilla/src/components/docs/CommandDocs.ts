@@ -670,7 +670,7 @@ export type CommandItem = {
           items: [
             { token: '--popover',            value: 'bg-popover',              description: t('tokens.table.popoverBg')   },
             { token: '--popover-foreground', value: 'text-popover-foreground', description: t('tokens.table.popoverFg')   },
-            { token: '--muted-foreground',   value: 'text-muted-foreground',   description: t('tokens.table.mutedFg')     },
+            { token: '--muted-foreground',   value: 'nds-text-muted-foreground',   description: t('tokens.table.mutedFg')     },
             { token: '--background',         value: 'bg-transparent',          description: t('tokens.table.inputBg')     },
             { token: '--border',             value: 'border-b',                description: t('tokens.table.inputBorder') },
             { token: '--accent',             value: 'bg-accent',               description: t('tokens.table.selectedBg')  },

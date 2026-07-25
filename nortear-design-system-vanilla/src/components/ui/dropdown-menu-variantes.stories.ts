@@ -122,7 +122,7 @@ export const Destructive: Story = {
       }
       const sep = document.createElement('li');
       sep.setAttribute('role', 'separator');
-      sep.className = '-mx-1 my-1 h-px bg-muted';
+      sep.className = 'nds-dropdown-menu-separator';
 
       menu.append(item('Editar'), item('Duplicar'), sep, item('Excluir', true));
       document.body.appendChild(menu);

@@ -650,7 +650,8 @@ interface RadioGroupItemProps {
       <RadioGroup
         bind:value={compHorizontalValue}
         orientation="horizontal"
-        class="grid grid-flow-col auto-cols-max gap-6"
+        class="nds-cluster"
+        data-spacing="lg"
         aria-label="Forma de entrega"
       >
         <div class="nds-cluster" data-spacing="xs">

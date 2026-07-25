@@ -25,7 +25,7 @@
   <TableBody>
     {#if invoices.length === 0}
       <TableRow>
-        <TableCell colspan={4} class="h-24 text-center text-muted-foreground">
+        <TableCell colspan={4} class="h-24 text-center nds-text-muted-foreground">
           Nenhuma fatura encontrada.
         </TableCell>
       </TableRow>

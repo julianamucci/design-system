@@ -76,7 +76,7 @@ export default function App() {
     if (LazyComponent) {
       return (
         <Suspense fallback={
-          <div className="flex items-center justify-center h-64 text-muted-foreground" aria-live="polite">
+          <div className="flex items-center justify-center h-64 nds-text-muted-foreground" aria-live="polite">
             <span className="nds-animate-pulse text-sm">Carregando...</span>
           </div>
         }>

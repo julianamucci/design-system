@@ -979,7 +979,7 @@ export type ContextMenuOptions = {
             { token: '--accent-foreground',  value: 'text-accent-foreground',  description: t('tokens.table.accentFg')     },
             { token: '--destructive',        value: 'text-destructive',     description: t('tokens.table.destructive')      },
             { token: '--destructive',        value: 'bg-destructive/10',    description: t('tokens.table.destructiveFocus') },
-            { token: '--muted-foreground',   value: 'text-muted-foreground',description: t('tokens.table.mutedFg')          },
+            { token: '--muted-foreground',   value: 'nds-text-muted-foreground',description: t('tokens.table.mutedFg')          },
             { token: '--border',             value: 'bg-muted / border',    description: t('tokens.table.border')           },
             { token: '--shadow-md',          value: 'shadow-md',            description: t('tokens.table.shadow')           },
             { token: '--radius',             value: 'rounded-md / rounded-sm', description: t('tokens.table.radius')        },

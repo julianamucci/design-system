@@ -142,7 +142,7 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
 
     return (
       <div className={`space-y-3 ${depth > 0 ? 'pl-4 border-l border-border' : ''}`}>
-        <p className="text-xs font-semibold nds-uppercase nds-tracking-wide text-muted-foreground">{label}</p>
+        <p className="text-xs font-semibold nds-uppercase nds-tracking-wide nds-text-muted-foreground">{label}</p>
         {Object.entries(nested).map(([k, v]) => (
           <FieldEditor
             key={`${fieldKey}.${k}`}
@@ -157,14 +157,14 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
           <div className="flex gap-2 pt-1">
             <button
               onClick={handleAddItem}
-              className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-border-primary nds-hover-text-primary nds-transition-colors"
+              className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs nds-text-muted-foreground nds-hover-border-primary nds-hover-text-primary nds-transition-colors"
             >
               + Adicionar item
             </button>
             {itemKeys(nested).length > 1 && (
               <button
                 onClick={handleRemoveLast}
-                className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-border-destructive nds-hover-text-destructive nds-transition-colors"
+                className="rounded-md border nds-border-dashed border-border px-3 py-1.5 text-xs nds-text-muted-foreground nds-hover-border-destructive nds-hover-text-destructive nds-transition-colors"
               >
                 − Remover último
               </button>
@@ -181,7 +181,7 @@ function FieldEditor({ fieldKey, value, onChange, onRemove, depth = 0 }: FieldEd
 
   return (
     <div className="space-y-1">
-      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      <label className="text-xs font-medium nds-text-muted-foreground">{label}</label>
       {isHtml ? (
         <QuillEditor
           value={strValue}
@@ -317,7 +317,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
         {/* Lista de componentes */}
         <nav className="flex-1 overflow-y-auto py-2">
           {components.length === 0 && (
-            <p className="px-4 text-xs text-muted-foreground">Carregando...</p>
+            <p className="px-4 text-xs nds-text-muted-foreground">Carregando...</p>
           )}
           {components.map((comp) => (
             <button
@@ -326,7 +326,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
               className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                 component === comp
                   ? 'bg-muted font-medium text-foreground'
-                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  : 'nds-text-muted-foreground nds-hover-bg-muted-50 nds-hover-text-foreground'
               }`}
             >
               {comp}
@@ -343,7 +343,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
               className={`flex-1 rounded py-1 text-xs transition-colors ${
                 locale === l
                   ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  : 'bg-muted nds-text-muted-foreground nds-hover-bg-muted-80'
               }`}
             >
               {LOCALE_LABELS[l]}
@@ -364,7 +364,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
           {/* Toolbar */}
           <header className="flex h-14 items-center gap-2 border-b border-border px-4">
             <h1 className="text-sm font-semibold">{component}</h1>
-            <span className="text-xs text-muted-foreground">{LOCALE_LABELS[locale]}</span>
+            <span className="text-xs nds-text-muted-foreground">{LOCALE_LABELS[locale]}</span>
             {error && <span className="text-xs text-destructive truncate max-w-[120px]">Erro: {error}</span>}
             <div className="ml-auto flex items-center gap-2">
               {dirty && <span className="text-xs text-warning">Não salvo</span>}
@@ -377,7 +377,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                 onClick={handleAutoTranslate}
                 disabled={translating || loading}
                 title={`Traduzir ${LOCALE_LABELS[locale]} → outros idiomas via Claude`}
-                className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors nds-disabled-opacity-50 flex items-center gap-1"
+                className="rounded-md border border-border px-3 py-1.5 text-xs nds-text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors nds-disabled-opacity-50 flex items-center gap-1"
               >
                 {translating ? (
                   <><span className="h-3 w-3 nds-animate-spin rounded-full border border-current border-t-transparent inline-block" /> Traduzindo...</>
@@ -390,12 +390,12 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
               >
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
-              <span className="text-xs text-muted-foreground">Ctrl+S</span>
+              <span className="text-xs nds-text-muted-foreground">Ctrl+S</span>
               {/* Toggle preview */}
               <button
                 onClick={() => setShowPreview((v) => !v)}
                 title={showPreview ? 'Ocultar preview' : 'Mostrar preview'}
-                className="rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
+                className="rounded-md border border-border px-2 py-1.5 text-xs nds-text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
               >
                 {showPreview ? '⬅ Ocultar' : 'Preview →'}
               </button>
@@ -452,7 +452,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                     className={`rounded px-2 py-1 text-xs transition-colors ${
                       activeStack === s.id
                         ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                        : 'bg-muted nds-text-muted-foreground nds-hover-bg-muted-80'
                     }`}
                   >
                     {s.label}
@@ -460,13 +460,13 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                 ))}
               </div>
 
-              <span className="text-xs text-muted-foreground">:{activePort}</span>
+              <span className="text-xs nds-text-muted-foreground">:{activePort}</span>
 
               <div className="ml-auto flex items-center gap-2">
                 <button
                   onClick={handleRefreshPreview}
                   title="Recarregar preview"
-                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
+                  className="rounded-md border border-border px-2 py-1 text-xs nds-text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
                 >
                   ↺
                 </button>
@@ -474,7 +474,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                   href={storybookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
+                  className="rounded-md border border-border px-2 py-1 text-xs nds-text-muted-foreground nds-hover-bg-muted-soft nds-transition-colors"
                 >
                   ↗
                 </a>

@@ -28,7 +28,7 @@ export const ComIconeNoTrigger: Story = {
     setup() { return {}; },
     template: `
       <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-align="center" data-spacing="sm">
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring" data-align="center" data-spacing="sm">
           <Filter aria-hidden="true" class="nds-shrink-0" style="height: 1rem; width: 1rem" />
           <span class="nds-flex-1 nds-text-left">Filtros avançados</span>
           <ChevronDown
@@ -77,7 +77,7 @@ export const ComIconeGiratório: Story = {
     setup() { return {}; },
     template: `
       <Collapsible class="nds-rounded-md nds-border-default nds-border-default nds-bg-background" style="width: 20rem">
-        <CollapsibleTrigger class="nds-cluster nds-w-full nds-px-4 nds-text-body nds-font-medium nds-hover-bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring nds-rounded-md" data-align="center" data-justify="between" style="padding-block: 0.75rem">
+        <CollapsibleTrigger class="nds-cluster nds-w-full nds-px-4 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-rounded-md" data-align="center" data-justify="between" style="padding-block: 0.75rem">
           <div class="nds-cluster" data-spacing="sm">
             <Settings aria-hidden="true" class="" style="height: 1rem; width: 1rem" />
             <span>Configuracoes avançadas</span>

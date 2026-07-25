@@ -10,7 +10,7 @@ export function ImageWithFallback({ fallbackText = 'Image not available', src, a
 
   if (error || !src) {
     return (
-      <div className="flex flex-col items-center justify-center nds-bg-muted-20 text-muted-foreground w-full h-full nds-min-h-50 border rounded-md">
+      <div className="flex flex-col items-center justify-center nds-bg-muted-20 nds-text-muted-foreground w-full h-full nds-min-h-50 border rounded-md">
         <ImageIcon className="w-10 h-10 mb-2 nds-opacity-50" />
         <span className="text-sm">{fallbackText}</span>
       </div>

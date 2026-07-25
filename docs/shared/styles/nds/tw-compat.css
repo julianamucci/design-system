@@ -48,6 +48,7 @@
 .nds-bg-muted-40   { background-color: hsl(var(--muted) / 0.4); }
 .nds-bg-muted-50   { background-color: hsl(var(--muted) / 0.5); }
 .nds-bg-primary-10 { background-color: hsl(var(--primary) / 0.1); }
+.nds-bg-primary-20 { background-color: hsl(var(--primary) / 0.2); }
 .nds-bg-background-15 { background-color: hsl(var(--background) / 0.15); }
 
 /* ── animação de rotação (já em utilities.css como .nds-animate-spin) ─────── */
@@ -70,6 +71,24 @@
 /* ── estados hover (complementam os de colors.css) ───────────────────────── */
 .nds-hover-text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
 .nds-hover-bg-accent:hover { background-color: hsl(var(--accent)); }
+.nds-hover-bg-accent-50:hover { background-color: hsl(var(--accent) / 0.5); }
+.nds-hover-bg-muted-80:hover { background-color: hsl(var(--muted) / 0.8); }
+.nds-hover-bg-muted-foreground-50:hover { background-color: hsl(var(--muted-foreground) / 0.5); }
+.nds-hover-bg-destructive-90:hover { background-color: hsl(var(--destructive) / 0.9); }
+.nds-hover-bg-sidebar-accent-50:hover { background-color: hsl(var(--sidebar-accent) / 0.5); }
+
+/* ── caixa inline centrada (slot de ícone/indicador em item de menu) ─────── */
+.nds-inline-center { display: inline-flex; align-items: center; justify-content: center; }
+
+/* ── ícone decorativo dentro de input (ex.: busca) — pai precisa de
+      position: relative; combine com .nds-icon para o tamanho ─────────────── */
+.nds-icon-input-start {
+  position: absolute;
+  left: var(--spacing-2);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
 
 /* ── disabled ────────────────────────────────────────────────────────────── */
 .nds-disabled-opacity-50:disabled,

@@ -13,6 +13,6 @@ const props = defineProps<
   <Separator
     data-slot="item-separator"
     orientation="horizontal"
-    :class="cn('my-2', props.class)"
+    :class="cn('nds-mt-2 nds-mb-2', props.class)"
   />
 </template>

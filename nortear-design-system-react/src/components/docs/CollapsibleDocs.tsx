@@ -853,10 +853,10 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         }}
         items={[
           { token: "--border",     value: "border-border",           description: tContent("tokens.table.border") },
-          { token: "--muted",      value: "bg-muted/40",             description: tContent("tokens.table.background") },
+          { token: "--muted",      value: "nds-bg-muted-40",             description: tContent("tokens.table.background") },
           { token: "--radius",     value: "rounded-md",              description: tContent("tokens.table.radius") },
-          { token: "--accent",     value: "hover:bg-accent",         description: tContent("tokens.table.triggerHover") },
-          { token: "--ring",       value: "focus-visible:ring-ring", description: tContent("tokens.table.triggerFocus") },
+          { token: "--accent",     value: "nds-hover-bg-accent",         description: tContent("tokens.table.triggerHover") },
+          { token: "--ring",       value: "nds-focus-ring", description: tContent("tokens.table.triggerFocus") },
           { token: "transition",   value: "transition-[height]",     description: tContent("tokens.table.transition") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

@@ -94,7 +94,7 @@
               </SheetClose>
               <Button
                 class={variant === 'withDestructiveAction'
-                  ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                  ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
                   : ''}
                 onclick={onAction}
               >
@@ -153,7 +153,7 @@
               </SheetClose>
               <Button
                 class={variant === 'withDestructiveAction'
-                  ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                  ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
                   : ''}
                 onclick={onAction}
               >

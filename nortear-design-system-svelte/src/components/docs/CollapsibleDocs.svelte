@@ -729,8 +729,8 @@ interface CollapsibleContentProps {
       { token: '--border',     value: 'border',                    description: $tStore('tokens.table.border')       },
       { token: '--background', value: 'bg-background',             description: $tStore('tokens.table.background')   },
       { token: '--radius',     value: 'rounded-md',                description: $tStore('tokens.table.radius')       },
-      { token: '--accent',     value: 'hover:bg-accent',           description: $tStore('tokens.table.triggerHover') },
-      { token: '--ring',       value: 'focus-visible:ring-2',      description: $tStore('tokens.table.triggerFocus') },
+      { token: '--accent',     value: 'nds-hover-bg-accent',           description: $tStore('tokens.table.triggerHover') },
+      { token: '--ring',       value: 'nds-focus-ring',      description: $tStore('tokens.table.triggerFocus') },
       { token: '—',            value: 'transition-[height]',       description: $tStore('tokens.table.transition')   },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}

@@ -46,7 +46,7 @@ export const AsLink: Story = {
       <a
         href="#filtro-design"
         aria-label="Filtrar conteúdo pela categoria Design"
-        class="nds-cluster focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 nds-rounded-md"
+        class="nds-cluster focus:outline-none nds-focus-ring nds-rounded-md"
       >
         <Badge variant="secondary">Design</Badge>
       </a>
@@ -65,7 +65,7 @@ export const AsButton: Story = {
       <button
         type="button"
         aria-label="Remover tag React"
-        class="nds-cluster focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 nds-rounded-md"
+        class="nds-cluster focus:outline-none nds-focus-ring nds-rounded-md"
       >
         <Badge variant="outline">React</Badge>
       </button>

@@ -47,7 +47,7 @@ export const Empty: Story = {
 
     const tbody = createTableBody();
     const emptyRow = createTableRow();
-    const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'h-24 text-center text-muted-foreground');
+    const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'h-24 text-center nds-text-muted-foreground');
     emptyCell.setAttribute('colspan', '4');
     emptyRow.appendChild(emptyCell);
     tbody.appendChild(emptyRow);

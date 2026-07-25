@@ -469,7 +469,7 @@ const commandDialogPropItems = computed(() => [
 const tokenRows = computed(() => [
   { token: '--popover',            value: 'bg-popover',          description: tContent('tokens.table.popoverBg')   },
   { token: '--popover-foreground', value: 'text-popover-foreground', description: tContent('tokens.table.popoverFg') },
-  { token: '--muted-foreground',   value: 'text-muted-foreground', description: tContent('tokens.table.mutedFg')   },
+  { token: '--muted-foreground',   value: 'nds-text-muted-foreground', description: tContent('tokens.table.mutedFg')   },
   { token: '--input',              value: 'border-input',         description: tContent('tokens.table.inputBorder') },
   { token: '--accent',             value: 'data-selected:bg-muted', description: tContent('tokens.table.selectedBg') },
   { token: '--foreground',         value: 'data-selected:text-foreground', description: tContent('tokens.table.selectedFg') },

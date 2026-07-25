@@ -100,7 +100,7 @@ function buildCustomMenu(
 function makeLabel(text: string): HTMLLIElement {
   const li = document.createElement('li');
   li.setAttribute('role', 'presentation');
-  li.className = 'px-2 py-1.5 text-xs font-semibold text-muted-foreground';
+  li.className = 'nds-dropdown-menu-label';
   li.textContent = text;
   return li;
 }
@@ -108,7 +108,7 @@ function makeLabel(text: string): HTMLLIElement {
 function makeSeparator(): HTMLLIElement {
   const li = document.createElement('li');
   li.setAttribute('role', 'separator');
-  li.className = '-mx-1 my-1 h-px bg-muted';
+  li.className = 'nds-dropdown-menu-separator';
   return li;
 }
 
@@ -124,7 +124,7 @@ function makeMenuitem(label: string, shortcut?: string): HTMLLIElement {
   li.appendChild(text);
   if (shortcut) {
     const sc = document.createElement('span');
-    sc.className = 'ml-auto text-xs tracking-widest text-muted-foreground';
+    sc.className = 'nds-dropdown-menu-shortcut';
     sc.setAttribute('aria-hidden', 'true');
     sc.textContent = shortcut;
     li.appendChild(sc);
@@ -141,7 +141,7 @@ function makeCheckboxItem(label: string, checked: boolean): HTMLLIElement {
   li.className =
     'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
   const indicator = document.createElement('span');
-  indicator.className = 'inline-flex w-4 h-4 items-center justify-center';
+  indicator.className = 'nds-inline-center nds-icon';
   indicator.setAttribute('aria-hidden', 'true');
   if (checked) {
     const svgNs = 'http://www.w3.org/2000/svg';
@@ -179,7 +179,7 @@ function makeRadioItem(label: string, checked: boolean, group: HTMLUListElement)
   li.className =
     'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
   const indicator = document.createElement('span');
-  indicator.className = 'inline-flex w-4 h-4 items-center justify-center';
+  indicator.className = 'nds-inline-center nds-icon';
   indicator.setAttribute('aria-hidden', 'true');
   if (checked) {
     const svgNs = 'http://www.w3.org/2000/svg';

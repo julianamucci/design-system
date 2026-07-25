@@ -348,9 +348,9 @@ const cellTriggerPropItems = computed(() => [
 const tokenRows = computed(() => [
   { token: '--primary',            value: 'bg-primary / text-primary-foreground', description: tContent('tokens.table.primary')         },
   { token: '--muted',              value: 'bg-accent / bg-muted',                  description: tContent('tokens.table.muted')           },
-  { token: '--muted-foreground',   value: 'text-muted-foreground',                 description: tContent('tokens.table.mutedForeground') },
+  { token: '--muted-foreground',   value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground') },
   { token: '--foreground',         value: 'text-foreground',                       description: tContent('tokens.table.foreground')      },
-  { token: '--ring',               value: 'focus-visible:ring-ring/50',            description: tContent('tokens.table.ring')            },
+  { token: '--ring',               value: 'nds-focus-ring',            description: tContent('tokens.table.ring')            },
   { token: '--radius-md',          value: '[--cell-radius:var(--radius-md)]',      description: stripHtml(tContent('tokens.table.cellRadius')) },
   { token: '--cell-size',          value: '[--cell-size:--spacing(7)]',            description: stripHtml(tContent('tokens.table.cellSize'))   },
 ]);

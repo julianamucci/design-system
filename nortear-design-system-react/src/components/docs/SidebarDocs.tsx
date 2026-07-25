@@ -377,7 +377,7 @@ function PreviewWithSearch() {
               <div style={{ position: "relative" }}>
                 <Search
                   aria-hidden="true"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
+                  className="nds-icon-input-start nds-icon-sm nds-text-muted-foreground"
                 />
                 <SidebarInput type="search" placeholder="Buscar..." aria-label="Buscar navegação" className="nds-text-caption" style={{ paddingLeft: "1.75rem", height: "2rem" }} />
               </div>
@@ -914,7 +914,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             code: `<SidebarHeader style={{ gap: "0.5rem" }}>
   <span className="nds-font-semibold">Design System</span>
   <div style={{ position: "relative" }}>
-    <Search aria-hidden="true" className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
+    <Search aria-hidden="true" className="nds-icon-input-start nds-icon-sm nds-text-muted-foreground" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."

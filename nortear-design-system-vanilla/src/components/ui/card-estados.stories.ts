@@ -70,7 +70,7 @@ export const Clickable: Story = {
     docs: {
       description: {
         story:
-          'Card envolvido em `<a>` (ou `<button>`) com `aria-label` descritivo e `focus-visible:ring-2`. Padrão "asChild" para manter semântica e navegação por teclado.',
+          'Card envolvido em `<a>` (ou `<button>`) com `aria-label` descritivo e `nds-focus-ring`. Padrão "asChild" para manter semântica e navegação por teclado.',
       },
     },
   },

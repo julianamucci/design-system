@@ -295,7 +295,7 @@ const tokenRows = computed(() => [
   { token: '--primary',            value: 'bg-primary',                 description: tContent('tokens.table.primary')            },
   { token: '--primary-foreground', value: 'text-primary-foreground',    description: tContent('tokens.table.primaryForeground')  },
   { token: '--input',              value: 'border-input',               description: tContent('tokens.table.input')              },
-  { token: '--ring',               value: 'focus-visible:ring-ring/50', description: tContent('tokens.table.ring')               },
+  { token: '--ring',               value: 'nds-focus-ring', description: tContent('tokens.table.ring')               },
   { token: '--destructive',        value: 'aria-invalid:border-destructive', description: tContent('tokens.table.destructive')   },
   { token: '--border',             value: 'border',                     description: tContent('tokens.table.border')             },
 ]);

@@ -337,13 +337,13 @@ const codeCompSortableHeaders = `<Table>
       <TableHead scope="col" aria-sort="ascending">
         <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
           Fatura
-          <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+          <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
       <TableHead scope="col" aria-sort="none">
         <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
           Valor
-          <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+          <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
     </TableRow>
@@ -472,9 +472,9 @@ const tableEmptyPropItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: 'border-b',                       value: 'TableHeader / TableBody', description: stripHtml(tContent('tokens.items.borderB'))       },
-  { token: 'bg-muted/50',                    value: 'TableFooter / TableRow',  description: stripHtml(tContent('tokens.items.bgMuted'))        },
+  { token: 'nds-bg-muted-50',                    value: 'TableFooter / TableRow',  description: stripHtml(tContent('tokens.items.bgMuted'))        },
   { token: 'data-[state=selected]:bg-muted', value: 'TableRow',               description: stripHtml(tContent('tokens.items.bgMutedSelected')) },
-  { token: 'text-muted-foreground',          value: 'TableCaption',            description: stripHtml(tContent('tokens.items.textMuted'))       },
+  { token: 'nds-text-muted-foreground',          value: 'TableCaption',            description: stripHtml(tContent('tokens.items.textMuted'))       },
   { token: 'font-medium',                    value: 'TableHead / TableFooter', description: stripHtml(tContent('tokens.items.fontMedium'))      },
   { token: 'h-10',                           value: 'TableHead',               description: stripHtml(tContent('tokens.items.h10'))             },
   { token: 'p-2',                            value: 'TableCell',               description: stripHtml(tContent('tokens.items.p2'))              },
@@ -1021,7 +1021,7 @@ const visualTestItems = computed(() => [
               style="position: relative"
             >
               <Search
-                class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground"
+                class="nds-icon-input-start nds-icon nds-text-muted-foreground"
                 aria-hidden="true"
               />
               <Input
@@ -1095,7 +1095,7 @@ const visualTestItems = computed(() => [
                 >
                   Fatura
                   <ArrowUpDown
-                    class="ml-2 h-4 w-4"
+                    class="nds-ml-2 nds-icon"
                     aria-hidden="true"
                   />
                 </Button>
@@ -1111,7 +1111,7 @@ const visualTestItems = computed(() => [
                 >
                   Status
                   <ArrowUpDown
-                    class="ml-2 h-4 w-4"
+                    class="nds-ml-2 nds-icon"
                     aria-hidden="true"
                   />
                 </Button>
@@ -1128,7 +1128,7 @@ const visualTestItems = computed(() => [
                 >
                   Valor
                   <ArrowUpDown
-                    class="ml-2 h-4 w-4"
+                    class="nds-ml-2 nds-icon"
                     aria-hidden="true"
                   />
                 </Button>

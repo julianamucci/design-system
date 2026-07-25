@@ -916,7 +916,7 @@ interface ContextMenuRadioGroupProps {
       { token: '--accent-foreground',  value: 'text-accent-foreground',  description: $tStore('tokens.table.accentFg')         },
       { token: '--destructive',        value: 'text-destructive',        description: $tStore('tokens.table.destructive')      },
       { token: '--destructive',        value: 'bg-destructive/10',       description: $tStore('tokens.table.destructiveFocus') },
-      { token: '--muted-foreground',   value: 'text-muted-foreground',   description: $tStore('tokens.table.mutedFg')          },
+      { token: '--muted-foreground',   value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedFg')          },
       { token: '--border',             value: 'bg-border',               description: $tStore('tokens.table.border')           },
       { token: '--shadow',             value: 'shadow-md',               description: $tStore('tokens.table.shadow')           },
       { token: '--radius',             value: 'rounded-lg',              description: $tStore('tokens.table.radius')           },

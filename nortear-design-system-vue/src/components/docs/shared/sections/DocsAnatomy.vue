@@ -28,7 +28,7 @@ defineProps<{
           <li
             v-for="(item, i) in items"
             :key="i"
-            class="nds-row list-none"
+            class="nds-row nds-list-none"
             data-spacing="sm"
             data-align="start"
           >

@@ -736,8 +736,8 @@ interface CardPartProps {
       { token: '--radius-card',      value: 'rounded-(--radius-card)', description: $tStore('tokens.table.radiusCard')      },
       { token: '--card',             value: 'bg-card',                 description: $tStore('tokens.table.card')            },
       { token: '--card-foreground',  value: 'text-card-foreground',    description: $tStore('tokens.table.cardForeground')  },
-      { token: '--muted',            value: 'bg-muted/50',             description: stripHtml($tStore('tokens.table.muted')) },
-      { token: '--muted-foreground', value: 'text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
+      { token: '--muted',            value: 'nds-bg-muted-50',             description: stripHtml($tStore('tokens.table.muted')) },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
       { token: '--foreground',       value: 'ring-foreground/10',      description: stripHtml($tStore('tokens.table.foreground')) },
       { token: '--border',           value: 'border-t',                description: $tStore('tokens.table.border')          },
     ]}

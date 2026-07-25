@@ -820,7 +820,7 @@ export type CheckboxOptions = {
             { token: '--primary',            value: 'data-[state=checked]:bg-primary',         description: t('tokens.table.primary') },
             { token: '--primary-foreground', value: 'data-[state=checked]:text-primary-foreground', description: t('tokens.table.primaryForeground') },
             { token: '--input',              value: 'border-primary',                           description: t('tokens.table.input') },
-            { token: '--ring',               value: 'focus-visible:ring-ring',                  description: t('tokens.table.ring') },
+            { token: '--ring',               value: 'nds-focus-ring',                  description: t('tokens.table.ring') },
             { token: '--destructive',        value: 'aria-invalid:border-destructive',          description: t('tokens.table.destructive') },
             { token: '--border',             value: 'border',                                   description: t('tokens.table.border') },
           ],

@@ -105,7 +105,7 @@ export const Clickable: Story = {
     });
 
     await step(
-      "A4: focus ring visível — focus-visible:ring-2 no wrapper",
+      "A4: focus ring visível — nds-focus-ring no wrapper",
       async () => {
         const wrapper = canvas.getByRole("button", {
           name: /Abrir produto Cadeira Gamer Pro/i,
@@ -148,7 +148,7 @@ export const WithFooter: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     await step(
-      "F1: footer ganha border-t e bg-muted/50; Card absorve pb-0",
+      "F1: footer ganha border-t e nds-bg-muted-50; Card absorve pb-0",
       async () => {
         const footer = canvasElement.querySelector('[data-slot="card-footer"]');
         await expect(footer).toBeInTheDocument();
@@ -175,7 +175,7 @@ export const WithFooter: Story = {
     docs: {
       description: {
         story:
-          "Composição com CardFooter: o Card aplica `pb-0` automaticamente via `has-data-[slot=card-footer]`; footer ganha `border-t` + `bg-muted/50`. Botões usam `aria-label` contextual para evitar ambiguidade em listas.",
+          "Composição com CardFooter: o Card aplica `pb-0` automaticamente via `has-data-[slot=card-footer]`; footer ganha `border-t` + `nds-bg-muted-50`. Botões usam `aria-label` contextual para evitar ambiguidade em listas.",
       },
     },
   },

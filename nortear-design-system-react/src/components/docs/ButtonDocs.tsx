@@ -647,8 +647,8 @@ import { Plus } from "lucide-react";`;
               { token: "--secondary", value: "bg-secondary", description: tContent("tokens.table.secondary") },
               { token: "--destructive", value: "bg-destructive text-white", description: tContent("tokens.table.destructive") },
               { token: "--border", value: "border", description: tContent("tokens.table.border") },
-              { token: "--accent", value: "hover:bg-accent", description: tContent("tokens.table.accent") },
-              { token: "--ring", value: "focus-visible:ring-ring/50", description: tContent("tokens.table.ring") },
+              { token: "--accent", value: "nds-hover-bg-accent", description: tContent("tokens.table.accent") },
+              { token: "--ring", value: "nds-focus-ring", description: tContent("tokens.table.ring") },
               { token: "--radius", value: "rounded-md", description: tContent("tokens.table.radius") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}

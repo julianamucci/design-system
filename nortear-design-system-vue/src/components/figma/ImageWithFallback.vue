@@ -24,7 +24,7 @@ const handleError = () => {
 <template>
   <div 
     v-if="error || !src" 
-    class="flex flex-col items-center justify-center nds-bg-muted-20 text-muted-foreground w-full h-full nds-min-h-50 border rounded-md" 
+    class="flex flex-col items-center justify-center nds-bg-muted-20 nds-text-muted-foreground w-full h-full nds-min-h-50 border rounded-md" 
     v-bind="$attrs"
   >
     <ImageIcon class="w-10 h-10 mb-2 nds-opacity-50" />

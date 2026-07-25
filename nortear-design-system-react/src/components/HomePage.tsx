@@ -27,7 +27,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </div>
           </div>
           <h1 className="text-5xl font-extrabold nds-tracking-tight">Documentação do Design System</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg nds-text-muted-foreground max-w-2xl mx-auto">
             Biblioteca de componentes reutilizáveis construída com React e CSS standalone .nds-*.
             Copie e cole os componentes que precisar em seu projeto.
           </p>
@@ -46,7 +46,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <section className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-semibold">Por que usar o Design System?</h2>
-            <p className="text-muted-foreground">
+            <p className="nds-text-muted-foreground">
               Uma biblioteca moderna e flexível para desenvolvimento rápido
             </p>
           </div>
@@ -62,7 +62,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Componentes prontos para uso que aceleram o desenvolvimento.
                 </p>
               </CardContent>
@@ -78,7 +78,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Sistema de design flexível baseado em variáveis CSS.
                 </p>
               </CardContent>
@@ -94,7 +94,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Construído seguindo diretrizes WCAG 2.1 AA de acessibilidade.
                 </p>
               </CardContent>
@@ -105,7 +105,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <section className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-semibold">Componentes Populares</h2>
-            <p className="text-muted-foreground">
+            <p className="nds-text-muted-foreground">
               Comece com os componentes mais utilizados
             </p>
           </div>
@@ -129,7 +129,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   <CardTitle>{component.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-sm text-muted-foreground">{component.description}</p>
+                  <p className="text-sm nds-text-muted-foreground">{component.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -139,7 +139,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <section className="space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-semibold">Como Navegar na Documentação</h2>
-            <p className="text-muted-foreground">
+            <p className="nds-text-muted-foreground">
               Guia rápido para aproveitar ao máximo esta documentação
             </p>
           </div>
@@ -153,7 +153,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Use a sidebar à esquerda para navegar entre componentes. Os componentes estão organizados
                   por categorias (Layout, Formulários, Feedback, etc.) para facilitar a busca.
                 </p>
@@ -168,7 +168,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Cada componente tem uma estrutura padronizada: demonstração, guidelines, casos de uso,
                   exemplos de código, propriedades e dicas. Siga essa ordem para entender completamente o componente.
                 </p>
@@ -183,7 +183,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Todos os exemplos mostram o código completo. Você pode copiar e colar diretamente em seu projeto.
                   As importações necessárias estão sempre documentadas.
                 </p>
@@ -198,7 +198,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm nds-text-muted-foreground">
                   Preste atenção às seções &#34;Guidelines Obrigatórias&#34; e &#34;Quando e Como Usar&#34;.
                   Elas contêm regras importantes para usar os componentes corretamente.
                 </p>
@@ -212,7 +212,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Heart className="h-8 w-8 text-destructive" aria-hidden="true" />
           </div>
           <h3 className="text-xl font-semibold">Pronto para começar?</h3>
-          <p className="text-muted-foreground max-w-md mx-auto">
+          <p className="nds-text-muted-foreground max-w-md mx-auto">
             Explore os componentes na sidebar ou comece com os componentes populares acima.
           </p>
           <Button onClick={() => onNavigate('button')}>

@@ -26,7 +26,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
   ol.dataset.spacing = 'sm';
   props.items.forEach((item, i) => {
     const li = document.createElement('li');
-    li.className = 'nds-row list-none';
+    li.className = 'nds-row nds-list-none';
     li.dataset.spacing = 'sm';
     li.dataset.align = 'start';
     li.innerHTML = `

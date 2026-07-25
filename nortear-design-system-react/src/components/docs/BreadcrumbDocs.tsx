@@ -921,9 +921,9 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--muted-foreground", value: "text-muted-foreground", description: tContent("tokens.table.mutedForeground") },
-          { token: "--foreground",       value: "hover:text-foreground", description: tContent("tokens.table.foreground") },
-          { token: "--ring",             value: "focus-visible:ring-ring", description: tContent("tokens.table.ring") },
+          { token: "--muted-foreground", value: "nds-text-muted-foreground", description: tContent("tokens.table.mutedForeground") },
+          { token: "--foreground",       value: "nds-hover-text-foreground", description: tContent("tokens.table.foreground") },
+          { token: "--ring",             value: "nds-focus-ring", description: tContent("tokens.table.ring") },
           { token: "font-size",          value: "text-sm",              description: tContent("tokens.table.textSm") },
           { token: "gap",                value: "gap-1.5",              description: tContent("tokens.table.gap") },
           { token: "icon-size",          value: "[&>svg]:size-3.5",     description: tContent("tokens.table.sizeSeparator") },

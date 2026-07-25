@@ -66,7 +66,7 @@ function handleKeyDown(e: KeyboardEvent) {
       <nav class="flex-1 overflow-y-auto py-2">
         <p
           v-if="!components.length"
-          class="px-4 text-xs text-muted-foreground"
+          class="px-4 text-xs nds-text-muted-foreground"
         >
           Carregando...
         </p>
@@ -74,7 +74,7 @@ function handleKeyDown(e: KeyboardEvent) {
           v-for="comp in components"
           :key="comp"
           class="w-full px-4 py-2 text-left text-sm nds-transition-colors"
-          :class="activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'text-muted-foreground nds-hover-bg-muted-50 hover:text-foreground'"
+          :class="activeComponent === comp ? 'bg-muted font-medium text-foreground' : 'nds-text-muted-foreground nds-hover-bg-muted-50 nds-hover-text-foreground'"
           @click="changeComponent(comp)"
         >
           {{ comp }}
@@ -87,7 +87,7 @@ function handleKeyDown(e: KeyboardEvent) {
           v-for="l in LOCALES"
           :key="l"
           class="flex-1 rounded py-1 text-xs nds-transition-colors"
-          :class="locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'"
+          :class="locale === l ? 'bg-primary text-primary-foreground' : 'bg-muted nds-text-muted-foreground nds-hover-bg-muted-80'"
           @click="locale = l"
         >
           {{ LOCALE_LABELS[l] }}
@@ -102,7 +102,7 @@ function handleKeyDown(e: KeyboardEvent) {
         <h1 class="text-sm font-semibold">
           {{ activeComponent }}
         </h1>
-        <span class="text-xs text-muted-foreground">{{ LOCALE_LABELS[locale] }}</span>
+        <span class="text-xs nds-text-muted-foreground">{{ LOCALE_LABELS[locale] }}</span>
         <span
           v-if="error"
           class="text-xs text-destructive"
@@ -119,7 +119,7 @@ function handleKeyDown(e: KeyboardEvent) {
           >
             {{ saving ? 'Salvando...' : 'Salvar' }}
           </button>
-          <span class="text-xs text-muted-foreground">Ctrl+S</span>
+          <span class="text-xs nds-text-muted-foreground">Ctrl+S</span>
         </div>
       </header>
 
@@ -195,7 +195,7 @@ export const FieldEditor = defineComponent({
 
     if (this.isNested()) {
       return h('div', { class: `space-y-3 ${depth > 0 ? 'pl-4 border-l border-border' : ''}` }, [
-        h('p', { class: 'text-xs font-semibold uppercase tracking-wide text-muted-foreground' }, label),
+        h('p', { class: 'text-xs font-semibold uppercase tracking-wide nds-text-muted-foreground' }, label),
         ...Object.entries(value as Record<string, unknown>).map(([k, v]) =>
           h(FieldEditor, {
             fieldKey: `${fieldKey}.${k}`,
@@ -209,7 +209,7 @@ export const FieldEditor = defineComponent({
 
     if (this.isHtml()) {
       return h('div', { class: 'space-y-1' }, [
-        h('label', { class: 'text-xs font-medium text-muted-foreground' }, label),
+        h('label', { class: 'text-xs font-medium nds-text-muted-foreground' }, label),
         h('div', {
           ref: 'containerRef',
           class: 'rounded-md border border-border bg-background [&_.ql-editor]:min-h-[80px] [&_.ql-editor]:text-foreground',
@@ -218,7 +218,7 @@ export const FieldEditor = defineComponent({
     }
 
     return h('div', { class: 'space-y-1' }, [
-      h('label', { class: 'text-xs font-medium text-muted-foreground' }, label),
+      h('label', { class: 'text-xs font-medium nds-text-muted-foreground' }, label),
       h('input', {
         type: 'text',
         value: String(value ?? ''),

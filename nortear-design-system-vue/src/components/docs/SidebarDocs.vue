@@ -449,7 +449,7 @@ const open = ref(false);
 const codeCompositionWithSearch = `<SidebarHeader style="gap: 0.5rem">
   <span class="nds-font-semibold">Design System</span>
   <div style="position: relative">
-    <Search aria-hidden="true" class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60" />
+    <Search aria-hidden="true" class="nds-icon-input-start nds-icon-sm nds-text-muted-foreground" />
     <SidebarInput
       type="search"
       placeholder="Buscar..."
@@ -1323,7 +1323,7 @@ const compositionItems = computed(() => [
                   <div style="position: relative">
                     <Search
                       aria-hidden="true"
-                      class="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-sidebar-foreground/60 pointer-events-none"
+                      class="nds-icon-input-start nds-icon-sm nds-text-muted-foreground"
                     />
                     <SidebarInput
                       type="search"

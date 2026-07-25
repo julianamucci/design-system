@@ -123,7 +123,7 @@ export const ComCheckbox: Story = {
       li.setAttribute('tabindex', '-1');
 
       const indicator = document.createElement('span');
-      indicator.className = 'flex h-3.5 w-3.5 items-center justify-center';
+      indicator.className = 'nds-inline-center nds-icon-sm';
       if (checked) indicator.appendChild(createCheckSvg());
 
       const labelSpan = document.createElement('span');
@@ -143,11 +143,11 @@ export const ComCheckbox: Story = {
 
     const sep1 = document.createElement('li');
     sep1.setAttribute('role', 'separator');
-    sep1.className = '-mx-1 my-1 h-px bg-muted';
+    sep1.className = 'nds-dropdown-menu-separator';
 
     const lbl = document.createElement('li');
     lbl.setAttribute('role', 'presentation');
-    lbl.className = 'px-2 py-1.5 text-xs font-semibold text-muted-foreground';
+    lbl.className = 'nds-dropdown-menu-label';
     lbl.textContent = 'Aparência';
 
     menu.append(
@@ -234,7 +234,7 @@ export const ComRadio: Story = {
       menu.replaceChildren();
       const lbl = document.createElement('li');
       lbl.setAttribute('role', 'presentation');
-      lbl.className = 'px-2 py-1.5 text-xs font-semibold text-muted-foreground';
+      lbl.className = 'nds-dropdown-menu-label';
       lbl.textContent = 'Modo de exibição';
       menu.appendChild(lbl);
 
@@ -247,7 +247,7 @@ export const ComRadio: Story = {
         li.setAttribute('tabindex', '-1');
 
         const indicator = document.createElement('span');
-        indicator.className = 'flex h-3.5 w-3.5 items-center justify-center';
+        indicator.className = 'nds-inline-center nds-icon-sm';
         if (opt.value === selected) indicator.appendChild(createRadioDotSvg());
 
         const labelSpan = document.createElement('span');
@@ -395,7 +395,7 @@ export const ComSubmenu: Story = {
 
     const sep = document.createElement('li');
     sep.setAttribute('role', 'separator');
-    sep.className = '-mx-1 my-1 h-px bg-muted';
+    sep.className = 'nds-dropdown-menu-separator';
 
     menu.append(
       makeItem('Editar',   fn()),
@@ -487,7 +487,7 @@ export const ComShortcuts: Story = {
       labelSpan.textContent = label;
 
       const sc = document.createElement('span');
-      sc.className = 'ml-auto text-xs tracking-widest text-muted-foreground';
+      sc.className = 'nds-dropdown-menu-shortcut';
       sc.setAttribute('aria-hidden', 'true');
       sc.textContent = shortcut;
 
@@ -498,7 +498,7 @@ export const ComShortcuts: Story = {
 
     const sep = document.createElement('li');
     sep.setAttribute('role', 'separator');
-    sep.className = '-mx-1 my-1 h-px bg-muted';
+    sep.className = 'nds-dropdown-menu-separator';
 
     menu.append(
       makeItemWithShortcut('Editar',       '⌘E', fn()),

@@ -637,10 +637,10 @@ export function createCollapsibleDocs(): HTMLElement {
           },
           items: [
             { token: '--border',          value: 'border-border',             description: t('tokens.table.border')      },
-            { token: '--muted',           value: 'bg-muted/50',               description: t('tokens.table.background')  },
+            { token: '--muted',           value: 'nds-bg-muted-50',               description: t('tokens.table.background')  },
             { token: '--radius',          value: 'rounded-md',                description: t('tokens.table.radius')      },
-            { token: '--accent',          value: 'hover:bg-accent',           description: t('tokens.table.triggerHover')},
-            { token: '--ring',            value: 'focus-visible:ring-ring',   description: t('tokens.table.triggerFocus')},
+            { token: '--accent',          value: 'nds-hover-bg-accent',           description: t('tokens.table.triggerHover')},
+            { token: '--ring',            value: 'nds-focus-ring',   description: t('tokens.table.triggerFocus')},
             { token: 'transition-all',    value: 'transition-all duration-200', description: t('tokens.table.transition') },
           ],
           customizationTitle: t('tokens.customizationTitle'),

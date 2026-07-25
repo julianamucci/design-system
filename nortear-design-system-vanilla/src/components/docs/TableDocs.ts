@@ -875,9 +875,9 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
           },
           items: [
             { token: 'border-b',                        value: 'TableHeader / TableBody rows', description: DOMPurify.sanitize(t('tokens.items.borderB')) },
-            { token: 'bg-muted/50',                     value: 'TableFooter / TableRow hover', description: DOMPurify.sanitize(t('tokens.items.bgMuted')) },
+            { token: 'nds-bg-muted-50',                     value: 'TableFooter / TableRow hover', description: DOMPurify.sanitize(t('tokens.items.bgMuted')) },
             { token: 'data-[state=selected]:bg-muted',  value: 'TableRow selected',            description: DOMPurify.sanitize(t('tokens.items.bgMutedSelected')) },
-            { token: 'text-muted-foreground',           value: 'TableCaption / empty state',   description: DOMPurify.sanitize(t('tokens.items.textMuted')) },
+            { token: 'nds-text-muted-foreground',           value: 'TableCaption / empty state',   description: DOMPurify.sanitize(t('tokens.items.textMuted')) },
             { token: 'font-medium',                     value: 'TableHead / TableFooter',      description: DOMPurify.sanitize(t('tokens.items.fontMedium')) },
             { token: 'h-10',                            value: 'TableHead',                    description: DOMPurify.sanitize(t('tokens.items.h10')) },
             { token: 'p-2',                             value: 'TableCell',                    description: DOMPurify.sanitize(t('tokens.items.p2')) },

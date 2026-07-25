@@ -148,7 +148,7 @@ export const WithOutsideDays: Story = {
     docs: {
       description: {
         story:
-          "showOutsideDays (padrão) — dias do mês anterior/próximo aparecem apagados (`text-muted-foreground`) nas bordas do grid.",
+          "showOutsideDays (padrão) — dias do mês anterior/próximo aparecem apagados (`nds-text-muted-foreground`) nas bordas do grid.",
       },
     },
   },

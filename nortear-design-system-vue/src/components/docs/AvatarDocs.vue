@@ -287,7 +287,7 @@ const avatarFallbackPropItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: '--muted',            value: 'bg-muted',               description: tContent('tokens.table.muted')           },
-  { token: '--muted-foreground', value: 'text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
+  { token: '--muted-foreground', value: 'nds-text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
   { token: '--background',       value: 'ring-background',        description: stripHtml(tContent('tokens.table.background')) },
   { token: '--border',           value: 'border',                 description: tContent('tokens.table.border')          },
   { token: '--primary',          value: 'bg-primary',             description: tContent('tokens.table.primary')         },

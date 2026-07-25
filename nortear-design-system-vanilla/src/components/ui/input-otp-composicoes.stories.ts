@@ -151,7 +151,9 @@ export const ComResendButton: Story = {
   name: 'Com Botão Reenviar',
   render: () => {
     const root = document.createElement('div');
-    root.className = 'flex flex-col gap-3 w-fit';
+    root.className = 'nds-stack';
+    root.dataset.spacing = 'sm';
+    root.style.width = 'fit-content';
 
     const label = document.createElement('label');
     label.className = 'nds-text-body nds-font-medium';

@@ -72,7 +72,7 @@ export const Focus: Story = {
     docs: {
       description: {
         story:
-          "Handle focado via teclado — ring visível (focus-visible:ring-1 ring-ring); setas ajustam tamanho.",
+          "Handle focado via teclado — ring visível (nds-focus-ring ring-ring); setas ajustam tamanho.",
       },
     },
   },

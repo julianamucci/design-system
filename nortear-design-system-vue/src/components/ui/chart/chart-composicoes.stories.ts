@@ -26,7 +26,7 @@ async function expectRendered(el: HTMLElement) {
 export const ComCard: Story = {
   render: () => h('div', { class: 'rounded-lg border border-border bg-card p-6 shadow-sm w-[480px]' }, [
     h('h3', { class: 'text-sm font-medium mb-1' }, 'Acessos por mês'),
-    h('p', { class: 'text-xs text-muted-foreground mb-4' }, 'Janeiro — Abril'),
+    h('p', { class: 'text-xs nds-text-muted-foreground mb-4' }, 'Janeiro — Abril'),
     h(ChartContainer, { option: buildBarOption({ data: chartData }), class: 'h-[200px] w-full' }),
   ]),
   parameters: { docs: { description: { story: 'Chart dentro de Card — composição padrão para dashboards.' } } },

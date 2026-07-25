@@ -358,7 +358,7 @@ const tokenRows = computed(() => [
   { token: '--accent-foreground',   value: 'text-accent-foreground', description: tContent('tokens.table.accentFg')       },
   { token: '--destructive',         value: 'text-destructive',     description: tContent('tokens.table.destructive')      },
   { token: '--destructive',         value: 'bg-destructive/10',    description: tContent('tokens.table.destructiveFocus') },
-  { token: '--muted-foreground',    value: 'text-muted-foreground', description: tContent('tokens.table.mutedFg')         },
+  { token: '--muted-foreground',    value: 'nds-text-muted-foreground', description: tContent('tokens.table.mutedFg')         },
   { token: '--border',              value: 'bg-border',            description: tContent('tokens.table.border')           },
   { token: '--shadow',              value: 'shadow-md',            description: tContent('tokens.table.shadow')           },
   { token: '--radius',              value: 'rounded-md',           description: tContent('tokens.table.radius')           },

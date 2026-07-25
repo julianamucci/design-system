@@ -214,7 +214,7 @@ export const CustomCloseInFooter: Story = {
     const action = createButton({ variant: 'default', label: 'Continuar' });
     const close = createButton({ variant: 'ghost', label: 'Fechar' });
     const footer = document.createElement('div');
-    footer.className = 'flex flex-col gap-2 sm:flex-row sm:justify-end sm:space-x-2';
+    footer.className = 'nds-dialog-footer';
     footer.appendChild(cancel);
     footer.appendChild(action);
     footer.appendChild(close);

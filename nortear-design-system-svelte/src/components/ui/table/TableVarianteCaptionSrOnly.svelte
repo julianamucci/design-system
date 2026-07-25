@@ -17,7 +17,7 @@
 </script>
 
 <div>
-  <h3 class="text-sm font-medium mb-2">Faturas recentes</h3>
+  <h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes</h3>
   <Table>
     <!-- Caption visualmente oculto — título já está acima -->
     <TableCaption class="sr-only">Lista de faturas recentes</TableCaption>

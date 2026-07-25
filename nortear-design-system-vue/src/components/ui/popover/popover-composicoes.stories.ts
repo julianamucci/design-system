@@ -220,7 +220,7 @@ export const SeletorDeCor: Story = {
                 v-for="color in palette"
                 :key="color"
                 type="button"
-                class="nds-size-8 nds-rounded-md ring-1 ring-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                class="nds-size-8 nds-rounded-md ring-1 ring-foreground/10 nds-focus-ring"
                 :style="{ backgroundColor: color }"
                 :aria-label="'Cor ' + color"
               />

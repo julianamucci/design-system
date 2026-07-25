@@ -109,7 +109,7 @@ export const EmFormulario: Story = {
             id="form-email"
             type="email"
             placeholder="seu@email.com"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
+            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
           />
         </div>
 
@@ -133,7 +133,7 @@ export const EmFormulario: Story = {
 
         <button
           type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium hover:bg-primary/90 transition-colors" style="height: var(--height-default)"
+          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
         >
           Finalizar pedido
         </button>
@@ -168,7 +168,7 @@ export const CartoesSelecionaveis: Story = {
       <RadioGroup aria-label="Plano" class="nds-grid" data-spacing="sm" style="width: 20rem">
         <label
           for="card-basic"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
           <RadioGroupItem value="basic" id="card-basic" class="nds-mt-1" />
           <div class="" data-spacing="xs">
@@ -178,7 +178,7 @@ export const CartoesSelecionaveis: Story = {
         </label>
         <label
           for="card-pro"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
           <RadioGroupItem value="pro" id="card-pro" class="nds-mt-1" />
           <div class="" data-spacing="xs">
@@ -188,7 +188,7 @@ export const CartoesSelecionaveis: Story = {
         </label>
         <label
           for="card-enterprise"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer hover:bg-muted/40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
         >
           <RadioGroupItem value="enterprise" id="card-enterprise" class="nds-mt-1" />
           <div class="" data-spacing="xs">

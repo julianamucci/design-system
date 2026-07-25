@@ -695,7 +695,7 @@ interface TableRowProps {
             code: `<TableHead scope="col" aria-sort="ascending">
   <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
     Fatura
-    <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+    <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
   </Button>
 </TableHead>`,
             preview: compSortableHeaders,
@@ -741,7 +741,7 @@ interface TableRowProps {
         <div class="nds-w-full nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-align="center" data-spacing="sm">
             <div class="nds-w-full nds-max-w-sm" style="position: relative">
-              <Search class="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+              <Search class="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
               <Input placeholder="Filtrar faturas..." style="padding-left: 2rem" />
             </div>
             <Button variant="outline">Status</Button>
@@ -779,19 +779,19 @@ interface TableRowProps {
               <TableHead scope="col" aria-sort="ascending">
                 <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Fatura
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
               </TableHead>
               <TableHead scope="col" aria-sort="none">
                 <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Status
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
               </TableHead>
               <TableHead scope="col" aria-sort="none" style="text-align: right">
                 <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
                   Valor
-                  <ArrowUpDown class="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
               </TableHead>
             </TableRow>
@@ -1004,9 +1004,9 @@ interface TableRowProps {
         }}
         items={[
           { token: 'border-b',                          value: 'TableHeader / TableBody', description: $tStore('tokens.items.borderB')          },
-          { token: 'bg-muted/50',                       value: 'TableFooter / TableRow',  description: $tStore('tokens.items.bgMuted')           },
+          { token: 'nds-bg-muted-50',                       value: 'TableFooter / TableRow',  description: $tStore('tokens.items.bgMuted')           },
           { token: 'data-[state=selected]:bg-muted',    value: 'TableRow',                description: $tStore('tokens.items.bgMutedSelected')   },
-          { token: 'text-muted-foreground',             value: 'TableCaption',            description: $tStore('tokens.items.textMuted')         },
+          { token: 'nds-text-muted-foreground',             value: 'TableCaption',            description: $tStore('tokens.items.textMuted')         },
           { token: 'font-medium',                       value: 'TableHead / TableFooter', description: $tStore('tokens.items.fontMedium')        },
           { token: 'h-10',                              value: 'TableHead',               description: $tStore('tokens.items.h10')               },
           { token: 'p-2',                               value: 'TableCell',               description: $tStore('tokens.items.p2')                },

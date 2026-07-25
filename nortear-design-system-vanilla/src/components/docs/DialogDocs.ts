@@ -700,7 +700,7 @@ export interface DialogOptions {
             { token: '--popover',            value: 'bg-popover',                                          description: t('tokens.table.popover') },
             { token: '--popover-foreground', value: 'text-popover-foreground',                             description: t('tokens.table.popoverForeground') },
             { token: '--foreground',         value: 'ring-foreground/10',                                  description: t('tokens.table.foreground') },
-            { token: '--muted',              value: 'bg-muted/50',                                         description: t('tokens.table.muted') },
+            { token: '--muted',              value: 'nds-bg-muted-50',                                         description: t('tokens.table.muted') },
             { token: '--border',             value: 'border-t',                                            description: t('tokens.table.border') },
             { token: '--radius-xl',          value: 'sm:rounded-xl',                                       description: t('tokens.table.radius') },
             { token: 'z-50',                 value: 'z-50',                                                description: t('tokens.table.zIndex') },

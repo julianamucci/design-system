@@ -698,9 +698,9 @@ export interface BreadcrumbEllipsisOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--muted-foreground', value: 'text-muted-foreground', description: t('tokens.table.mutedForeground') },
+            { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
             { token: '--foreground', value: 'text-foreground', description: t('tokens.table.foreground') },
-            { token: '--ring', value: 'focus-visible:ring-ring', description: t('tokens.table.ring') },
+            { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
             { token: 'text-sm', value: 'text-sm', description: t('tokens.table.textSm') },
             { token: 'gap-1.5', value: 'gap-1.5', description: t('tokens.table.gap') },
             { token: 'size-3.5', value: '[&>svg]:size-3.5', description: t('tokens.table.sizeSeparator') },

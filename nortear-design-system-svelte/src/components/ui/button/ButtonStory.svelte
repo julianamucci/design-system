@@ -70,10 +70,10 @@
   {onclick}
 >
   {#if OnlyIcon}
-    <OnlyIcon class={spinIcon ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} aria-hidden="true" />
+    <OnlyIcon class={spinIcon ? 'nds-icon nds-animate-spin' : 'nds-icon'} aria-hidden="true" />
   {:else}
     {#if StartIcon}
-      <StartIcon class={spinIcon ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} aria-hidden="true" />
+      <StartIcon class={spinIcon ? 'nds-icon nds-animate-spin' : 'nds-icon'} aria-hidden="true" />
     {/if}
     {label}
     {#if EndIcon}

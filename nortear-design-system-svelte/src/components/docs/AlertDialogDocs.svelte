@@ -649,7 +649,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
       { token: '--background',             value: 'bg-background',               description: $tStore('tokens.table.contentBg')             },
       { token: '--foreground',             value: 'text-foreground',             description: $tStore('tokens.table.contentForeground')     },
       { token: '--border',                 value: 'border',                      description: $tStore('tokens.table.border')                },
-      { token: '--muted-foreground',       value: 'text-muted-foreground',       description: $tStore('tokens.table.mutedForeground')       },
+      { token: '--muted-foreground',       value: 'nds-text-muted-foreground',       description: $tStore('tokens.table.mutedForeground')       },
       { token: '--destructive',            value: 'bg-destructive',              description: $tStore('tokens.table.destructive')           },
       { token: '--destructive-foreground', value: 'text-destructive-foreground', description: $tStore('tokens.table.destructiveForeground') },
       { token: '--radius',                 value: 'sm:rounded-lg',               description: $tStore('tokens.table.radius')                },

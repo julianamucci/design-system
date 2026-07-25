@@ -504,7 +504,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
               useWhen: t('variants.compositions.withLabel.use'),
               code:
                 `const row = document.createElement('div');\n` +
-                `row.className = 'nds-cluster space-x-2';\n` +
+                `row.className = 'nds-cluster';\n` +
                 `const sw = createSwitch({ id: 'sw-email' });\n` +
                 `const label = document.createElement('label');\n` +
                 `label.htmlFor = 'sw-email';\n` +

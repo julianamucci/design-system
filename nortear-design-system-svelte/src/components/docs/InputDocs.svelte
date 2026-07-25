@@ -513,13 +513,13 @@ interface InputProps extends HTMLInputAttributes {
           { token: '--height-default',   value: 'h-(--height-default)',               description: $tStore('tokens.table.height')       },
           { token: '--radius-input',     value: 'rounded-(--radius-input)',            description: $tStore('tokens.table.radius')       },
           { token: '--border-input',     value: 'border-input',                        description: $tStore('tokens.table.border')       },
-          { token: '--ring',             value: 'focus-visible:border-ring',           description: $tStore('tokens.table.borderFocus')  },
-          { token: '--ring / 50%',       value: 'focus-visible:ring-ring/50',          description: $tStore('tokens.table.ring')         },
+          { token: '--ring',             value: 'nds-focus-ring',           description: $tStore('tokens.table.borderFocus')  },
+          { token: '--ring / 50%',       value: 'nds-focus-ring',          description: $tStore('tokens.table.ring')         },
           { token: '--destructive',      value: 'aria-invalid:border-destructive',     description: $tStore('tokens.table.borderError')  },
           { token: '--destructive / 20%', value: 'aria-invalid:ring-destructive/20',  description: $tStore('tokens.table.ringError')    },
           { token: '--input / 50%',      value: 'disabled:bg-input/50',               description: $tStore('tokens.table.bgDisabled')   },
           { token: '--input / 80%',      value: 'dark:disabled:bg-input/80',          description: $tStore('tokens.table.bgDisabledDark') },
-          { token: '--muted-foreground', value: 'placeholder:text-muted-foreground',  description: $tStore('tokens.table.placeholder')  },
+          { token: '--muted-foreground', value: 'placeholder:nds-text-muted-foreground',  description: $tStore('tokens.table.placeholder')  },
           { token: '--input / 30%',      value: 'dark:bg-input/30',                   description: $tStore('tokens.table.bgDark')       },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}

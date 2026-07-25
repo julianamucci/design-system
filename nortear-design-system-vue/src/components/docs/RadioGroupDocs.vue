@@ -268,7 +268,8 @@ const codeCompHorizontal = `<div class="nds-stack" data-spacing="sm">
   <RadioGroup
     name="delivery"
     aria-labelledby="comp-delivery-legend"
-    class="grid grid-flow-col auto-cols-max gap-6"
+    class="nds-cluster"
+    data-spacing="lg"
   >
     <div class="nds-cluster" data-spacing="xs">
       <RadioGroupItem value="standard" id="comp-h-standard" />
@@ -1066,7 +1067,8 @@ const visualTestItems = computed(() => [
           <RadioGroup
             name="delivery"
             aria-labelledby="comp-delivery-legend"
-            class="grid grid-flow-col auto-cols-max gap-6"
+            class="nds-cluster"
+            data-spacing="lg"
           >
             <div
               class="nds-cluster"

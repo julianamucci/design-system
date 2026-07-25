@@ -258,7 +258,7 @@ export function TableDocs() {
             size="icon"
             aria-label={\`Ações para fatura \${invoice.id}\`}
           >
-            <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+            <MoreHorizontal className="nds-icon" aria-hidden="true" />
           </Button>
         </TableCell>
       </TableRow>
@@ -702,7 +702,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                             size="icon"
                             aria-label={`Ações para fatura ${invoice.id}`}
                           >
-                            <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+                            <MoreHorizontal className="nds-icon" aria-hidden="true" />
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -758,7 +758,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             code: `<div className="nds-stack" data-spacing="sm">
   <div className="nds-cluster" data-align="center" data-spacing="sm">
     <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
-      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+      <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
       <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
     </div>
     <Button variant="outline">Status</Button>
@@ -787,7 +787,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
               <div className="nds-w-full nds-stack" data-spacing="sm">
                 <div className="nds-cluster" data-align="center" data-spacing="sm">
                   <div className="nds-w-full nds-max-w-sm" style={{ position: "relative" }}>
-                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 nds-text-muted-foreground" aria-hidden="true" />
+                    <Search className="nds-icon-input-start nds-icon nds-text-muted-foreground" aria-hidden="true" />
                     <Input placeholder="Filtrar faturas..." style={{ paddingLeft: "2rem" }} />
                   </div>
                   <Button variant="outline">Status</Button>
@@ -826,13 +826,13 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
       <TableHead scope="col" aria-sort="ascending">
         <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
           Fatura
-          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+          <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
       <TableHead scope="col" aria-sort="none">
         <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
           Valor
-          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+          <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
     </TableRow>
@@ -848,19 +848,19 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col" aria-sort="ascending">
                         <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Fatura
-                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                          <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none">
                         <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Status
-                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                          <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none" style={{ textAlign: "right" }}>
                         <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
                           Valor
-                          <ArrowUpDown className="ml-2 h-4 w-4" aria-hidden="true" />
+                          <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                     </TableRow>
@@ -1180,9 +1180,9 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         }}
         items={[
           { token: "border-b",                       value: "TableHeader / TableBody / TableRow", description: tContent("tokens.items.borderB") },
-          { token: "bg-muted/50",                    value: "TableFooter / TableRow (hover)",     description: tContent("tokens.items.bgMuted") },
+          { token: "nds-bg-muted-50",                    value: "TableFooter / TableRow (hover)",     description: tContent("tokens.items.bgMuted") },
           { token: "data-[state=selected]:bg-muted", value: "TableRow",                           description: tContent("tokens.items.bgMutedSelected") },
-          { token: "text-muted-foreground",           value: "TableCaption / empty state",         description: tContent("tokens.items.textMuted") },
+          { token: "nds-text-muted-foreground",           value: "TableCaption / empty state",         description: tContent("tokens.items.textMuted") },
           { token: "font-medium",                    value: "TableHead / TableFooter",             description: tContent("tokens.items.fontMedium") },
           { token: "h-10",                           value: "TableHead",                           description: tContent("tokens.items.h10") },
           { token: "p-2",                            value: "TableCell",                           description: tContent("tokens.items.p2") },

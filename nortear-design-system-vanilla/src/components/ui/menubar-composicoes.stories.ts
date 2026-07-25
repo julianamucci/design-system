@@ -58,7 +58,7 @@ function injectCheckbox(panel: HTMLElement, label: string, checked: boolean): vo
   item.setAttribute('tabindex', '0');
   if (checked) item.dataset.state = 'checked';
   item.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground hover:bg-accent';
+    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground nds-hover-bg-accent';
 
   const indicator = document.createElement('span');
   indicator.className = 'nds-cluster nds-icon-sm';
@@ -101,7 +101,7 @@ function injectRadio(panel: HTMLElement, label: string, checked: boolean): void 
   item.setAttribute('tabindex', '0');
   if (checked) item.dataset.state = 'checked';
   item.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground hover:bg-accent';
+    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground nds-hover-bg-accent';
 
   const indicator = document.createElement('span');
   indicator.className = 'nds-cluster nds-icon-sm';

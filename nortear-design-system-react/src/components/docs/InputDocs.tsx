@@ -793,13 +793,13 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           { token: "--height-default", value: "h-(--height-default)",        description: tContent("tokens.table.height") },
           { token: "--radius-input",   value: "rounded-(--radius-input)",     description: tContent("tokens.table.radius") },
           { token: "--input",          value: "border-input",                 description: tContent("tokens.table.border") },
-          { token: "--ring",           value: "focus-visible:border-ring",    description: tContent("tokens.table.borderFocus") },
-          { token: "--ring",           value: "focus-visible:ring-ring/50",   description: tContent("tokens.table.ring") },
+          { token: "--ring",           value: "nds-focus-ring",    description: tContent("tokens.table.borderFocus") },
+          { token: "--ring",           value: "nds-focus-ring",   description: tContent("tokens.table.ring") },
           { token: "--destructive",    value: "aria-invalid:border-destructive", description: tContent("tokens.table.borderError") },
           { token: "--destructive",    value: "aria-invalid:ring-destructive/20", description: tContent("tokens.table.ringError") },
           { token: "--input",          value: "disabled:bg-input/50",         description: tContent("tokens.table.bgDisabled") },
           { token: "--input",          value: "dark:disabled:bg-input/80",    description: tContent("tokens.table.bgDisabledDark") },
-          { token: "--muted-foreground", value: "placeholder:text-muted-foreground", description: tContent("tokens.table.placeholder") },
+          { token: "--muted-foreground", value: "placeholder:nds-text-muted-foreground", description: tContent("tokens.table.placeholder") },
           { token: "--input",          value: "dark:bg-input/30",             description: tContent("tokens.table.bgDark") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

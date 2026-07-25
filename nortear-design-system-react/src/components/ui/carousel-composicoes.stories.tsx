@@ -92,7 +92,7 @@ function ComDotsCarousel() {
             onClick={() => api?.scrollTo(i)}
             className={cn(
               "h-2 w-2 rounded-full p-0 nds-transition-colors",
-              i === current ? "bg-primary" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+              i === current ? "bg-primary" : "bg-muted-foreground/30 nds-hover-bg-muted-foreground-50"
             )}
           />
         ))}

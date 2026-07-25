@@ -528,9 +528,9 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           items: [
             { token: '--primary', value: 'bg-primary text-primary-foreground', description: t('tokens.table.primary') },
             { token: '--accent', value: 'bg-accent text-accent-foreground', description: t('tokens.table.muted') },
-            { token: '--muted-foreground', value: 'text-muted-foreground', description: t('tokens.table.mutedForeground') },
+            { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
             { token: '--foreground', value: 'text-foreground', description: t('tokens.table.foreground') },
-            { token: '--ring', value: 'focus-visible:ring-ring', description: t('tokens.table.ring') },
+            { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
             { token: '--radius', value: 'rounded-md', description: stripHtml(t('tokens.table.cellRadius')) },
             { token: 'h-8 w-8', value: 'h-8 w-8', description: stripHtml(t('tokens.table.cellSize')) },
           ],
