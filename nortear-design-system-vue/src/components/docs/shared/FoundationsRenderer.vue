@@ -27,7 +27,8 @@ const data = computed<Record<string, any>>(
   () => (props.translations[locale.value] ?? props.translations['pt-BR'] ?? {}) as Record<string, any>,
 );
 
-const RESERVED = new Set(['title', 'category', 'type', 'description', 'seo', 'nav']);
+// `specimens` é renderizado pela própria página via slot #extra (visual custom).
+const RESERVED = new Set(['title', 'category', 'type', 'description', 'seo', 'nav', 'specimens']);
 
 interface Section {
   key: string;
@@ -190,10 +191,14 @@ track('docs_page_view', {
           {{ t('title') }}
         </h1>
 
-        <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
-          {{ t('description') }}
-        </p>
+        <p
+          class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
+          v-html="t('description')"
+        />
       </header>
+
+      <!-- Specimens/visual extra da página (opcional) -->
+      <slot name="extra" />
 
       <!-- Sections -->
       <section
@@ -210,15 +215,13 @@ track('docs_page_view', {
           <h2
             v-if="sec.title"
             class="nds-text-h2 nds-text-foreground"
-          >
-            {{ sec.title }}
-          </h2>
+            v-html="sec.title"
+          />
           <p
             v-if="sec.subtitle"
             class="nds-text-body"
-          >
-            {{ sec.subtitle }}
-          </p>
+            v-html="sec.subtitle"
+          />
         </div>
 
         <p
@@ -229,9 +232,8 @@ track('docs_page_view', {
         <p
           v-if="sec.audience"
           class="nds-text-body nds-leading-relaxed nds-max-w-prose"
-        >
-          {{ sec.audience }}
-        </p>
+          v-html="sec.audience"
+        />
 
         <!-- Table (cols + rows) — o componente Table já provê .nds-table-wrapper -->
         <Table v-if="sec.cols && sec.rows">
@@ -312,15 +314,16 @@ track('docs_page_view', {
           </ul>
         </template>
 
-        <!-- Rules -->
+        <!-- Rules — lista de acento, igual às demais stacks -->
         <ul
           v-if="sec.rules"
-          class="nds-stack nds-list-disc nds-text-body"
-          data-spacing="xs"
+          class="nds-stack nds-list-none"
+          data-spacing="md"
         >
           <li
             v-for="rule in rulesEntries(sec.rules)"
             :key="rule.key"
+            class="nds-text-body nds-leading-relaxed nds-accent-start"
             v-html="rule.value"
           />
         </ul>

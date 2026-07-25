@@ -1,4 +1,5 @@
 import { FoundationPage } from './shared/FoundationPage';
+import { useTranslation } from '@/lib/i18n';
 import translations from '@shared/content/foundations/espacamento/translations.json';
 
 // Barras coloridas com largura igual a cada token de spacing — visualiza a
@@ -14,20 +15,20 @@ const SPACING_TOKENS: Array<{ name: string; varName: string; px: string }> = [
   { name: 'spacing-8', varName: '--spacing-8', px: '32px' },
   { name: 'spacing-10', varName: '--spacing-10', px: '40px' },
   { name: 'spacing-12', varName: '--spacing-12', px: '48px' },
+  { name: 'spacing-14', varName: '--spacing-14', px: '56px' },
   { name: 'spacing-16', varName: '--spacing-16', px: '64px' },
   { name: 'spacing-20', varName: '--spacing-20', px: '80px' },
   { name: 'spacing-24', varName: '--spacing-24', px: '96px' },
 ];
 
 function SpacingSpecimens() {
+  const { t } = useTranslation(translations);
+
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="md">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h2 nds-text-foreground">Escala visual</h2>
-        <p className="nds-text-body">
-          Cada barra tem largura igual ao token. A escala acompanha a densidade
-          ativa do tema.
-        </p>
+        <h2 className="nds-text-h2 nds-text-foreground">{t('specimens.title')}</h2>
+        <p className="nds-text-body">{t('specimens.subtitle')}</p>
       </div>
       <div className="nds-stack nds-bg-card nds-border-soft nds-rounded-lg nds-p-6" data-spacing="sm">
         {SPACING_TOKENS.map((tok) => (

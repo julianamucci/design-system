@@ -50,6 +50,7 @@ interface FoundationPageProps {
 }
 
 // Chaves top-level que não viram seção visível.
+// `specimens` é renderizado pela própria página via `extraSection` (visual custom).
 const META_KEYS = new Set([
   'title',
   'category',
@@ -57,6 +58,7 @@ const META_KEYS = new Set([
   'description',
   'seo',
   'nav',
+  'specimens',
 ]);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

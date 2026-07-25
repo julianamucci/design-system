@@ -5,7 +5,7 @@
    * aplica SEO e dispara analytics, e itera as seções top-level do JSON
    * delegando a renderização para FoundationSection.
    */
-  import { untrack } from 'svelte';
+  import { untrack, type Snippet } from 'svelte';
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -16,16 +16,19 @@
   type Props = {
     translations: Record<string, unknown>;
     componentSlug: string;
+    /** Seção visual custom (specimens) renderizada após o header. */
+    extra?: Snippet;
   };
 
-  let { translations, componentSlug }: Props = $props();
+  let { translations, componentSlug, extra }: Props = $props();
 
   // translations é um import estático por página (não muda em runtime); tStore
   // continua reativo ao locale internamente (useTranslation deriva do store de
   // locale). untrack silencia o aviso state_referenced_locally do Svelte 5.
   const { tStore } = untrack(() => useTranslation(translations));
 
-  const META_KEYS = new Set(['title', 'category', 'type', 'description', 'seo', 'nav']);
+  // `specimens` é renderizado pela própria página via snippet `extra` (visual custom).
+  const META_KEYS = new Set(['title', 'category', 'type', 'description', 'seo', 'nav', 'specimens']);
 
   // Seções top-level do locale corrente (excluindo metadados).
   const sections = $derived.by(() => {
@@ -80,9 +83,11 @@
       </h1>
 
       <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
-        {$tStore('description')}
+        {@html $tStore('description')}
       </p>
     </header>
+
+    {@render extra?.()}
 
     {#each sections as [key, value] (key)}
       <section class="nds-stack nds-docs-section-divider" data-spacing="md">

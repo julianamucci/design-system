@@ -4,6 +4,10 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "Motion serve à função, nunca à decoração. O Design System usa durações breves, easings semânticos e respeita <code>prefers-reduced-motion</code> globalmente. Cada animação tem um propósito: confirmar uma ação, orientar o foco ou suavizar uma transição de contexto.",
+    "specimens": {
+      "title": "Espécimes",
+      "subtitle": "Passe o mouse sobre cada botão para sentir as três durações do sistema."
+    },
     "seo": {
       "title": "Motion",
       "description": "Tokens de duração e easing, princípios de animação funcional e suporte global a prefers-reduced-motion.",
@@ -133,6 +137,10 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "Motion serves function, never decoration. The Design System uses brief durations, semantic easings, and respects <code>prefers-reduced-motion</code> globally. Every animation has a purpose: confirm an action, guide focus, or smooth a context change.",
+    "specimens": {
+      "title": "Specimens",
+      "subtitle": "Hover over each button to feel the system's three durations."
+    },
     "seo": {
       "title": "Motion",
       "description": "Duration and easing tokens, principles of functional animation, and global prefers-reduced-motion support.",
@@ -262,6 +270,10 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "Motion sirve a la función, nunca a la decoración. El Design System usa duraciones breves, easings semánticos y respeta <code>prefers-reduced-motion</code> globalmente. Cada animación tiene un propósito: confirmar una acción, guiar el foco o suavizar un cambio de contexto.",
+    "specimens": {
+      "title": "Especímenes",
+      "subtitle": "Pasa el cursor sobre cada botón para sentir las tres duraciones del sistema."
+    },
     "seo": {
       "title": "Motion",
       "description": "Tokens de duración y easing, principios de animación funcional y soporte global a prefers-reduced-motion.",

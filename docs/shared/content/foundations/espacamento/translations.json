@@ -3,7 +3,11 @@
     "title": "Espaçamento e Grid",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "Todo o espaçamento do sistema é construído sobre uma base de 4px e ancorado num grid de 8. Tokens <code>--spacing-*</code> alimentam as classes utilitárias <code>.nds-*</code>, então <code>.nds-p-4</code>, <code>.nds-gap-2</code> e <code>.nds-m-6</code> seguem automaticamente a densidade ativa do tema.",
+    "description": "Todo o espaçamento do sistema é construído sobre uma base de 4px e ancorado num grid de 8. Tokens <code>--spacing-*</code> alimentam as classes utilitárias <code>.nds-*</code> e as primitivas de layout, então <code>.nds-p-4</code>, <code>.nds-mb-6</code> e <code>data-spacing=\"sm\"</code> seguem automaticamente a densidade ativa do tema.",
+    "specimens": {
+      "title": "Escala visual",
+      "subtitle": "Cada barra tem largura igual ao token. A escala acompanha a densidade ativa do tema."
+    },
     "seo": {
       "title": "Espaçamento",
       "description": "Sistema 8-grid com base de 4px, tokens --spacing-* completos, gaps por contexto e regra de off-grid como bug a corrigir.",
@@ -14,88 +18,94 @@
     "philosophy": {
       "title": "Filosofia 8-grid",
       "body": "A unidade visual do sistema é 8px. Tokens válidos são múltiplos (8, 16, 24, 32...) ou divisores limpos (4, 2, 1px). Valores fora do grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>não devem existir</strong> como tokens — se aparecerem em CSS, são bug a ser corrigido.",
-      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). As classes utilitárias <code>.nds-p-{n}</code>, <code>.nds-gap-{n}</code>, <code>.nds-m-{n}</code> e <code>.nds-space-{n}</code> calculam <code>n × --spacing-base</code>, então todas acompanham a densidade do tema (condensado/confortável) automaticamente."
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). As classes utilitárias (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>, <code>.nds-mb-*</code>, <code>.nds-mt-*</code>) e os gaps das primitivas de layout (<code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code> via <code>data-spacing</code>) calculam <code>n × --spacing-base</code>, então todas acompanham a densidade do tema (condensado/confortável) automaticamente."
     },
     "scale": {
       "title": "Escala de tokens",
-      "subtitle": "Use estes tokens em CSS standalone quando precisar de um valor nomeado. Em componentes React/Vue/Svelte, prefira a classe utilitária <code>.nds-*</code> equivalente.",
+      "subtitle": "Use o token <code>var(--spacing-*)</code> em CSS quando precisar de um valor nomeado; nos templates, prefira a classe utilitária <code>.nds-*</code> ou o <code>data-spacing</code> das primitivas de layout.",
       "cols": {
         "token": "Token",
         "value": "Valor (px)",
-        "tw": ".nds-*",
+        "tw": "Classe / uso",
         "use": "Uso típico"
       },
       "rows": {
         "1": {
           "token": "--spacing-1",
           "value": "4px",
-          "tw": ".nds-p-1",
-          "use": "Gap entre ícone e texto adjacente"
+          "tw": "<code>.nds-p-1</code> / <code>data-spacing=\"xs\"</code>",
+          "use": "Gap de agrupamentos internos: ícone+texto, título+subtítulo de seção, conteúdo de card"
         },
         "2": {
           "token": "--spacing-2",
           "value": "8px",
-          "tw": ".nds-p-2 / .nds-gap-2",
+          "tw": "<code>.nds-p-2</code> / <code>data-spacing=\"sm\"</code>",
           "use": "Base do grid — badges, chips, botões em grupo"
         },
         "4": {
           "token": "--spacing-4",
           "value": "16px",
-          "tw": ".nds-p-4 / .nds-gap-4",
-          "use": "Padding interno padrão de componentes"
+          "tw": "<code>.nds-p-4</code> / <code>data-spacing=\"md\"</code>",
+          "use": "Gap padrão de conteúdo (dentro de seções, entre cards) e padding interno de componentes"
         },
         "6": {
           "token": "--spacing-6",
           "value": "24px",
-          "tw": ".nds-p-6 / .nds-gap-6",
-          "use": "Padding de card, gap entre cards"
+          "tw": "<code>.nds-p-6</code> / <code>data-spacing=\"lg\"</code>",
+          "use": "Padding de containers de demonstração/specimens; gap de grids nas docs de componente"
         },
         "8": {
           "token": "--spacing-8",
           "value": "32px",
-          "tw": ".nds-p-8",
-          "use": "Padding de container de página"
+          "tw": "<code>.nds-p-8</code> / <code>data-spacing=\"xl\"</code>",
+          "use": "Padding do container de página e gap entre seções de foundation pages"
         },
         "10": {
           "token": "--spacing-10",
           "value": "40px",
-          "tw": ".nds-p-10",
-          "use": "Gap entre subseções"
+          "tw": "<code>var(--spacing-10)</code>",
+          "use": "Dimensões de componentes (avatar lg, ícones de dialog) — raro como espaçamento"
         },
         "12": {
           "token": "--spacing-12",
           "value": "48px",
-          "tw": ".nds-space-y-12",
+          "tw": "<code>data-spacing=\"2xl\"</code> (nds-stack)",
           "use": "Gap entre seções principais de docs"
+        },
+        "14": {
+          "token": "--spacing-14",
+          "value": "56px",
+          "tw": "<code>var(--spacing-14)</code>",
+          "use": "Degrau intermediário — raro; prefira 12 ou 16"
         },
         "16": {
           "token": "--spacing-16",
           "value": "64px",
-          "tw": ".nds-py-16",
+          "tw": "<code>var(--spacing-16)</code>",
           "use": "Padding vertical de seções de landing"
         },
         "20": {
           "token": "--spacing-20",
           "value": "80px",
-          "tw": ".nds-py-20",
+          "tw": "<code>var(--spacing-20)</code>",
           "use": "Section gap em layouts editoriais"
         },
         "24": {
           "token": "--spacing-24",
           "value": "96px",
-          "tw": ".nds-py-24",
+          "tw": "<code>var(--spacing-24)</code>",
           "use": "Hero section, separação de áreas maiores"
         },
         "px": {
           "token": "--spacing-px",
           "value": "1px",
-          "tw": ".nds-p-px",
+          "tw": "<code>var(--spacing-px)</code>",
           "use": "Hairline, bordas finíssimas"
         },
         "half": {
           "token": "--spacing-0-5",
           "value": "2px",
-          "tw": ".nds-p-0.5",
+          "tw": "<code>.nds-p-0-5</code> / <code>.nds-px-0-5</code>",
           "use": "Separadores muito finos"
         }
       }
@@ -105,8 +115,8 @@
       "subtitle": "Faixas de uso recomendadas. Não há regra absoluta — o contexto manda — mas começar pelo padrão da faixa evita decisões arbitrárias.",
       "ranges": {
         "tiny": "<strong>1–2</strong> (4–8px): separadores entre ícone e texto, hairlines, badges compactos.",
-        "small": "<strong>3–4</strong> (12–16px): padding inline de inputs e botões, gap entre itens de uma toolbar.",
-        "medium": "<strong>6–8</strong> (24–32px): gap entre cards, padding interno de containers, padding de página.",
+        "small": "<strong>4</strong> (16px): padding inline de inputs e botões, gap entre itens de uma toolbar.",
+        "medium": "<strong>6–8</strong> (24–32px): padding de containers de demonstração, padding e gap do container de página.",
         "large": "<strong>10–16</strong> (40–64px): padding vertical de seção de landing, gap entre blocos principais.",
         "huge": "<strong>20–24</strong> (80–96px): hero sections, separação de áreas distintas em layouts editoriais."
       }
@@ -115,19 +125,19 @@
       "title": "Aplicações",
       "subtitle": "Onde cada token aparece — direta ou indiretamente — no código.",
       "items": {
-        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): espaço interno de containers e componentes.",
-        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): espaço entre filhos diretos de flex/grid.",
-        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): espaço externo. Prefira gap quando possível.",
-        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): espaço entre filhos sem usar flex. Padrão em containers de docs (<code>space-y-12</code>)."
+        "padding": "<strong>Padding</strong> (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>): espaço interno de containers e componentes.",
+        "gap": "<strong>Gap</strong> (<code>data-spacing</code> em <code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code>): espaço entre filhos diretos — o jeito padrão de espaçar irmãos.",
+        "margin": "<strong>Margin</strong> (<code>.nds-mt-*</code>, <code>.nds-mb-*</code>, <code>.nds-m-0</code>): espaço externo pontual. Prefira o gap das primitivas quando possível.",
+        "spaceY": "<strong>Empilhamento</strong> (<code>nds-stack</code>): espaço vertical entre filhos sem flex manual — padrão em containers de docs (<code>data-spacing=\"2xl\"</code> entre seções)."
       }
     },
     "offGrid": {
       "title": "Off-grid é bug",
       "subtitle": "Valores ímpares ou fora dos múltiplos/divisores de 8 quebram a coerência visual e devem ser corrigidos.",
       "rules": {
-        "react": "Em React, Vue e Svelte: use classes .nds-* padrão (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — todas no grid.",
+        "react": "Em todas as stacks: use as classes <code>.nds-*</code> do grid (<code>.nds-p-1</code>, <code>.nds-p-2</code>, <code>.nds-p-4</code>, <code>.nds-p-6</code>, <code>.nds-p-8</code>) ou <code>data-spacing</code> — todas no grid.",
         "nortear": "No stack Nortear, qualquer valor de px hardcoded fora do grid (3, 5, 7, 9, 10, 11, 13, 14...) é considerado bug — substitua pelo token correspondente.",
-        "arbitrary": "Evite valores arbitrários fora da escala (<code>p-[13px]</code>, <code>gap-[7px]</code>) — só fazem sentido para casos extraordinários, sempre justificados em PR.",
+        "arbitrary": "Evite valores fora da escala em CSS (13px, 7px, 0.8rem…) — só fazem sentido em casos extraordinários, sempre justificados em PR; prefira o token mais próximo.",
         "density": "Confira o resultado nas três densidades (condensado, default, confortável). Se algo quebra em uma delas, provavelmente é um valor hardcoded escapando do token."
       }
     },
@@ -143,7 +153,11 @@
     "title": "Spacing & Grid",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "All system spacing is built on a 4px base and anchored on an 8-grid. <code>--spacing-*</code> tokens feed the <code>.nds-*</code> utility classes, so <code>.nds-p-4</code>, <code>.nds-gap-2</code> and <code>.nds-m-6</code> follow the active theme density automatically.",
+    "description": "All spacing in the system is built on a 4px base anchored to an 8-grid. <code>--spacing-*</code> tokens feed the <code>.nds-*</code> utility classes and the layout primitives, so <code>.nds-p-4</code>, <code>.nds-mb-6</code> and <code>data-spacing=\"sm\"</code> automatically follow the theme's active density.",
+    "specimens": {
+      "title": "Visual scale",
+      "subtitle": "Each bar is as wide as its token. The scale follows the theme's active density."
+    },
     "seo": {
       "title": "Spacing",
       "description": "8-grid system with 4px base, full --spacing-* token scale, gaps by context and off-grid as a bug to fix.",
@@ -154,88 +168,94 @@
     "philosophy": {
       "title": "8-grid philosophy",
       "body": "The system's visual unit is 8px. Valid tokens are multiples (8, 16, 24, 32...) or clean divisors (4, 2, 1px). Values outside the grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>should not exist</strong> as tokens — if they appear in CSS, they are bugs to fix.",
-      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). The utility classes <code>.nds-p-{n}</code>, <code>.nds-gap-{n}</code>, <code>.nds-m-{n}</code> and <code>.nds-space-{n}</code> compute <code>n × --spacing-base</code>, so they all track the theme density (condensed/comfortable) automatically."
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). Utility classes (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>, <code>.nds-mb-*</code>, <code>.nds-mt-*</code>) and the layout primitives' gaps (<code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code> via <code>data-spacing</code>) compute <code>n × --spacing-base</code>, so they all follow the theme density (condensed/comfortable) automatically."
     },
     "scale": {
       "title": "Token scale",
-      "subtitle": "Use these tokens in standalone CSS when you need a named value. In React/Vue/Svelte components, prefer the matching <code>.nds-*</code> utility class.",
+      "subtitle": "Use the <code>var(--spacing-*)</code> token in CSS when you need a named value; in templates, prefer the <code>.nds-*</code> utility class or the layout primitives' <code>data-spacing</code>.",
       "cols": {
         "token": "Token",
         "value": "Value (px)",
-        "tw": ".nds-*",
+        "tw": "Class / usage",
         "use": "Typical use"
       },
       "rows": {
         "1": {
           "token": "--spacing-1",
           "value": "4px",
-          "tw": ".nds-p-1",
-          "use": "Gap between icon and adjacent text"
+          "tw": "<code>.nds-p-1</code> / <code>data-spacing=\"xs\"</code>",
+          "use": "Inner grouping gap: icon+text, section title+subtitle, card content"
         },
         "2": {
           "token": "--spacing-2",
           "value": "8px",
-          "tw": ".nds-p-2 / .nds-gap-2",
-          "use": "Grid base — badges, chips, button groups"
+          "tw": "<code>.nds-p-2</code> / <code>data-spacing=\"sm\"</code>",
+          "use": "Grid base — badges, chips, grouped buttons"
         },
         "4": {
           "token": "--spacing-4",
           "value": "16px",
-          "tw": ".nds-p-4 / .nds-gap-4",
-          "use": "Default inner padding of components"
+          "tw": "<code>.nds-p-4</code> / <code>data-spacing=\"md\"</code>",
+          "use": "Default content gap (within sections, between cards) and inner component padding"
         },
         "6": {
           "token": "--spacing-6",
           "value": "24px",
-          "tw": ".nds-p-6 / .nds-gap-6",
-          "use": "Card padding, gap between cards"
+          "tw": "<code>.nds-p-6</code> / <code>data-spacing=\"lg\"</code>",
+          "use": "Padding of demo/specimen containers; grid gaps in component docs"
         },
         "8": {
           "token": "--spacing-8",
           "value": "32px",
-          "tw": ".nds-p-8",
-          "use": "Page container padding"
+          "tw": "<code>.nds-p-8</code> / <code>data-spacing=\"xl\"</code>",
+          "use": "Page container padding and gap between foundation page sections"
         },
         "10": {
           "token": "--spacing-10",
           "value": "40px",
-          "tw": ".nds-p-10",
-          "use": "Gap between subsections"
+          "tw": "<code>var(--spacing-10)</code>",
+          "use": "Component dimensions (avatar lg, dialog icons) — rare as spacing"
         },
         "12": {
           "token": "--spacing-12",
           "value": "48px",
-          "tw": ".nds-space-y-12",
+          "tw": "<code>data-spacing=\"2xl\"</code> (nds-stack)",
           "use": "Gap between main docs sections"
+        },
+        "14": {
+          "token": "--spacing-14",
+          "value": "56px",
+          "tw": "<code>var(--spacing-14)</code>",
+          "use": "Intermediate step — rare; prefer 12 or 16"
         },
         "16": {
           "token": "--spacing-16",
           "value": "64px",
-          "tw": ".nds-py-16",
-          "use": "Vertical padding for landing sections"
+          "tw": "<code>var(--spacing-16)</code>",
+          "use": "Vertical padding of landing sections"
         },
         "20": {
           "token": "--spacing-20",
           "value": "80px",
-          "tw": ".nds-py-20",
+          "tw": "<code>var(--spacing-20)</code>",
           "use": "Section gap in editorial layouts"
         },
         "24": {
           "token": "--spacing-24",
           "value": "96px",
-          "tw": ".nds-py-24",
-          "use": "Hero section, larger area separation"
+          "tw": "<code>var(--spacing-24)</code>",
+          "use": "Hero sections, separating major areas"
         },
         "px": {
           "token": "--spacing-px",
           "value": "1px",
-          "tw": ".nds-p-px",
-          "use": "Hairline, very thin borders"
+          "tw": "<code>var(--spacing-px)</code>",
+          "use": "Hairline, ultra-thin borders"
         },
         "half": {
           "token": "--spacing-0-5",
           "value": "2px",
-          "tw": ".nds-p-0.5",
+          "tw": "<code>.nds-p-0-5</code> / <code>.nds-px-0-5</code>",
           "use": "Very thin separators"
         }
       }
@@ -245,8 +265,8 @@
       "subtitle": "Recommended usage ranges. There is no absolute rule — context wins — but starting from the range default avoids arbitrary decisions.",
       "ranges": {
         "tiny": "<strong>1–2</strong> (4–8px): separators between icon and text, hairlines, compact badges.",
-        "small": "<strong>3–4</strong> (12–16px): inline padding for inputs and buttons, gap between toolbar items.",
-        "medium": "<strong>6–8</strong> (24–32px): gap between cards, container inner padding, page padding.",
+        "small": "<strong>4</strong> (16px): inline padding of inputs and buttons, gap between toolbar items.",
+        "medium": "<strong>6–8</strong> (24–32px): demo container padding, page container padding and gap.",
         "large": "<strong>10–16</strong> (40–64px): landing section vertical padding, gap between main blocks.",
         "huge": "<strong>20–24</strong> (80–96px): hero sections, separating distinct areas in editorial layouts."
       }
@@ -255,19 +275,19 @@
       "title": "Applications",
       "subtitle": "Where each token shows up — directly or indirectly — in code.",
       "items": {
-        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): inner space of containers and components.",
-        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): space between direct children of flex/grid.",
-        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): outer space. Prefer gap when possible.",
-        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): space between children without using flex. Standard in docs containers (<code>space-y-12</code>)."
+        "padding": "<strong>Padding</strong> (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>): inner space of containers and components.",
+        "gap": "<strong>Gap</strong> (<code>data-spacing</code> on <code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code>): space between direct children — the default way to space siblings.",
+        "margin": "<strong>Margin</strong> (<code>.nds-mt-*</code>, <code>.nds-mb-*</code>, <code>.nds-m-0</code>): occasional outer space. Prefer the primitives' gap when possible.",
+        "spaceY": "<strong>Stacking</strong> (<code>nds-stack</code>): vertical space between children without manual flex — standard in docs containers (<code>data-spacing=\"2xl\"</code> between sections)."
       }
     },
     "offGrid": {
       "title": "Off-grid is a bug",
       "subtitle": "Odd values or values outside multiples/divisors of 8 break visual coherence and must be fixed.",
       "rules": {
-        "react": "In React, Vue and Svelte: use standard .nds-* classes (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — all on grid.",
+        "react": "In every stack: use the on-grid <code>.nds-*</code> classes (<code>.nds-p-1</code>, <code>.nds-p-2</code>, <code>.nds-p-4</code>, <code>.nds-p-6</code>, <code>.nds-p-8</code>) or <code>data-spacing</code> — all on the grid.",
         "nortear": "In the Nortear stack, any hardcoded px value outside the grid (3, 5, 7, 9, 10, 11, 13, 14...) is considered a bug — replace it with the matching token.",
-        "arbitrary": "Avoid arbitrary values outside the scale (<code>p-[13px]</code>, <code>gap-[7px]</code>) — they only make sense for exceptional cases, always justified in the PR.",
+        "arbitrary": "Avoid off-scale values in CSS (13px, 7px, 0.8rem…) — they only make sense in extraordinary cases, always justified in the PR; prefer the nearest token.",
         "density": "Check the result across all three densities (condensed, default, comfortable). If something breaks in one of them, it's probably a hardcoded value escaping the token."
       }
     },
@@ -283,7 +303,11 @@
     "title": "Espaciado y Grid",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "Todo el espaciado del sistema se construye sobre una base de 4px y anclado en un grid de 8. Los tokens <code>--spacing-*</code> alimentan las clases utilitarias <code>.nds-*</code>, entonces <code>.nds-p-4</code>, <code>.nds-gap-2</code> y <code>.nds-m-6</code> siguen automáticamente la densidad activa del tema.",
+    "description": "Todo el espaciado del sistema se construye sobre una base de 4px anclada a un grid de 8. Los tokens <code>--spacing-*</code> alimentan las clases utilitarias <code>.nds-*</code> y las primitivas de layout, así que <code>.nds-p-4</code>, <code>.nds-mb-6</code> y <code>data-spacing=\"sm\"</code> siguen automáticamente la densidad activa del tema.",
+    "specimens": {
+      "title": "Escala visual",
+      "subtitle": "Cada barra tiene el ancho de su token. La escala sigue la densidad activa del tema."
+    },
     "seo": {
       "title": "Espaciado",
       "description": "Sistema 8-grid con base de 4px, tokens --spacing-* completos, gaps por contexto y regla de off-grid como bug a corregir.",
@@ -294,88 +318,94 @@
     "philosophy": {
       "title": "Filosofía 8-grid",
       "body": "La unidad visual del sistema es 8px. Tokens válidos son múltiplos (8, 16, 24, 32...) o divisores limpios (4, 2, 1px). Valores fuera del grid (10, 12, 14, 20, 28, 36, 44, 56...) <strong>no deben existir</strong> como tokens — si aparecen en CSS, son bugs a corregir.",
-      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). Las clases utilitarias <code>.nds-p-{n}</code>, <code>.nds-gap-{n}</code>, <code>.nds-m-{n}</code> y <code>.nds-space-{n}</code> calculan <code>n × --spacing-base</code>, entonces todas acompañan la densidad del tema (condensado/cómodo) automáticamente."
+      "base": "<code>--spacing-base</code> = <code>0.25rem</code> (4px). Las clases utilitarias (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>, <code>.nds-mb-*</code>, <code>.nds-mt-*</code>) y los gaps de las primitivas de layout (<code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code> vía <code>data-spacing</code>) calculan <code>n × --spacing-base</code>, así que todas siguen la densidad del tema (condensado/confortable) automáticamente."
     },
     "scale": {
       "title": "Escala de tokens",
-      "subtitle": "Usa estos tokens en CSS standalone cuando necesites un valor nombrado. En componentes React/Vue/Svelte, prefiere la clase utilitaria <code>.nds-*</code> equivalente.",
+      "subtitle": "Usa el token <code>var(--spacing-*)</code> en CSS cuando necesites un valor nombrado; en templates, prefiere la clase utilitaria <code>.nds-*</code> o el <code>data-spacing</code> de las primitivas de layout.",
       "cols": {
         "token": "Token",
         "value": "Valor (px)",
-        "tw": ".nds-*",
+        "tw": "Clase / uso",
         "use": "Uso típico"
       },
       "rows": {
         "1": {
           "token": "--spacing-1",
           "value": "4px",
-          "tw": ".nds-p-1",
-          "use": "Gap entre icono y texto adyacente"
+          "tw": "<code>.nds-p-1</code> / <code>data-spacing=\"xs\"</code>",
+          "use": "Gap de agrupaciones internas: icono+texto, título+subtítulo de sección, contenido de card"
         },
         "2": {
           "token": "--spacing-2",
           "value": "8px",
-          "tw": ".nds-p-2 / .nds-gap-2",
-          "use": "Base del grid — badges, chips, grupos de botones"
+          "tw": "<code>.nds-p-2</code> / <code>data-spacing=\"sm\"</code>",
+          "use": "Base del grid — badges, chips, botones agrupados"
         },
         "4": {
           "token": "--spacing-4",
           "value": "16px",
-          "tw": ".nds-p-4 / .nds-gap-4",
-          "use": "Padding interno por defecto de componentes"
+          "tw": "<code>.nds-p-4</code> / <code>data-spacing=\"md\"</code>",
+          "use": "Gap estándar de contenido (dentro de secciones, entre cards) y padding interno de componentes"
         },
         "6": {
           "token": "--spacing-6",
           "value": "24px",
-          "tw": ".nds-p-6 / .nds-gap-6",
-          "use": "Padding de card, gap entre cards"
+          "tw": "<code>.nds-p-6</code> / <code>data-spacing=\"lg\"</code>",
+          "use": "Padding de contenedores de demostración/specimens; gaps de grids en docs de componente"
         },
         "8": {
           "token": "--spacing-8",
           "value": "32px",
-          "tw": ".nds-p-8",
-          "use": "Padding de contenedor de página"
+          "tw": "<code>.nds-p-8</code> / <code>data-spacing=\"xl\"</code>",
+          "use": "Padding del contenedor de página y gap entre secciones de foundation pages"
         },
         "10": {
           "token": "--spacing-10",
           "value": "40px",
-          "tw": ".nds-p-10",
-          "use": "Gap entre subsecciones"
+          "tw": "<code>var(--spacing-10)</code>",
+          "use": "Dimensiones de componentes (avatar lg, iconos de dialog) — raro como espaciado"
         },
         "12": {
           "token": "--spacing-12",
           "value": "48px",
-          "tw": ".nds-space-y-12",
+          "tw": "<code>data-spacing=\"2xl\"</code> (nds-stack)",
           "use": "Gap entre secciones principales de docs"
+        },
+        "14": {
+          "token": "--spacing-14",
+          "value": "56px",
+          "tw": "<code>var(--spacing-14)</code>",
+          "use": "Escalón intermedio — raro; prefiere 12 o 16"
         },
         "16": {
           "token": "--spacing-16",
           "value": "64px",
-          "tw": ".nds-py-16",
+          "tw": "<code>var(--spacing-16)</code>",
           "use": "Padding vertical de secciones de landing"
         },
         "20": {
           "token": "--spacing-20",
           "value": "80px",
-          "tw": ".nds-py-20",
+          "tw": "<code>var(--spacing-20)</code>",
           "use": "Section gap en layouts editoriales"
         },
         "24": {
           "token": "--spacing-24",
           "value": "96px",
-          "tw": ".nds-py-24",
+          "tw": "<code>var(--spacing-24)</code>",
           "use": "Hero section, separación de áreas mayores"
         },
         "px": {
           "token": "--spacing-px",
           "value": "1px",
-          "tw": ".nds-p-px",
-          "use": "Hairline, bordes muy finos"
+          "tw": "<code>var(--spacing-px)</code>",
+          "use": "Hairline, bordes finísimos"
         },
         "half": {
           "token": "--spacing-0-5",
           "value": "2px",
-          "tw": ".nds-p-0.5",
+          "tw": "<code>.nds-p-0-5</code> / <code>.nds-px-0-5</code>",
           "use": "Separadores muy finos"
         }
       }
@@ -385,8 +415,8 @@
       "subtitle": "Rangos de uso recomendados. No hay regla absoluta — el contexto manda — pero empezar por el default del rango evita decisiones arbitrarias.",
       "ranges": {
         "tiny": "<strong>1–2</strong> (4–8px): separadores entre icono y texto, hairlines, badges compactos.",
-        "small": "<strong>3–4</strong> (12–16px): padding inline de inputs y botones, gap entre items de una toolbar.",
-        "medium": "<strong>6–8</strong> (24–32px): gap entre cards, padding interno de contenedores, padding de página.",
+        "small": "<strong>4</strong> (16px): padding inline de inputs y botones, gap entre ítems de una toolbar.",
+        "medium": "<strong>6–8</strong> (24–32px): padding de contenedores de demostración, padding y gap del contenedor de página.",
         "large": "<strong>10–16</strong> (40–64px): padding vertical de sección de landing, gap entre bloques principales.",
         "huge": "<strong>20–24</strong> (80–96px): hero sections, separación de áreas distintas en layouts editoriales."
       }
@@ -395,19 +425,19 @@
       "title": "Aplicaciones",
       "subtitle": "Dónde aparece cada token — directa o indirectamente — en el código.",
       "items": {
-        "padding": "<strong>Padding</strong> (<code>p-*</code>, <code>px-*</code>, <code>py-*</code>): espacio interno de contenedores y componentes.",
-        "gap": "<strong>Gap</strong> (<code>gap-*</code>, <code>gap-x-*</code>, <code>gap-y-*</code>): espacio entre hijos directos de flex/grid.",
-        "margin": "<strong>Margin</strong> (<code>m-*</code>, <code>mt-*</code>, <code>mb-*</code>): espacio externo. Prefiere gap cuando sea posible.",
-        "spaceY": "<strong>space-y / space-x</strong> (<code>space-y-*</code>): espacio entre hijos sin usar flex. Estándar en contenedores de docs (<code>space-y-12</code>)."
+        "padding": "<strong>Padding</strong> (<code>.nds-p-*</code>, <code>.nds-px-*</code>, <code>.nds-py-*</code>): espacio interno de contenedores y componentes.",
+        "gap": "<strong>Gap</strong> (<code>data-spacing</code> en <code>nds-stack</code>/<code>nds-cluster</code>/<code>nds-grid</code>): espacio entre hijos directos — la forma estándar de espaciar hermanos.",
+        "margin": "<strong>Margin</strong> (<code>.nds-mt-*</code>, <code>.nds-mb-*</code>, <code>.nds-m-0</code>): espacio externo puntual. Prefiere el gap de las primitivas cuando sea posible.",
+        "spaceY": "<strong>Apilado</strong> (<code>nds-stack</code>): espacio vertical entre hijos sin flex manual — estándar en contenedores de docs (<code>data-spacing=\"2xl\"</code> entre secciones)."
       }
     },
     "offGrid": {
       "title": "Off-grid es bug",
       "subtitle": "Valores impares o fuera de los múltiplos/divisores de 8 rompen la coherencia visual y deben corregirse.",
       "rules": {
-        "react": "En React, Vue y Svelte: usa clases .nds-* estándar (<code>p-1</code>, <code>p-2</code>, <code>p-4</code>, <code>p-6</code>, <code>p-8</code>) — todas en el grid.",
+        "react": "En todas las stacks: usa las clases <code>.nds-*</code> del grid (<code>.nds-p-1</code>, <code>.nds-p-2</code>, <code>.nds-p-4</code>, <code>.nds-p-6</code>, <code>.nds-p-8</code>) o <code>data-spacing</code> — todas en el grid.",
         "nortear": "En el stack Nortear, cualquier valor de px hardcodeado fuera del grid (3, 5, 7, 9, 10, 11, 13, 14...) se considera bug — sustituye por el token correspondiente.",
-        "arbitrary": "Evita valores arbitrarios fuera de la escala (<code>p-[13px]</code>, <code>gap-[7px]</code>) — solo tienen sentido para casos extraordinarios, siempre justificados en PR.",
+        "arbitrary": "Evita valores fuera de la escala en CSS (13px, 7px, 0.8rem…) — solo tienen sentido en casos extraordinarios, siempre justificados en el PR; prefiere el token más cercano.",
         "density": "Verifica el resultado en las tres densidades (condensado, default, cómodo). Si algo se rompe en una de ellas, probablemente es un valor hardcodeado escapando del token."
       }
     },

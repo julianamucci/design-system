@@ -48,11 +48,12 @@
     if (isObject(n.cols) && isObject(n.rows)) {
       const colKeys = Object.keys(n.cols);
       const cols = colKeys.map((k) => String((n.cols as Record<string, unknown>)[k]));
-      const rows = Object.values(n.rows).map((row) =>
-        isObject(row)
-          ? colKeys.map((k) => (row[k] == null ? '' : String(row[k])))
-          : [String(row)],
-      );
+      // Linha pode ser objeto (mapeia pela CHAVE da coluna) ou array (posicional).
+      const rows = Object.values(n.rows).map((row) => {
+        if (isArray(row)) return row.map((c) => (c == null ? '' : String(c)));
+        if (isObject(row)) return colKeys.map((k) => (row[k] == null ? '' : String(row[k])));
+        return [String(row)];
+      });
       return { cols, rows };
     }
     return null;
@@ -156,38 +157,41 @@
 
 {#snippet renderObject(obj: Record<string, unknown>, depth: number)}
   {@const table = asTable(obj)}
-  {#if table}
-    <!-- O componente Table já provê .nds-table-wrapper (sem wrapper extra) -->
-    <Table>
-      <TableHeader>
-        <TableRow>
-          {#each table.cols as col}
-            <TableHead>{col}</TableHead>
-          {/each}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {#each table.rows as row}
-          <TableRow>
-            {#if isRowArray(row)}
-              {#each row as cell}
-                <TableCell>{@html String(cell)}</TableCell>
+  <div class="nds-stack" data-spacing="md">
+    {#each entries(obj) as [key, value]}
+        {#if (key === 'cols' || key === 'tableCols') && table}
+          <!-- Tabela renderizada na posição da chave `cols` — as demais chaves
+               (title, subtitle, rules...) continuam no fluxo. Antes, um `if`
+               de topo curto-circuitava e engolia o resto da seção. -->
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {#each table.cols as col}
+                  <TableHead>{col}</TableHead>
+                {/each}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {#each table.rows as row}
+                <TableRow>
+                  {#if isRowArray(row)}
+                    {#each row as cell}
+                      <TableCell>{@html String(cell)}</TableCell>
+                    {/each}
+                  {:else if isObject(row)}
+                    {#each cellsOfObjectRow(row, table.cols) as cell}
+                      <TableCell>{@html cell}</TableCell>
+                    {/each}
+                  {/if}
+                </TableRow>
               {/each}
-            {:else if isObject(row)}
-              {#each cellsOfObjectRow(row, table.cols) as cell}
-                <TableCell>{@html cell}</TableCell>
-              {/each}
-            {/if}
-          </TableRow>
-        {/each}
-      </TableBody>
-    </Table>
-  {:else}
-    <div class="nds-stack" data-spacing="md">
-      {#each entries(obj) as [key, value]}
-        {#if key === 'title' && isString(value)}
+            </TableBody>
+          </Table>
+        {:else if (key === 'rows' || key === 'tableRows') && table}
+          <!-- consumida pela tabela renderizada na chave cols -->
+        {:else if key === 'title' && isString(value)}
           {@const Tag = headingTag(depth)}
-          <svelte:element this={Tag} class="{headingClass(depth)}">{value}</svelte:element>
+          <svelte:element this={Tag} class="{headingClass(depth)}">{@html value}</svelte:element>
         {:else if (key === 'subtitle' || key === 'body' || key === 'description' || key === 'intro' || key === 'audience' || key === 'note') && isString(value)}
           <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
         {:else if key === 'items' && isObject(value)}
@@ -222,6 +226,15 @@
               {/each}
             </ul>
           {/if}
+        {:else if key === 'rules' && (isObject(value) || isArray(value))}
+          <!-- rules → lista de acento, sem heading do nome da chave (igual às demais stacks) -->
+          <ul class="nds-stack nds-list-none" data-spacing="md">
+            {#each (isArray(value) ? value : Object.values(value)) as rule}
+              {#if isString(rule)}
+                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html rule}</li>
+              {/if}
+            {/each}
+          </ul>
         {:else if key === 'items' && isArray(value)}
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
             {#each value as item}
@@ -248,7 +261,6 @@
         {/if}
       {/each}
     </div>
-  {/if}
 {/snippet}
 
 {#if isObject(node)}

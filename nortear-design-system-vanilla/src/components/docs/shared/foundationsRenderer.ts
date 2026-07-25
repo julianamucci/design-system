@@ -32,14 +32,23 @@ import {
   createTableCell,
 } from '@/components/ui/table';
 
+/** Contexto entregue ao `extraSection` — `addText` registra textos reativos a locale. */
+export interface FoundationsExtraCtx {
+  t: (key: string, fallback?: string) => string;
+  addText: (el: HTMLElement, key: string, html?: boolean) => void;
+}
+
 interface FoundationsRendererOptions {
   translations: Record<string, unknown>;
   componentSlug: string;
   /** Chaves do nível superior que são metadados (header) e não devem virar seções. */
   metaKeys?: string[];
+  /** Seção visual custom (specimens) renderizada após o header. */
+  extraSection?: (ctx: FoundationsExtraCtx) => HTMLElement;
 }
 
-const DEFAULT_META_KEYS = ['title', 'category', 'type', 'description', 'seo', 'nav'];
+// `specimens` é renderizado pela própria página via `extraSection` (visual custom).
+const DEFAULT_META_KEYS = ['title', 'category', 'type', 'description', 'seo', 'nav', 'specimens'];
 
 type AnyRecord = Record<string, unknown>;
 
@@ -142,6 +151,12 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
     textRefs.push({ el, key, html });
   }
 
+  // Seção visual custom (specimens) — após o header, antes das seções genéricas.
+  // Os textos registrados via addText entram no mesmo rerender reativo de locale.
+  if (opts.extraSection) {
+    container.appendChild(opts.extraSection({ t, addText }));
+  }
+
   function makeSectionTitle(key: string): HTMLHeadingElement {
     const h = document.createElement('h2');
     h.className = 'nds-text-h2 nds-text-foreground';
@@ -199,9 +214,10 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       });
       tbody.appendChild(tr);
       // Para cada linha, mapeamos a célula c à chave rows.<rk>.<ck>.
-      const valueKeys = colKeys.map((ck) => {
-        // Se a linha é objeto, lê rows.<rk>.<ck>. Se for string array, usa índice.
+      const valueKeys = colKeys.map((ck, ci) => {
+        // Linha objeto → rows.<rk>.<ck>; linha array → rows.<rk>.<índice da coluna>.
         if (isPlainObject(row)) return `${basePath}.rows.${rk}.${ck}`;
+        if (Array.isArray(row)) return `${basePath}.rows.${rk}.${ci}`;
         return `${basePath}.rows.${rk}`;
       });
       tableRows.push({ cells, keys: valueKeys });
@@ -359,8 +375,27 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       renderItemsGrid(section, `${key}.items`, node['items'] as AnyRecord);
     }
 
+    // rules → lista de acento SEM heading do nome da chave (igual às demais
+    // stacks). Sem isso, o laço genérico criava o subtítulo "Rules".
+    const rules = node['rules'];
+    if (isStringArray(rules) || isPlainObject(rules)) {
+      const ul = document.createElement('ul');
+      ul.className = 'nds-stack nds-list-none';
+      ul.dataset.spacing = 'md';
+      const ruleKeys = Array.isArray(rules)
+        ? rules.map((_, i) => String(i))
+        : Object.keys(rules).filter((rk) => typeof (rules as AnyRecord)[rk] === 'string');
+      ruleKeys.forEach((rk) => {
+        const li = document.createElement('li');
+        li.className = 'nds-text-body nds-leading-relaxed nds-accent-start';
+        addText(li, `${key}.rules.${rk}`, true);
+        ul.appendChild(li);
+      });
+      section.appendChild(ul);
+    }
+
     // Iterar restantes
-    const skip = new Set(['title', 'subtitle', 'body', 'audience', 'cols', 'rows', 'items']);
+    const skip = new Set(['title', 'subtitle', 'body', 'audience', 'cols', 'rows', 'items', 'rules']);
     Object.keys(node).forEach((sk) => {
       if (skip.has(sk)) return;
       const child = node[sk];

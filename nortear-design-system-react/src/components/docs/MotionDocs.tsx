@@ -1,5 +1,6 @@
 import { FoundationPage } from './shared/FoundationPage';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/lib/i18n';
 import translations from '@shared/content/foundations/motion/translations.json';
 
 const DURATIONS = [
@@ -12,13 +13,13 @@ const DURATIONS = [
 // o token padrão do sistema (cubic-bezier(.4,0,.2,1)). prefers-reduced-motion
 // é tratado globalmente pelo motion.css — não precisa de tratamento aqui.
 function MotionSpecimens() {
+  const { t } = useTranslation(translations);
+
   return (
-    <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
+    <section className="nds-stack nds-docs-section-divider" data-spacing="md">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h2 nds-text-foreground">Specimens</h2>
-        <p className="nds-text-body">
-          Passe o mouse sobre cada botão para sentir as três durações do sistema.
-        </p>
+        <h2 className="nds-text-h2 nds-text-foreground">{t('specimens.title')}</h2>
+        <p className="nds-text-body">{t('specimens.subtitle')}</p>
       </div>
 
       <div className="nds-cluster nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="md">

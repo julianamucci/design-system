@@ -3,12 +3,22 @@
     "title": "Tipografia",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), uma escala de tamanhos tokenizada e pesos semânticos. Tudo é controlado por variáveis CSS no <code>:root</code> e aplicado via elementos HTML padrão — não use classes utilitárias de tamanho de fonte (<code>.nds-text-*</code>) sem motivo.",
+    "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), um type scale derivado de base × ratio e pesos semânticos. Os degraus são recalculados em rem a partir de <code>--type-base</code> e <code>--type-scale</code> — troque a escala e a base pela toolbar e a página inteira reage.",
+    "specimens": {
+      "title": "Espécimes",
+      "subtitle": "Hierarquia renderizada com os elementos HTML padrão do tema ativo.",
+      "h1": "Heading 1 — título de página",
+      "h2": "Heading 2 — seção principal",
+      "h3": "Heading 3 — subseção",
+      "h4": "Heading 4 — agrupamento menor",
+      "body": "Parágrafo de corpo. The quick brown fox jumps over the lazy dog. Texto corrido usa <code>--text-p</code> (a base da escala) com <code>--line-height-normal</code> (1.5) — base WCAG 1.4.12.",
+      "label": "Label — rótulo de formulário"
+    },
     "seo": {
       "title": "Tipografia",
-      "description": "Famílias, escala de tamanhos, pesos e line-heights tokenizados do Design System. Hierarquia semântica de h1 a h6 mais regras de uso.",
-      "aiSummary": "Página de fundamentos de Tipografia. Documenta família ativa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights e regras de hierarquia semântica.",
-      "aiEntities": "Tipografia, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG",
+      "description": "Famílias, type scale (base × ratio), pesos e line-heights tokenizados do Design System. Hierarquia semântica e controles de escala.",
+      "aiSummary": "Página de fundamentos de Tipografia. Documenta a família ativa --font-family-active e o type scale derivado de --type-base × --type-scale (ratios 1.067–1.618, base S/M/L em rem), degraus --text-h1 a --text-label, pesos 400/500/600/800, line-heights e regras de hierarquia semântica.",
+      "aiEntities": "Tipografia, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG",
       "aiIntent": "informational"
     },
     "families": {
@@ -44,50 +54,59 @@
     },
     "scale": {
       "title": "Escala de tamanhos",
-      "subtitle": "Tokens semânticos amarrados aos elementos HTML padrão. Aplicados automaticamente em <code>@layer base</code>.",
+      "subtitle": "Degraus derivados de <code>--type-base</code> × <code>--type-scale</code> (modelo typescale.com), em rem. Default: base 1rem × Minor Third (1.200). Os valores abaixo mudam com os presets ativos.",
       "cols": {
         "token": "Token",
-        "value": "Valor",
-        "element": "Elemento",
+        "calc": "Degrau",
+        "value": "Default (1rem × 1.2)",
         "use": "Uso"
       },
       "rows": {
         "h1": {
           "token": "--text-h1",
-          "value": "48px",
-          "element": "h1",
-          "use": "Título principal da página (raro fora do header)"
+          "calc": "base × 1.2⁴",
+          "value": "2.074rem (~33px)",
+          "use": "Título principal da página (h1)"
         },
         "h2": {
           "token": "--text-h2",
-          "value": "30px",
-          "element": "h2",
-          "use": "Seções de primeiro nível"
+          "calc": "base × 1.2³",
+          "value": "1.728rem (~28px)",
+          "use": "Seções de primeiro nível (h2)"
         },
         "h3": {
           "token": "--text-h3",
-          "value": "20px",
-          "element": "h3",
-          "use": "Subseções dentro de uma seção"
+          "calc": "base × 1.2²",
+          "value": "1.44rem (~23px)",
+          "use": "Subseções dentro de uma seção (h3)"
         },
         "h4": {
           "token": "--text-h4",
-          "value": "16px",
-          "element": "h4",
-          "use": "Agrupamentos menores e títulos de card"
+          "calc": "base × 1.2",
+          "value": "1.2rem (~19px)",
+          "use": "Agrupamentos menores e títulos de card (h4)"
         },
         "p": {
           "token": "--text-p",
-          "value": "14px",
-          "element": "p",
-          "use": "Texto corrido"
+          "calc": "base",
+          "value": "1rem (16px)",
+          "use": "Texto corrido (p)"
         },
         "label": {
           "token": "--text-label",
-          "value": "12px",
-          "element": "label",
-          "use": "Rótulos de formulário, metadados"
+          "calc": "base ÷ 1.2",
+          "value": "0.833rem (~13px)",
+          "use": "Rótulos de formulário, metadados (label)"
         }
+      }
+    },
+    "controls": {
+      "title": "Controles da escala",
+      "body": "A escala inteira é recalculada trocando dois tokens no <code>&lt;html&gt;</code>: <code>--type-base</code> (presets <code>.base-tipo-s/m/l</code> — 0.875/1/1.125rem) e <code>--type-scale</code> (presets <code>.escala-*</code>, de 1.067 a 1.618). No Storybook, use os controles <strong>Type scale</strong> e <strong>Type base</strong> da toolbar — os espécimes acima reagem ao vivo.",
+      "rules": {
+        "rem": "Tudo em rem: a base acompanha a preferência de fonte do navegador (WCAG 1.4.4) — nunca converta os degraus para px fixos.",
+        "roles": "Consuma a escala pelos papéis <code>.nds-text-*</code> (h1–h4, body, caption, label) ou pelos tokens <code>--text-*</code> — nunca hardcode font-size.",
+        "default": "O preset padrão é <code>.escala-minor-third</code> + <code>.base-tipo-m</code>; as classes re-declaram os tokens, então voltar ao padrão reverte o cascade."
       }
     },
     "weights": {
@@ -160,7 +179,7 @@
         "h2": "<code>&lt;h2&gt;</code> abre seções de primeiro nível (Demonstração, Variantes, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> abre subseções dentro de uma seção (uma variante específica, um grupo de tokens).",
         "skip": "Nunca pule níveis (h2 → h4). Sempre desça um por vez.",
-        "noUtilityClasses": "Nunca use classes utilitárias de tamanho (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) em texto de produto — use o elemento correto.",
+        "noUtilityClasses": "Use os papéis semânticos <code>.nds-text-*</code> ou o elemento HTML correto — nunca tamanhos arbitrários em px fora da escada <code>--text-*</code>.",
         "minSize": "Nunca use <code>text-[9px]</code> ou <code>text-[10px]</code> em corpo: WCAG 1.4.4 (Resize Text) exige que o texto permaneça legível em 200% de zoom."
       }
     },
@@ -169,19 +188,30 @@
       "scale": "Escala",
       "weights": "Pesos",
       "lineHeights": "Line-heights",
-      "hierarchy": "Hierarquia"
+      "hierarchy": "Hierarquia",
+      "controls": "Controles"
     }
   },
   "en": {
     "title": "Typography",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "The system's typography is defined by a swappable active family (Inter by default), a tokenized size scale and semantic weights. Everything is controlled by CSS variables in <code>:root</code> and applied via standard HTML elements — don't use utility font-size classes (<code>.nds-text-*</code>) without a reason.",
+    "description": "System typography is defined by a switchable active family (Inter by default), a type scale derived from base × ratio, and semantic weights. Steps are recomputed in rem from <code>--type-base</code> and <code>--type-scale</code> — switch scale and base from the toolbar and the whole page reacts.",
+    "specimens": {
+      "title": "Specimens",
+      "subtitle": "Hierarchy rendered with the default HTML elements of the active theme.",
+      "h1": "Heading 1 — page title",
+      "h2": "Heading 2 — main section",
+      "h3": "Heading 3 — subsection",
+      "h4": "Heading 4 — minor grouping",
+      "body": "Body paragraph. The quick brown fox jumps over the lazy dog. Running text uses <code>--text-p</code> (the scale base) with <code>--line-height-normal</code> (1.5) — WCAG 1.4.12 baseline.",
+      "label": "Label — form label"
+    },
     "seo": {
       "title": "Typography",
-      "description": "Families, size scale, weights and tokenized line-heights of the Design System. Semantic hierarchy from h1 to h6 plus usage rules.",
-      "aiSummary": "Typography foundations page. Documents active family --font-family-active, --text-h1 to --text-label scale, 400/500/600/800 weights, line-heights and semantic hierarchy rules.",
-      "aiEntities": "Typography, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG",
+      "description": "Families, type scale (base × ratio), weights and line-heights tokenized in the Design System. Semantic hierarchy and scale controls.",
+      "aiSummary": "Typography foundations page. Documents the active family --font-family-active and the type scale derived from --type-base × --type-scale (ratios 1.067–1.618, S/M/L base in rem), steps --text-h1 to --text-label, weights 400/500/600/800, line-heights and semantic hierarchy rules.",
+      "aiEntities": "Typography, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG",
       "aiIntent": "informational"
     },
     "families": {
@@ -217,50 +247,59 @@
     },
     "scale": {
       "title": "Size scale",
-      "subtitle": "Semantic tokens tied to standard HTML elements. Applied automatically in <code>@layer base</code>.",
+      "subtitle": "Steps derived from <code>--type-base</code> × <code>--type-scale</code> (typescale.com model), in rem. Default: 1rem base × Minor Third (1.200). Values below change with the active presets.",
       "cols": {
         "token": "Token",
-        "value": "Value",
-        "element": "Element",
+        "calc": "Step",
+        "value": "Default (1rem × 1.2)",
         "use": "Usage"
       },
       "rows": {
         "h1": {
           "token": "--text-h1",
-          "value": "48px",
-          "element": "h1",
-          "use": "Main page title (rare outside the header)"
+          "calc": "base × 1.2⁴",
+          "value": "2.074rem (~33px)",
+          "use": "Main page title (h1)"
         },
         "h2": {
           "token": "--text-h2",
-          "value": "30px",
-          "element": "h2",
-          "use": "First-level sections"
+          "calc": "base × 1.2³",
+          "value": "1.728rem (~28px)",
+          "use": "First-level sections (h2)"
         },
         "h3": {
           "token": "--text-h3",
-          "value": "20px",
-          "element": "h3",
-          "use": "Subsections within a section"
+          "calc": "base × 1.2²",
+          "value": "1.44rem (~23px)",
+          "use": "Subsections within a section (h3)"
         },
         "h4": {
           "token": "--text-h4",
-          "value": "16px",
-          "element": "h4",
-          "use": "Smaller groupings and card titles"
+          "calc": "base × 1.2",
+          "value": "1.2rem (~19px)",
+          "use": "Minor groupings and card titles (h4)"
         },
         "p": {
           "token": "--text-p",
-          "value": "14px",
-          "element": "p",
-          "use": "Body text"
+          "calc": "base",
+          "value": "1rem (16px)",
+          "use": "Running text (p)"
         },
         "label": {
           "token": "--text-label",
-          "value": "12px",
-          "element": "label",
-          "use": "Form labels, metadata"
+          "calc": "base ÷ 1.2",
+          "value": "0.833rem (~13px)",
+          "use": "Form labels, metadata (label)"
         }
+      }
+    },
+    "controls": {
+      "title": "Scale controls",
+      "body": "The whole scale is recomputed by switching two tokens on <code>&lt;html&gt;</code>: <code>--type-base</code> (presets <code>.base-tipo-s/m/l</code> — 0.875/1/1.125rem) and <code>--type-scale</code> (presets <code>.escala-*</code>, from 1.067 to 1.618). In Storybook, use the <strong>Type scale</strong> and <strong>Type base</strong> toolbar controls — the specimens above react live.",
+      "rules": {
+        "rem": "Everything in rem: the base follows the browser font-size preference (WCAG 1.4.4) — never convert steps to fixed px.",
+        "roles": "Consume the scale through the <code>.nds-text-*</code> roles (h1–h4, body, caption, label) or the <code>--text-*</code> tokens — never hardcode font-size.",
+        "default": "The default preset is <code>.escala-minor-third</code> + <code>.base-tipo-m</code>; the classes re-declare the tokens, so returning to default reverts the cascade."
       }
     },
     "weights": {
@@ -333,7 +372,7 @@
         "h2": "<code>&lt;h2&gt;</code> opens first-level sections (Demo, Variants, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> opens subsections within a section (a specific variant, a token group).",
         "skip": "Never skip levels (h2 → h4). Always go down one step at a time.",
-        "noUtilityClasses": "Never use utility size classes (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) in product text — use the right element.",
+        "noUtilityClasses": "Use the semantic <code>.nds-text-*</code> roles or the correct HTML element — never arbitrary px sizes outside the <code>--text-*</code> ladder.",
         "minSize": "Never use <code>text-[9px]</code> or <code>text-[10px]</code> for body: WCAG 1.4.4 (Resize Text) requires text to remain legible at 200% zoom."
       }
     },
@@ -342,19 +381,30 @@
       "scale": "Scale",
       "weights": "Weights",
       "lineHeights": "Line-heights",
-      "hierarchy": "Hierarchy"
+      "hierarchy": "Hierarchy",
+      "controls": "Controls"
     }
   },
   "es": {
     "title": "Tipografía",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), una escala de tamaños tokenizada y pesos semánticos. Todo se controla por variables CSS en <code>:root</code> y se aplica vía elementos HTML estándar — no uses clases utilitarias de tamaño de fuente (<code>.nds-text-*</code>) sin motivo.",
+    "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), un type scale derivado de base × ratio y pesos semánticos. Los escalones se recalculan en rem a partir de <code>--type-base</code> y <code>--type-scale</code> — cambia la escala y la base desde la toolbar y toda la página reacciona.",
+    "specimens": {
+      "title": "Especímenes",
+      "subtitle": "Jerarquía renderizada con los elementos HTML por defecto del tema activo.",
+      "h1": "Heading 1 — título de página",
+      "h2": "Heading 2 — sección principal",
+      "h3": "Heading 3 — subsección",
+      "h4": "Heading 4 — agrupación menor",
+      "body": "Párrafo de cuerpo. The quick brown fox jumps over the lazy dog. El texto corrido usa <code>--text-p</code> (la base de la escala) con <code>--line-height-normal</code> (1.5) — base WCAG 1.4.12.",
+      "label": "Label — etiqueta de formulario"
+    },
     "seo": {
       "title": "Tipografía",
-      "description": "Familias, escala de tamaños, pesos y line-heights tokenizados del Design System. Jerarquía semántica de h1 a h6 más reglas de uso.",
-      "aiSummary": "Página de fundamentos de Tipografía. Documenta familia activa --font-family-active, escala --text-h1 a --text-label, pesos 400/500/600/800, line-heights y reglas de jerarquía semántica.",
-      "aiEntities": "Tipografía, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG",
+      "description": "Familias, type scale (base × ratio), pesos y line-heights tokenizados del Design System. Jerarquía semántica y controles de escala.",
+      "aiSummary": "Página de fundamentos de Tipografía. Documenta la familia activa --font-family-active y el type scale derivado de --type-base × --type-scale (ratios 1.067–1.618, base S/M/L en rem), escalones --text-h1 a --text-label, pesos 400/500/600/800, line-heights y reglas de jerarquía semántica.",
+      "aiEntities": "Tipografía, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG",
       "aiIntent": "informational"
     },
     "families": {
@@ -390,50 +440,59 @@
     },
     "scale": {
       "title": "Escala de tamaños",
-      "subtitle": "Tokens semánticos atados a los elementos HTML estándar. Aplicados automáticamente en <code>@layer base</code>.",
+      "subtitle": "Escalones derivados de <code>--type-base</code> × <code>--type-scale</code> (modelo typescale.com), en rem. Default: base 1rem × Minor Third (1.200). Los valores de abajo cambian con los presets activos.",
       "cols": {
         "token": "Token",
-        "value": "Valor",
-        "element": "Elemento",
+        "calc": "Escalón",
+        "value": "Default (1rem × 1.2)",
         "use": "Uso"
       },
       "rows": {
         "h1": {
           "token": "--text-h1",
-          "value": "48px",
-          "element": "h1",
-          "use": "Título principal de la página (raro fuera del header)"
+          "calc": "base × 1.2⁴",
+          "value": "2.074rem (~33px)",
+          "use": "Título principal de la página (h1)"
         },
         "h2": {
           "token": "--text-h2",
-          "value": "30px",
-          "element": "h2",
-          "use": "Secciones de primer nivel"
+          "calc": "base × 1.2³",
+          "value": "1.728rem (~28px)",
+          "use": "Secciones de primer nivel (h2)"
         },
         "h3": {
           "token": "--text-h3",
-          "value": "20px",
-          "element": "h3",
-          "use": "Subsecciones dentro de una sección"
+          "calc": "base × 1.2²",
+          "value": "1.44rem (~23px)",
+          "use": "Subsecciones dentro de una sección (h3)"
         },
         "h4": {
           "token": "--text-h4",
-          "value": "16px",
-          "element": "h4",
-          "use": "Agrupaciones menores y títulos de card"
+          "calc": "base × 1.2",
+          "value": "1.2rem (~19px)",
+          "use": "Agrupaciones menores y títulos de card (h4)"
         },
         "p": {
           "token": "--text-p",
-          "value": "14px",
-          "element": "p",
-          "use": "Texto corrido"
+          "calc": "base",
+          "value": "1rem (16px)",
+          "use": "Texto corrido (p)"
         },
         "label": {
           "token": "--text-label",
-          "value": "12px",
-          "element": "label",
-          "use": "Etiquetas de formulario, metadatos"
+          "calc": "base ÷ 1.2",
+          "value": "0.833rem (~13px)",
+          "use": "Etiquetas de formulario, metadatos (label)"
         }
+      }
+    },
+    "controls": {
+      "title": "Controles de la escala",
+      "body": "Toda la escala se recalcula cambiando dos tokens en <code>&lt;html&gt;</code>: <code>--type-base</code> (presets <code>.base-tipo-s/m/l</code> — 0.875/1/1.125rem) y <code>--type-scale</code> (presets <code>.escala-*</code>, de 1.067 a 1.618). En Storybook, usa los controles <strong>Type scale</strong> y <strong>Type base</strong> de la toolbar — los especímenes de arriba reaccionan en vivo.",
+      "rules": {
+        "rem": "Todo en rem: la base sigue la preferencia de fuente del navegador (WCAG 1.4.4) — nunca conviertas los escalones a px fijos.",
+        "roles": "Consume la escala mediante los roles <code>.nds-text-*</code> (h1–h4, body, caption, label) o los tokens <code>--text-*</code> — nunca hardcodees font-size.",
+        "default": "El preset por defecto es <code>.escala-minor-third</code> + <code>.base-tipo-m</code>; las clases re-declaran los tokens, así que volver al default revierte el cascade."
       }
     },
     "weights": {
@@ -506,7 +565,7 @@
         "h2": "<code>&lt;h2&gt;</code> abre secciones de primer nivel (Demostración, Variantes, Props, etc.).",
         "h3": "<code>&lt;h3&gt;</code> abre subsecciones dentro de una sección (una variante específica, un grupo de tokens).",
         "skip": "Nunca saltes niveles (h2 → h4). Siempre baja uno por uno.",
-        "noUtilityClasses": "Nunca uses clases utilitarias de tamaño (<code>.nds-text-2xl</code>, <code>.nds-text-sm</code>) en texto de producto — usa el elemento correcto.",
+        "noUtilityClasses": "Usa los roles semánticos <code>.nds-text-*</code> o el elemento HTML correcto — nunca tamaños arbitrarios en px fuera de la escalera <code>--text-*</code>.",
         "minSize": "Nunca uses <code>text-[9px]</code> o <code>text-[10px]</code> en cuerpo: WCAG 1.4.4 (Resize Text) exige que el texto permanezca legible al 200% de zoom."
       }
     },
@@ -515,7 +574,8 @@
       "scale": "Escala",
       "weights": "Pesos",
       "lineHeights": "Line-heights",
-      "hierarchy": "Jerarquía"
+      "hierarchy": "Jerarquía",
+      "controls": "Controles"
     }
   }
 }

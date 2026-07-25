@@ -48,7 +48,9 @@ function flattenDict(obj: Record<string, unknown>, prefix = ''): Record<string, 
   for (const key of Object.keys(obj)) {
     const path = prefix ? `${prefix}.${key}` : key;
     const value = obj[key];
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    // Arrays também recursam (índices viram chaves: rows.0.1) — necessário
+    // para tabelas com linhas em array e listas indexadas.
+    if (value !== null && typeof value === 'object') {
       Object.assign(result, flattenDict(value as Record<string, unknown>, path));
     } else {
       result[path] = String(value);
