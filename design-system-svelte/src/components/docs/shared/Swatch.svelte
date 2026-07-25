@@ -1,6 +1,4 @@
 <script lang="ts">
-  import Check from '@lucide/svelte/icons/check';
-
   interface Props {
     /** Nome do token CSS sem o prefixo `--`. */
     token: string;
@@ -40,36 +38,40 @@
   }
 </script>
 
+<!--
+  Visual 100% via classes .nds-swatch* / .nds-miniswatch* (docs-swatches.css);
+  o único estilo dinâmico é a custom property de cor por token (via style:).
+-->
 {#if orientation === 'vertical'}
-  <div class="flex flex-col items-center gap-1">
+  <div class="nds-miniswatch">
     <span
-      class="h-8 w-8 rounded-md border nds-border-soft"
-      style="background-color: hsl(var(--{token}))"
+      class="nds-miniswatch-chip"
+      style:--swatch-color={`var(--${token})`}
       aria-hidden="true"
     ></span>
-    <span class="nds-text-2xs text-muted-foreground font-mono">{token}</span>
+    <span class="nds-miniswatch-name">{token}</span>
   </div>
 {:else}
   <button
     type="button"
     onclick={handleCopy}
     aria-label={`${copyLabel} --${token}`}
-    class="group relative w-full flex items-center gap-3 p-2 rounded-lg border nds-border-soft nds-hover-border nds-hover-bg-muted-40 nds-focus-ring nds-transition-colors text-left"
+    class="nds-swatch"
   >
     <span
-      class="h-10 w-10 shrink-0 rounded-md border nds-border-soft"
-      style="background-color: hsl(var(--{token}))"
+      class="nds-swatch-color"
+      style:--swatch-color={`var(--${token})`}
       aria-hidden="true"
     ></span>
-    <span class="flex flex-col min-w-0">
-      <span class="text-xs font-mono text-foreground truncate">--{token}</span>
-      <span class="nds-text-2xs font-mono text-muted-foreground truncate">{value || '—'}</span>
-    </span>
+    <div class="nds-swatch-meta">
+      <span class="nds-swatch-token">--{token}</span>
+      <span class="nds-swatch-value">{value || '—'}</span>
+    </div>
     <span
-      class="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-900 px-2 py-1 nds-text-2xs text-white z-10 nds-opacity-0 group-hover:opacity-100 nds-transition-opacity inline-flex items-center gap-1"
+      class="nds-icon-tile-tooltip"
+      style:opacity={copied ? '1' : undefined}
       aria-hidden="true"
     >
-      {#if copied}<Check class="h-3 w-3" aria-hidden="true" />{/if}
       {copied ? copiedLabel : copyLabel}
     </span>
   </button>
