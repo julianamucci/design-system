@@ -295,7 +295,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Array de valores</strong> — <code>value</code> e <code>defaultValue</code> são sempre arrays, mesmo para single (<code>[50]</code>).",
       "item3": "<strong>Mudança contínua vs valor confirmado</strong> — o callback de mudança dispara durante arrasto; use o callback de commit (ao soltar) para analytics e submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — precisa de altura definida no container (<code>h-40</code> ou similar)."
@@ -659,7 +659,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Value array</strong> — <code>value</code> and <code>defaultValue</code> are always arrays, even for single (<code>[50]</code>).",
       "item3": "<strong>Continuous change vs committed value</strong> — the change callback fires during drag; use the commit callback (on release) for analytics and submit to avoid spam.",
       "item4": "<strong>Vertical</strong> — requires defined height on container (<code>h-40</code> or similar)."
@@ -1023,7 +1023,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Array de valores</strong> — <code>value</code> y <code>defaultValue</code> son siempre arrays, incluso para single (<code>[50]</code>).",
       "item3": "<strong>Cambio continuo vs valor confirmado</strong> — el callback de cambio dispara durante el arrastre; usa el callback de commit (al soltar) para analytics y submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — requiere altura definida en el contenedor (<code>h-40</code> o similar)."

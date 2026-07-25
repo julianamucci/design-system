@@ -156,7 +156,7 @@ export const CheckboxChecked: Story = {
     ]);
     bar.dataset.slot = 'menubar';
 
-    // Factory Basecoat não tem CheckboxItem nativo — injetamos manualmente
+    // Factory Vanilla não tem CheckboxItem nativo — injetamos manualmente
     // um <div role="menuitemcheckbox" aria-checked="true"> no panel.
     const panel = bar.querySelector<HTMLElement>('[role="menu"]');
     if (panel) {

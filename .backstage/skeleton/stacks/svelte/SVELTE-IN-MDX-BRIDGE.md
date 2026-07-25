@@ -81,7 +81,7 @@ Pontos-chave:
 | React | `import { Foo } from './Foo'` + `<Foo />` | Não — addon-docs é React |
 | Vue | `import Foo from './Foo.vue'` + `<Foo />` | Não — `@storybook/vue3` fornece adapter |
 | **Svelte** | **`mount(Foo, { target: ref.current })` dentro de wrapper React** | **Sim — bridge manual** |
-| Basecoat | `el = createFoo(); ref.current.appendChild(el)` dentro de wrapper React | Sim — DOM imperativo |
+| Vanilla | `el = createFoo(); ref.current.appendChild(el)` dentro de wrapper React | Sim — DOM imperativo |
 
 ## Referência
 

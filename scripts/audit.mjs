@@ -24,10 +24,9 @@ import { join, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
-const STACKS = ['react', 'vue', 'svelte', 'basecoat'];
+const STACKS = ['react', 'vue', 'svelte', 'vanilla'];
 
-// Alias 'basecoat' (skills/CLI) → pasta nortear-design-system-vanilla.
-const stackDir = (stack) => `nortear-design-system-${stack === 'basecoat' ? 'vanilla' : stack}`;
+const stackDir = (stack) => `nortear-design-system-${stack}`;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -74,7 +73,7 @@ function filesForSlug(slug, stack) {
     react: ['.tsx', '.ts'],
     vue: ['.vue', '.ts'],
     svelte: ['.svelte', '.ts'],
-    basecoat: ['.ts'],
+    vanilla: ['.ts'],
   }[stack];
 
   const uiFiles = globStack(stack, 'components/ui', ext).filter(f => {
@@ -103,7 +102,7 @@ function auditSecurity(slug) {
         { name: 'dangerouslySetInnerHTML', re: /dangerouslySetInnerHTML\s*=\s*\{\{\s*__html:\s*([^}]+)\}\}/g, stacks: ['react'] },
         { name: 'v-html', re: /v-html\s*=\s*"([^"]+)"/g, stacks: ['vue'] },
         { name: '{@html}', re: /\{@html\s+([^}]+)\}/g, stacks: ['svelte'] },
-        { name: '.innerHTML=', re: /\.innerHTML\s*=\s*([^;]+);/g, stacks: ['basecoat'] },
+        { name: '.innerHTML=', re: /\.innerHTML\s*=\s*([^;]+);/g, stacks: ['vanilla'] },
       ];
       for (const { name, re, stacks } of patterns) {
         if (!stacks.includes(stack)) continue;

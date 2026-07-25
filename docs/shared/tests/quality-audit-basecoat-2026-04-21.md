@@ -1,7 +1,7 @@
-# Quality Audit — Basecoat Storybook
+# Quality Audit — Vanilla Storybook
 
 **Data**: 2026-04-21
-**Stack**: Basecoat (port 6009)
+**Stack**: Vanilla (port 6009)
 **Ferramenta**: `@storybook/test-runner` + `axe-playwright`
 **Comando**: `npm run test-storybook:ci`
 
@@ -77,17 +77,17 @@ Resultado: `avatar-estados` suíte 4/4 passando.
 |------------|------|--------|
 | **P1** | Ajustar tokens `destructive`/`success`/`warning` para atingir 4.5:1 | `docs/shared/themes/*.css` (afeta todas as stacks) |
 | ~~**P1**~~ | ~~Corrigir Avatar Failed fallback~~ ✅ resolvido (17ef7d8) | ~~`nortear-design-system-vanilla/src/components/ui/avatar.ts`~~ |
-| **P2** | Remover `aria-label` de `<span>` sem `role` | avatar Basecoat + avaliar outras stacks |
+| **P2** | Remover `aria-label` de `<span>` sem `role` | avatar Vanilla + avaliar outras stacks |
 | **P3** | Validar test-runner em React/Vue/Svelte após correções | executar `test-storybook:ci` em cada |
 
 ## Próximos Passos
 
 1. Abrir tasks separadas por grupo acima (P1 tokens, P1 avatar fallback, P2 aria).
 2. Cada correção deve re-executar o test-runner da stack afetada.
-3. Quando Basecoat estiver limpo, rodar test-runner nas outras 3 stacks para capturar violações equivalentes.
+3. Quando Vanilla estiver limpo, rodar test-runner nas outras 3 stacks para capturar violações equivalentes.
 
 ## Notas
 
 - O test-runner foi instalado nesta sessão — é a primeira vez que violações são capturadas automaticamente.
 - Violações de contraste são provavelmente **sistêmicas** (afetam todas as stacks porque os tokens são compartilhados via `docs/shared/themes/`).
-- A violação `aria-prohibited-attr` é específica do Basecoat (implementação vanilla do Avatar) ou pode estar espelhada nos outros Avatars — checar.
+- A violação `aria-prohibited-attr` é específica do Vanilla (implementação vanilla do Avatar) ou pode estar espelhada nos outros Avatars — checar.

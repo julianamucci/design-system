@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Popover: Default (apenas conteúdo livre), ComTitulo (PopoverHeader com Title + Description) e Form (formulário inline). NOTA: a factory Basecoat não tem subcomponentes PopoverHeader/Title/Description — usamos HTML semântico (h4/p) dentro do content.',
+          'Variantes do Popover: Default (apenas conteúdo livre), ComTitulo (PopoverHeader com Title + Description) e Form (formulário inline). NOTA: a factory Vanilla não tem subcomponentes PopoverHeader/Title/Description — usamos HTML semântico (h4/p) dentro do content.',
       },
     },
   },

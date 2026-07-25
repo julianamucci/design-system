@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Slider: Single (1 thumb, padrão), Range (composição com 2 sliders adjacentes — o factory custom do Basecoat não suporta 2 thumbs nativamente) e Vertical (NÃO suportado de forma acessível — `<input type="range">` nativo não tem orientação vertical com ARIA correto; documentada como divergência).',
+          'Variantes do Slider: Single (1 thumb, padrão), Range (composição com 2 sliders adjacentes — o factory custom do Vanilla não suporta 2 thumbs nativamente) e Vertical (NÃO suportado de forma acessível — `<input type="range">` nativo não tem orientação vertical com ARIA correto; documentada como divergência).',
       },
     },
   },
@@ -96,7 +96,7 @@ export const Single: Story = {
     docs: {
       description: {
         story:
-          'Variante padrão — um único thumb representando um valor escalar. `value` é `number` no Basecoat (não `number[]` como nas libs upstream).',
+          'Variante padrão — um único thumb representando um valor escalar. `value` é `number` no Vanilla (não `number[]` como nas libs upstream).',
       },
     },
   },
@@ -196,7 +196,7 @@ export const Range: Story = {
     docs: {
       description: {
         story:
-          'Variante "Range" — o factory custom do Basecoat NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes + estado compartilhado para min/max e clamping mútuo. ARIA: 2 inputs distintos com aria-label "min" e "max".',
+          'Variante "Range" — o factory custom do Vanilla NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes + estado compartilhado para min/max e clamping mútuo. ARIA: 2 inputs distintos com aria-label "min" e "max".',
       },
     },
   },
@@ -228,7 +228,7 @@ export const Vertical: Story = {
     note.className = 'nds-text-body nds-italic';
     note.style.textAlign = 'center';
     note.textContent =
-      'A variante "vertical" NÃO é suportada de forma acessível no Basecoat — <input type="range"> nativo não expõe orientação vertical via ARIA. Use a variante horizontal.';
+      'A variante "vertical" NÃO é suportada de forma acessível no Vanilla — <input type="range"> nativo não expõe orientação vertical via ARIA. Use a variante horizontal.';
 
     const fallback = createSlider({ min: 0, max: 100, value: 50 });
     const input = fallback.querySelector('input[type="range"]') as HTMLInputElement | null;

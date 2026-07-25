@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do DropdownMenu: ComLabel, ComCheckboxItems, ComRadioGroup e ComShortcuts. NOTA: a factory createDropdownMenu (Basecoat) não tem submenu nativo — a composição "ComSubmenu" foi omitida intencionalmente. Para hierarquia, monte o Sub manualmente ou prefira menus planos.',
+          'Composicoes do DropdownMenu: ComLabel, ComCheckboxItems, ComRadioGroup e ComShortcuts. NOTA: a factory createDropdownMenu (Vanilla) não tem submenu nativo — a composição "ComSubmenu" foi omitida intencionalmente. Para hierarquia, monte o Sub manualmente ou prefira menus planos.',
       },
     },
   },

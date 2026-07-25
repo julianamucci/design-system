@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Toggle: Off, On, Disabled (off), DisabledOn, Invalid (aria-invalid) e FocoVisivel. O factory custom Basecoat aplica `aria-pressed` + `data-state` automaticamente no click — para estados visuais como invalid, basta setar atributos extras no botão retornado.',
+          'Estados do Toggle: Off, On, Disabled (off), DisabledOn, Invalid (aria-invalid) e FocoVisivel. O factory custom Vanilla aplica `aria-pressed` + `data-state` automaticamente no click — para estados visuais como invalid, basta setar atributos extras no botão retornado.',
       },
     },
   },

@@ -1,4 +1,4 @@
-# PATCHES — Customizações sobre os componentes shadcn/basecoat
+# PATCHES — Customizações sobre os componentes shadcn/vanilla
 
 Este arquivo registra toda divergência intencional entre os componentes deste design system e suas fontes upstream (shadcn/ui, shadcn-vue, shadcn-svelte, basecoat-css). Serve de checklist obrigatório ao atualizar dependências ou re-gerar componentes via CLI.
 
@@ -92,7 +92,7 @@ Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind h
 
 Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system-vanilla/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
+**Vanilla usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system-vanilla/src/styles/vanilla-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #vanilla-theme-overrides abaixo.
 
 #### #button-dimension-tokens
 
@@ -129,24 +129,24 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 - **Antes:** `h-5`
 - **Depois:** `h-(--height-badge)`
 
-#### #basecoat-theme-overrides + #basecoat-nova-parity
+#### #vanilla-theme-overrides + #vanilla-nova-parity
 
-- **Arquivo:** `nortear-design-system-vanilla/src/styles/basecoat-theme-overrides.css`
+- **Arquivo:** `nortear-design-system-vanilla/src/styles/vanilla-theme-overrides.css`
 - **Factory atualizada:** `nortear-design-system-vanilla/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
 
 **Duas responsabilidades combinadas:**
 
-1. **Tokenização de dimensões** (`#basecoat-theme-overrides`): redeclara alturas usando `--height-*`/`--size-*` para preparar variação de densidade entre temas (atualmente só Default ativo).
-2. **Paridade visual com o estilo nova** (`#basecoat-nova-parity`): o pacote `basecoat-css` v0.3.11 ainda usa o estilo "new-york" (destructive sólido, sem sizes `xs`/`icon-xs`, sem `aria-expanded` states). Fazemos o Basecoat parecer com os outros ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova).
+1. **Tokenização de dimensões** (`#vanilla-theme-overrides`): redeclara alturas usando `--height-*`/`--size-*` para preparar variação de densidade entre temas (atualmente só Default ativo).
+2. **Paridade visual com o estilo nova** (`#vanilla-nova-parity`): o pacote `basecoat-css` v0.3.11 ainda usa o estilo "new-york" (destructive sólido, sem sizes `xs`/`icon-xs`, sem `aria-expanded` states). Fazemos o Vanilla parecer com os outros ports do shadcn (base-nova/reka-nova/shadcn-svelte-nova).
 
-**Estratégia** (sem forkar o pacote): adicionamos CSS override dentro do mesmo `@layer components` do basecoat, importado **depois** no `globals.css`:
+**Estratégia** (sem forkar o pacote): adicionamos CSS override dentro do mesmo `@layer components` do vanilla, importado **depois** no `globals.css`:
 
 ```css
 @import "tailwindcss";
 @import "basecoat-css";                /* declara .btn { @apply h-9 bg-destructive text-white } */
 @import "@shared/tokens/tokens.css";
 @import "@shared/themes/index.css";
-@import "./basecoat-theme-overrides.css";  /* redeclara: soft destructive, altura tokenizada, novos sizes */
+@import "./vanilla-theme-overrides.css";  /* redeclara: soft destructive, altura tokenizada, novos sizes */
 ```
 
 **Componentes com dimensão tokenizada:**
@@ -162,7 +162,7 @@ Button (todos sizes + icons), Input (+ file-selector-button), Select, Kbd, Comma
 Usamos **CSS puro com `hsl(var(--token) / 0.10)`** em vez de `@apply bg-destructive/10` em cascades extensas — reduz drasticamente o tempo de compile (primeira versão quebrou com timeouts em 50s por story; versão final compila em <15s/story). Regra: se precisar declarar a mesma cor em >5 seletores, prefira `background-color: hsl(var(--x) / 0.1)` ao `@apply bg-x/10`.
 
 **Verificação após bump `basecoat-css`:**
-- Rodar `grep -E "@apply.*\bh-[0-9]" node_modules/basecoat-css/dist/basecoat.css` e comparar com `basecoat-theme-overrides.css`.
+- Rodar `grep -E "@apply.*\bh-[0-9]" node_modules/basecoat-css/dist/basecoat.css` e comparar com `vanilla-theme-overrides.css`.
 - Testar se `.btn-destructive` ainda é override com success (upstream pode eventualmente migrar pro soft).
 - Se `basecoat-css` passar a suportar sizes `xs` nativamente, remover as regras do bloco `btn-xs` para não duplicar.
 
@@ -219,7 +219,7 @@ const alertVariants = cva(
 
 **Verificação após bump:** abrir o Storybook em `ui-alert-variantes--success` e `--warning`; ícone deve estar verde/amarelo, não cinza. Se o upstream (shadcn v3+) já usar `text-current`, remover marker e marcar entrada como RESOLVIDO UPSTREAM.
 
-### basecoat/alert — descrição como `<section>` para grid do basecoat-css
+### vanilla/alert — descrição como `<section>` para grid do basecoat-css
 
 - **Arquivo:** `nortear-design-system-vanilla/src/components/ui/alert.ts`
 - **Categoria:** a11y (layout legível)
@@ -318,7 +318,7 @@ Gera CSS `.card:has(>[data-slot='card-footer']) { padding-bottom: 0 }` — combi
 
 ### avatar — `object-cover` na imagem (4 stacks) {#avatar-object-cover} — ⚠️ PARCIALMENTE RESOLVIDO UPSTREAM (2026-04-21)
 
-- **Status:** React (`base-nova`), Vue (`reka-nova`) e Svelte (`nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Basecoat **ainda precisa do patch** — marker permanece nesse único arquivo.
+- **Status:** React (`base-nova`), Vue (`reka-nova`) e Svelte (`nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Vanilla **ainda precisa do patch** — marker permanece nesse único arquivo.
 - **Arquivos:**
   - ~~`nortear-design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
   - ~~`nortear-design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)

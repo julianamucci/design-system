@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do NavigationMenu: LinkSimples (sem submenu), ComDropdown (lista vertical de sub-links), MegaMenuGrid (grid 2 colunas com descrições) e ComCardDestacado (card hero + lista de links). NOTA: a factory createNavigationMenu (Basecoat) NÃO possui Viewport compartilhado — cada Content abre em <div> próprio relativo ao Trigger. Para paridade visual com base-ui/reka-ui/bits-ui, ajustamos classes inline nos casos avançados.',
+          'Composicoes do NavigationMenu: LinkSimples (sem submenu), ComDropdown (lista vertical de sub-links), MegaMenuGrid (grid 2 colunas com descrições) e ComCardDestacado (card hero + lista de links). NOTA: a factory createNavigationMenu (Vanilla) NÃO possui Viewport compartilhado — cada Content abre em <div> próprio relativo ao Trigger. Para paridade visual com base-ui/reka-ui/bits-ui, ajustamos classes inline nos casos avançados.',
       },
     },
   },

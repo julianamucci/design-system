@@ -28,7 +28,7 @@ const meta: Meta<DropdownArgs> = {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
       description:
-        'Lado de abertura. NOTA: factory Basecoat fixa bottom; documenta o argType para manter paridade conceitual com outras stacks.',
+        'Lado de abertura. NOTA: factory Vanilla fixa bottom; documenta o argType para manter paridade conceitual com outras stacks.',
     },
     align: {
       control: { type: 'inline-radio' },
@@ -38,7 +38,7 @@ const meta: Meta<DropdownArgs> = {
     modal: {
       control: 'boolean',
       description:
-        'Bloqueia interação fora. NOTA: factory Basecoat sempre permite click fora (não-modal de fato).',
+        'Bloqueia interação fora. NOTA: factory Vanilla sempre permite click fora (não-modal de fato).',
     },
     defaultOpen: { control: 'boolean', description: 'Abre o menu ao montar.' },
   },

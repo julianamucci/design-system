@@ -14,7 +14,7 @@ const meta: Meta = {
       description: {
         component:
           'Composicoes reais com Tabs. Demonstra ícones, badges e layout vertical. ' +
-          'DIVERGÊNCIAS Basecoat: a factory custom não expõe `variant` nem `orientation`; ' +
+          'DIVERGÊNCIAS Vanilla: a factory custom não expõe `variant` nem `orientation`; ' +
           'variantes line/vertical são aplicadas via utility classes manualmente.',
       },
     },
@@ -174,7 +174,7 @@ export const ComBadgeNoTrigger: Story = {
   },
 };
 
-// ─── Vertical (divergência Basecoat) ──────────────────────────────────────────
+// ─── Vertical (divergência Vanilla) ──────────────────────────────────────────
 
 export const Vertical: Story = {
   render: () => {
@@ -203,7 +203,7 @@ export const Vertical: Story = {
       description: {
         story:
           'Layout vertical com lista lateral. ' +
-          'DIVERGÊNCIA Basecoat: factory NÃO expõe `orientation` — aplicamos flex-col + `aria-orientation="vertical"` manualmente. ' +
+          'DIVERGÊNCIA Vanilla: factory NÃO expõe `orientation` — aplicamos flex-col + `aria-orientation="vertical"` manualmente. ' +
           'As setas continuam Left/Right (não Up/Down) — limitação documentada.',
       },
     },
@@ -241,7 +241,7 @@ export const SubNavegacaoLine: Story = {
       description: {
         story:
           'Sub-navegação minimalista (variant line). Útil dentro de páginas onde o estilo "default" competiria com outros containers. ' +
-          'DIVERGÊNCIA Basecoat: aplicado via classes utilitárias — a factory não expõe prop `variant`.',
+          'DIVERGÊNCIA Vanilla: aplicado via classes utilitárias — a factory não expõe prop `variant`.',
       },
     },
   },

@@ -36,7 +36,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Orientações disponíveis para o Carousel — horizontal (padrão) e vertical. A implementação Basecoat desliza lateralmente por padrão.',
+        component: 'Orientações disponíveis para o Carousel — horizontal (padrão) e vertical. A implementação Vanilla desliza lateralmente por padrão.',
       },
     },
   },
@@ -62,7 +62,7 @@ export const Horizontal: Story = {
 
 export const Vertical: Story = {
   render: () => {
-    // A implementação Basecoat do Carousel é horizontal por padrão. Esta variante
+    // A implementação Vanilla do Carousel é horizontal por padrão. Esta variante
     // apresenta a mesma API com itens de altura fixa — para verdadeira orientação
     // vertical, extender o componente aplicando translateY no track.
     const wrap = document.createElement('div');

@@ -14,7 +14,7 @@ import { createCalendar } from './calendar';
 // Fora do escopo desta factory (documentado mas não rendereizável aqui):
 //  - WithOutsideDays → a factory atual NÃO renderiza dias do mês anterior/próximo
 //    (células vazias). Disponível em React/Vue/Svelte via `showOutsideDays`.
-//  - RangeWithMiddle → requer mode="range", ausente no Basecoat.
+//  - RangeWithMiddle → requer mode="range", ausente no Vanilla.
 
 const meta: Meta = {
   tags: ['form'],
@@ -109,14 +109,14 @@ export const Today: Story = {
 // ─── Stubs documentacionais ───────────────────────────────────────────────────
 // As stories abaixo existem apenas para transparência no Storybook sidebar,
 // espelhando a presença nas stacks React/Vue/Svelte. A factory vanilla do
-// Basecoat não suporta esses modos — ver descrição em cada story.
+// Vanilla não suporta esses modos — ver descrição em cada story.
 
 export const WithOutsideDays: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          'A factory vanilla do Basecoat não renderiza dias do mês anterior/próximo (células vazias em vez de outside-days esmaecidos). Para esse comportamento, consulte as stacks React/Vue/Svelte, que expõem `showOutsideDays`/`disableDaysOutsideCurrentView` nativamente.',
+          'A factory vanilla do Vanilla não renderiza dias do mês anterior/próximo (células vazias em vez de outside-days esmaecidos). Para esse comportamento, consulte as stacks React/Vue/Svelte, que expõem `showOutsideDays`/`disableDaysOutsideCurrentView` nativamente.',
       },
     },
   },
@@ -132,7 +132,7 @@ export const RangeWithMiddle: Story = {
     docs: {
       description: {
         story:
-          'A factory vanilla do Basecoat não suporta `mode="range"`. Não há como destacar dias do meio de um intervalo. Para esse comportamento, use as stacks React (`react-day-picker` com `mode="range"`) ou Vue (`RangeCalendar` do reka-ui).',
+          'A factory vanilla do Vanilla não suporta `mode="range"`. Não há como destacar dias do meio de um intervalo. Para esse comportamento, use as stacks React (`react-day-picker` com `mode="range"`) ou Vue (`RangeCalendar` do reka-ui).',
       },
     },
   },

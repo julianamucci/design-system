@@ -124,7 +124,7 @@ export const Disabled: Story = {
     docs: {
       description: {
         story:
-          'Todos os itens com `disabled: true` — `opacity-50`, cursor bloqueado, não recebe foco nem responde a clique. O factory custom do Basecoat não expõe prop `disabled` no grupo: aplique item-a-item.',
+          'Todos os itens com `disabled: true` — `opacity-50`, cursor bloqueado, não recebe foco nem responde a clique. O factory custom do Vanilla não expõe prop `disabled` no grupo: aplique item-a-item.',
       },
     },
   },

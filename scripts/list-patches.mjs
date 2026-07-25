@@ -65,7 +65,7 @@ function scanFile(file) {
   return hits;
 }
 
-const targets = (args.stack ? [`nortear-design-system-${args.stack === 'basecoat' ? 'vanilla' : args.stack}`] : STACKS)
+const targets = (args.stack ? [`nortear-design-system-${args.stack}`] : STACKS)
   .map((s) => join(ROOT, s))
   .filter((p) => {
     try { return statSync(p).isDirectory(); } catch { return false; }

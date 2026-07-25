@@ -7,8 +7,8 @@
     "seo": {
       "title": "NavigationMenu — Navegação",
       "description": "Documentação do NavigationMenu: menu horizontal para web com sub-menus, viewport animado, indicador e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
-      "aiSummary": "Componente NavigationMenu construído sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navegação, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiSummary": "Componente NavigationMenu construído sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Vanilla) que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, navegação, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -331,7 +331,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom com hover/focus events.",
+      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom com hover/focus events.",
       "item2": "<strong>Viewport compartilhado</strong>: ao contrário do DropdownMenu (cada Content em portal próprio), o NavigationMenu usa um único Viewport que muda de tamanho com transição.",
       "item3": "<strong>Mobile</strong>: NavigationMenu não funciona bem em telas pequenas — sempre tenha um <code>Drawer</code> com menu vertical como fallback responsive.",
       "item4": "<strong>Mega-menu</strong>: para Content com grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro do <code>&lt;ul&gt;</code>.",
@@ -449,8 +449,8 @@
     "seo": {
       "title": "NavigationMenu — Navigation",
       "description": "NavigationMenu documentation: web horizontal menu with sub-menus, animated viewport, indicator, and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
-      "aiSummary": "NavigationMenu component built on base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navigation, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiSummary": "NavigationMenu component built on base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Vanilla) presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, navigation, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -773,7 +773,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: NavigationMenu uses <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory with hover/focus events.",
+      "item1": "<strong>Upstream lib</strong>: NavigationMenu uses <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory with hover/focus events.",
       "item2": "<strong>Shared Viewport</strong>: unlike DropdownMenu (each Content in its own portal), NavigationMenu uses a single Viewport that resizes with transition.",
       "item3": "<strong>Mobile</strong>: NavigationMenu doesn't work well on small screens — always have a <code>Drawer</code> with vertical menu as a responsive fallback.",
       "item4": "<strong>Mega-menu</strong>: for Content with grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> inside <code>&lt;ul&gt;</code>.",
@@ -891,8 +891,8 @@
     "seo": {
       "title": "NavigationMenu — Navegación",
       "description": "Documentación de NavigationMenu: menú horizontal para web con sub-menús, viewport animado, indicador y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
-      "aiSummary": "Componente NavigationMenu construido sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, navegación, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
+      "aiSummary": "Componente NavigationMenu construido sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Vanilla) que presenta menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
+      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, navegación, hover, focus, viewport, WCAG 2.1, aria-current, role=navigation, link",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1215,7 +1215,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom con eventos hover/focus.",
+      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom con eventos hover/focus.",
       "item2": "<strong>Viewport compartido</strong>: a diferencia de DropdownMenu (cada Content en su propio portal), el NavigationMenu usa un único Viewport que cambia de tamaño con transición.",
       "item3": "<strong>Mobile</strong>: NavigationMenu no funciona bien en pantallas pequeñas — siempre ten un <code>Drawer</code> con menú vertical como fallback responsive.",
       "item4": "<strong>Mega-menú</strong>: para Content con grid + tarjetas, usa <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro del <code>&lt;ul&gt;</code>.",

@@ -31,7 +31,7 @@ const meta: Meta<InputOTPArgs> = {
     withSeparator: {
       control: 'boolean',
       description:
-        'Exibe um separator visual no meio do código. Divergência idiomática do factory Basecoat: separator é controlado via opção `separator` (índices) e não via subcomponente.',
+        'Exibe um separator visual no meio do código. Divergência idiomática do factory Vanilla: separator é controlado via opção `separator` (índices) e não via subcomponente.',
     },
   },
   args: {

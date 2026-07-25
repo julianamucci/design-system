@@ -28,18 +28,18 @@ const meta: Meta<NavigationMenuArgs> = {
     delayDuration: {
       control: { type: 'number', min: 0, max: 1000, step: 50 },
       description:
-        'Delay em ms antes de abrir Content em hover. NOTA: factory Basecoat abre apenas em click; argType para paridade conceitual com base-ui/reka-ui/bits-ui.',
+        'Delay em ms antes de abrir Content em hover. NOTA: factory Vanilla abre apenas em click; argType para paridade conceitual com base-ui/reka-ui/bits-ui.',
     },
     skipDelayDuration: {
       control: { type: 'number', min: 0, max: 1000, step: 50 },
       description:
-        'Delay para hover consecutivo entre Triggers. NOTA: factory Basecoat não implementa; argType para paridade.',
+        'Delay para hover consecutivo entre Triggers. NOTA: factory Vanilla não implementa; argType para paridade.',
     },
     orientation: {
       control: { type: 'inline-radio' },
       options: ['horizontal', 'vertical'],
       description:
-        'Orientação da lista. NOTA: factory Basecoat fixa horizontal; argType para paridade.',
+        'Orientação da lista. NOTA: factory Vanilla fixa horizontal; argType para paridade.',
     },
   },
   args: {

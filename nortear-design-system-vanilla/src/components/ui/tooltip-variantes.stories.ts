@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Tooltip: Default (texto curto), ComAtalho (texto + atalho de teclado) e TextoLongo (max-w-xs). NOTA: a factory Basecoat NÃO renderiza <kbd> separado nem Arrow — o atalho é parte do texto e a indicação visual é provida por classe customizada.',
+          'Variantes do Tooltip: Default (texto curto), ComAtalho (texto + atalho de teclado) e TextoLongo (max-w-xs). NOTA: a factory Vanilla NÃO renderiza <kbd> separado nem Arrow — o atalho é parte do texto e a indicação visual é provida por classe customizada.',
       },
     },
   },
@@ -81,7 +81,7 @@ export const ComAtalho: Story = {
   name: 'Com Atalho',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
-    // NOTA: factory Basecoat não suporta nodes filhos no content; o atalho
+    // NOTA: factory Vanilla não suporta nodes filhos no content; o atalho
     // é parte do texto. Em React/Vue/Svelte usaríamos <kbd>Ctrl</kbd>+<kbd>S</kbd>.
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
     fireOpen(trigger);

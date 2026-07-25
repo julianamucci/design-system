@@ -607,7 +607,7 @@ Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferent
 
 3. **`DocsProps` com 3 tabelas** — `ChartContainer` (ou equivalente Unovis), `ChartTooltipContent`, `ChartLegendContent`. Os nomes de props e comportamentos vêm do translations.json — a implementação interna usa Unovis.
 
-4. **`DocsImport`** — omitir a chave `import.basecoat` (não se aplica). Usar `import.basic` e `import.withRecharts` adaptando para Unovis:
+4. **`DocsImport`** — omitir a chave `import.vanilla` (não se aplica). Usar `import.basic` e `import.withRecharts` adaptando para Unovis:
    - Import do wrapper de theming do design system
    - Import dos primitivos do `@unovis/vue`
 

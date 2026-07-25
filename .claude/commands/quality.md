@@ -13,7 +13,7 @@ Você é um especialista em qualidade para design systems. Garanta que casos de 
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -48,7 +48,7 @@ Critérios por categoria de componente: ver `docs/shared/skill-refs/test-criteri
 
 **Read** (1): `docs/shared/content/<slug>/translations.json`
 
-**Grep** (1): dimensões hardcoded — `\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b` em `nortear-design-system-{react,vue,svelte}/src/components/ui/<slug>*` (excluir Basecoat e `*.stories.*`)
+**Grep** (1): dimensões hardcoded — `\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b` em `nortear-design-system-{react,vue,svelte}/src/components/ui/<slug>*` (excluir Vanilla e `*.stories.*`)
 
 **Grep** (1): tipografia inválida — `text-\[9px\]|text-\[10px\]` em `nortear-design-system-*/src/components/docs/*Docs.*`
 
@@ -72,7 +72,7 @@ Após coletar, **não releia** nada nos passos seguintes.
 - `meta` tem `argTypes` (painel não vazio)
 - `meta.args` declara valores iniciais para TODAS as props listadas em `argTypes` (sem isso, controls aparecem vazios)
 - `render` consome `(args)` e espalha via `{...args}` ou `v-bind="args"` (não `render: () => ` sem args)
-- Props de montagem têm re-mount: React `key={String(args.x)}`, Vue `:key="String(args.x)"`, Svelte `{#key args.x}`, Basecoat re-execução natural
+- Props de montagem têm re-mount: React `key={String(args.x)}`, Vue `:key="String(args.x)"`, Svelte `{#key args.x}`, Vanilla re-execução natural
 - `disabled` propagado ao filho interativo (não só root)
 
 **2c. Actions do Playground**: componentes interativos DEVEM ter handlers populando a aba Actions. Verifique:
@@ -177,21 +177,21 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 ## Relatório de Qualidade — <component-slug>
 
 ### Cobertura de Stories
-| Arquivo | React | Vue | Svelte | Basecoat |
+| Arquivo | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | <slug>.stories | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | <slug>-estados | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | <slug>-composicoes | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 
 ### Play Functions
-| Story | React | Vue | Svelte | Basecoat |
+| Story | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | Playground completa | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Disabled (toBeDisabled + callback) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Sub-stories com play (100%) | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
 
 ### Controls + Actions
-| Check | React | Vue | Svelte | Basecoat |
+| Check | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | Playground tem args completos | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Playground tem callbacks com fn() | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A |
@@ -199,7 +199,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | Variações com actions.disable | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 
 ### Cobertura Documentada vs Implementada
-| Categoria | React | Vue | Svelte | Basecoat |
+| Categoria | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | testes.functional.item* → play steps | ✅ N/N | ⚠️ X/N | ✅ N/N | ✅ N/N |
 | testes.accessibility (ARIA/teclado) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
@@ -208,7 +208,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 > Use ratio `cobertos/total documentados` para mostrar progresso.
 
 ### Docs Page
-| Check | React | Vue | Svelte | Basecoat |
+| Check | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | testes ≥4+4+4 | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Acessibilidade completa | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |

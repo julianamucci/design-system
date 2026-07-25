@@ -8,7 +8,7 @@ Consulte **antes** de criar ou editar qualquer página de documentação. Este g
 
 Antes de considerar uma docs page completa, os seguintes itens **devem** estar presentes:
 
-| Item | React | Vue | Svelte | Basecoat |
+| Item | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | `LanguageSwitcher` no header | `<LanguageSwitcher />` | `<LanguageSwitcher />` | `<LanguageSwitcher />` | `createLanguageSwitcher()` inline |
 | Tradução via `useTranslation` | `useTranslation(translations)` | `useTranslation(translations)` | `useTranslation(translations)` | `createTranslation(translations)` |
@@ -57,7 +57,7 @@ Partes específicas de framework (package name, sintaxe de import, exemplos de c
 | React | Funciona nativamente — addon-docs é React |
 | Vue | `Element type is invalid: expected a string… but got: object` |
 | Svelte | `TypeError: node.remove is not a function` em `remove_effect_dom` |
-| Basecoat (Vanilla TS) | Retorna `HTMLElement`, não elemento React — `ExpressionStatement` no indexer |
+| Vanilla (Vanilla TS) | Retorna `HTMLElement`, não elemento React — `ExpressionStatement` no indexer |
 
 ### Solução: bridge React com `useEffect`
 
@@ -108,7 +108,7 @@ export function DocsPage() {
 <DocsPage />
 ```
 
-**Basecoat (Vanilla TS)**
+**Vanilla (Vanilla TS)**
 ```mdx
 import { createElement, useEffect, useRef } from 'react';
 import { createMinhaDocsPage } from './MinhaDocsPage';
@@ -244,7 +244,7 @@ O `text-sm` é definido **apenas no `<table>`**. As células `<td>` e `<th>` **h
 - **Células de tabela** (`<th>`, `<td>`): usam `p-3` — padding de célula é independente do padding de container.
 - **Cards de showcase com `overflow-hidden`**: padding vai nas sub-seções do card, não no wrapper.
 
-Aplica-se a todas as stacks: React, Vue, Svelte e Basecoat.
+Aplica-se a todas as stacks: React, Vue, Svelte e Vanilla.
 
 ---
 
@@ -266,7 +266,7 @@ O CSS `.nds-*` não aplica um reset global de lista no contexto de bridge (e alg
 </ul>
 ```
 
-Aplica-se a todas as stacks: React, Vue, Svelte e Basecoat.
+Aplica-se a todas as stacks: React, Vue, Svelte e Vanilla.
 
 ---
 
@@ -570,7 +570,7 @@ Para cada tamanho, duas chaves: `{key}` (dimensão) e `{key}Use` (contexto de us
 Adaptar para cada stack:
 - **Vue**: `{{ item.use }}` a partir do `computed` `sizeItems`
 - **Svelte**: `{$tStore(`variants.sizes.${label}Use`)}`
-- **Basecoat**: `${t(`variants.sizes.${key}Use`)}`
+- **Vanilla**: `${t(`variants.sizes.${key}Use`)}`
 
 ### 11.3 Cards de tipo (componentes sem cva)
 

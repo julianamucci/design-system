@@ -7,8 +7,8 @@
     "seo": {
       "title": "DropdownMenu — Overlay",
       "description": "Documentação do DropdownMenu: menu suspenso com itens, checkbox, radio, submenus, atalhos e WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
-      "aiSummary": "Componente DropdownMenu construído sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) e cmdk-style factory (Basecoat) que apresenta menu suspenso com items, checkbox-items, radio-items, submenus, separators e shortcuts em popup acessível.",
-      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiSummary": "Componente DropdownMenu construído sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) e cmdk-style factory (Vanilla) que apresenta menu suspenso com items, checkbox-items, radio-items, submenus, separators e shortcuts em popup acessível.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -337,7 +337,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sem submenu nativo.",
+      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sem submenu nativo.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
       "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
@@ -454,8 +454,8 @@
     "seo": {
       "title": "DropdownMenu — Overlay",
       "description": "DropdownMenu documentation: dropdown menu with items, checkboxes, radios, submenus, shortcuts and WCAG 2.1 AA via base-ui/reka-ui/bits-ui.",
-      "aiSummary": "DropdownMenu component built on base-ui (React), reka-ui (Vue), bits-ui (Svelte) and a cmdk-style factory (Basecoat) presenting a dropdown menu with items, checkbox-items, radio-items, submenus, separators and shortcuts in an accessible popup.",
-      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiSummary": "DropdownMenu component built on base-ui (React), reka-ui (Vue), bits-ui (Svelte) and a cmdk-style factory (Vanilla) presenting a dropdown menu with items, checkbox-items, radio-items, submenus, separators and shortcuts in an accessible popup.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -784,7 +784,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: DropdownMenu uses <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory without native submenu.",
+      "item1": "<strong>Upstream lib</strong>: DropdownMenu uses <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory without native submenu.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
       "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
@@ -901,8 +901,8 @@
     "seo": {
       "title": "DropdownMenu — Overlay",
       "description": "Documentación de DropdownMenu: menú desplegable con items, checkbox, radio, submenús, atajos y WCAG 2.1 AA vía base-ui/reka-ui/bits-ui.",
-      "aiSummary": "Componente DropdownMenu construido sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) y factory cmdk-style (Basecoat) que presenta menú desplegable con items, checkbox-items, radio-items, submenús, separators y shortcuts en popup accesible.",
-      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
+      "aiSummary": "Componente DropdownMenu construido sobre base-ui (React), reka-ui (Vue), bits-ui (Svelte) y factory cmdk-style (Vanilla) que presenta menú desplegable con items, checkbox-items, radio-items, submenús, separators y shortcuts en popup accesible.",
+      "aiEntities": "DropdownMenu, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, focus trap, role=menu, role=menuitem, WCAG 2.1, aria-checked, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1231,7 +1231,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sin submenu nativo.",
+      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sin submenu nativo.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
       "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",

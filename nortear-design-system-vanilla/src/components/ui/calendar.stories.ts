@@ -30,7 +30,7 @@ export const Playground: Story = {
     docs: {
       description: {
         story:
-          'Calendar no modo padrão (seleção única). A factory vanilla do Basecoat expõe `value`, `onSelect`, `disabled` e `class` — sem suporte nativo a mode="multiple"/"range", captionLayout, locale ou classNames por slot.',
+          'Calendar no modo padrão (seleção única). A factory vanilla do Vanilla expõe `value`, `onSelect`, `disabled` e `class` — sem suporte nativo a mode="multiple"/"range", captionLayout, locale ou classNames por slot.',
       },
     },
   },

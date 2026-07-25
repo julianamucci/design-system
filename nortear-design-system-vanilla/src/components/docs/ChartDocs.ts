@@ -333,7 +333,7 @@ export function createChartDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: t('import.basecoat'),
+          description: t('import.vanilla'),
           code: `import { createChart } from '@/components/ui/chart';`,
           secondaryDescription: t('import.withBuilders'),
           secondaryCode: `// Nortear — uso básico

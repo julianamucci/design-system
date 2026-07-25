@@ -236,7 +236,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Indeterminate</strong> — sem prop nativa; passe <code>value={null}</code> e anime o indicador via CSS (<code>[&>div]:animate-indeterminate</code>).",
       "item3": "<strong>Cor customizada</strong> — via <code>[&>div]:bg-*</code> ou classe utilitária no className do Progress.",
       "item4": "<strong>Não interativo</strong> — Progress é passivo. Para rastrear conclusão, dispare evento no callback da operação, não no componente."
@@ -545,7 +545,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Indeterminate</strong> — no native prop; pass <code>value={null}</code> and animate the indicator via CSS (<code>[&>div]:animate-indeterminate</code>).",
       "item3": "<strong>Custom color</strong> — via <code>[&>div]:bg-*</code> or utility class on the Progress className.",
       "item4": "<strong>Non-interactive</strong> — Progress is passive. To track completion, fire the event on the operation callback, not on the component."
@@ -854,7 +854,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Indeterminate</strong> — sin prop nativa; pasa <code>value={null}</code> y anima el indicador vía CSS (<code>[&>div]:animate-indeterminate</code>).",
       "item3": "<strong>Color personalizado</strong> — vía <code>[&>div]:bg-*</code> o clase utilitaria en el className del Progress.",
       "item4": "<strong>No interactivo</strong> — Progress es pasivo. Para rastrear finalización, dispara el evento en el callback de la operación, no en el componente."

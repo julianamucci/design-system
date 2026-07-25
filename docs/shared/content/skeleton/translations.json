@@ -8,7 +8,7 @@
       "title": "Skeleton — Feedback",
       "description": "Documentação do Skeleton: placeholder de loading com animate-pulse, decorativo via aria-hidden, com motion-reduce para acessibilidade.",
       "aiSummary": "Componente Skeleton renderiza placeholder retangular com animate-pulse e bg-muted; é puramente decorativo (aria-hidden), respeita motion-reduce e replica dimensões do conteúdo final.",
-      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -195,7 +195,7 @@
         "part": "Aplicação",
         "background": {
           "class": "bg-muted",
-          "part": "Cor pulsante (React/Vue/Svelte). Basecoat usa bg-primary/10 — divergência idiomática"
+          "part": "Cor pulsante (React/Vue/Svelte). Vanilla usa bg-primary/10 — divergência idiomática"
         },
         "rounded": {
           "class": "rounded-md",
@@ -370,7 +370,7 @@
       "title": "Skeleton — Feedback",
       "description": "Skeleton documentation: loading placeholder with animate-pulse, decorative via aria-hidden, and motion-reduce for accessibility.",
       "aiSummary": "Skeleton component renders a rectangular placeholder with animate-pulse and bg-muted; purely decorative (aria-hidden), respects motion-reduce, and mirrors final content dimensions.",
-      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -557,7 +557,7 @@
         "part": "Application",
         "background": {
           "class": "bg-muted",
-          "part": "Pulsating color (React/Vue/Svelte). Basecoat uses bg-primary/10 — idiomatic divergence"
+          "part": "Pulsating color (React/Vue/Svelte). Vanilla uses bg-primary/10 — idiomatic divergence"
         },
         "rounded": {
           "class": "rounded-md",
@@ -732,7 +732,7 @@
       "title": "Skeleton — Feedback",
       "description": "Documentación de Skeleton: placeholder de loading con animate-pulse, decorativo vía aria-hidden y motion-reduce para accesibilidad.",
       "aiSummary": "Componente Skeleton renderiza un placeholder rectangular con animate-pulse y bg-muted; es puramente decorativo (aria-hidden), respeta motion-reduce y replica las dimensiones del contenido final.",
-      "aiEntities": "Skeleton, React, Vue, Svelte, Basecoat, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, animate-pulse, motion-reduce, WCAG 2.3.3, aria-busy",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -919,7 +919,7 @@
         "part": "Aplicación",
         "background": {
           "class": "bg-muted",
-          "part": "Color pulsante (React/Vue/Svelte). Basecoat usa bg-primary/10 — divergencia idiomática"
+          "part": "Color pulsante (React/Vue/Svelte). Vanilla usa bg-primary/10 — divergencia idiomática"
         },
         "rounded": {
           "class": "rounded-md",

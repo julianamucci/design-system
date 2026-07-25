@@ -90,7 +90,7 @@ export const PreviewDeLink: Story = {
                 <span class="nds-text-caption nds-text-muted-foreground nds-truncate">design-system.dev</span>
               </div>
               <p class="nds-text-body nds-font-medium leading-snug">Design System — Documentação técnica</p>
-              <p class="nds-text-caption nds-text-muted-foreground">Componentes acessíveis em React, Vue, Svelte e Basecoat.</p>
+              <p class="nds-text-caption nds-text-muted-foreground">Componentes acessíveis em React, Vue, Svelte e Vanilla.</p>
             </div>
           </HoverCardContent>
         </HoverCard>

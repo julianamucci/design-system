@@ -290,7 +290,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Portal</strong> — o <code>SelectContent</code> é renderizado em portal para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
       "item3": "<strong>Type-ahead</strong> — digitar caractere com o trigger focado pula para o item correspondente, sem precisar abrir o dropdown.",
       "item4": "<strong>Sem busca</strong> — para filtrar por texto, use <code>Combobox</code> (Command + Popover) em vez de Select."
@@ -651,7 +651,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Portal</strong> — <code>SelectContent</code> renders in a portal to avoid <code>z-index</code> and <code>overflow</code> issues.",
       "item3": "<strong>Type-ahead</strong> — typing a character with the trigger focused jumps to the matching item without opening the dropdown.",
       "item4": "<strong>No search</strong> — to filter by text, use <code>Combobox</code> (Command + Popover) instead of Select."
@@ -1012,7 +1012,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Portal</strong> — el <code>SelectContent</code> se renderiza en portal para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
       "item3": "<strong>Type-ahead</strong> — escribir un carácter con el trigger enfocado salta al ítem correspondiente, sin abrir el dropdown.",
       "item4": "<strong>Sin búsqueda</strong> — para filtrar por texto, usa <code>Combobox</code> (Command + Popover) en vez de Select."

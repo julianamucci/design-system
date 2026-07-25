@@ -41,7 +41,7 @@ Use a **skill `/pipeline`** — orquestra automaticamente em paralelo:
 Cria, em ordem:
 1. **Conteúdo** (`docs/shared/content/<slug>/translations.json`) via skill `/ux-writer`
 2. **Audit determinístico inicial** via `scripts/audit.mjs`
-3. **Primitivos + stories + docs page** nas 4 stacks (paralelo) via `/dev-react`, `/dev-vue`, `/dev-svelte`, `/dev-basecoat`
+3. **Primitivos + stories + docs page** nas 4 stacks (paralelo) via `/dev-react`, `/dev-vue`, `/dev-svelte`, `/dev-vanilla`
 4. **Audits condicionais** (security, performance, quality, analytics, seo-geo) via skills
 5. **Cross-stack audit** final via `/cross-stack`
 6. **FIXES-NEEDED.md** consolidado

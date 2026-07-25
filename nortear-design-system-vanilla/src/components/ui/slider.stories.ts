@@ -26,7 +26,7 @@ const meta: Meta<SliderArgs> = {
     min: { control: { type: 'number' }, description: 'Valor mínimo.' },
     max: { control: { type: 'number' }, description: 'Valor máximo.' },
     step: { control: { type: 'number' }, description: 'Incremento por seta/arrasto.' },
-    value: { control: { type: 'number' }, description: 'Valor inicial (number — não array no Basecoat).' },
+    value: { control: { type: 'number' }, description: 'Valor inicial (number — não array no Vanilla).' },
     disabled: { control: 'boolean', description: 'Desabilita o slider.' },
     ariaLabel: { control: 'text', description: 'aria-label OBRIGATÓRIO para o <input type="range"> interno.' },
     unit: { control: 'text', description: 'Unidade exibida ao lado do valor (ex.: "%", "px"). Apenas visual.' },

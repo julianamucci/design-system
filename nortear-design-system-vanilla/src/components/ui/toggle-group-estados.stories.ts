@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do ToggleGroup: Default (nenhum selecionado), Selected (um ou mais ativos), Disabled (todos os items bloqueados via `item.disabled`), DisabledItem (apenas um item bloqueado) e FocoVisivel. **Divergência Basecoat**: factory não expõe `disabled` no grupo — usar `item.disabled` em cada um. Não há prop `aria-invalid` no grupo; para estado de erro, aplicar atributos manualmente.',
+          'Estados do ToggleGroup: Default (nenhum selecionado), Selected (um ou mais ativos), Disabled (todos os items bloqueados via `item.disabled`), DisabledItem (apenas um item bloqueado) e FocoVisivel. **Divergência Vanilla**: factory não expõe `disabled` no grupo — usar `item.disabled` em cada um. Não há prop `aria-invalid` no grupo; para estado de erro, aplicar atributos manualmente.',
       },
     },
   },
@@ -125,7 +125,7 @@ export const Disabled: Story = {
     docs: {
       description: {
         story:
-          'Todos os items desabilitados — **Divergência Basecoat**: factory não expõe `disabled` no grupo. Aqui passamos `disabled: true` em cada `ToggleGroupItem`. Atributo HTML `disabled` aplicado em cada `<button>`; `opacity-50` e `pointer-events-none` vêm das classes do Toggle.',
+          'Todos os items desabilitados — **Divergência Vanilla**: factory não expõe `disabled` no grupo. Aqui passamos `disabled: true` em cada `ToggleGroupItem`. Atributo HTML `disabled` aplicado em cada `<button>`; `opacity-50` e `pointer-events-none` vêm das classes do Toggle.',
       },
     },
   },
@@ -169,7 +169,7 @@ export const FocoVisivel: Story = {
     docs: {
       description: {
         story:
-          'Foco visível via Tab — anel `ring-1 ring-ring` aplicado pelo Toggle. **Divergência Basecoat**: a factory NÃO implementa roving tabindex automático; todos os items recebem `tabindex=0` (do próprio `<button>`). Para roving real, escute ArrowLeft/Right e mova `focus()` manualmente. Space/Enter alternam o item focado.',
+          'Foco visível via Tab — anel `ring-1 ring-ring` aplicado pelo Toggle. **Divergência Vanilla**: a factory NÃO implementa roving tabindex automático; todos os items recebem `tabindex=0` (do próprio `<button>`). Para roving real, escute ArrowLeft/Right e mova `focus()` manualmente. Space/Enter alternam o item focado.',
       },
     },
   },

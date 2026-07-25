@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de layout do RadioGroup: Vertical (padrão, grid gap-2), Horizontal (flex gap-6 para 2-3 opções curtas) e WithDescription (Label + texto auxiliar abaixo). O factory custom do Basecoat não expõe prop `orientation` — a orientação é aplicada via classe utilitária no `<fieldset>`.',
+          'Variantes de layout do RadioGroup: Vertical (padrão, grid gap-2), Horizontal (flex gap-6 para 2-3 opções curtas) e WithDescription (Label + texto auxiliar abaixo). O factory custom do Vanilla não expõe prop `orientation` — a orientação é aplicada via classe utilitária no `<fieldset>`.',
       },
     },
   },
@@ -184,7 +184,7 @@ export const WithDescription: Story = {
     docs: {
       description: {
         story:
-          'Cada par item + Label acompanha um texto auxiliar abaixo, útil quando o nome da opção sozinho não comunica o critério de escolha. Layout construído manualmente — o factory `createRadioGroup` (Basecoat) não expõe campo `description` por item.',
+          'Cada par item + Label acompanha um texto auxiliar abaixo, útil quando o nome da opção sozinho não comunica o critério de escolha. Layout construído manualmente — o factory `createRadioGroup` (Vanilla) não expõe campo `description` por item.',
       },
     },
   },

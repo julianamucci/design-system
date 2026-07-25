@@ -6,9 +6,9 @@
     "description": "Caixa de seleção para escolhas independentes em formulários. Suporta estados marcado, desmarcado, indeterminado e desabilitado.",
     "seo": {
       "title": "Checkbox — Formulário",
-      "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Basecoat.",
+      "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Vanilla.",
       "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -26,7 +26,7 @@
       "item1": "<strong>Root</strong> — elemento interativo com <code>role=\"checkbox\"</code> e <code>data-slot=\"checkbox\"</code>. Gerencia estado e teclado.",
       "item2": "<strong>Indicator</strong> — ícone interno com <code>data-slot=\"checkbox-indicator\"</code>. Exibe <code>CheckIcon</code> quando marcado ou <code>MinusIcon</code> quando indeterminado (Svelte).",
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> associado via <code>htmlFor</code>/<code>for</code>. Obrigatório para acessibilidade.",
-      "item4": "<strong>Hidden input</strong> — input nativo oculto para participação em formulários HTML (Basecoat). Carrega <code>name</code> e <code>value</code>.",
+      "item4": "<strong>Hidden input</strong> — input nativo oculto para participação em formulários HTML (Vanilla). Carrega <code>name</code> e <code>value</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": "<div>\n  <Checkbox id=\"termos\" />        {/* Root + Indicator */}\n  <Label htmlFor=\"termos\">        {/* Label externo */}\n    Aceito os termos\n  </Label>\n</div>"
     },
@@ -83,7 +83,7 @@
       "react": "React (base-ui):",
       "vue": "Vue (reka-ui):",
       "svelte": "Svelte (bits-ui):",
-      "basecoat": "Basecoat (vanilla):"
+      "vanilla": "Vanilla (vanilla):"
     },
     "variants": {
       "title": "Variantes",
@@ -162,7 +162,7 @@
       "reactTitle": "React",
       "vueTitle": "Vue",
       "svelteTitle": "Svelte",
-      "basecoatTitle": "Basecoat",
+      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -180,8 +180,8 @@
         "value": "<code>value</code> — valor enviado no submit do formulário quando marcado. Padrão <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — classes .nds-* adicionais mescladas via <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla o estado indeterminado independentemente de <code>checked</code>.",
-        "basecoatId": "<code>id</code> (Basecoat) — ID do elemento. Usado para associação com label externo.",
-        "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — label acessível quando não há <code>&lt;label&gt;</code> externo visível."
+        "vanillaId": "<code>id</code> (Vanilla) — ID do elemento. Usado para associação com label externo.",
+        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — label acessível quando não há <code>&lt;label&gt;</code> externo visível."
       }
     },
     "tokens": {
@@ -202,7 +202,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "summary": "Checkbox aplica <code>role=\"checkbox\"</code> e <code>aria-checked</code> automaticamente (incluindo <code>\"mixed\"</code> para indeterminado). Atende WCAG 2.2 AA: 1.3.1 (informação em estrutura), 1.3.3 (características sensoriais), 4.1.2 (nome, role, value).",
-      "item1": "<strong>role=\"checkbox\"</strong> — aplicado automaticamente pelo Radix/reka-ui/bits-ui. Basecoat renderiza <code>div role=\"checkbox\"</code> explicitamente.",
+      "item1": "<strong>role=\"checkbox\"</strong> — aplicado automaticamente pelo Radix/reka-ui/bits-ui. Vanilla renderiza <code>div role=\"checkbox\"</code> explicitamente.",
       "item2": "<strong>aria-checked</strong> — atualizado automaticamente: <code>\"false\"</code>, <code>\"true\"</code> ou <code>\"mixed\"</code> (indeterminado).",
       "item3": "<strong>Label visível obrigatório</strong> — associe via <code>htmlFor</code>/<code>id</code>. Nunca omitir o texto de label para cumprir WCAG 1.3.1.",
       "item4": "<strong>Foco visível</strong> — ring via <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Atende WCAG 2.4.7.",
@@ -219,7 +219,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> ou atributo <code>disabled</code> — informa que a interação está bloqueada.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado via prop <code>required</code>. Informar campos obrigatórios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado pelo <code>FormControl</code> quando há erro de validação.",
-        "ariaLabel": "<code>aria-label</code> — obrigatório quando não há <code>&lt;label&gt;</code> externo visível (ex: Basecoat sem label)."
+        "ariaLabel": "<code>aria-label</code> — obrigatório quando não há <code>&lt;label&gt;</code> externo visível (ex: Vanilla sem label)."
       },
       "screenReader": {
         "onFocus": "Ao focar: leitor anuncia \"[texto do label], caixa de seleção, [estado]\" (ex: \"Aceitar termos, caixa de seleção, desmarcada\").",
@@ -240,7 +240,7 @@
       "title": "Notas de Implementação",
       "tip1": "Dentro de <code>FormField</code>, conecte o estado controlado e o callback de mudança ao <code>field</code>. O <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente.",
       "tip2": "O estado <code>indeterminate</code> está disponível apenas no Svelte (prop <code>indeterminate</code> bindable). No React e Vue, use <code>checked=\"indeterminate\"</code> conforme a API do Radix.",
-      "tip3": "No Basecoat, <code>createCheckbox()</code> retorna um elemento DOM com <code>role=\"checkbox\"</code> e um input nativo oculto. Use <code>aria-label</code> quando não houver label visível associado via <code>id</code>.",
+      "tip3": "No Vanilla, <code>createCheckbox()</code> retorna um elemento DOM com <code>role=\"checkbox\"</code> e um input nativo oculto. Use <code>aria-label</code> quando não houver label visível associado via <code>id</code>.",
       "tip4": "Label do peer: a classe <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> no <code>&lt;Label&gt;</code> garante que o cursor e opacidade do label acompanhem o estado do checkbox."
     },
     "analytics": {
@@ -324,9 +324,9 @@
     "description": "Selection control for independent choices in forms. Supports checked, unchecked, indeterminate, and disabled states.",
     "seo": {
       "title": "Checkbox — Form",
-      "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Basecoat support.",
+      "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Vanilla support.",
       "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -344,7 +344,7 @@
       "item1": "<strong>Root</strong> — interactive element with <code>role=\"checkbox\"</code> and <code>data-slot=\"checkbox\"</code>. Manages state and keyboard behavior.",
       "item2": "<strong>Indicator</strong> — inner icon with <code>data-slot=\"checkbox-indicator\"</code>. Shows <code>CheckIcon</code> when checked or <code>MinusIcon</code> when indeterminate (Svelte).",
       "item3": "<strong>Label (external)</strong> — <code>&lt;label&gt;</code> element associated via <code>htmlFor</code>/<code>for</code>. Required for accessibility.",
-      "item4": "<strong>Hidden input</strong> — native hidden input for HTML form participation (Basecoat). Carries <code>name</code> and <code>value</code>.",
+      "item4": "<strong>Hidden input</strong> — native hidden input for HTML form participation (Vanilla). Carries <code>name</code> and <code>value</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": "<div>\n  <Checkbox id=\"terms\" />          {/* Root + Indicator */}\n  <Label htmlFor=\"terms\">          {/* External label */}\n    I accept the terms\n  </Label>\n</div>"
     },
@@ -401,7 +401,7 @@
       "react": "React (base-ui):",
       "vue": "Vue (reka-ui):",
       "svelte": "Svelte (bits-ui):",
-      "basecoat": "Basecoat (vanilla):"
+      "vanilla": "Vanilla (vanilla):"
     },
     "variants": {
       "title": "Variants",
@@ -480,7 +480,7 @@
       "reactTitle": "React",
       "vueTitle": "Vue",
       "svelteTitle": "Svelte",
-      "basecoatTitle": "Basecoat",
+      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -498,8 +498,8 @@
         "value": "<code>value</code> — value submitted on form submit when checked. Default <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — additional .nds-* classes merged via <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controls the indeterminate state independently of <code>checked</code>.",
-        "basecoatId": "<code>id</code> (Basecoat) — element ID. Used for association with an external label.",
-        "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — accessible label when no visible external <code>&lt;label&gt;</code> is present."
+        "vanillaId": "<code>id</code> (Vanilla) — element ID. Used for association with an external label.",
+        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — accessible label when no visible external <code>&lt;label&gt;</code> is present."
       }
     },
     "tokens": {
@@ -520,7 +520,7 @@
     "accessibility": {
       "title": "Accessibility",
       "summary": "Checkbox automatically applies <code>role=\"checkbox\"</code> and <code>aria-checked</code> (including <code>\"mixed\"</code> for indeterminate). Meets WCAG 2.2 AA: 1.3.1 (info in structure), 1.3.3 (sensory characteristics), 4.1.2 (name, role, value).",
-      "item1": "<strong>role=\"checkbox\"</strong> — applied automatically by Radix/reka-ui/bits-ui. Basecoat renders <code>div role=\"checkbox\"</code> explicitly.",
+      "item1": "<strong>role=\"checkbox\"</strong> — applied automatically by Radix/reka-ui/bits-ui. Vanilla renders <code>div role=\"checkbox\"</code> explicitly.",
       "item2": "<strong>aria-checked</strong> — updated automatically: <code>\"false\"</code>, <code>\"true\"</code>, or <code>\"mixed\"</code> (indeterminate).",
       "item3": "<strong>Visible label required</strong> — associate via <code>htmlFor</code>/<code>id</code>. Never omit the label text to comply with WCAG 1.3.1.",
       "item4": "<strong>Visible focus</strong> — ring via <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Meets WCAG 2.4.7.",
@@ -537,7 +537,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> or <code>disabled</code> attribute — indicates interaction is blocked.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagated via the <code>required</code> prop. Marks mandatory fields.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — applied by <code>FormControl</code> when there is a validation error.",
-        "ariaLabel": "<code>aria-label</code> — required when no visible external <code>&lt;label&gt;</code> is present (e.g., Basecoat without a label)."
+        "ariaLabel": "<code>aria-label</code> — required when no visible external <code>&lt;label&gt;</code> is present (e.g., Vanilla without a label)."
       },
       "screenReader": {
         "onFocus": "On focus: reader announces \"[label text], checkbox, [state]\" (e.g., \"Accept terms, checkbox, unchecked\").",
@@ -558,7 +558,7 @@
       "title": "Implementation Notes",
       "tip1": "Inside <code>FormField</code>, wire the controlled state and the change callback to <code>field</code>. <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically.",
       "tip2": "The <code>indeterminate</code> state is only available in Svelte (bindable <code>indeterminate</code> prop). In React and Vue, use <code>checked=\"indeterminate\"</code> per the Radix API.",
-      "tip3": "In Basecoat, <code>createCheckbox()</code> returns a DOM element with <code>role=\"checkbox\"</code> and a hidden native input. Use <code>aria-label</code> when no visible label is associated via <code>id</code>.",
+      "tip3": "In Vanilla, <code>createCheckbox()</code> returns a DOM element with <code>role=\"checkbox\"</code> and a hidden native input. Use <code>aria-label</code> when no visible label is associated via <code>id</code>.",
       "tip4": "Peer label: the class <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> on <code>&lt;Label&gt;</code> ensures the label cursor and opacity follow the checkbox disabled state."
     },
     "analytics": {
@@ -642,9 +642,9 @@
     "description": "Control de selección para opciones independientes en formularios. Soporta estados marcado, desmarcado, indeterminado y deshabilitado.",
     "seo": {
       "title": "Checkbox — Formulario",
-      "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Basecoat.",
+      "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Vanilla.",
       "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Basecoat, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -662,7 +662,7 @@
       "item1": "<strong>Root</strong> — elemento interactivo con <code>role=\"checkbox\"</code> y <code>data-slot=\"checkbox\"</code>. Gestiona el estado y el teclado.",
       "item2": "<strong>Indicator</strong> — ícono interno con <code>data-slot=\"checkbox-indicator\"</code>. Muestra <code>CheckIcon</code> cuando está marcado o <code>MinusIcon</code> cuando es indeterminado (Svelte).",
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> asociado vía <code>htmlFor</code>/<code>for</code>. Obligatorio para accesibilidad.",
-      "item4": "<strong>Input oculto</strong> — input nativo oculto para participación en formularios HTML (Basecoat). Transporta <code>name</code> y <code>value</code>.",
+      "item4": "<strong>Input oculto</strong> — input nativo oculto para participación en formularios HTML (Vanilla). Transporta <code>name</code> y <code>value</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": "<div>\n  <Checkbox id=\"terminos\" />       {/* Root + Indicator */}\n  <Label htmlFor=\"terminos\">       {/* Label externo */}\n    Acepto los términos\n  </Label>\n</div>"
     },
@@ -719,7 +719,7 @@
       "react": "React (base-ui):",
       "vue": "Vue (reka-ui):",
       "svelte": "Svelte (bits-ui):",
-      "basecoat": "Basecoat (vanilla):"
+      "vanilla": "Vanilla (vanilla):"
     },
     "variants": {
       "title": "Variantes",
@@ -798,7 +798,7 @@
       "reactTitle": "React",
       "vueTitle": "Vue",
       "svelteTitle": "Svelte",
-      "basecoatTitle": "Basecoat",
+      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -816,8 +816,8 @@
         "value": "<code>value</code> — valor enviado en el submit cuando está marcado. Por defecto <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — clases .nds-* adicionales combinadas vía <code>cn()</code>.",
         "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla el estado indeterminado independientemente de <code>checked</code>.",
-        "basecoatId": "<code>id</code> (Basecoat) — ID del elemento. Usado para asociación con un label externo.",
-        "basecoatAriaLabel": "<code>aria-label</code> (Basecoat) — label accesible cuando no hay <code>&lt;label&gt;</code> externo visible."
+        "vanillaId": "<code>id</code> (Vanilla) — ID del elemento. Usado para asociación con un label externo.",
+        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — label accesible cuando no hay <code>&lt;label&gt;</code> externo visible."
       }
     },
     "tokens": {
@@ -838,7 +838,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "summary": "Checkbox aplica <code>role=\"checkbox\"</code> y <code>aria-checked</code> automáticamente (incluido <code>\"mixed\"</code> para indeterminado). Cumple WCAG 2.2 AA: 1.3.1 (información en estructura), 1.3.3 (características sensoriales), 4.1.2 (nombre, role, value).",
-      "item1": "<strong>role=\"checkbox\"</strong> — aplicado automáticamente por Radix/reka-ui/bits-ui. Basecoat renderiza <code>div role=\"checkbox\"</code> explícitamente.",
+      "item1": "<strong>role=\"checkbox\"</strong> — aplicado automáticamente por Radix/reka-ui/bits-ui. Vanilla renderiza <code>div role=\"checkbox\"</code> explícitamente.",
       "item2": "<strong>aria-checked</strong> — actualizado automáticamente: <code>\"false\"</code>, <code>\"true\"</code> o <code>\"mixed\"</code> (indeterminado).",
       "item3": "<strong>Label visible obligatorio</strong> — asocia vía <code>htmlFor</code>/<code>id</code>. Nunca omitir el texto del label para cumplir WCAG 1.3.1.",
       "item4": "<strong>Foco visible</strong> — ring vía <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Cumple WCAG 2.4.7.",
@@ -855,7 +855,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> o atributo <code>disabled</code> — indica que la interacción está bloqueada.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado vía prop <code>required</code>. Informa campos obligatorios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado por <code>FormControl</code> cuando hay error de validación.",
-        "ariaLabel": "<code>aria-label</code> — obligatorio cuando no hay <code>&lt;label&gt;</code> externo visible (ej: Basecoat sin label)."
+        "ariaLabel": "<code>aria-label</code> — obligatorio cuando no hay <code>&lt;label&gt;</code> externo visible (ej: Vanilla sin label)."
       },
       "screenReader": {
         "onFocus": "Al enfocar: el lector anuncia \"[texto del label], casilla de verificación, [estado]\" (ej: \"Aceptar términos, casilla, desmarcada\").",
@@ -876,7 +876,7 @@
       "title": "Notas de Implementación",
       "tip1": "Dentro de <code>FormField</code>, conecta el estado controlado y el callback de cambio al <code>field</code>. <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente.",
       "tip2": "El estado <code>indeterminate</code> solo está disponible en Svelte (prop bindable <code>indeterminate</code>). En React y Vue, usa <code>checked=\"indeterminate\"</code> según la API de Radix.",
-      "tip3": "En Basecoat, <code>createCheckbox()</code> devuelve un elemento DOM con <code>role=\"checkbox\"</code> y un input nativo oculto. Usa <code>aria-label</code> cuando no haya label visible asociado vía <code>id</code>.",
+      "tip3": "En Vanilla, <code>createCheckbox()</code> devuelve un elemento DOM con <code>role=\"checkbox\"</code> y un input nativo oculto. Usa <code>aria-label</code> cuando no haya label visible asociado vía <code>id</code>.",
       "tip4": "Peer label: la clase <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> en <code>&lt;Label&gt;</code> asegura que el cursor y opacidad del label acompañen el estado disabled del checkbox."
     },
     "analytics": {

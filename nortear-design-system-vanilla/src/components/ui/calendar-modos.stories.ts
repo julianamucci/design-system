@@ -6,7 +6,7 @@ import { within, expect } from 'storybook/test';
 //
 // Modos de operação do Calendar.
 //
-// A implementação vanilla do Basecoat expõe apenas o modo "single" via a
+// A implementação vanilla do Vanilla expõe apenas o modo "single" via a
 // factory `createCalendar`. Modos "multiple" e "range" existem nas stacks
 // React/Vue/Svelte (sobre react-day-picker / reka-ui / bits-ui) mas não
 // fazem parte da API atual desta factory — documentadas aqui apenas como
@@ -22,7 +22,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Modo de seleção do Calendar. Na API vanilla do Basecoat apenas **single** está disponível — `multiple` e `range` são cobertos pelas stacks React/Vue/Svelte.',
+          'Modo de seleção do Calendar. Na API vanilla do Vanilla apenas **single** está disponível — `multiple` e `range` são cobertos pelas stacks React/Vue/Svelte.',
       },
     },
   },

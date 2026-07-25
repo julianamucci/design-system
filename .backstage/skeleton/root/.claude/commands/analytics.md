@@ -13,7 +13,7 @@ Você é um especialista em analytics para design systems. Seu trabalho é garan
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -99,7 +99,7 @@ $effect(() => {
 });
 ```
 
-**Basecoat:**
+**Vanilla:**
 ```ts
 import { track } from '@/lib/analytics';
 
@@ -155,7 +155,7 @@ interface AnalyticsBasePayload {
 grep -l "%STORYBOOK_GA_MEASUREMENT_ID%" nortear-design-system-*/storybook/preview-head.html
 ```
 
-Confirme que TODAS as stacks (react, vue, svelte, basecoat) têm o script GA4.
+Confirme que TODAS as stacks (react, vue, svelte, vanilla) têm o script GA4.
 
 ### 2. Verificar `analytics.ts`
 

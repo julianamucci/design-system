@@ -6,7 +6,7 @@ import { within, expect } from 'storybook/test';
 //
 // Layouts do Calendar.
 //
-// A factory vanilla `createCalendar` do Basecoat não expõe `captionLayout`,
+// A factory vanilla `createCalendar` do Vanilla não expõe `captionLayout`,
 // `showWeekNumber` ou `numberOfMonths`. Os layouts cobertos aqui são aqueles
 // realmente alcançáveis via a API atual:
 //  - CaptionLabel  → legenda em texto (padrão, única disponível)
@@ -25,7 +25,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Layouts disponíveis na API vanilla do Basecoat. `captionLayout="dropdown"`, `numberOfMonths` e `showWeekNumber` são exclusivos das stacks com react-day-picker/reka-ui/bits-ui.',
+          'Layouts disponíveis na API vanilla do Vanilla. `captionLayout="dropdown"`, `numberOfMonths` e `showWeekNumber` são exclusivos das stacks com react-day-picker/reka-ui/bits-ui.',
       },
     },
   },

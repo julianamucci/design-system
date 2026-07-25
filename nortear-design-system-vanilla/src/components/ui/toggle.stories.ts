@@ -48,7 +48,7 @@ const meta: Meta<ToggleArgs> = {
   argTypes: {
     pressed: {
       control: 'boolean',
-      description: 'Estado inicial pressionado (não-controlado no Basecoat).',
+      description: 'Estado inicial pressionado (não-controlado no Vanilla).',
     },
     disabled: {
       control: 'boolean',

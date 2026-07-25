@@ -1,12 +1,12 @@
 ---
-description: Especialista em Consistência Cross-Stack — audita e corrige divergências visuais e comportamentais entre React, Vue, Svelte e Basecoat
+description: Especialista em Consistência Cross-Stack — audita e corrige divergências visuais e comportamentais entre React, Vue, Svelte e Vanilla
 argument-hint: <component-slug|all> [aspect]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
 
 # Especialista em Consistência Cross-Stack
 
-Você é um especialista em consistência visual e comportamental para design systems multi-stack. Seu trabalho é garantir que o mesmo componente produza resultado visual e interativo idêntico em React, Vue, Svelte e Basecoat.
+Você é um especialista em consistência visual e comportamental para design systems multi-stack. Seu trabalho é garantir que o mesmo componente produza resultado visual e interativo idêntico em React, Vue, Svelte e Vanilla.
 
 ## Argumentos
 
@@ -50,7 +50,7 @@ grep -A 20 "cva(" nortear-design-system-vue/src/components/ui/<slug>/*.vue 2>/de
 grep -A 20 "cva(" nortear-design-system-svelte/src/components/ui/<slug>/*.ts 2>/dev/null
 grep -A 20 "cva(" nortear-design-system-svelte/src/components/ui/*.svelte 2>/dev/null
 
-# Basecoat
+# Vanilla
 grep -A 20 "cva(" nortear-design-system-vanilla/src/components/ui/<slug>/*.ts 2>/dev/null
 ```
 
@@ -313,7 +313,7 @@ Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 
 **Sinais de que é só cross-stack (não é patch):**
 
-- Copiou classes do React para Vue/Svelte/Basecoat porque já estavam no React (e estavam no upstream do React)
+- Copiou classes do React para Vue/Svelte/Vanilla porque já estavam no React (e estavam no upstream do React)
 - Alinhou nome de variante/tamanho entre stacks
 - Adicionou story ou preencheu conteúdo de docs page
 
@@ -376,7 +376,7 @@ Se uma stack tem stories que outra não tem:
    - React: render function direta
    - Vue: template + args
    - Svelte: ButtonStory wrapper pattern (ver dev-svelte skill)
-   - Basecoat: createElement pattern (ver dev-basecoat skill)
+   - Vanilla: createElement pattern (ver dev-vanilla skill)
 
 ---
 
@@ -386,27 +386,27 @@ Se uma stack tem stories que outra não tem:
 ## Relatório de Consistência Cross-Stack — <component-slug>
 
 ### Classes `cva()`
-| Aspecto | React | Vue | Svelte | Basecoat | Status |
+| Aspecto | React | Vue | Svelte | Vanilla | Status |
 |---------|-------|-----|--------|----------|--------|
 
 ### Variantes
-| Variante | React | Vue | Svelte | Basecoat |
+| Variante | React | Vue | Svelte | Vanilla |
 |----------|-------|-----|--------|----------|
 
 ### Tamanhos
-| Tamanho | React | Vue | Svelte | Basecoat |
+| Tamanho | React | Vue | Svelte | Vanilla |
 |---------|-------|-----|--------|----------|
 
 ### Stories
-| Categoria | React | Vue | Svelte | Basecoat |
+| Categoria | React | Vue | Svelte | Vanilla |
 |-----------|-------|-----|--------|----------|
 
 ### Acessibilidade
-| Atributo | React | Vue | Svelte | Basecoat |
+| Atributo | React | Vue | Svelte | Vanilla |
 |----------|-------|-----|--------|----------|
 
 ### Docs Page — Conteúdo por Seção
-| Seção | React | Vue | Svelte | Basecoat |
+| Seção | React | Vue | Svelte | Vanilla |
 |-------|-------|-----|--------|----------|
 | Header (badges, LanguageSwitcher, h1, desc) | ✅ | ?  | ?  | ?  |
 | Demonstração (demos interativos) | ✅ | ?  | ?  | ?  |

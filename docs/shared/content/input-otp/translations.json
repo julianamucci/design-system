@@ -7,8 +7,8 @@
     "seo": {
       "title": "InputOTP — Formulário",
       "description": "Documentação do InputOTP: campo de código de verificação via input-otp, com slots individuais, autoFocus, paste e WCAG 2.1 AA.",
-      "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Basecoat) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Vanilla) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.1, aria-invalid",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -337,7 +337,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartilhado com Vue e Svelte via wrappers. <strong>Basecoat</strong> usa factory custom com inputs HTML nativos.",
+      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartilhado com Vue e Svelte via wrappers. <strong>Vanilla</strong> usa factory custom com inputs HTML nativos.",
       "item2": "<strong>autoComplete one-time-code</strong>: essencial para autofill nativo. Sem isso, o usuário precisa digitar manualmente mesmo com SMS recebido.",
       "item3": "<strong>Paste</strong>: a lib distribui automaticamente o código colado nos slots; testar em Safari iOS especialmente.",
       "item4": "<strong>Patterns prontos</strong>: <code>REGEXP_ONLY_DIGITS</code> (padrão), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados pela lib.",
@@ -454,8 +454,8 @@
     "seo": {
       "title": "InputOTP — Form",
       "description": "InputOTP documentation: verification code field via input-otp, with individual slots, autoFocus, paste, and WCAG 2.1 AA.",
-      "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Basecoat) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Vanilla) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.1, aria-invalid",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -784,7 +784,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: InputOTP uses <code>input-otp</code> (React) — shared with Vue and Svelte via wrappers. <strong>Basecoat</strong> uses a custom factory with native HTML inputs.",
+      "item1": "<strong>Upstream lib</strong>: InputOTP uses <code>input-otp</code> (React) — shared with Vue and Svelte via wrappers. <strong>Vanilla</strong> uses a custom factory with native HTML inputs.",
       "item2": "<strong>autoComplete one-time-code</strong>: essential for native autofill. Without it, the user must type manually even when SMS is received.",
       "item3": "<strong>Paste</strong>: the lib automatically distributes pasted code across slots; test on iOS Safari especially.",
       "item4": "<strong>Ready-made patterns</strong>: <code>REGEXP_ONLY_DIGITS</code> (default), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exported by the lib.",
@@ -901,8 +901,8 @@
     "seo": {
       "title": "InputOTP — Formulario",
       "description": "Documentación de InputOTP: campo de código de verificación vía input-otp, con slots individuales, autoFocus, paste y WCAG 2.1 AA.",
-      "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Basecoat) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Basecoat, autocomplete, paste, WCAG 2.1, aria-invalid",
+      "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Vanilla) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.1, aria-invalid",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1231,7 +1231,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartido con Vue y Svelte vía wrappers. <strong>Basecoat</strong> usa factory custom con inputs HTML nativos.",
+      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartido con Vue y Svelte vía wrappers. <strong>Vanilla</strong> usa factory custom con inputs HTML nativos.",
       "item2": "<strong>autoComplete one-time-code</strong>: esencial para autofill nativo. Sin esto, el usuario debe escribir manualmente aún recibiendo SMS.",
       "item3": "<strong>Paste</strong>: la lib distribuye automáticamente el código pegado en los slots; probar en Safari iOS especialmente.",
       "item4": "<strong>Patterns listos</strong>: <code>REGEXP_ONLY_DIGITS</code> (predeterminado), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados por la lib.",

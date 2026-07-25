@@ -92,7 +92,7 @@
   --spacing-base: 0.25rem; /* 4px — padrão Tailwind */
 
   /* Spacing scale — grid de 8 (múltiplos ou divisores de 8 apenas).
-     Use estes tokens em CSS standalone (.nds-*, basecoat-overrides) quando
+     Use estes tokens em CSS standalone (.nds-*, vanilla-overrides) quando
      precisar de um valor de spacing nomeado.
      Acompanham a densidade automaticamente porque referenciam --spacing-base.
 

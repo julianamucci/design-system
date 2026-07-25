@@ -14,7 +14,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Drawer por direção (bottom/top/left/right). NOTA: createDrawer (Basecoat) é hardcoded para bottom; outras direções usam createSheet diretamente — divergência idiomática vs. vaul.',
+          'Variantes do Drawer por direção (bottom/top/left/right). NOTA: createDrawer (Vanilla) é hardcoded para bottom; outras direções usam createSheet diretamente — divergência idiomática vs. vaul.',
       },
     },
   },

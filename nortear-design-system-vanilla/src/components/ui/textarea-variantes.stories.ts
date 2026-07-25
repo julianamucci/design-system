@@ -13,7 +13,7 @@ const meta: Meta = {
       description: {
         component:
           'Variantes do Textarea: Default (resize-y min-h-[120px]), WithCounter (maxLength + contador aria-live), NoResize (resize-none). ' +
-          'NOTA: o factory Basecoat é wrapper enxuto — props como maxLength/readOnly/aria-invalid são aplicadas via DOM nativa após criação.',
+          'NOTA: o factory Vanilla é wrapper enxuto — props como maxLength/readOnly/aria-invalid são aplicadas via DOM nativa após criação.',
       },
     },
   },

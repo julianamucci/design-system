@@ -13,7 +13,7 @@ Você é um especialista em qualidade para design systems. Seu trabalho é garan
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -22,7 +22,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 1. `docs/shared/guidelines/01-acessibilidade.md` — critérios WCAG obrigatórios
 2. `nortear-design-system-react/.storybook/test-runner.ts` — configuração axe-playwright
 3. `nortear-design-system-react/src/components/ui/alert.stories.tsx` — referência de play functions (React)
-4. Equivalentes em vue/svelte/basecoat para o mesmo componente
+4. Equivalentes em vue/svelte/vanilla para o mesmo componente
 5. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist de docs pages
 
 ---
@@ -151,7 +151,7 @@ export const MeuCenario: Story = {
 };
 ```
 
-### Basecoat (Vanilla TS)
+### Vanilla (Vanilla TS)
 
 ```ts
 export const MeuCenario: Story = {
@@ -270,7 +270,7 @@ Para o componente especificado, liste todas as stories em cada stack e verifique
 
 ### 5. Auditar estrutura HTML das docs pages (nesting e espaçamento)
 
-Verifique cada `*Docs.tsx` (e equivalentes Vue/Svelte/Basecoat) em busca de aninhamento desnecessário que acumula espaçamento:
+Verifique cada `*Docs.tsx` (e equivalentes Vue/Svelte/Vanilla) em busca de aninhamento desnecessário que acumula espaçamento:
 
 **5.1 Padrão de tabela — buscar violações:**
 

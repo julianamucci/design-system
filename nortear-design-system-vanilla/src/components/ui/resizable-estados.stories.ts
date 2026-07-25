@@ -110,7 +110,7 @@ export const Dragging: Story = {
 export const Disabled: Story = {
   name: 'Disabled',
   render: () => {
-    // NOTA: factory Basecoat NÃO expõe prop disabled — aplicamos manualmente
+    // NOTA: factory Vanilla NÃO expõe prop disabled — aplicamos manualmente
     // tabindex=-1, aria-disabled=true e pointer-events:none para simular o
     // estado documentado em translations.json.
     const root = basicHorizontal();

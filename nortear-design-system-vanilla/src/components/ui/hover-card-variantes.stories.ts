@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do HoverCard: Default (delays padrão da factory) e ComDelayCurto (tempos reduzidos para previews ricos). NOTA: a factory Basecoat usa delays internos fixos (SHOW_DELAY=300, HIDE_DELAY=150). Esta story documenta a paridade conceitual com outras stacks.',
+          'Variantes do HoverCard: Default (delays padrão da factory) e ComDelayCurto (tempos reduzidos para previews ricos). NOTA: a factory Vanilla usa delays internos fixos (SHOW_DELAY=300, HIDE_DELAY=150). Esta story documenta a paridade conceitual com outras stacks.',
       },
     },
   },
@@ -126,7 +126,7 @@ export const ComDelayCurto: Story = {
   name: 'Com Delay Curto',
   render: () => {
     const trigger = buildTrigger('@maria');
-    // A factory Basecoat tem delays fixos; usamos a classe customizada para
+    // A factory Vanilla tem delays fixos; usamos a classe customizada para
     // documentar a intenção visual de "delay curto" (preview rico).
     const el = createHoverCard({
       trigger,

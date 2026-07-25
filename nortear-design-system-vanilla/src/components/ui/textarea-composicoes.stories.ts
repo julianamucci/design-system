@@ -14,7 +14,7 @@ const meta: Meta = {
       description: {
         component:
           'Composicoes do Textarea com Label externo, texto de apoio, contador acessível, mensagem de erro e envio em formulário HTML nativo. ' +
-          'NOTA: o factory Basecoat não expõe props onChange/maxLength/readOnly/aria-invalid — todos são aplicados via API DOM nativa após a criação.',
+          'NOTA: o factory Vanilla não expõe props onChange/maxLength/readOnly/aria-invalid — todos são aplicados via API DOM nativa após a criação.',
       },
     },
   },

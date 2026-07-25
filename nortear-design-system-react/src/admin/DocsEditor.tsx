@@ -19,13 +19,13 @@ const LOCALE_LABELS: Record<Locale, string> = { 'pt-BR': '🇧🇷 PT', en: '�
 
 // ─── Stack config ─────────────────────────────────────────────────────────────
 
-type Stack = 'react' | 'vue' | 'svelte' | 'basecoat';
+type Stack = 'react' | 'vue' | 'svelte' | 'vanilla';
 
 const STACKS: { id: Stack; label: string; port: number }[] = [
   { id: 'react',    label: 'React',    port: 6006 },
   { id: 'vue',      label: 'Vue',      port: 6007 },
   { id: 'svelte',   label: 'Svelte',   port: 6008 },
-  { id: 'basecoat', label: 'Basecoat', port: 6009 },
+  { id: 'vanilla', label: 'Vanilla', port: 6009 },
 ];
 
 // Componentes que vivem fora da categoria UI no Storybook (ex: Foundations)

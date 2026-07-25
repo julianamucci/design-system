@@ -11,7 +11,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Basecoat: factory custom NÃO expõe prop `variant` nem `orientation`. ' +
+          'Vanilla: factory custom NÃO expõe prop `variant` nem `orientation`. ' +
           'As variantes "line" e "vertical" são aplicadas via utility classes no elemento [role="tablist"] após criação.',
       },
     },
@@ -87,7 +87,7 @@ export const Line: Story = {
       description: {
         story:
           'Variante line: visual minimalista com linha inferior. ' +
-          'Basecoat: factory NÃO expõe prop `variant` — aplicamos classes utilitárias manualmente.',
+          'Vanilla: factory NÃO expõe prop `variant` — aplicamos classes utilitárias manualmente.',
       },
     },
   },
@@ -125,7 +125,7 @@ export const Vertical: Story = {
       description: {
         story:
           'Orientação vertical: lista lateral e conteúdo à direita. ' +
-          'Basecoat: factory NÃO expõe prop `orientation` — aplicamos flex-col + aria-orientation manualmente. ' +
+          'Vanilla: factory NÃO expõe prop `orientation` — aplicamos flex-col + aria-orientation manualmente. ' +
           'Importante: setas continuam navegando como horizontal (Left/Right) — para suportar Up/Down nativamente seria necessário estender a factory.',
       },
     },

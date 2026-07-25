@@ -1,6 +1,6 @@
 ---
 description: Cria os 15 componentes genéricos de seção de documentação em cada stack — containers estruturais reutilizáveis que garantem layout consistente entre todas as doc pages
-argument-hint: [--stack react|vue|svelte|basecoat|all]
+argument-hint: [--stack react|vue|svelte|vanilla|all]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
 
@@ -12,7 +12,7 @@ Você é o arquiteto dos componentes de documentação genéricos. Seu trabalho 
 
 O usuário invocou o comando com: **$ARGUMENTS**
 
-- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -67,7 +67,7 @@ src/components/docs/shared/sections/
 └── DocsTestes.<ext>
 ```
 
-Extensões: React → `.tsx`, Vue → `.vue`, Svelte → `.svelte`, Basecoat → `.ts`
+Extensões: React → `.tsx`, Vue → `.vue`, Svelte → `.svelte`, Vanilla → `.ts`
 
 ---
 
@@ -115,7 +115,7 @@ interface DocsDemonstrationProps {
   title: string
   // React: children: React.ReactNode
   // Vue/Svelte: slot padrão
-  // Basecoat: demoFactory: () => HTMLElement
+  // Vanilla: demoFactory: () => HTMLElement
 }
 // Renderiza: <section id="demonstracao"> + h2 + card wrapper (ComponentDemo)
 // O card wrapper: flex items-center justify-center p-10 mt-6 border rounded-xl bg-background shadow-sm
@@ -165,7 +165,7 @@ interface DocsDoDontPair {
   // React: doPreview/dontPreview: React.ReactNode
   // Vue: slots nomeados #do-preview-{n} / #dont-preview-{n}
   // Svelte: snippets doPreview{n} / dontPreview{n} (Svelte 5 {#snippet})
-  // Basecoat: doPreviewFactory / dontPreviewFactory: () => HTMLElement
+  // Vanilla: doPreviewFactory / dontPreviewFactory: () => HTMLElement
   doCaption:   string         // texto descritivo abaixo do box verde
   dontCaption: string         // texto descritivo abaixo do box vermelho
 }
@@ -202,7 +202,7 @@ interface DocsVariantItem {
   // React: preview: React.ReactNode
   // Vue: slot #variant-preview-{name}
   // Svelte: snippet variantPreview{index}
-  // Basecoat: previewFactory: () => HTMLElement
+  // Vanilla: previewFactory: () => HTMLElement
 }
 
 interface DocsVariantsProps {
@@ -524,7 +524,7 @@ Cada componente usa `$props()` para props e `{#snippet}` / `{@render}` para prev
 </section>
 ```
 
-### Basecoat (Vanilla TS)
+### Vanilla (Vanilla TS)
 
 Cada componente é uma função `createDocs<Section>(props): HTMLElement`. Previews são factory functions `() => HTMLElement`.
 
@@ -664,7 +664,7 @@ done
 
 ## Como os Dev Skills Usam Esses Componentes
 
-Após a criação dos containers, as skills `dev-react`, `dev-vue`, `dev-svelte` e `dev-basecoat` **devem importar os section components** ao criar docs pages, em vez de escrever o HTML inline:
+Após a criação dos containers, as skills `dev-react`, `dev-vue`, `dev-svelte` e `dev-vanilla` **devem importar os section components** ao criar docs pages, em vez de escrever o HTML inline:
 
 ```tsx
 // AlertDialogDocs.tsx — DEPOIS da criação dos containers
@@ -697,7 +697,7 @@ import { DocsProps }        from '@/components/docs/shared/sections/DocsProps';
 ## Docs Section Components — criação
 
 ### Componentes por stack
-| Componente        | React | Vue | Svelte | Basecoat |
+| Componente        | React | Vue | Svelte | Vanilla |
 |-------------------|-------|-----|--------|----------|
 | DocsHeader        | ✅    | ✅  | ✅     | ✅       |
 | DocsDemonstration | ✅    | ✅  | ✅     | ✅       |

@@ -227,7 +227,7 @@
       "title": "Notas de Implementação",
       "item1": "Em implementações modernas o componente usa a propriedade CSS nativa <code>aspect-ratio</code>; o ratio é preservado antes do carregamento da mídia, sem reflow.",
       "item2": "Bits UI (Svelte) usa a mesma técnica com runes.",
-      "item3": "Basecoat implementa manualmente via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item3": "Vanilla implementa manualmente via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
       "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou composição com Radix/Reka/Bits."
     },
     "analytics": {
@@ -559,7 +559,7 @@
       "title": "Implementation Notes",
       "item1": "Modern implementations use the native CSS <code>aspect-ratio</code> property; the ratio is preserved before media loads, with no reflow.",
       "item2": "Bits UI (Svelte) uses the same technique with runes.",
-      "item3": "Basecoat implements it manually via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item3": "Vanilla implements it manually via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
       "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or Radix/Reka/Bits composition."
     },
     "analytics": {
@@ -891,7 +891,7 @@
       "title": "Notas de Implementación",
       "item1": "Las implementaciones modernas usan la propiedad CSS nativa <code>aspect-ratio</code>; la proporción se preserva antes de la carga del medio, sin reflow.",
       "item2": "Bits UI (Svelte) usa la misma técnica con runes.",
-      "item3": "Basecoat la implementa manualmente vía <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item3": "Vanilla la implementa manualmente vía <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
       "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con Radix/Reka/Bits."
     },
     "analytics": {

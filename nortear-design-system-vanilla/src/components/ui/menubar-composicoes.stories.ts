@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do Menubar: ComShortcuts, ComCheckboxItems, ComRadioGroup e EditorCompleto. NOTA: a factory createMenubar (Basecoat) NÃO suporta submenu nativo (sem MenubarSub/SubTrigger/SubContent). A composição ComSubmenu foi OMITIDA intencionalmente — para hierarquia, prefira reorganizar os menus ou utilizar as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
+          'Composicoes do Menubar: ComShortcuts, ComCheckboxItems, ComRadioGroup e EditorCompleto. NOTA: a factory createMenubar (Vanilla) NÃO suporta submenu nativo (sem MenubarSub/SubTrigger/SubContent). A composição ComSubmenu foi OMITIDA intencionalmente — para hierarquia, prefira reorganizar os menus ou utilizar as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
       },
     },
   },

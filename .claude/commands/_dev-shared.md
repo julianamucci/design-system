@@ -1,5 +1,5 @@
 ---
-description: Padrões compartilhados pelas dev-skills (react/vue/svelte/basecoat). Não invoque diretamente — leia em conjunto com a dev-<stack>.md específica.
+description: Padrões compartilhados pelas dev-skills (react/vue/svelte/vanilla). Não invoque diretamente — leia em conjunto com a dev-<stack>.md específica.
 ---
 
 # Padrões Compartilhados — Dev Skills
@@ -103,7 +103,7 @@ Toda docs page renderiza TODAS estas seções com conteúdo real de `translation
 10. **Tokens** (`id="tokens"`) — tabela de tokens CSS + customização
 11. **Acessibilidade** (`id="acessibilidade"`) — lista + cards de teclado
 12. **Relacionados** (`id="relacionados"`) — grid de cards com links
-13. **Notas** (`id="notas"`) — callouts. **Documentar divergências idiomáticas Basecoat aqui (notes.item1)**
+13. **Notas** (`id="notas"`) — callouts. **Documentar divergências idiomáticas Vanilla aqui (notes.item1)**
 14. **Analytics** (`id="analytics"`) — tabela de eventos GA4
 15. **Testes** (`id="testes"`) — 3 sub-seções: funcional, acessibilidade, visual
 
@@ -202,9 +202,9 @@ Sempre passar conteúdo de `translations.json` por `sanitizeHtml()` antes de ren
 - React: `dangerouslySetInnerHTML={{ __html: sanitizeHtml(t(...)) }}`
 - Vue: `v-html="sanitizeHtml(t(...))"`
 - Svelte: `{@html sanitizeHtml(t(...))}`
-- Basecoat: `el.innerHTML = sanitizeHtml(t(...))` (apenas com sanitizeHtml; ou createElement + textContent quando possível)
+- Vanilla: `el.innerHTML = sanitizeHtml(t(...))` (apenas com sanitizeHtml; ou createElement + textContent quando possível)
 
-**Basecoat: NUNCA `innerHTML` com string interpolada de fonte dinâmica sem sanitize. Preferir `createElement` + `textContent`.**
+**Vanilla: NUNCA `innerHTML` com string interpolada de fonte dinâmica sem sanitize. Preferir `createElement` + `textContent`.**
 
 ---
 
@@ -214,7 +214,7 @@ Componentes que renderizam Content em portal (Dialog, DropdownMenu, Popover, Too
 
 - React: `style={{ contain: 'layout' }}` no wrapper
 - Vue/Svelte: `style="contain: layout"`
-- Basecoat: `wrapper.style.contain = 'layout'`
+- Vanilla: `wrapper.style.contain = 'layout'`
 
 Ver `PATCHES.md#sidebar` para racional CSS Containment.
 
@@ -238,9 +238,9 @@ Componentes com Trigger (DropdownMenuTrigger, DialogTrigger, etc.) devem usar `a
 
 ---
 
-## Documentação de Divergências Idiomáticas (Basecoat)
+## Documentação de Divergências Idiomáticas (Vanilla)
 
-Quando a factory custom Basecoat **não suporta** uma feature da lib upstream (submenu, CheckboxItem, RadioItem, props específicas), documentar em **3 camadas**:
+Quando a factory custom Vanilla **não suporta** uma feature da lib upstream (submenu, CheckboxItem, RadioItem, props específicas), documentar em **3 camadas**:
 
 1. `translations.notes.item1` — descrever divergência
 2. DocsProps notes inline — para cada prop não suportada

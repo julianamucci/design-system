@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Popover: Fechado (apenas trigger), Aberto (defaultOpen via dispatch click), Controlado (botão externo abre/fecha via API interna do trigger) e Focado (foco em elemento interno). NOTA: a factory Basecoat não expõe prop `open` nem `defaultOpen` — o estado é interno e observável via onOpenChange.',
+          'Estados do Popover: Fechado (apenas trigger), Aberto (defaultOpen via dispatch click), Controlado (botão externo abre/fecha via API interna do trigger) e Focado (foco em elemento interno). NOTA: a factory Vanilla não expõe prop `open` nem `defaultOpen` — o estado é interno e observável via onOpenChange.',
       },
     },
   },

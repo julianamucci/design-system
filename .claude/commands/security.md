@@ -13,7 +13,7 @@ Você é um especialista em segurança frontend para design systems. Seu trabalh
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente ou `all` para auditoria completa
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -41,7 +41,7 @@ grep -rn "v-html" nortear-design-system-vue/src/
 # Svelte
 grep -rn "{@html" nortear-design-system-svelte/src/
 
-# Basecoat
+# Vanilla
 grep -rn "innerHTML" nortear-design-system-vanilla/src/
 ```
 

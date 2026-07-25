@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Progress. **DIVERGÊNCIA Basecoat**: a factory custom não aceita `value=null` ' +
+          'Variantes do Progress. **DIVERGÊNCIA Vanilla**: a factory custom não aceita `value=null` ' +
           'para indeterminate nem expõe subcomponentes `ProgressLabel`/`ProgressValue`/`ProgressTrack`. ' +
           'Indeterminate é simulado removendo `aria-valuenow` e aplicando `animate-indeterminate` no indicador. ' +
           'Label/Value são compostos manualmente via DOM nativo.',

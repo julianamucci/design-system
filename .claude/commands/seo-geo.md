@@ -13,7 +13,7 @@ Você é um especialista em SEO e GEO para design systems. Seu trabalho é garan
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -42,7 +42,7 @@ useSeoEffect(computed(() => ({
   componentSlug: '<slug>',
 })));
 
-// Svelte / Basecoat — applySeo() dentro de $effect ou após montar
+// Svelte / Vanilla — applySeo() dentro de $effect ou após montar
 applySeo({ title, description, locale: $locale, componentSlug: '<slug>' });
 ```
 
@@ -161,7 +161,7 @@ Use 4 `Grep` em paralelo por check — não loops bash seriais.
 | React    | ✅/❌       | ✅/❌     | ✅/❌     | ✅/❌               |
 | Vue      | ✅/❌       | ✅/❌     | ✅/❌     | ✅/❌               |
 | Svelte   | ✅/❌       | ✅/❌     | ✅/❌     | ✅/❌               |
-| Basecoat | ✅/❌       | ✅/❌     | ✅/❌     | ✅/❌               |
+| Vanilla | ✅/❌       | ✅/❌     | ✅/❌     | ✅/❌               |
 ```
 
 ---

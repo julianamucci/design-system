@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Select: Default (lista plana), WithGroups (<optgroup> agrupando opções) e WithIcon — **indisponível** no Basecoat porque o factory custom é um wrapper do `<select>` HTML nativo, que não suporta ícones inline em `<option>`. Para a variante de ícone, use `Combobox` ou um componente custom.',
+          'Variantes do Select: Default (lista plana), WithGroups (<optgroup> agrupando opções) e WithIcon — **indisponível** no Vanilla porque o factory custom é um wrapper do `<select>` HTML nativo, que não suporta ícones inline em `<option>`. Para a variante de ícone, use `Combobox` ou um componente custom.',
       },
     },
   },
@@ -82,7 +82,7 @@ export const WithGroups: Story = {
   render: () => {
     // O factory createSelect só aceita items planos.
     // Para agrupar, montamos o <select> + <optgroup> diretamente,
-    // reaproveitando as classes do tema Basecoat.
+    // reaproveitando as classes do tema Vanilla.
     const select = document.createElement('select');
     select.className = 'select';
     select.dataset.slot = 'select';
@@ -133,7 +133,7 @@ export const WithGroups: Story = {
     docs: {
       description: {
         story:
-          'Opções agrupadas por categoria com `<optgroup>`. NOTA: o factory `createSelect` (Basecoat) só aceita uma lista plana — para grupos, monte o `<select>` + `<optgroup>` manualmente como mostrado no código.',
+          'Opções agrupadas por categoria com `<optgroup>`. NOTA: o factory `createSelect` (Vanilla) só aceita uma lista plana — para grupos, monte o `<select>` + `<optgroup>` manualmente como mostrado no código.',
       },
     },
   },
@@ -147,7 +147,7 @@ export const WithGroups: Story = {
   },
 };
 
-// ─── WithIcon (indisponível no Basecoat) ──────────────────────────────────────
+// ─── WithIcon (indisponível no Vanilla) ──────────────────────────────────────
 
 export const WithIcon: Story = {
   render: () => {
@@ -160,7 +160,7 @@ export const WithIcon: Story = {
 
     const title = document.createElement('p');
     title.className = 'nds-text-body nds-font-semibold';
-    title.textContent = 'Variante indisponível no Basecoat';
+    title.textContent = 'Variante indisponível no Vanilla';
 
     const note = document.createElement('p');
     note.className = 'nds-text-body';
@@ -174,7 +174,7 @@ export const WithIcon: Story = {
     docs: {
       description: {
         story:
-          'Variante NÃO suportada no Basecoat. O `<select>` HTML nativo (utilizado pelo factory `createSelect`) não permite ícones inline em `<option>` — limitação do navegador, não do design system. Para listas com ícone, recomendamos `Combobox` (Command + Popover) ou um componente custom.',
+          'Variante NÃO suportada no Vanilla. O `<select>` HTML nativo (utilizado pelo factory `createSelect`) não permite ícones inline em `<option>` — limitação do navegador, não do design system. Para listas com ícone, recomendamos `Combobox` (Command + Popover) ou um componente custom.',
       },
     },
   },

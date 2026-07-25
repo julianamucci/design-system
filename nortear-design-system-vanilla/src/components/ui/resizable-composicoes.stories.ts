@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). NOTA Basecoat: a factory custom NÃO suporta autoSaveId, onLayout nem maxSize — para persistência e callbacks, use as stacks React/Vue/Svelte.',
+          'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). NOTA Vanilla: a factory custom NÃO suporta autoSaveId, onLayout nem maxSize — para persistência e callbacks, use as stacks React/Vue/Svelte.',
       },
     },
   },

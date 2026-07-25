@@ -281,7 +281,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Seleção automática ao focar</strong> — comportamento padrão em desktop: navegar com setas já seleciona. Em mobile, requer toque.",
       "item3": "<strong>Não pré-selecione</strong> sem motivo de negócio — força o usuário a confirmar a escolha e evita erros silenciosos.",
       "item4": "<strong>Sem layout próprio</strong> — o componente apenas agrupa; use <code>flex</code>/<code>grid</code> em volta de cada par item+label."
@@ -631,7 +631,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Auto-select on focus</strong> — default behavior on desktop: arrow navigation selects on move. On mobile, requires tap.",
       "item3": "<strong>Don't pre-select</strong> without business reason — forces user to confirm the choice and avoids silent errors.",
       "item4": "<strong>No own layout</strong> — the component only groups; use <code>flex</code>/<code>grid</code> around each item+label pair."
@@ -981,7 +981,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Selección automática al enfocar</strong> — comportamiento por defecto en desktop: navegar con flechas ya selecciona. En móvil requiere toque.",
       "item3": "<strong>No preseleccione</strong> sin razón de negocio — fuerza al usuario a confirmar la elección y evita errores silenciosos.",
       "item4": "<strong>Sin layout propio</strong> — el componente solo agrupa; usa <code>flex</code>/<code>grid</code> alrededor de cada par ítem+label."

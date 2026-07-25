@@ -162,7 +162,7 @@ export const ComDescricao: Story = {
     docs: {
       description: {
         story:
-          'Cada item acompanha um texto auxiliar abaixo do Label. Útil quando o nome da opção sozinho não comunica o critério de escolha. NOTA: o factory custom (Basecoat) não expõe campo `description` por item — o layout é composto manualmente.',
+          'Cada item acompanha um texto auxiliar abaixo do Label. Útil quando o nome da opção sozinho não comunica o critério de escolha. NOTA: o factory custom (Vanilla) não expõe campo `description` por item — o layout é composto manualmente.',
       },
     },
   },

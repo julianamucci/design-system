@@ -13,7 +13,7 @@ Garanta que toda docs page rastreie elementos interativos via **tracking automá
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug ou `all`
-- **`stack`** (opcional) — `react`/`vue`/`svelte`/`basecoat`/`all` (padrão `all`)
+- **`stack`** (opcional) — `react`/`vue`/`svelte`/`vanilla`/`all` (padrão `all`)
 - **`--audit`** (opcional) — modo read-only; reporta gaps sem editar/commitar
 - **`--json`** (opcional, com `--audit`) — emite JSON consumível por `FIXES-NEEDED.md`
 

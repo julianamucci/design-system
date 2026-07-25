@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que o factory Basecoat não expõe prop `name`).',
+          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que o factory Vanilla não expõe prop `name`).',
       },
     },
   },
@@ -184,7 +184,7 @@ export const ListaDeConfiguracoes: Story = {
 
 export const EmFormularioComHidden: Story = {
   render: () => {
-    // Divergência Basecoat: o factory custom NÃO expõe prop `name`.
+    // Divergência Vanilla: o factory custom NÃO expõe prop `name`.
     // Para envio em formulário, sincronizamos o estado em um <input type="hidden">.
     const form = document.createElement('form');
     form.className = 'nds-stack';
@@ -230,7 +230,7 @@ export const EmFormularioComHidden: Story = {
     docs: {
       description: {
         story:
-          'Padrão para envio em formulário no Basecoat: como o factory custom não expõe prop `name`, sincronize o estado do Switch para um `<input type="hidden" name="...">` via `onCheckedChange`. Em React/Vue/Svelte, basta passar a prop `name` direto no componente.',
+          'Padrão para envio em formulário no Vanilla: como o factory custom não expõe prop `name`, sincronize o estado do Switch para um `<input type="hidden" name="...">` via `onCheckedChange`. Em React/Vue/Svelte, basta passar a prop `name` direto no componente.',
       },
     },
   },

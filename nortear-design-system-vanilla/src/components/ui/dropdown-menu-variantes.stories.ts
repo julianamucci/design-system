@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do DropdownMenuItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: factory Basecoat aplica essas variantes via classes manuais no <li> com role="menuitem".',
+          'Variantes do DropdownMenuItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: factory Vanilla aplica essas variantes via classes manuais no <li> com role="menuitem".',
       },
     },
   },

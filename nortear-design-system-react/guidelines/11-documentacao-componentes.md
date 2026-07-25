@@ -968,7 +968,7 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
 | Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
 | Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
-| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts`, `import.basecoat` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts`, `import.vanilla` |
 | Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
 | Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.legendTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
@@ -991,7 +991,7 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
 3. **`DocsImport` com 3 blocos de código** — a seção import documenta 3 padrões distintos via `secondaryCode` e `tertiaryCode` (ou renderização customizada):
    - Básico React: `import { ChartContainer, ChartTooltip, ... } from '@/components/ui/chart'`
    - Com primitivos Recharts: `import { BarChart, Bar, ... } from 'recharts'`
-   - Basecoat (nota informativa apenas, sem import real de componente)
+   - Vanilla (nota informativa apenas, sem import real de componente)
 
 4. **`DocsDemonstration`** — deve renderizar 3 tabs ou toggle entre `bar`, `line` e `area` usando os labels de `demonstration.labels.*`. Os dados de demonstração são hardcoded na docs page — não vêm do translations.json.
 

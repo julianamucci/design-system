@@ -42,9 +42,9 @@ Paths:
 
 ## Check 5 — Tokens CSS / Temas + Tokenização de dimensões
 
-React/Vue/Svelte devem usar **mesmos tokens** de altura/size (`--height-*`, `--size-*`). Basecoat usa `basecoat-css` (override de tokens).
+React/Vue/Svelte devem usar **mesmos tokens** de altura/size (`--height-*`, `--size-*`). Vanilla usa `basecoat-css` (override de tokens).
 
-3 `Grep` paralelos (excluir Basecoat):
+3 `Grep` paralelos (excluir Vanilla):
 - Tokens: `"h-\(--height-|size-\(--size-"`
 - Hardcoded: `"\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b"`
 
@@ -157,7 +157,7 @@ Categorias: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 - Introduziu comportamento JS que upstream não tem
 
 **Sinais de cross-stack (não é patch):**
-- Copiou classes do React para Vue/Svelte/Basecoat (já no upstream React)
+- Copiou classes do React para Vue/Svelte/Vanilla (já no upstream React)
 - Alinhou nome de variante/tamanho entre stacks
 - Adicionou story ou preencheu docs
 
@@ -173,15 +173,15 @@ npx shadcn@latest view <slug> 2>/dev/null | head -80
 
 ---
 
-## Check 11 — Divergências idiomáticas Basecoat (3 camadas)
+## Check 11 — Divergências idiomáticas Vanilla (3 camadas)
 
-Quando factory custom Basecoat **não suporta** feature da lib upstream (submenu, CheckboxItem nativo, RadioItem, props específicas), verificar documentação em **3 camadas**:
+Quando factory custom Vanilla **não suporta** feature da lib upstream (submenu, CheckboxItem nativo, RadioItem, props específicas), verificar documentação em **3 camadas**:
 
 1. `translations.notes.item1` — descreve divergência
 2. DocsProps notes inline — para cada prop não suportada
 3. Story afetada (se omitida): `parameters.docs.description.component` com nota explícita
 
-`navigation-menu` e `menubar` Basecoat são referências exemplares.
+`navigation-menu` e `menubar` Vanilla são referências exemplares.
 
 ---
 
@@ -218,7 +218,7 @@ Estrutural: items-objeto → componente Card (`CardTitle as="h3"`) em `nds-grid 
 - React: render function direta
 - Vue: template + args
 - Svelte: wrapper `.svelte` pattern (ver `dev-svelte.md`)
-- Basecoat: `createElement` pattern (ver `dev-basecoat.md`)
+- Vanilla: `createElement` pattern (ver `dev-vanilla.md`)
 
 ---
 
@@ -230,19 +230,19 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 ## Relatório Cross-Stack — <component-slug>
 
 ### Classes cva()
-| Aspecto | React | Vue | Svelte | Basecoat | Status |
+| Aspecto | React | Vue | Svelte | Vanilla | Status |
 
 ### Variantes / Tamanhos
-| Variante | React | Vue | Svelte | Basecoat |
+| Variante | React | Vue | Svelte | Vanilla |
 
 ### Stories
-| Arquivo | React | Vue | Svelte | Basecoat |
+| Arquivo | React | Vue | Svelte | Vanilla |
 
 ### Acessibilidade
-| Atributo | React | Vue | Svelte | Basecoat |
+| Atributo | React | Vue | Svelte | Vanilla |
 
 ### Docs Page
-| Check | React | Vue | Svelte | Basecoat |
+| Check | React | Vue | Svelte | Vanilla |
 | IDs (14 seções) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Blocos quando-usar (4) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Sem placeholders | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
@@ -259,7 +259,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 ### Patches sobre upstream shadcn
 | Arquivo | Marker no código | Entrada em PATCHES.md | Status |
 
-### Divergências idiomáticas Basecoat
+### Divergências idiomáticas Vanilla
 | Feature ausente | translations.notes | DocsProps note | Story omitida com nota |
 
 ### Divergências encontradas: X

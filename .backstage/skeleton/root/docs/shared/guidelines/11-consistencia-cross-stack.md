@@ -1,6 +1,6 @@
 # 11 — Consistência Visual Cross-Stack
 
-Este arquivo define como garantir que o mesmo componente produz resultado visual idêntico em React, Vue, Svelte e Basecoat. Um design system multi-stack só tem valor se a aparência e o comportamento forem consistentes em todas as implementações.
+Este arquivo define como garantir que o mesmo componente produz resultado visual idêntico em React, Vue, Svelte e Vanilla. Um design system multi-stack só tem valor se a aparência e o comportamento forem consistentes em todas as implementações.
 
 ---
 
@@ -29,7 +29,7 @@ Hierarquia de decisão:
 As classes de cada variante, tamanho e estado DEVEM ser copiadas letra por letra do React. A função `cva()` (ou equivalente) deve produzir as mesmas strings em todas as stacks.
 
 ```typescript
-// Esta string DEVE ser idêntica em React, Vue, Svelte e Basecoat
+// Esta string DEVE ser idêntica em React, Vue, Svelte e Vanilla
 const base = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50';
 
 const variants = {
@@ -45,7 +45,7 @@ const variants = {
 grep -A 5 "bg-primary" nortear-design-system-react/src/components/ui/button/index.ts
 grep -A 5 "bg-primary" nortear-design-system-vue/src/components/ui/button/index.ts
 grep -A 5 "bg-primary" nortear-design-system-svelte/src/components/ui/Button.svelte
-# Basecoat: verificar constantes no arquivo de stories
+# Vanilla: verificar constantes no arquivo de stories
 ```
 
 ### 2. Tokens CSS (variáveis custom properties)
@@ -82,7 +82,7 @@ Os temas (`docs/shared/themes/`) são compartilhados. Cada stack importa os mesm
 
 Cada stack usa suas próprias convenções:
 
-| Aspecto | React | Vue | Svelte | Basecoat |
+| Aspecto | React | Vue | Svelte | Vanilla |
 |---------|-------|-----|--------|----------|
 | Props | `interface Props` | `defineProps<Props>()` | `$props()` / `export let` | Não aplicável |
 | Slots | `children` | `<slot />` | `<slot />` / `{@render}` | `innerHTML` |
@@ -97,13 +97,13 @@ Cada stack usa suas próprias convenções:
 | React | Radix UI |
 | Vue | Reka UI |
 | Svelte | Bits UI |
-| Basecoat | HTML nativo + ARIA manual |
+| Vanilla | HTML nativo + ARIA manual |
 
 A biblioteca muda, mas o resultado acessível deve ser idêntico.
 
-### Implementações vanilla (Basecoat)
+### Implementações vanilla (Vanilla)
 
-Quando um pacote npm não existe para vanilla TS (ex: `sonner` só tem bindings para React, Vue e Svelte), o Basecoat cria uma **implementação própria** que replica a API e o resultado visual. Regras:
+Quando um pacote npm não existe para vanilla TS (ex: `sonner` só tem bindings para React, Vue e Svelte), o Vanilla cria uma **implementação própria** que replica a API e o resultado visual. Regras:
 
 - A API pública deve seguir o mesmo contrato (mesmos nomes de função, mesmos parâmetros)
 - As classes Tailwind aplicadas aos elementos DOM devem produzir resultado visual idêntico ao da biblioteca original
@@ -132,7 +132,7 @@ Diferenças nas classes = bug. A stack React é a referência.
 
 Verifique que cada stack tem as mesmas variantes:
 
-| Variante | React | Vue | Svelte | Basecoat |
+| Variante | React | Vue | Svelte | Vanilla |
 |----------|-------|-----|--------|----------|
 | default | ✅ | ✅ | ✅ | ✅ |
 | secondary | ✅ | ✅ | ✅ | ✅ |
@@ -159,7 +159,7 @@ Abra o mesmo componente/variante nos 4 Storybooks lado a lado:
 - React: `localhost:6006`
 - Vue: `localhost:6007` (ou porta configurada)
 - Svelte: `localhost:6008`
-- Basecoat: `localhost:6009`
+- Vanilla: `localhost:6009`
 
 Diferenças visuais (cor, espaçamento, tipografia, border-radius) indicam classes divergentes.
 

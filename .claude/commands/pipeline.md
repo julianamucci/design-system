@@ -131,7 +131,7 @@ Fase B (4 agents em PARALELO — dev-skills):
   /dev-react <slug>
   /dev-vue <slug>
   /dev-svelte <slug>
-  /dev-basecoat <slug>
+  /dev-vanilla <slug>
 
 Fase C (serial):
   node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json  (re-scan pós-dev)

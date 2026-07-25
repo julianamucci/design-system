@@ -248,7 +248,7 @@ export const SelecionarTodos: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos. O estado indeterminado não está disponível no Basecoat; use o marcado/desmarcado para o pai.',
+        story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos. O estado indeterminado não está disponível no Vanilla; use o marcado/desmarcado para o pai.',
       },
     },
   },

@@ -13,7 +13,7 @@ const meta: Meta = {
       description: {
         component:
           'Estados do Progress baseados no valor: default (0), loading (parcial), complete (100) e indeterminate (sem valor). ' +
-          'O Basecoat factory não aceita `value=null` — indeterminate é simulado removendo `aria-valuenow`.',
+          'O Vanilla factory não aceita `value=null` — indeterminate é simulado removendo `aria-valuenow`.',
       },
     },
   },

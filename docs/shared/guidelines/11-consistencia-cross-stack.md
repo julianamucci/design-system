@@ -1,6 +1,6 @@
 # 11 — Consistência Visual Cross-Stack
 
-Este arquivo define como garantir que o mesmo componente produz resultado visual idêntico em React, Vue, Svelte e Basecoat. Um design system multi-stack só tem valor se a aparência e o comportamento forem consistentes em todas as implementações.
+Este arquivo define como garantir que o mesmo componente produz resultado visual idêntico em React, Vue, Svelte e Vanilla. Um design system multi-stack só tem valor se a aparência e o comportamento forem consistentes em todas as implementações.
 
 ---
 
@@ -84,7 +84,7 @@ Os temas (`docs/shared/themes/`) são compartilhados. Cada stack importa os mesm
 
 Cada stack usa suas próprias convenções:
 
-| Aspecto | React | Vue | Svelte | Basecoat |
+| Aspecto | React | Vue | Svelte | Vanilla |
 |---------|-------|-----|--------|----------|
 | Props | `interface Props` | `defineProps<Props>()` | `$props()` / `export let` | Não aplicável |
 | Slots | `children` | `<slot />` | `<slot />` / `{@render}` | `innerHTML` |
@@ -99,13 +99,13 @@ Cada stack usa suas próprias convenções:
 | React | Radix UI |
 | Vue | Reka UI |
 | Svelte | Bits UI |
-| Basecoat | HTML nativo + ARIA manual |
+| Vanilla | HTML nativo + ARIA manual |
 
 A biblioteca muda, mas o resultado acessível deve ser idêntico.
 
-### Implementações vanilla (Basecoat)
+### Implementações vanilla (Vanilla)
 
-Quando um pacote npm não existe para vanilla TS (ex: `sonner` só tem bindings para React, Vue e Svelte), o Basecoat cria uma **implementação própria** que replica a API e o resultado visual. Regras:
+Quando um pacote npm não existe para vanilla TS (ex: `sonner` só tem bindings para React, Vue e Svelte), o Vanilla cria uma **implementação própria** que replica a API e o resultado visual. Regras:
 
 - A API pública deve seguir o mesmo contrato (mesmos nomes de função, mesmos parâmetros)
 - As classes `.nds-*` aplicadas aos elementos DOM devem produzir resultado visual idêntico ao da biblioteca original
@@ -134,7 +134,7 @@ Diferenças nas classes = bug. A stack React é a referência.
 
 Verifique que cada stack tem as mesmas variantes:
 
-| Variante | React | Vue | Svelte | Basecoat |
+| Variante | React | Vue | Svelte | Vanilla |
 |----------|-------|-----|--------|----------|
 | default | ✅ | ✅ | ✅ | ✅ |
 | secondary | ✅ | ✅ | ✅ | ✅ |
@@ -161,7 +161,7 @@ Abra o mesmo componente/variante nos 4 Storybooks lado a lado:
 - React: `localhost:6006`
 - Vue: `localhost:6007` (ou porta configurada)
 - Svelte: `localhost:6008`
-- Basecoat: `localhost:6009`
+- Vanilla: `localhost:6009`
 
 Diferenças visuais (cor, espaçamento, tipografia, border-radius) indicam classes divergentes.
 
@@ -229,7 +229,7 @@ O `translations.json` é **compartilhado entre as 4 stacks**. Cada stack pode us
    });
    ```
 
-   Suportado em React (`useTranslation`), Vue (`useTranslation`), Svelte (`useTranslation`) e Basecoat (`createTranslation`). Use com moderação — preferir reescrever em conceito quando possível.
+   Suportado em React (`useTranslation`), Vue (`useTranslation`), Svelte (`useTranslation`) e Vanilla (`createTranslation`). Use com moderação — preferir reescrever em conceito quando possível.
 
 ### Padrões problemáticos comuns
 

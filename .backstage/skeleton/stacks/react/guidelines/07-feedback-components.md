@@ -87,7 +87,7 @@ import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react"
 O posicionamento do ícone difere entre stacks por razões de versão do Shadcn/UI — **não corrigir**:
 - React: `[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4` + `[&>svg~*]:pl-7` (seletor de irmão)
 - Vue/Svelte: `has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr]` (CSS grid, Shadcn mais recente)
-- Basecoat: classe CSS `.alert` definida em `globals.css`
+- Vanilla: classe CSS `.alert` definida em `globals.css`
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - O Shadcn aplica `role="alert"` automaticamente — o leitor de tela anuncia o conteúdo ao ser inserido no DOM

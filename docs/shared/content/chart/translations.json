@@ -118,7 +118,7 @@
       "title": "Importação",
       "basic": "Import básico:",
       "withBuilders": "Com builders auxiliares:",
-      "basecoat": "Vanilla TypeScript (Nortear):"
+      "vanilla": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Tipos de Gráfico",
@@ -462,7 +462,7 @@
       "title": "Import",
       "basic": "Basic import:",
       "withBuilders": "With auxiliary builders:",
-      "basecoat": "Vanilla TypeScript (Nortear):"
+      "vanilla": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Chart Types",
@@ -806,7 +806,7 @@
       "title": "Importación",
       "basic": "Import básico:",
       "withBuilders": "Con builders auxiliares:",
-      "basecoat": "Vanilla TypeScript (Nortear):"
+      "vanilla": "Vanilla TypeScript (Nortear):"
     },
     "variants": {
       "title": "Tipos de Gráfico",

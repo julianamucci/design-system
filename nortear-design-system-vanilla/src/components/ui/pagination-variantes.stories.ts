@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Pagination: Default (link inativo, ghost), Active (página atual com aria-current="page" e estilo destacado) e Directional (Previous/Next com ícone). NOTA: o factory createPagination (Basecoat) não expõe prop `variant` — a variante "active" é aplicada internamente quando `page === current`.',
+          'Variantes do Pagination: Default (link inativo, ghost), Active (página atual com aria-current="page" e estilo destacado) e Directional (Previous/Next com ícone). NOTA: o factory createPagination (Vanilla) não expõe prop `variant` — a variante "active" é aplicada internamente quando `page === current`.',
       },
     },
   },

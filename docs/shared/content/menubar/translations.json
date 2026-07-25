@@ -7,8 +7,8 @@
     "seo": {
       "title": "Menubar — Navegação",
       "description": "Documentação do Menubar: barra de menus horizontal estilo desktop via base-ui/reka-ui/bits-ui, com setas, submenus e WCAG 2.1 AA.",
-      "aiSummary": "Componente Menubar construído sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Basecoat) que apresenta barra horizontal de menus estilo desktop com triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts e navegação por setas entre menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiSummary": "Componente Menubar construído sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Vanilla) que apresenta barra horizontal de menus estilo desktop com triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts e navegação por setas entre menus.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -339,7 +339,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordenado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sem submenu nativo.",
+      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordenado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sem submenu nativo.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (ex: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar em telas pequenas vira sub-ótimo — considere alternar para Sidebar ou DropdownMenu acima de breakpoint.",
@@ -463,8 +463,8 @@
     "seo": {
       "title": "Menubar — Navigation",
       "description": "Menubar documentation: desktop-style menu bar via base-ui/reka-ui/bits-ui, with arrows, submenus, and WCAG 2.1 AA.",
-      "aiSummary": "Menubar component built on base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Basecoat) that presents a horizontal bar of desktop-style menus with triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts, and arrow navigation between menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiSummary": "Menubar component built on base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Vanilla) that presents a horizontal bar of desktop-style menus with triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts, and arrow navigation between menus.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -794,7 +794,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: Menubar uses coordinated <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> uses a custom factory without native submenu.",
+      "item1": "<strong>Upstream lib</strong>: Menubar uses coordinated <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory without native submenu.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (e.g., <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar on small screens becomes sub-optimal — consider switching to Sidebar or DropdownMenu above breakpoint.",
@@ -918,8 +918,8 @@
     "seo": {
       "title": "Menubar — Navegación",
       "description": "Documentación de Menubar: barra de menús horizontal estilo desktop vía base-ui/reka-ui/bits-ui, con flechas, submenús y WCAG 2.1 AA.",
-      "aiSummary": "Componente Menubar construido sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Basecoat) que presenta barra horizontal de menús estilo desktop con triggers, items, checkbox-items, radio-items, submenús, separators, shortcuts y navegación por flechas entre menús.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Basecoat, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
+      "aiSummary": "Componente Menubar construido sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Vanilla) que presenta barra horizontal de menús estilo desktop con triggers, items, checkbox-items, radio-items, submenús, separators, shortcuts y navegación por flechas entre menús.",
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.1, aria-haspopup, desktop application",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1249,7 +1249,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordinado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Basecoat</strong> usa factory custom sin submenú nativo.",
+      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordinado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sin submenú nativo.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (ej.: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar en pantallas pequeñas se vuelve subóptimo — considera cambiar a Sidebar o DropdownMenu por encima de un breakpoint.",

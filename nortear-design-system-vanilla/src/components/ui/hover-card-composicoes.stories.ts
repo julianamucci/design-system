@@ -171,7 +171,7 @@ export const PreviewDeLink: Story = {
     const desc = document.createElement('p');
     desc.className = 'nds-text-caption nds-text-muted-foreground';
     desc.style.lineHeight = '1.375';
-    desc.textContent = 'Componentes acessíveis em React, Vue, Svelte e Basecoat.';
+    desc.textContent = 'Componentes acessíveis em React, Vue, Svelte e Vanilla.';
 
     content.append(header, title, desc);
 

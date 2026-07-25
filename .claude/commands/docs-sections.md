@@ -1,6 +1,6 @@
 ---
 description: Cria os 15 componentes genéricos de seção de documentação em cada stack — containers estruturais reutilizáveis que garantem layout consistente entre todas as doc pages
-argument-hint: [--stack react|vue|svelte|basecoat|all]
+argument-hint: [--stack react|vue|svelte|vanilla|all]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
 
@@ -12,7 +12,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 
 O usuário invocou o comando com: **$ARGUMENTS**
 
-- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -69,7 +69,7 @@ Use `AlertDocs` como referência de como cada container é consumido:
 - React: `nortear-design-system-react/src/components/docs/AlertDocs.tsx`
 - Vue: `nortear-design-system-vue/src/components/docs/AlertDocs.vue`
 - Svelte: `nortear-design-system-svelte/src/components/docs/AlertDocs.svelte`
-- Basecoat: `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts`
+- Vanilla: `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts`
 
 Use os section containers existentes da stack como template para criar novos:
 - `nortear-design-system-{stack}/src/components/docs/shared/sections/DocsAnatomy.{ext}` — container com dados (lista numerada + structureCode)

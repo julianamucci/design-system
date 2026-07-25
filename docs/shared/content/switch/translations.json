@@ -139,7 +139,7 @@
         },
         "inForm": {
           "name": "Em formulário",
-          "description": "Switch dentro de um <code>&lt;form&gt;</code> com prop <code>name</code> (React/Vue/Svelte) ou sincronizado via <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) para participar do submit nativo.",
+          "description": "Switch dentro de um <code>&lt;form&gt;</code> com prop <code>name</code> (React/Vue/Svelte) ou sincronizado via <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) para participar do submit nativo.",
           "use": "Aceite de termos opcionais, opt-in de newsletter em formulários multi-campo. Use o <code>onCheckedChange</code> para sincronizar o valor."
         }
       }
@@ -276,11 +276,11 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Efeito imediato</strong> — o Switch dispara o callback de mudança a cada toggle. Não usar dentro de form que exige submit.",
       "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
       "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para tamanho customizado, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — a factory <code>createSwitch()</code> não suporta <code>size</code>, <code>defaultChecked</code> nem <code>name</code> nativos. Use a prop <code>checked</code> como valor inicial e sincronize com <code>&lt;input type=\"hidden\"&gt;</code> via o callback de mudança para formulários."
+      "item5": "<strong>Vanilla</strong> — a factory <code>createSwitch()</code> não suporta <code>size</code>, <code>defaultChecked</code> nem <code>name</code> nativos. Use a prop <code>checked</code> como valor inicial e sincronize com <code>&lt;input type=\"hidden\"&gt;</code> via o callback de mudança para formulários."
     },
     "analytics": {
       "title": "Analytics",
@@ -485,7 +485,7 @@
         },
         "inForm": {
           "name": "In a form",
-          "description": "Switch inside a <code>&lt;form&gt;</code> with a <code>name</code> prop (React/Vue/Svelte) or synced via <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) so it participates in native submit.",
+          "description": "Switch inside a <code>&lt;form&gt;</code> with a <code>name</code> prop (React/Vue/Svelte) or synced via <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) so it participates in native submit.",
           "use": "Optional terms acceptance, newsletter opt-in in multi-field forms. Use <code>onCheckedChange</code> to sync the value."
         }
       }
@@ -622,11 +622,11 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Immediate effect</strong> — Switch fires the change callback on every toggle. Don't use inside form that requires submit.",
       "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
       "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For custom size, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — the <code>createSwitch()</code> factory does not natively support <code>size</code>, <code>defaultChecked</code> or <code>name</code>. Use the <code>checked</code> prop as initial value and sync with <code>&lt;input type=\"hidden\"&gt;</code> via the change callback for forms."
+      "item5": "<strong>Vanilla</strong> — the <code>createSwitch()</code> factory does not natively support <code>size</code>, <code>defaultChecked</code> or <code>name</code>. Use the <code>checked</code> prop as initial value and sync with <code>&lt;input type=\"hidden\"&gt;</code> via the change callback for forms."
     },
     "analytics": {
       "title": "Analytics",
@@ -831,7 +831,7 @@
         },
         "inForm": {
           "name": "En formulario",
-          "description": "Switch dentro de un <code>&lt;form&gt;</code> con prop <code>name</code> (React/Vue/Svelte) o sincronizado vía <code>&lt;input type=\"hidden\"&gt;</code> (Basecoat) para participar del submit nativo.",
+          "description": "Switch dentro de un <code>&lt;form&gt;</code> con prop <code>name</code> (React/Vue/Svelte) o sincronizado vía <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) para participar del submit nativo.",
           "use": "Aceptación de términos opcionales, opt-in de newsletter en formularios multi-campo. Usa <code>onCheckedChange</code> para sincronizar el valor."
         }
       }
@@ -968,11 +968,11 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Efecto inmediato</strong> — el Switch dispara el callback de cambio en cada toggle. No usar dentro de form que requiere submit.",
       "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
       "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para tamaño personalizado, usa CSS vía <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Basecoat</strong> — la factory <code>createSwitch()</code> no soporta <code>size</code>, <code>defaultChecked</code> ni <code>name</code> nativamente. Usa la prop <code>checked</code> como valor inicial y sincroniza con <code>&lt;input type=\"hidden\"&gt;</code> vía el callback de cambio para formularios."
+      "item5": "<strong>Vanilla</strong> — la factory <code>createSwitch()</code> no soporta <code>size</code>, <code>defaultChecked</code> ni <code>name</code> nativamente. Usa la prop <code>checked</code> como valor inicial y sincroniza con <code>&lt;input type=\"hidden\"&gt;</code> vía el callback de cambio para formularios."
     },
     "analytics": {
       "title": "Analytics",

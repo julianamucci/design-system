@@ -16,7 +16,7 @@ const meta: Meta = {
       description: {
         component:
           'Composicoes reais do Sheet: filtros avançados (right), navegação secundária (left) e painel ' +
-          'mobile-style (bottom). NOTA: a factory Basecoat não suporta SheetClose com asChild — o botão X é ' +
+          'mobile-style (bottom). NOTA: a factory Vanilla não suporta SheetClose com asChild — o botão X é ' +
           'sempre renderizado pela factory, e botões customizados de cancelar precisam acionar o overlay manualmente.',
       },
     },
@@ -51,7 +51,7 @@ function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
   footer.className = 'nds-cluster';
   footer.dataset.spacing = 'sm';
   footer.append(cancel, action);
-  // Fechar via overlay click (factory Basecoat não suporta SheetClose asChild)
+  // Fechar via overlay click (factory Vanilla não suporta SheetClose asChild)
   const closeFromAction = () => {
     const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
     overlay?.click();
@@ -206,7 +206,7 @@ export const WithLongScrollContent: Story = {
       description: {
         story:
           'Body longo com scroll interno — o flex layout do painel mantém o footer fixo enquanto o body rola. ' +
-          'A factory Basecoat aplica `flex-1 overflow-auto` automaticamente no body.',
+          'A factory Vanilla aplica `flex-1 overflow-auto` automaticamente no body.',
       },
     },
   },

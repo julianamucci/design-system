@@ -272,7 +272,7 @@
       "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> só vale em <code>&lt;button&gt;</code>.",
       "item3": "<strong>Ellipsis tipográfico</strong> — use o caractere <code>…</code> (U+2026), não três pontos <code>...</code>.",
       "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível.",
-      "item5": "<strong>Basecoat</strong> — a factory <code>createPagination({ total, current, onPageChange })</code> não permite compor com elemento filho nem expõe <code>PaginationLink</code> individuais. Para integrar com router, use <code>onPageChange</code> e atualize a URL manualmente."
+      "item5": "<strong>Vanilla</strong> — a factory <code>createPagination({ total, current, onPageChange })</code> não permite compor com elemento filho nem expõe <code>PaginationLink</code> individuais. Para integrar com router, use <code>onPageChange</code> e atualize a URL manualmente."
     },
     "analytics": {
       "title": "Analytics",
@@ -610,7 +610,7 @@
       "item2": "<strong>Disabled state</strong> — for <code>&lt;a&gt;</code> links, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> only works on <code>&lt;button&gt;</code>.",
       "item3": "<strong>Typographic ellipsis</strong> — use the <code>…</code> character (U+2026), not three dots <code>...</code>.",
       "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible.",
-      "item5": "<strong>Basecoat</strong> — the <code>createPagination({ total, current, onPageChange })</code> factory does not allow composing with a child element nor exposes individual <code>PaginationLink</code>. To integrate with a router, use <code>onPageChange</code> and update the URL manually."
+      "item5": "<strong>Vanilla</strong> — the <code>createPagination({ total, current, onPageChange })</code> factory does not allow composing with a child element nor exposes individual <code>PaginationLink</code>. To integrate with a router, use <code>onPageChange</code> and update the URL manually."
     },
     "analytics": {
       "title": "Analytics",
@@ -948,7 +948,7 @@
       "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, usa <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> solo aplica a <code>&lt;button&gt;</code>.",
       "item3": "<strong>Ellipsis tipográfico</strong> — usa el carácter <code>…</code> (U+2026), no tres puntos <code>...</code>.",
       "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible.",
-      "item5": "<strong>Basecoat</strong> — la factory <code>createPagination({ total, current, onPageChange })</code> no permite componer con elemento hijo ni expone <code>PaginationLink</code> individuales. Para integrar con router, usa <code>onPageChange</code> y actualiza la URL manualmente."
+      "item5": "<strong>Vanilla</strong> — la factory <code>createPagination({ total, current, onPageChange })</code> no permite componer con elemento hijo ni expone <code>PaginationLink</code> individuales. Para integrar con router, usa <code>onPageChange</code> y actualiza la URL manualmente."
     },
     "analytics": {
       "title": "Analytics",

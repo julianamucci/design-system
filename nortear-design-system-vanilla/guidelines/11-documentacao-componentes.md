@@ -557,7 +557,7 @@ Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, 
 | Anatomia | `createDocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
 | Quando Usar | `createDocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `createDocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
-| Importação | `createDocsImport` | `import.title`, `import.basecoat` |
+| Importação | `createDocsImport` | `import.title`, `import.vanilla` |
 | Tipos de Gráfico | `createDocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`, `variants.items.line` |
 | Estados | `createDocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `createDocsProps` | `props.title`, `props.containerTitle`, `props.table.config`, `props.table.className`, `props.extensibilityTitle`, `props.extensibility` |
@@ -579,7 +579,7 @@ Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, 
    - `colors`: string[] (tokens CSS ou valores hex)
    Chave de título: `props.containerTitle` (`"createChart"` como título da tabela).
 
-3. **`DocsImport`** — usar apenas `import.basecoat`:
+3. **`DocsImport`** — usar apenas `import.vanilla`:
    ```ts
    import { createChart } from '@/components/ui/chart';
    ```

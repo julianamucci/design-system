@@ -47,8 +47,8 @@ if (!args.stack || !args.component) {
   process.exit(1);
 }
 
-if (args.stack === 'basecoat') {
-  console.error('Stack basecoat não tem registry shadcn. Compare manualmente com node_modules/basecoat-css/dist/basecoat.css.');
+if (args.stack === 'vanilla') {
+  console.error('Stack vanilla não tem registry shadcn. Compare manualmente com node_modules/basecoat-css/dist/basecoat.css.');
   process.exit(1);
 }
 

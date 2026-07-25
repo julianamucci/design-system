@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Tooltip: Fechado (apenas trigger), Aberto (dispatch mouseenter) e FocoTeclado (Tab abre via focus event). NOTA: a factory Basecoat usa delay interno fixo (300 ms) por instância — não há TooltipProvider compartilhado. Foco e hover compartilham o mesmo delay.',
+          'Estados do Tooltip: Fechado (apenas trigger), Aberto (dispatch mouseenter) e FocoTeclado (Tab abre via focus event). NOTA: a factory Vanilla usa delay interno fixo (300 ms) por instância — não há TooltipProvider compartilhado. Foco e hover compartilham o mesmo delay.',
       },
     },
   },

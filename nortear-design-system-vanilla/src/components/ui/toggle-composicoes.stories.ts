@@ -191,7 +191,7 @@ export const Tamanhos: Story = {
 
 export const SimulacaoToggleGroup: Story = {
   render: () => {
-    // Divergência idiomática Basecoat: não existe ToggleGroup nativo no factory.
+    // Divergência idiomática Vanilla: não existe ToggleGroup nativo no factory.
     // Aqui simulamos manualmente uma escolha exclusiva (single) — em produção,
     // prefira `ToggleGroup` quando representam escolha conjunta.
     const group = document.createElement('div');
@@ -236,7 +236,7 @@ export const SimulacaoToggleGroup: Story = {
     docs: {
       description: {
         story:
-          'Simulação de ToggleGroup (`type="single"`) — 3 Toggles agrupados visualmente com lógica de exclusividade adicionada manualmente. **Divergência Basecoat**: o factory custom não fornece `ToggleGroup` nativo. Em produção, prefira usar o componente `ToggleGroup` específico (existe nas outras stacks como referência).',
+          'Simulação de ToggleGroup (`type="single"`) — 3 Toggles agrupados visualmente com lógica de exclusividade adicionada manualmente. **Divergência Vanilla**: o factory custom não fornece `ToggleGroup` nativo. Em produção, prefira usar o componente `ToggleGroup` específico (existe nas outras stacks como referência).',
       },
     },
   },

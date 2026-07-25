@@ -258,7 +258,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Tamanhos em porcentagem</strong> — <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> são percentuais do grupo (0–100), não pixels.",
       "item3": "<strong>autoSaveId</strong> (React) — persiste tamanhos no <code>localStorage</code> automaticamente quando definido no <code>PanelGroup</code>.",
       "item4": "<strong>Mobile</strong> — considere ocultar o componente em telas pequenas e usar layout empilhado ou <code>Sheet</code> em vez."
@@ -585,7 +585,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Sizes in percentage</strong> — <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> are group percentages (0–100), not pixels.",
       "item3": "<strong>autoSaveId</strong> (React) — persists sizes in <code>localStorage</code> automatically when defined on <code>PanelGroup</code>.",
       "item4": "<strong>Mobile</strong> — consider hiding the component on small screens and using stacked layout or <code>Sheet</code> instead."
@@ -912,7 +912,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Tamaños en porcentaje</strong> — <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> son porcentajes del grupo (0–100), no píxeles.",
       "item3": "<strong>autoSaveId</strong> (React) — persiste tamaños en <code>localStorage</code> automáticamente cuando se define en el <code>PanelGroup</code>.",
       "item4": "<strong>Móvil</strong> — considera ocultar el componente en pantallas pequeñas y usar layout apilado o <code>Sheet</code> en su lugar."

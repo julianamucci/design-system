@@ -49,7 +49,7 @@ Como o design system é construído em cima de primitives de terceiros e CLI de 
 
 1. **Wrapper-first**: Sempre tentar encapsular um componente antes de modificá-lo.
 2. **Patching rastreável**: Se for essencial alterar a estrutura base gerada (ex: `a11y`, `i18n`, `bugfix`), a linha é obrigatoriamente comentada no código com `// PATCH: ...`.
-3. **Auditoria (`npm run patches:list`)**: Scripts automatizados validam as modificações locais comparando com as fontes de upstream (*shadcn, basecoat, etc.*) antes e depois de atualizações.
+3. **Auditoria (`npm run patches:list`)**: Scripts automatizados validam as modificações locais comparando com as fontes de upstream (*shadcn, vanilla, etc.*) antes e depois de atualizações.
 
 ## 5. Destaques Técnicos
 

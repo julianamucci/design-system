@@ -14,7 +14,7 @@ Você é o skill `/quality {{slug}} all` em **audit-mode puro**. NÃO edite nenh
 **React**: {{react_files}}
 **Vue**: {{vue_files}}
 **Svelte**: {{svelte_files}}
-**Basecoat**: {{basecoat_files}}
+**Vanilla**: {{vanilla_files}}
 
 ## EARLY-EXIT
 

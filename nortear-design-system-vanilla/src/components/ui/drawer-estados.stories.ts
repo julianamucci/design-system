@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados canônicos do Drawer: Fechado (apenas trigger), Aberto (defaultOpen), Controlado (open externo via .click()) e NaoDismissible (documenta intent — Basecoat permite ESC/overlay sempre).',
+          'Estados canônicos do Drawer: Fechado (apenas trigger), Aberto (defaultOpen), Controlado (open externo via .click()) e NaoDismissible (documenta intent — Vanilla permite ESC/overlay sempre).',
       },
     },
   },
@@ -180,7 +180,7 @@ export const NaoDismissible: Story = {
     docs: {
       description: {
         story:
-          'NOTA: a factory createDrawer (Basecoat) sempre permite ESC/overlay/X. Esta story documenta a intenção dismissible=false — a divergência do upstream (vaul) deve ser tratada em camadas superiores via onOpenChange + e.preventDefault em consumidores.',
+          'NOTA: a factory createDrawer (Vanilla) sempre permite ESC/overlay/X. Esta story documenta a intenção dismissible=false — a divergência do upstream (vaul) deve ser tratada em camadas superiores via onOpenChange + e.preventDefault em consumidores.',
       },
     },
   },

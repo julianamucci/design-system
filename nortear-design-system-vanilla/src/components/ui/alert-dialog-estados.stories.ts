@@ -66,7 +66,7 @@ function buildDemo(opts: DemoOptions): HTMLElement {
   });
 
   if (opts.openInitially) {
-    // Basecoat AlertDialog opens on trigger click. Open programmatically for snapshots.
+    // Vanilla AlertDialog opens on trigger click. Open programmatically for snapshots.
     queueMicrotask(() => trigger.click());
   }
 

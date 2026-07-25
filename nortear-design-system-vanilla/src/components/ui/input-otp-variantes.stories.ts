@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do InputOTP no Basecoat: SeisDigitos (padrão SMS), QuatroDigitos (PIN) e ComSeparator (3+3). Divergência idiomática: o factory Basecoat aceita apenas dígitos (regex \\D no paste) — não há suporte a `pattern` alfanumérico nem a `inputMode=text`. A variante Alfanumerico é documentada mas omitida visualmente neste stack.',
+          'Variantes do InputOTP no Vanilla: SeisDigitos (padrão SMS), QuatroDigitos (PIN) e ComSeparator (3+3). Divergência idiomática: o factory Vanilla aceita apenas dígitos (regex \\D no paste) — não há suporte a `pattern` alfanumérico nem a `inputMode=text`. A variante Alfanumerico é documentada mas omitida visualmente neste stack.',
       },
     },
   },
@@ -102,7 +102,7 @@ export const Alfanumerico: Story = {
     const note = document.createElement('p');
     note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent =
-      'O factory Basecoat aceita apenas dígitos (inputMode=numeric, paste com regex \\D). Para códigos alfanuméricos use a variante das stacks React/Vue/Svelte ou estenda o factory.';
+      'O factory Vanilla aceita apenas dígitos (inputMode=numeric, paste com regex \\D). Para códigos alfanuméricos use a variante das stacks React/Vue/Svelte ou estenda o factory.';
     const fallback = createInputOTP({ length: 6 });
     wrapper.append(note, fallback);
     return wrap(wrapper);

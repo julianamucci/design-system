@@ -123,7 +123,7 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Modos e Layouts",
-      "note": "O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>). <strong>Disponibilidade por stack:</strong> <code>range</code> está em React (<code>react-day-picker</code>) e Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expõe apenas <code>single</code>/<code>multiple</code>, Basecoat expõe apenas <code>single</code>. <code>showWeekNumber</code> é exclusivo do React. <code>numberOfMonths</code> e <code>captionLayout=\"dropdown\"</code> existem em React, Vue e Svelte.",
+      "note": "O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>). <strong>Disponibilidade por stack:</strong> <code>range</code> está em React (<code>react-day-picker</code>) e Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expõe apenas <code>single</code>/<code>multiple</code>, Vanilla expõe apenas <code>single</code>. <code>showWeekNumber</code> é exclusivo do React. <code>numberOfMonths</code> e <code>captionLayout=\"dropdown\"</code> existem em React, Vue e Svelte.",
       "items": {
         "single": "<code>mode=\"single\"</code> — seleção de uma data única. Valor: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — várias datas independentes. Valor: <code>Date[]</code>.",
@@ -479,7 +479,7 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Modes and Layouts",
-      "note": "Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>). <strong>Availability per stack:</strong> <code>range</code> is supported in React (<code>react-day-picker</code>) and Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) exposes only <code>single</code>/<code>multiple</code>, Basecoat exposes only <code>single</code>. <code>showWeekNumber</code> is React-only. <code>numberOfMonths</code> and <code>captionLayout=\"dropdown\"</code> are available in React, Vue and Svelte.",
+      "note": "Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>). <strong>Availability per stack:</strong> <code>range</code> is supported in React (<code>react-day-picker</code>) and Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) exposes only <code>single</code>/<code>multiple</code>, Vanilla exposes only <code>single</code>. <code>showWeekNumber</code> is React-only. <code>numberOfMonths</code> and <code>captionLayout=\"dropdown\"</code> are available in React, Vue and Svelte.",
       "items": {
         "single": "<code>mode=\"single\"</code> — pick one date. Value: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — several independent dates. Value: <code>Date[]</code>.",
@@ -835,7 +835,7 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Modos y Layouts",
-      "note": "Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>). <strong>Disponibilidad por stack:</strong> <code>range</code> está en React (<code>react-day-picker</code>) y Vue (vía <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expone solo <code>single</code>/<code>multiple</code>, Basecoat expone solo <code>single</code>. <code>showWeekNumber</code> es exclusivo de React. <code>numberOfMonths</code> y <code>captionLayout=\"dropdown\"</code> existen en React, Vue y Svelte.",
+      "note": "Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>). <strong>Disponibilidad por stack:</strong> <code>range</code> está en React (<code>react-day-picker</code>) y Vue (vía <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expone solo <code>single</code>/<code>multiple</code>, Vanilla expone solo <code>single</code>. <code>showWeekNumber</code> es exclusivo de React. <code>numberOfMonths</code> y <code>captionLayout=\"dropdown\"</code> existen en React, Vue y Svelte.",
       "items": {
         "single": "<code>mode=\"single\"</code> — selección de una sola fecha. Valor: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — varias fechas independientes. Valor: <code>Date[]</code>.",

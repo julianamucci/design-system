@@ -13,7 +13,7 @@ Você é um especialista em Search Engine Optimization e Generative Engine Optim
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `basecoat` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
 
 ---
 
@@ -121,7 +121,7 @@ $effect(() => {
 });
 ```
 
-**Basecoat:**
+**Vanilla:**
 ```ts
 import { applySeo } from '@/lib/use-seo';
 

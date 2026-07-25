@@ -13,7 +13,7 @@ const meta: Meta = {
       description: {
         component:
           'Três direções canônicas de scroll: vertical (padrão), horizontal e bidirecional. ' +
-          'Diferente da API React/Vue/Svelte, a factory Basecoat não tem subcomponente ScrollBar nem prop orientation — ' +
+          'Diferente da API React/Vue/Svelte, a factory Vanilla não tem subcomponente ScrollBar nem prop orientation — ' +
           'a direção é decorrente da relação entre o tamanho do container e do conteúdo interno (flex w-max para horizontal, table larga para both).',
       },
     },

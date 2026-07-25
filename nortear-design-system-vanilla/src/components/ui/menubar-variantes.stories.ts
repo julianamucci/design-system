@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do MenubarItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: a factory createMenubar (Basecoat) não tem prop `variant` nativo — o item destructive é montado manualmente com classes .nds-* aplicadas no <li role="menuitem">.',
+          'Variantes do MenubarItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: a factory createMenubar (Vanilla) não tem prop `variant` nativo — o item destructive é montado manualmente com classes .nds-* aplicadas no <li role="menuitem">.',
       },
     },
   },
@@ -86,7 +86,7 @@ export const Default: Story = {
 export const Destructive: Story = {
   name: 'Destructive',
   render: () => {
-    // Factory Basecoat não tem `variant` — adicionamos um item destructive
+    // Factory Vanilla não tem `variant` — adicionamos um item destructive
     // após criar a barra, anexando o <li> manualmente ao panel do menu.
     const bar = createMenubar([
       {

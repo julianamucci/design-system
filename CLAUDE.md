@@ -26,7 +26,7 @@ Each stack is an independent npm package; run commands from inside the stack dir
 
 ```bash
 # Storybook (the primary developer interface — NOT App.tsx/main.ts)
-npm run storybook          # React:6006 · Vue:6007 · Svelte:6008 · Basecoat:6009
+npm run storybook          # React:6006 · Vue:6007 · Svelte:6008 · Vanilla:6009
 
 # Build + typecheck
 npm run build              # tsc -b && vite build (varies per stack)
@@ -101,7 +101,7 @@ When `*Docs.tsx` iterates `translations[locale].props.<group>.items` directly (b
 
 ### Skills and audit pipeline
 
-`.claude/commands/` defines named skills (`pipeline`, `dev-react`, `dev-vue`, `dev-svelte`, `dev-basecoat`, `ux-writer`, `quality`, `security`, `performance`, `analytics`, `seo-geo`, `cross-stack`, `product`, `docs-sections`). The `pipeline` orchestrator chains them with parallelism between stacks and inline determinism via `scripts/audit.mjs`. Skills are user-invoked with slash commands — do not invoke them speculatively.
+`.claude/commands/` defines named skills (`pipeline`, `dev-react`, `dev-vue`, `dev-svelte`, `dev-vanilla`, `ux-writer`, `quality`, `security`, `performance`, `analytics`, `seo-geo`, `cross-stack`, `product`, `docs-sections`). The `pipeline` orchestrator chains them with parallelism between stacks and inline determinism via `scripts/audit.mjs`. Skills are user-invoked with slash commands — do not invoke them speculatively.
 
 ## Conventions To Respect
 

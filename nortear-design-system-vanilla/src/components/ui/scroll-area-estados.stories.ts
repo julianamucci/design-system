@@ -13,7 +13,7 @@ const meta: Meta = {
       description: {
         component:
           'Estados visuais do ScrollArea: idle, scrolling, hover e focus. ' +
-          'Divergência Basecoat: como a scrollbar é a nativa do navegador (sem JS state machine), idle/scrolling/hover ' +
+          'Divergência Vanilla: como a scrollbar é a nativa do navegador (sem JS state machine), idle/scrolling/hover ' +
           'são controlados pelo SO/browser; o foco no viewport é o único estado controlável via tabIndex.',
       },
     },

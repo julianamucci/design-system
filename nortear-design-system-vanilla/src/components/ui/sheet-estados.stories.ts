@@ -16,7 +16,7 @@ const meta: Meta = {
       description: {
         component:
           'Estados canônicos do Sheet: closed (inicial), open (aberto programaticamente) e controlled ' +
-          '(abertura externa via referência ao trigger, já que a factory Basecoat não expõe prop `open`).',
+          '(abertura externa via referência ao trigger, já que a factory Vanilla não expõe prop `open`).',
       },
     },
   },
@@ -104,7 +104,7 @@ export const Controlled: Story = {
     docs: {
       description: {
         story:
-          'Abertura controlada externamente. A factory Basecoat não expõe prop `open` — o pai dispara ' +
+          'Abertura controlada externamente. A factory Vanilla não expõe prop `open` — o pai dispara ' +
           'via referência ao trigger interno (sr-only). `onOpenChange` rastreia o estado para o pai.',
       },
     },

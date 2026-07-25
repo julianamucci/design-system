@@ -29,7 +29,7 @@ function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement
 }
 
 function injectIcons(group: HTMLElement, icons: unknown[]): void {
-  // Basecoat: createToggle usa textContent quando `children` é string —
+  // Vanilla: createToggle usa textContent quando `children` é string —
   // injetamos o SVG via DOM API após criar o grupo.
   group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
     btn.textContent = '';
@@ -69,7 +69,7 @@ const meta: Meta<ToggleGroupArgs> = {
     orientation: {
       control: { type: 'inline-radio' },
       options: ['horizontal', 'vertical'],
-      description: 'Orientação visual. Basecoat: factory não expõe — aplicado via classList no playground.',
+      description: 'Orientação visual. Vanilla: factory não expõe — aplicado via classList no playground.',
     },
     ariaLabel: {
       control: 'text',

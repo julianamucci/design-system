@@ -22,7 +22,7 @@ const meta: Meta<SwitchArgs> = {
   argTypes: {
     checked: {
       control: 'boolean',
-      description: 'Estado inicial marcado (não-controlado no Basecoat).',
+      description: 'Estado inicial marcado (não-controlado no Vanilla).',
     },
     disabled: {
       control: 'boolean',

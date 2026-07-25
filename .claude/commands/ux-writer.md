@@ -59,7 +59,7 @@ Gerar `docs/shared/content/<slug>/translations.json` com a estrutura completa no
 
 ### Texto descritivo API-neutro (cross-stack)
 
-O `translations.json` é compartilhado entre React, Vue, Svelte e Basecoat. Cada stack pode usar lib diferente (base-ui, reka-ui, bits-ui, factory custom) com APIs divergentes. **Textos descritivos não devem mencionar props literais** — apenas conceitos.
+O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada stack pode usar lib diferente (base-ui, reka-ui, bits-ui, factory custom) com APIs divergentes. **Textos descritivos não devem mencionar props literais** — apenas conceitos.
 
 | Não escreva (literal) | Escreva (conceito) |
 |---|---|

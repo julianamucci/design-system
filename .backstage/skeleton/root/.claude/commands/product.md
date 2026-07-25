@@ -383,7 +383,7 @@ Para cada discrepância, edite a guideline para refletir o código atual.
 | O que verificar |
 |----------------|
 | Padrão de import bate com o código? |
-| Padrão de iteração (React map, Vue v-for, Svelte #each, Basecoat .map().join('')) está correto? |
+| Padrão de iteração (React map, Vue v-for, Svelte #each, Vanilla .map().join('')) está correto? |
 | Exemplos de código de referência estão atualizados? |
 
 ---

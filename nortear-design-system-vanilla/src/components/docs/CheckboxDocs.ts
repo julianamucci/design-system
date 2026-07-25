@@ -354,7 +354,7 @@ export function createCheckboxDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: t('import.basecoat'),
+          description: t('import.vanilla'),
           code: `import { createCheckbox, type CheckboxOptions } from '@/components/ui/checkbox';`,
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const cb = createCheckbox({ id: 'termos', checked: false });
@@ -775,15 +775,15 @@ export type CheckboxOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: t('props.basecoatTitle'),
+              title: t('props.vanillaTitle'),
               cols: propsCols,
               items: [
                 { name: 'checked',          type: 'boolean',                    defaultValue: 'false', required: 'Não', description: 'Estado inicial marcado.' },
                 { name: 'disabled',         type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml(t('props.items.disabled')) },
                 { name: 'onCheckedChange',  type: '(checked: boolean) => void', defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.onCheckedChange')) },
-                { name: 'id',               type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.basecoatId')) },
+                { name: 'id',               type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.vanillaId')) },
                 { name: 'class',            type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.className')) },
-                { name: 'aria-label',       type: 'string',                     defaultValue: '—',     required: 'Condicional', description: stripHtml(t('props.items.basecoatAriaLabel')) },
+                { name: 'aria-label',       type: 'string',                     defaultValue: '—',     required: 'Condicional', description: stripHtml(t('props.items.vanillaAriaLabel')) },
               ],
             },
           ],

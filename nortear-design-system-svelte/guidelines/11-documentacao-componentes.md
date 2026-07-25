@@ -551,7 +551,7 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
    ```svelte
    import { ChartContainer, ChartTooltip } from '$lib/../components/ui/chart';
    ```
-   Omitir `import.withRecharts` e `import.basecoat`.
+   Omitir `import.withRecharts` e `import.vanilla`.
 
 5. **SVG puro — sem lucide-svelte** — dentro dos previews de gráfico, usar SVG inline gerado programaticamente. Nunca `lucide-svelte` (incompatível com Svelte 5).
 

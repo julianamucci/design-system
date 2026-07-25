@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Slider: Volume (single, com unidade), Brilho (single, step grande), FaixaDePreco (range — composição manual de 2 sliders com clamping mútuo, já que o factory custom não suporta 2 thumbs) e EmFormulario (integrado a `<form>` com debounce de analytics). DIVERGÊNCIA Basecoat: factory é wrapper de `<input type="range">` nativo — sem range nativo, sem `onValueCommitted` (debounce manual), sem orientação vertical acessível.',
+          'Composicoes reais do Slider: Volume (single, com unidade), Brilho (single, step grande), FaixaDePreco (range — composição manual de 2 sliders com clamping mútuo, já que o factory custom não suporta 2 thumbs) e EmFormulario (integrado a `<form>` com debounce de analytics). DIVERGÊNCIA Vanilla: factory é wrapper de `<input type="range">` nativo — sem range nativo, sem `onValueCommitted` (debounce manual), sem orientação vertical acessível.',
       },
     },
   },
@@ -220,7 +220,7 @@ export const FaixaDePreco: Story = {
     docs: {
       description: {
         story:
-          'DIVERGÊNCIA Basecoat: o factory custom NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes e clamping mútuo (min nunca passa max, e vice-versa). Cada `<input type="range">` recebe `aria-label` independente — "mínimo" e "máximo".',
+          'DIVERGÊNCIA Vanilla: o factory custom NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes e clamping mútuo (min nunca passa max, e vice-versa). Cada `<input type="range">` recebe `aria-label` independente — "mínimo" e "máximo".',
       },
     },
   },
@@ -246,7 +246,7 @@ export const EmFormulario: Story = {
     form.style.width = '20rem';
     form.setAttribute('aria-label', 'Configuracoes de áudio');
 
-    // Debounce manual — o factory Basecoat não tem onValueCommitted
+    // Debounce manual — o factory Vanilla não tem onValueCommitted
     let debounceId: ReturnType<typeof setTimeout> | null = null;
     let lastCommitted = 60;
 
@@ -287,7 +287,7 @@ export const EmFormulario: Story = {
     docs: {
       description: {
         story:
-          'Slider em formulário com debounce manual de 300ms para simular `onValueCommitted` — DIVERGÊNCIA Basecoat: o factory custom não expõe callback de commit separado, então debounce manual é necessário para analytics, evitando 1 evento por tecla pressionada.',
+          'Slider em formulário com debounce manual de 300ms para simular `onValueCommitted` — DIVERGÊNCIA Vanilla: o factory custom não expõe callback de commit separado, então debounce manual é necessário para analytics, evitando 1 evento por tecla pressionada.',
       },
     },
   },

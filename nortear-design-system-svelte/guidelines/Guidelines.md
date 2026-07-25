@@ -10,7 +10,7 @@ Stack: **Svelte 5 + Bits UI + lucide-svelte + Zod + Storybook 10**
 
 ### Compartilhadas (todas as stacks)
 
-Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Basecoat:
+Em `docs/shared/guidelines/` — se aplicam a React, Vue, Svelte e Vanilla:
 
 - **[01-acessibilidade.md](../../../docs/shared/guidelines/01-acessibilidade.md)** — WCAG 2.2 AA
 - **[02-alinhamento-botoes.md](../../../docs/shared/guidelines/02-alinhamento-botoes.md)** — Hierarquia visual de botões

@@ -8,7 +8,7 @@
       "title": "Divergências Cross-Stack",
       "description": "Como o sistema mantém consistência visual entre React, Vue, Svelte e Nortear apesar das APIs divergentes das libs base headless.",
       "aiSummary": "Página técnica que documenta divergências entre stacks. Lista as libs base por stack (base-ui no React, reka-ui no Vue, bits-ui no Svelte, factories vanilla no Nortear), apresenta tabelas de divergência conhecidas (Accordion, DataTable, Checkbox), explica a estratégia de texto API-neutro em translations.json e indica onde menções literais são aceitáveis (snippets de código, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, basecoat, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
     "intro": {
@@ -43,7 +43,7 @@
         "nortear": {
           "stack": "Nortear",
           "lib": "basecoat-css + factories vanilla TS",
-          "approach": "Funções factory que retornam HTML + listeners; estilo via classes basecoat."
+          "approach": "Funções factory que retornam HTML + listeners; estilo via classes vanilla."
         }
       }
     },
@@ -172,7 +172,7 @@
       "title": "Cross-Stack Divergences",
       "description": "How the system keeps visual consistency across React, Vue, Svelte and Nortear despite divergent APIs in the headless base libraries.",
       "aiSummary": "Technical page documenting per-stack divergences. Lists the base libraries per stack (base-ui in React, reka-ui in Vue, bits-ui in Svelte, vanilla factories in Nortear), shows known divergence tables (Accordion, DataTable, Checkbox), explains the API-neutral text strategy in translations.json and points out where literal mentions are acceptable (code snippets, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, basecoat, factories, headless, API-neutral, Accordion, DataTable, Checkbox, override, structureCode",
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutral, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
     "intro": {
@@ -207,7 +207,7 @@
         "nortear": {
           "stack": "Nortear",
           "lib": "basecoat-css + vanilla TS factories",
-          "approach": "Factory functions returning HTML + listeners; styling via basecoat classes."
+          "approach": "Factory functions returning HTML + listeners; styling via vanilla classes."
         }
       }
     },
@@ -336,7 +336,7 @@
       "title": "Divergencias Cross-Stack",
       "description": "Cómo el sistema mantiene consistencia visual entre React, Vue, Svelte y Nortear pese a las APIs divergentes de las libs base headless.",
       "aiSummary": "Página técnica que documenta divergencias entre stacks. Lista las libs base por stack (base-ui en React, reka-ui en Vue, bits-ui en Svelte, factories vanilla en Nortear), presenta tablas de divergencias conocidas (Accordion, DataTable, Checkbox), explica la estrategia de texto API-neutro en translations.json e indica dónde son aceptables las menciones literales (snippets de código, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, basecoat, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
     "intro": {
@@ -371,7 +371,7 @@
         "nortear": {
           "stack": "Nortear",
           "lib": "basecoat-css + factories vanilla TS",
-          "approach": "Funciones factory que devuelven HTML + listeners; estilo vía clases basecoat."
+          "approach": "Funciones factory que devuelven HTML + listeners; estilo vía clases vanilla."
         }
       }
     },

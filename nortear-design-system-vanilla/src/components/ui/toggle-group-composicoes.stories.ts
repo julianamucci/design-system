@@ -23,7 +23,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Basecoat** documentadas em 3 camadas (notes + DocsProps + esta composição): (1) factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `orientation`/`size`/`spacing`/`disabled` no grupo NÃO existem — aplicar manualmente; (3) `aria-label` no grupo e em items icon-only setado via `setAttribute` no elemento retornado; (4) `children` é string HTML literal — gerar SVG via `createElementNS` + `outerHTML` (NUNCA interpolar dado dinâmico).',
+          'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Vanilla** documentadas em 3 camadas (notes + DocsProps + esta composição): (1) factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `orientation`/`size`/`spacing`/`disabled` no grupo NÃO existem — aplicar manualmente; (3) `aria-label` no grupo e em items icon-only setado via `setAttribute` no elemento retornado; (4) `children` é string HTML literal — gerar SVG via `createElementNS` + `outerHTML` (NUNCA interpolar dado dinâmico).',
       },
     },
   },
@@ -195,7 +195,7 @@ export const ModoDeVisualizacao: Story = {
     ]);
     group.setAttribute('aria-label', 'Modo de visualização');
     group.setAttribute('aria-orientation', 'vertical');
-    // Divergência Basecoat: factory não expõe orientation
+    // Divergência Vanilla: factory não expõe orientation
     group.classList.remove('flex-row');
     group.classList.add('flex-col', 'items-stretch');
     // Items aqui têm texto visível, então não precisam de aria-label próprio.
@@ -205,7 +205,7 @@ export const ModoDeVisualizacao: Story = {
     docs: {
       description: {
         story:
-          'Orientação vertical + texto visível ao lado do ícone. Quando o texto é visível, items NÃO precisam de `aria-label` (o leitor usa o texto interno). O grupo ainda precisa de `aria-label`. **Divergência Basecoat**: `orientation` não é prop — `flex-col` aplicado manualmente; `aria-orientation` setado via `setAttribute`.',
+          'Orientação vertical + texto visível ao lado do ícone. Quando o texto é visível, items NÃO precisam de `aria-label` (o leitor usa o texto interno). O grupo ainda precisa de `aria-label`. **Divergência Vanilla**: `orientation` não é prop — `flex-col` aplicado manualmente; `aria-orientation` setado via `setAttribute`.',
       },
     },
   },
@@ -246,7 +246,7 @@ export const ComItemDesabilitado: Story = {
     docs: {
       description: {
         story:
-          'Um item desabilitado (via `item.disabled: true`) — útil quando uma opção não se aplica ao contexto. O `aria-label` do item indica explicitamente a indisponibilidade. **Divergência Basecoat**: para desabilitar o grupo inteiro, aplicar `disabled: true` em CADA item (factory não expõe `disabled` no grupo).',
+          'Um item desabilitado (via `item.disabled: true`) — útil quando uma opção não se aplica ao contexto. O `aria-label` do item indica explicitamente a indisponibilidade. **Divergência Vanilla**: para desabilitar o grupo inteiro, aplicar `disabled: true` em CADA item (factory não expõe `disabled` no grupo).',
       },
     },
   },

@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Checkbox: unchecked, checked, disabled (desmarcado), disabled (marcado) e error (aria-invalid). O estado indeterminate não é suportado no Basecoat — disponível apenas no Svelte.',
+          'Estados do Checkbox: unchecked, checked, disabled (desmarcado), disabled (marcado) e error (aria-invalid). O estado indeterminate não é suportado no Vanilla — disponível apenas no Svelte.',
       },
     },
   },

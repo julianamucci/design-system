@@ -1,4 +1,4 @@
-// Minimal vanilla toast utility for Basecoat (no framework dependency).
+// Minimal vanilla toast utility for Vanilla (no framework dependency).
 // Provides a Sonner-compatible API surface for stories and demos.
 
 import DOMPurify from 'dompurify';

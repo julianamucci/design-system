@@ -13,7 +13,7 @@ Você é o skill `/cross-stack {{slug}}` em **audit-mode puro**. NÃO edite nenh
 **React**: {{react_files}}
 **Vue**: {{vue_files}}
 **Svelte**: {{svelte_files}}
-**Basecoat**: {{basecoat_files}}
+**Vanilla**: {{vanilla_files}}
 
 ## EARLY-EXIT (obrigatório)
 
@@ -32,7 +32,7 @@ Se houver qualquer hit, aí sim investigue o arquivo específico citado.
 - Classes `cva()`/`tv()` coerentes (React = fonte canônica)
 - 14 seções na docs page
 - Meta único com `autodocs`
-- Tokens `h-(--height-*)`/`size-(--size-*)` nos 3 stacks Tailwind (Basecoat pula)
+- Tokens `h-(--height-*)`/`size-(--size-*)` nos 3 stacks Tailwind (Vanilla pula)
 
 ## Saída (≤120 palavras)
 

@@ -303,7 +303,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Modo define o value</strong> — seleção única usa string; seleção múltipla usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordas conectadas); spacing maior cria botões separados.",
       "item4": "<strong>Variants herdadas</strong> — <code>variant</code> e <code>size</code> do grupo se aplicam a todos os items via Context."
@@ -676,7 +676,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Basecoat).",
+      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Mode defines value</strong> — single selection uses string; multiple selection uses array of strings.",
       "item3": "<strong>spacing=0</strong> — segmented visual (connected borders); higher spacing creates separate buttons.",
       "item4": "<strong>Inherited variants</strong> — <code>variant</code> and <code>size</code> from group apply to all items via Context."
@@ -1049,7 +1049,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Basecoat).",
+      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Modo define el value</strong> — selección única usa string; selección múltiple usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordes conectados); spacing mayor crea botones separados.",
       "item4": "<strong>Variants heredados</strong> — <code>variant</code> y <code>size</code> del grupo se aplican a todos los ítems vía Context."

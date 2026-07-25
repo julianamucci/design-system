@@ -73,7 +73,7 @@ spec:
             - react
             - vue
             - svelte
-            - basecoat
+            - vanilla
           default: react
           ui:options:
             enumOptions:
@@ -83,8 +83,8 @@ spec:
                 label: "Vue 3 (shadcn-vue + Reka UI)"
               - value: svelte
                 label: "Svelte 5 (shadcn-svelte + Bits UI)"
-              - value: basecoat
-                label: "Basecoat — Vanilla TS (basecoat-css + Tailwind)"
+              - value: vanilla
+                label: "Vanilla — Vanilla TS (basecoat-css + Tailwind)"
 
         includeChromatic:
           type: boolean

@@ -2,7 +2,7 @@
 
 Referência para `/quality` e dev-skills. **Leia apenas quando precisar dos critérios específicos da categoria** — para casos típicos, basta seguir a story Playground como template.
 
-API uniforme: `import { fn, userEvent, within, expect } from 'storybook/test'`. Idêntica em React/Vue/Svelte/Basecoat.
+API uniforme: `import { fn, userEvent, within, expect } from 'storybook/test'`. Idêntica em React/Vue/Svelte/Vanilla.
 
 ---
 

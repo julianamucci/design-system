@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de uso do Switch: Default (Label à direita), WithDescription (painel `flex justify-between` com Label + descrição) e Sm (tamanho compacto). O factory custom do Basecoat não expõe prop `size` — o tamanho `sm` é alcançado via `class` (`h-4 w-7`) + ajuste das classes do thumb (`h-3 w-3`, `translate-x-3`).',
+          'Variantes de uso do Switch: Default (Label à direita), WithDescription (painel `flex justify-between` com Label + descrição) e Sm (tamanho compacto). O factory custom do Vanilla não expõe prop `size` — o tamanho `sm` é alcançado via `class` (`h-4 w-7`) + ajuste das classes do thumb (`h-3 w-3`, `translate-x-3`).',
       },
     },
   },
@@ -124,7 +124,7 @@ export const Sm: Story = {
   row.dataset.spacing = 'sm';
 
     const id = 'v-sm-switch';
-    // Factory Basecoat não expõe prop `size` — replicamos via class
+    // Factory Vanilla não expõe prop `size` — replicamos via class
     const sw = createSwitch({ id, checked: true, class: 'h-4 w-7' });
     const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement | null;
     if (thumb) {
@@ -145,7 +145,7 @@ export const Sm: Story = {
     docs: {
       description: {
         story:
-          'Tamanho compacto (24×14px aprox.) para uso em listas densas ou menus. Como o factory Basecoat não expõe prop `size`, replicamos as dimensões via `class` (`h-4 w-7`) + ajuste do thumb (`h-3 w-3`, `translate-x-3`).',
+          'Tamanho compacto (24×14px aprox.) para uso em listas densas ou menus. Como o factory Vanilla não expõe prop `size`, replicamos as dimensões via `class` (`h-4 w-7`) + ajuste do thumb (`h-3 w-3`, `translate-x-3`).',
       },
     },
   },

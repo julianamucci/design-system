@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do Progress em contextos reais de aplicação. Como a factory Basecoat não expõe ' +
+          'Composicoes do Progress em contextos reais de aplicação. Como a factory Vanilla não expõe ' +
           'ProgressLabel/ProgressValue/ProgressTrack, todos os exemplos compõem Label/Value via DOM nativo.',
       },
     },

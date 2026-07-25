@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes de uso do Select: EstadoBrasileiro (lista plana), RegiaoComGrupos (`<optgroup>` Sudeste/Sul) e EmFormulario (integrado a um `<form>` com submit). NOTA: o factory custom do Basecoat é um wrapper do `<select>` HTML nativo — agrupamento só é possível compondo `<optgroup>` manualmente; ícones inline em `<option>` não são suportados pelo navegador.',
+          'Composicoes de uso do Select: EstadoBrasileiro (lista plana), RegiaoComGrupos (`<optgroup>` Sudeste/Sul) e EmFormulario (integrado a um `<form>` com submit). NOTA: o factory custom do Vanilla é um wrapper do `<select>` HTML nativo — agrupamento só é possível compondo `<optgroup>` manualmente; ícones inline em `<option>` não são suportados pelo navegador.',
       },
     },
   },
@@ -145,7 +145,7 @@ export const RegiaoComGrupos: Story = {
     docs: {
       description: {
         story:
-          'Estados agrupados por região via `<optgroup>` (Sudeste/Sul). NOTA: o factory `createSelect` (Basecoat) só aceita lista plana — para grupos, monte `<select>` + `<optgroup>` manualmente.',
+          'Estados agrupados por região via `<optgroup>` (Sudeste/Sul). NOTA: o factory `createSelect` (Vanilla) só aceita lista plana — para grupos, monte `<select>` + `<optgroup>` manualmente.',
       },
     },
   },

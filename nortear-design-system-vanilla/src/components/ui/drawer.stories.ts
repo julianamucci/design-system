@@ -36,7 +36,7 @@ const meta: Meta<DrawerArgs> = {
       control: { type: 'inline-radio' },
       options: ['bottom', 'top', 'left', 'right'],
       description:
-        'Direção de entrada do painel. NOTA: a factory createDrawer do Basecoat usa sempre bottom; para outras direções a story chama createSheet diretamente (divergência idiomática vs. vaul).',
+        'Direção de entrada do painel. NOTA: a factory createDrawer do Vanilla usa sempre bottom; para outras direções a story chama createSheet diretamente (divergência idiomática vs. vaul).',
     },
     defaultOpen: { control: 'boolean', description: 'Abre o drawer ao montar.' },
     dismissible: {

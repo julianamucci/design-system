@@ -24,7 +24,7 @@ const meta: Meta<MenubarArgs> = {
     loop: {
       control: 'boolean',
       description:
-        'Loop de navegação por setas entre Triggers. NOTA: factory Basecoat não implementa loop nativo; argType é informativo (paridade conceitual com base-ui/reka-ui/bits-ui).',
+        'Loop de navegação por setas entre Triggers. NOTA: factory Vanilla não implementa loop nativo; argType é informativo (paridade conceitual com base-ui/reka-ui/bits-ui).',
     },
     defaultOpen: {
       control: 'boolean',
@@ -34,13 +34,13 @@ const meta: Meta<MenubarArgs> = {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
       description:
-        'Lado de abertura do Content. NOTA: factory Basecoat fixa bottom; argType para paridade.',
+        'Lado de abertura do Content. NOTA: factory Vanilla fixa bottom; argType para paridade.',
     },
     align: {
       control: { type: 'inline-radio' },
       options: ['start', 'center', 'end'],
       description:
-        'Alinhamento horizontal do Content. NOTA: factory Basecoat fixa start; argType para paridade.',
+        'Alinhamento horizontal do Content. NOTA: factory Vanilla fixa start; argType para paridade.',
     },
   },
   args: {

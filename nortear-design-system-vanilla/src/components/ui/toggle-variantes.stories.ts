@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de uso do Toggle: Default (sem borda, fundo `muted` quando pressionado), Outline (borda `input`), WithLabel (ícone + texto visível). Em icon-only, `aria-label` é OBRIGATÓRIO. O factory custom Basecoat já aplica `aria-pressed` + `data-state` automaticamente no click.',
+          'Variantes de uso do Toggle: Default (sem borda, fundo `muted` quando pressionado), Outline (borda `input`), WithLabel (ícone + texto visível). Em icon-only, `aria-label` é OBRIGATÓRIO. O factory custom Vanilla já aplica `aria-pressed` + `data-state` automaticamente no click.',
       },
     },
   },

@@ -42,7 +42,7 @@ ls -d nortear-design-system-vue/src/components/ui/*/  2>/dev/null | \
   sort -u
 ```
 
-**Intersecção**: use os slugs que existem no React como lista canônica. Stacks mais novas (Svelte, Basecoat) podem ter subconjunto menor — isso é esperado.
+**Intersecção**: use os slugs que existem no React como lista canônica. Stacks mais novas (Svelte, Vanilla) podem ter subconjunto menor — isso é esperado.
 
 **Slugs a ignorar** (não são componentes standalone): `index`, `utils`, `cn`, `icons`
 
@@ -92,7 +92,7 @@ Com base no estado atual e no `mode`, monte uma tabela de execução antes de co
 |------------|--------|-------------------|
 | button     | completo | cross-stack, security, performance, quality |
 | dialog     | sem translations | ux-writer, seo-geo, analytics, cross-stack, security |
-| input      | sem Svelte/Basecoat | dev-svelte, dev-basecoat, cross-stack, quality |
+| input      | sem Svelte/Vanilla | dev-svelte, dev-vanilla, cross-stack, quality |
 ```
 
 **Mostre este plano para o usuário e aguarde confirmação antes de executar.**
@@ -107,7 +107,7 @@ Para cada componente no plano, execute as skills na sequência abaixo de acordo 
 
 Execute nesta ordem exata:
 
-1. **Se stack ausente**: `/dev-react`, `/dev-vue`, `/dev-svelte`, `/dev-basecoat` (apenas as que faltam)
+1. **Se stack ausente**: `/dev-react`, `/dev-vue`, `/dev-svelte`, `/dev-vanilla` (apenas as que faltam)
 2. **Se translations ausente**: `/ux-writer <slug>`
 3. **`/cross-stack <slug>`** — sempre
 4. **`/quality <slug>`** — sempre
@@ -136,7 +136,7 @@ Execute nesta ordem exata:
 3. `/dev-react <slug>` — implementa docs page + stories (fonte de verdade visual)
 4. `/dev-vue <slug>`
 5. `/dev-svelte <slug>`
-6. `/dev-basecoat <slug>`
+6. `/dev-vanilla <slug>`
 7. `/cross-stack <slug>`
 8. `/quality <slug>`
 9. `/seo-geo <slug>`

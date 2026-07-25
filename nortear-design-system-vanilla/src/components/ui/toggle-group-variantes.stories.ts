@@ -22,7 +22,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do ToggleGroup: Single (seleção exclusiva — `value` é string), Multiple (seleção combinada — `value` é array) e Vertical (orientação empilhada). **Divergência Basecoat**: factory não expõe `orientation`, `size`, `spacing` nem `disabled` no grupo — aplicar manualmente via `classList`/`setAttribute`/`item.disabled`. `aria-label` no grupo e em items icon-only é OBRIGATÓRIO e setado via `setAttribute` no elemento retornado.',
+          'Variantes do ToggleGroup: Single (seleção exclusiva — `value` é string), Multiple (seleção combinada — `value` é array) e Vertical (orientação empilhada). **Divergência Vanilla**: factory não expõe `orientation`, `size`, `spacing` nem `disabled` no grupo — aplicar manualmente via `classList`/`setAttribute`/`item.disabled`. `aria-label` no grupo e em items icon-only é OBRIGATÓRIO e setado via `setAttribute` no elemento retornado.',
       },
     },
   },
@@ -182,7 +182,7 @@ export const Vertical: Story = {
     injectIcons(group, [LayoutGrid, List]);
     group.setAttribute('aria-label', 'Modo de visualização');
     group.setAttribute('aria-orientation', 'vertical');
-    // Divergência Basecoat: factory não expõe orientation — aplicar manualmente
+    // Divergência Vanilla: factory não expõe orientation — aplicar manualmente
     group.classList.remove('flex-row');
     group.classList.add('flex-col', 'items-stretch');
     applyItemAriaLabels(group, ['Grade', 'Lista']);
@@ -192,7 +192,7 @@ export const Vertical: Story = {
     docs: {
       description: {
         story:
-          'Orientação vertical — items empilhados. **Divergência Basecoat**: a factory custom NÃO expõe `orientation`; aplicamos `flex-col` + `aria-orientation="vertical"` manualmente. Navegação por setas verticais requer implementação custom (roving tabindex não é automático na factory).',
+          'Orientação vertical — items empilhados. **Divergência Vanilla**: a factory custom NÃO expõe `orientation`; aplicamos `flex-col` + `aria-orientation="vertical"` manualmente. Navegação por setas verticais requer implementação custom (roving tabindex não é automático na factory).',
       },
     },
   },
