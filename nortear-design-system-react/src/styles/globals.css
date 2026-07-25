@@ -73,15 +73,8 @@
   /* Typography Mappings */
   --font-sans: var(--font-family);
   --font-base-size: var(--font-size);
-  --text-h1: var(--text-h1);
-  --text-h2: var(--text-h2);
-  --text-h3: var(--text-h3);
-  --text-h4: var(--text-h4);
-  --text-p: var(--text-p);
-  --text-label: var(--text-label);
   --font-weight-extrabold: var(--font-weight-extra-bold);
   --font-weight-semibold: var(--font-weight-semi-bold);
-  --font-weight-medium: var(--font-weight-medium);
   --font-weight-normal: var(--font-weight-regular);
   --leading-tight: var(--line-height-tight);
   --leading-normal: var(--line-height-normal);
@@ -96,10 +89,7 @@
      são aplicados diretamente via `rounded-(--radius-button)` nos componentes.
      Isso permite que os 7 temas definam multiplicadores por componente sem
      afetar wrappers genéricos que usam rounded-lg, rounded-xl. */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* --radius-sm/md/lg/xl agora vêm de tokens.css (compartilhados) */
 
   /* Shadow Mappings */
   --shadow-sm: var(--elevation-sm);
@@ -114,13 +104,6 @@
   --ease-default: var(--transition-timing);
 
   /* Z-Index Mappings */
-  --z-dropdown: var(--z-dropdown);
-  --z-sticky: var(--z-sticky);
-  --z-fixed: var(--z-fixed);
-  --z-modal-backdrop: var(--z-modal-backdrop);
-  --z-modal: var(--z-modal);
-  --z-popover: var(--z-popover);
-  --z-tooltip: var(--z-tooltip);
 
   /* Ring & Focus Mappings */
   --ring-offset: var(--ring-offset-width);

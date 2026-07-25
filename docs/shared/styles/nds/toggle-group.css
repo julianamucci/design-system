@@ -23,7 +23,7 @@
 .nds-toggle-group[data-variant="outline"] {
   gap: 0;
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
   overflow: hidden;
 }
@@ -31,7 +31,7 @@
 /* Toggles internos do outline group perdem a borda própria */
 .nds-toggle-group[data-variant="outline"] > .nds-toggle {
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius-none);
   box-shadow: none;
 }
 
@@ -55,23 +55,23 @@
   gap: calc(var(--spacing-base, 0.25rem) * var(--gap, 0));
 }
 .nds-toggle-group[data-spacing="0"] > .nds-toggle {
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 .nds-toggle-group[data-spacing="0"]:not([data-orientation="vertical"]) > .nds-toggle:first-child {
-  border-top-left-radius: var(--radius-button, 0.5rem);
-  border-bottom-left-radius: var(--radius-button, 0.5rem);
+  border-top-left-radius: var(--radius-button);
+  border-bottom-left-radius: var(--radius-button);
 }
 .nds-toggle-group[data-spacing="0"]:not([data-orientation="vertical"]) > .nds-toggle:last-child {
-  border-top-right-radius: var(--radius-button, 0.5rem);
-  border-bottom-right-radius: var(--radius-button, 0.5rem);
+  border-top-right-radius: var(--radius-button);
+  border-bottom-right-radius: var(--radius-button);
 }
 .nds-toggle-group[data-spacing="0"][data-orientation="vertical"] > .nds-toggle:first-child {
-  border-top-left-radius: var(--radius-button, 0.5rem);
-  border-top-right-radius: var(--radius-button, 0.5rem);
+  border-top-left-radius: var(--radius-button);
+  border-top-right-radius: var(--radius-button);
 }
 .nds-toggle-group[data-spacing="0"][data-orientation="vertical"] > .nds-toggle:last-child {
-  border-bottom-left-radius: var(--radius-button, 0.5rem);
-  border-bottom-right-radius: var(--radius-button, 0.5rem);
+  border-bottom-left-radius: var(--radius-button);
+  border-bottom-right-radius: var(--radius-button);
 }
 /* Foco visível acima dos vizinhos emendados */
 .nds-toggle-group > .nds-toggle:focus-visible {

@@ -11,7 +11,7 @@
   padding: var(--spacing-1);                      /* 4px */
   background-color: hsl(var(--muted) / 0.3);
   border: 1px solid hsl(var(--border) / 0.4);
-  border-radius: var(--radius-input, 0.5rem);
+  border-radius: var(--radius-input);
 }
 
 .nds-lang-switcher-button {
@@ -25,7 +25,7 @@
   background: transparent;
   color: hsl(var(--muted-foreground));
   border: 0;
-  border-radius: var(--radius-button, 0.625rem);
+  border-radius: var(--radius-button);
   cursor: pointer;
   outline: none;
   transition: background-color var(--duration-fast), color var(--duration-fast);

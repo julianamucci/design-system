@@ -23,7 +23,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
   outline: 0;
@@ -72,6 +72,6 @@
   color: hsl(var(--foreground));
   background-color: hsl(var(--muted));
   border: 0;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }

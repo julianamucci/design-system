@@ -19,7 +19,7 @@
  * de alert dialog (decisão crítica, exige escolha explícita do usuário).
  *
  * Tokens: --background, --foreground, --muted-foreground, --border,
- *         --radius-dialog, --spacing-*
+ *         --spacing-*
  */
 
 /* ── Overlay ─────────────────────────────────────────────────────────────── */
@@ -47,11 +47,9 @@
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius-dialog, 0.625rem);
+  border-radius: var(--radius-card);
   padding: var(--spacing-6);                      /* 24px */
-  box-shadow:
-    0 10px 15px -3px hsl(0 0% 0% / 0.1),
-    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+  box-shadow: var(--elevation-lg);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -139,7 +137,7 @@
   justify-content: center;
   margin-bottom: var(--spacing-2);
 
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   background-color: hsl(var(--muted));
 }
 

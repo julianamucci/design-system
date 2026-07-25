@@ -13,7 +13,7 @@
 .nds-skeleton {
   display: block;
   background-color: hsl(var(--primary) / 0.1);
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   animation: nds-skeleton-pulse 1.5s var(--ease-standard) infinite;
 }
 

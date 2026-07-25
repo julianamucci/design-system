@@ -48,7 +48,7 @@
   text-align: left;
   background: transparent;
   border: 1px solid hsl(var(--border) / 0.5);
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-2);                    /* 8px */
   cursor: pointer;
   transition: border-color var(--duration-fast), background-color var(--duration-fast);
@@ -67,7 +67,7 @@
   width: 2.5rem;                                /* 40px */
   height: 2.5rem;
   flex-shrink: 0;
-  border-radius: var(--radius-md, 0.5rem);
+  border-radius: var(--radius-md);
   background-color: hsl(var(--swatch-color));
   border: 1px solid hsl(var(--border) / 0.5);
 }
@@ -121,7 +121,7 @@
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-4);                    /* 16px */
 }
 .nds-theme-card-label {
@@ -145,7 +145,7 @@
 .nds-miniswatch-chip {
   width: 2rem;                                  /* 32px */
   height: 2rem;
-  border-radius: var(--radius-md, 0.5rem);
+  border-radius: var(--radius-md);
   background-color: hsl(var(--swatch-color));
   border: 1px solid hsl(var(--border) / 0.6);
 }
@@ -174,7 +174,7 @@
   flex-direction: column;
   gap: var(--spacing-2);                        /* 8px */
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-4);                    /* 16px */
 }
 .nds-axis-sample-label {

@@ -53,13 +53,13 @@
 
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
-  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);
-  border-radius: 0;
+  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1), var(--elevation-lg);
+  border-radius: var(--radius-none);
 }
 
 @media (min-width: 40rem) {
   .nds-dialog-content {
-    border-radius: 0.75rem;                        /* 12px — rounded-xl */
+    border-radius: var(--radius-card); /* família dialog usa o token do Card (temável) */
   }
 }
 
@@ -130,7 +130,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: 0.25rem;                          /* 4px — radius-sm */
+  border-radius: var(--radius-xs);
   padding: var(--spacing-1);
   cursor: pointer;
   opacity: 0.7;

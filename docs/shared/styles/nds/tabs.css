@@ -29,7 +29,7 @@
   padding: var(--spacing-1, 0.25rem);          /* 4px interno */
 
   background-color: hsl(var(--muted));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   color: hsl(var(--muted-foreground));
 }
 
@@ -46,7 +46,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: calc(var(--radius, 0.5rem) - 0.125rem);
+  border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
   font-family: inherit;
   font-size: 0.875rem;                          /* 14px */
   font-weight: var(--font-weight-medium, 500);
@@ -79,7 +79,7 @@
 
 .nds-tabs-content:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.5);
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 }
 
 /*
@@ -149,7 +149,7 @@
 .nds-tabs-list[data-variant="line"] {
   gap: var(--spacing-1);
   background-color: transparent;
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 
 .nds-tabs-list[data-variant="line"] .nds-tabs-trigger {

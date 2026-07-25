@@ -33,10 +33,10 @@
   gap: var(--spacing-4);                        /* 16px */
   overflow: hidden;
 
-  border-radius: var(--radius-card, 0.625rem);
+  border-radius: var(--radius-card);
   background-color: var(--card-bg);
   color: var(--card-fg);
-  box-shadow: 0 0 0 1px var(--card-ring);
+  box-shadow: 0 0 0 1px var(--card-ring), var(--elevation-sm);
 
   padding-block: var(--spacing-4);              /* 16px top/bottom */
   padding-inline: var(--spacing-4);             /* 16px left/right */
@@ -76,13 +76,13 @@
 /* Imagens com cantos arredondados conforme posição */
 .nds-card > img:first-child,
 .nds-card .nds-card-img-first {
-  border-top-left-radius: var(--radius-card, 0.625rem);
-  border-top-right-radius: var(--radius-card, 0.625rem);
+  border-top-left-radius: var(--radius-card);
+  border-top-right-radius: var(--radius-card);
 }
 .nds-card > img:last-child,
 .nds-card .nds-card-img-last {
-  border-bottom-left-radius: var(--radius-card, 0.625rem);
-  border-bottom-right-radius: var(--radius-card, 0.625rem);
+  border-bottom-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
 }
 
 /* Footer presente → zera padding-bottom do card (footer encosta na base) */
@@ -145,8 +145,8 @@
   background-color: hsl(var(--muted) / 0.5);
   padding: var(--spacing-4);                    /* 16px */
   margin-inline: calc(var(--spacing-4) * -1);   /* compensa padding-inline do card */
-  border-bottom-left-radius: var(--radius-card, 0.625rem);
-  border-bottom-right-radius: var(--radius-card, 0.625rem);
+  border-bottom-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
 }
 .nds-card[data-size="sm"] .nds-card-footer {
   padding: var(--spacing-2);

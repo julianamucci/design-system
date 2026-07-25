@@ -25,7 +25,7 @@
   font-size: 0.875rem;
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
   outline: 0;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
@@ -52,7 +52,7 @@
 .nds-tags-input-item {
   display: flex;
   align-items: center;
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
 }

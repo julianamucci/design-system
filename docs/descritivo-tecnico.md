@@ -36,7 +36,7 @@ O Nortear não reconstrói primitivas de UI do zero. Ele se apoia em libs primit
 
 ## 3. Gestão de Temas e Tokens Visuais
 
-O design system suporta ativamente **7 temas** (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). 
+O design system suporta **3 temas de cor** (Default, Warm, Cold), combináveis com densidades, fontes e type scale — todos via classes no `<html>`. 
 
 A abordagem técnica evita *forks* de componentes por tema através de uma estratégia estrita de **Tokenização de Dimensões**:
 - Variáveis CSS (Custom Properties) como `--height-default` ou `--size-xs` são injetadas em componentes iterativos.

@@ -141,7 +141,7 @@
   flex-shrink: 0;
 
   padding-inline: var(--spacing-2);
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 
   font-size: 0.75rem;
   font-weight: var(--font-weight-medium, 500);
@@ -177,7 +177,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   text-align: left;
   font-family: inherit;
   font-size: 0.875rem;
@@ -290,7 +290,7 @@
 }
 
 .nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner {
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   border: 1px solid hsl(var(--sidebar-border));
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
 }
@@ -392,7 +392,7 @@
   .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset {
     margin: var(--spacing-2);
     margin-left: 0;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-xl);
     box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
   }
 
@@ -443,7 +443,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   color: hsl(var(--sidebar-foreground));
   cursor: pointer;
   outline: 0;
@@ -544,7 +544,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   color: hsl(var(--sidebar-foreground));
   cursor: pointer;
   outline: 0;
@@ -611,7 +611,7 @@
   justify-content: center;
 
   padding-inline: var(--spacing-1);
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   font-size: 0.75rem;
   font-weight: var(--font-weight-medium, 500);
   font-variant-numeric: tabular-nums;
@@ -633,7 +633,7 @@
   gap: var(--spacing-2);
   min-height: var(--spacing-8, 2rem);
   padding-inline: var(--spacing-2);
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
 }
 
 .nds-sidebar-menu-skeleton-icon {
@@ -684,7 +684,7 @@
   padding-block: var(--spacing-1, 0.25rem);
   transform: translateX(-1px);
 
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   color: hsl(var(--sidebar-foreground));
   text-decoration: none;

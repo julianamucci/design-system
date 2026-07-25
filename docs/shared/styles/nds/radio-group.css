@@ -43,7 +43,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--primary));
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   outline: 0;
   padding: 0;
@@ -83,7 +83,7 @@
   content: "";
   width: 0.625rem;
   height: 0.625rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background-color: hsl(var(--primary));
 }
 

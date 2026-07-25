@@ -48,15 +48,15 @@
 .nds-input-otp > .nds-input-otp-slot:first-child,
 .nds-input-otp-separator + .nds-input-otp-slot {
   border-inline-start: 1px solid hsl(var(--input, var(--border)));
-  border-start-start-radius: var(--radius, 0.5rem);
-  border-end-start-radius: var(--radius, 0.5rem);
+  border-start-start-radius: var(--radius);
+  border-end-start-radius: var(--radius);
 }
 
 /* Último slot do grupo (antes de separator ou no fim): radius direito */
 .nds-input-otp > .nds-input-otp-slot:last-child,
 .nds-input-otp-slot:has(+ .nds-input-otp-separator) {
-  border-start-end-radius: var(--radius, 0.5rem);
-  border-end-end-radius: var(--radius, 0.5rem);
+  border-start-end-radius: var(--radius);
+  border-end-end-radius: var(--radius);
 }
 
 .nds-input-otp-slot:focus {
@@ -103,7 +103,7 @@
 .nds-input-otp-group {
   display: flex;
   align-items: center;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 }
 
 .nds-input-otp-group:has([aria-invalid="true"]) {
@@ -114,13 +114,13 @@
 /* Slots dentro de grupo: mesmas regras de borda/radius do fluxo nativo */
 .nds-input-otp-group > .nds-input-otp-slot:first-child {
   border-inline-start: 1px solid hsl(var(--input, var(--border)));
-  border-start-start-radius: var(--radius, 0.5rem);
-  border-end-start-radius: var(--radius, 0.5rem);
+  border-start-start-radius: var(--radius);
+  border-end-start-radius: var(--radius);
 }
 
 .nds-input-otp-group > .nds-input-otp-slot:last-child {
-  border-start-end-radius: var(--radius, 0.5rem);
-  border-end-end-radius: var(--radius, 0.5rem);
+  border-start-end-radius: var(--radius);
+  border-end-end-radius: var(--radius);
 }
 
 /* Slot ativo (data-active, para slots-div com input oculto) — par do :focus */

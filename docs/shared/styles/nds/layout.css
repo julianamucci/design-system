@@ -83,7 +83,9 @@
   justify-content: flex-start;
 }
 
-.nds-stack > * + * {
+/* :not(:first-child) ≡ "* + *" mas com especificidade 0-2-0 — precisa vencer
+ * o `margin: 0` de .nds-list-none (utilities.css carrega depois deste arquivo). */
+.nds-stack > :not(:first-child) {
   margin-top: var(--stack-gap);
 }
 

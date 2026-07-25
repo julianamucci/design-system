@@ -27,7 +27,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 
   /* Chevron SVG inline (cor controlada via stroke=currentColor) */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -104,7 +104,7 @@
   color: hsl(var(--foreground));
   background-color: transparent;
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   outline: 0;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
@@ -127,7 +127,7 @@
 
 .nds-native-select-input[data-size="sm"] {
   padding-block: 2px;
-  border-radius: min(var(--radius-md, calc(var(--radius) - 2px)), 10px);
+  border-radius: var(--radius-md);
   font-size: 0.8125rem;
 }
 
@@ -165,7 +165,7 @@
 
   background-color: transparent;
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 
   cursor: pointer;
   user-select: none;
@@ -175,7 +175,7 @@
 
 .nds-select-trigger[data-size="sm"] {
   padding-block: var(--spacing-1, 0.25rem);       /* 4px — altura via padding, sem height fixo */
-  border-radius: min(var(--radius-md, calc(var(--radius) - 2px)), 10px);
+  border-radius: var(--radius-md);
 }
 
 .nds-select-positioner {
@@ -241,11 +241,10 @@
 
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow:
     0 0 0 1px hsl(var(--foreground) / 0.1),
-    0 4px 6px -1px hsl(0 0% 0% / 0.1),
-    0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    var(--elevation-md);
 
   transform-origin: var(--transform-origin, var(--reka-select-content-transform-origin, center));
 }
@@ -297,7 +296,7 @@
   padding-inline-start: var(--spacing-1-5, 0.375rem);
   padding-inline-end: var(--spacing-8);           /* 32px — espaço pro check */
 
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   cursor: default;
   user-select: none;

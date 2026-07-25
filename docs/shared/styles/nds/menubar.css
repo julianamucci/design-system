@@ -31,7 +31,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
 }
 
@@ -50,7 +50,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-sm); /* Ri = Re − inset (p-1) */
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium, 500);
@@ -82,10 +82,8 @@
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
-  box-shadow:
-    0 10px 15px -3px hsl(0 0% 0% / 0.1),
-    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+  border-radius: var(--radius);
+  box-shadow: var(--elevation-md);
 }
 
 /* ── Item ────────────────────────────────────────────────────────────────── */
@@ -97,7 +95,7 @@
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
 
-  border-radius: 0.25rem;
+  border-radius: var(--radius-sm); /* Ri = Re − inset (p-1) */
   font-size: 0.875rem;
   cursor: pointer;
   user-select: none;

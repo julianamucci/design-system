@@ -4,6 +4,15 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "O sistema de elevação combina <strong>sombra</strong> e <strong>radius</strong> para comunicar profundidade e contexto. Cinco níveis cobrem todos os containers do produto — do plano da página até o tooltip flutuante. Bordas sutis garantem definição mesmo em fundos claros.",
+    "specimens": {
+      "title": "Espécimes",
+      "subtitle": "Cards com cada nível de sombra e cada token de radius aplicado.",
+      "shadows": "Sombras",
+      "radius": "Radius",
+      "nested": "Raio aninhado",
+      "nestedOk": "Rᵢ = Rₑ − E — cantos alinhados",
+      "nestedBad": "Rᵢ = Rₑ — canto interno pesado"
+    },
     "seo": {
       "title": "Elevação, Bordas e Sombras",
       "description": "Cinco níveis de elevação, tokens --elevation-* e --radius-*, combinações típicas e regras de uso para borders e shadows.",
@@ -19,7 +28,7 @@
         "token": "Token",
         "usage": "Uso típico"
       },
-      "items": {
+      "rows": {
         "plano": {
           "level": "0 — Plano",
           "token": "—",
@@ -33,7 +42,7 @@
         "dropdown": {
           "level": "2 — Dropdown",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, Select aberto, ComboBox"
+          "usage": "Dropdown, Popover, Select aberto, ComboBox, menus"
         },
         "dialog": {
           "level": "3 — Dialog",
@@ -80,43 +89,125 @@
     },
     "radius": {
       "title": "Tokens de radius",
-      "subtitle": "O radius base é <code>0.625rem</code> (10px). Cada componente consome um token semântico calculado a partir do base — temas de marca podem aplicar multiplicadores diferentes (ex: Warm com radius mais arredondado).",
+      "subtitle": "Duas famílias: a <strong>escala genérica</strong> (none, xs–xl, full — offsets fixos sobre o base) para wrappers, subpartes e raio aninhado; e os <strong>tokens por componente</strong> (button, input, card, badge, alert), que por default apontam para degraus da escala e os temas podem sobrescrever.",
       "cols": {
         "token": "Token",
         "value": "Valor",
         "usage": "Uso"
       },
-      "items": {
+      "rows": {
         "base": {
           "token": "--radius",
           "value": "10px",
-          "usage": "Base global — referência dos demais"
+          "usage": "Base global — referência de todos os demais"
+        },
+        "none": {
+          "token": "--radius-none",
+          "value": "0",
+          "usage": "Cantos retos intencionais: itens flush em grupos (ToggleGroup), fullscreen"
+        },
+        "xs": {
+          "token": "--radius-xs",
+          "value": "4px (−6px)",
+          "usage": "Micro-controles: checkbox, botão de fechar, handles"
+        },
+        "sm": {
+          "token": "--radius-sm",
+          "value": "6px (−4px)",
+          "usage": "Filhos com inset de 4px (itens de menu, tabs trigger); kbd, tooltip"
+        },
+        "md": {
+          "token": "--radius-md",
+          "value": "8px (−2px)",
+          "usage": "Filhos com inset de 2px (opção de Select, botão de InputGroup)"
+        },
+        "lg": {
+          "token": "--radius-lg",
+          "value": "10px (=base)",
+          "usage": "Containers genéricos de docs e wrappers"
+        },
+        "xl": {
+          "token": "--radius-xl",
+          "value": "14px (+4px)",
+          "usage": "Containers grandes e superfícies destacadas"
         },
         "button": {
           "token": "--radius-button",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Button, Toggle, Tab trigger"
         },
         "input": {
           "token": "--radius-input",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Input, Textarea, Select trigger"
         },
         "card": {
           "token": "--radius-card",
-          "value": "14px (1.4×)",
+          "value": "14px (= xl)",
           "usage": "Card, Dialog, Sheet, Popover"
         },
         "badge": {
           "token": "--radius-badge",
-          "value": "26px (2.6×)",
+          "value": "pill (= full)",
           "usage": "Badge, Chip — formato pill"
         },
+        "alert": {
+          "token": "--radius-alert",
+          "value": "10px (= lg)",
+          "usage": "Alert e callouts semânticos"
+        },
         "full": {
-          "token": "rounded-full",
+          "token": "--radius-full",
           "value": "9999px",
-          "usage": "Avatar, ícone-botão circular"
+          "usage": "Pill/círculo: Avatar, ícone-botão circular, Badge"
         }
+      },
+      "rules": {
+        "component": "Componentes consomem SEMPRE seu token de componente; subpartes derivam pela regra de raio aninhado usando a escala.",
+        "fallback": "Sem fallback em <code>var(--radius-*)</code> — tokens.css é sempre carregado; fallback divergente mascara bug (havia 110, todos removidos).",
+        "micro": "Elementos com ~20px ou menos usam <code>--radius-xs</code>; abaixo disso (setas, hairlines) é exceção micro documentada no próprio CSS.",
+        "theming": "Contrato de tema: temas podem sobrescrever <code>--radius</code> e os tokens por componente (identidade de forma); a escala <code>xs–xl</code> é geometria do raio aninhado e nunca é sobrescrita."
+      }
+    },
+    "nested": {
+      "title": "Raio aninhado",
+      "subtitle": "Elemento arredondado dentro de container arredondado: o raio interno é o raio externo menos o espaçamento entre eles — <code>Rᵢ = Rₑ − E</code>. Repetir o raio do pai deixa o canto interno visualmente mais grosso.",
+      "cols": {
+        "parent": "Contêiner (Rₑ)",
+        "inset": "Inset (E)",
+        "child": "Filho (Rᵢ)",
+        "example": "Exemplo no sistema"
+      },
+      "rows": {
+        "0": [
+          "--radius (10px)",
+          "--spacing-1 (4px)",
+          "--radius-sm (6px)",
+          "Tabs trigger; itens de Dropdown, Menubar e Command"
+        ],
+        "1": [
+          "--radius (10px)",
+          "2px",
+          "--radius-md (8px)",
+          "Botão do InputGroup; opção do Select"
+        ],
+        "2": [
+          "--radius-card (14px)",
+          "--spacing-1 (4px)",
+          "--radius (10px)",
+          "Bloco interno colado à borda de um Card"
+        ],
+        "3": [
+          "qualquer",
+          "0 (full-bleed)",
+          "mesmo raio do pai",
+          "Imagem no topo do Card"
+        ]
+      },
+      "rules": {
+        "utility": "Para aninhamentos dinâmicos use <code>.nds-radius-nested</code> — o container define <code>--nested-parent-radius</code> e <code>--nested-inset</code>; <code>max(0px, …)</code> zera o raio quando o inset é maior que o raio do pai.",
+        "never": "Nunca repita o raio do pai num filho com inset, nem chute um valor — derive pela fórmula usando os tokens.",
+        "pairs": "Prefira os pares prontos da tabela: os offsets da escala (<code>sm = −4px</code>, <code>md = −2px</code>) foram desenhados para casar com os insets de <code>--spacing-1</code> e 2px."
       }
     },
     "borders": {
@@ -125,7 +216,7 @@
       "items": {
         "default": "<code>--border</code> — borda padrão para Card, divisores, separadores",
         "input": "<code>--input</code> — borda específica de inputs (mesma cor, semântica distinta)",
-        "subtle": "<code>border-border/60</code> — divisores sutis dentro de containers",
+        "subtle": "<code>.nds-border-soft</code> — <code>--border</code> a 50%: divisores sutis dentro de containers",
         "width": "<code>--border-width-default: 1px</code> — espessura única para todo o sistema"
       }
     },
@@ -138,50 +229,50 @@
         "shadow": "Shadow",
         "border": "Border"
       },
-      "rows": [
-        [
+      "rows": {
+        "0": [
           "Card",
           "radius-card (14px)",
           "elevation-sm",
-          "border"
+          "ring 1px"
         ],
-        [
+        "1": [
           "Button",
           "radius-button (10px)",
           "—",
           "transparent / border"
         ],
-        [
+        "2": [
           "Input",
           "radius-input (10px)",
           "—",
           "input"
         ],
-        [
-          "Tooltip",
-          "radius (10px)",
-          "elevation-md",
-          "—"
-        ],
-        [
-          "Dropdown / Popover",
+        "3": [
+          "Dropdown / Popover / Select",
           "radius (10px)",
           "elevation-md",
           "border"
         ],
-        [
+        "4": [
           "Dialog / Sheet",
           "radius-card (14px)",
+          "elevation-lg",
+          "ring 1px"
+        ],
+        "5": [
+          "Tooltip / Toast / HoverCard",
+          "radius-sm (6px)",
           "elevation-xl",
           "—"
         ],
-        [
+        "6": [
           "Badge",
-          "radius-badge (26px)",
+          "radius-badge (pill)",
           "—",
           "transparent"
         ]
-      ]
+      }
     },
     "rules": {
       "title": "Regras",
@@ -200,7 +291,8 @@
       "radius": "Radius",
       "borders": "Bordas",
       "combinations": "Combinações",
-      "rules": "Regras"
+      "rules": "Regras",
+      "nested": "Raio aninhado"
     }
   },
   "en": {
@@ -208,6 +300,15 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "The elevation system combines <strong>shadow</strong> and <strong>radius</strong> to communicate depth and context. Five levels cover every container in the product — from the page plane to the floating tooltip. Subtle borders provide definition even on light backgrounds.",
+    "specimens": {
+      "title": "Specimens",
+      "subtitle": "Cards with each shadow level and each radius token applied.",
+      "shadows": "Shadows",
+      "radius": "Radius",
+      "nested": "Nested radius",
+      "nestedOk": "Rᵢ = Rₑ − E — aligned corners",
+      "nestedBad": "Rᵢ = Rₑ — heavy inner corner"
+    },
     "seo": {
       "title": "Elevation, Borders & Shadows",
       "description": "Five elevation levels, --elevation-* and --radius-* tokens, typical combinations, and usage rules for borders and shadows.",
@@ -223,21 +324,21 @@
         "token": "Token",
         "usage": "Typical usage"
       },
-      "items": {
+      "rows": {
         "plano": {
-          "level": "0 — Plane",
+          "level": "0 — Flat",
           "token": "—",
-          "usage": "Page background, inline content with no container"
+          "usage": "Page background, inline content without a container"
         },
         "card": {
           "level": "1 — Card",
           "token": "--elevation-sm",
-          "usage": "Card, Tile, list item on raised surface"
+          "usage": "Card, Tile, list item on a raised surface"
         },
         "dropdown": {
           "level": "2 — Dropdown",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, open Select, ComboBox"
+          "usage": "Dropdown, Popover, open Select, ComboBox, menus"
         },
         "dialog": {
           "level": "3 — Dialog",
@@ -284,43 +385,125 @@
     },
     "radius": {
       "title": "Radius tokens",
-      "subtitle": "The base radius is <code>0.625rem</code> (10px). Each component consumes a semantic token derived from the base — brand themes may apply different multipliers (e.g., Warm with more rounded corners).",
+      "subtitle": "Two families: the <strong>generic scale</strong> (none, xs–xl, full — fixed offsets over the base) for wrappers, subparts and nested radii; and the <strong>per-component tokens</strong> (button, input, card, badge, alert), which point to scale steps by default and themes may override.",
       "cols": {
         "token": "Token",
         "value": "Value",
         "usage": "Usage"
       },
-      "items": {
+      "rows": {
         "base": {
           "token": "--radius",
           "value": "10px",
-          "usage": "Global base — reference for the rest"
+          "usage": "Global base — reference for all others"
+        },
+        "none": {
+          "token": "--radius-none",
+          "value": "0",
+          "usage": "Intentional square corners: flush items in groups (ToggleGroup), fullscreen"
+        },
+        "xs": {
+          "token": "--radius-xs",
+          "value": "4px (−6px)",
+          "usage": "Micro controls: checkbox, close button, handles"
+        },
+        "sm": {
+          "token": "--radius-sm",
+          "value": "6px (−4px)",
+          "usage": "Children with 4px inset (menu items, tabs trigger); kbd, tooltip"
+        },
+        "md": {
+          "token": "--radius-md",
+          "value": "8px (−2px)",
+          "usage": "Children with 2px inset (Select option, InputGroup button)"
+        },
+        "lg": {
+          "token": "--radius-lg",
+          "value": "10px (=base)",
+          "usage": "Generic docs containers and wrappers"
+        },
+        "xl": {
+          "token": "--radius-xl",
+          "value": "14px (+4px)",
+          "usage": "Large containers and prominent surfaces"
         },
         "button": {
           "token": "--radius-button",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Button, Toggle, Tab trigger"
         },
         "input": {
           "token": "--radius-input",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Input, Textarea, Select trigger"
         },
         "card": {
           "token": "--radius-card",
-          "value": "14px (1.4×)",
+          "value": "14px (= xl)",
           "usage": "Card, Dialog, Sheet, Popover"
         },
         "badge": {
           "token": "--radius-badge",
-          "value": "26px (2.6×)",
+          "value": "pill (= full)",
           "usage": "Badge, Chip — pill shape"
         },
+        "alert": {
+          "token": "--radius-alert",
+          "value": "10px (= lg)",
+          "usage": "Alert and semantic callouts"
+        },
         "full": {
-          "token": "rounded-full",
+          "token": "--radius-full",
           "value": "9999px",
-          "usage": "Avatar, circular icon button"
+          "usage": "Pill/circle: Avatar, circular icon button, Badge"
         }
+      },
+      "rules": {
+        "component": "Components ALWAYS consume their component token; subparts derive via the nested-radius rule using the scale.",
+        "fallback": "No fallbacks in <code>var(--radius-*)</code> — tokens.css is always loaded; a divergent fallback masks bugs (there were 110, all removed).",
+        "micro": "Elements around 20px or smaller use <code>--radius-xs</code>; below that (arrows, hairlines) is a micro exception documented in the CSS itself.",
+        "theming": "Theme contract: themes may override <code>--radius</code> and the per-component tokens (shape identity); the <code>xs–xl</code> scale is nested-radius geometry and is never overridden."
+      }
+    },
+    "nested": {
+      "title": "Nested radius",
+      "subtitle": "Rounded element inside a rounded container: the inner radius is the outer radius minus the spacing between them — <code>Rᵢ = Rₑ − E</code>. Repeating the parent radius makes the inner corner look visually thicker.",
+      "cols": {
+        "parent": "Container (Rₑ)",
+        "inset": "Inset (E)",
+        "child": "Child (Rᵢ)",
+        "example": "Example in the system"
+      },
+      "rows": {
+        "0": [
+          "--radius (10px)",
+          "--spacing-1 (4px)",
+          "--radius-sm (6px)",
+          "Tabs trigger; Dropdown, Menubar and Command items"
+        ],
+        "1": [
+          "--radius (10px)",
+          "2px",
+          "--radius-md (8px)",
+          "InputGroup button; Select option"
+        ],
+        "2": [
+          "--radius-card (14px)",
+          "--spacing-1 (4px)",
+          "--radius (10px)",
+          "Inner block flush to a Card edge"
+        ],
+        "3": [
+          "any",
+          "0 (full-bleed)",
+          "same as parent",
+          "Image at the top of a Card"
+        ]
+      },
+      "rules": {
+        "utility": "For dynamic nesting use <code>.nds-radius-nested</code> — the container sets <code>--nested-parent-radius</code> and <code>--nested-inset</code>; <code>max(0px, …)</code> zeroes the radius when the inset exceeds the parent radius.",
+        "never": "Never repeat the parent radius on an inset child, and never eyeball a value — derive it from the formula using tokens.",
+        "pairs": "Prefer the ready-made pairs in the table: the scale offsets (<code>sm = −4px</code>, <code>md = −2px</code>) were designed to match the <code>--spacing-1</code> and 2px insets."
       }
     },
     "borders": {
@@ -329,7 +512,7 @@
       "items": {
         "default": "<code>--border</code> — default border for Card, dividers, separators",
         "input": "<code>--input</code> — input-specific border (same color, distinct semantic)",
-        "subtle": "<code>border-border/60</code> — subtle dividers inside containers",
+        "subtle": "<code>.nds-border-soft</code> — <code>--border</code> at 50%: subtle dividers inside containers",
         "width": "<code>--border-width-default: 1px</code> — single thickness across the system"
       }
     },
@@ -342,50 +525,50 @@
         "shadow": "Shadow",
         "border": "Border"
       },
-      "rows": [
-        [
+      "rows": {
+        "0": [
           "Card",
           "radius-card (14px)",
           "elevation-sm",
-          "border"
+          "1px ring"
         ],
-        [
+        "1": [
           "Button",
           "radius-button (10px)",
           "—",
           "transparent / border"
         ],
-        [
+        "2": [
           "Input",
           "radius-input (10px)",
           "—",
           "input"
         ],
-        [
-          "Tooltip",
-          "radius (10px)",
-          "elevation-md",
-          "—"
-        ],
-        [
-          "Dropdown / Popover",
+        "3": [
+          "Dropdown / Popover / Select",
           "radius (10px)",
           "elevation-md",
           "border"
         ],
-        [
+        "4": [
           "Dialog / Sheet",
           "radius-card (14px)",
+          "elevation-lg",
+          "1px ring"
+        ],
+        "5": [
+          "Tooltip / Toast / HoverCard",
+          "radius-sm (6px)",
           "elevation-xl",
           "—"
         ],
-        [
+        "6": [
           "Badge",
-          "radius-badge (26px)",
+          "radius-badge (pill)",
           "—",
           "transparent"
         ]
-      ]
+      }
     },
     "rules": {
       "title": "Rules",
@@ -404,7 +587,8 @@
       "radius": "Radius",
       "borders": "Borders",
       "combinations": "Combinations",
-      "rules": "Rules"
+      "rules": "Rules",
+      "nested": "Nested radius"
     }
   },
   "es": {
@@ -412,6 +596,15 @@
     "category": "Foundations",
     "type": "Tokens",
     "description": "El sistema de elevación combina <strong>sombra</strong> y <strong>radius</strong> para comunicar profundidad y contexto. Cinco niveles cubren todos los contenedores del producto — desde el plano de página hasta el tooltip flotante. Los bordes sutiles aseguran definición incluso sobre fondos claros.",
+    "specimens": {
+      "title": "Especímenes",
+      "subtitle": "Cards con cada nivel de sombra y cada token de radius aplicado.",
+      "shadows": "Sombras",
+      "radius": "Radius",
+      "nested": "Radio anidado",
+      "nestedOk": "Rᵢ = Rₑ − E — esquinas alineadas",
+      "nestedBad": "Rᵢ = Rₑ — esquina interna pesada"
+    },
     "seo": {
       "title": "Elevación, Bordes y Sombras",
       "description": "Cinco niveles de elevación, tokens --elevation-* y --radius-*, combinaciones típicas y reglas de uso para borders y shadows.",
@@ -427,21 +620,21 @@
         "token": "Token",
         "usage": "Uso típico"
       },
-      "items": {
+      "rows": {
         "plano": {
           "level": "0 — Plano",
           "token": "—",
-          "usage": "Fondo de página, contenido embebido sin contenedor"
+          "usage": "Fondo de la página, contenido embebido sin contenedor"
         },
         "card": {
           "level": "1 — Card",
           "token": "--elevation-sm",
-          "usage": "Card, Tile, ítem de lista sobre superficie elevada"
+          "usage": "Card, Tile, ítem de lista en superficie elevada"
         },
         "dropdown": {
           "level": "2 — Dropdown",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, Select abierto, ComboBox"
+          "usage": "Dropdown, Popover, Select abierto, ComboBox, menús"
         },
         "dialog": {
           "level": "3 — Dialog",
@@ -451,7 +644,7 @@
         "tooltip": {
           "level": "4 — Tooltip",
           "token": "--elevation-xl",
-          "usage": "Tooltip, Toast, HoverCard — flotan sobre todo"
+          "usage": "Tooltip, Toast, HoverCard — flotan encima de todo"
         }
       }
     },
@@ -488,43 +681,125 @@
     },
     "radius": {
       "title": "Tokens de radius",
-      "subtitle": "El radius base es <code>0.625rem</code> (10px). Cada componente consume un token semántico calculado a partir del base — los temas de marca pueden aplicar multiplicadores distintos (ej: Warm con esquinas más redondeadas).",
+      "subtitle": "Dos familias: la <strong>escala genérica</strong> (none, xs–xl, full — offsets fijos sobre el base) para wrappers, subpartes y radios anidados; y los <strong>tokens por componente</strong> (button, input, card, badge, alert), que por defecto apuntan a pasos de la escala y los temas pueden sobrescribir.",
       "cols": {
         "token": "Token",
         "value": "Valor",
         "usage": "Uso"
       },
-      "items": {
+      "rows": {
         "base": {
           "token": "--radius",
           "value": "10px",
-          "usage": "Base global — referencia para el resto"
+          "usage": "Base global — referencia de todos los demás"
+        },
+        "none": {
+          "token": "--radius-none",
+          "value": "0",
+          "usage": "Esquinas rectas intencionales: ítems flush en grupos (ToggleGroup), fullscreen"
+        },
+        "xs": {
+          "token": "--radius-xs",
+          "value": "4px (−6px)",
+          "usage": "Micro-controles: checkbox, botón de cerrar, handles"
+        },
+        "sm": {
+          "token": "--radius-sm",
+          "value": "6px (−4px)",
+          "usage": "Hijos con inset de 4px (ítems de menú, tabs trigger); kbd, tooltip"
+        },
+        "md": {
+          "token": "--radius-md",
+          "value": "8px (−2px)",
+          "usage": "Hijos con inset de 2px (opción de Select, botón de InputGroup)"
+        },
+        "lg": {
+          "token": "--radius-lg",
+          "value": "10px (=base)",
+          "usage": "Contenedores genéricos de docs y wrappers"
+        },
+        "xl": {
+          "token": "--radius-xl",
+          "value": "14px (+4px)",
+          "usage": "Contenedores grandes y superficies destacadas"
         },
         "button": {
           "token": "--radius-button",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Button, Toggle, Tab trigger"
         },
         "input": {
           "token": "--radius-input",
-          "value": "10px (1×)",
+          "value": "10px (= lg)",
           "usage": "Input, Textarea, Select trigger"
         },
         "card": {
           "token": "--radius-card",
-          "value": "14px (1.4×)",
+          "value": "14px (= xl)",
           "usage": "Card, Dialog, Sheet, Popover"
         },
         "badge": {
           "token": "--radius-badge",
-          "value": "26px (2.6×)",
+          "value": "pill (= full)",
           "usage": "Badge, Chip — formato pill"
         },
+        "alert": {
+          "token": "--radius-alert",
+          "value": "10px (= lg)",
+          "usage": "Alert y callouts semánticos"
+        },
         "full": {
-          "token": "rounded-full",
+          "token": "--radius-full",
           "value": "9999px",
-          "usage": "Avatar, botón de icono circular"
+          "usage": "Pill/círculo: Avatar, botón-icono circular, Badge"
         }
+      },
+      "rules": {
+        "component": "Los componentes consumen SIEMPRE su token de componente; las subpartes derivan por la regla de radio anidado usando la escala.",
+        "fallback": "Sin fallbacks en <code>var(--radius-*)</code> — tokens.css siempre está cargado; un fallback divergente enmascara bugs (había 110, todos eliminados).",
+        "micro": "Elementos de ~20px o menos usan <code>--radius-xs</code>; por debajo (flechas, hairlines) es excepción micro documentada en el propio CSS.",
+        "theming": "Contrato de tema: los temas pueden sobrescribir <code>--radius</code> y los tokens por componente (identidad de forma); la escala <code>xs–xl</code> es geometría del radio anidado y nunca se sobrescribe."
+      }
+    },
+    "nested": {
+      "title": "Radio anidado",
+      "subtitle": "Elemento redondeado dentro de un contenedor redondeado: el radio interno es el radio externo menos el espaciado entre ellos — <code>Rᵢ = Rₑ − E</code>. Repetir el radio del padre hace que la esquina interna se vea más gruesa.",
+      "cols": {
+        "parent": "Contenedor (Rₑ)",
+        "inset": "Inset (E)",
+        "child": "Hijo (Rᵢ)",
+        "example": "Ejemplo en el sistema"
+      },
+      "rows": {
+        "0": [
+          "--radius (10px)",
+          "--spacing-1 (4px)",
+          "--radius-sm (6px)",
+          "Tabs trigger; ítems de Dropdown, Menubar y Command"
+        ],
+        "1": [
+          "--radius (10px)",
+          "2px",
+          "--radius-md (8px)",
+          "Botón del InputGroup; opción del Select"
+        ],
+        "2": [
+          "--radius-card (14px)",
+          "--spacing-1 (4px)",
+          "--radius (10px)",
+          "Bloque interno pegado al borde de un Card"
+        ],
+        "3": [
+          "cualquiera",
+          "0 (full-bleed)",
+          "mismo radio del padre",
+          "Imagen en la parte superior de un Card"
+        ]
+      },
+      "rules": {
+        "utility": "Para anidamientos dinámicos usa <code>.nds-radius-nested</code> — el contenedor define <code>--nested-parent-radius</code> y <code>--nested-inset</code>; <code>max(0px, …)</code> anula el radio cuando el inset supera el radio del padre.",
+        "never": "Nunca repitas el radio del padre en un hijo con inset, ni improvises un valor — derívalo con la fórmula usando tokens.",
+        "pairs": "Prefiere los pares listos de la tabla: los offsets de la escala (<code>sm = −4px</code>, <code>md = −2px</code>) se diseñaron para casar con los insets de <code>--spacing-1</code> y 2px."
       }
     },
     "borders": {
@@ -533,7 +808,7 @@
       "items": {
         "default": "<code>--border</code> — borde por defecto para Card, divisores, separadores",
         "input": "<code>--input</code> — borde específico de inputs (mismo color, semántica distinta)",
-        "subtle": "<code>border-border/60</code> — divisores sutiles dentro de contenedores",
+        "subtle": "<code>.nds-border-soft</code> — <code>--border</code> al 50%: divisores sutiles dentro de contenedores",
         "width": "<code>--border-width-default: 1px</code> — grosor único para todo el sistema"
       }
     },
@@ -546,50 +821,50 @@
         "shadow": "Shadow",
         "border": "Border"
       },
-      "rows": [
-        [
+      "rows": {
+        "0": [
           "Card",
           "radius-card (14px)",
           "elevation-sm",
-          "border"
+          "ring 1px"
         ],
-        [
+        "1": [
           "Button",
           "radius-button (10px)",
           "—",
           "transparent / border"
         ],
-        [
+        "2": [
           "Input",
           "radius-input (10px)",
           "—",
           "input"
         ],
-        [
-          "Tooltip",
-          "radius (10px)",
-          "elevation-md",
-          "—"
-        ],
-        [
-          "Dropdown / Popover",
+        "3": [
+          "Dropdown / Popover / Select",
           "radius (10px)",
           "elevation-md",
           "border"
         ],
-        [
+        "4": [
           "Dialog / Sheet",
           "radius-card (14px)",
+          "elevation-lg",
+          "ring 1px"
+        ],
+        "5": [
+          "Tooltip / Toast / HoverCard",
+          "radius-sm (6px)",
           "elevation-xl",
           "—"
         ],
-        [
+        "6": [
           "Badge",
-          "radius-badge (26px)",
+          "radius-badge (pill)",
           "—",
           "transparent"
         ]
-      ]
+      }
     },
     "rules": {
       "title": "Reglas",
@@ -608,7 +883,8 @@
       "radius": "Radius",
       "borders": "Bordes",
       "combinations": "Combinaciones",
-      "rules": "Reglas"
+      "rules": "Reglas",
+      "nested": "Radio anidado"
     }
   }
 }

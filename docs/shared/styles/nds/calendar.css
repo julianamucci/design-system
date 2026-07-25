@@ -44,7 +44,7 @@
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   font-family: inherit;
   font-size: 0.875rem;
   cursor: pointer;
@@ -114,7 +114,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: var(--font-weight-normal, 400);
@@ -168,7 +168,7 @@
 
 .nds-calendar-root {
   --nds-cell-size: 2rem;                          /* 32px */
-  --nds-cell-radius: calc(var(--radius, 0.5rem) - 2px);
+  --nds-cell-radius: var(--radius-md);
 
   width: fit-content;
   padding: var(--spacing-2);                      /* 8px */
@@ -395,7 +395,7 @@
 }
 
 .nds-calendar-range-middle {
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 
 /* ── Estados da célula ───────────────────────────────────────────────────── */
@@ -406,7 +406,7 @@
 }
 
 .nds-calendar-today[data-selected="true"] {
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 
 .nds-calendar-outside,
@@ -469,7 +469,7 @@
 }
 
 .nds-calendar-day-btn[data-range-middle="true"] {
-  border-radius: 0;
+  border-radius: var(--radius-none);
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
 }
@@ -517,19 +517,19 @@
 
 .nds-calendar-day-cell:has([data-selected]) {
   background-color: hsl(var(--accent));
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 
 .nds-calendar-day-cell:first-child:has([data-selected]),
 .nds-calendar-day-cell:has([data-selection-start]) {
-  border-start-start-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
-  border-end-start-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+  border-start-start-radius: var(--nds-cell-radius, var(--radius-md));
+  border-end-start-radius: var(--nds-cell-radius, var(--radius-md));
 }
 
 .nds-calendar-day-cell:last-child:has([data-selected]),
 .nds-calendar-day-cell:has([data-selection-end]) {
-  border-start-end-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
-  border-end-end-radius: var(--nds-cell-radius, calc(var(--radius, 0.5rem) - 2px));
+  border-start-end-radius: var(--nds-cell-radius, var(--radius-md));
+  border-end-end-radius: var(--nds-cell-radius, var(--radius-md));
 }
 
 /* ── Seletores nativos de mês/ano no caption ─────────────────────────────── */
@@ -573,7 +573,7 @@
   position: relative;
   display: flex;
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: calc(var(--radius, 0.5rem) - 2px);
+  border-radius: var(--radius-md);
 }
 
 .nds-calendar-select-framed:has(select:focus-visible) {

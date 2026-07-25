@@ -54,7 +54,7 @@
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   outline: 0;
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
@@ -107,7 +107,7 @@
 .nds-carousel-arrow {
   position: absolute;
   touch-action: manipulation;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
 }
 
 .nds-carousel-arrow-prev[data-orientation="horizontal"] {

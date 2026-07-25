@@ -66,6 +66,10 @@
   --sidebar-accent-foreground: 18 60% 22%;
   --sidebar-border: 30 15% 85%;
   --sidebar-ring: 18 75% 45%;
+
+  /* Radius — este tema PODE sobrescrever --radius e os tokens por componente
+     (--radius-button/card/badge/input/alert) para mudar a identidade de forma.
+     A escala --radius-xs..xl (raio aninhado) nunca é sobrescrita. */
 }
 
 /* Dark mode — combina `.dark.tema-warm` */

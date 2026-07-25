@@ -1,0 +1,30 @@
+/*
+ * ─── Type scale ───────────────────────────────────────────────────────────────
+ * Sobrescreve --type-scale (ratio) e --type-base (tamanho base), consumidos
+ * pela escada --text-* em tokens.css. Modelo typescale.com: escolha a base e
+ * o ratio; os degraus (label → p → h4 → h3 → h2 → h1) derivam por calc().
+ *
+ * Aplicado via classes no <html> (toolbar do Storybook):
+ *   .escala-minor-third (padrão) … .escala-golden
+ *   .base-tipo-s / .base-tipo-m (padrão) / .base-tipo-l
+ *
+ * Tudo em rem — a base respeita a preferência de fonte do navegador
+ * (WCAG 1.4.4). Combina com qualquer tema de cor, densidade e fonte.
+ */
+
+/* ── Ratio (escala) ────────────────────────────────────────────────────────── */
+/* Default — re-declara para garantir cascade ao voltar de outra escala */
+.escala-minor-third      { --type-scale: 1.2; }
+
+.escala-minor-second     { --type-scale: 1.067; }
+.escala-major-second     { --type-scale: 1.125; }
+.escala-major-third      { --type-scale: 1.25; }
+.escala-perfect-fourth   { --type-scale: 1.333; }
+.escala-augmented-fourth { --type-scale: 1.414; }
+.escala-perfect-fifth    { --type-scale: 1.5; }
+.escala-golden           { --type-scale: 1.618; }
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+.base-tipo-m { --type-base: 1rem; }        /* padrão — 16px @ browser default */
+.base-tipo-s { --type-base: 0.875rem; }    /* 14px */
+.base-tipo-l { --type-base: 1.125rem; }    /* 18px */

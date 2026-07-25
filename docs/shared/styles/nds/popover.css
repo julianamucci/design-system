@@ -25,10 +25,8 @@
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
-  box-shadow:
-    0 10px 15px -3px hsl(0 0% 0% / 0.1),
-    0 4px 6px -4px hsl(0 0% 0% / 0.1);
+  border-radius: var(--radius);
+  box-shadow: var(--elevation-md);
 }
 
 /*

@@ -26,7 +26,7 @@
   height: var(--avatar-size);
   flex-shrink: 0;
 
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   overflow: hidden;
   background-color: hsl(var(--muted));
   color: hsl(var(--muted-foreground));
@@ -93,7 +93,7 @@
   width: 0.625rem;                                /* 10px — default */
   height: 0.625rem;
 
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   box-shadow: 0 0 0 2px hsl(var(--background));
@@ -131,7 +131,7 @@
   height: var(--spacing-8);
   margin-left: calc(var(--spacing-2) * -1);       /* overlap igual aos avatares */
 
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   border: 2px solid hsl(var(--background));
   background-color: hsl(var(--muted));
   color: hsl(var(--muted-foreground));

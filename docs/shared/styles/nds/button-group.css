@@ -62,7 +62,7 @@
   padding-inline: var(--spacing-2-5, 0.625rem);
   background-color: hsl(var(--muted));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium, 500);
 }

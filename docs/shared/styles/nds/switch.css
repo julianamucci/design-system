@@ -23,7 +23,7 @@
 
   background-color: hsl(var(--input, var(--border)));
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   outline: 0;
   transition: background-color var(--duration-base);
@@ -57,7 +57,7 @@
   height: var(--spacing-4);
 
   background-color: hsl(var(--background));
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   box-shadow: 0 1px 3px hsl(0 0% 0% / 0.2);
   pointer-events: none;
 

@@ -11,7 +11,7 @@
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border) / 0.5);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
   padding: 0.1em 0.3em;
   white-space: nowrap;
 }
@@ -23,7 +23,7 @@
   line-height: 1.5;
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
-  border-radius: 0.625rem;
+  border-radius: var(--radius-lg);
   padding: var(--spacing-4);
   overflow-x: auto;
   white-space: pre;

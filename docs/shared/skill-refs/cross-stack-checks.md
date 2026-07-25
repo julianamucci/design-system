@@ -194,6 +194,8 @@ nds-(border-soft|rounded)[^"']*>  em wrapper de <Table>           → Table já 
 
 Estrutural: items-objeto → componente Card (`CardTitle as="h3"`) em `nds-grid data-cols="2" data-fixed`; items-string → `ul.nds-stack.nds-list-none data-spacing="md"` + `li.nds-accent-start`. Divergência entre stacks = bug.
 
+Raio aninhado: filho arredondado com inset dentro de pai arredondado deve seguir `Rᵢ = Rₑ − inset` (tokens: pai `--radius`+4px→`--radius-sm`; +2px→`--radius-md`). `border-radius` do filho igual ao do pai, ou valor mágico (`0.25rem`, `calc(... - 3px)`), = bug.
+
 ---
 
 ## Correções comuns

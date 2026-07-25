@@ -30,7 +30,7 @@
 
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 }
 
 /* ── Input wrapper (com ícone de busca) ──────────────────────────────────── */
@@ -104,7 +104,7 @@
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
 
-  border-radius: 0.25rem;                          /* 4px */
+  border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
   font-size: 0.875rem;                             /* 14px */
   cursor: pointer;
   user-select: none;
@@ -216,11 +216,10 @@
 
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow:
     0 0 0 1px hsl(var(--foreground) / 0.1),
-    0 4px 6px -1px hsl(0 0% 0% / 0.1),
-    0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    var(--elevation-md);
 }
 
 .nds-combobox-input {

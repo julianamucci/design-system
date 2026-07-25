@@ -53,7 +53,7 @@
   line-height: 1.25;
   background: transparent;
   border: 0;
-  border-radius: var(--radius-button, 0.625rem);
+  border-radius: var(--radius-button);
   color: hsl(var(--muted-foreground));
   cursor: pointer;
   outline: none;

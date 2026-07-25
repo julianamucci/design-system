@@ -39,7 +39,7 @@
 /* ── bordas / sombras / opacidade ────────────────────────────────────────── */
 .nds-border-dashed { border-style: dashed; }
 .nds-border-soft   { border-color: hsl(var(--border) / 0.5); }
-.nds-shadow-md     { box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
+.nds-shadow-md     { box-shadow: var(--elevation-md), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
 .nds-opacity-50    { opacity: 0.5; }
 .nds-opacity-70    { opacity: 0.7; }
 
@@ -123,8 +123,8 @@
 /* ── sombras / transições extras ─────────────────────────────────────────── */
 .nds-shadow-sm { box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05); }
 .nds-transition-shadow { transition: box-shadow var(--duration-fast, 150ms) ease; }
-.nds-hover-shadow-md:hover { box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
-.nds-focus-shadow-md:focus { box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
+.nds-hover-shadow-md:hover { box-shadow: var(--elevation-md), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
+.nds-focus-shadow-md:focus { box-shadow: var(--elevation-md), 0 2px 4px -2px hsl(0 0% 0% / 0.1); }
 
 /* ── pulse (skeleton) ────────────────────────────────────────────────────── */
 @keyframes nds-pulse { 50% { opacity: 0.5; } }
@@ -203,7 +203,7 @@
   width: auto; height: auto;
   margin: 0; overflow: visible; clip: auto;
   padding: 0.5rem 1rem;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));

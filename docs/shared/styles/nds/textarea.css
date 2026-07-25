@@ -27,7 +27,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 
   resize: vertical;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);

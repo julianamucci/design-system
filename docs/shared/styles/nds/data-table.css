@@ -62,7 +62,7 @@
   min-width: 16rem;
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.1);
   padding: var(--spacing-2);
 }
@@ -83,7 +83,7 @@
   align-items: center;
   gap: var(--spacing-2);
   padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
 }
 
 .nds-data-table-columns-menu-row:hover {
@@ -104,7 +104,7 @@
   height: var(--spacing-6, 1.5rem);
   background: transparent;
   border: 0;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   color: hsl(var(--muted-foreground));
   cursor: pointer;
 }
@@ -123,7 +123,7 @@
   width: 100%;
   overflow-x: auto;
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 }
 
 .nds-data-table-table-wrapper {
@@ -168,7 +168,7 @@
   text-align: left;
   font-weight: 500;
   cursor: pointer;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
 }
 
 .nds-data-table-sort-btn:hover {
@@ -207,7 +207,7 @@
   padding-inline: var(--spacing-2);
   border: 1px solid hsl(var(--input));
   background-color: transparent;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   color: hsl(var(--foreground));
 }
 
@@ -249,7 +249,7 @@
   padding: var(--spacing-1);
   font: inherit;
   color: inherit;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 
@@ -308,7 +308,7 @@
   padding-inline: var(--spacing-2);
   border: 1px solid hsl(var(--input));
   background-color: transparent;
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   font-size: 0.875rem;
   color: hsl(var(--foreground));
 }

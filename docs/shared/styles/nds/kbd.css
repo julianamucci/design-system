@@ -32,7 +32,7 @@
 
   background-color: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
-  border-radius: 0.375rem;              /* 6px — cantos suaves de tecla */
+  border-radius: var(--radius-sm);
 
   /* Profundidade de tecla: sombra interna no topo (highlight) +
      sombra externa embaixo (base apoiada). */

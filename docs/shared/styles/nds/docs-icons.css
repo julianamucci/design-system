@@ -23,7 +23,7 @@
   width: 100%;
   background-color: hsl(var(--input-background));
   border: 1px solid hsl(var(--input));
-  border-radius: var(--radius-md, 0.5rem);
+  border-radius: var(--radius-md);
   padding-inline: 2.25rem 0.75rem;          /* left 36px (para o ícone), right 12px */
   padding-block: var(--spacing-1);          /* 4px */
   height: 2.25rem;                          /* 36px */
@@ -90,7 +90,7 @@
   padding: var(--spacing-3, 0.75rem);       /* 12px */
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   overflow: visible;
   transition: background-color var(--duration-fast), border-color var(--duration-fast);
@@ -150,7 +150,7 @@
   display: block;
   background-color: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-4);                /* 16px */
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
   font-size: 0.75rem;                       /* 12px */
@@ -170,7 +170,7 @@
  * Bg/border soft em uma cor semântica; conteúdo herda layout via nds-stack.
  */
 .nds-docs-callout {
-  border-radius: var(--radius-lg, 0.625rem);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-2);                /* 8px */
   background-color: hsl(var(--muted) / 0.5);
   border: 1px solid hsl(var(--border));
@@ -201,7 +201,7 @@
   background-color: hsl(var(--foreground));
   color: hsl(var(--background));
   padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm, 0.25rem);
+  border-radius: var(--radius-sm);
   font-size: 10px;
   white-space: nowrap;
   z-index: 10;

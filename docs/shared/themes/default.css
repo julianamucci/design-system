@@ -2,8 +2,8 @@
  * ─── Tema: Default ────────────────────────────────────────────────────────────
  * Tema base do sistema. Vibe: moderno, compacto, cantos suaves, densidade média-alta.
  *
- * Radius: base 10px; componentes seguem multiplicadores:
- *   button: 1×, card: 1.4×, badge: 2.6×, input: 1×, alert: 1×
+ * Radius: base 10px; componentes derivam da escala:
+ *   button/input/alert: lg (=base), card: xl (+4px), badge: full (pill)
  *
  * Os valores em :root (tokens.css) refletem Default. Este arquivo RE-DECLARA
  * os mesmos tokens dentro de `.tema-default` para garantir que, ao voltar de
@@ -44,6 +44,16 @@
   --input-background: 0 0% 100%;
   --ring: 0 0% 45%;
   --ring-offset-color: 0 0% 100%;
+
+  /* Radius — contrato de tema: temas podem sobrescrever --radius e os tokens
+     por componente abaixo (identidade de forma). A escala --radius-xs..xl é
+     geometria do raio aninhado e NUNCA é sobrescrita por tema. */
+  --radius: 0.625rem;
+  --radius-button: var(--radius-lg);
+  --radius-input: var(--radius-lg);
+  --radius-alert: var(--radius-lg);
+  --radius-card: var(--radius-xl);
+  --radius-badge: var(--radius-full);
 }
 
 /* Dark mode — combina `.dark.tema-default` */

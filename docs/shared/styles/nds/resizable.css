@@ -71,7 +71,7 @@
 
   background-color: hsl(var(--border));
   border: 1px solid hsl(var(--border));
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
 }
 
 .nds-resizable[data-direction="vertical"] > .nds-resizable-handle > .nds-resizable-grip {
@@ -180,7 +180,7 @@
   flex-shrink: 0;
   width: var(--spacing-1, 0.25rem);
   height: var(--spacing-6, 1.5rem);
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   background-color: hsl(var(--border));
 }
 

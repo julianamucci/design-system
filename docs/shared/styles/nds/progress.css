@@ -17,7 +17,7 @@
   width: 100%;
   height: var(--spacing-2);                /* 8px */
   background-color: hsl(var(--primary) / 0.2);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 

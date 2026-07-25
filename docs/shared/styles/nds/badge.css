@@ -28,7 +28,7 @@
   overflow: hidden;
 
   border: 1px solid var(--badge-border);
-  border-radius: var(--radius-badge, 9999px);
+  border-radius: var(--radius-badge);
   padding-inline: var(--spacing-2);             /* 8px */
   padding-block: var(--spacing-0-5);            /* 2px */
 

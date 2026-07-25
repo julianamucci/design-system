@@ -27,7 +27,7 @@
   align-items: center;
 
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   outline: 0;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
@@ -60,7 +60,7 @@
 .nds-input-group-control {
   flex: 1;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius-none);
   background: transparent;
   box-shadow: none;
 }
@@ -137,7 +137,7 @@ textarea.nds-input-group-control {
 /* ── Botão compacto dentro do grupo (compõe nds-button) ──────────────────── */
 .nds-input-group-button {
   gap: var(--spacing-1);
-  border-radius: calc(var(--radius, 0.5rem) - 3px);
+  border-radius: var(--radius-md); /* Ri = Re − inset: radius (10) − 2px */
   padding-inline: var(--spacing-1-5, 0.375rem);
   padding-block: 2px;
 }

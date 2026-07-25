@@ -81,12 +81,22 @@
 .nds-icon    { width: 1rem;     height: 1rem;     }   /* 16px */
 .nds-icon-lg { width: 1.25rem;  height: 1.25rem;  }   /* 20px */
 
-/* ── Border radius ─────────────────────────────────────────────────────────── */
-.nds-rounded-sm   { border-radius: 0.25rem; }
-.nds-rounded      { border-radius: 0.375rem; }
-.nds-rounded-md   { border-radius: 0.5rem; }
-.nds-rounded-lg   { border-radius: 0.625rem; }
-.nds-rounded-full { border-radius: 9999px; }
+/* ── Border radius — espelha a escala de tokens (tema-responsivo) ─────────── */
+.nds-rounded-none { border-radius: var(--radius-none); } /* 0 — flush intencional */
+.nds-rounded-xs   { border-radius: var(--radius-xs); }   /* 4px — micro */
+.nds-rounded-sm   { border-radius: var(--radius-sm); }   /* 6px */
+.nds-rounded      { border-radius: var(--radius-sm); }   /* alias legado de sm */
+.nds-rounded-md   { border-radius: var(--radius-md); }   /* 8px */
+.nds-rounded-lg   { border-radius: var(--radius-lg); }   /* 10px */
+.nds-rounded-xl   { border-radius: var(--radius-xl); }   /* 14px */
+.nds-rounded-full { border-radius: var(--radius-full); } /* pill/círculo */
+
+/* Raio aninhado — Ri = Re − E (raio do pai menos o inset até o filho).
+ * O container define as duas variáveis (ou herda os defaults); max() evita
+ * raio negativo quando o inset é maior que o raio do pai. */
+.nds-radius-nested {
+  border-radius: max(0px, calc(var(--nested-parent-radius, var(--radius)) - var(--nested-inset, var(--spacing-1))));
+}
 
 /* ── Visibility / Accessibility ────────────────────────────────────────────── */
 .nds-sr-only {

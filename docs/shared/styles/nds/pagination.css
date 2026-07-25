@@ -51,7 +51,7 @@
 
   background: transparent;
   border: 0;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   font-family: inherit;
   font-size: 0.875rem;                          /* 14px */
   font-weight: var(--font-weight-medium, 500);

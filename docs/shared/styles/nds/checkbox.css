@@ -26,7 +26,7 @@
 
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: 0.25rem;                        /* 4px — radius-sm */
+  border-radius: var(--radius-xs);
   cursor: pointer;
   outline: 0;
   transition: background-color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast);

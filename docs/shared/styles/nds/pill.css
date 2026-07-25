@@ -20,7 +20,7 @@
   justify-content: center;
   width: var(--pill-size);
   height: var(--pill-size);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background-color: var(--pill-bg);
   color: var(--pill-fg);
   font-size: 0.75rem;

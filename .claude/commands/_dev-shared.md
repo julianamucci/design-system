@@ -55,6 +55,7 @@ Exceções: `px-*`/`gap-*`/`py-*` (spacing), `[&_svg]:size-4` (ícones decorativ
 - **Tabelas: renderizar `<Table>` direto** — o componente já provê `.nds-table-wrapper`. Nunca envolver em wrapper com `nds-border-*`/`nds-rounded-*` (cria caixa dupla).
 - **Cards de conteúdo usam o componente Card** (`CardHeader > CardTitle + CardDescription`; campos extras em `CardContent`), nunca `div` com classes de card. `CardTitle` aceita `as` — passe `h2`–`h6` quando for heading real na hierarquia. Grid de cards em pares: `nds-grid` + `data-cols="2"` + `data-fixed`.
 - **Listas simples**: `ul` com `nds-stack nds-list-none` + `data-spacing="md"`, itens com `nds-accent-start`.
+- **Raio aninhado**: elemento arredondado dentro de container arredondado segue `Rᵢ = Rₑ − inset` — use os pares prontos (pai `--radius` + inset 4px → filho `--radius-sm`; inset 2px → `--radius-md`; pai `--radius-card` + 4px → `--radius`) ou `.nds-radius-nested`. Nunca repita o raio do pai nem chute valor. Contrato de tema: temas sobrescrevem só `--radius` + tokens por componente; a escala `xs–xl` nunca. Ver Elevação §Raio aninhado.
 
 Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/08-docs-pages-foundations.md` §14.
 

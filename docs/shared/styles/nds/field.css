@@ -84,7 +84,7 @@
   width: 100%;
   flex-direction: column;
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
 }
 
 .nds-field-label:has(> .nds-field) > .nds-field {

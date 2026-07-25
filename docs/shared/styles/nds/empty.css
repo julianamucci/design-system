@@ -27,7 +27,7 @@
 
   padding: var(--spacing-6);
   border: 1px dashed hsl(var(--border));
-  border-radius: 0.75rem;
+  border-radius: var(--radius-xl);
   text-align: center;
   text-wrap: balance;
 }
@@ -91,7 +91,7 @@
 .nds-empty-media-icon {
   width: var(--spacing-8, 2rem);
   height: var(--spacing-8, 2rem);
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
 }

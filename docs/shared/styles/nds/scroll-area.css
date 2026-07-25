@@ -56,7 +56,7 @@
 .nds-scroll-area-thumb {
   position: relative;
   flex: 1;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background-color: hsl(var(--border));
 }
 

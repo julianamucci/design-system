@@ -26,7 +26,7 @@
   padding-block: var(--spacing-2-5, 0.625rem);
 
   border: 1px solid transparent;
-  border-radius: var(--radius, 0.5rem);
+  border-radius: var(--radius);
   font-size: 0.875rem;
   outline: 0;
   transition: background-color var(--duration-fast), border-color var(--duration-fast);
@@ -92,7 +92,7 @@ a.nds-item:hover {
   width: var(--spacing-10, 2.5rem);
   height: var(--spacing-10, 2.5rem);
   overflow: hidden;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
 }
 
 .nds-item-media-image img {
