@@ -73,7 +73,7 @@ export const Fechado: Story = {
     await step("Apenas trigger visível", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir/i });
       await expect(trigger).toBeVisible();
-      const dialog = body.queryByRole("dialog");
+      const dialog = within(document.body).queryByRole("dialog");
       await expect(dialog).toBeNull();
     });
   },
@@ -170,7 +170,7 @@ export const Controlado: Story = {
     await step("ESC fecha o drawer controlado", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => {
-        const dialog = body.queryByRole("dialog");
+        const dialog = within(document.body).queryByRole("dialog");
         if (dialog) throw new Error("ainda aberto");
       }, { timeout: 1000 });
     });
@@ -215,7 +215,7 @@ export const NaoDismissible: Story = {
       await userEvent.keyboard("{Escape}");
       // Aguarda um tick para garantir que ESC não fechou
       await new Promise((r) => setTimeout(r, 200));
-      const stillOpen = body.queryByRole("dialog");
+      const stillOpen = within(document.body).queryByRole("dialog");
       await expect(stillOpen).toBeInTheDocument();
     });
   },

@@ -57,7 +57,7 @@ function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTM
   return wrapper;
 }
 
-async function expectDirection(side: SheetSide, step: (name: string, fn: () => Promise<void> | void) => Promise<void>) {
+async function expectDirection(side: SheetSide, step: (name: string, fn: () => Promise<void> | void) => Promise<void> | void) {
   const body = within(document.body);
   const dialog = await body.findByRole('dialog');
   await step(`Renderiza com direção ${side}`, async () => {

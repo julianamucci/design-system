@@ -96,7 +96,7 @@ export const Playground: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const dialog = body.queryByRole("alertdialog");
+          const dialog = within(document.body).queryByRole("alertdialog");
           if (dialog && dialog.getAttribute("data-state") !== "closed") {
             throw new Error("dialog still open");
           }

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, within } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
@@ -104,8 +104,8 @@ export const ComFormulario: Story = {
   play: async ({ step }) => {
     await assertSemanticStructure(step as never);
     await step("Inputs do formulário presentes", async () => {
-      const nameInput = await body.findByLabelText(/Nome/i);
-      const emailInput = await body.findByLabelText(/E-mail/i);
+      const nameInput = await within(document.body).findByLabelText(/Nome/i);
+      const emailInput = await within(document.body).findByLabelText(/E-mail/i);
       await expect(nameInput).toBeInTheDocument();
       await expect(emailInput).toBeInTheDocument();
     });
@@ -147,8 +147,8 @@ export const ComConfirmacao: Story = {
   play: async ({ step }) => {
     await assertSemanticStructure(step as never);
     await step("Botões Confirmar e Cancelar presentes", async () => {
-      await expect(body.getByRole("button", { name: /Confirmar/i })).toBeInTheDocument();
-      await expect(body.getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
+      await expect(within(document.body).getByRole("button", { name: /Confirmar/i })).toBeInTheDocument();
+      await expect(within(document.body).getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
     });
   },
 };

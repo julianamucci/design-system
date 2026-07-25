@@ -122,7 +122,7 @@ export const ComDropdown: Story = {
   play: async ({ step }) => {
     await step("Content visível com sub-links", async () => {
       await waitFor(async () => {
-        const link = body.queryByText(/Plano Pro/i);
+        const link = within(document.body).queryByText(/Plano Pro/i);
         await expect(link).toBeTruthy();
       });
     });
@@ -200,10 +200,10 @@ export const MegaMenuGrid: Story = {
   play: async ({ step }) => {
     await step("Mega-menu grid com 4 cards visíveis", async () => {
       await waitFor(async () => {
-        const t = body.queryByText(/Para Times/i);
-        const d = body.queryByText(/Para Devs/i);
-        const ds = body.queryByText(/Para Design/i);
-        const m = body.queryByText(/Para Marketing/i);
+        const t = within(document.body).queryByText(/Para Times/i);
+        const d = within(document.body).queryByText(/Para Devs/i);
+        const ds = within(document.body).queryByText(/Para Design/i);
+        const m = within(document.body).queryByText(/Para Marketing/i);
         await expect(Boolean(t && d && ds && m)).toBe(true);
       });
     });
@@ -264,8 +264,8 @@ export const ComCardDestacado: Story = {
   play: async ({ step }) => {
     await step("Card destacado e lista de links presentes", async () => {
       await waitFor(async () => {
-        const tokens = body.queryByText(/Tokens v2/i);
-        const docs = body.queryByText(/Documentação/i);
+        const tokens = within(document.body).queryByText(/Tokens v2/i);
+        const docs = within(document.body).queryByText(/Documentação/i);
         await expect(Boolean(tokens && docs)).toBe(true);
       });
     });

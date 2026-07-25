@@ -70,7 +70,7 @@ export const Closed: Story = {
     const trigger = canvas.getByRole("button", { name: /Excluir item/i });
     await expect(trigger).toBeVisible();
     // Base UI pode manter portal no DOM mesmo fechado; checar data-state
-    const dialog = body.queryByRole("alertdialog");
+    const dialog = within(document.body).queryByRole("alertdialog");
     if (dialog) {
       await expect(dialog).toHaveAttribute("data-state", "closed");
     }
@@ -159,7 +159,7 @@ export const Confirmed: Story = {
     });
 
     await step("Ação Confirmar é clicada (handler disparado)", async () => {
-      const action = await body.findByTestId("confirm-action");
+      const action = await within(document.body).findByTestId("confirm-action");
       await userEvent.click(action);
       await expect(action).toBeInTheDocument();
     });
@@ -205,7 +205,7 @@ export const Cancelled: Story = {
       await userEvent.click(cancel);
       await waitFor(
         () => {
-          const dialog = body.queryByRole("alertdialog");
+          const dialog = within(document.body).queryByRole("alertdialog");
           if (dialog && dialog.getAttribute("data-state") !== "closed") {
             throw new Error("dialog still open");
           }
@@ -274,7 +274,7 @@ export const Controlled: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const dialog = body.queryByRole("alertdialog");
+          const dialog = within(document.body).queryByRole("alertdialog");
           if (dialog && dialog.getAttribute("data-state") !== "closed") {
             throw new Error("dialog still open");
           }

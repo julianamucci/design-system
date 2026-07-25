@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, within } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Dialog,
@@ -144,8 +144,8 @@ export const WithForm: Story = {
     );
   },
   play: async () => {
-    await expect(await body.findByLabelText(/nome/i)).toBeInTheDocument();
-    await expect(await body.findByLabelText(/e-mail/i)).toBeInTheDocument();
+    await expect(await within(document.body).findByLabelText(/nome/i)).toBeInTheDocument();
+    await expect(await within(document.body).findByLabelText(/e-mail/i)).toBeInTheDocument();
   },
 };
 
@@ -194,7 +194,7 @@ export const WithScrollContent: Story = {
     );
   },
   play: async () => {
-    await expect(await body.findByText(/termos de uso/i)).toBeInTheDocument();
+    await expect(await within(document.body).findByText(/termos de uso/i)).toBeInTheDocument();
   },
 };
 
@@ -227,7 +227,7 @@ export const NoFooter: Story = {
     );
   },
   play: async () => {
-    await expect(await body.findByText(/sobre este recurso/i)).toBeInTheDocument();
+    await expect(await within(document.body).findByText(/sobre este recurso/i)).toBeInTheDocument();
   },
 };
 

@@ -29,7 +29,7 @@ function TabButton({
 }: {
   active: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return h(
     'button',

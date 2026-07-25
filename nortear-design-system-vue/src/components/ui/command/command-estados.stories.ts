@@ -100,6 +100,7 @@ export const ItemDesabilitado: Story = {
 
     await step('item desabilitado tem opacidade reduzida via classe', async () => {
       const disabledItem = canvas.getByText('Input (desabilitado)').closest('[data-slot="command-item"]');
+      if (!disabledItem) throw new Error('command-item ancestral não encontrado');
       await expect(disabledItem).toHaveClass('nds-command-item');
       await expect(getComputedStyle(disabledItem).opacity).toBe('0.5');
     });

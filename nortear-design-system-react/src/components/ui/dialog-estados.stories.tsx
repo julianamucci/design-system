@@ -81,7 +81,7 @@ export const Closed: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getAllByRole("button")[0];
     await expect(trigger).toBeVisible();
-    const dialog = body.queryByRole("dialog");
+    const dialog = within(document.body).queryByRole("dialog");
     if (dialog) {
       await expect(dialog).toHaveAttribute("data-state", "closed");
     }
@@ -167,7 +167,7 @@ export const WithCloseButtonHidden: Story = {
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
     // Não há botão Close (X) com sr-only "Close"
-    const closeBtn = body.queryByRole("button", { name: /^Close$/i });
+    const closeBtn = within(document.body).queryByRole("button", { name: /^Close$/i });
     await expect(closeBtn).toBeNull();
   },
 };
@@ -227,7 +227,7 @@ export const Controlled: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog && dialog.getAttribute("data-closed") === null) {
             throw new Error("dialog ainda aberto");
           }

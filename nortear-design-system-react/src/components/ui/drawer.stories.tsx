@@ -89,7 +89,7 @@ export const Playground: Story = {
     const waitForClose = async () => {
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog) {
             throw new Error("drawer still open");
           }

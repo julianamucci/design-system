@@ -18,5 +18,5 @@ export default meta;
 // Story stub obrigatório (regra storybook/story-exports). Marcado com !test
 // pelas tags do meta — não aparece no sidebar nem roda nos testes.
 export const _Stub: StoryObj<typeof meta> = {
-  render: () => null,
+  render: () => <></>,
 };

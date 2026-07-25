@@ -42,7 +42,7 @@ export default function App() {
   const [isDark, setIsDark] = useState(false);
   // Inicialização de tema por subdomínio direto no initializer do useState
   // (evita flicker do primeiro render + atende react-hooks/set-state-in-effect)
-  const [currentTheme, setCurrentTheme] = useState(() => {
+  const [currentTheme, setCurrentTheme] = useState<string>(() => {
     const { theme, isDevMode } = getThemeInfo();
     return isDevMode ? 'default' : theme;
   });

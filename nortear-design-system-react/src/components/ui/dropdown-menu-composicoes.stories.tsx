@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { expect } from "storybook/test";
+import { expect, within } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
@@ -137,7 +137,7 @@ export const ComCheckboxItems: Story = {
   play: async ({ step }) => {
     await step("3 itens com role=menuitemcheckbox", async () => {
       await waitForPortal("menu");
-      const checkboxes = body.getAllByRole("menuitemcheckbox");
+      const checkboxes = within(document.body).getAllByRole("menuitemcheckbox");
       await expect(checkboxes.length).toBe(3);
       // Pelo menos um marcado, pelo menos um desmarcado
       const checked = checkboxes.filter(
@@ -184,7 +184,7 @@ export const ComRadioGroup: Story = {
   play: async ({ step }) => {
     await step("RadioItems com role=menuitemradio e apenas um checked", async () => {
       await waitForPortal("menu");
-      const radios = body.getAllByRole("menuitemradio");
+      const radios = within(document.body).getAllByRole("menuitemradio");
       await expect(radios.length).toBe(3);
       const checked = radios.filter(
         (el) => el.getAttribute("aria-checked") === "true"

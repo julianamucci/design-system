@@ -67,7 +67,7 @@ export const Fechado: Story = {
     await step("Triggers visíveis e nenhum menu aberto", async () => {
       const triggers = canvas.getAllByRole("menuitem");
       await expect(triggers.length).toBeGreaterThanOrEqual(2);
-      const menu = body.queryByRole("menu");
+      const menu = within(document.body).queryByRole("menu");
       await expect(menu).toBeNull();
     });
   },
@@ -171,7 +171,7 @@ export const CheckboxChecked: Story = {
   play: async ({ step }) => {
     await step("CheckboxItem com aria-checked=true", async () => {
       await waitForPortal("menu");
-      const checkboxes = body.getAllByRole("menuitemcheckbox");
+      const checkboxes = within(document.body).getAllByRole("menuitemcheckbox");
       await expect(checkboxes.length).toBe(2);
       const checked = checkboxes.find(
         (el) => el.getAttribute("aria-checked") === "true"

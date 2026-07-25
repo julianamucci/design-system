@@ -192,7 +192,7 @@ export const CommandPaletteDialog: Story = {
     await step("Escape fecha o dialog", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => {
-        const dialog = body.queryByRole("dialog");
+        const dialog = within(document.body).queryByRole("dialog");
         if (dialog && dialog.getAttribute("data-state") !== "closed") {
           throw new Error("dialog ainda aberto");
         }

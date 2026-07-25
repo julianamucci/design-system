@@ -13,7 +13,8 @@ export async function waitForPortal(
     | "listbox"
     | "menu"
     | "menuitem"
-    | "option",
+    | "option"
+    | "button",
   options: { name?: string | RegExp; timeout?: number } = {},
 ): Promise<HTMLElement> {
   const { name, timeout = 4000 } = options;

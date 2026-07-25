@@ -61,7 +61,7 @@ export const Fechado: Story = {
     await step("Apenas trigger visível, dialog ausente", async () => {
       const trigger = canvas.getByRole("link", { name: /@joana/i });
       await expect(trigger).toBeVisible();
-      const dialog = body.queryByRole("dialog");
+      const dialog = within(document.body).queryByRole("dialog");
       await expect(dialog).toBeNull();
     });
   },
@@ -168,7 +168,7 @@ export const Controlado: Story = {
       await userEvent.click(closeBtn);
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog) throw new Error("ainda aberto");
         },
         { timeout: 1500 }

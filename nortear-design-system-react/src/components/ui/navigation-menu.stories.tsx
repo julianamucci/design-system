@@ -119,7 +119,7 @@ export const Playground: Story = {
       const trigger = canvas.getByRole("button", { name: /Produtos/i });
       await userEvent.click(trigger);
       await waitFor(async () => {
-        const content = body.queryByText(/Plano Starter/i);
+        const content = within(document.body).queryByText(/Plano Starter/i);
         await expect(content).toBeTruthy();
       });
     });

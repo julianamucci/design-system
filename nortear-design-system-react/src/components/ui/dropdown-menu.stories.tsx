@@ -92,7 +92,7 @@ export const Playground: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const menu = body.queryByRole("menu");
+          const menu = within(document.body).queryByRole("menu");
           if (menu) throw new Error("menu still open");
         },
         { timeout: 1000 }

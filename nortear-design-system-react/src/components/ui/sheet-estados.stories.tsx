@@ -87,7 +87,7 @@ export const Closed: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getAllByRole("button")[0];
     await expect(trigger).toBeVisible();
-    const dialog = body.queryByRole("dialog");
+    const dialog = within(document.body).queryByRole("dialog");
     if (dialog) {
       await expect(dialog).toHaveAttribute("data-state", "closed");
     }
@@ -231,7 +231,7 @@ export const Controlled: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog && dialog.getAttribute("data-closed") === null) {
             throw new Error("sheet ainda aberto");
           }

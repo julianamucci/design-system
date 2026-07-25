@@ -114,7 +114,7 @@ export const Playground: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog) throw new Error("dialog ainda aberto");
         },
         { timeout: 1500 }

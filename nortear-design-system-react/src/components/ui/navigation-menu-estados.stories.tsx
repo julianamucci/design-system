@@ -120,7 +120,7 @@ export const Aberto: Story = {
   play: async ({ step }) => {
     await step("Content visível com sub-link Plano Pro", async () => {
       await waitFor(async () => {
-        const link = body.queryByText(/Plano Pro/i);
+        const link = within(document.body).queryByText(/Plano Pro/i);
         await expect(link).toBeTruthy();
       });
     });

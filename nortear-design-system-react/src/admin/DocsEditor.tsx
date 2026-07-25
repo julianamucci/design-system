@@ -255,15 +255,19 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
 
   const localeData = data?.[locale] ?? {};
 
+  // Recarrega re-atribuindo o src — funciona cross-origin (Storybook em outra porta)
+  const reloadPreview = useCallback(() => {
+    const frame = iframeRef.current;
+    if (frame) frame.setAttribute('src', frame.src);
+  }, []);
+
   const handleSave = useCallback(async () => {
     await save();
     // Recarrega o iframe após salvar para refletir o novo JSON
-    setPreviewKey((k) => k + 1);
-  }, [save]);
+    reloadPreview();
+  }, [save, reloadPreview]);
 
-  const handleRefreshPreview = useCallback(() => {
-    setPreviewKey((k) => k + 1);
-  }, []);
+  const handleRefreshPreview = reloadPreview;
 
   const handleAutoTranslate = useCallback(async () => {
     if (!data) return;
@@ -443,7 +447,7 @@ export function DocsEditor({ initialComponent = 'button' }: DocsEditorProps) {
                 {STACKS.map((s) => (
                   <button
                     key={s.id}
-                    onClick={() => { setActiveStack(s.id); setPreviewKey((k) => k + 1); }}
+                    onClick={() => setActiveStack(s.id)}
                     title={`Storybook ${s.label} · porta ${s.port}`}
                     className={`rounded px-2 py-1 text-xs transition-colors ${
                       activeStack === s.id

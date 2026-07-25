@@ -117,7 +117,7 @@ export const Playground: Story = {
     const waitForClose = async () => {
       await waitFor(
         () => {
-          const dialog = body.queryByRole("dialog");
+          const dialog = within(document.body).queryByRole("dialog");
           if (dialog && dialog.getAttribute("data-state") !== "closed") {
             throw new Error("dialog still open");
           }

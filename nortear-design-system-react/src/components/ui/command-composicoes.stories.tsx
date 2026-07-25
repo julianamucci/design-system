@@ -240,12 +240,12 @@ export const ComoCombobox: Story = {
       const trigger = canvas.getByRole("combobox");
       await userEvent.click(trigger);
       await waitFor(() => {
-        expect(body.getByText("React")).toBeInTheDocument();
+        expect(within(document.body).getByText("React")).toBeInTheDocument();
       });
     });
 
     await step("selecionar item fecha o popover e atualiza o trigger", async () => {
-      const reactItem = body.getByText("React");
+      const reactItem = within(document.body).getByText("React");
       await userEvent.click(reactItem);
       await waitFor(() => {
         expect(canvas.getByRole("combobox")).toHaveTextContent("React");
@@ -257,7 +257,7 @@ export const ComoCombobox: Story = {
     // pois o axe panel do Storybook checa o documento inteiro (incluindo portais).
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
-      expect(body.queryByRole("listbox")).not.toBeInTheDocument();
+      expect(within(document.body).queryByRole("listbox")).not.toBeInTheDocument();
     });
   },
 };
@@ -334,14 +334,14 @@ export const CommandPalette: Story = {
     });
 
     await step("CommandInput está com foco após abertura", async () => {
-      const input = body.getByRole("combobox");
+      const input = within(document.body).getByRole("combobox");
       await expect(input).toBeInTheDocument();
     });
 
     await step("Escape fecha o dialog", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => {
-        const dialog = body.queryByRole("dialog");
+        const dialog = within(document.body).queryByRole("dialog");
         if (dialog && dialog.getAttribute("data-state") !== "closed") {
           throw new Error("dialog ainda aberto");
         }

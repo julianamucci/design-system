@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, within } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Dialog,
@@ -136,7 +136,7 @@ export const ProfileEdit: Story = {
     );
   },
   play: async () => {
-    const input = await body.findByLabelText(/Nome completo/i);
+    const input = await within(document.body).findByLabelText(/Nome completo/i);
     await expect(input).toBeVisible();
   },
 };

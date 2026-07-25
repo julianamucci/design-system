@@ -61,7 +61,7 @@ export const Fechado: Story = {
     await step("Apenas trigger visível, menu ausente", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir menu/i });
       await expect(trigger).toBeVisible();
-      const menu = body.queryByRole("menu");
+      const menu = within(document.body).queryByRole("menu");
       await expect(menu).toBeNull();
     });
   },
@@ -93,7 +93,7 @@ export const Aberto: Story = {
     await step("Menu aberto com role=menu", async () => {
       const menu = await waitForPortal("menu");
       await expect(menu).toBeVisible();
-      const items = body.getAllByRole("menuitem");
+      const items = within(document.body).getAllByRole("menuitem");
       await expect(items.length).toBeGreaterThanOrEqual(2);
     });
   },
@@ -151,7 +151,7 @@ export const Controlado: Story = {
       await userEvent.keyboard("{Escape}");
       await waitFor(
         () => {
-          const menu = body.queryByRole("menu");
+          const menu = within(document.body).queryByRole("menu");
           if (menu) throw new Error("ainda aberto");
         },
         { timeout: 1000 }

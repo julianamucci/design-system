@@ -50,7 +50,7 @@ function buildWrapper(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-async function closeAfter(step: (name: string, fn: () => Promise<void> | void) => Promise<void>) {
+async function closeAfter(step: (name: string, fn: () => Promise<void> | void) => Promise<void> | void) {
   const body = within(document.body);
   await step('Limpa fechando via ESC antes do postVisit', async () => {
     await userEvent.keyboard('{Escape}');

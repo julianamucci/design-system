@@ -63,7 +63,7 @@ function Calendar({
           captionLayout !== "label" && "nds-calendar-caption-label-button",
           defaultClassNames.caption_label
         ),
-        table: "nds-calendar-table",
+        month_grid: cn("nds-calendar-table", defaultClassNames.month_grid),
         weekdays: cn("nds-calendar-weekdays", defaultClassNames.weekdays),
         weekday: cn("nds-calendar-weekday", defaultClassNames.weekday),
         week: cn("nds-calendar-week", defaultClassNames.week),
