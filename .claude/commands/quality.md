@@ -56,6 +56,10 @@ Critérios por categoria de componente: ver `docs/shared/skill-refs/test-criteri
 
 **Grep** (1): a11y.disable — `a11y.*disable|disable.*a11y` em `design-system-*/src/components/ui/<slug>*.stories.*`
 
+**Grep** (1): higiene `.nds-*` — `nds-text-h[1-4][^"']*nds-(font-(bold|semibold)|tracking-tight)|nds-text-body[^"']*nds-text-foreground|<h2[^>]*nds-text-h3` em `design-system-*/src/components/docs/*Docs.*`
+
+**Grep** (1): style inline em docs — `style=\{\{|style="` em `design-system-*/src/components/docs/*Docs.*` (exceto stories; criar utility `.nds-*` em vez de inline)
+
 Após coletar, **não releia** nada nos passos seguintes.
 
 ---
@@ -155,6 +159,8 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 
 **3g. Tipografia + tabelas** (do Grep do Passo 1): zero `text-[9px]`/`text-[10px]` em corpo, zero tabelas dentro de `<ComponentDemo>`, zero wrappers com `overflow-hidden` (correto: `border rounded-xl overflow-x-auto p-4 shadow-sm`).
 
+**3h. Higiene `.nds-*`** (dos Greps do Passo 1): zero peso/tracking redundante sobre `nds-text-h1..h4`, zero `nds-text-foreground` junto de `nds-text-body`, zero `nds-text-muted-foreground` em `<p class="nds-text-body">` de corpo, zero `style` inline em docs pages, `<h2>` sempre com `nds-text-h2`, `<Table>` sem wrapper de borda. Regras em `_dev-shared.md` §Higiene.
+
 ---
 
 ### Passo 4 — Identificar gaps + corrigir
@@ -211,6 +217,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | Semântica HTML + links | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Tokenização dimensões | ✅/❌ | ✅/❌ | ✅/❌ | N/A |
 | Tipografia + tabelas | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Higiene .nds-* (redundância/style inline) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 
 ### Gaps Encontrados
 | Item | Stack | Problema | Ação |

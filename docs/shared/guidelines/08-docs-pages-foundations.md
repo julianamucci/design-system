@@ -684,3 +684,24 @@ html.meu-tema.dark {
   <div class="space-y-2"> <!-- bloco customização --> </div>
 </div>
 ```
+
+## 14. Foundation pages — padrões do renderer genérico
+
+Toda foundation page usa o renderer genérico da stack (`FoundationPage.tsx` / `FoundationsRenderer.vue` / `FoundationPage.svelte`+`FoundationSection.svelte` / `foundationsRenderer.ts`). As 4 stacks produzem a MESMA estrutura:
+
+**Shell**: root `sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs` → container `nds-p-8 nds-stack nds-max-w-docs nds-mx-auto` com `data-spacing="xl"`.
+
+**Header**: `header.nds-stack.nds-pb-8` contendo:
+1. `div.nds-cluster.nds-w-full` (`data-spacing="sm" data-align="center"`) com Badge categoria (`nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium`), Badge tipo (`nds-text-muted-foreground nds-font-normal`) e `LanguageSwitcher` envolvido em `nds-spacer-start` (empurra para a direita).
+2. `h1.nds-text-h1.nds-text-foreground` (sem `nds-font-bold`/`nds-tracking-tight`/`nds-m-0` — redundantes).
+3. `p.nds-text-muted-foreground.nds-leading-relaxed.nds-max-w-prose`.
+
+**LanguageSwitcher**: `nds-lang-switcher` + 3 `button.nds-lang-switcher-button` com `data-locale`, `aria-label`, `aria-pressed`. Sem ícone, sem ToggleGroup.
+
+**Seções**: `section.nds-stack.nds-docs-section-divider` com `data-spacing="md"` (não `lg`). Título `h2.nds-text-h2.nds-text-foreground`. Chaves `body`/`audience` de topo → parágrafos simples `nds-text-body nds-leading-relaxed` (sem rótulo de chave, sem cor extra).
+
+**Items de seção**:
+- Itens objeto → grid `nds-grid` `data-cols="2" data-fixed data-spacing="md"` de componente **Card**: `CardHeader > CardTitle as="h3" + CardDescription` (title-like: `title|name|label`; body-like: `body|description|usage|use|text`); campos extras em `CardContent` (`nds-text-caption nds-text-muted-foreground`).
+- Itens string → `ul.nds-stack.nds-list-none` `data-spacing="md"` com `li.nds-text-body.nds-leading-relaxed.nds-accent-start`.
+
+**Tabelas** (`cols`+`rows`, objeto ou array): componente `Table` renderizado direto, sem wrapper com borda. Células mapeadas pela CHAVE da coluna — as chaves de `rows.*` devem bater com as de `cols` no translations.json.

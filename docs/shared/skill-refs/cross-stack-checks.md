@@ -185,6 +185,23 @@ Quando factory custom Basecoat **não suporta** feature da lib upstream (submenu
 
 ---
 
+## Check 12 — Higiene `.nds-*` + paridade estrutural
+
+Regras completas em `.claude/commands/_dev-shared.md` §"Higiene de classes `.nds-*`" e guideline 08 §14. Greps por stack (docs pages + shared):
+
+```
+nds-text-h[1-4][^"']*nds-(font-(bold|semibold)|tracking-tight)   → redundante (composta já traz)
+nds-text-body[^"']*nds-text-foreground                            → redundante (body já traz --foreground)
+<p [^>]*nds-text-body[^>]*nds-text-muted-foreground               → corpo de texto não é muted
+style=  /  \.style\.                                              → proibido em docs/foundation (criar utility)
+<h2[^>]*nds-text-h3                                               → usar nds-text-h2
+nds-(border-soft|rounded)[^"']*>  em wrapper de <Table>           → Table já provê .nds-table-wrapper
+```
+
+Estrutural: items-objeto → componente Card (`CardTitle as="h3"`) em `nds-grid data-cols="2" data-fixed`; items-string → `ul.nds-stack.nds-list-none data-spacing="md"` + `li.nds-accent-start`. Divergência entre stacks = bug.
+
+---
+
 ## Correções comuns
 
 ### Copiar classes do React → outras stacks

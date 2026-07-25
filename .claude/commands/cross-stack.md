@@ -57,6 +57,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 9 | Do & Don't layout (bug recorrente) | inspeção visual após Read | Bloqueante |
 | 10 | Patches sobre upstream shadcn (markers + PATCHES.md) | Grep × 1 + leitura | Crítico |
 | 11 | Divergências idiomáticas Basecoat (3 camadas: notes, DocsProps, story) | inspeção após Read | Bug |
+| 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 4 | Bug |
 
 ---
 

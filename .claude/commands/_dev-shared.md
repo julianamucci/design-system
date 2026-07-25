@@ -45,6 +45,21 @@ Exceções: `px-*`/`gap-*`/`py-*` (spacing), `[&_svg]:size-4` (ícones decorativ
 
 ---
 
+## Higiene de classes `.nds-*`
+
+- **Classes compostas do type scale já trazem peso/tracking** (`nds-text-h1` → 700 + tight; `h2`–`h4` → 600). Nunca empilhar `nds-font-*`/`nds-tracking-*` redundantes no mesmo elemento.
+- **`nds-text-body` já traz `color: --foreground`** — nunca combinar com `nds-text-foreground`. Classe de cor só para sobrescrever: `nds-text-muted-foreground` em subtítulos/metadados, nunca em `<p class="nds-text-body">` de corpo de texto.
+- **Zero `style` inline.** Se a propriedade não existe como utility, crie a classe em `docs/shared/styles/nds/` (spacing restrito ao grid 8) e use-a.
+- **Não forçar `nds-m-0`** — espaçamento vem do gap de `nds-stack`/`nds-cluster`.
+- **`<h2>` de seção usa `nds-text-h2`** — nunca `nds-text-h3` em elemento `<h2>`.
+- **Tabelas: renderizar `<Table>` direto** — o componente já provê `.nds-table-wrapper`. Nunca envolver em wrapper com `nds-border-*`/`nds-rounded-*` (cria caixa dupla).
+- **Cards de conteúdo usam o componente Card** (`CardHeader > CardTitle + CardDescription`; campos extras em `CardContent`), nunca `div` com classes de card. `CardTitle` aceita `as` — passe `h2`–`h6` quando for heading real na hierarquia. Grid de cards em pares: `nds-grid` + `data-cols="2"` + `data-fixed`.
+- **Listas simples**: `ul` com `nds-stack nds-list-none` + `data-spacing="md"`, itens com `nds-accent-start`.
+
+Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/08-docs-pages-foundations.md` §14.
+
+---
+
 ## Artefatos a Criar (todas as stacks)
 
 | Arquivo | Conteúdo |
