@@ -253,6 +253,14 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
       })()
     : undefined;
 
+  // Chaves string soltas (ex.: passos de instalação `cloneTitle`/`cloneCode`/
+  // `installNote`): `*Title` → h3, `*Code` → bloco de código, resto → parágrafo.
+  const looseStrings = Object.entries(data).filter(
+    ([k, v]) =>
+      typeof v === 'string' &&
+      !['title', 'subtitle', 'body', 'audience', 'note'].includes(k),
+  ) as Array<[string, string]>;
+
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="md">
       {(title || subtitle) && (
@@ -286,6 +294,25 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
           html={audience}
           className="nds-text-body nds-leading-relaxed"
         />
+      )}
+
+      {looseStrings.map(([k, v]) =>
+        k.endsWith('Title') ? (
+          <h3 key={k} className="nds-text-h3 nds-text-foreground">
+            <HtmlText html={v} />
+          </h3>
+        ) : k.endsWith('Code') ? (
+          <div key={k} className="nds-docs-code">
+            <HtmlText html={v} className="nds-whitespace-pre" />
+          </div>
+        ) : (
+          <HtmlText
+            key={k}
+            as="p"
+            html={v}
+            className="nds-text-body nds-leading-relaxed"
+          />
+        ),
       )}
 
       {cols && rows !== undefined && <SectionTable cols={cols} rows={rows} />}

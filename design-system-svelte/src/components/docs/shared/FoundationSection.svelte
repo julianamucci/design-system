@@ -233,10 +233,14 @@
             {/each}
           </ul>
         {:else if isString(value)}
-          <div class="nds-stack" data-spacing="xs">
-            <span class="nds-text-caption nds-font-medium nds-uppercase nds-tracking-wide nds-text-muted-foreground">{key}</span>
+          <!-- `*Title` → h3, `*Code` → bloco de código, resto → parágrafo (sem rótulo de chave) -->
+          {#if key.endsWith('Title')}
+            <h3 class="nds-text-h3 nds-text-foreground">{@html value}</h3>
+          {:else if key.endsWith('Code')}
+            <div class="nds-docs-code"><span class="nds-whitespace-pre">{@html value}</span></div>
+          {:else}
             <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
-          </div>
+          {/if}
         {:else if isArray(value) || isObject(value)}
           <section class="nds-stack" data-spacing="xs">
             {@render renderValue(value, depth)}

@@ -62,7 +62,7 @@
         },
         "a11y": {
           "title": "Acessibilidade primeiro",
-          "body": "WCAG 2.1 AA é piso, não meta. Cada primitive é validado com <code>axe-playwright</code> via <code>test-storybook</code>."
+          "body": "WCAG 2.1 AA é piso, não meta. Cada primitive é validado com axe em toda story via <code>npm test</code> (Storybook Test)."
         },
         "headless": {
           "title": "API headless",
@@ -91,7 +91,9 @@
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — fonte única de tokens semânticos",
         "guidelines": "<code>docs/shared/guidelines/</code> — regras cross-stack (acessibilidade, padrões, tom de voz)",
         "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementação do primitive por stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentação geradas via HOC <code>withAutoDocsTab</code>"
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentação geradas via HOC <code>withAutoDocsTab</code>",
+        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; ordem do sidebar via <code>storySort</code>",
+        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {
@@ -169,7 +171,7 @@
         },
         "a11y": {
           "title": "Accessibility first",
-          "body": "WCAG 2.1 AA is the floor, not the goal. Every primitive is validated with <code>axe-playwright</code> via <code>test-storybook</code>."
+          "body": "WCAG 2.1 AA is the floor, not the goal. Every primitive is validated with axe on every story via <code>npm test</code> (Storybook Test)."
         },
         "headless": {
           "title": "Headless API",
@@ -198,7 +200,9 @@
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — single source for semantic tokens",
         "guidelines": "<code>docs/shared/guidelines/</code> — cross-stack rules (accessibility, patterns, tone of voice)",
         "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — primitive implementation per stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — documentation pages generated via the <code>withAutoDocsTab</code> HOC"
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — documentation pages generated via the <code>withAutoDocsTab</code> HOC",
+        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variants + states; sidebar order via <code>storySort</code>",
+        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {
@@ -276,7 +280,7 @@
         },
         "a11y": {
           "title": "Accesibilidad primero",
-          "body": "WCAG 2.1 AA es piso, no meta. Cada primitive se valida con <code>axe-playwright</code> vía <code>test-storybook</code>."
+          "body": "WCAG 2.1 AA es el piso, no la meta. Cada primitive se valida con axe en cada story vía <code>npm test</code> (Storybook Test)."
         },
         "headless": {
           "title": "API headless",
@@ -305,7 +309,9 @@
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — fuente única de tokens semánticos",
         "guidelines": "<code>docs/shared/guidelines/</code> — reglas cross-stack (accesibilidad, patrones, tono de voz)",
         "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementación del primitive por stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentación generadas vía HOC <code>withAutoDocsTab</code>"
+        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentación generadas vía HOC <code>withAutoDocsTab</code>",
+        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; orden del sidebar vía <code>storySort</code>",
+        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {

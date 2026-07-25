@@ -7,7 +7,7 @@
     "seo": {
       "title": "Comece por Aqui — Setup do Design System",
       "description": "Pré-requisitos, instalação, scripts essenciais e estrutura de pastas do Design System multi-stack (React, Vue, Svelte, Nortear).",
-      "aiSummary": "Página de onboarding técnico. Lista pré-requisitos (Node 18+, npm, git), passos de clone e install por stack, scripts essenciais (storybook, build, lint, test-storybook) e mapa de pastas do monorepo.",
+      "aiSummary": "Página de onboarding técnico. Lista pré-requisitos (Node 18+, npm, git), passos de clone e install por stack, scripts essenciais (storybook, build, lint, test) e próximos passos.",
       "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, instalação, scripts",
       "aiIntent": "informational"
     },
@@ -75,45 +75,15 @@
           "purpose": "ESLint + regras específicas do stack.",
           "ports": "Roda em CI."
         },
-        "testStorybook": {
-          "command": "npm run test-storybook",
-          "purpose": "axe-playwright + play functions em cada story.",
-          "ports": "Storybook precisa estar rodando em outra aba."
+        "test": {
+          "command": "npm test",
+          "purpose": "Storybook Test via Vitest (browser): play functions + axe em cada story.",
+          "ports": "Não exige o Storybook aberto."
         },
         "chromatic": {
           "command": "npm run chromatic",
           "purpose": "Snapshot visual cross-browser.",
           "ports": "Exige <code>CHROMATIC_PROJECT_TOKEN</code>."
-        }
-      }
-    },
-    "structure": {
-      "title": "Mapa de pastas",
-      "subtitle": "Onde mora cada coisa no monorepo.",
-      "items": {
-        "shared": {
-          "path": "docs/shared/",
-          "body": "Fonte única de verdade: conteúdo (<code>content/</code>), temas (<code>themes/</code>), guidelines e referências para skills."
-        },
-        "stack": {
-          "path": "design-system-&lt;stack&gt;/",
-          "body": "Pacote npm independente: stories, docs pages, primitives e build próprio."
-        },
-        "primitives": {
-          "path": "src/components/ui/",
-          "body": "Os primitives (Button, Dialog, Input…). Um arquivo por componente, espelhado em todos os stacks."
-        },
-        "docs": {
-          "path": "src/components/docs/",
-          "body": "Páginas de documentação consumidas pelo Storybook via HOC <code>withAutoDocsTab</code>."
-        },
-        "stories": {
-          "path": "src/components/ui/*.stories.*",
-          "body": "Playground + variantes + estados + composições. Ordem do sidebar controlada por <code>storySort</code>."
-        },
-        "lib": {
-          "path": "src/lib/",
-          "body": "Hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
         }
       }
     },
@@ -135,7 +105,7 @@
     "seo": {
       "title": "Start Here — Design System Setup",
       "description": "Prerequisites, install, essential scripts and folder map of the multi-stack Design System (React, Vue, Svelte, Nortear).",
-      "aiSummary": "Technical onboarding page. Lists prerequisites (Node 18+, npm, git), per-stack clone and install steps, essential scripts (storybook, build, lint, test-storybook) and monorepo folder map.",
+      "aiSummary": "Technical onboarding page. Lists prerequisites (Node 18+, npm, git), per-stack clone and install steps, essential scripts (storybook, build, lint, test) and next steps.",
       "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, install, scripts",
       "aiIntent": "informational"
     },
@@ -203,45 +173,15 @@
           "purpose": "ESLint + stack-specific rules.",
           "ports": "Runs in CI."
         },
-        "testStorybook": {
-          "command": "npm run test-storybook",
-          "purpose": "axe-playwright + play functions on every story.",
-          "ports": "Storybook must be running in another tab."
+        "test": {
+          "command": "npm test",
+          "purpose": "Storybook Test via Vitest (browser): play functions + axe on every story.",
+          "ports": "Does not require Storybook running."
         },
         "chromatic": {
           "command": "npm run chromatic",
           "purpose": "Cross-browser visual snapshot.",
           "ports": "Requires <code>CHROMATIC_PROJECT_TOKEN</code>."
-        }
-      }
-    },
-    "structure": {
-      "title": "Folder map",
-      "subtitle": "Where everything lives in the monorepo.",
-      "items": {
-        "shared": {
-          "path": "docs/shared/",
-          "body": "Single source of truth: content (<code>content/</code>), themes (<code>themes/</code>), guidelines and skill refs."
-        },
-        "stack": {
-          "path": "design-system-&lt;stack&gt;/",
-          "body": "Independent npm package: own stories, docs pages, primitives and build."
-        },
-        "primitives": {
-          "path": "src/components/ui/",
-          "body": "Primitives (Button, Dialog, Input…). One file per component, mirrored across all stacks."
-        },
-        "docs": {
-          "path": "src/components/docs/",
-          "body": "Documentation pages consumed by Storybook via the <code>withAutoDocsTab</code> HOC."
-        },
-        "stories": {
-          "path": "src/components/ui/*.stories.*",
-          "body": "Playground + variants + states + compositions. Sidebar order controlled by <code>storySort</code>."
-        },
-        "lib": {
-          "path": "src/lib/",
-          "body": "Shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
         }
       }
     },
@@ -263,7 +203,7 @@
     "seo": {
       "title": "Empieza Aquí — Setup del Design System",
       "description": "Requisitos, instalación, scripts esenciales y estructura de carpetas del Design System multi-stack (React, Vue, Svelte, Nortear).",
-      "aiSummary": "Página de onboarding técnico. Lista requisitos (Node 18+, npm, git), pasos de clon e instalación por stack, scripts esenciales (storybook, build, lint, test-storybook) y mapa de carpetas del monorepo.",
+      "aiSummary": "Página de onboarding técnico. Lista requisitos (Node 18+, npm, git), pasos de clon e instalación por stack, scripts esenciales (storybook, build, lint, test) y próximos pasos.",
       "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, basecoat, setup, instalación, scripts",
       "aiIntent": "informational"
     },
@@ -331,45 +271,15 @@
           "purpose": "ESLint + reglas específicas del stack.",
           "ports": "Se ejecuta en CI."
         },
-        "testStorybook": {
-          "command": "npm run test-storybook",
-          "purpose": "axe-playwright + play functions en cada story.",
-          "ports": "Storybook debe estar corriendo en otra pestaña."
+        "test": {
+          "command": "npm test",
+          "purpose": "Storybook Test vía Vitest (browser): play functions + axe en cada story.",
+          "ports": "No requiere Storybook abierto."
         },
         "chromatic": {
           "command": "npm run chromatic",
           "purpose": "Snapshot visual cross-browser.",
           "ports": "Requiere <code>CHROMATIC_PROJECT_TOKEN</code>."
-        }
-      }
-    },
-    "structure": {
-      "title": "Mapa de carpetas",
-      "subtitle": "Dónde vive cada cosa en el monorepo.",
-      "items": {
-        "shared": {
-          "path": "docs/shared/",
-          "body": "Fuente única de verdad: contenido (<code>content/</code>), temas (<code>themes/</code>), guidelines y referencias para skills."
-        },
-        "stack": {
-          "path": "design-system-&lt;stack&gt;/",
-          "body": "Paquete npm independiente: stories, docs pages, primitives y build propios."
-        },
-        "primitives": {
-          "path": "src/components/ui/",
-          "body": "Los primitives (Button, Dialog, Input…). Un archivo por componente, espejado en todos los stacks."
-        },
-        "docs": {
-          "path": "src/components/docs/",
-          "body": "Páginas de documentación consumidas por Storybook vía el HOC <code>withAutoDocsTab</code>."
-        },
-        "stories": {
-          "path": "src/components/ui/*.stories.*",
-          "body": "Playground + variantes + estados + composiciones. Orden del sidebar vía <code>storySort</code>."
-        },
-        "lib": {
-          "path": "src/lib/",
-          "body": "Hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>."
         }
       }
     },

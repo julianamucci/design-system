@@ -323,8 +323,24 @@ track('docs_page_view', {
           data-spacing="xs"
         >
           <template v-if="typeof ex.value === 'string'">
+            <!-- `*Title` → h3, `*Code` → bloco de código, resto → parágrafo -->
+            <h3
+              v-if="ex.key.endsWith('Title')"
+              class="nds-text-h3 nds-text-foreground"
+              v-html="ex.value"
+            />
+            <div
+              v-else-if="ex.key.endsWith('Code')"
+              class="nds-docs-code"
+            >
+              <span
+                class="nds-whitespace-pre"
+                v-html="ex.value"
+              />
+            </div>
             <p
-              class="nds-text-body"
+              v-else
+              class="nds-text-body nds-leading-relaxed"
               v-html="ex.value"
             />
           </template>

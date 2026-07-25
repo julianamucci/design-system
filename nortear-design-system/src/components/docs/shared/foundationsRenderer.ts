@@ -366,17 +366,27 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       const child = node[sk];
 
       if (typeof child === 'string') {
-        const block = document.createElement('div');
-        block.className = 'nds-stack';
-        block.dataset.spacing = 'xs';
-        const h4 = document.createElement('h3');
-        h4.className = 'nds-text-body nds-font-semibold';
-        h4.textContent = sk.charAt(0).toUpperCase() + sk.slice(1);
-        const p = document.createElement('p');
-        p.className = 'nds-text-body nds-leading-relaxed';
-        addText(p, `${key}.${sk}`, true);
-        block.append(h4, p);
-        section.appendChild(block);
+        // `*Title` → h3, `*Code` → bloco de código, resto → parágrafo
+        // (sem rótulo do nome da chave — igual às demais stacks).
+        if (sk.endsWith('Title')) {
+          const h3 = document.createElement('h3');
+          h3.className = 'nds-text-h3 nds-text-foreground';
+          addText(h3, `${key}.${sk}`, true);
+          section.appendChild(h3);
+        } else if (sk.endsWith('Code')) {
+          const codeWrap = document.createElement('div');
+          codeWrap.className = 'nds-docs-code';
+          const codeEl = document.createElement('span');
+          codeEl.className = 'nds-whitespace-pre';
+          addText(codeEl, `${key}.${sk}`, true);
+          codeWrap.appendChild(codeEl);
+          section.appendChild(codeWrap);
+        } else {
+          const p = document.createElement('p');
+          p.className = 'nds-text-body nds-leading-relaxed';
+          addText(p, `${key}.${sk}`, true);
+          section.appendChild(p);
+        }
         return;
       }
 

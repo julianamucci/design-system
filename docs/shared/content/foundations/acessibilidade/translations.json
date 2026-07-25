@@ -3,7 +3,7 @@
     "title": "Acessibilidade",
     "category": "Foundations",
     "type": "Princípios",
-    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.1 AA por padrão e é validado com <code>axe-playwright</code> via <code>test-storybook</code>. Esta página documenta os compromissos e padrões que todo componente deve seguir.",
+    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.1 AA por padrão e é validado com axe em toda story via <code>npm test</code> (Storybook Test). Esta página documenta os compromissos e padrões que todo componente deve seguir.",
     "seo": {
       "title": "Acessibilidade",
       "description": "Compromisso WCAG 2.1 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
@@ -100,7 +100,7 @@
       "subtitle": "Combinação de automação determinística e verificação manual.",
       "automated": {
         "title": "Automatizado",
-        "body": "<code>npm run test-storybook</code> roda <code>axe-playwright</code> em cada story. Erros de contraste, ARIA inválido e ordem de tabulação inconsistente quebram o CI."
+        "body": "<code>npm test</code> roda o Storybook Test (Vitest browser + addon-a11y): axe em cada story. Erros de contraste, ARIA inválido e ordem de tabulação inconsistente quebram o CI."
       },
       "manual": {
         "title": "Manual",
@@ -133,7 +133,7 @@
     "title": "Accessibility",
     "category": "Foundations",
     "type": "Principles",
-    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.1 AA by default and is validated with <code>axe-playwright</code> via <code>test-storybook</code>. This page documents the commitments and patterns every component must follow.",
+    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.1 AA by default and is validated with axe on every story via <code>npm test</code> (Storybook Test). This page documents the commitments and patterns every component must follow.",
     "seo": {
       "title": "Accessibility",
       "description": "WCAG 2.1 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
@@ -230,7 +230,7 @@
       "subtitle": "Combination of deterministic automation and manual verification.",
       "automated": {
         "title": "Automated",
-        "body": "<code>npm run test-storybook</code> runs <code>axe-playwright</code> on every story. Contrast errors, invalid ARIA and inconsistent tab order break CI."
+        "body": "<code>npm test</code> runs Storybook Test (Vitest browser + addon-a11y): axe on every story. Contrast errors, invalid ARIA and inconsistent tab order break CI."
       },
       "manual": {
         "title": "Manual",
@@ -263,7 +263,7 @@
     "title": "Accesibilidad",
     "category": "Foundations",
     "type": "Principios",
-    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.1 AA por defecto y se valida con <code>axe-playwright</code> vía <code>test-storybook</code>. Esta página documenta los compromisos y patrones que todo componente debe seguir.",
+    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.1 AA por defecto y se valida con axe en cada story vía <code>npm test</code> (Storybook Test). Esta página documenta los compromisos y patrones que todo componente debe seguir.",
     "seo": {
       "title": "Accesibilidad",
       "description": "Compromiso WCAG 2.1 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
@@ -360,7 +360,7 @@
       "subtitle": "Combinación de automatización determinista y verificación manual.",
       "automated": {
         "title": "Automatizado",
-        "body": "<code>npm run test-storybook</code> ejecuta <code>axe-playwright</code> en cada story. Errores de contraste, ARIA inválido y orden de tabulación inconsistente rompen el CI."
+        "body": "<code>npm test</code> ejecuta Storybook Test (Vitest browser + addon-a11y): axe en cada story. Errores de contraste, ARIA inválido y orden de tabulación inconsistente rompen el CI."
       },
       "manual": {
         "title": "Manual",
