@@ -6,7 +6,7 @@ Regra obrigatória para **todos os componentes UI, docs pages, stories e contain
 
 O design system suporta 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Cada tema altera **dimensões** (altura, padding, radius, shadows, font-weight) via CSS custom properties. Componentes que **hardcodam** dimensões fixas — um valor em pixels ou uma classe utilitária de tamanho fixo como `.nds-size-10` — visualmente **não respeitam o tema ativo**: ficam com densidade "Nova" mesmo quando o usuário seleciona Vega/Lyra/etc.
 
-**Vanilla é exceção** — usa o pacote `basecoat-css` (classes `.btn`, `.input`, etc.) que não são tokenizáveis sem fork do pacote. Regras abaixo se aplicam a React/Vue/Svelte.
+**Vanilla usa o CSS compartilhado `.nds-*`** (`docs/shared/styles/nds/`) — as dimensões já são tokenizadas nas próprias classes (`--height-*`/`--size-*`), sem intervenção nos primitives. Regras abaixo se aplicam a React/Vue/Svelte.
 
 ## Tokens disponíveis
 

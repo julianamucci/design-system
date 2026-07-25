@@ -1,6 +1,6 @@
 /*
  * ─── nds-button ───────────────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  * Consome apenas custom properties já definidas em tokens.css + themes/*.css.
  *
  * A11Y — WCAG 1.4.4 (Resize Text 200%):

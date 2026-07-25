@@ -1,6 +1,6 @@
 # PATCHES — Customizações sobre os componentes shadcn/vanilla
 
-Este arquivo registra toda divergência intencional entre os componentes deste design system e suas fontes upstream (shadcn/ui, shadcn-vue, shadcn-svelte, basecoat-css). Serve de checklist obrigatório ao atualizar dependências ou re-gerar componentes via CLI.
+Este arquivo registra toda divergência intencional entre os componentes deste design system e suas fontes upstream (shadcn/ui, shadcn-vue, shadcn-svelte). O stack Vanilla é standalone (factories + CSS `.nds-*`) e não tem upstream CSS. Serve de checklist obrigatório ao atualizar dependências ou re-gerar componentes via CLI.
 
 ## Princípios
 
@@ -11,7 +11,7 @@ Este arquivo registra toda divergência intencional entre os componentes deste d
    ```
    Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 3. **Todo patch é descrito aqui.** Uma entrada por patch, com diff antes/depois, justificativa e link para PR/issue upstream se houver.
-4. **Revisão obrigatória no bump.** Ao atualizar `@base-ui/react`, `reka-ui`, `bits-ui`, `basecoat-css` ou re-gerar componentes via `shadcn@latest`, rode `npm run patches:list` e re-valide cada entrada.
+4. **Revisão obrigatória no bump.** Ao atualizar `@base-ui/react`, `reka-ui`, `bits-ui` ou re-gerar componentes via `shadcn@latest`, rode `npm run patches:list` e re-valide cada entrada.
 
 > **Histórico de stack de primitivas (React):**
 > - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)
@@ -65,7 +65,7 @@ npm run patches:diff -- --stack react --component alert
 
 **Depois (custom):**
 ```tsx
-// PATCH: a11y — grid de basecoat-css aplica col-start-2 só em <section>
+// PATCH: a11y — <section> preserva a semântica de landmark exigida pelo grid
 <section>{children}</section>
 ```
 
@@ -92,7 +92,7 @@ Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind h
 
 Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Vanilla usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system-vanilla/src/styles/vanilla-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #vanilla-theme-overrides abaixo.
+**Vanilla**: desde a migração para CSS standalone `.nds-*` (2026-07), os primitives vanilla consomem os tokens diretamente nas classes compartilhadas (`docs/shared/styles/nds/`) — sem upstream CSS a patchear. A antiga abordagem de overrides está registrada em #vanilla-theme-overrides (obsoleto).
 
 #### #button-dimension-tokens
 
@@ -129,9 +129,11 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 - **Antes:** `h-5`
 - **Depois:** `h-(--height-badge)`
 
-#### #vanilla-theme-overrides + #vanilla-nova-parity
+#### #vanilla-theme-overrides + #vanilla-nova-parity — ✅ OBSOLETO (2026-07)
 
-- **Arquivo:** `nortear-design-system-vanilla/src/styles/vanilla-theme-overrides.css`
+> Migração `.nds-*` removeu `basecoat-css` e `vanilla-theme-overrides.css` do stack Vanilla — os primitives agora usam o CSS standalone compartilhado, com tokens nas próprias classes. Entrada mantida como histórico.
+
+- **Arquivo (removido):** `nortear-design-system-vanilla/src/styles/vanilla-theme-overrides.css`
 - **Factory atualizada:** `nortear-design-system-vanilla/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
 
 **Duas responsabilidades combinadas:**
@@ -219,7 +221,9 @@ const alertVariants = cva(
 
 **Verificação após bump:** abrir o Storybook em `ui-alert-variantes--success` e `--warning`; ícone deve estar verde/amarelo, não cinza. Se o upstream (shadcn v3+) já usar `text-current`, remover marker e marcar entrada como RESOLVIDO UPSTREAM.
 
-### vanilla/alert — descrição como `<section>` para grid do basecoat-css
+### vanilla/alert — descrição como `<section>` para o grid do alert — ✅ ABSORVIDO (2026-07)
+
+> Com a migração `.nds-*`, o `<section>` deixou de ser patch sobre upstream e virou o design do próprio sistema: `.nds-alert-description`/`.nds-alert > section` posicionam a descrição na coluna 2 do grid. Entrada mantida como histórico da decisão.
 
 - **Arquivo:** `nortear-design-system-vanilla/src/components/ui/alert.ts`
 - **Categoria:** a11y (layout legível)

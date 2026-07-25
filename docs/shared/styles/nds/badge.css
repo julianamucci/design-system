@@ -1,6 +1,6 @@
 /*
  * ─── nds-badge ───────────────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  * Etiqueta inline pequena para status, contagem ou tag.
  *
  *   <span class="nds-badge nds-badge-secondary">5</span>

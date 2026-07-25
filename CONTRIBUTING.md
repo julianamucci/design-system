@@ -58,7 +58,7 @@ Cria, em ordem:
 
 ### Patches upstream
 
-Modificações em código gerado por `@base-ui/react`, `reka-ui`, `bits-ui` ou `basecoat-css` que **não podem viver em wrapper** devem ser registradas em [`patches.md`](patches.md).
+Modificações em código gerado por `@base-ui/react`, `reka-ui` ou `bits-ui` que **não podem viver em wrapper** devem ser registradas em [`patches.md`](patches.md).
 
 Use `patch-package` para versionar:
 

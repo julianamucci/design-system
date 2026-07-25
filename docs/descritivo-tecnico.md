@@ -27,7 +27,7 @@ O Nortear não reconstrói primitivas de UI do zero. Ele se apoia no ecossistema
 - **React**: Utiliza `@base-ui/react` (via registry *base-nova* do shadcn).
 - **Vue**: Utiliza `reka-ui` (via *reka-nova*).
 - **Svelte**: Utiliza `bits-ui` (via *nova*).
-- **Vanilla**: Utiliza pacote estático `basecoat-css`.
+- **Vanilla**: factories TypeScript + CSS standalone `.nds-*` compartilhado.
 
 ### Documentação e Testes
 - **Storybook (v10)**: O coração da documentação. Cada stack roda sua própria instância do Storybook, mas com uma arquitetura de documentação `.mdx` padronizada em 15 seções (anatomia, a11y, testes, etc.).

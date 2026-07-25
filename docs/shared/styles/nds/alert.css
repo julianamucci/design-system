@@ -1,6 +1,6 @@
 /*
  * ─── nds-alert ───────────────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  *
  * Estrutura:
  *   <div class="nds-alert" role="alert">
@@ -73,7 +73,7 @@
   line-height: 1.4;
 }
 
-/* Descrição — section nativa (preserva semântica do basecoat-css upstream).
+/* Descrição — section nativa (semântica de landmark preservada).
  * Display grid para empilhar parágrafos com gap consistente. */
 .nds-alert-description,
 .nds-alert > section {

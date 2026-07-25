@@ -1,5 +1,5 @@
 // ─── Table — Vanilla factories standalone ───────────────────────────────────
-// Visual: classes .nds-table / .nds-table-wrapper (zero basecoat-css).
+// Visual: classes .nds-table / .nds-table-wrapper (standalone .nds-*).
 
 function cls(base: string, extra?: string): string {
   return extra ? `${base} ${extra}` : base;

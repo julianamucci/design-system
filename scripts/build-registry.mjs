@@ -27,17 +27,19 @@ const SHARED     = path.join(ROOT, 'docs', 'shared');
 const OUT_DIR    = path.join(ROOT, 'registry', 'v1');
 
 // ─── Componentes a empacotar ─────────────────────────────────────────────────
+// CSS dos componentes vive no shared (.nds-*), não mais em src/styles do stack.
 const COMPONENTS = [
-  { name: 'button', ts: 'src/components/ui/button.ts', css: 'src/styles/components/button.css' },
-  { name: 'alert',  ts: 'src/components/ui/alert.ts',  css: 'src/styles/components/alert.css'  },
+  { name: 'button', ts: 'src/components/ui/button.ts', css: 'styles/nds/button.css' },
+  { name: 'alert',  ts: 'src/components/ui/alert.ts',  css: 'styles/nds/alert.css'  },
 ];
 
 // ─── Camada base (init) ──────────────────────────────────────────────────────
 // type ∈ paths.{lib|tokens|theme|vendor|styles}; o CLI compõe o destino final.
 const INIT_FILES = [
   // lib
+  // sanitize-html.ts foi removido do projeto (sanitização via DOMPurify direto
+  // no call site — ver guideline 09); o init distribui apenas utils.ts.
   { type: 'lib',    name: 'utils.ts',         src: path.join(NORTEAR, 'src/lib/utils.ts') },
-  { type: 'lib',    name: 'sanitize-html.ts', src: path.join(NORTEAR, 'src/lib/sanitize-html.ts') },
   // tokens
   { type: 'tokens', name: 'tokens.css',       src: path.join(SHARED,  'tokens/tokens.css') },
   // themes
@@ -89,7 +91,7 @@ const indexItems = [];
 // componentes
 for (const comp of COMPONENTS) {
   const tsContent  = await readFile(path.join(NORTEAR, comp.ts),  'utf8');
-  const cssContent = comp.css ? await readFile(path.join(NORTEAR, comp.css), 'utf8') : null;
+  const cssContent = comp.css ? await readFile(path.join(SHARED, comp.css), 'utf8') : null;
 
   const { npmDeps, registryDeps } = detectDeps(tsContent);
 

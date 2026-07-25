@@ -1,6 +1,6 @@
 /*
  * ─── nds-accordion ──────────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  *
  * Estrutura:
  *   <div class="nds-accordion" data-slot="accordion">

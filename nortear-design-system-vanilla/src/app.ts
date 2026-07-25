@@ -82,9 +82,8 @@ function renderHome(container: HTMLElement): void {
     <div class="nds-app-home">
       <h1 class="nds-app-home-title">Design System</h1>
       <p class="nds-app-home-lead">
-        Biblioteca de componentes em <strong>Vanilla JS</strong> usando
-        <a href="https://basecoatui.com" target="_blank" rel="noopener noreferrer"
-           class="nds-app-home-link">Basecoat UI</a>.
+        Biblioteca de componentes em <strong>Vanilla TS</strong> com
+        factories e CSS standalone <strong>.nds-*</strong>.
       </p>
       <div class="nds-app-home-grid">
         <button data-nav="alert" class="nds-app-home-card ds-home-nav">

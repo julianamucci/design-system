@@ -1,6 +1,6 @@
 /*
  * ─── nds-avatar ─────────────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  *
  * Estrutura:
  *   <span class="nds-avatar" data-slot="avatar">

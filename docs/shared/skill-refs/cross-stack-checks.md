@@ -42,7 +42,7 @@ Paths:
 
 ## Check 5 — Tokens CSS / Temas + Tokenização de dimensões
 
-React/Vue/Svelte devem usar **mesmos tokens** de altura/size (`--height-*`, `--size-*`). Vanilla usa `basecoat-css` (override de tokens).
+React/Vue/Svelte devem usar **mesmos tokens** de altura/size (`--height-*`, `--size-*`). Vanilla consome os mesmos tokens via CSS `.nds-*` compartilhado.
 
 3 `Grep` paralelos (excluir Vanilla):
 - Tokens: `"h-\(--height-|size-\(--size-"`
@@ -152,7 +152,7 @@ Categorias: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 **Sinais de patch:**
 - Classe Tailwind nova que não existia em nenhuma stack
 - Mudou tag HTML do primitive
-- Removeu/substituiu regra CSS do `basecoat-css` via override
+- Removeu/substituiu regra do CSS compartilhado `.nds-*` via override local
 - Adicionou atributo ARIA/role que upstream não define
 - Introduziu comportamento JS que upstream não tem
 

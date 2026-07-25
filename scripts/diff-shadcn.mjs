@@ -48,7 +48,7 @@ if (!args.stack || !args.component) {
 }
 
 if (args.stack === 'vanilla') {
-  console.error('Stack vanilla não tem registry shadcn. Compare manualmente com node_modules/basecoat-css/dist/basecoat.css.');
+  console.error('Stack vanilla não tem registry shadcn. Compare manualmente com docs/shared/styles/nds/<slug>.css.');
   process.exit(1);
 }
 

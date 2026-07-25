@@ -1,6 +1,6 @@
 // ─── Accordion — Vanilla factory alinhada ao primitive React ────────
 //
-// Visual: classes .nds-accordion-* (standalone/basecoat-css).
+// Visual: classes .nds-accordion-* (standalone .nds-*).
 // Comportamentos preservados:
 //   - type="single" | "multiple" + collapsible
 //   - defaultValue (string | string[])

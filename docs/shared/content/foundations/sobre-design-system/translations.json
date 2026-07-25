@@ -46,7 +46,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "base": "basecoat-css + Vanilla TS",
+          "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Sites estáticos, micro-frontends ou qualquer base sem framework de UI"
         }
@@ -155,7 +155,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "base": "basecoat-css + Vanilla TS",
+          "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Static sites, micro-frontends or any base without a UI framework"
         }
@@ -264,7 +264,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "base": "basecoat-css + Vanilla TS",
+          "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Sitios estáticos, micro-frontends o cualquier base sin framework de UI"
         }

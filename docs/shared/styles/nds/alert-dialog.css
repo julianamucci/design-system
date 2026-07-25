@@ -1,6 +1,6 @@
 /*
  * ─── nds-alert-dialog ──────────────────────────────────────────────────────
- * Componente standalone — zero dependência de Tailwind ou basecoat-css.
+ * Componente standalone — zero dependência externa de CSS.
  *
  * Estrutura (portal — root é body):
  *   <div class="nds-alert-dialog-overlay" />

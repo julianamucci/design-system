@@ -1,6 +1,6 @@
 /*
  * ─── nds-card ────────────────────────────────────────────────────────────────
- * Container standalone — zero dependência de Tailwind ou basecoat-css.
+ * Container standalone — zero dependência externa de CSS.
  *
  * Estrutura (todos opcionais):
  *   <div class="nds-card" data-size="default|sm">

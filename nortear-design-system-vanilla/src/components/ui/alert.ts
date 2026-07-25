@@ -43,7 +43,7 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
 export function createAlertDescription(options: AlertDescriptionOptions = {}): HTMLElement {
   const { text = '', className } = options;
 
-  // <section> mantém a semântica do upstream basecoat-css. CSS aceita tanto
+  // <section> preserva a semântica de landmark da descrição. CSS aceita tanto
   // section quanto qualquer elemento com class nds-alert-description.
   const el = document.createElement('section');
   el.className = 'nds-alert-description';

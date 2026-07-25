@@ -9,7 +9,7 @@ This is a **multi-stack design system monorepo**. The same design system is impl
 - `nortear-design-system-react/` — React 19 + `@base-ui/react` — port **6006**
 - `nortear-design-system-vue/` — Vue 3 + `reka-ui` — port **6007**
 - `nortear-design-system-svelte/` — Svelte 5 + `bits-ui` — port **6008**
-- `nortear-design-system-vanilla/` — Vanilla TS factories + `basecoat-css` — port **6009**
+- `nortear-design-system-vanilla/` — Vanilla TS factories + CSS `.nds-*` — port **6009**
 
 Shared (read by all stacks):
 - `docs/shared/content/<slug>/translations.json` — pt-BR/en/es content per component

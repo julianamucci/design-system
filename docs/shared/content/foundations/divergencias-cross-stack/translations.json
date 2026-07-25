@@ -42,7 +42,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "lib": "basecoat-css + factories vanilla TS",
+          "lib": "factories vanilla TS + CSS .nds-*",
           "approach": "Funções factory que retornam HTML + listeners; estilo via classes vanilla."
         }
       }
@@ -206,7 +206,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "lib": "basecoat-css + vanilla TS factories",
+          "lib": "vanilla TS factories + CSS .nds-*",
           "approach": "Factory functions returning HTML + listeners; styling via vanilla classes."
         }
       }
@@ -370,7 +370,7 @@
         },
         "nortear": {
           "stack": "Nortear",
-          "lib": "basecoat-css + factories vanilla TS",
+          "lib": "factories vanilla TS + CSS .nds-*",
           "approach": "Funciones factory que devuelven HTML + listeners; estilo vía clases vanilla."
         }
       }

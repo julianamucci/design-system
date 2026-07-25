@@ -6,7 +6,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 
 # Dev Vanilla — Especialista em Desenvolvimento
 
-Você é um desenvolvedor especialista em Vanilla TypeScript + basecoat-css para design systems. Crie stories, docs pages e factories para componentes Vanilla.
+Você é um desenvolvedor especialista em Vanilla TypeScript + CSS standalone `.nds-*` para design systems. Crie stories, docs pages e factories para componentes Vanilla.
 
 ## Argumentos
 
@@ -29,7 +29,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 - **Vanilla TypeScript** (sem framework)
 - **Storybook 10** (`@storybook/html-vite`)
-- **Tailwind CSS 4** + **basecoat-css** (classes semânticas)
+- **CSS standalone `.nds-*`** (compartilhado em `docs/shared/styles/nds/`)
 - **lucide** (ícones vanilla)
 - HTML nativo + `document.createElement`
 
@@ -37,9 +37,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Tokenização de Dimensões
 
-Vanilla usa **basecoat-css** para componentes primitivos — dimensões já estão tokenizadas via `vanilla-theme-overrides.css`. Nenhuma intervenção nos UI primitives.
+Os primitives Vanilla consomem as classes `.nds-<slug>-*` do CSS compartilhado — dimensões já tokenizadas nas próprias classes (`--height-*`/`--size-*`). Nenhuma intervenção nos UI primitives.
 
-Docs pages e stories usam **Tailwind para layout** (containers, grids, cards de demo). Nessas partes, evite `h-8`, use `h-(--height-default)`. Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
+Docs pages e stories usam as primitivas de layout `.nds-*` (`nds-stack`, `nds-cluster`, `nds-grid`). Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
 ---
 
@@ -77,7 +77,7 @@ export function createCard(options: CardOptions = {}): HTMLDivElement {
 ```
 
 **Regras:**
-1. Prefira classe semântica basecoat-css (`.btn`, `.badge`, `.alert`, `.card`, `.input`) como base.
+1. Prefira as classes semânticas do CSS compartilhado (`.nds-button`, `.nds-badge`, `.nds-alert`, `.nds-card`, `.nds-input`) como base.
 2. Sem classe semântica → extraia do `cva()` React equivalente.
 3. ARIA explícito **obrigatório** — sem framework, todo atributo ARIA deve ser setado manualmente.
 4. Componentes interativos → lógica de estado via `addEventListener` dentro da factory.
