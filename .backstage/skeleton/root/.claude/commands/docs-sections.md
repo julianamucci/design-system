@@ -74,10 +74,10 @@ Extensões: React → `.tsx`, Vue → `.vue`, Svelte → `.svelte`, Basecoat →
 ## Passo 1 — Auditar o que já existe
 
 ```bash
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
   echo "=== $stack ==="
-  ls design-system-$stack/src/components/docs/shared/sections/ 2>/dev/null \
+  ls nortear-design-system-$stack/src/components/docs/shared/sections/ 2>/dev/null \
     | sed 's/\..*//' | sort \
     || echo "  diretório não existe — criar todos os 15 componentes"
 done
@@ -91,7 +91,7 @@ Componentes existentes mas com API incompleta: **atualizar apenas o necessário*
 
 ## Passo 2 — Criar os Componentes
 
-Leia `design-system-react/src/components/docs/AlertDocs.tsx` **antes** de criar qualquer componente — esse é o exemplo de referência de como as seções devem se parecer visualmente.
+Leia `nortear-design-system-react/src/components/docs/AlertDocs.tsx` **antes** de criar qualquer componente — esse é o exemplo de referência de como as seções devem se parecer visualmente.
 
 ### API de Props por Componente
 
@@ -605,9 +605,9 @@ export function createDocsDoDont(props: { title: string; pairs: DocsDoDontPair[]
 ```bash
 SECTIONS="DocsHeader DocsDemonstration DocsAnatomy DocsWhenToUse DocsDoDont DocsImport DocsVariants DocsStates DocsProps DocsTokens DocsAccessibility DocsRelated DocsNotes DocsAnalytics DocsTestes"
 
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  dir="design-system-$stack/src/components/docs/shared/sections"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  dir="nortear-design-system-$stack/src/components/docs/shared/sections"
   echo "=== $stack ==="
   missing=0
   for s in $SECTIONS; do
@@ -623,9 +623,9 @@ done
 ## Passo 5 — Security: Verificar sanitizeHtml
 
 ```bash
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  dir="design-system-$stack/src/components/docs/shared/sections"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  dir="nortear-design-system-$stack/src/components/docs/shared/sections"
   echo "=== $stack ==="
   grep -rn "dangerouslySetInnerHTML\|v-html\|{@html\|\.innerHTML" "$dir" 2>/dev/null \
     | grep -v "sanitizeHtml" \
@@ -643,18 +643,18 @@ echo "=== IDs de seção por stack ==="
 SECTION_IDS="demonstracao anatomia quando-usar do-dont importacao variantes estados propriedades tokens acessibilidade relacionados notas analytics testes"
 for id in $SECTION_IDS; do
   echo "--- id=$id ---"
-  for stack in react vue svelte basecoat; do
-    ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-    dir="design-system-$stack/src/components/docs/shared/sections"
+  for stack in react vue svelte vanilla; do
+    ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+    dir="nortear-design-system-$stack/src/components/docs/shared/sections"
     grep -rl "id=\"$id\"" "$dir" 2>/dev/null \
       && echo "  ✅ $stack" || echo "  ❌ $stack: id=$id ausente"
   done
 done
 
 echo "=== DocsDoDont: sem loop de pares ==="
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/shared/sections/DocsDoDont.$ext"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/shared/sections/DocsDoDont.$ext"
   grep -n "v-for.*in 2\|#each \[1.*2\]\|\[1.*2\]\.map" "$file" 2>/dev/null \
     && echo "  ❌ $stack: loop fixo detectado — ERRO!" || echo "  ✅ $stack: sem loop fixo"
 done

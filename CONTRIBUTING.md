@@ -13,10 +13,10 @@ git clone <repo-url>
 cd design-system
 
 # Cada stack é independente. Instale onde for trabalhar:
-cd design-system-react && npm install
-cd ../design-system-vue && npm install
-cd ../design-system-svelte && npm install
-cd ../nortear-design-system && npm install
+cd nortear-design-system-react && npm install
+cd ../nortear-design-system-vue && npm install
+cd ../nortear-design-system-svelte && npm install
+cd ../nortear-design-system-vanilla && npm install
 ```
 
 Pré-requisitos: Node 18+, npm.
@@ -63,7 +63,7 @@ Modificações em código gerado por `@base-ui/react`, `reka-ui`, `bits-ui` ou `
 Use `patch-package` para versionar:
 
 ```bash
-cd design-system-<stack>
+cd nortear-design-system-<stack>
 # edite o arquivo em node_modules/
 npx patch-package <package>   # gera patches/<package>+<version>.patch
 # adicione "postinstall": "patch-package" no package.json se ainda não tem

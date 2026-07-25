@@ -81,7 +81,7 @@ O item `init` tem ainda `entryImports`: array de `{type, name}` que o CLI anexa 
 node scripts/build-registry.mjs
 ```
 
-Lê `nortear-design-system/src/components/ui/*` + `src/styles/components/*` + `docs/shared/{tokens,themes}/`, deduz deps npm e `registryDependencies` por análise de imports, e emite `registry/v1/{<name>.json,index.json}`.
+Lê `nortear-design-system-vanilla/src/components/ui/*` + `src/styles/components/*` + `docs/shared/{tokens,themes}/`, deduz deps npm e `registryDependencies` por análise de imports, e emite `registry/v1/{<name>.json,index.json}`.
 
 Para incluir um componente novo, adicione o slug em `COMPONENTS` em [`scripts/build-registry.mjs`](../scripts/build-registry.mjs). Para mudar a camada base, edite `INIT_FILES` / `INIT_ENTRY_IMPORTS` / `INIT_DEPS` no mesmo arquivo.
 

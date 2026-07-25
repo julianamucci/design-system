@@ -24,9 +24,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 `docs/shared/skill-refs/analytics-arch.md` — arquitetura completa, catálogo de eventos, padrão de `data-track-id`, severidades, output JSON. **Consulte se precisar do detalhe**.
 
 Templates:
-- `design-system-react/src/components/docs/AlertDocs.tsx` — implementação modelo
-- `design-system-react/src/lib/docs-tracking.ts` — observer global
-- `design-system-react/src/lib/analytics.ts` — catálogo tipado
+- `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — implementação modelo
+- `nortear-design-system-react/src/lib/docs-tracking.ts` — observer global
+- `nortear-design-system-react/src/lib/analytics.ts` — catálogo tipado
 
 ---
 
@@ -42,7 +42,7 @@ node scripts/audit.mjs <slug> --category analytics --json
 
 ### Passo 1 — Coletar arquivos em paralelo
 
-**Glob** (4 paralelos): docs pages — `design-system-{react,vue,svelte,basecoat}/src/components/docs/<Slug>Docs.*`
+**Glob** (4 paralelos): docs pages — `nortear-design-system-{react,vue,svelte,vanilla}/src/components/docs/<Slug>Docs.*`
 
 **Read** (4 paralelos): cada docs page
 

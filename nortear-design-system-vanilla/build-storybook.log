@@ -1,5 +1,5 @@
 
-> nortear-design-system@0.0.0 build-storybook
+> nortear-design-system-vanilla@0.0.0 build-storybook
 > storybook build --output-dir=C:\Users\julia\AppData\Local\Temp\chromatic--26188-SufyVOpn7dKT
 
 

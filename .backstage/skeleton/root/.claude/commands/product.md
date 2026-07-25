@@ -45,31 +45,31 @@ Fluxo: `translations.json` + guidelines estruturais (08) → atualizar guideline
 
 ### Modo `--from-code`
 
-1. `design-system-react/src/components/docs/{Slug}Docs.tsx` — implementação React (fonte primária)
-2. `design-system-vue/src/components/docs/{Slug}Docs.vue`
-3. `design-system-svelte/src/components/docs/{Slug}Docs.svelte`
-4. `nortear-design-system/src/components/docs/{Slug}Docs.ts`
+1. `nortear-design-system-react/src/components/docs/{Slug}Docs.tsx` — implementação React (fonte primária)
+2. `nortear-design-system-vue/src/components/docs/{Slug}Docs.vue`
+3. `nortear-design-system-svelte/src/components/docs/{Slug}Docs.svelte`
+4. `nortear-design-system-vanilla/src/components/docs/{Slug}Docs.ts`
 5. `docs/shared/content/{slug}/translations.json` — estrutura de chaves e locales
 6. **Guideline de categoria** — leia o arquivo correspondente ao componente (ver tabela na seção `--from-content` acima). Usado para verificar se as props e variantes documentadas na docs page batem com as regras canônicas do projeto.
 
 ### Modo `--from-content`
 
 1. `docs/shared/content/{slug}/translations.json` — conteúdo gerado pelo ux-writer (fonte primária)
-2. `design-system-react/src/components/ui/{slug}.tsx` (ou `{slug}/index.tsx`) — componente UI para extrair variantes, props, tamanhos
+2. `nortear-design-system-react/src/components/ui/{slug}.tsx` (ou `{slug}/index.tsx`) — componente UI para extrair variantes, props, tamanhos
 3. **Guideline de categoria** (obrigatório) — leia o arquivo correspondente ao componente:
 
 | Categoria | Arquivo | Componentes |
 |-----------|---------|-------------|
-| Layout | `design-system-react/guidelines/04-layout-components.md` | Card, Sidebar, ScrollArea, AspectRatio, Resizable, Separator |
-| Navegação | `design-system-react/guidelines/05-navigation-components.md` | Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs |
-| Formulário | `design-system-react/guidelines/06-form-components.md` | Button, Input, Textarea, Select, DatePicker, Calendar, Checkbox, RadioGroup, Switch, Slider, Form, InputOTP |
-| Feedback | `design-system-react/guidelines/07-feedback-components.md` | Alert, Badge, Progress, Skeleton, Sonner/Toast |
-| Display | `design-system-react/guidelines/08-display-components.md` | Avatar, Table, Chart, Carousel, DataTable |
-| Disclosure | `design-system-react/guidelines/09-disclosure-components.md` | Accordion, Collapsible, Sheet, Drawer |
-| Overlay | `design-system-react/guidelines/10-overlay-components.md` | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
+| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` | Card, Sidebar, ScrollArea, AspectRatio, Resizable, Separator |
+| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` | Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs |
+| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` | Button, Input, Textarea, Select, DatePicker, Calendar, Checkbox, RadioGroup, Switch, Slider, Form, InputOTP |
+| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` | Alert, Badge, Progress, Skeleton, Sonner/Toast |
+| Display | `nortear-design-system-react/guidelines/08-display-components.md` | Avatar, Table, Chart, Carousel, DataTable |
+| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` | Accordion, Collapsible, Sheet, Drawer |
+| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
 
 4. `docs/shared/guidelines/08-docs-pages-foundations.md` — padrões estruturais (referência, não alvo de edição)
-5. `design-system-react/src/components/docs/AlertDocs.tsx` — implementação de referência para padrões visuais
+5. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — implementação de referência para padrões visuais
 
 ### Guidelines (a atualizar — ambos os modos)
 
@@ -84,10 +84,10 @@ Fluxo: `translations.json` + guidelines estruturais (08) → atualizar guideline
 - `docs/shared/guidelines/11-consistencia-cross-stack.md` — consistência entre stacks
 
 **Por stack** (apenas se existirem regras específicas de docs):
-- `design-system-react/guidelines/11-documentacao-componentes.md`
-- `design-system-vue/guidelines/11-documentacao-componentes.md`
-- `design-system-svelte/guidelines/11-documentacao-componentes.md`
-- `nortear-design-system/guidelines/11-documentacao-componentes.md`
+- `nortear-design-system-react/guidelines/11-documentacao-componentes.md`
+- `nortear-design-system-vue/guidelines/11-documentacao-componentes.md`
+- `nortear-design-system-svelte/guidelines/11-documentacao-componentes.md`
+- `nortear-design-system-vanilla/guidelines/11-documentacao-componentes.md`
 
 ---
 
@@ -112,7 +112,7 @@ grep -oP '"variants\.(items|styles)\.\K[^"]+' docs/shared/content/${slug}/transl
 
 Compare com as variantes reais do componente UI:
 ```bash
-grep -A 20 "cva(" design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
 ```
 
 Variante no componente UI mas ausente no translations.json = gap do ux-writer (reportar).
@@ -126,14 +126,14 @@ Extraia as chaves `variants.sizes.*` e `variants.sizes.*Use`. Cada tamanho deve 
 
 Extraia as chaves `props.table.*`. Compare com as props reais do componente:
 ```bash
-grep -A 5 "interface.*Props" design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
+grep -A 5 "interface.*Props" nortear-design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
 ```
 
 **1.5 Estrutura de tokens**
 
 Extraia as chaves `tokens.table.*`. Verifique que os tokens CSS listados existem no componente:
 ```bash
-grep -oP 'var\(--[a-z-]+\)' design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
+grep -oP 'var\(--[a-z-]+\)' nortear-design-system-react/src/components/ui/${slug}*.tsx 2>/dev/null
 ```
 
 **1.6 Estrutura de testes**
@@ -240,7 +240,7 @@ Para o componente especificado, leia as 4 docs pages e extraia:
 ```bash
 # Extrair todas as classes de font-size usadas em elementos de conteúdo
 grep -n "text-\[.*px\]\|text-xs\|text-sm\|text-base\|text-lg\|text-xl" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 Classifique cada ocorrência por contexto:
@@ -257,7 +257,7 @@ Classifique cada ocorrência por contexto:
 
 ```bash
 grep -n "<h[1-6]\|<section\|<table\|role=" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 Documente:
@@ -268,7 +268,7 @@ Documente:
 **1.3 Wrappers de tabela**
 
 ```bash
-grep -B2 "<table" design-system-react/src/components/docs/${Slug}Docs.tsx
+grep -B2 "<table" nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 Documente o padrão de wrapper atual (classes, nesting).
@@ -277,7 +277,7 @@ Documente o padrão de wrapper atual (classes, nesting).
 
 ```bash
 grep -n "Badge\|inline-flex.*rounded-md.*border" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 Documente: classes, tamanho de fonte, cores por estado.
@@ -286,7 +286,7 @@ Documente: classes, tamanho de fonte, cores por estado.
 
 ```bash
 grep -n "window.top\|location.href\|role=\"link\"" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 **1.6 Estrutura do translations.json**
@@ -424,7 +424,7 @@ Estes são os pontos que mais divergem entre código e guidelines. Verifique com
 | SEO dentro dos limites | ✅/❌ |
 
 ### Guidelines atualizadas: X
-- design-system-react/guidelines/11-documentacao-componentes.md (seção {slug})
+- nortear-design-system-react/guidelines/11-documentacao-componentes.md (seção {slug})
 - docs/shared/guidelines/08-docs-pages-foundations.md (§N — novo padrão)
 
 ### Pronto para dev skills: ✅/❌
@@ -460,7 +460,7 @@ Estes são os pontos que mais divergem entre código e guidelines. Verifique com
 
 ### Guidelines atualizadas:
 - docs/shared/guidelines/08-docs-pages-foundations.md (§11, §12, §13)
-- design-system-react/guidelines/11-documentacao-componentes.md
+- nortear-design-system-react/guidelines/11-documentacao-componentes.md
 
 ### Verificação pós-atualização:
 - [ ] Nenhuma guideline referencia classes que não existem no código

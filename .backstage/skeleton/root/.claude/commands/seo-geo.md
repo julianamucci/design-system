@@ -20,8 +20,8 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
 1. `docs/shared/guidelines/06-seo-geo.md` — regras completas de SEO e GEO
-2. `design-system-react/src/lib/use-seo.ts` — implementação do hook `useSeoEffect`
-3. `design-system-react/src/components/docs/AlertDocs.tsx` — uso de referência
+2. `nortear-design-system-react/src/lib/use-seo.ts` — implementação do hook `useSeoEffect`
+3. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — uso de referência
 4. `docs/shared/content/alert/translations.json` — campo `description` como modelo
 5. `docs/shared/guidelines/05-tom-de-voz.md` — regras de linguagem para títulos e descrições
 

@@ -44,9 +44,9 @@ const variants = {
 
 ```bash
 # Extrair a composição de classes de cada stack e comparar
-grep -A 5 "nds-button" design-system-react/src/components/ui/button/index.ts
-grep -A 5 "nds-button" design-system-vue/src/components/ui/button/index.ts
-grep -A 5 "nds-button" design-system-svelte/src/components/ui/Button.svelte
+grep -A 5 "nds-button" nortear-design-system-react/src/components/ui/button/index.ts
+grep -A 5 "nds-button" nortear-design-system-vue/src/components/ui/button/index.ts
+grep -A 5 "nds-button" nortear-design-system-svelte/src/components/ui/Button.svelte
 # Vanilla: verificar constantes no arquivo de stories
 ```
 
@@ -124,7 +124,7 @@ Para cada componente, extraia as classes `.nds-*` de cada stack e compare:
 # Script de comparação rápida
 for stack in react vue svelte; do
   echo "=== $stack ==="
-  grep -oP "(?<=')\S+(?=')" design-system-$stack/src/components/ui/<slug>/*.{ts,vue,svelte} 2>/dev/null | sort
+  grep -oP "(?<=')\S+(?=')" nortear-design-system-$stack/src/components/ui/<slug>/*.{ts,vue,svelte} 2>/dev/null | sort
 done
 ```
 
@@ -171,7 +171,7 @@ Rode axe nos 4 Storybooks e compare violations:
 
 ```bash
 # Cada stack
-cd design-system-<stack> && npx test-storybook --url http://localhost:600X
+cd nortear-design-system-<stack> && npx test-storybook --url http://localhost:600X
 ```
 
 Violations em uma stack que não existem em outra = implementação inconsistente.

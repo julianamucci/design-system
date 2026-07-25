@@ -2,7 +2,7 @@
 /**
  * Gerador do Nortear registry (estilo shadcn, sem Tailwind/React).
  *
- * Lê os fontes do nortear-design-system/ e emite, para cada componente PoC:
+ * Lê os fontes do nortear-design-system-vanilla/ e emite, para cada componente PoC:
  *   - registry/v1/<name>.json    — manifesto com files[].content inlinado
  *   - registry/v1/init.json      — camada base (lib/, tokens, themes)
  *   - registry/v1/index.json     — índice
@@ -22,7 +22,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT       = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const NORTEAR    = path.join(ROOT, 'nortear-design-system');
+const NORTEAR    = path.join(ROOT, 'nortear-design-system-vanilla');
 const SHARED     = path.join(ROOT, 'docs', 'shared');
 const OUT_DIR    = path.join(ROOT, 'registry', 'v1');
 

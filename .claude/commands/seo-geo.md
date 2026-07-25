@@ -98,10 +98,10 @@ Obrigatória nos 3 idiomas:
 Dispare em paralelo no mesmo turno:
 
 - `Read` de `docs/shared/content/<slug>/translations.json`
-- `Glob` de `design-system-react/src/components/docs/*<Slug>Docs.tsx`
-- `Glob` de `design-system-vue/src/components/docs/*<Slug>Docs.vue`
-- `Glob` de `design-system-svelte/src/components/docs/*<Slug>Docs.svelte`
-- `Glob` de `nortear-design-system/src/components/docs/*<Slug>Docs.ts`
+- `Glob` de `nortear-design-system-react/src/components/docs/*<Slug>Docs.tsx`
+- `Glob` de `nortear-design-system-vue/src/components/docs/*<Slug>Docs.vue`
+- `Glob` de `nortear-design-system-svelte/src/components/docs/*<Slug>Docs.svelte`
+- `Glob` de `nortear-design-system-vanilla/src/components/docs/*<Slug>Docs.ts`
 
 Depois leia as docs pages encontradas (em paralelo) para verificar o `useSeoEffect`.
 
@@ -129,10 +129,10 @@ Para cada stack no escopo:
 Execute apenas se suspeitar de problema de infraestrutura (sintoma: todos os eventos aparecem como `/iframe.html` no GA4):
 
 ```
-Grep "googletagmanager.com" em design-system-*/storybook/manager-head.html → deve existir
-Grep "googletagmanager.com" em design-system-*/storybook/preview-head.html → deve estar ausente
-Grep "window.top" em design-system-*/src/lib/analytics.ts → deve existir
-Grep "page_view" em design-system-*/src/lib/use-seo.ts → deve existir
+Grep "googletagmanager.com" em nortear-design-system-*/storybook/manager-head.html → deve existir
+Grep "googletagmanager.com" em nortear-design-system-*/storybook/preview-head.html → deve estar ausente
+Grep "window.top" em nortear-design-system-*/src/lib/analytics.ts → deve existir
+Grep "page_view" em nortear-design-system-*/src/lib/use-seo.ts → deve existir
 ```
 
 Use 4 `Grep` em paralelo por check — não loops bash seriais.

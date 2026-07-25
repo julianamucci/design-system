@@ -25,7 +25,7 @@
 ## 2. Directory Structure
 
 ```
-design-system-vue/
+nortear-design-system-vue/
 ├── .storybook/
 │   ├── main.ts
 │   ├── preview.ts

@@ -7,10 +7,10 @@ Este documento apresenta uma visão técnica e detalhada do **Nortear Design Sys
 O projeto adota uma arquitetura de **Monorepo**, gerenciando diferentes implementações do design system lado a lado. Isso permite o compartilhamento de tokens, testes, diretrizes e assets, reduzindo a duplicação e facilitando a consistência cross-stack.
 
 A estrutura principal divide-se em:
-- `design-system-react/`
-- `design-system-vue/`
-- `design-system-svelte/`
-- `nortear-design-system/` (Vanilla JS/CSS)
+- `nortear-design-system-react/`
+- `nortear-design-system-vue/`
+- `nortear-design-system-svelte/`
+- `nortear-design-system-vanilla/` (Vanilla JS/CSS)
 - `docs/shared/` (Documentação unificada, tokens, temas e guidelines)
 
 ## 2. Tecnologias e Ferramentas Base

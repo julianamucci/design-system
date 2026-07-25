@@ -84,16 +84,16 @@
     },
     "architecture": {
       "title": "Arquitetura de pastas",
-      "subtitle": "Tudo que é compartilhado vive em <code>docs/shared/</code>. Tudo que é específico de stack vive em <code>design-system-&lt;stack&gt;/</code>.",
+      "subtitle": "Tudo que é compartilhado vive em <code>docs/shared/</code>. Tudo que é específico de stack vive em <code>nortear-design-system-&lt;stack&gt;/</code>.",
       "items": {
         "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — conteúdo pt-BR / en / es por componente",
         "themes": "<code>docs/shared/themes/</code> — temas de marca, densidades e fontes em CSS variables",
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — fonte única de tokens semânticos",
         "guidelines": "<code>docs/shared/guidelines/</code> — regras cross-stack (acessibilidade, padrões, tom de voz)",
-        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementação do primitive por stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentação geradas via HOC <code>withAutoDocsTab</code>",
-        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; ordem do sidebar via <code>storySort</code>",
-        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
+        "primitives": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/</code> — implementação do primitive por stack",
+        "docs": "<code>nortear-design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentação geradas via HOC <code>withAutoDocsTab</code>",
+        "stories": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; ordem do sidebar via <code>storySort</code>",
+        "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {
@@ -193,16 +193,16 @@
     },
     "architecture": {
       "title": "Folder architecture",
-      "subtitle": "Everything shared lives in <code>docs/shared/</code>. Everything stack-specific lives in <code>design-system-&lt;stack&gt;/</code>.",
+      "subtitle": "Everything shared lives in <code>docs/shared/</code>. Everything stack-specific lives in <code>nortear-design-system-&lt;stack&gt;/</code>.",
       "items": {
         "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — pt-BR / en / es content per component",
         "themes": "<code>docs/shared/themes/</code> — brand themes, densities and fonts as CSS variables",
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — single source for semantic tokens",
         "guidelines": "<code>docs/shared/guidelines/</code> — cross-stack rules (accessibility, patterns, tone of voice)",
-        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — primitive implementation per stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — documentation pages generated via the <code>withAutoDocsTab</code> HOC",
-        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variants + states; sidebar order via <code>storySort</code>",
-        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
+        "primitives": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/</code> — primitive implementation per stack",
+        "docs": "<code>nortear-design-system-&lt;stack&gt;/src/components/docs/</code> — documentation pages generated via the <code>withAutoDocsTab</code> HOC",
+        "stories": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variants + states; sidebar order via <code>storySort</code>",
+        "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {
@@ -302,16 +302,16 @@
     },
     "architecture": {
       "title": "Arquitectura de carpetas",
-      "subtitle": "Todo lo compartido vive en <code>docs/shared/</code>. Todo lo específico de stack vive en <code>design-system-&lt;stack&gt;/</code>.",
+      "subtitle": "Todo lo compartido vive en <code>docs/shared/</code>. Todo lo específico de stack vive en <code>nortear-design-system-&lt;stack&gt;/</code>.",
       "items": {
         "content": "<code>docs/shared/content/&lt;slug&gt;/translations.json</code> — contenido pt-BR / en / es por componente",
         "themes": "<code>docs/shared/themes/</code> — temas de marca, densidades y fuentes en CSS variables",
         "tokens": "<code>docs/shared/tokens/tokens.css</code> — fuente única de tokens semánticos",
         "guidelines": "<code>docs/shared/guidelines/</code> — reglas cross-stack (accesibilidad, patrones, tono de voz)",
-        "primitives": "<code>design-system-&lt;stack&gt;/src/components/ui/</code> — implementación del primitive por stack",
-        "docs": "<code>design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentación generadas vía HOC <code>withAutoDocsTab</code>",
-        "stories": "<code>design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; orden del sidebar vía <code>storySort</code>",
-        "lib": "<code>design-system-&lt;stack&gt;/src/lib/</code> — hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
+        "primitives": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/</code> — implementación del primitive por stack",
+        "docs": "<code>nortear-design-system-&lt;stack&gt;/src/components/docs/</code> — páginas de documentación generadas vía HOC <code>withAutoDocsTab</code>",
+        "stories": "<code>nortear-design-system-&lt;stack&gt;/src/components/ui/*.stories.*</code> — playground + variantes + estados; orden del sidebar vía <code>storySort</code>",
+        "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
     "links": {

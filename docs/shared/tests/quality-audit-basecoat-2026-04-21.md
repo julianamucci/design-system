@@ -57,8 +57,8 @@ Contraste insuficiente entre foreground e background em variantes `destructive`,
 - **Fallback com ícone**: remover `aria-label` do `<span>` wrapper; adicionar `aria-label` ao `<svg>` interno ou usar `role="img"`.
 
 Corrigir em:
-- `nortear-design-system/src/components/ui/avatar.ts` (primitivo — se o problema for herdado)
-- `nortear-design-system/src/components/ui/avatar-composicoes.stories.ts` (stories)
+- `nortear-design-system-vanilla/src/components/ui/avatar.ts` (primitivo — se o problema for herdado)
+- `nortear-design-system-vanilla/src/components/ui/avatar-composicoes.stories.ts` (stories)
 - Avaliar se afeta outras stacks (React/Vue/Svelte) e aplicar PATCH se sim.
 
 ### 3. Bug funcional — Avatar Failed estado ✅ CORRIGIDO (commit 17ef7d8)
@@ -76,7 +76,7 @@ Resultado: `avatar-estados` suíte 4/4 passando.
 | Prioridade | Task | Escopo |
 |------------|------|--------|
 | **P1** | Ajustar tokens `destructive`/`success`/`warning` para atingir 4.5:1 | `docs/shared/themes/*.css` (afeta todas as stacks) |
-| ~~**P1**~~ | ~~Corrigir Avatar Failed fallback~~ ✅ resolvido (17ef7d8) | ~~`nortear-design-system/src/components/ui/avatar.ts`~~ |
+| ~~**P1**~~ | ~~Corrigir Avatar Failed fallback~~ ✅ resolvido (17ef7d8) | ~~`nortear-design-system-vanilla/src/components/ui/avatar.ts`~~ |
 | **P2** | Remover `aria-label` de `<span>` sem `role` | avatar Basecoat + avaliar outras stacks |
 | **P3** | Validar test-runner em React/Vue/Svelte após correções | executar `test-storybook:ci` em cada |
 

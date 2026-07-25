@@ -1,6 +1,6 @@
 # Nortear registry
 
-JSONs gerados por [`scripts/build-registry.mjs`](../scripts/build-registry.mjs) a partir dos fontes em [`nortear-design-system/`](../nortear-design-system/). Consumidos pelo CLI [`nortear-cli`](../nortear-cli/).
+JSONs gerados por [`scripts/build-registry.mjs`](../scripts/build-registry.mjs) a partir dos fontes em [`nortear-design-system-vanilla/`](../nortear-design-system-vanilla/). Consumidos pelo CLI [`nortear-cli`](../nortear-cli/).
 
 ```
 registry/

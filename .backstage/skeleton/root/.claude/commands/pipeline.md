@@ -29,7 +29,7 @@ Descubra os slugs disponíveis lendo as duas fontes:
 
 **React** (arquivos `.tsx` sem `stories` e sem os sufixos de variação):
 ```bash
-ls design-system-react/src/components/ui/*.tsx | \
+ls nortear-design-system-react/src/components/ui/*.tsx | \
   xargs -I{} basename {} .tsx | \
   grep -v "stories" | \
   sort -u
@@ -37,7 +37,7 @@ ls design-system-react/src/components/ui/*.tsx | \
 
 **Vue** (subdiretórios em `components/ui/`):
 ```bash
-ls -d design-system-vue/src/components/ui/*/  2>/dev/null | \
+ls -d nortear-design-system-vue/src/components/ui/*/  2>/dev/null | \
   xargs -I{} basename {} | \
   sort -u
 ```
@@ -58,10 +58,10 @@ Para cada slug, determine o estado atual antes de decidir o que executar:
 
 ```bash
 # Verificar se existe em cada stack
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo -n "$stack: "
-  ls design-system-$stack/src/components/ui/$slug* 2>/dev/null | head -1 || \
-  ls design-system-$stack/src/components/ui/$slug/ 2>/dev/null || \
+  ls nortear-design-system-$stack/src/components/ui/$slug* 2>/dev/null | head -1 || \
+  ls nortear-design-system-$stack/src/components/ui/$slug/ 2>/dev/null || \
   echo "AUSENTE"
 done
 
@@ -69,12 +69,12 @@ done
 ls docs/shared/content/$slug/translations.json 2>/dev/null || echo "translations: AUSENTE"
 
 # Verificar se tem docs page
-ls design-system-react/src/components/docs/*Docs.tsx 2>/dev/null | grep -i $slug || echo "docs page: AUSENTE"
+ls nortear-design-system-react/src/components/docs/*Docs.tsx 2>/dev/null | grep -i $slug || echo "docs page: AUSENTE"
 
 # Verificar se tem stories em todas as stacks
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo -n "stories $stack: "
-  ls design-system-$stack/src/components/ui/$slug*.stories.* 2>/dev/null | wc -l | tr -d ' '
+  ls nortear-design-system-$stack/src/components/ui/$slug*.stories.* 2>/dev/null | wc -l | tr -d ' '
   echo " stories"
 done
 ```

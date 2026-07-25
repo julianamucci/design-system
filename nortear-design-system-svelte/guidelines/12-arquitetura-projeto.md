@@ -20,7 +20,7 @@ npm run dev            # sandbox de desenvolvimento (App.svelte) — uso secund�
 ## Estrutura de Diretórios
 
 ```
-design-system-svelte/
+nortear-design-system-svelte/
 ├── .storybook/
 │   ├── main.ts                  # Addons, stories glob, framework
 │   ├── preview.ts               # Parâmetros globais, decorators, toolbar

@@ -25,7 +25,7 @@ Path alias: `@/` → `./src/` (configured in `vite.config.ts` and `tsconfig.app.
 ## 2. Directory Structure
 
 ```
-design-system-react/
+nortear-design-system-react/
 ├── .storybook/
 │   ├── main.ts                  # Addons, stories glob, framework
 │   ├── preview.ts               # Global parameters, decorators, toolbar globals
@@ -741,7 +741,7 @@ parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }
 ```json
 {
   "onlyChanged": true,
-  "storybookBaseDir": "design-system-react",
+  "storybookBaseDir": "nortear-design-system-react",
   "zip": true
 }
 ```

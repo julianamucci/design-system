@@ -33,13 +33,13 @@ Busque imports que puxam módulos inteiros em vez de componentes individuais:
 
 ```bash
 # Imports wildcard de ícones (cada ícone ~200B, lib inteira ~200KB)
-grep -rn "from 'lucide-" design-system-*/src/ | grep -v "import {" | grep "import \*"
+grep -rn "from 'lucide-" nortear-design-system-*/src/ | grep -v "import {" | grep "import \*"
 
 # Imports de barrels grandes
-grep -rn "from '@/components/ui'" design-system-*/src/ --include="*.tsx" --include="*.ts"
+grep -rn "from '@/components/ui'" nortear-design-system-*/src/ --include="*.tsx" --include="*.ts"
 
 # Re-exports que quebram tree-shaking
-grep -rn "export \*" design-system-*/src/components/ui/index.ts 2>/dev/null
+grep -rn "export \*" nortear-design-system-*/src/components/ui/index.ts 2>/dev/null
 ```
 
 ### 2. Renderização Desnecessária
@@ -48,26 +48,26 @@ grep -rn "export \*" design-system-*/src/components/ui/index.ts 2>/dev/null
 
 ```bash
 # Funções inline em JSX (arrow functions em props)
-grep -rn "onClick={() =>" design-system-react/src/components/docs/
+grep -rn "onClick={() =>" nortear-design-system-react/src/components/docs/
 
 # Objetos inline em props
-grep -rn "style={{" design-system-react/src/components/docs/
+grep -rn "style={{" nortear-design-system-react/src/components/docs/
 ```
 
 **Vue — computeds ausentes:**
 
 ```bash
 # Chamadas de função no template (recalculam a cada render)
-grep -rn ":class=\"cn(" design-system-vue/src/
+grep -rn ":class=\"cn(" nortear-design-system-vue/src/
 ```
 
 ### 3. Classes Tailwind Dinâmicas (quebram tree-shaking CSS)
 
 ```bash
 # Template literals construindo classes
-grep -rn '`text-\${' design-system-*/src/
-grep -rn '`bg-\${' design-system-*/src/
-grep -rn '`border-\${' design-system-*/src/
+grep -rn '`text-\${' nortear-design-system-*/src/
+grep -rn '`bg-\${' nortear-design-system-*/src/
+grep -rn '`border-\${' nortear-design-system-*/src/
 ```
 
 Cada ocorrência deve usar um mapa de classes completas:
@@ -79,7 +79,7 @@ Cada ocorrência deve usar um mapa de classes completas:
 ### 4. IntersectionObserver
 
 ```bash
-grep -rn "IntersectionObserver" design-system-*/src/
+grep -rn "IntersectionObserver" nortear-design-system-*/src/
 ```
 
 Para cada uso:
@@ -91,16 +91,16 @@ Para cada uso:
 
 ```bash
 # Imagens sem loading="lazy"
-grep -rn "<img" design-system-*/src/ | grep -v "loading="
+grep -rn "<img" nortear-design-system-*/src/ | grep -v "loading="
 
 # Imagens sem dimensões explícitas (causam CLS)
-grep -rn "<img" design-system-*/src/ | grep -v "width="
+grep -rn "<img" nortear-design-system-*/src/ | grep -v "width="
 ```
 
 ### 6. @apply em CSS (duplica estilos)
 
 ```bash
-grep -rn "@apply" design-system-*/src/styles/
+grep -rn "@apply" nortear-design-system-*/src/styles/
 ```
 
 Cada `@apply` duplica as propriedades CSS em vez de usar a classe utilitária. Preferir classes inline.
@@ -109,9 +109,9 @@ Cada `@apply` duplica as propriedades CSS em vez de usar a classe utilitária. P
 
 ```bash
 # Tamanho do build de cada stack
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  cd design-system-$stack
+  cd nortear-design-system-$stack
   npm run build-storybook 2>/dev/null && du -sh storybook-static/ 2>/dev/null
   cd ..
 done

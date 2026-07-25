@@ -79,7 +79,7 @@ if (files.length === 0) {
 }
 
 // ── 2. Localizar arquivo local correspondente ────────────────────────────────
-const stackDir = join(ROOT, `design-system-${args.stack}`, 'src', 'components', 'ui');
+const stackDir = join(ROOT, `nortear-design-system-${args.stack}`, 'src', 'components', 'ui');
 
 for (const f of files) {
   const upstreamName = f.name || f.path?.split('/').pop();

@@ -20,7 +20,7 @@ npm run dev            # sandbox de desenvolvimento (App.tsx) — uso secundári
 ## Estrutura de Diretórios
 
 ```
-design-system-react/
+nortear-design-system-react/
 ├── .storybook/
 │   ├── main.ts                  # Addons, stories glob, framework
 │   ├── preview.ts               # Parâmetros globais, decorators, toolbar

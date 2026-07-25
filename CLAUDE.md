@@ -6,10 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **multi-stack design system monorepo**. The same design system is implemented in 4 stacks that share content, themes, and guidelines:
 
-- `design-system-react/` — React 19 + `@base-ui/react` — port **6006**
-- `design-system-vue/` — Vue 3 + `reka-ui` — port **6007**
-- `design-system-svelte/` — Svelte 5 + `bits-ui` — port **6008**
-- `nortear-design-system/` — Vanilla TS factories + `basecoat-css` — port **6009**
+- `nortear-design-system-react/` — React 19 + `@base-ui/react` — port **6006**
+- `nortear-design-system-vue/` — Vue 3 + `reka-ui` — port **6007**
+- `nortear-design-system-svelte/` — Svelte 5 + `bits-ui` — port **6008**
+- `nortear-design-system-vanilla/` — Vanilla TS factories + `basecoat-css` — port **6009**
 
 Shared (read by all stacks):
 - `docs/shared/content/<slug>/translations.json` — pt-BR/en/es content per component
@@ -18,7 +18,7 @@ Shared (read by all stacks):
 - `docs/shared/skill-refs/` — schemas/references consumed by `.claude/commands/*.md` skills
 - `scripts/audit.mjs` and `scripts/audit-translation-literals.mjs` — deterministic checks
 
-Per-stack guidelines live in `design-system-<stack>/guidelines/` and each stack has its own `CLAUDE.md`.
+Per-stack guidelines live in `nortear-design-system-<stack>/guidelines/` and each stack has its own `CLAUDE.md`.
 
 ## Common Commands
 

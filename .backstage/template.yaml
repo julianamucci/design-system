@@ -146,7 +146,7 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton/stacks/${{ parameters.stack }}
-        targetPath: design-system-${{ parameters.stack }}
+        targetPath: nortear-design-system-${{ parameters.stack }}
         copyWithoutTemplating:
           - 'src/**/*'
           - 'public/**/*'
@@ -196,7 +196,7 @@ spec:
 
           ### Instalar dependências
           ```bash
-          cd design-system-${{ parameters.stack }}
+          cd nortear-design-system-${{ parameters.stack }}
           npm install
           ```
 

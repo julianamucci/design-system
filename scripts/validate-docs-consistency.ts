@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-const STACKS = ['design-system-react', 'design-system-vue', 'design-system-svelte', 'nortear-design-system'];
+const STACKS = ['nortear-design-system-react', 'nortear-design-system-vue', 'nortear-design-system-svelte', 'nortear-design-system-vanilla'];
 const SHARED_CONTENT = path.join(ROOT, 'docs/shared/content');
 
 // ─── Cores para output ───────────────────────────────────────────────────────

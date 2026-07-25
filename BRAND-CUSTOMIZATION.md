@@ -74,10 +74,10 @@ A fonte do Google Fonts é carregada em:
 
 | Stack | Arquivo |
 |---|---|
-| React | [`design-system-react/src/styles/globals.css`](design-system-react/src/styles/globals.css) (linha 6, `@import url('...fonts.googleapis.com/...')`) |
-| Vue | [`design-system-vue/src/styles/globals.css`](design-system-vue/src/styles/globals.css) |
-| Svelte | [`design-system-svelte/src/styles/globals.css`](design-system-svelte/src/styles/globals.css) |
-| Nortear | [`nortear-design-system/index.html`](nortear-design-system/index.html) + [`nortear-design-system/.storybook/preview-head.html`](nortear-design-system/.storybook/preview-head.html) (via `<link>`) |
+| React | [`nortear-design-system-react/src/styles/globals.css`](nortear-design-system-react/src/styles/globals.css) (linha 6, `@import url('...fonts.googleapis.com/...')`) |
+| Vue | [`nortear-design-system-vue/src/styles/globals.css`](nortear-design-system-vue/src/styles/globals.css) |
+| Svelte | [`nortear-design-system-svelte/src/styles/globals.css`](nortear-design-system-svelte/src/styles/globals.css) |
+| Nortear | [`nortear-design-system-vanilla/index.html`](nortear-design-system-vanilla/index.html) + [`nortear-design-system-vanilla/.storybook/preview-head.html`](nortear-design-system-vanilla/.storybook/preview-head.html) (via `<link>`) |
 
 **Substitua** o URL do `@import` / `<link>` pela sua família. Exemplo trocando Inter por Geist:
 
@@ -109,10 +109,10 @@ Substitua o SVG do Nortear pelo seu logo. Recomendado:
 Aplicar em todas as 4 stacks:
 
 ```bash
-cp meu-logo.svg design-system-react/.storybook/brand-logo.svg
-cp meu-logo.svg design-system-vue/.storybook/brand-logo.svg
-cp meu-logo.svg design-system-svelte/.storybook/brand-logo.svg
-cp meu-logo.svg nortear-design-system/.storybook/brand-logo.svg
+cp meu-logo.svg nortear-design-system-react/.storybook/brand-logo.svg
+cp meu-logo.svg nortear-design-system-vue/.storybook/brand-logo.svg
+cp meu-logo.svg nortear-design-system-svelte/.storybook/brand-logo.svg
+cp meu-logo.svg nortear-design-system-vanilla/.storybook/brand-logo.svg
 ```
 
 ---
@@ -172,7 +172,7 @@ As variáveis:
 
 ### Não quer analytics?
 
-Não faça nada — sem env vars o tracking já é no-op. Pra remover de vez, delete os blocos `<script>` do gtag nos `manager-head.html` (4 stacks) e no `design-system-react/index.html`; a função `track()` em `src/lib/analytics.ts` já é silenciosa quando `gtag` não existe.
+Não faça nada — sem env vars o tracking já é no-op. Pra remover de vez, delete os blocos `<script>` do gtag nos `manager-head.html` (4 stacks) e no `nortear-design-system-react/index.html`; a função `track()` em `src/lib/analytics.ts` já é silenciosa quando `gtag` não existe.
 
 ---
 
@@ -185,8 +185,8 @@ Se você quer remover idiomas (ex: ficar só em pt-BR + en) ou adicionar mais:
 Cada arquivo tem 3 chaves de primeiro nível: `pt-BR`, `en`, `es`. Adicione/remova chaves conforme necessário.
 
 Depois atualize o `LanguageSwitcher` em cada stack:
-- `design-system-react/src/components/docs/shared/LanguageSwitcher.tsx`
-- `design-system-vue/src/components/docs/shared/LanguageSwitcher.vue`
+- `nortear-design-system-react/src/components/docs/shared/LanguageSwitcher.tsx`
+- `nortear-design-system-vue/src/components/docs/shared/LanguageSwitcher.vue`
 - etc.
 
 > **Atenção**: descrições de componentes em `translations.json` devem ser **API-neutras** (ex: "modo múltiplo" e não `multiple: true`). Snippets de código stack-específicos ficam em chaves com sufixo `Code` (`structureCode`, `extensibilityCode`).
@@ -199,8 +199,8 @@ Substitua todas as ocorrências de "Nortear" pelo nome da sua marca:
 
 ```bash
 # Em cada package.json
-sed -i 's/nortear-design-system/acme-design-system/g' nortear-design-system/package.json
-sed -i 's/"name": "design-system-react"/"name": "acme-react"/g' design-system-react/package.json
+sed -i 's/nortear-design-system-vanilla/acme-design-system/g' nortear-design-system-vanilla/package.json
+sed -i 's/"name": "nortear-design-system-react"/"name": "acme-react"/g' nortear-design-system-react/package.json
 # (idem vue, svelte, nortear)
 
 # README principal
@@ -230,7 +230,7 @@ Depois do primeiro deploy, submeta cada `https://<sub>.seudominio.com/sitemap.xm
 No painel do Vercel, pra cada uma das 4 stacks:
 
 1. **New Project → Import Git Repository**, seleciona o repo do seu design system
-2. **Root Directory**: aponta pro subdiretório da stack (`design-system-react`, `design-system-vue`, etc.)
+2. **Root Directory**: aponta pro subdiretório da stack (`nortear-design-system-react`, `nortear-design-system-vue`, etc.)
 3. **Framework Preset**: Other (o `vercel.json` já configura build/install)
 4. Após criar: **Settings → Domains** → adicione `react.suamarca.com` (ou equivalente)
 5. Copie o hostname CNAME que o Vercel mostrar e configure no DNS do seu registrador

@@ -6,7 +6,7 @@ Design system com documentação centralizada, temas customizáveis e pipeline d
 
 ## Stack
 
-**${{ values.stack }}** — `design-system-${{ values.stack }}/`
+**${{ values.stack }}** — `nortear-design-system-${{ values.stack }}/`
 
 > Este projeto usa uma única stack. Para usar o mesmo design system em outro framework,
 > gere um novo projeto com este template escolhendo a outra stack.
@@ -15,7 +15,7 @@ Design system com documentação centralizada, temas customizáveis e pipeline d
 
 ```
 ${{ values.projectName }}/
-├── design-system-${{ values.stack }}/    # Código da stack escolhida
+├── nortear-design-system-${{ values.stack }}/    # Código da stack escolhida
 ├── docs/
 │   └── shared/
 │       ├── content/               # Traduções dos componentes (pt-BR / en / es)
@@ -32,7 +32,7 @@ ${{ values.projectName }}/
 ### 1. Instalar dependências
 
 ```bash
-cd design-system-${{ values.stack }} && npm install
+cd nortear-design-system-${{ values.stack }} && npm install
 ```
 
 ### 2. Abrir o Storybook

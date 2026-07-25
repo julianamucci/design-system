@@ -39,19 +39,19 @@ Extraia e compare as classes de cada stack para o componente:
 
 ```bash
 # React (referência)
-grep -A 20 "cva(" design-system-react/src/components/ui/<slug>/*.ts 2>/dev/null
-grep -A 20 "cva(" design-system-react/src/components/ui/<slug>/*.tsx 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-react/src/components/ui/<slug>/*.ts 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-react/src/components/ui/<slug>/*.tsx 2>/dev/null
 
 # Vue
-grep -A 20 "cva(" design-system-vue/src/components/ui/<slug>/*.ts 2>/dev/null
-grep -A 20 "cva(" design-system-vue/src/components/ui/<slug>/*.vue 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-vue/src/components/ui/<slug>/*.ts 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-vue/src/components/ui/<slug>/*.vue 2>/dev/null
 
 # Svelte
-grep -A 20 "cva(" design-system-svelte/src/components/ui/<slug>/*.ts 2>/dev/null
-grep -A 20 "cva(" design-system-svelte/src/components/ui/*.svelte 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-svelte/src/components/ui/<slug>/*.ts 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-svelte/src/components/ui/*.svelte 2>/dev/null
 
 # Basecoat
-grep -A 20 "cva(" nortear-design-system/src/components/ui/<slug>/*.ts 2>/dev/null
+grep -A 20 "cva(" nortear-design-system-vanilla/src/components/ui/<slug>/*.ts 2>/dev/null
 ```
 
 **Diferenças nas classes = bug.** Copie as classes do React para as outras stacks.
@@ -61,9 +61,9 @@ grep -A 20 "cva(" nortear-design-system/src/components/ui/<slug>/*.ts 2>/dev/nul
 Verifique que cada stack tem as mesmas variantes:
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  grep -oP "(?<=')[a-z]+(?=':)" design-system-$stack/src/components/ui/<slug>/*.ts 2>/dev/null | sort -u
+  grep -oP "(?<=')[a-z]+(?=':)" nortear-design-system-$stack/src/components/ui/<slug>/*.ts 2>/dev/null | sort -u
 done
 ```
 
@@ -72,18 +72,18 @@ Variante presente no React mas ausente em outra stack = bug.
 ### 3. Tamanhos disponíveis
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  grep -A 10 "size:" design-system-$stack/src/components/ui/<slug>/*.ts 2>/dev/null
+  grep -A 10 "size:" nortear-design-system-$stack/src/components/ui/<slug>/*.ts 2>/dev/null
 done
 ```
 
 ### 4. Data attributes (`data-slot`)
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  grep "data-slot" design-system-$stack/src/components/ui/<slug>/* 2>/dev/null
+  grep "data-slot" nortear-design-system-$stack/src/components/ui/<slug>/* 2>/dev/null
 done
 ```
 
@@ -94,10 +94,10 @@ Todos devem ter o mesmo `data-slot` value.
 Verifique que todas as stacks têm as mesmas categorias:
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ls design-system-$stack/src/components/ui/<slug>*stories* 2>/dev/null || \
-  ls design-system-$stack/src/components/ui/*<slug>*stories* 2>/dev/null
+  ls nortear-design-system-$stack/src/components/ui/<slug>*stories* 2>/dev/null || \
+  ls nortear-design-system-$stack/src/components/ui/*<slug>*stories* 2>/dev/null
 done
 ```
 
@@ -111,9 +111,9 @@ Categorias esperadas por componente:
 ### 6. Acessibilidade (ARIA)
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  grep -n "aria-\|role=" design-system-$stack/src/components/ui/<slug>/* 2>/dev/null
+  grep -n "aria-\|role=" nortear-design-system-$stack/src/components/ui/<slug>/* 2>/dev/null
 done
 ```
 
@@ -124,9 +124,9 @@ Mesmos `role`, `aria-*` em todas as stacks.
 Verifique que os temas compartilhados são importados corretamente:
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  grep -l "globals.css\|themes/" design-system-$stack/src/styles/*.css 2>/dev/null
+  grep -l "globals.css\|themes/" nortear-design-system-$stack/src/styles/*.css 2>/dev/null
 done
 ```
 
@@ -138,10 +138,10 @@ Toda docs page deve ter **todas** as seguintes seções com IDs exatos. Use o Re
 # Seções obrigatórias (IDs que devem existir em toda *Docs page)
 REQUIRED_IDS="demonstracao anatomia quando-usar do-dont importacao variantes estados propriedades tokens acessibilidade relacionados notas analytics testes"
 
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
   for id in $REQUIRED_IDS; do
     grep -q "id=\"$id\"" "$file" 2>/dev/null && echo "  ✓ $id" || echo "  ✗ MISSING: $id"
   done
@@ -155,10 +155,10 @@ Seção ausente = bug crítico. Adicione a seção com conteúdo equivalente ao 
 A seção `quando-usar` tem **4 blocos internos obrigatórios** em todas as stacks. Verifique cada um:
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
 
   # Bloco 1 — Guidelines (bg-muted/30 rounded-lg p-4)
   grep -q "usage.guidelines" "$file" 2>/dev/null && echo "  ✓ guidelines" || echo "  ✗ MISSING: guidelines block"
@@ -181,13 +181,13 @@ Bloco ausente = bug crítico. Adicione com conteúdo equivalente ao React.
 Verifique que todos os ícones de certo/errado usam as classes de pill padrão (ver `docs/shared/guidelines/05-tom-de-voz.md`):
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
   # Padrões problemáticos que precisam ser corrigidos:
-  grep -n "font-bold text-lg.*[✓✗]\|[✓✗].*font-bold text-lg" design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
-  grep -n "bg-green-500/10\|bg-red-500/10" design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
-  grep -n "text-primary font-bold.*✓\|✓.*text-primary font-bold" design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
+  grep -n "font-bold text-lg.*[✓✗]\|[✓✗].*font-bold text-lg" nortear-design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
+  grep -n "bg-green-500/10\|bg-red-500/10" nortear-design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
+  grep -n "text-primary font-bold.*✓\|✓.*text-primary font-bold" nortear-design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
 done
 ```
 
@@ -200,13 +200,13 @@ Padrões corretos:
 ### 10. Padrões de tabela nas docs pages
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
   # Detectar tabelas com overflow-hidden (padrão errado — borda colada na tabela)
-  grep -n "overflow-hidden shadow-sm" design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | grep -v "border-border/60\|bg-card/50" | head -5
+  grep -n "overflow-hidden shadow-sm" nortear-design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | grep -v "border-border/60\|bg-card/50" | head -5
   # Detectar tabelas dentro de ComponentDemo (padrão errado — acumula p-10)
-  grep -n "ComponentDemo" design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
+  grep -n "ComponentDemo" nortear-design-system-$stack/src/components/docs/*Docs.$ext 2>/dev/null | head -5
 done
 ```
 
@@ -221,10 +221,10 @@ Regras (ver `docs/shared/guidelines/08-docs-pages-foundations.md` seção 3):
 Verifique que as seções **Propriedades** e **Tokens** seguem o padrão completo (ver `docs/shared/guidelines/08-docs-pages-foundations.md` §12 e §13):
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
 
   # Props: 5 colunas (required obrigatório)
   grep -q "props.table.required" "$file" 2>/dev/null && echo "  ✓ props: required column" || echo "  ✗ MISSING: props.table.required"
@@ -247,10 +247,10 @@ Itens ausentes = bug de consistência. Use o React como referência para corrigi
 **VERIFICAÇÃO CRÍTICA.** Cada docs page deve renderizar conteúdo real de `translations.json`, não placeholders ou mensagens de redirecionamento. Verifique:
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
 
   # Detectar placeholders genéricos — CADA UM é um bug crítico
   grep -n "Exemplo aqui\|Estrutura de subcomponentes\|Orientações de uso\|Boas práticas e antipadrões\|Exemplos de código\|Todas as variantes do componente\|Tabela de props\|Tokens CSS relevantes\|Alternativas e complementos\|Boas práticas e avisos\|Funcional, acessibilidade" "$file" 2>/dev/null && echo "  ✗ PLACEHOLDERS DETECTADOS!" || echo "  ✓ sem placeholders"
@@ -276,10 +276,10 @@ Para cada seção, verifique que TODAS as stacks renderizam os mesmos dados:
 
 ```bash
 # Extrair chaves de tradução usadas em cada stack
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
 
   # Seções de conteúdo — verificar que cada uma usa chaves de tradução
   # nota: 'variants' agora contém tanto descrição quanto code (DocsVariants absorveu a antiga seção Exemplos)
@@ -339,10 +339,10 @@ Se o argumento for `all`, percorra os markers já presentes no código e valide 
 
 ```bash
 # Buscar todos os markers PATCH no código
-grep -rn "PATCH:" design-system-*/src/components/ui/ --include="*.ts" --include="*.tsx" --include="*.vue" --include="*.svelte"
+grep -rn "PATCH:" nortear-design-system-*/src/components/ui/ --include="*.ts" --include="*.tsx" --include="*.vue" --include="*.svelte"
 
 # Extrair anchors referenciados e cruzar com PATCHES.md
-grep -rhoP "PATCHES\.md#\K[a-z0-9-]+" design-system-*/src/components/ui/ | sort -u > /tmp/markers.txt
+grep -rhoP "PATCHES\.md#\K[a-z0-9-]+" nortear-design-system-*/src/components/ui/ | sort -u > /tmp/markers.txt
 grep -oP "^### .*\{#\K[a-z0-9-]+" PATCHES.md > /tmp/entries.txt
 diff /tmp/markers.txt /tmp/entries.txt
 ```
@@ -431,9 +431,9 @@ Antes de auditar docs pages individuais, verificar se os 15 containers genérico
 ```bash
 SECTIONS="DocsHeader DocsDemonstration DocsAnatomy DocsWhenToUse DocsDoDont DocsImport DocsVariants DocsStates DocsProps DocsTokens DocsAccessibility DocsRelated DocsNotes DocsAnalytics DocsTestes"
 
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  dir="design-system-$stack/src/components/docs/shared/sections"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  dir="nortear-design-system-$stack/src/components/docs/shared/sections"
   echo "=== $stack ==="
   missing=0
   for s in $SECTIONS; do
@@ -449,9 +449,9 @@ Se containers estiverem ausentes: **não auditar docs pages inline** — primeir
 Se containers existirem: verificar que as docs pages de cada componente os estão usando (não reimplementando HTML inline):
 
 ```bash
-for stack in react vue svelte basecoat; do
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+for stack in react vue svelte vanilla; do
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
   echo "=== $stack ==="
   # Verificar que a docs page importa os section components
   grep -q "shared/sections/DocsDoDont\|createDocsDoDont" "$file" 2>/dev/null \
@@ -465,10 +465,10 @@ done
 **Verificação obrigatória** — este layout é gerado de forma errada com frequência.
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "basecoat" ] && ext="ts"
-  file="design-system-$stack/src/components/docs/<Slug>Docs.$ext"
+  ext="tsx"; [ "$stack" = "vue" ] && ext="vue"; [ "$stack" = "svelte" ] && ext="svelte"; [ "$stack" = "vanilla" ] && ext="ts"
+  file="nortear-design-system-$stack/src/components/docs/<Slug>Docs.$ext"
 
   # ✅ Correto: dois grids separados (um por pair1, outro por pair2)
   grids=$(grep -c "grid grid-cols-1 md:grid-cols-2\|grid grid-cols-2" "$file" 2>/dev/null || echo "0")

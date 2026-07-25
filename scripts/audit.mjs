@@ -26,6 +26,9 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const STACKS = ['react', 'vue', 'svelte', 'basecoat'];
 
+// Alias 'basecoat' (skills/CLI) → pasta nortear-design-system-vanilla.
+const stackDir = (stack) => `nortear-design-system-${stack === 'basecoat' ? 'vanilla' : stack}`;
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function readFile(path) {
@@ -48,7 +51,7 @@ function grepFile(path, pattern, flags = 'g') {
 }
 
 function globStack(stack, subpath, ext) {
-  const dir = join(ROOT, `design-system-${stack}`, 'src', subpath);
+  const dir = join(ROOT, stackDir(stack), 'src', subpath);
   if (!existsSync(dir)) return [];
   const out = [];
   const walk = (d) => {
@@ -242,7 +245,7 @@ function auditAnalytics(slug) {
     }
 
     for (const stack of STACKS) {
-      const analyticsPath = join(ROOT, `design-system-${stack}`, 'src', 'lib', 'analytics.ts');
+      const analyticsPath = join(ROOT, stackDir(stack), 'src', 'lib', 'analytics.ts');
       const analytics = readFile(analyticsPath);
       if (!analytics) continue;
       for (const event of eventsInTr) {

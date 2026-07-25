@@ -105,12 +105,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 Antes de criar qualquer story ou docs page, verifique se o componente já existe e está completo:
 
 ```bash
-ls design-system-svelte/src/components/ui/<slug>/
+ls nortear-design-system-svelte/src/components/ui/<slug>/
 ```
 
 **Se a pasta não existir** — instale via CLI do shadcn-svelte:
 ```bash
-cd design-system-svelte && npx shadcn-svelte add -y -o <slug>
+cd nortear-design-system-svelte && npx shadcn-svelte add -y -o <slug>
 ```
 
 **Se a pasta existir** — leia o `index.ts` para confirmar quais exports estão disponíveis antes de usar nos artefatos.
@@ -222,14 +222,14 @@ Se a docs page mostra Alert destructive com "Erro ao salvar" mas a story mostra 
 
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
-1. `design-system-svelte/src/components/ui/alert/alert.stories.ts` — Playground + play functions (REFERÊNCIA)
-2. `design-system-svelte/src/components/ui/alert/alert-variantes.stories.ts` — variantes
-3. `design-system-svelte/src/components/ui/alert/alert-estados.stories.ts` — estados
-4. `design-system-svelte/src/components/ui/alert/alert-composicoes.stories.ts` — composições
-5. `design-system-svelte/src/components/ui/alert/AlertStory.svelte` — wrapper para stories
-6. `design-system-svelte/src/components/docs/AlertDocs.svelte` — docs page completa (REFERÊNCIA)
-7. `design-system-svelte/src/lib/withAutoDocsTab` — bridge para docs tab
-8. `design-system-svelte/.storybook/preview.ts` — configuração global
+1. `nortear-design-system-svelte/src/components/ui/alert/alert.stories.ts` — Playground + play functions (REFERÊNCIA)
+2. `nortear-design-system-svelte/src/components/ui/alert/alert-variantes.stories.ts` — variantes
+3. `nortear-design-system-svelte/src/components/ui/alert/alert-estados.stories.ts` — estados
+4. `nortear-design-system-svelte/src/components/ui/alert/alert-composicoes.stories.ts` — composições
+5. `nortear-design-system-svelte/src/components/ui/alert/AlertStory.svelte` — wrapper para stories
+6. `nortear-design-system-svelte/src/components/docs/AlertDocs.svelte` — docs page completa (REFERÊNCIA)
+7. `nortear-design-system-svelte/src/lib/withAutoDocsTab` — bridge para docs tab
+8. `nortear-design-system-svelte/.storybook/preview.ts` — configuração global
 9. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist
 
 ---
@@ -409,7 +409,7 @@ export const Disabled: Story = {
 
 **REGRA CRÍTICA: Cada stack deve ser independente.** A docs page Svelte DEVE renderizar TODO o conteúdo das 15 seções usando `translations.json`. NUNCA use placeholders ou mensagens referindo a outras stacks.
 
-**Referência obrigatória**: Leia `design-system-svelte/src/components/docs/AlertDocs.svelte` inteiro antes de criar qualquer docs page. É o modelo completo para Svelte.
+**Referência obrigatória**: Leia `nortear-design-system-svelte/src/components/docs/AlertDocs.svelte` inteiro antes de criar qualquer docs page. É o modelo completo para Svelte.
 
 ```svelte
 <script lang="ts">
@@ -670,7 +670,7 @@ Exceção: `<pre>` apenas para diagramas ASCII (`anatomy.structureCode`), sempre
 **ANTES de escrever qualquer template inline na docs page**, verifique se os section containers genéricos existem:
 
 ```bash
-ls design-system-svelte/src/components/docs/shared/sections/ 2>/dev/null
+ls nortear-design-system-svelte/src/components/docs/shared/sections/ 2>/dev/null
 ```
 
 Se existirem (`DocsDoDont.svelte`, `DocsVariants.svelte`, etc.), **use-os**. Se não existirem, rode `/docs-sections --stack svelte` primeiro.

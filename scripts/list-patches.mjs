@@ -19,7 +19,7 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const STACKS = ['design-system-react', 'design-system-vue', 'design-system-svelte', 'nortear-design-system'];
+const STACKS = ['nortear-design-system-react', 'nortear-design-system-vue', 'nortear-design-system-svelte', 'nortear-design-system-vanilla'];
 const EXTS = new Set(['.ts', '.tsx', '.vue', '.svelte', '.js']);
 const SKIP = new Set(['node_modules', '.storybook-static', 'storybook-static', 'dist', '.turbo', '.next', '.svelte-kit']);
 
@@ -65,7 +65,7 @@ function scanFile(file) {
   return hits;
 }
 
-const targets = (args.stack ? [`design-system-${args.stack}`] : STACKS)
+const targets = (args.stack ? [`nortear-design-system-${args.stack === 'basecoat' ? 'vanilla' : args.stack}`] : STACKS)
   .map((s) => join(ROOT, s))
   .filter((p) => {
     try { return statSync(p).isDirectory(); } catch { return false; }
@@ -73,7 +73,7 @@ const targets = (args.stack ? [`design-system-${args.stack}`] : STACKS)
 
 const report = [];
 for (const root of targets) {
-  const stack = root.split(/[\\/]/).pop().replace('design-system-', '');
+  const stack = root.split(/[\\/]/).pop().replace('nortear-design-system-', '');
   for (const file of walk(root)) {
     const hits = scanFile(file);
     for (const h of hits) {

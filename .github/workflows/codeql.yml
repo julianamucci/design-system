@@ -45,7 +45,7 @@ jobs:
       # aprendida com o scanner anterior.
       - name: Install dependencies
         run: |
-          for dir in design-system-react design-system-vue design-system-svelte nortear-design-system nortear-cli; do
+          for dir in nortear-design-system-react nortear-design-system-vue nortear-design-system-svelte nortear-design-system-vanilla nortear-cli; do
             (cd "$dir" && npm ci --ignore-scripts --no-audit --no-fund)
           done
 

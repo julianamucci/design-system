@@ -17,7 +17,7 @@ Stories e docs pages **NUNCA** recriam variantes com HTML/JSX/Tailwind inline. S
 ## Leituras obrigatórias antes de criar arquivos
 
 Em paralelo:
-1. UI primitive da stack: `design-system-<stack>/src/components/ui/<slug>.<ext>` (ou `<slug>/index.<ext>`)
+1. UI primitive da stack: `nortear-design-system-<stack>/src/components/ui/<slug>.<ext>` (ou `<slug>/index.<ext>`)
 2. `docs/shared/content/<slug>/translations.json` — fonte única de conteúdo
 3. `.pipeline-context/<slug>.md` (se existir) — contexto preparado pelo pipeline
 
@@ -77,7 +77,7 @@ Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/
 
 A docs page é composta exclusivamente por section containers + componentes reais de `@/components/ui/`. **Nunca** escreva JSX/template/createElement inline replicando layout de seção.
 
-Containers em `design-system-<stack>/src/components/docs/shared/sections/`. Se ausentes, rodar `/docs-sections --stack <stack>` antes.
+Containers em `nortear-design-system-<stack>/src/components/docs/shared/sections/`. Se ausentes, rodar `/docs-sections --stack <stack>` antes.
 
 Use `DocsPageLayout` para o layout de duas colunas com sidebar sticky — não monte `flex gap-16` manualmente. Previews visuais (DoDont, Variants, Demonstration) são passados como props/children.
 

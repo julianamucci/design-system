@@ -49,7 +49,7 @@
       "cloneCode": "git clone https://github.com/sua-org/design-system.git\ncd design-system",
       "installTitle": "2. Instale o stack desejado",
       "installNote": "Entre na pasta do stack e rode <code>npm install</code>. Não rode na raiz — não há workspace agregador.",
-      "installCode": "cd design-system-react   # ou design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+      "installCode": "cd nortear-design-system-react   # ou nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
     },
     "scripts": {
       "title": "Scripts essenciais",
@@ -147,7 +147,7 @@
       "cloneCode": "git clone https://github.com/your-org/design-system.git\ncd design-system",
       "installTitle": "2. Install the desired stack",
       "installNote": "Enter the stack folder and run <code>npm install</code>. Do not run it at the root — there is no aggregator workspace.",
-      "installCode": "cd design-system-react   # or design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+      "installCode": "cd nortear-design-system-react   # or nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
     },
     "scripts": {
       "title": "Essential scripts",
@@ -245,7 +245,7 @@
       "cloneCode": "git clone https://github.com/tu-org/design-system.git\ncd design-system",
       "installTitle": "2. Instala el stack deseado",
       "installNote": "Entra en la carpeta del stack y ejecuta <code>npm install</code>. No lo ejecutes en la raíz — no hay workspace agregador.",
-      "installCode": "cd design-system-react   # o design-system-vue / design-system-svelte / nortear-design-system\nnpm install"
+      "installCode": "cd nortear-design-system-react   # o nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
     },
     "scripts": {
       "title": "Scripts esenciales",

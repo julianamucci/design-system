@@ -29,10 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         stack:
-          - { name: react,   dir: design-system-react }
-          - { name: vue,     dir: design-system-vue }
-          - { name: svelte,  dir: design-system-svelte }
-          - { name: vanilla, dir: nortear-design-system }
+          - { name: react,   dir: nortear-design-system-react }
+          - { name: vue,     dir: nortear-design-system-vue }
+          - { name: svelte,  dir: nortear-design-system-svelte }
+          - { name: vanilla, dir: nortear-design-system-vanilla }
 
     defaults:
       run:

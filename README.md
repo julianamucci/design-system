@@ -28,10 +28,10 @@ Quando uma equipe ou produto precisa entregar a mesma marca em **mais de uma sta
 
 | Stack | Diretório | Porta Storybook | Engine base | Comando dev |
 |---|---|---|---|---|
-| **React** | `design-system-react/` | 6006 | `@base-ui/react` + Tailwind 4 | `npm run dev:react` |
-| **Vue** | `design-system-vue/` | 6007 | `reka-ui` + Tailwind 4 | `npm run dev:vue` |
-| **Svelte** | `design-system-svelte/` | 6008 | `bits-ui` + Tailwind 4 (Svelte 5 runes) | `npm run dev:svelte` |
-| **Nortear** | `nortear-design-system/` | 6009 | Vanilla TS + factories + CSS standalone (`.nds-*`) — **zero CSS framework** | `npm run dev:vanilla` |
+| **React** | `nortear-design-system-react/` | 6006 | `@base-ui/react` + Tailwind 4 | `npm run dev:react` |
+| **Vue** | `nortear-design-system-vue/` | 6007 | `reka-ui` + Tailwind 4 | `npm run dev:vue` |
+| **Svelte** | `nortear-design-system-svelte/` | 6008 | `bits-ui` + Tailwind 4 (Svelte 5 runes) | `npm run dev:svelte` |
+| **Nortear** | `nortear-design-system-vanilla/` | 6009 | Vanilla TS + factories + CSS standalone (`.nds-*`) — **zero CSS framework** | `npm run dev:vanilla` |
 
 ## Componentes
 
@@ -116,10 +116,10 @@ Storybooks ao vivo do template original:
 git clone <repo-url>
 cd design-system
 # instale em cada stack que vai usar:
-cd design-system-react && npm install
-cd ../design-system-vue && npm install
-cd ../design-system-svelte && npm install
-cd ../nortear-design-system && npm install
+cd nortear-design-system-react && npm install
+cd ../nortear-design-system-vue && npm install
+cd ../nortear-design-system-svelte && npm install
+cd ../nortear-design-system-vanilla && npm install
 ```
 
 ### Rodar Storybook (qualquer stack)
@@ -173,10 +173,10 @@ design-system/
 │   ├── themes/                            # temas + densidades + fontes
 │   └── guidelines/                        # 11 guidelines (a11y, tom de voz, SEO, etc.)
 │
-├── design-system-react/            # ⚛️  React 19 + @base-ui
-├── design-system-vue/              # 💚 Vue 3 + reka-ui
-├── design-system-svelte/           # 🧡 Svelte 5 + bits-ui
-├── nortear-design-system/          # 🌿 Vanilla TS + .nds-* CSS standalone
+├── nortear-design-system-react/            # ⚛️  React 19 + @base-ui
+├── nortear-design-system-vue/              # 💚 Vue 3 + reka-ui
+├── nortear-design-system-svelte/           # 🧡 Svelte 5 + bits-ui
+├── nortear-design-system-vanilla/          # 🌿 Vanilla TS + .nds-* CSS standalone
 │
 ├── nortear-cli/                    # CLI tipo shadcn pra Nortear vanilla
 ├── patches.md                      # registry de patches upstream + tokens
@@ -205,10 +205,10 @@ Cada uma das 4 stacks tem seu próprio `vercel.json` e é deployada como **proje
 
 | Projeto Vercel | Diretório raiz no repo | Subdomínio | Build |
 |---|---|---|---|
-| `nortear-react` | `design-system-react/` | `react.norteardesign.com.br` | `npm run build-storybook` |
-| `nortear-vue` | `design-system-vue/` | `vue.norteardesign.com.br` | `npm run build-storybook` |
-| `nortear-svelte` | `design-system-svelte/` | `svelte.norteardesign.com.br` | `npm run build-storybook` |
-| `nortear-vanilla` | `nortear-design-system/` | `vanilla.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-react` | `nortear-design-system-react/` | `react.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-vue` | `nortear-design-system-vue/` | `vue.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-svelte` | `nortear-design-system-svelte/` | `svelte.norteardesign.com.br` | `npm run build-storybook` |
+| `nortear-vanilla` | `nortear-design-system-vanilla/` | `vanilla.norteardesign.com.br` | `npm run build-storybook` |
 
 O site/portal que agrupa os 4 Storybooks (acessível em [norteardesign.com.br](https://norteardesign.com.br)) é um **projeto separado** que consome este design system como template — não é versionado aqui.
 
@@ -232,7 +232,7 @@ A Vercel automaticamente provisiona certificados TLS (Let's Encrypt) pra todos o
 Pra cada uma das 4 stacks:
 
 1. No painel Vercel: **New Project → Import Git Repository**, seleciona este repo
-2. **Root Directory**: `design-system-<stack>` (ex: `design-system-react`)
+2. **Root Directory**: `nortear-design-system-<stack>` (ex: `nortear-design-system-react`)
 3. **Framework Preset**: Other (o `vercel.json` já configura o resto)
 4. Após criar: **Settings → Domains** → adiciona o subdomínio próprio
 5. Copie o hostname CNAME que aparece e configure no seu registrador

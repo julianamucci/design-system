@@ -19,7 +19,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Leituras obrigatórias (antes de começar)
 
 1. **`_dev-shared.md`** — padrões compartilhados das 4 stacks. **Esta skill complementa com o que é específico de Vue 3.**
-2. UI primitive: `design-system-vue/src/components/ui/<slug>/index.ts` (ou `<slug>.vue`)
+2. UI primitive: `nortear-design-system-vue/src/components/ui/<slug>/index.ts` (ou `<slug>.vue`)
 3. `docs/shared/content/<slug>/translations.json`
 4. `.pipeline-context/<slug>.md` (se existir)
 

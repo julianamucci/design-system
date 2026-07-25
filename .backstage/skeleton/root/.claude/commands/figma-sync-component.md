@@ -23,7 +23,7 @@ Siga **exatamente** estas etapas em ordem. Não pule etapas.
 
 ### Etapa 1 — Ler o código-fonte do componente
 
-Leia **todos** os arquivos dentro de `design-system-vue/src/components/ui/<component-name>/`:
+Leia **todos** os arquivos dentro de `nortear-design-system-vue/src/components/ui/<component-name>/`:
 
 - `index.ts` — contém o `cva()` com todas as **variantes**, **tamanhos** e **tokens CSS** (ex: `bg-primary`, `text-destructive-foreground`)
 - `*.vue` — todos os sub-componentes; observe os nomes das camadas/slots usados no `<template>` (ex: `data-slot="button"`, `<slot />`, nomes de elementos internos)

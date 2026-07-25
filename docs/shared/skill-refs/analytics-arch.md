@@ -132,7 +132,7 @@ Tem `data-track*` quando o clique **informa sobre navegação nas docs**, não s
   "<slug>": {
     "stacks": {
       "react": {
-        "file": "design-system-react/src/components/docs/<Slug>Docs.tsx",
+        "file": "nortear-design-system-react/src/components/docs/<Slug>Docs.tsx",
         "docs_page_layout_componentSlug": true,
         "docs_page_view": true,
         "docs_section_viewed": true,

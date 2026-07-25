@@ -9,7 +9,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: /design-system-react
+    directory: /nortear-design-system-react
     schedule:
       interval: monthly
     groups:
@@ -19,7 +19,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: npm
-    directory: /design-system-vue
+    directory: /nortear-design-system-vue
     schedule:
       interval: monthly
     groups:
@@ -29,7 +29,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: npm
-    directory: /design-system-svelte
+    directory: /nortear-design-system-svelte
     schedule:
       interval: monthly
     groups:
@@ -39,7 +39,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: npm
-    directory: /nortear-design-system
+    directory: /nortear-design-system-vanilla
     schedule:
       interval: monthly
     groups:

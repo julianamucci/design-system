@@ -38,13 +38,13 @@ Modo `--from-content` NÃO altera padrões visuais (classes/tipografia/cores) �
 ## Fontes de Verdade
 
 ### Modo `--from-code`
-1. `design-system-{react,vue,svelte,basecoat}/src/components/docs/{Slug}Docs.*` — implementações
+1. `nortear-design-system-{react,vue,svelte,vanilla}/src/components/docs/{Slug}Docs.*` — implementações
 2. `docs/shared/content/{slug}/translations.json` — chaves e locales
 3. **Guideline de categoria** (tabela abaixo)
 
 ### Modo `--from-content`
 1. `docs/shared/content/{slug}/translations.json` — fonte primária
-2. `design-system-react/src/components/ui/{slug}.tsx` — extrair variantes/props/sizes
+2. `nortear-design-system-react/src/components/ui/{slug}.tsx` — extrair variantes/props/sizes
 3. **Guideline de categoria** (obrigatório)
 4. `docs/shared/guidelines/08-docs-pages-foundations.md` — referência estrutural
 
@@ -52,19 +52,19 @@ Modo `--from-content` NÃO altera padrões visuais (classes/tipografia/cores) �
 
 | Categoria | Arquivo |
 |---|---|
-| Layout | `design-system-react/guidelines/04-layout-components.md` |
-| Navegação | `design-system-react/guidelines/05-navigation-components.md` |
-| Formulário | `design-system-react/guidelines/06-form-components.md` |
-| Feedback | `design-system-react/guidelines/07-feedback-components.md` |
-| Display | `design-system-react/guidelines/08-display-components.md` |
-| Disclosure | `design-system-react/guidelines/09-disclosure-components.md` |
-| Overlay | `design-system-react/guidelines/10-overlay-components.md` |
+| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` |
+| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` |
+| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` |
+| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` |
+| Display | `nortear-design-system-react/guidelines/08-display-components.md` |
+| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` |
+| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` |
 
 ### Guidelines a atualizar
 
 **Compartilhadas**: `docs/shared/guidelines/{08-docs-pages,01-acessibilidade,05-tom-de-voz,06-seo-geo,07-analytics,09-seguranca-xss,10-performance,11-consistencia-cross-stack}.md`
 
-**Por stack**: `design-system-{react,vue,svelte,basecoat}/guidelines/11-documentacao-componentes.md`
+**Por stack**: `nortear-design-system-{react,vue,svelte,vanilla}/guidelines/11-documentacao-componentes.md`
 
 ---
 

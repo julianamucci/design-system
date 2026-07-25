@@ -23,20 +23,20 @@ Antes de escrever qualquer texto, leia obrigatoriamente:
 
 1. **Tom de voz**: `docs/shared/guidelines/05-tom-de-voz.md`
 2. **Exemplo de referência**: `docs/shared/content/alert/translations.json` (estrutura completa de tradução)
-3. **Componente fonte**: código do componente no React (`design-system-react/src/components/ui/<slug>/`) para entender variantes, props e estados
-4. **AlertDocs.tsx**: `design-system-react/src/components/docs/AlertDocs.tsx` (referência de quais chaves de tradução são usadas)
+3. **Componente fonte**: código do componente no React (`nortear-design-system-react/src/components/ui/<slug>/`) para entender variantes, props e estados
+4. **AlertDocs.tsx**: `nortear-design-system-react/src/components/docs/AlertDocs.tsx` (referência de quais chaves de tradução são usadas)
 5. **Acessibilidade**: `docs/shared/guidelines/01-acessibilidade.md`
 6. **Guideline de categoria** (obrigatório): leia o arquivo correspondente à categoria do componente antes de escrever qualquer conteúdo de variantes, estados, props ou UX Writing:
 
 | Categoria | Arquivo | Componentes |
 |-----------|---------|-------------|
-| Layout | `design-system-react/guidelines/04-layout-components.md` | Card, Sidebar, ScrollArea, AspectRatio, Resizable, Separator |
-| Navegação | `design-system-react/guidelines/05-navigation-components.md` | Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs |
-| Formulário | `design-system-react/guidelines/06-form-components.md` | Button, Input, Textarea, Select, DatePicker, Calendar, Checkbox, RadioGroup, Switch, Slider, Form, InputOTP |
-| Feedback | `design-system-react/guidelines/07-feedback-components.md` | Alert, Badge, Progress, Skeleton, Sonner/Toast |
-| Display | `design-system-react/guidelines/08-display-components.md` | Avatar, Table, Chart, Carousel, DataTable |
-| Disclosure | `design-system-react/guidelines/09-disclosure-components.md` | Accordion, Collapsible, Sheet, Drawer |
-| Overlay | `design-system-react/guidelines/10-overlay-components.md` | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
+| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` | Card, Sidebar, ScrollArea, AspectRatio, Resizable, Separator |
+| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` | Breadcrumb, Menubar, NavigationMenu, Pagination, Stepper, Tabs |
+| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` | Button, Input, Textarea, Select, DatePicker, Calendar, Checkbox, RadioGroup, Switch, Slider, Form, InputOTP |
+| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` | Alert, Badge, Progress, Skeleton, Sonner/Toast |
+| Display | `nortear-design-system-react/guidelines/08-display-components.md` | Avatar, Table, Chart, Carousel, DataTable |
+| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` | Accordion, Collapsible, Sheet, Drawer |
+| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` | Dialog, AlertDialog, DropdownMenu, Popover, Tooltip, ContextMenu, Command, HoverCard |
 
 A guideline de categoria é a fonte de verdade para:
 - Quais **variantes** existem e seus casos de uso canônicos

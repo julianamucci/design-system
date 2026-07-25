@@ -25,24 +25,24 @@ Dispare todos os `Grep` do mesmo check em paralelo no mesmo turno.
 
 Use `Grep` nativo em paralelo nas 4 stacks:
 
-- **Wildcard de ícones** (cada ícone ~200B, lib inteira ~200KB) — padrão `import \*.*from 'lucide-` em `design-system-<stack>/src/`
+- **Wildcard de ícones** (cada ícone ~200B, lib inteira ~200KB) — padrão `import \*.*from 'lucide-` em `nortear-design-system-<stack>/src/`
 - **Barrel imports** que puxam toda a lib UI — padrão `from '@/components/ui'` (sem subpath) em arquivos `.tsx`/`.ts`/`.vue`/`.svelte` dentro de `src/components/docs/`
-- **Re-exports wildcard** que quebram tree-shaking — padrão `export \*` em `design-system-<stack>/src/components/ui/index.ts`
+- **Re-exports wildcard** que quebram tree-shaking — padrão `export \*` em `nortear-design-system-<stack>/src/components/ui/index.ts`
 
 ### 2. Renderização Desnecessária
 
 **React — objetos inline em componentes UI** (não docs pages — lá são intencionais):
-- `Grep` padrão `style=\{\{` em `design-system-react/src/components/ui/`
+- `Grep` padrão `style=\{\{` em `nortear-design-system-react/src/components/ui/`
 
 **Vue — `cn()` chamado diretamente no template** (recalcula a cada render, deveria ser `computed`):
-- `Grep` padrão `:class="cn\(` em `design-system-vue/src/components/ui/`
+- `Grep` padrão `:class="cn\(` em `nortear-design-system-vue/src/components/ui/`
 
 ### 3. Classes Tailwind Dinâmicas (quebram purge/tree-shaking CSS)
 
 Use `Grep` em paralelo nas 4 stacks para template literals construindo classes:
-- Padrão `` `text-\${ `` em `design-system-<stack>/src/`
-- Padrão `` `bg-\${ `` em `design-system-<stack>/src/`
-- Padrão `` `border-\${ `` em `design-system-<stack>/src/`
+- Padrão `` `text-\${ `` em `nortear-design-system-<stack>/src/`
+- Padrão `` `bg-\${ `` em `nortear-design-system-<stack>/src/`
+- Padrão `` `border-\${ `` em `nortear-design-system-<stack>/src/`
 
 Cada ocorrência deve usar um mapa de classes completas:
 ```tsx
@@ -56,7 +56,7 @@ const bgColors = { primary: 'bg-primary', secondary: 'bg-secondary' } as const;
 
 ### 4. IntersectionObserver
 
-`Grep` padrão `IntersectionObserver` em `design-system-<stack>/src/` para cada stack no escopo.
+`Grep` padrão `IntersectionObserver` em `nortear-design-system-<stack>/src/` para cada stack no escopo.
 
 Para cada uso encontrado:
 - [ ] `disconnect()` chamado no cleanup (React: retorno do `useEffect`; Svelte: retorno do `$effect`; Vue: `onUnmounted`)?
@@ -65,7 +65,7 @@ Para cada uso encontrado:
 
 ### 5. @apply em CSS (duplica propriedades no output)
 
-`Grep` padrão `@apply` em `design-system-<stack>/src/` (arquivos `.css`).
+`Grep` padrão `@apply` em `nortear-design-system-<stack>/src/` (arquivos `.css`).
 
 Cada `@apply` copia as propriedades CSS no lugar de referenciar a classe utilitária — preferir classes inline no template.
 

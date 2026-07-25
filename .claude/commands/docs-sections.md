@@ -6,7 +6,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 
 # Docs Section Components — Stub
 
-> **Status atual**: os 15 section components já existem e estão estabilizados nas 4 stacks. Esta skill é mantida para o caso raro de precisar **recriar do zero** (nova stack, refactor de uma seção). Para mudanças pontuais, edite diretamente os arquivos em `design-system-{stack}/src/components/docs/shared/sections/`.
+> **Status atual**: os 15 section components já existem e estão estabilizados nas 4 stacks. Esta skill é mantida para o caso raro de precisar **recriar do zero** (nova stack, refactor de uma seção). Para mudanças pontuais, edite diretamente os arquivos em `nortear-design-system-{stack}/src/components/docs/shared/sections/`.
 
 ## Argumentos
 
@@ -43,10 +43,10 @@ Adicionalmente: `DocsPageLayout` (envolvendo tudo) e `DocsNav` (sidebar sticky) 
 ## Localização dos Arquivos
 
 ```
-design-system-react/src/components/docs/shared/sections/Docs*.tsx
-design-system-vue/src/components/docs/shared/sections/Docs*.vue
-design-system-svelte/src/components/docs/shared/sections/Docs*.svelte
-nortear-design-system/src/components/docs/shared/sections/Docs*.ts
+nortear-design-system-react/src/components/docs/shared/sections/Docs*.tsx
+nortear-design-system-vue/src/components/docs/shared/sections/Docs*.vue
+nortear-design-system-svelte/src/components/docs/shared/sections/Docs*.svelte
+nortear-design-system-vanilla/src/components/docs/shared/sections/Docs*.ts
 ```
 
 ---
@@ -66,14 +66,14 @@ nortear-design-system/src/components/docs/shared/sections/Docs*.ts
 ## Padrão de implementação
 
 Use `AlertDocs` como referência de como cada container é consumido:
-- React: `design-system-react/src/components/docs/AlertDocs.tsx`
-- Vue: `design-system-vue/src/components/docs/AlertDocs.vue`
-- Svelte: `design-system-svelte/src/components/docs/AlertDocs.svelte`
-- Basecoat: `nortear-design-system/src/components/docs/AlertDocs.ts`
+- React: `nortear-design-system-react/src/components/docs/AlertDocs.tsx`
+- Vue: `nortear-design-system-vue/src/components/docs/AlertDocs.vue`
+- Svelte: `nortear-design-system-svelte/src/components/docs/AlertDocs.svelte`
+- Basecoat: `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts`
 
 Use os section containers existentes da stack como template para criar novos:
-- `design-system-{stack}/src/components/docs/shared/sections/DocsAnatomy.{ext}` — container com dados (lista numerada + structureCode)
-- `design-system-{stack}/src/components/docs/shared/sections/DocsDoDont.{ext}` — container com slots (dois grids separados, **NUNCA** loop único)
+- `nortear-design-system-{stack}/src/components/docs/shared/sections/DocsAnatomy.{ext}` — container com dados (lista numerada + structureCode)
+- `nortear-design-system-{stack}/src/components/docs/shared/sections/DocsDoDont.{ext}` — container com slots (dois grids separados, **NUNCA** loop único)
 
 ---
 

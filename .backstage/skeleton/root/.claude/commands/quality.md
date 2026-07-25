@@ -20,8 +20,8 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
 1. `docs/shared/guidelines/01-acessibilidade.md` — critérios WCAG obrigatórios
-2. `design-system-react/.storybook/test-runner.ts` — configuração axe-playwright
-3. `design-system-react/src/components/ui/alert.stories.tsx` — referência de play functions (React)
+2. `nortear-design-system-react/.storybook/test-runner.ts` — configuração axe-playwright
+3. `nortear-design-system-react/src/components/ui/alert.stories.tsx` — referência de play functions (React)
 4. Equivalentes em vue/svelte/basecoat para o mesmo componente
 5. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist de docs pages
 
@@ -276,11 +276,11 @@ Verifique cada `*Docs.tsx` (e equivalentes Vue/Svelte/Basecoat) em busca de anin
 
 ```bash
 # Tabelas dentro de ComponentDemo (errado — ComponentDemo é só para demos interativas de UI)
-grep -n "ComponentDemo" design-system-*/src/components/docs/*Docs.* | grep -A2 "<table"
+grep -n "ComponentDemo" nortear-design-system-*/src/components/docs/*Docs.* | grep -A2 "<table"
 
 # Tabelas com dois wrappers (errado — um wrapper é suficiente)
 # Padrão problemático: <ComponentDemo><div class="overflow-x-auto"><table>
-grep -n "overflow-x-auto" design-system-*/src/components/docs/*Docs.* | grep -v "border rounded"
+grep -n "overflow-x-auto" nortear-design-system-*/src/components/docs/*Docs.* | grep -v "border rounded"
 ```
 
 **Regra obrigatória (ver guideline 08, seção 3.2)**: toda tabela de documentação deve estar em **uma única div** com as classes exatas:
@@ -297,7 +297,7 @@ Casos que violam a regra:
 
 ```bash
 # Cards com p-3 (mínimo é p-4)
-grep -n "border.*rounded.*p-3\|p-3.*border.*rounded" design-system-*/src/components/docs/*Docs.*
+grep -n "border.*rounded.*p-3\|p-3.*border.*rounded" nortear-design-system-*/src/components/docs/*Docs.*
 ```
 
 Todo card de conteúdo (border + rounded + qualquer bg) deve ter `p-4` mínimo.
@@ -310,7 +310,7 @@ Audite a docs page como um todo — semântica HTML, hierarquia visual, tipograf
 
 ```bash
 # Verificar hierarquia de headings — h2 para seções, h3 para sub-seções, nunca pular níveis
-grep -n "<h[1-6]\|<H[1-6]" design-system-react/src/components/docs/<slug>Docs.tsx
+grep -n "<h[1-6]\|<H[1-6]" nortear-design-system-react/src/components/docs/<slug>Docs.tsx
 ```
 
 - [ ] `<h2>` para cada seção principal (deve corresponder às âncoras do `DocsNav`)
@@ -325,7 +325,7 @@ grep -n "<h[1-6]\|<H[1-6]" design-system-react/src/components/docs/<slug>Docs.ts
 
 ```bash
 # Buscar fontes menores que 12px (potencial violação de legibilidade)
-grep -n "text-\[9px\]\|text-\[10px\]\|text-\[11px\]" design-system-*/src/components/docs/*Docs.*
+grep -n "text-\[9px\]\|text-\[10px\]\|text-\[11px\]" nortear-design-system-*/src/components/docs/*Docs.*
 ```
 
 Regras de tamanho mínimo para docs pages:
@@ -355,10 +355,10 @@ Violações comuns:
 
 ```bash
 # Links com href hardcoded (podem quebrar)
-grep -n 'href="http\|href="/' design-system-*/src/components/docs/*Docs.*
+grep -n 'href="http\|href="/' nortear-design-system-*/src/components/docs/*Docs.*
 
 # Links internos do Storybook (devem usar window.top pattern)
-grep -n 'href=.*storybook\|href=.*iframe' design-system-*/src/components/docs/*Docs.*
+grep -n 'href=.*storybook\|href=.*iframe' nortear-design-system-*/src/components/docs/*Docs.*
 
 # Âncoras do DocsNav que não têm section correspondente
 # (comparar array de nav items com ids de <section>)

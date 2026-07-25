@@ -42,9 +42,9 @@ const variants = {
 
 ```bash
 # Extrair cva() de cada stack e comparar
-grep -A 5 "bg-primary" design-system-react/src/components/ui/button/index.ts
-grep -A 5 "bg-primary" design-system-vue/src/components/ui/button/index.ts
-grep -A 5 "bg-primary" design-system-svelte/src/components/ui/Button.svelte
+grep -A 5 "bg-primary" nortear-design-system-react/src/components/ui/button/index.ts
+grep -A 5 "bg-primary" nortear-design-system-vue/src/components/ui/button/index.ts
+grep -A 5 "bg-primary" nortear-design-system-svelte/src/components/ui/Button.svelte
 # Basecoat: verificar constantes no arquivo de stories
 ```
 
@@ -122,7 +122,7 @@ Para cada componente, extraia as classes Tailwind de cada stack e compare:
 # Script de comparação rápida
 for stack in react vue svelte; do
   echo "=== $stack ==="
-  grep -oP "(?<=')\S+(?=')" design-system-$stack/src/components/ui/<slug>/*.{ts,vue,svelte} 2>/dev/null | sort
+  grep -oP "(?<=')\S+(?=')" nortear-design-system-$stack/src/components/ui/<slug>/*.{ts,vue,svelte} 2>/dev/null | sort
 done
 ```
 
@@ -169,7 +169,7 @@ Rode axe nos 4 Storybooks e compare violations:
 
 ```bash
 # Cada stack
-cd design-system-<stack> && npx test-storybook --url http://localhost:600X
+cd nortear-design-system-<stack> && npx test-storybook --url http://localhost:600X
 ```
 
 Violations em uma stack que não existem em outra = implementação inconsistente.

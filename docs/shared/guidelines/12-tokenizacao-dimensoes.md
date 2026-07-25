@@ -152,8 +152,8 @@ Para auditar um componente rapidamente:
 grep -niE "(block-size|inline-size|height|width)\s*:\s*[0-9]+px" docs/shared/styles/nds/*.css
 
 # Alturas fixas cravadas via inline style em stories e docs pages
-grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" design-system-*/src/components/docs/*Docs.*
-grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" design-system-*/src/components/ui/*.stories.*
+grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" nortear-design-system-*/src/components/docs/*Docs.*
+grep -rniE "(height|blockSize|inlineSize)\s*[:=]\s*['\"]?[0-9]+(px)?" nortear-design-system-*/src/components/ui/*.stories.*
 ```
 
 Se algum match aparecer fora dos casos aceitáveis acima, tokenize.

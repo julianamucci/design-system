@@ -33,13 +33,13 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
-1. `design-system-vue/src/components/ui/alert/Alert.stories.ts` — Playground + play functions (REFERÊNCIA)
-2. `design-system-vue/src/components/ui/alert/alert-variantes.stories.ts` — variantes
-3. `design-system-vue/src/components/ui/alert/alert-estados.stories.ts` — estados
-4. `design-system-vue/src/components/ui/alert/alert-composicoes.stories.ts` — composições
-5. `design-system-vue/src/components/docs/AlertDocs.vue` — docs page (REFERÊNCIA)
-6. `design-system-vue/src/lib/withAutoDocsTab.tsx` — bridge React para docs tab
-7. `design-system-vue/.storybook/preview.ts` — configuração global
+1. `nortear-design-system-vue/src/components/ui/alert/Alert.stories.ts` — Playground + play functions (REFERÊNCIA)
+2. `nortear-design-system-vue/src/components/ui/alert/alert-variantes.stories.ts` — variantes
+3. `nortear-design-system-vue/src/components/ui/alert/alert-estados.stories.ts` — estados
+4. `nortear-design-system-vue/src/components/ui/alert/alert-composicoes.stories.ts` — composições
+5. `nortear-design-system-vue/src/components/docs/AlertDocs.vue` — docs page (REFERÊNCIA)
+6. `nortear-design-system-vue/src/lib/withAutoDocsTab.tsx` — bridge React para docs tab
+7. `nortear-design-system-vue/.storybook/preview.ts` — configuração global
 8. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist
 
 ---
@@ -243,9 +243,9 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 **REGRA CRÍTICA: Cada stack deve ser independente.** A docs page Vue DEVE renderizar TODO o conteúdo das 15 seções usando `translations.json`. NUNCA exiba mensagens como "Documentação completa disponível na stack React" ou placeholders genéricos ("Exemplo aqui.", "Estrutura de subcomponentes."). Cada projeto será usado de forma independente.
 
-**Referência obrigatória**: Leia `design-system-vue/src/components/docs/AlertDocs.vue` inteiro antes de criar qualquer docs page. Ele é o modelo completo para Vue — use a mesma estrutura de `<script setup>` e `<template>`.
+**Referência obrigatória**: Leia `nortear-design-system-vue/src/components/docs/AlertDocs.vue` inteiro antes de criar qualquer docs page. Ele é o modelo completo para Vue — use a mesma estrutura de `<script setup>` e `<template>`.
 
-**Referência de conteúdo**: Leia a docs page React (`design-system-react/src/components/docs/<Slug>Docs.tsx`) para entender quais seções, tabelas, cards e demos existem. A versão Vue deve ter conteúdo IDÊNTICO adaptado à sintaxe Vue.
+**Referência de conteúdo**: Leia a docs page React (`nortear-design-system-react/src/components/docs/<Slug>Docs.tsx`) para entender quais seções, tabelas, cards e demos existem. A versão Vue deve ter conteúdo IDÊNTICO adaptado à sintaxe Vue.
 
 #### Setup (`<script setup>`)
 
@@ -579,7 +579,7 @@ export const AsChild: Story = {
 **ANTES de escrever qualquer template inline na docs page**, verifique se os section containers genéricos existem:
 
 ```bash
-ls design-system-vue/src/components/docs/shared/sections/ 2>/dev/null
+ls nortear-design-system-vue/src/components/docs/shared/sections/ 2>/dev/null
 ```
 
 Se existirem (`DocsDoDont.vue`, `DocsVariants.vue`, etc.), **use-os** — nunca reimplemente o HTML das seções. Se não existirem, rode `/docs-sections --stack vue` primeiro.

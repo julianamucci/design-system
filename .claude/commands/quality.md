@@ -48,17 +48,17 @@ Critérios por categoria de componente: ver `docs/shared/skill-refs/test-criteri
 
 **Read** (1): `docs/shared/content/<slug>/translations.json`
 
-**Grep** (1): dimensões hardcoded — `\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b` em `design-system-{react,vue,svelte}/src/components/ui/<slug>*` (excluir Basecoat e `*.stories.*`)
+**Grep** (1): dimensões hardcoded — `\bh-(5|6|7|8|9|10|11|12)\b|\bsize-(5|6|7|8|9|10)\b` em `nortear-design-system-{react,vue,svelte}/src/components/ui/<slug>*` (excluir Basecoat e `*.stories.*`)
 
-**Grep** (1): tipografia inválida — `text-\[9px\]|text-\[10px\]` em `design-system-*/src/components/docs/*Docs.*`
+**Grep** (1): tipografia inválida — `text-\[9px\]|text-\[10px\]` em `nortear-design-system-*/src/components/docs/*Docs.*`
 
-**Grep** (1): tabela incorreta — `overflow-hidden shadow-sm|ComponentDemo` em `design-system-*/src/components/docs/*Docs.*`
+**Grep** (1): tabela incorreta — `overflow-hidden shadow-sm|ComponentDemo` em `nortear-design-system-*/src/components/docs/*Docs.*`
 
-**Grep** (1): a11y.disable — `a11y.*disable|disable.*a11y` em `design-system-*/src/components/ui/<slug>*.stories.*`
+**Grep** (1): a11y.disable — `a11y.*disable|disable.*a11y` em `nortear-design-system-*/src/components/ui/<slug>*.stories.*`
 
-**Grep** (1): higiene `.nds-*` — `nds-text-h[1-4][^"']*nds-(font-(bold|semibold)|tracking-tight)|nds-text-body[^"']*nds-text-foreground|<h2[^>]*nds-text-h3` em `design-system-*/src/components/docs/*Docs.*`
+**Grep** (1): higiene `.nds-*` — `nds-text-h[1-4][^"']*nds-(font-(bold|semibold)|tracking-tight)|nds-text-body[^"']*nds-text-foreground|<h2[^>]*nds-text-h3` em `nortear-design-system-*/src/components/docs/*Docs.*`
 
-**Grep** (1): style inline em docs — `style=\{\{|style="` em `design-system-*/src/components/docs/*Docs.*` (exceto stories; criar utility `.nds-*` em vez de inline)
+**Grep** (1): style inline em docs — `style=\{\{|style="` em `nortear-design-system-*/src/components/docs/*Docs.*` (exceto stories; criar utility `.nds-*` em vez de inline)
 
 Após coletar, **não releia** nada nos passos seguintes.
 

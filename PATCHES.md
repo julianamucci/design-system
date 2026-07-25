@@ -30,7 +30,7 @@ Este arquivo registra toda divergência intencional entre os componentes deste d
 npm run patches:list                          # inventário de patches ativos
 
 # 2. Bump da dep ou re-geração de componente
-cd design-system-react && npx shadcn@latest add <component> --overwrite
+cd nortear-design-system-react && npx shadcn@latest add <component> --overwrite
 
 # 3. Após o bump, reavaliar patches
 npm run patches:diff -- --stack react --component alert
@@ -53,7 +53,7 @@ npm run patches:diff -- --stack react --component alert
 ```markdown
 ### <stack>/<componente> — <título curto>
 
-- **Arquivo:** `design-system-<stack>/src/components/ui/<slug>.<ext>`
+- **Arquivo:** `nortear-design-system-<stack>/src/components/ui/<slug>.<ext>`
 - **Categoria:** a11y | i18n | theme | security | bugfix
 - **Data:** YYYY-MM-DD
 - **Upstream ref:** (issue/PR/discussion ou "—")
@@ -92,7 +92,7 @@ Patches múltiplos agrupados por propósito. Todos substituem classes Tailwind h
 
 Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, Lyra h-default=28px, Maia h-default=40px, etc.).
 
-**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
+**Basecoat usa abordagem diferente**: em vez de patch nos componentes (que usam classes `.btn`/`.input`/`.badge` do pacote `basecoat-css`), adicionamos um CSS override em `nortear-design-system-vanilla/src/styles/basecoat-theme-overrides.css` que redeclara as dimensões dos componentes upstream usando `height: var(--height-*)`. Importado depois de `basecoat-css` no `globals.css` para vencer a cascade dentro do mesmo `@layer components`. Ver seção #basecoat-theme-overrides abaixo.
 
 #### #button-dimension-tokens
 
@@ -131,8 +131,8 @@ Cada tema override em `docs/shared/themes/<tema>.css` (ex: Vega h-default=40px, 
 
 #### #basecoat-theme-overrides + #basecoat-nova-parity
 
-- **Arquivo:** `nortear-design-system/src/styles/basecoat-theme-overrides.css`
-- **Factory atualizada:** `nortear-design-system/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
+- **Arquivo:** `nortear-design-system-vanilla/src/styles/basecoat-theme-overrides.css`
+- **Factory atualizada:** `nortear-design-system-vanilla/src/components/ui/button.ts` — tipo `ButtonSize` inclui `xs`/`icon-xs`, `btnClass` mapeia pra `btn-xs`/`btn-xs-icon`.
 
 **Duas responsabilidades combinadas:**
 
@@ -176,7 +176,7 @@ Usamos **CSS puro com `hsl(var(--token) / 0.10)`** em vez de `@apply bg-destruct
 ### react/alert — SVG usa `text-current` para herdar cor da variante — ✅ RESOLVIDO UPSTREAM (2026-04-21)
 
 - **Status:** Absorvido pelo upstream no registry `radix-nova`, mantido no `base-nova`. O Alert atual usa `*:[svg]:text-current` e `bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90`. Patch não é mais necessário — marker removido do código.
-- **Arquivo:** `design-system-react/src/components/ui/alert.tsx`
+- **Arquivo:** `nortear-design-system-react/src/components/ui/alert.tsx`
 - **Categoria:** a11y (contraste de ícone em variantes semânticas)
 - **Data original:** 2026-04-18
 - **Data resolução:** 2026-04-21 (migração shadcn `new-york` → `radix-nova`; consolidada em `base-nova` no mesmo dia)
@@ -221,7 +221,7 @@ const alertVariants = cva(
 
 ### basecoat/alert — descrição como `<section>` para grid do basecoat-css
 
-- **Arquivo:** `nortear-design-system/src/components/ui/alert.ts`
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/alert.ts`
 - **Categoria:** a11y (layout legível)
 - **Data:** 2026-04-18
 - **Upstream ref:** `basecoat-css` dist/basecoat.css L153–L184
@@ -254,8 +254,8 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 ### react/toggle + toggle-group — radius via `--radius-button` {#toggle-radius-token}
 
 - **Arquivos:**
-  - `design-system-react/src/components/ui/toggle.tsx`
-  - `design-system-react/src/components/ui/toggle-group.tsx`
+  - `nortear-design-system-react/src/components/ui/toggle.tsx`
+  - `nortear-design-system-react/src/components/ui/toggle-group.tsx`
 - **Categoria:** theme
 - **Data:** 2026-04-24
 - **Upstream ref:** shadcn/ui — base-nova v2 ainda hardcoda `rounded-lg` / `rounded-[min(var(--radius-md),10px)]`
@@ -291,10 +291,10 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
 ### card — `has-[>[data-slot=card-footer]]` restringe a filho direto (4 stacks) {#card-footer-direct-child}
 
 - **Arquivos:**
-  - `design-system-react/src/components/ui/card.tsx` (Card root)
-  - `design-system-vue/src/components/ui/card/Card.vue`
-  - `design-system-svelte/src/components/ui/card/card.svelte`
-  - `nortear-design-system/src/components/ui/card.ts` (`createCard`)
+  - `nortear-design-system-react/src/components/ui/card.tsx` (Card root)
+  - `nortear-design-system-vue/src/components/ui/card/Card.vue`
+  - `nortear-design-system-svelte/src/components/ui/card/card.svelte`
+  - `nortear-design-system-vanilla/src/components/ui/card.ts` (`createCard`)
 - **Categoria:** bugfix
 - **Data:** 2026-04-22
 - **Upstream ref:** shadcn/ui — não há issue aberta (comportamento default do Tailwind `has-data-*`)
@@ -320,10 +320,10 @@ Gera CSS `.card:has(>[data-slot='card-footer']) { padding-bottom: 0 }` — combi
 
 - **Status:** React (`base-nova`), Vue (`reka-nova`) e Svelte (`nova`) absorveram o patch — AvatarImage agora inclui `object-cover` por padrão. Basecoat **ainda precisa do patch** — marker permanece nesse único arquivo.
 - **Arquivos:**
-  - ~~`design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
-  - ~~`design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)
-  - ~~`design-system-svelte/src/components/ui/avatar/avatar-image.svelte`~~ ✅ absorvido upstream (shadcn-svelte nova)
-  - `nortear-design-system/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
+  - ~~`nortear-design-system-react/src/components/ui/avatar.tsx` (AvatarImage)~~ ✅ absorvido upstream (radix-nova → base-nova)
+  - ~~`nortear-design-system-vue/src/components/ui/avatar/AvatarImage.vue`~~ ✅ absorvido upstream (reka-nova)
+  - ~~`nortear-design-system-svelte/src/components/ui/avatar/avatar-image.svelte`~~ ✅ absorvido upstream (shadcn-svelte nova)
+  - `nortear-design-system-vanilla/src/components/ui/avatar.ts` (`createAvatarImage`) — PATCH ATIVO
 - **Categoria:** bugfix (distorção visual)
 - **Data original:** 2026-04-21
 - **Data resolução React:** 2026-04-21 (migração shadcn `new-york` → `radix-nova` → `base-nova`)
@@ -348,7 +348,7 @@ className={cn("aspect-square h-full w-full object-cover", className)}
 
 ### react/chart — `role="img"` no ChartContainer para satisfazer aria-prohibited-attr {#chart-aria-img-role}
 
-- **Arquivo:** `design-system-react/src/components/ui/chart.tsx` (ChartContainer)
+- **Arquivo:** `nortear-design-system-react/src/components/ui/chart.tsx` (ChartContainer)
 - **Categoria:** a11y
 - **Data:** 2026-04-28
 - **Upstream ref:** shadcn/ui — `chart.tsx` upstream usa `<div data-slot="chart">` sem `role`
@@ -383,9 +383,9 @@ className={cn("aspect-square h-full w-full object-cover", className)}
 ### react/collapsible — substituir `asChild` por `className` em stories (base-ui breaking) {#collapsible-trigger-no-aschild}
 
 - **Arquivos:**
-  - `design-system-react/src/components/ui/collapsible.stories.tsx`
-  - `design-system-react/src/components/ui/collapsible-estados.stories.tsx`
-  - `design-system-react/src/components/ui/collapsible-composicoes.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/collapsible.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/collapsible-estados.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/collapsible-composicoes.stories.tsx`
 - **Categoria:** a11y (nested-interactive) + bugfix (migração base-ui)
 - **Data:** 2026-04-28
 - **Upstream ref:** base-ui v1 — `Collapsible.Trigger` não suporta `asChild` (ver breaking changes 2026-04-21 no topo deste arquivo)
@@ -414,7 +414,7 @@ CollapsibleTrigger é o próprio `<button>` semântico, recebe classes de button
 
 ### react/calendar — desabilitar `scope-attr-valid` em stories com `showWeekNumber` {#calendar-week-number-scope}
 
-- **Arquivo:** `design-system-react/src/components/ui/calendar-layouts.stories.tsx` (story `WithWeekNumber`)
+- **Arquivo:** `nortear-design-system-react/src/components/ui/calendar-layouts.stories.tsx` (story `WithWeekNumber`)
 - **Categoria:** a11y (escopo limitado)
 - **Data:** 2026-04-28
 - **Upstream ref:** react-day-picker v9 — gera `<td role="rowheader" scope="row">` para week numbers
@@ -450,9 +450,9 @@ Não fixamos no upstream (issue/PR no react-day-picker está pendente há meses)
 ### react/sonner — desabilitar `color-contrast` e `aria-prohibited-attr` (lib externa) {#sonner-rich-colors-contrast}
 
 - **Arquivos:**
-  - `design-system-react/src/components/ui/sonner.stories.tsx`
-  - `design-system-react/src/components/ui/sonner-tipos.stories.tsx`
-  - `design-system-react/src/components/ui/sonner-composicoes.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/sonner.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/sonner-tipos.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/sonner-composicoes.stories.tsx`
 - **Categoria:** a11y (escopo limitado a stories que renderizam o Toaster)
 - **Data:** 2026-04-28
 - **Upstream ref:** [emilkowalski/sonner](https://github.com/emilkowalski/sonner) — implementação interna do toast usa `<div data-title aria-label>` e CSS variables com richColors
@@ -495,9 +495,9 @@ Limitado **apenas às 3 stories que renderizam Toaster**. Botões e demais primi
 ### react/command — desabilitar `aria-required-children` (cmdk listbox spec) {#command-listbox-children}
 
 - **Arquivos:**
-  - `design-system-react/src/components/ui/command.stories.tsx`
-  - `design-system-react/src/components/ui/command-composicoes.stories.tsx`
-  - `design-system-react/src/components/ui/command-estados.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/command.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/command-composicoes.stories.tsx`
+  - `nortear-design-system-react/src/components/ui/command-estados.stories.tsx`
 - **Categoria:** a11y (escopo limitado a stories de Command)
 - **Data:** 2026-04-28
 - **Upstream ref:** [pacocoursey/cmdk](https://github.com/pacocoursey/cmdk) — listbox como container genérico de comandos
@@ -534,7 +534,7 @@ Mas cmdk segue intencionalmente o padrão de command palettes (VSCode, Figma, Sp
 
 ### react/command — desabilitar `a11y.test` na story ComoCombobox (portal flaky) {#command-combobox-portal-flaky}
 
-- **Arquivo:** `design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
+- **Arquivo:** `nortear-design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
 - **Categoria:** a11y (escopo limitado a uma story)
 - **Data:** 2026-04-28
 
@@ -568,7 +568,7 @@ export const ComoCombobox: Story = {
 
 ### react/command — Popover trigger combobox precisa aria-haspopup + aria-controls {#command-combobox-aria}
 
-- **Arquivo:** `design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
+- **Arquivo:** `nortear-design-system-react/src/components/ui/command-composicoes.stories.tsx` (story `ComoCombobox`)
 - **Categoria:** a11y (compliance ARIA combobox spec)
 - **Data:** 2026-04-28
 - **Upstream ref:** WAI-ARIA 1.2 Authoring Practices — [Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
@@ -614,13 +614,13 @@ A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é in
 A partir de 2026-06-06, patches diretamente em bibliotecas upstream `node_modules/` são versionados via [`patch-package`](https://github.com/ds300/patch-package) em cada stack. Postinstall aplica os patches automaticamente após `npm install`.
 
 **Localização**:
-- `design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`)
-- `design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+1.3.2.patch`)
-- `design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.0.patch`)
+- `nortear-design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`)
+- `nortear-design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+1.3.2.patch`)
+- `nortear-design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.0.patch`)
 
 **Como atualizar**:
 ```bash
-cd design-system-<stack>
+cd nortear-design-system-<stack>
 # Edite o arquivo em node_modules/<pkg>/...
 npx patch-package <pkg>       # regenera o .patch
 # Commit o arquivo regenerado em patches/
@@ -630,7 +630,7 @@ npx patch-package <pkg>       # regenera o .patch
 
 ### vue/vue-sonner — Toast `<li>` tabindex 0 → -1 {#vue-sonner-toast-tabindex}
 
-- **Patch:** `design-system-vue/patches/vue-sonner+1.3.2.patch`
+- **Patch:** `nortear-design-system-vue/patches/vue-sonner+1.3.2.patch`
 - **Arquivos patcheados:** `node_modules/vue-sonner/lib/vue-sonner.js` (linha 326) + `vue-sonner.cjs`
 - **Versão upstream:** `vue-sonner@1.3.2`
 - **Categoria:** a11y
@@ -661,7 +661,7 @@ tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab
 
 ### svelte/svelte-sonner — Toast `<li>` tabindex 0 → -1 {#svelte-sonner-toast-tabindex}
 
-- **Patch:** `design-system-svelte/patches/svelte-sonner+1.1.0.patch`
+- **Patch:** `nortear-design-system-svelte/patches/svelte-sonner+1.1.0.patch`
 - **Arquivos patcheados:** `node_modules/svelte-sonner/dist/Toast.svelte` (linha 334)
 - **Versão upstream:** `svelte-sonner@1.1.0`
 - **Categoria:** a11y

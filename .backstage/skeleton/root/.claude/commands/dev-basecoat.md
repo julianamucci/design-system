@@ -29,12 +29,12 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
-1. `nortear-design-system/src/components/ui/alert.stories.ts` — Playground
-2. `nortear-design-system/src/components/ui/alert-variantes.stories.ts` — variantes
-3. `nortear-design-system/src/components/ui/alert-estados.stories.ts` — estados
-4. `nortear-design-system/src/components/ui/alert-composicoes.stories.ts` — composições
-5. `nortear-design-system/src/components/docs/AlertDocs.ts` — docs page completa (REFERÊNCIA)
-6. `nortear-design-system/.storybook/preview.ts` — configuração global
+1. `nortear-design-system-vanilla/src/components/ui/alert.stories.ts` — Playground
+2. `nortear-design-system-vanilla/src/components/ui/alert-variantes.stories.ts` — variantes
+3. `nortear-design-system-vanilla/src/components/ui/alert-estados.stories.ts` — estados
+4. `nortear-design-system-vanilla/src/components/ui/alert-composicoes.stories.ts` — composições
+5. `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts` — docs page completa (REFERÊNCIA)
+6. `nortear-design-system-vanilla/.storybook/preview.ts` — configuração global
 7. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist
 
 ---
@@ -370,9 +370,9 @@ a.className = 'alert'; // ← não faça isso quando já existe createAlert()
 
 **REGRA CRÍTICA: Cada stack deve ser independente.** A docs page Basecoat DEVE renderizar TODO o conteúdo das 15 seções usando `translations.json`. NUNCA exiba mensagens como "Documentação completa disponível na stack React" ou placeholders genéricos. Cada projeto será usado de forma independente.
 
-**Referência obrigatória**: Leia `nortear-design-system/src/components/docs/AlertDocs.ts` inteiro antes de criar qualquer docs page. Ele é o modelo completo para Basecoat.
+**Referência obrigatória**: Leia `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts` inteiro antes de criar qualquer docs page. Ele é o modelo completo para Basecoat.
 
-**Referência de conteúdo**: Leia a docs page React (`design-system-react/src/components/docs/<Slug>Docs.tsx`) para entender quais seções, tabelas, cards e demos existem. A versão Basecoat deve ter conteúdo IDÊNTICO usando as factory functions + `innerHTML` com `sanitizeHtml` para texto.
+**Referência de conteúdo**: Leia a docs page React (`nortear-design-system-react/src/components/docs/<Slug>Docs.tsx`) para entender quais seções, tabelas, cards e demos existem. A versão Basecoat deve ter conteúdo IDÊNTICO usando as factory functions + `innerHTML` com `sanitizeHtml` para texto.
 
 Localização: `src/components/docs/<ComponentName>Docs.ts`
 
@@ -588,7 +588,7 @@ Confirme que esta regra existe no CSS antes de criar qualquer docs page.
 **ANTES de escrever qualquer `innerHTML` inline na docs page**, verifique se os section containers genéricos existem:
 
 ```bash
-ls nortear-design-system/src/components/docs/shared/sections/ 2>/dev/null
+ls nortear-design-system-vanilla/src/components/docs/shared/sections/ 2>/dev/null
 ```
 
 Se existirem (`createDocsDoDont.ts`, `createDocsVariants.ts`, etc.), **use-os**. Se não existirem, rode `/docs-sections --stack basecoat` primeiro.

@@ -14,7 +14,7 @@ Listar seções presentes (`demonstration`, `anatomy`, `usage`, `variants`, `sta
 #### 1.2 Variantes
 ```bash
 grep -oP '"variants\.(items|styles)\.\K[^"]+' docs/shared/content/${slug}/translations.json | sort -u
-grep -A 20 "cva(" design-system-react/src/components/ui/${slug}*.tsx
+grep -A 20 "cva(" nortear-design-system-react/src/components/ui/${slug}*.tsx
 ```
 - Variante no UI mas ausente no JSON = gap do ux-writer (reportar).
 - Variante no JSON mas ausente no UI = erro de conteúdo (reportar).
@@ -25,13 +25,13 @@ Extrair `variants.sizes.*` e `variants.sizes.*Use`. Cada tamanho deve ter par `{
 #### 1.4 Props
 Extrair `props.table.*`. Comparar com:
 ```bash
-grep -A 5 "interface.*Props" design-system-react/src/components/ui/${slug}*.tsx
+grep -A 5 "interface.*Props" nortear-design-system-react/src/components/ui/${slug}*.tsx
 ```
 
 #### 1.5 Tokens
 Extrair `tokens.table.*`. Verificar tokens CSS no componente:
 ```bash
-grep -oP 'var\(--[a-z-]+\)' design-system-react/src/components/ui/${slug}*.tsx
+grep -oP 'var\(--[a-z-]+\)' nortear-design-system-react/src/components/ui/${slug}*.tsx
 ```
 
 #### 1.6 Testes
@@ -98,30 +98,30 @@ Para cada docs page nas 4 stacks:
 #### 1.1 Tipografia
 ```bash
 grep -n "text-\[.*px\]\|text-xs\|text-sm\|text-base\|text-lg\|text-xl" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 Classificar por contexto: `<table>`, `<td>`, `<th>`, `<h2>`, `<h3>`, descriptions, badges, código.
 
 #### 1.2 Hierarquia HTML
 ```bash
 grep -n "<h[1-6]\|<section\|<table\|role=" \
-  design-system-react/src/components/docs/${Slug}Docs.tsx
+  nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 Documentar: heading levels, estrutura `section > h2 > h3`, roles em não-semânticos.
 
 #### 1.3 Wrappers de tabela
 ```bash
-grep -B2 "<table" design-system-react/src/components/docs/${Slug}Docs.tsx
+grep -B2 "<table" nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 #### 1.4 Estilos de badges
 ```bash
-grep -n "Badge\|inline-flex.*rounded-md.*border" design-system-react/src/components/docs/${Slug}Docs.tsx
+grep -n "Badge\|inline-flex.*rounded-md.*border" nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 #### 1.5 Padrões de navegação
 ```bash
-grep -n "window.top\|location.href\|role=\"link\"" design-system-react/src/components/docs/${Slug}Docs.tsx
+grep -n "window.top\|location.href\|role=\"link\"" nortear-design-system-react/src/components/docs/${Slug}Docs.tsx
 ```
 
 #### 1.6 Estrutura do translations.json

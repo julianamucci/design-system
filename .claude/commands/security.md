@@ -20,8 +20,8 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
 1. `docs/shared/guidelines/09-seguranca-xss.md` — regras completas de segurança
-2. `design-system-react/src/lib/sanitize-html.ts` — implementação de referência
-3. `design-system-react/src/components/docs/AlertDocs.tsx` — uso correto de sanitizeHtml
+2. `nortear-design-system-react/src/lib/sanitize-html.ts` — implementação de referência
+3. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — uso correto de sanitizeHtml
 
 ---
 
@@ -33,16 +33,16 @@ Busque TODOS os usos de renderização de HTML dinâmico:
 
 ```bash
 # React
-grep -rn "dangerouslySetInnerHTML" design-system-react/src/
+grep -rn "dangerouslySetInnerHTML" nortear-design-system-react/src/
 
 # Vue
-grep -rn "v-html" design-system-vue/src/
+grep -rn "v-html" nortear-design-system-vue/src/
 
 # Svelte
-grep -rn "{@html" design-system-svelte/src/
+grep -rn "{@html" nortear-design-system-svelte/src/
 
 # Basecoat
-grep -rn "innerHTML" nortear-design-system/src/
+grep -rn "innerHTML" nortear-design-system-vanilla/src/
 ```
 
 Para CADA ocorrência, verifique:
@@ -52,9 +52,9 @@ Para CADA ocorrência, verifique:
 ### 2. URLs dinâmicos
 
 ```bash
-grep -rn "href.*{" design-system-*/src/ --include="*.tsx" --include="*.vue" --include="*.svelte"
-grep -rn ":href" design-system-vue/src/
-grep -rn "el.href" nortear-design-system/src/
+grep -rn "href.*{" nortear-design-system-*/src/ --include="*.tsx" --include="*.vue" --include="*.svelte"
+grep -rn ":href" nortear-design-system-vue/src/
+grep -rn "el.href" nortear-design-system-vanilla/src/
 ```
 
 Para cada URL dinâmico:
@@ -64,22 +64,22 @@ Para cada URL dinâmico:
 ### 3. sanitizeHtml existe em cada stack
 
 ```bash
-for stack in react vue svelte basecoat; do
+for stack in react vue svelte vanilla; do
   echo "=== $stack ==="
-  ls design-system-$stack/src/lib/sanitize-html.ts 2>/dev/null || echo "AUSENTE!"
+  ls nortear-design-system-$stack/src/lib/sanitize-html.ts 2>/dev/null || echo "AUSENTE!"
 done
 ```
 
 ### 4. Event handlers dinâmicos
 
 ```bash
-grep -rn "on[A-Z].*=" design-system-*/src/ --include="*.tsx" | grep -v "onClick\|onChange\|onSubmit\|onFocus\|onBlur\|onKeyDown\|onKeyUp\|onMouseEnter\|onMouseLeave"
+grep -rn "on[A-Z].*=" nortear-design-system-*/src/ --include="*.tsx" | grep -v "onClick\|onChange\|onSubmit\|onFocus\|onBlur\|onKeyDown\|onKeyUp\|onMouseEnter\|onMouseLeave"
 ```
 
 ### 5. Style dinâmico com conteúdo externo
 
 ```bash
-grep -rn "style.*{.*}" design-system-*/src/ --include="*.tsx" --include="*.vue"
+grep -rn "style.*{.*}" nortear-design-system-*/src/ --include="*.tsx" --include="*.vue"
 ```
 
 ---

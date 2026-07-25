@@ -31,14 +31,14 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
-1. `design-system-react/STORYBOOK-ARCHITECTURE.md` — arquitetura completa
-2. `design-system-react/src/components/ui/alert.stories.tsx` — Playground + play functions (REFERÊNCIA)
-3. `design-system-react/src/components/ui/alert-variantes.stories.tsx` — variantes
-4. `design-system-react/src/components/ui/alert-estados.stories.tsx` — estados
-5. `design-system-react/src/components/ui/alert-composicoes.stories.tsx` — composições
-6. `design-system-react/src/components/docs/AlertDocs.tsx` — docs page completa (REFERÊNCIA)
+1. `nortear-design-system-react/STORYBOOK-ARCHITECTURE.md` — arquitetura completa
+2. `nortear-design-system-react/src/components/ui/alert.stories.tsx` — Playground + play functions (REFERÊNCIA)
+3. `nortear-design-system-react/src/components/ui/alert-variantes.stories.tsx` — variantes
+4. `nortear-design-system-react/src/components/ui/alert-estados.stories.tsx` — estados
+5. `nortear-design-system-react/src/components/ui/alert-composicoes.stories.tsx` — composições
+6. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — docs page completa (REFERÊNCIA)
 7. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist obrigatório
-8. `design-system-react/.storybook/preview.ts` — configuração global
+8. `nortear-design-system-react/.storybook/preview.ts` — configuração global
 
 ---
 
@@ -211,7 +211,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 **REGRA CRÍTICA: Cada stack deve ser independente.** A docs page React DEVE renderizar TODO o conteúdo das 15 seções usando `translations.json`. NUNCA use placeholders genéricos ("Exemplo aqui.", "Estrutura de subcomponentes."). Cada projeto será usado de forma independente.
 
-**Referência obrigatória**: Leia `design-system-react/src/components/docs/AlertDocs.tsx` inteiro antes de criar qualquer docs page. Ele é o modelo completo para React.
+**Referência obrigatória**: Leia `nortear-design-system-react/src/components/docs/AlertDocs.tsx` inteiro antes de criar qualquer docs page. Ele é o modelo completo para React.
 
 #### Layout obrigatório
 
@@ -478,7 +478,7 @@ Foundations → UI → [*, [Docs, Playground, Variantes, Tamanhos, Composições
 **ANTES de escrever qualquer JSX inline na docs page**, verifique se os section containers genéricos existem:
 
 ```bash
-ls design-system-react/src/components/docs/shared/sections/ 2>/dev/null
+ls nortear-design-system-react/src/components/docs/shared/sections/ 2>/dev/null
 ```
 
 Se existirem (`DocsDoDont.tsx`, `DocsVariants.tsx`, etc.), **use-os** — nunca reimplemente o HTML das seções. Se não existirem, rode `/docs-sections --stack react` primeiro.

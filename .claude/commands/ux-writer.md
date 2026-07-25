@@ -20,18 +20,18 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência
 
 Em paralelo:
-1. **Componente fonte React** — `design-system-react/src/components/ui/<slug>.tsx` (ou `<slug>/index.tsx`) — variantes, props, estados
+1. **Componente fonte React** — `nortear-design-system-react/src/components/ui/<slug>.tsx` (ou `<slug>/index.tsx`) — variantes, props, estados
 2. **Guideline de categoria** (obrigatório):
 
 | Categoria | Arquivo |
 |---|---|
-| Layout | `design-system-react/guidelines/04-layout-components.md` |
-| Navegação | `design-system-react/guidelines/05-navigation-components.md` |
-| Formulário | `design-system-react/guidelines/06-form-components.md` |
-| Feedback | `design-system-react/guidelines/07-feedback-components.md` |
-| Display | `design-system-react/guidelines/08-display-components.md` |
-| Disclosure | `design-system-react/guidelines/09-disclosure-components.md` |
-| Overlay | `design-system-react/guidelines/10-overlay-components.md` |
+| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` |
+| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` |
+| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` |
+| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` |
+| Display | `nortear-design-system-react/guidelines/08-display-components.md` |
+| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` |
+| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` |
 
 A guideline é fonte de verdade para variantes, estados, props, regras de API e padrões de a11y.
 

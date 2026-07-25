@@ -19,7 +19,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Leituras obrigatórias (antes de começar)
 
 1. **`_dev-shared.md`** (`.claude/commands/_dev-shared.md`) — padrões compartilhados das 4 stacks (regras, 15 seções, SEO, audits, checklist). **Esta skill complementa com o que é específico de React.**
-2. UI primitive: `design-system-react/src/components/ui/<slug>.tsx` (ou `<slug>/index.tsx`)
+2. UI primitive: `nortear-design-system-react/src/components/ui/<slug>.tsx` (ou `<slug>/index.tsx`)
 3. `docs/shared/content/<slug>/translations.json`
 4. `.pipeline-context/<slug>.md` (se existir)
 

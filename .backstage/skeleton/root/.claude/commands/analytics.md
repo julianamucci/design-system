@@ -29,9 +29,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
 1. `docs/shared/guidelines/07-analytics.md` — convenção de nomenclatura e payload
-2. `design-system-react/src/lib/analytics.ts` — implementação da função `track()`
-3. `design-system-react/src/components/docs/AlertDocs.tsx` — referência de implementação
-4. `design-system-react/.storybook/preview-head.html` — script GA4
+2. `nortear-design-system-react/src/lib/analytics.ts` — implementação da função `track()`
+3. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — referência de implementação
+4. `nortear-design-system-react/.storybook/preview-head.html` — script GA4
 5. `docs/shared/guidelines/08-docs-pages-foundations.md` — checklist de docs pages
 
 ---
@@ -152,7 +152,7 @@ interface AnalyticsBasePayload {
 ### 1. Verificar script GA4
 
 ```bash
-grep -l "%STORYBOOK_GA_MEASUREMENT_ID%" design-system-*/storybook/preview-head.html
+grep -l "%STORYBOOK_GA_MEASUREMENT_ID%" nortear-design-system-*/storybook/preview-head.html
 ```
 
 Confirme que TODAS as stacks (react, vue, svelte, basecoat) têm o script GA4.
