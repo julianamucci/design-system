@@ -1,7 +1,7 @@
 {
   "name": "nortear",
   "version": "0.1.0-poc",
-  "description": "CLI para copiar componentes do Nortear Design System (estilo shadcn) — TypeScript puro, zero Tailwind.",
+  "description": "CLI para copiar componentes do Nortear Design System — TypeScript puro, zero Tailwind.",
   "type": "module",
   "bin": {
     "nortear": "./bin/nortear.mjs"

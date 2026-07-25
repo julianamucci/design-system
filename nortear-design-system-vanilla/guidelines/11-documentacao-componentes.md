@@ -113,7 +113,7 @@ export function createAlertDocs(): HTMLElement {
       description: tContent('description'),
       category: tContent('category'),
       type: tContent('type'),
-      installNote: 'npx shadcn@latest add <slug>',
+      installNote: 'npx nortear add <slug>',
     }));
 
     // Container de duas colunas
@@ -209,7 +209,7 @@ root.appendChild(createDocsHeader({
   description: tContent('description'),
   category: tContent('category'),
   type: tContent('type'),
-  installNote: 'npx shadcn@latest add <slug>',
+  installNote: 'npx nortear add <slug>',
 }));
 ```
 

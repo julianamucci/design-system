@@ -19,14 +19,14 @@ Cada pacote é otimizado para o seu ecossistema, mas compartilha um núcleo ferr
 
 ### Core / Bundling
 - **Vite (v8)**: Utilizado em todas as stacks como bundler rápido e dev server.
-- **Tailwind CSS (v4)**: Motor de estilização principal, responsável por consumir os design tokens e gerar a utility-class layer, otimizada pela nova engine v4.
+- **CSS standalone `.nds-*`**: motor de estilização principal — classes compartilhadas em `docs/shared/styles/nds/` que consomem os design tokens diretamente, sem framework de utility CSS.
 - **TypeScript**: Padrão adotado em todas as stacks para tipagem estática.
 
 ### Componentes Base (Headless & Primitives)
-O Nortear não reconstrói primitivas de UI do zero. Ele se apoia no ecossistema do **shadcn/ui** e seus ports oficiais para garantir acessibilidade e comportamento padrão da web, aplicando os tokens visuais por cima:
-- **React**: Utiliza `@base-ui/react` (via registry *base-nova* do shadcn).
-- **Vue**: Utiliza `reka-ui` (via *reka-nova*).
-- **Svelte**: Utiliza `bits-ui` (via *nova*).
+O Nortear não reconstrói primitivas de UI do zero. Ele se apoia em libs primitivas headless para garantir acessibilidade e comportamento padrão da web, aplicando os tokens visuais por cima:
+- **React**: Utiliza `@base-ui/react`.
+- **Vue**: Utiliza `reka-ui`.
+- **Svelte**: Utiliza `bits-ui`.
 - **Vanilla**: factories TypeScript + CSS standalone `.nds-*` compartilhado.
 
 ### Documentação e Testes
@@ -41,19 +41,19 @@ O design system suporta ativamente **7 temas** (Nova, Vega, Maia, Lyra, Mira, Lu
 A abordagem técnica evita *forks* de componentes por tema através de uma estratégia estrita de **Tokenização de Dimensões**:
 - Variáveis CSS (Custom Properties) como `--height-default` ou `--size-xs` são injetadas em componentes iterativos.
 - O mapeamento ocorre no nível do CSS (`docs/shared/tokens/tokens.css` e overrides temáticos em `docs/shared/themes/`).
-- Essa técnica combinada com o Tailwind CSS garante que as dimensões estruturais reajam ao tema sem custo de runtime em JS.
+- Essa técnica garante que as dimensões estruturais reajam ao tema sem custo de runtime em JS.
 
 ## 4. O Sistema de "Patches" (PATCHES.md)
 
-Como o design system é construído em cima de primitives de terceiros e CLI de geração (ex: `shadcn@latest add`), modificações diretas no código gerado podem ser perdidas durante uma atualização. Para resolver isso, existe um fluxo de engenharia rigoroso documentado no arquivo `PATCHES.md`:
+Como o design system é construído em cima de primitives de terceiros, modificações que contornam comportamento dessas libs podem ser perdidas durante uma atualização. Para resolver isso, existe um fluxo de engenharia rigoroso documentado no arquivo `PATCHES.md`:
 
 1. **Wrapper-first**: Sempre tentar encapsular um componente antes de modificá-lo.
 2. **Patching rastreável**: Se for essencial alterar a estrutura base gerada (ex: `a11y`, `i18n`, `bugfix`), a linha é obrigatoriamente comentada no código com `// PATCH: ...`.
-3. **Auditoria (`npm run patches:list`)**: Scripts automatizados validam as modificações locais comparando com as fontes de upstream (*shadcn, vanilla, etc.*) antes e depois de atualizações.
+3. **Auditoria (`npm run patches:list`)**: Scripts automatizados validam as modificações locais comparando com as fontes de upstream antes e depois de atualizações.
 
 ## 5. Destaques Técnicos
 
 - **Acessibilidade (a11y)**: Fortemente testada com *axe-playwright* e baseada nas primitivas do Base UI/Reka UI, garantindo suporte pleno a teclado, leitores de tela e estados WAI-ARIA adequados.
-- **Performance**: Tempo de load da documentação otimizado; regras estritas contra extensões massivas de classes CSS não processadas no Tailwind, preferindo CSS vars em cascades extensas para diminuir o bundle e evitar timeouts.
+- **Performance**: Tempo de load da documentação otimizado; regras estritas de CSS enxuto, preferindo CSS vars em cascades extensas para diminuir o bundle.
 - **Consistência Cross-Stack**: Scripts automatizados (ex: `scripts/validate-docs-consistency.ts`) garantem que a documentação, tokens e guidelines presentes em `docs/shared/` estejam perfeitamente alinhados e refletidos em React, Vue, Svelte e Vanilla simultaneamente.
 - **SEO & Internacionalização (i18n)**: Práticas incorporadas à própria engine de documentação (Storybook) e aos componentes expostos.

@@ -42,7 +42,7 @@ export function truncate(str: string, maxLength: number): string {
 
 /**
  * Combina classes CSS, ignorando falsy values.
- * Equivalente ao `cn()` do shadcn (sem tailwind-merge).
+ * Concatenador de classes — clsx puro (sem tailwind-merge).
  */
 export function cx(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');

@@ -116,7 +116,7 @@
   --ring-offset: var(--ring-offset-width);
   --ring-offset-color: hsl(var(--ring-offset-color));
 
-  /* Animations for shadcn-vue */
+  /* Animations dos componentes */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;

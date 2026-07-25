@@ -6,7 +6,7 @@ import { list } from './list.mjs';
 const VERSION = '0.1.0-poc';
 
 const HELP = `
-  ${bold('nortear')} ${dim('— componentes copiados, não dependência (estilo shadcn, sem Tailwind/React)')}
+  ${bold('nortear')} ${dim('— componentes copiados, não dependência (sem Tailwind/React)')}
 
   ${bold('Comandos')}
     nortear init [--registry <url|path>] [--root <dir>] [--yes]

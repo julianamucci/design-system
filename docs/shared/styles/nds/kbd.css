@@ -64,7 +64,7 @@
 
 /* ── nds-kbd-group ─────────────────────────────────────────────────────────
  * Container para atalhos compostos (Ctrl + B, ⌘⇧⌥⌃, etc.).
- * Renderizado também como <kbd> para preservar a semântica HTML do shadcn.
+ * Renderizado também como <kbd> para preservar a semântica HTML de tecla.
  */
 .nds-kbd-group {
   display: inline-flex;

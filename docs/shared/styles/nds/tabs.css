@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
 
-  height: var(--spacing-9, 2.25rem);          /* 36px — fora grid-8 (padrão shadcn) */
+  height: var(--spacing-9, 2.25rem);          /* 36px — fora do grid-8 (herança do design original) */
   padding: var(--spacing-1, 0.25rem);          /* 4px interno */
 
   background-color: hsl(var(--muted));

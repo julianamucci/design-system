@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Gerador do Nortear registry (estilo shadcn, sem Tailwind/React).
+ * Gerador do Nortear registry (componentes copiáveis, sem Tailwind/React).
  *
  * Lê os fontes do nortear-design-system-vanilla/ e emite, para cada componente PoC:
  *   - registry/v1/<name>.json    — manifesto com files[].content inlinado
@@ -58,7 +58,7 @@ const INIT_ENTRY_IMPORTS = [
   { type: 'theme',  name: 'index.css'  },
 ];
 
-const INIT_DEPS = ['clsx', 'tailwind-merge'];
+const INIT_DEPS = ['clsx'];
 
 // ─── Build ──────────────────────────────────────────────────────────────────
 const VERSION = '1.0.0';

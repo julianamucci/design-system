@@ -33,7 +33,7 @@ export default defineConfig([globalIgnores(['dist', 'storybook-static', 'node_mo
         argsIgnorePattern: '^_',
       },
     ],
-    // Convenção shadcn: exporta o componente E `*Variants` (cva) no mesmo
+    // Convenção do projeto: exporta o componente E `*Variants` (cva) no mesmo
     // arquivo. Considera *Variants/use*Context/use* como allowed constants.
     'react-refresh/only-export-components': [
       'warn',

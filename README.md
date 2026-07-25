@@ -133,7 +133,7 @@ npm run storybook:vanilla    # http://localhost:6009
 
 ## Nortear CLI (Vanilla TS)
 
-Pra puxar componentes do Nortear num projeto vanilla, estilo shadcn. **Ainda não publicado no npm** — por enquanto, rode a partir do clone:
+Pra puxar componentes do Nortear num projeto vanilla — copy, não dependa. **Ainda não publicado no npm** — por enquanto, rode a partir do clone:
 
 ```bash
 # do repo root, dentro do seu projeto consumidor:
@@ -178,7 +178,7 @@ design-system/
 ├── nortear-design-system-svelte/           # 🧡 Svelte 5 + bits-ui
 ├── nortear-design-system-vanilla/          # 🌿 Vanilla TS + .nds-* CSS standalone
 │
-├── nortear-cli/                    # CLI tipo shadcn pra Nortear vanilla
+├── nortear-cli/                    # CLI de componentes copiáveis (Nortear vanilla)
 ├── patches.md                      # registry de patches upstream + tokens
 ├── scripts/                        # validate-docs-consistency, list-patches, etc.
 └── registry/                       # metadata pro CLI (componentes disponíveis)

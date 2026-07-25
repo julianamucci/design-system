@@ -1,6 +1,6 @@
 # nortear (CLI)
 
-CLI para copiar componentes do **Nortear Design System** para o projeto consumidor — modelo *copy, não dependa* (estilo shadcn), mas em **TypeScript puro e sem Tailwind**.
+CLI para copiar componentes do **Nortear Design System** para o projeto consumidor — modelo *copy, não dependa*, em **TypeScript puro e sem Tailwind**.
 
 > **Proof of concept.** Não publicado no npm. Para testar localmente, veja [Uso local](#uso-local).
 
@@ -125,4 +125,4 @@ Versionar por path (`/v1/`, `/v2/`) para upgrades opt-in.
 - Não detecta dependência recursiva entre componentes ainda — só lê `import` top-level. Componentes do PoC (`button`, `alert`) não usam outros componentes, então não testado.
 - `--dry-run` em `init` ainda escreve arquivos da camada base; só simula o `npm install`. Easy fix se virar produção.
 - Sem comando `update` ou `remove` ainda.
-- Sem checagem de SHA pra detectar arquivos modificados antes de overwrite (shadcn faz isso).
+- Sem checagem de SHA pra detectar arquivos modificados antes de overwrite (melhoria futura).

@@ -67,7 +67,7 @@
   --accent-foreground: 0 0% 9%;
 
   /* Feedback — cores com contraste WCAG 2.1 AA (≥4.5:1) para texto sobre bg colorido
-     E também para text-<color> sobre bg-<color>/10 (soft variants do shadcn radix-nova) */
+     E também para text-<color> sobre bg-<color>/10 (soft variants) */
   --destructive: 0 74% 42%;
   --destructive-foreground: 0 0% 100%;
   --success: 142 85% 22%;
@@ -127,13 +127,13 @@
   --chart-4: 201 88% 43%;
   --chart-5: 210 71% 23%;
 
-  /* Radius — arquitetura fiel ao shadcn (base-nova/reka-nova/etc.):
+  /* Radius — derivado de um radius base:
      --radius é o tamanho base global. Cada componente consome um token
      específico (--radius-button, --radius-card, etc.) que no tema padrão
      (Default) é igual ao --radius, mas em outros temas pode aplicar
      multiplicadores diferentes (ver docs/shared/themes/<tema>.css).
 
-     Valor base = 0.625rem (10px) bate exatamente com shadcn default. */
+     Valor base = 0.625rem (10px). */
   --radius: 0.625rem;              /* 10px — base global */
   --radius-button: var(--radius);  /* Default: 1× */
   --radius-card: calc(var(--radius) * 1.4);   /* Default: 14px */

@@ -380,7 +380,7 @@ onMounted(() => {
           complexity="Simples"
           :title="t('title')"
           :description="t('description')"
-          shadcn-command="npx shadcn@latest add button"
+          install-command="npm install"
         />
         <LanguageSwitcher />
       </div>

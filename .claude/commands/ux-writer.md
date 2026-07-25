@@ -71,7 +71,7 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 | `modelValue` / `bind:value` | "estado controlado" |
 
 **Onde menções literais são OK**:
-- Snippets de código (`structureCode`, `codeSingle`, `codeMultiple`, `extensibilityCode`, `interfaceCode`, `customizationCode`) — sintaxe real, geralmente shadcn-like (Vue/Svelte coincidem)
+- Snippets de código (`structureCode`, `codeSingle`, `codeMultiple`, `extensibilityCode`, `interfaceCode`, `customizationCode`) — sintaxe real da stack (Vue/Svelte frequentemente coincidem)
 - `props.table.<prop>.name` — nomeia a prop documentada
 - `props.table.<prop>.type` — literal TypeScript
 - `notes.itemN` quando explicita divergência: "No React (base-ui), a API expõe `multiple` (boolean). Em Vue/Svelte, use `type=\"multiple\"`."

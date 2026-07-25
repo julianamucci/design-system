@@ -35,7 +35,7 @@ nortear-design-system-react/
 │
 ├── src/
 │   ├── components/
-│   │   ├── ui/                  # Primitive UI components (shadcn/ui pattern)
+│   │   ├── ui/                  # Primitive UI components (cva + cn pattern)
 │   │   │   ├── button.tsx
 │   │   │   ├── button.stories.tsx          # Main story file (Playground + docs.page)
 │   │   │   ├── button-variantes.stories.tsx
@@ -475,7 +475,7 @@ export function ButtonDocs() {
 
 | Component | Location | Props | Purpose |
 |---|---|---|---|
-| `DocsHeader` | `shared/DocsHeader.tsx` | `category`, `complexity`, `title`, `description`, `shadcnCommand`, `figmaLink`, `updatedAt` | Standardized page header with badges |
+| `DocsHeader` | `shared/DocsHeader.tsx` | `category`, `complexity`, `title`, `description`, `figmaLink`, `updatedAt` | Standardized page header with badges |
 | `DocsSection` | `shared/DocsSection.tsx` | `id`, `title`, `description`, `children`, `noSeparator` | Section wrapper with `<hr>` + `scroll-mt-24` |
 | `DoDont` | `shared/DoDont.tsx` | `pairs: { do: { visual, description }, dont: { visual, description } }[]` | Side-by-side Do / Don't panels |
 | `Anatomy` | `shared/Anatomy.tsx` | component-specific | Visual anatomy diagram |
@@ -760,7 +760,7 @@ Follow this exact sequence when an AI agent needs to add a new UI component (e.g
 src/components/ui/badge.tsx
 ```
 
-Follows the shadcn/ui pattern: `cva` for variants, `cn()` for class merging, `React.forwardRef`.
+Padrão dos primitives: `cva` para variantes, `cn()` para merge de classes, `React.forwardRef`.
 
 ### Step 2 — Create translation files
 
