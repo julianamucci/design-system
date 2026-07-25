@@ -38,7 +38,7 @@ jobs:
       - name: Setup Node 22
         uses: actions/setup-node@v7
         with:
-          node-version: "22"
+          node-version: "24"
 
       # Dependências instaladas melhoram a resolução de imports de terceiros
       # (dompurify, cross-spawn…) na extração do CodeQL — mesma lição
