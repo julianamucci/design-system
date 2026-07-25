@@ -73,6 +73,6 @@
     "vue-tsc": "^2.2.12"
   },
   "overrides": {
-    "postcss": "^8.5.15"
+    "postcss": "^8.5.23"
   }
 }
