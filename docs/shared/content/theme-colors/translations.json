@@ -3,7 +3,7 @@
     "title": "Cores e Temas",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "A paleta do Design System é definida por tokens semânticos em HSL. Temas de marca, light/dark, densidade e fonte são aplicados via classes no <html>, recalculando os tokens automaticamente. Clique em qualquer swatch para copiar o token.",
+    "description": "A paleta do Design System é definida por tokens semânticos em HSL. Temas de marca, light/dark, densidade e fonte são aplicados via classes no <html>, recalculando os tokens automaticamente. Clique em um swatch da paleta para copiar o token.",
     "copy": {
       "tooltip": "Clique para copiar",
       "copied": "Copiado!"
@@ -16,17 +16,13 @@
         "brand": "Marca / Interativo",
         "feedback": "Feedback",
         "structure": "Estrutura",
-        "chart": "Gráficos"
-      },
-      "cols": {
-        "token": "Token",
-        "value": "Valor (HSL)",
-        "usage": "Uso"
+        "chart": "Gráficos",
+        "sidebar": "Sidebar"
       }
     },
     "brand": {
       "title": "Temas de marca",
-      "subtitle": "Default, Warm e Cold reescrevem os tokens de cor. Trocar via toolbar do Storybook aplica a classe correspondente no <html>.",
+      "subtitle": "Default, Warm e Cold reescrevem os tokens de cor — e podem ajustar a identidade de forma (<code>--radius</code> e os tokens de radius por componente). Trocar via toolbar do Storybook aplica a classe correspondente no <html>.",
       "themes": {
         "default": "Default — neutro",
         "warm": "Warm — tint âmbar/terracota",
@@ -35,13 +31,13 @@
     },
     "modes": {
       "title": "Light e Dark",
-      "subtitle": "Cada token tem um valor para light (:root) e dark (.dark). O contraste é mantido em ambos para atender WCAG 2.1 AA.",
+      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark), mantendo contraste WCAG 2.1 AA nos dois modos. Exceção: os tokens de gráficos usam a mesma paleta em ambos.",
       "light": "Light",
       "dark": "Dark"
     },
     "axes": {
       "title": "Densidade e Fontes",
-      "subtitle": "Além das cores, o tema controla densidade (escala de spacing/alturas) e família tipográfica — também via classe no <html>.",
+      "subtitle": "Além das cores, o tema controla densidade (escala de spacing/alturas) e família tipográfica — também via classe no <html>. Os eixos de type scale e base tipográfica são documentados na página Tipografia.",
       "density": {
         "title": "Densidade",
         "subtitle": "Ajusta --spacing-base proporcionalmente, afetando paddings, gaps e alturas tokenizadas.",
@@ -89,7 +85,7 @@
     "title": "Colors & Themes",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "The Design System palette is defined by semantic HSL tokens. Brand themes, light/dark, density and font are applied via classes on <html>, recomputing tokens automatically. Click any swatch to copy the token.",
+    "description": "The Design System palette is defined by semantic HSL tokens. Brand themes, light/dark, density and font are applied via classes on <html>, recomputing tokens automatically. Click a palette swatch to copy the token.",
     "copy": {
       "tooltip": "Click to copy",
       "copied": "Copied!"
@@ -102,17 +98,13 @@
         "brand": "Brand / Interactive",
         "feedback": "Feedback",
         "structure": "Structure",
-        "chart": "Charts"
-      },
-      "cols": {
-        "token": "Token",
-        "value": "Value (HSL)",
-        "usage": "Usage"
+        "chart": "Charts",
+        "sidebar": "Sidebar"
       }
     },
     "brand": {
       "title": "Brand themes",
-      "subtitle": "Default, Warm and Cold rewrite the color tokens. Switching via the Storybook toolbar applies the matching class on <html>.",
+      "subtitle": "Default, Warm and Cold rewrite the color tokens — and may adjust shape identity (<code>--radius</code> and the per-component radius tokens). Switching via the Storybook toolbar applies the matching class on <html>.",
       "themes": {
         "default": "Default — neutral",
         "warm": "Warm — amber/terracotta tint",
@@ -121,13 +113,13 @@
     },
     "modes": {
       "title": "Light and Dark",
-      "subtitle": "Each token has a light (:root) and dark (.dark) value. Contrast is preserved in both to meet WCAG 2.1 AA.",
+      "subtitle": "Each color token has a light (:root) and dark (.dark) value, preserving WCAG 2.1 AA contrast in both modes. Exception: chart tokens use the same palette in both.",
       "light": "Light",
       "dark": "Dark"
     },
     "axes": {
       "title": "Density and Fonts",
-      "subtitle": "Beyond colors, the theme controls density (spacing/height scale) and typographic family — also via a class on <html>.",
+      "subtitle": "Beyond colors, the theme controls density (spacing/height scale) and typographic family — also via a class on <html>. The type scale and type base axes are documented on the Typography page.",
       "density": {
         "title": "Density",
         "subtitle": "Scales --spacing-base proportionally, affecting paddings, gaps and tokenized heights.",
@@ -175,7 +167,7 @@
     "title": "Colores y Temas",
     "category": "Foundations",
     "type": "Tokens",
-    "description": "La paleta del Design System se define por tokens semánticos en HSL. Temas de marca, light/dark, densidad y fuente se aplican vía clases en <html>, recalculando los tokens automáticamente. Haz clic en cualquier swatch para copiar el token.",
+    "description": "La paleta del Design System se define por tokens semánticos en HSL. Temas de marca, light/dark, densidad y fuente se aplican vía clases en <html>, recalculando los tokens automáticamente. Haz clic en un swatch de la paleta para copiar el token.",
     "copy": {
       "tooltip": "Haz clic para copiar",
       "copied": "¡Copiado!"
@@ -188,17 +180,13 @@
         "brand": "Marca / Interactivo",
         "feedback": "Feedback",
         "structure": "Estructura",
-        "chart": "Gráficos"
-      },
-      "cols": {
-        "token": "Token",
-        "value": "Valor (HSL)",
-        "usage": "Uso"
+        "chart": "Gráficos",
+        "sidebar": "Sidebar"
       }
     },
     "brand": {
       "title": "Temas de marca",
-      "subtitle": "Default, Warm y Cold reescriben los tokens de color. Cambiar vía la toolbar de Storybook aplica la clase correspondiente en <html>.",
+      "subtitle": "Default, Warm y Cold reescriben los tokens de color — y pueden ajustar la identidad de forma (<code>--radius</code> y los tokens de radius por componente). Cambiar vía la toolbar de Storybook aplica la clase correspondiente en <html>.",
       "themes": {
         "default": "Default — neutro",
         "warm": "Warm — tinte ámbar/terracota",
@@ -207,13 +195,13 @@
     },
     "modes": {
       "title": "Light y Dark",
-      "subtitle": "Cada token tiene un valor para light (:root) y dark (.dark). El contraste se mantiene en ambos para cumplir WCAG 2.1 AA.",
+      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark), manteniendo contraste WCAG 2.1 AA en ambos modos. Excepción: los tokens de gráficos usan la misma paleta en ambos.",
       "light": "Light",
       "dark": "Dark"
     },
     "axes": {
       "title": "Densidad y Fuentes",
-      "subtitle": "Además de los colores, el tema controla densidad (escala de spacing/alturas) y familia tipográfica — también vía clase en <html>.",
+      "subtitle": "Además de los colores, el tema controla densidad (escala de spacing/alturas) y familia tipográfica — también vía clase en <html>. Los ejes de type scale y base tipográfica se documentan en la página Tipografía.",
       "density": {
         "title": "Densidad",
         "subtitle": "Escala --spacing-base proporcionalmente, afectando paddings, gaps y alturas tokenizadas.",

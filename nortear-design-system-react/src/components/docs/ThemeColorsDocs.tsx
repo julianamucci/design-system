@@ -32,7 +32,14 @@ const PALETTE_GROUPS: Array<{ key: string; tokens: string[] }> = [
   },
   {
     key: 'structure',
-    tokens: ['border', 'input', 'input-background', 'ring'],
+    tokens: ['border', 'input', 'input-background', 'ring', 'ring-offset-color'],
+  },
+  {
+    key: 'sidebar',
+    tokens: [
+      'sidebar', 'sidebar-foreground', 'sidebar-primary', 'sidebar-primary-foreground',
+      'sidebar-accent', 'sidebar-accent-foreground', 'sidebar-border', 'sidebar-ring',
+    ],
   },
   {
     key: 'chart',
