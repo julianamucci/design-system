@@ -10,6 +10,11 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /nortear-design-system-react
+    ignore:
+      # TypeScript 7 (tsgo) quebra typescript-eslint/vue-tsc/svelte-check —
+      # major só com migração planejada do toolchain
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: monthly
     groups:
@@ -20,6 +25,11 @@ updates:
 
   - package-ecosystem: npm
     directory: /nortear-design-system-vue
+    ignore:
+      # TypeScript 7 (tsgo) quebra typescript-eslint/vue-tsc/svelte-check —
+      # major só com migração planejada do toolchain
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: monthly
     groups:
@@ -30,6 +40,11 @@ updates:
 
   - package-ecosystem: npm
     directory: /nortear-design-system-svelte
+    ignore:
+      # TypeScript 7 (tsgo) quebra typescript-eslint/vue-tsc/svelte-check —
+      # major só com migração planejada do toolchain
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: monthly
     groups:
@@ -40,6 +55,11 @@ updates:
 
   - package-ecosystem: npm
     directory: /nortear-design-system-vanilla
+    ignore:
+      # TypeScript 7 (tsgo) quebra typescript-eslint/vue-tsc/svelte-check —
+      # major só com migração planejada do toolchain
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: monthly
     groups:
