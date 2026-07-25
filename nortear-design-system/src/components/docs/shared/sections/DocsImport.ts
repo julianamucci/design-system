@@ -25,7 +25,7 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
 
   if (props.description) {
     const p = document.createElement('p');
-    p.className = 'nds-text-body nds-text-muted-foreground nds-mb-4';
+    p.className = 'nds-text-body nds-mb-4';
     p.textContent = props.description;
     section.appendChild(p);
   }
@@ -40,7 +40,7 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
   if (props.secondaryCode) {
     if (props.secondaryDescription) {
       const p2 = document.createElement('p');
-      p2.className = 'nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4';
+      p2.className = 'nds-text-body nds-mt-4 nds-mb-4';
       p2.textContent = props.secondaryDescription;
       section.appendChild(p2);
     }

@@ -157,7 +157,7 @@ export const ComCardDestacado: Story = {
                       class="nds-stack from-muted/50 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-6 no-underline outline-hidden focus:shadow-md" style="user-select: none; height: 100%" data-justify="end" 
                     >
                       <div class="nds-mt-4 nds-mb-2 nds-text-base nds-font-medium">Novidade · v3.0</div>
-                      <p class="nds-text-muted-foreground nds-text-body leading-tight">
+                      <p class="nds-text-body leading-tight">
                         Conheça nossa nova plataforma de design.
                       </p>
                     </NavigationMenuLink>

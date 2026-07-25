@@ -72,7 +72,7 @@ function buildField(opts: FieldOpts): HTMLElement {
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = opts.labelText;
   wrapper.appendChild(label);
 
@@ -374,7 +374,7 @@ export function createTextareaDocs(): HTMLElement {
   wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'dodont-dont-counter';
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = t('demonstration.labels.descriptionLabel');
                 const ta = createTextarea({
                   id: 'dodont-dont-counter',
@@ -522,7 +522,7 @@ textarea.addEventListener('input', () => {
 
           const label = document.createElement('label');
           label.htmlFor = opts.labelFor;
-          label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+          label.className = 'nds-text-body nds-font-medium';
           label.textContent = opts.labelText;
 
           opts.textareaEl.id = opts.labelFor;

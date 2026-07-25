@@ -167,7 +167,7 @@ export const WithNavGroups: Story = {
             <span class="nds-text-body nds-text-muted-foreground">Com grupos e badges</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos de navegação, badges e ações.</p>
+            <p class="nds-text-body">Sidebar com múltiplos grupos de navegação, badges e ações.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -286,7 +286,7 @@ export const WithSubMenu: Story = {
             <span class="nds-text-body nds-text-muted-foreground">Com sub-menus</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Sidebar com SidebarMenuSub para hierarquia de navegação aninhada.</p>
+            <p class="nds-text-body">Sidebar com SidebarMenuSub para hierarquia de navegação aninhada.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -372,7 +372,7 @@ export const WithSearch: Story = {
             <span class="nds-text-body nds-text-muted-foreground">Com busca no header</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">SidebarInput no header para busca inline.</p>
+            <p class="nds-text-body">SidebarInput no header para busca inline.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>

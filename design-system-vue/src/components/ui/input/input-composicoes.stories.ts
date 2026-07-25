@@ -58,7 +58,7 @@ export const ComTextoDeApoio: Story = {
       <div class="" data-spacing="xs" style="width: 16rem">
         <Label for="email-apoio">Email</Label>
         <Input id="email-apoio" type="email" placeholder="ex: joao@empresa.com" />
-        <p class="nds-text-body nds-text-muted-foreground">Usaremos este endereço para notificações.</p>
+        <p class="nds-text-body">Usaremos este endereço para notificações.</p>
       </div>
     `,
   }),

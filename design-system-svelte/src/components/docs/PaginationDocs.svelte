@@ -659,7 +659,7 @@ interface PaginationDirectionalProps {
           </PaginationContent>
         {/snippet}
       </Pagination>
-      <p class="nds-text-body nds-text-muted-foreground">Página atual: {interactiveCurrent} / 8</p>
+      <p class="nds-text-body">Página atual: {interactiveCurrent} / 8</p>
     </div>
   {/snippet}
 

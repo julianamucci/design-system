@@ -48,7 +48,7 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
+  p.className = 'nds-text-body nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
@@ -61,7 +61,7 @@ function makeRichPanel(title: string, description: string): HTMLElement {
   h.className = 'nds-text-body nds-font-semibold';
   h.textContent = title;
   const p = document.createElement('p');
-  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.className = 'nds-text-body';
   p.textContent = description;
   wrap.append(h, p);
   return wrap;

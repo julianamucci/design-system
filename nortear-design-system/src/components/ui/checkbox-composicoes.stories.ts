@@ -87,7 +87,7 @@ export const ComDescricao: Story = {
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     const desc = document.createElement('p');
-    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.className = 'nds-text-body';
     desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';
 
     textGroup.append(label, desc);

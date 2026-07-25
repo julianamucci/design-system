@@ -79,7 +79,7 @@ export const ComDescricao: Story = {
           >
             Receber novidades por email
           </label>
-          <p id="desc-help" class="nds-text-body nds-text-muted-foreground">
+          <p id="desc-help" class="nds-text-body">
             Enviaremos atualizações mensais sobre o produto.
           </p>
         </div>

@@ -56,7 +56,7 @@ export const Controlled: Story = {
               <Label htmlFor="ctrl-boleto">Boleto bancário</Label>
             </div>
           </RadioGroup>
-          <p className="nds-text-body nds-text-muted-foreground" data-testid="ctrl-output">
+          <p className="nds-text-body" data-testid="ctrl-output">
             Selecionado: <span className="nds-font-mono">{value || "—"}</span>
           </p>
         </div>

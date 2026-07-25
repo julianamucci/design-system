@@ -117,7 +117,7 @@ export const WithDescription: Story = {
         <RadioGroupItem value="padrao" id="desc-padrao" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-padrao">Padrão</Label>
-          <p className="nds-text-body nds-text-muted-foreground">
+          <p className="nds-text-body">
             Entrega em até 5 dias úteis. Frete grátis acima de R$ 99.
           </p>
         </div>
@@ -126,7 +126,7 @@ export const WithDescription: Story = {
         <RadioGroupItem value="expressa" id="desc-expressa" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-expressa">Expressa</Label>
-          <p className="nds-text-body nds-text-muted-foreground">
+          <p className="nds-text-body">
             Entrega em 1 dia útil. Custo adicional de R$ 19,90.
           </p>
         </div>
@@ -135,7 +135,7 @@ export const WithDescription: Story = {
         <RadioGroupItem value="retirar" id="desc-retirar" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">
           <Label htmlFor="desc-retirar">Retirar na loja</Label>
-          <p className="nds-text-body nds-text-muted-foreground">
+          <p className="nds-text-body">
             Disponível em 2 horas após confirmação do pagamento.
           </p>
         </div>

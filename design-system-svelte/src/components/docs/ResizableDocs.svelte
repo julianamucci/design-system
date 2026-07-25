@@ -208,7 +208,7 @@ interface HandleProps {
               </Pane>
               <Handle withHandle aria-label="Redimensionar painéis — use setas para ajustar" />
               <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
-                <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.content')}</span>
+                <span class="nds-text-body">{$tStore('demonstration.labels.content')}</span>
               </Pane>
             </PaneGroup>
           </div>
@@ -223,7 +223,7 @@ interface HandleProps {
               </Pane>
               <Handle withHandle aria-label="Redimensionar painéis verticalmente — use setas" />
               <Pane defaultSize={50} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
-                <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.bottom')}</span>
+                <span class="nds-text-body">{$tStore('demonstration.labels.bottom')}</span>
               </Pane>
             </PaneGroup>
           </div>
@@ -240,7 +240,7 @@ interface HandleProps {
               <Pane defaultSize={70} minSize={40}>
                 <PaneGroup direction="vertical" style="height: 100%">
                   <Pane defaultSize={60} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
-                    <span class="nds-text-body nds-text-foreground">{$tStore('demonstration.labels.top')}</span>
+                    <span class="nds-text-body">{$tStore('demonstration.labels.top')}</span>
                   </Pane>
                   <Handle withHandle aria-label="Redimensionar editor — use setas" />
                   <Pane defaultSize={40} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">

@@ -197,7 +197,7 @@ interface CollapsibleContentProps {
       <div class="nds-w-full nds-stack" data-spacing="xl">
         <!-- Demo 1: Não-controlado (padrão) -->
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Não-controlado
           </p>
           <Collapsible class="nds-w-full">
@@ -222,7 +222,7 @@ interface CollapsibleContentProps {
 
         <!-- Demo 2: Controlado -->
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Controlado
           </p>
           <Collapsible bind:open={controlledOpen} class="nds-w-full">
@@ -248,7 +248,7 @@ interface CollapsibleContentProps {
 
         <!-- Demo 3: Desabilitado -->
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Desabilitado
           </p>
           <Collapsible disabled class="nds-w-full">

@@ -551,7 +551,7 @@ select.name = 'state';`,
                 wrap.dataset.spacing = 'xs';
                 wrap.style.width = '20rem';
                 const note = document.createElement('p');
-                note.className = 'nds-text-body nds-text-muted-foreground nds-italic';
+                note.className = 'nds-text-body nds-italic';
                 note.textContent =
                   'Limitação do HTML <select> nativo — ícones inline em <option> não são suportados pelo navegador. Para essa necessidade, use Combobox.';
                 wrap.appendChild(note);

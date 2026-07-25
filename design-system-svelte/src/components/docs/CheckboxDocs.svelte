@@ -113,7 +113,7 @@ import { Label } from "@/components/ui/label";`;
   <Checkbox id="newsletter" aria-describedby="newsletter-desc" style="margin-top: 0.125rem" />
   <div class="nds-stack" data-spacing="xs">
     <Label for="newsletter">Receber novidades por email</Label>
-    <p id="newsletter-desc" class="nds-text-body nds-text-muted-foreground">
+    <p id="newsletter-desc" class="nds-text-body">
       Ao marcar esta opção, você concorda em receber comunicações de marketing.
     </p>
   </div>
@@ -201,7 +201,7 @@ import { Label } from "@/components/ui/label";`;
   <Checkbox id="cb-newsletter" bind:checked style="margin-top: 0.125rem" aria-describedby="cb-newsletter-desc" />
   <div class="nds-stack" data-spacing="xs">
     <Label for="cb-newsletter">Receber novidades por email</Label>
-    <p id="cb-newsletter-desc" class="nds-text-body nds-text-muted-foreground">
+    <p id="cb-newsletter-desc" class="nds-text-body">
       Enviaremos atualizações ocasionais sobre novos produtos.
     </p>
   </div>
@@ -501,7 +501,7 @@ import { Label } from "@/components/ui/label";`;
       <Checkbox id="var-with-desc" bind:checked={varWithDescChecked} aria-describedby="var-with-desc-text" style="margin-top: 0.125rem" />
       <div class="nds-stack" data-spacing="xs">
         <Label for="var-with-desc">Receber novidades por email</Label>
-        <p id="var-with-desc-text" class="nds-text-body nds-text-muted-foreground">
+        <p id="var-with-desc-text" class="nds-text-body">
           Ao marcar esta opção, você concorda em receber comunicações de marketing.
         </p>
       </div>
@@ -564,7 +564,7 @@ import { Label } from "@/components/ui/label";`;
       <Checkbox id="comp-newsletter" bind:checked={compWithDescChecked} style="margin-top: 0.125rem" aria-describedby="comp-newsletter-desc" />
       <div class="nds-stack" data-spacing="xs">
         <Label for="comp-newsletter">Receber novidades por email</Label>
-        <p id="comp-newsletter-desc" class="nds-text-body nds-text-muted-foreground">
+        <p id="comp-newsletter-desc" class="nds-text-body">
           Enviaremos atualizações ocasionais sobre novos produtos.
         </p>
       </div>

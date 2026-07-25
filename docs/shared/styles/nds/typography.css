@@ -40,6 +40,7 @@
 .nds-text-body {
   font-size: 0.875rem;                      /* 14px */
   line-height: 1.5;
+  color: hsl(var(--foreground));            /* cor padrão do corpo de texto */
 }
 .nds-text-base {
   font-size: 1rem;                          /* 16px */
@@ -81,8 +82,9 @@
 .nds-leading-loose   { line-height: 2; }
 
 /* ── Transforms ────────────────────────────────────────────────────────────── */
-.nds-uppercase { text-transform: uppercase; }
-.nds-italic    { font-style: italic; }
+.nds-uppercase  { text-transform: uppercase; }
+.nds-capitalize { text-transform: capitalize; }
+.nds-italic     { font-style: italic; }
 
 
 /* ── Section title — pattern combinado h2 + mb-4 ────────────────────────────

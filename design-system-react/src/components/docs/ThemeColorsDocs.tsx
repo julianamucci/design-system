@@ -162,8 +162,8 @@ export function ThemeColorsDocs() {
         {/* ── Paleta semântica ─────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
           <div className="nds-stack" data-spacing="xs">
-            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('palette.title')}</h2>
-            <p className="nds-text-body nds-text-muted-foreground">{t('palette.subtitle')}</p>
+            <h2 className="nds-text-h2 nds-text-foreground">{t('palette.title')}</h2>
+            <p className="nds-text-body">{t('palette.subtitle')}</p>
           </div>
 
           {PALETTE_GROUPS.map((group) => (
@@ -189,8 +189,8 @@ export function ThemeColorsDocs() {
         {/* ── Temas de marca ───────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
           <div className="nds-stack" data-spacing="xs">
-            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('brand.title')}</h2>
-            <p className="nds-text-body nds-text-muted-foreground">{t('brand.subtitle')}</p>
+            <h2 className="nds-text-h2 nds-text-foreground">{t('brand.title')}</h2>
+            <p className="nds-text-body">{t('brand.subtitle')}</p>
           </div>
           <div className="nds-theme-card-grid">
             {BRAND_THEMES.map((theme) => (
@@ -209,8 +209,8 @@ export function ThemeColorsDocs() {
         {/* ── Light e Dark ─────────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
           <div className="nds-stack" data-spacing="xs">
-            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('modes.title')}</h2>
-            <p className="nds-text-body nds-text-muted-foreground">{t('modes.subtitle')}</p>
+            <h2 className="nds-text-h2 nds-text-foreground">{t('modes.title')}</h2>
+            <p className="nds-text-body">{t('modes.subtitle')}</p>
           </div>
           <div className="nds-theme-card-grid">
             {MODES.map((mode) => (
@@ -229,8 +229,8 @@ export function ThemeColorsDocs() {
         {/* ── Densidade e Fontes ───────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
           <div className="nds-stack" data-spacing="xs">
-            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('axes.title')}</h2>
-            <p className="nds-text-body nds-text-muted-foreground">{t('axes.subtitle')}</p>
+            <h2 className="nds-text-h2 nds-text-foreground">{t('axes.title')}</h2>
+            <p className="nds-text-body">{t('axes.subtitle')}</p>
           </div>
 
           {/* Densidade — tabela 3×3 dentro de cada escopo densidade-*. Os
@@ -238,8 +238,8 @@ export function ThemeColorsDocs() {
               demonstrando o eixo sem a ambiguidade de "tamanho de botão". */}
           <div className="nds-stack" data-spacing="md">
             <div className="nds-stack" data-spacing="xs">
-              <h3 className="nds-text-body nds-font-medium nds-text-foreground">{t('axes.density.title')}</h3>
-              <p className="nds-text-body nds-text-muted-foreground">{t('axes.density.subtitle')}</p>
+              <h3 className="nds-text-body nds-font-medium">{t('axes.density.title')}</h3>
+              <p className="nds-text-body">{t('axes.density.subtitle')}</p>
             </div>
             <div className="nds-axis-grid">
               {DENSITY_ITEMS.map((item) => {
@@ -277,8 +277,8 @@ export function ThemeColorsDocs() {
           {/* Fontes */}
           <div className="nds-stack" data-spacing="md">
             <div className="nds-stack" data-spacing="xs">
-              <h3 className="nds-text-body nds-font-medium nds-text-foreground">{t('axes.fonts.title')}</h3>
-              <p className="nds-text-body nds-text-muted-foreground">{t('axes.fonts.subtitle')}</p>
+              <h3 className="nds-text-body nds-font-medium">{t('axes.fonts.title')}</h3>
+              <p className="nds-text-body">{t('axes.fonts.subtitle')}</p>
             </div>
             <div className="nds-axis-grid" data-cols="4">
               {FONT_ITEMS.map((item) => (

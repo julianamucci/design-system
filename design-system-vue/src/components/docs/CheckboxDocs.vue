@@ -157,7 +157,7 @@ const codeWithDescription = `<div class="nds-cluster" data-spacing="xs" data-ali
     <label for="newsletter" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
       Receber novidades por email
     </label>
-    <p id="newsletter-desc" class="nds-text-body nds-text-muted-foreground">
+    <p id="newsletter-desc" class="nds-text-body">
       Enviaremos atualizações mensais sobre o produto.
     </p>
   </div>
@@ -242,7 +242,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withDescription.name'),
     description: stripHtml(tContent('variants.compositions.withDescription.description')),
     useWhen: stripHtml(tContent('variants.compositions.withDescription.use')),
-    code: `<div class="nds-cluster" data-spacing="xs" data-align="start">\n  <Checkbox id="cb-newsletter" style="margin-top: 0.125rem" />\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="nds-text-body nds-text-muted-foreground">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
+    code: `<div class="nds-cluster" data-spacing="xs" data-align="start">\n  <Checkbox id="cb-newsletter" style="margin-top: 0.125rem" />\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="nds-text-body">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
   },
   {
     name: tContent('variants.compositions.fieldset.name'),
@@ -431,7 +431,7 @@ const visualTestItems = computed(() => [
             >
               {{ tContent('demonstration.labels.notifications') }}
             </label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Enviaremos atualizações mensais.
             </p>
           </div>
@@ -649,7 +649,7 @@ const visualTestItems = computed(() => [
             >
               Receber novidades por email
             </label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Enviaremos atualizações mensais sobre o produto.
             </p>
           </div>
@@ -686,7 +686,7 @@ const visualTestItems = computed(() => [
           />
           <div class="nds-stack" data-spacing="xs">
             <Label for="cb-newsletter">Receber novidades por email</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Enviaremos atualizações sobre novos recursos e melhorias do produto.
             </p>
           </div>

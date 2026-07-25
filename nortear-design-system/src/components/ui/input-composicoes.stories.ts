@@ -37,7 +37,7 @@ function createFormField(opts: {
 
   const label = document.createElement('label');
   label.htmlFor = opts.labelFor;
-  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = opts.labelText;
 
   opts.inputEl.id = opts.labelFor;
@@ -136,7 +136,7 @@ export const ComPrefixoTexto: Story = {
 
     const label = document.createElement('label');
     label.htmlFor = 'input-url';
-    label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = 'URL do site';
 
     const row = document.createElement('div');

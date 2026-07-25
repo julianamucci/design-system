@@ -98,7 +98,7 @@ export const Expanded: Story = {
             <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">data-state="expanded"</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Sidebar expandida.</p>
+            <p class="nds-text-body">Sidebar expandida.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -179,7 +179,7 @@ export const CollapsedIcon: Story = {
             <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">collapsible="icon", data-state="collapsed"</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Sidebar no modo icon — apenas ícones visíveis com tooltip ao hover.</p>
+            <p class="nds-text-body">Sidebar no modo icon — apenas ícones visíveis com tooltip ao hover.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -241,7 +241,7 @@ export const CollapsibleNone: Story = {
             <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">collapsible="none" — sidebar sempre visível</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Sidebar fixa sem opção de recolhimento.</p>
+            <p class="nds-text-body">Sidebar fixa sem opção de recolhimento.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -291,7 +291,7 @@ export const LoadingSkeleton: Story = {
             <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">SidebarMenuSkeleton showIcon=true</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Estado de carregamento com skeletons.</p>
+            <p class="nds-text-body">Estado de carregamento com skeletons.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>
@@ -355,7 +355,7 @@ export const MobileOverlay: Story = {
             <span class="nds-text-body nds-font-medium">Mobile — clique no trigger</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Em mobile, a sidebar aparece como Sheet overlay.</p>
+            <p class="nds-text-body">Em mobile, a sidebar aparece como Sheet overlay.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>

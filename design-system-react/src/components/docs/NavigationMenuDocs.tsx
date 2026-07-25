@@ -736,7 +736,7 @@ interface NavigationMenuLinkProps
         <div className="nds-cluster nds-p-4" data-spacing="md" style={{ width: "560px" }}>
           <a href="/quickstart" className="nds-stack nds-rounded-md nds-p-4" style={{ width: "220px", justifyContent: "flex-end", textDecoration: "none", background: "linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))" }}>
             <div className="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
-            <p className="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
+            <p className="nds-mt-2 nds-text-body nds-leading-tight">
               Crie sua primeira integração com nosso quickstart.
             </p>
           </a>
@@ -763,7 +763,7 @@ interface NavigationMenuLinkProps
                             className="nds-stack nds-rounded-md nds-p-4" style={{ width: "220px", justifyContent: "flex-end", textDecoration: "none", background: "linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))" }}
                           >
                             <div className="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
-                            <p className="nds-mt-2 nds-text-body nds-leading-tight nds-text-muted-foreground">
+                            <p className="nds-mt-2 nds-text-body nds-leading-tight">
                               Crie sua primeira integração com nosso quickstart.
                             </p>
                           </a>

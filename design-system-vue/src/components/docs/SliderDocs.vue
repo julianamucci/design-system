@@ -471,7 +471,7 @@ const visualTestItems = computed(() => [
             <Label>{{ tContent('demonstration.labels.volume') }}</Label>
             <span
               aria-live="polite"
-              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >
               {{ volumeValue[0] }}%
             </span>
@@ -491,7 +491,7 @@ const visualTestItems = computed(() => [
             <Label>{{ tContent('demonstration.labels.priceRange') }}</Label>
             <span
               aria-live="polite"
-              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >
               R$ {{ priceValue[0] }} — R$ {{ priceValue[1] }}
             </span>
@@ -511,7 +511,7 @@ const visualTestItems = computed(() => [
             <Label>{{ tContent('demonstration.labels.brightness') }}</Label>
             <span
               aria-live="polite"
-              class="nds-text-body nds-text-foreground" style="font-variant-numeric: tabular-nums;"
+              class="nds-text-body" style="font-variant-numeric: tabular-nums;"
             >
               {{ verticalValue[0] }}%
             </span>

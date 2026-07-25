@@ -29,7 +29,7 @@
               <Card class="nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4">
                 {@render pair.doPreview()}
               </Card>
-              <p class="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">{pair.doCaption}</p>
+              <p class="nds-text-body nds-italic nds-px-1">{pair.doCaption}</p>
             </div>
             <!-- DON'T -->
             <div class="nds-stack" data-spacing="sm">
@@ -40,7 +40,7 @@
               <Card class="nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4">
                 {@render pair.dontPreview()}
               </Card>
-              <p class="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">{pair.dontCaption}</p>
+              <p class="nds-text-body nds-italic nds-px-1">{pair.dontCaption}</p>
             </div>
           </div>
         {/each}

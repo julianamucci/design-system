@@ -60,7 +60,7 @@ export const ComTextoDeApoio: Story = {
           aria-describedby="comp-apoio-help"
           class="resize-y min-h-[120px]"
         />
-        <p id="comp-apoio-help" class="nds-text-body nds-text-muted-foreground">
+        <p id="comp-apoio-help" class="nds-text-body">
           Aparece no seu perfil público.
         </p>
       </div>

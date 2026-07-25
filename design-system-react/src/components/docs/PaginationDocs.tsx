@@ -886,7 +886,7 @@ const total = 8;
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
-                <p className="nds-text-body nds-text-muted-foreground">
+                <p className="nds-text-body">
                   {lblPage} {compPage} {locale === "en" ? "of" : "de"} {compTotal}
                 </p>
               </div>

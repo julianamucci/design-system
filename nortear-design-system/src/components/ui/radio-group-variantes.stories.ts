@@ -169,7 +169,7 @@ export const WithDescription: Story = {
         label.replaceWith(textGroup);
         label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
         const desc = document.createElement('p');
-        desc.className = 'nds-text-body nds-text-muted-foreground';
+        desc.className = 'nds-text-body';
         desc.textContent = item.description;
         textGroup.append(label, desc);
       }

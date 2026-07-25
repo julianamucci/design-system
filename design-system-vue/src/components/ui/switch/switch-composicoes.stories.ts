@@ -32,7 +32,7 @@ export const PainelConfiguracoes: Story = {
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
           <div class="" data-spacing="xs">
             <Label :for="'pc-marketing'">Emails de marketing</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -42,7 +42,7 @@ export const PainelConfiguracoes: Story = {
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
           <div class="" data-spacing="xs">
             <Label :for="'pc-security'">Alertas de segurança</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Notificações sobre acessos suspeitos à sua conta.
             </p>
           </div>
@@ -52,7 +52,7 @@ export const PainelConfiguracoes: Story = {
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
           <div class="" data-spacing="xs">
             <Label :for="'pc-news'">Resumo semanal</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Receba um resumo das principais novidades toda segunda.
             </p>
           </div>
@@ -125,7 +125,7 @@ export const EmFormulario: Story = {
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
           <div class="" data-spacing="xs">
             <Label :for="'form-public'">Perfil público</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Qualquer pessoa pode visualizar seu perfil.
             </p>
           </div>

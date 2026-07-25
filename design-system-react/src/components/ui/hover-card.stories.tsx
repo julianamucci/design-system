@@ -72,7 +72,7 @@ export const Playground: Story = {
           <HoverCardTrigger asChild>
             <a
               href="/users/joana"
-              className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
+              className="nds-text-body nds-font-medium" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
             >
               @joana
             </a>

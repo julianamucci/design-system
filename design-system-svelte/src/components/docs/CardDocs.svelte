@@ -131,7 +131,7 @@ import { Button } from "@/components/ui/button";`;
     </CardDescription>
   </CardHeader>
   <CardContent>
-    <p class="nds-text-body nds-text-muted-foreground">R$ 1.299,00 · Em estoque</p>
+    <p class="nds-text-body">R$ 1.299,00 · Em estoque</p>
   </CardContent>
 </Card>`;
 
@@ -395,7 +395,7 @@ interface CardPartProps {
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
       <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button size="sm">{$tStore('demonstration.labels.actionSave')}</Button>
@@ -405,7 +405,7 @@ interface CardPartProps {
   {#snippet dontPair1()}
     <Card class="nds-w-full">
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground" style="padding-block: 1rem">—</p>
+        <p class="nds-text-body" style="padding-block: 1rem">—</p>
       </CardContent>
     </Card>
   {/snippet}
@@ -464,7 +464,7 @@ interface CardPartProps {
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
+        <p class="nds-text-body">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
       </CardContent>
     </Card>
   {/snippet}
@@ -486,7 +486,7 @@ interface CardPartProps {
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
       <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
         <Button variant="outline" size="sm">{$tStore('demonstration.labels.actionCancel')}</Button>
@@ -506,7 +506,7 @@ interface CardPartProps {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
+        <p class="nds-text-body">{$tStore('demonstration.labels.productPrice')} · {$tStore('demonstration.labels.productStock')}</p>
       </CardContent>
     </Card>
   {/snippet}
@@ -518,7 +518,7 @@ interface CardPartProps {
         <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.productPrice')}</p>
+        <p class="nds-text-body">{$tStore('demonstration.labels.productPrice')}</p>
       </CardContent>
     </Card>
   {/snippet}

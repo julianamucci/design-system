@@ -124,7 +124,7 @@ export const Invalid: Story = {
         <div class="nds-cluster nds-rounded-lg nds-border-default border-destructive nds-p-4" data-align="center" data-justify="between">
           <div class="" data-spacing="xs">
             <Label :for="'est-invalid'">Aceitar termos</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Você precisa aceitar para continuar.
             </p>
           </div>

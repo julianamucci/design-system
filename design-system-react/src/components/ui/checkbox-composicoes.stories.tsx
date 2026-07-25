@@ -58,7 +58,7 @@ export const ComDescricao: Story = {
         >
           Receber novidades por email
         </label>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <p className="nds-text-body">
           Enviaremos no máximo 2 emails por semana.
         </p>
       </div>
@@ -184,7 +184,7 @@ export const DentroDeCard: Story = {
           >
             Plano Pro
           </label>
-          <p className="nds-text-body nds-text-muted-foreground">
+          <p className="nds-text-body">
             Acesso ilimitado a todos os recursos premium.
           </p>
         </div>

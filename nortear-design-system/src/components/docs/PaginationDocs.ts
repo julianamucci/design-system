@@ -531,7 +531,7 @@ const nav = createPagination({
                 wrapper.style.alignItems = 'center';
 
                 const status = document.createElement('p');
-                status.className = 'nds-text-body nds-text-muted-foreground';
+                status.className = 'nds-text-body';
 
                 const navContainer = document.createElement('div');
 

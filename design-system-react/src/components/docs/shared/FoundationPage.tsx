@@ -18,6 +18,13 @@
 import { useEffect, type ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card';
+import {
   Table,
   TableHeader,
   TableBody,
@@ -130,7 +137,29 @@ function SectionTable({
   );
 }
 
-/** Renderiza objeto/array de items com `title`+`body` ou strings simples. */
+// Chaves candidatas a título e a corpo de um card (na ordem de preferência).
+const TITLE_KEYS = ['title', 'name', 'label'] as const;
+const BODY_KEYS = ['body', 'description', 'usage', 'use', 'text'] as const;
+
+/** Extrai título, corpo e campos extras de um item objeto para montar um Card. */
+function cardParts(item: Record<string, unknown>) {
+  const titleKey = TITLE_KEYS.find((k) => typeof item[k] === 'string');
+  const bodyKey = BODY_KEYS.find((k) => typeof item[k] === 'string');
+  const extras = Object.entries(item).filter(
+    ([k, v]) => typeof v === 'string' && k !== titleKey && k !== bodyKey,
+  ) as Array<[string, string]>;
+  return {
+    title: titleKey ? (item[titleKey] as string) : '',
+    body: bodyKey ? (item[bodyKey] as string) : '',
+    extras,
+  };
+}
+
+/**
+ * Renderiza objeto/array de items.
+ * - Itens objeto → grid fixo de 2 colunas de <Card> (título + descrição + extras).
+ * - Itens string → lista vertical simples.
+ */
 function SectionItems({ items }: { items: unknown }) {
   const entries: Array<[string, unknown]> = Array.isArray(items)
     ? items.map((v, i) => [String(i), v])
@@ -138,46 +167,59 @@ function SectionItems({ items }: { items: unknown }) {
     ? Object.entries(items)
     : [];
 
+  const hasCards = entries.some(([, v]) => isPlainObject(v));
+
+  if (!hasCards) {
+    return (
+      <ul className="nds-stack nds-list-none" data-spacing="md">
+        {entries.map(([key, item]) => (
+          <li
+            key={key}
+            className="nds-text-body nds-leading-relaxed nds-accent-start"
+          >
+            <HtmlText html={String(item)} />
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
-    <ul className="space-y-3 list-none p-0 m-0">
+    <div className="nds-grid" data-cols="2" data-fixed="true" data-spacing="md">
       {entries.map(([key, item]) => {
-        if (typeof item === 'string') {
-          return (
-            <li
-              key={key}
-              className="text-sm text-foreground nds-leading-relaxed pl-4 border-l-2 nds-border-soft"
-            >
-              <HtmlText html={item} />
-            </li>
-          );
-        }
-        if (isPlainObject(item)) {
-          const title = (item.title as string) ?? (item.name as string) ?? '';
-          const body =
-            (item.body as string) ?? (item.description as string) ?? (item.usage as string) ?? '';
-          return (
-            <li
-              key={key}
-              className="rounded-lg border nds-border-soft p-4 space-y-1.5"
-            >
+        const { title, body, extras } = isPlainObject(item)
+          ? cardParts(item)
+          : { title: '', body: String(item), extras: [] as Array<[string, string]> };
+        return (
+          <Card key={key}>
+            <CardHeader>
               {title && (
-                <h4 className="text-sm font-semibold text-foreground m-0">
-                  <HtmlText html={title} />
-                </h4>
-              )}
-              {body && (
-                <HtmlText
-                  as="p"
-                  html={body}
-                  className="text-sm text-muted-foreground nds-leading-relaxed m-0"
+                <CardTitle
+                  as="h3"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
                 />
               )}
-            </li>
-          );
-        }
-        return null;
+              {body && (
+                <CardDescription
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}
+                />
+              )}
+            </CardHeader>
+            {extras.length > 0 && (
+              <CardContent className="nds-stack" data-spacing="xs">
+                {extras.map(([k, v]) => (
+                  <p
+                    key={k}
+                    className="nds-text-caption nds-text-muted-foreground nds-m-0"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(v) }}
+                  />
+                ))}
+              </CardContent>
+            )}
+          </Card>
+        );
       })}
-    </ul>
+    </div>
   );
 }
 
@@ -212,11 +254,11 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
     : undefined;
 
   return (
-    <section className="space-y-4 border-t nds-border-soft pt-8">
+    <section className="nds-stack nds-docs-section-divider" data-spacing="md">
       {(title || subtitle) && (
-        <div className="space-y-1">
+        <div className="nds-stack" data-spacing="xs">
           {title && (
-            <h2 className="text-xl font-semibold text-foreground m-0">
+            <h2 className="nds-text-h2 nds-text-foreground">
               <HtmlText html={title} />
             </h2>
           )}
@@ -224,7 +266,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
             <HtmlText
               as="p"
               html={subtitle}
-              className="text-sm text-muted-foreground nds-leading-relaxed m-0"
+              className="nds-text-body nds-leading-relaxed"
             />
           )}
         </div>
@@ -234,7 +276,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
         <HtmlText
           as="p"
           html={body}
-          className="text-sm text-foreground nds-leading-relaxed m-0"
+          className="nds-text-body nds-leading-relaxed"
         />
       )}
 
@@ -242,7 +284,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
         <HtmlText
           as="p"
           html={audience}
-          className="text-sm text-muted-foreground nds-leading-relaxed m-0"
+          className="nds-text-body nds-leading-relaxed"
         />
       )}
 
@@ -257,11 +299,11 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
       {rules !== undefined && <SectionItems items={rules} />}
 
       {note && (
-        <div className="rounded-lg border nds-border-soft nds-bg-muted-30 p-3">
+        <div className="nds-rounded-md nds-border-soft nds-bg-muted-30 nds-p-4">
           <HtmlText
             as="p"
             html={note}
-            className="text-xs text-muted-foreground nds-leading-relaxed m-0"
+            className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed"
           />
         </div>
       )}
@@ -301,36 +343,36 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
   );
 
   return (
-    <div className="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-      <div className="max-w-4xl mx-auto p-8 space-y-8">
+    <div className="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+      <div className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <header className="space-y-4 pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                className="nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0"
-              >
-                {t('category')}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-muted-foreground font-normal px-2 py-0"
-              >
-                {t('type')}
-              </Badge>
+        <header className="nds-stack nds-pb-8">
+          <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+            <Badge
+              variant="secondary"
+              className="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
+            >
+              {t('category')}
+            </Badge>
+            <Badge
+              variant="outline"
+              className="nds-text-muted-foreground nds-font-normal"
+            >
+              {t('type')}
+            </Badge>
+            <div className="nds-spacer-start">
+              <LanguageSwitcher />
             </div>
-            <LanguageSwitcher />
           </div>
 
-          <h1 className="text-4xl font-bold nds-tracking-tight text-foreground m-0">
+          <h1 className="nds-text-h1 nds-text-foreground">
             {t('title')}
           </h1>
 
           <HtmlText
             as="p"
             html={t('description')}
-            className="text-muted-foreground max-w-3xl nds-leading-relaxed m-0"
+            className="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
           />
         </header>
 

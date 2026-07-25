@@ -113,7 +113,7 @@ function buildSwitchPanel(opts: {
   label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
   const desc = document.createElement('p');
-  desc.className = 'nds-text-body nds-text-muted-foreground';
+  desc.className = 'nds-text-body';
   desc.textContent = descText;
 
   textGroup.append(label, desc);
@@ -542,7 +542,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
                 `label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });\n` +
                 `const desc = document.createElement('p');\n` +
-                `desc.className = 'nds-text-body nds-text-muted-foreground';\n` +
+                `desc.className = 'nds-text-body';\n` +
                 `desc.textContent = 'Receba novidades e promoções da plataforma.';\n` +
                 `textGroup.append(label, desc);\n` +
                 `panel.append(textGroup, sw);`,
@@ -563,7 +563,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                 label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
                 const desc = document.createElement('p');
-                desc.className = 'nds-text-body nds-text-muted-foreground';
+                desc.className = 'nds-text-body';
                 desc.textContent = 'Receba novidades e promoções da plataforma.';
                 textGroup.append(label, desc);
                 panel.append(textGroup, sw);
@@ -623,7 +623,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                   label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                   label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
                   const desc = document.createElement('p');
-                  desc.className = 'nds-text-body nds-text-muted-foreground';
+                  desc.className = 'nds-text-body';
                   desc.textContent = descText;
                   textGroup.append(label, desc);
                   panel.append(textGroup, sw);

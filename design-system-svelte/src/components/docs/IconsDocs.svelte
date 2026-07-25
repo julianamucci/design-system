@@ -153,16 +153,16 @@
 
     <!-- ── Como usar ────────────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
-      <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('howToUse.title')}</h2>
+      <h2 class="nds-text-h2 nds-text-foreground">{$tStore('howToUse.title')}</h2>
       <div class="nds-grid" data-spacing="md" data-min="18rem">
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('howToUse.individual.title')}</p>
+          <p class="nds-text-body nds-font-medium">{$tStore('howToUse.individual.title')}</p>
           <pre class="nds-docs-code"><code>{`import Search from '@lucide/svelte/icons/search';
 
 <Search class="nds-icon" aria-hidden="true" />`}</code></pre>
         </div>
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('howToUse.sizes.title')}</p>
+          <p class="nds-text-body nds-font-medium">{$tStore('howToUse.sizes.title')}</p>
           <pre class="nds-docs-code"><code>{`h-3 w-3   // 12px — badges, captions
 h-4 w-4   // 16px — padrão em texto e botões
 h-5 w-5   // 20px — destaque em headers
@@ -173,10 +173,10 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
 
     <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-      <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('accessibility.title')}</h2>
+      <h2 class="nds-text-h2 nds-text-foreground">{$tStore('accessibility.title')}</h2>
       <div class="nds-grid" data-spacing="sm" data-min="18rem">
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-foreground">
+          <p class="nds-text-body nds-font-medium">
             {$tStore('accessibility.decorative.title')}
           </p>
           <pre class="nds-docs-code"><code>{`<Button>
@@ -185,7 +185,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
 </Button>`}</code></pre>
         </div>
         <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium nds-text-foreground">
+          <p class="nds-text-body nds-font-medium">
             {$tStore('accessibility.functional.title')}
           </p>
           <pre class="nds-docs-code"><code>{`<Button
@@ -210,8 +210,8 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
     <!-- ── Busca ────────────────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="sm">
       <div class="nds-stack" data-spacing="xs">
-        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('search.title')}</h2>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('search.subtitle')}</p>
+        <h2 class="nds-text-h2 nds-text-foreground">{$tStore('search.title')}</h2>
+        <p class="nds-text-body">{$tStore('search.subtitle')}</p>
       </div>
       <div class="nds-icon-search-wrap">
         <!-- Search icon inlined -->
@@ -224,7 +224,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
           class="nds-icon-search-input"
         />
       </div>
-      <p class="nds-text-body nds-text-muted-foreground" aria-live="polite" aria-atomic="true">
+      <p class="nds-text-body" aria-live="polite" aria-atomic="true">
         {searchCountText}
       </p>
     </section>

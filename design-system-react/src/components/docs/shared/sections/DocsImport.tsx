@@ -22,14 +22,14 @@ export function DocsImport({ title, description, code, secondaryCode, secondaryD
   return (
     <section id="importacao">
       <h2 className="nds-section-title">{title}</h2>
-      {description && <p className="nds-text-body nds-text-muted-foreground nds-mb-4">{description}</p>}
+      {description && <p className="nds-text-body nds-mb-4">{description}</p>}
       <Card className="nds-code-block nds-shadow-none">
         <code className="nds-whitespace-pre">{code}</code>
       </Card>
       {secondaryCode && (
         <>
           {secondaryDescription && (
-            <p className="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{secondaryDescription}</p>
+            <p className="nds-text-body nds-mt-4 nds-mb-4">{secondaryDescription}</p>
           )}
           <Card className="nds-code-block nds-mt-2 nds-shadow-none">
             <code className="nds-whitespace-pre">{secondaryCode}</code>
@@ -39,7 +39,7 @@ export function DocsImport({ title, description, code, secondaryCode, secondaryD
       {tertiaryCode && (
         <>
           {tertiaryDescription && (
-            <p className="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{tertiaryDescription}</p>
+            <p className="nds-text-body nds-mt-4 nds-mb-4">{tertiaryDescription}</p>
           )}
           <Card className="nds-code-block nds-mt-2 nds-shadow-none">
             <code className="nds-whitespace-pre">{tertiaryCode}</code>

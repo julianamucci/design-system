@@ -17,7 +17,7 @@
   <h2 class="nds-section-title">{title}</h2>
   <Card class="nds-p-4 nds-stack" data-spacing="lg">
     <div class="nds-stack" data-spacing="md">
-      <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
+      <p class="nds-text-body nds-leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
       <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
         {#each items as item}
           <li class="nds-leading-relaxed">{@html DOMPurify.sanitize(item)}</li>

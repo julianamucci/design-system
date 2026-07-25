@@ -174,8 +174,8 @@
     <!-- ── Paleta semântica ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
       <div class="nds-stack" data-spacing="xs">
-        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('palette.title')}</h2>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('palette.subtitle')}</p>
+        <h2 class="nds-text-h2 nds-text-foreground">{$tStore('palette.title')}</h2>
+        <p class="nds-text-body">{$tStore('palette.subtitle')}</p>
       </div>
 
       {#each PALETTE_GROUPS as group}
@@ -201,8 +201,8 @@
     <!-- ── Temas de marca ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
       <div class="nds-stack" data-spacing="xs">
-        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('brand.title')}</h2>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('brand.subtitle')}</p>
+        <h2 class="nds-text-h2 nds-text-foreground">{$tStore('brand.title')}</h2>
+        <p class="nds-text-body">{$tStore('brand.subtitle')}</p>
       </div>
       <div class="nds-theme-card-grid">
         {#each BRAND_THEMES as theme}
@@ -223,8 +223,8 @@
     <!-- ── Light e Dark ──────────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
       <div class="nds-stack" data-spacing="xs">
-        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('modes.title')}</h2>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('modes.subtitle')}</p>
+        <h2 class="nds-text-h2 nds-text-foreground">{$tStore('modes.title')}</h2>
+        <p class="nds-text-body">{$tStore('modes.subtitle')}</p>
       </div>
       <div class="nds-theme-card-grid">
         {#each MODES as mode}
@@ -245,15 +245,15 @@
     <!-- ── Densidade e Fontes ──────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
       <div class="nds-stack" data-spacing="xs">
-        <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">{$tStore('axes.title')}</h2>
-        <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.subtitle')}</p>
+        <h2 class="nds-text-h2 nds-text-foreground">{$tStore('axes.title')}</h2>
+        <p class="nds-text-body">{$tStore('axes.subtitle')}</p>
       </div>
 
       <!-- Densidade -->
       <div class="nds-stack" data-spacing="md">
         <div class="nds-stack" data-spacing="xs">
-          <h3 class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('axes.density.title')}</h3>
-          <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.density.subtitle')}</p>
+          <h3 class="nds-text-body nds-font-medium">{$tStore('axes.density.title')}</h3>
+          <p class="nds-text-body">{$tStore('axes.density.subtitle')}</p>
         </div>
         <div class="nds-axis-grid">
           {#each DENSITY_ITEMS as item}
@@ -287,8 +287,8 @@
       <!-- Fontes -->
       <div class="nds-stack" data-spacing="md">
         <div class="nds-stack" data-spacing="xs">
-          <h3 class="nds-text-body nds-font-medium nds-text-foreground">{$tStore('axes.fonts.title')}</h3>
-          <p class="nds-text-body nds-text-muted-foreground">{$tStore('axes.fonts.subtitle')}</p>
+          <h3 class="nds-text-body nds-font-medium">{$tStore('axes.fonts.title')}</h3>
+          <p class="nds-text-body">{$tStore('axes.fonts.subtitle')}</p>
         </div>
         <div class="nds-axis-grid" data-cols="4">
           {#each FONT_ITEMS as item}

@@ -32,7 +32,7 @@ export const ComLabelEValor: Story = {
           <Label htmlFor="volume-slider">Volume</Label>
           <span
             aria-live="polite"
-            className="nds-text-body nds-tabular-nums nds-text-foreground"
+            className="nds-text-body nds-tabular-nums"
           >
             {value[0]}%
           </span>
@@ -70,7 +70,7 @@ export const FaixaDePreco: Story = {
           <Label>Faixa de preço</Label>
           <span
             aria-live="polite"
-            className="nds-text-body nds-tabular-nums nds-text-foreground"
+            className="nds-text-body nds-tabular-nums"
           >
             R$ {value[0]} — R$ {value[1]}
           </span>

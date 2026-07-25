@@ -60,7 +60,7 @@ function buildDefaultPopover(): HTMLElement {
   content.dataset.spacing = 'xs';
 
   const p = document.createElement('p');
-  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.className = 'nds-text-body';
   p.textContent = t('demonstration.labels.description');
   content.appendChild(p);
 

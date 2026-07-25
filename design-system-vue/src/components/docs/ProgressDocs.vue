@@ -346,7 +346,7 @@ const visualTestItems = computed(() => [
 
         <!-- Indeterminate -->
         <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-          <div class="nds-text-body nds-text-foreground">
+          <div class="nds-text-body">
             {{ tContent('demonstration.labels.indeterminate') }}
           </div>
           <Progress

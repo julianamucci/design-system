@@ -659,7 +659,7 @@ interface ToggleGroupItemProps {
 
   {#snippet compFilterWithText()}
     <div class="nds-stack" data-spacing="sm" data-align="start">
-      <p class="nds-text-body nds-font-medium nds-text-foreground">Filtros de exibição</p>
+      <p class="nds-text-body nds-font-medium">Filtros de exibição</p>
       <ToggleGroup type="multiple" variant="outline" bind:value={compFilter} aria-label="Filtros de exibição">
         <ToggleGroupItem value="hidden">
           <Eye aria-hidden="true" />

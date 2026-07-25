@@ -132,7 +132,7 @@ export const Interativo: Story = {
     wrapper.style.justifyContent = 'center';
 
     const status = document.createElement('p');
-    status.className = 'nds-text-body nds-text-muted-foreground';
+    status.className = 'nds-text-body';
     status.dataset.testid = 'page-status';
 
     const total = 8;

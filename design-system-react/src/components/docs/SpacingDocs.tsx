@@ -23,8 +23,8 @@ function SpacingSpecimens() {
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="md">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Escala visual</h2>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <h2 className="nds-text-h2 nds-text-foreground">Escala visual</h2>
+        <p className="nds-text-body">
           Cada barra tem largura igual ao token. A escala acompanha a densidade
           ativa do tema.
         </p>

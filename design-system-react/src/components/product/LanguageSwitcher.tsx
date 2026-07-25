@@ -1,63 +1,43 @@
-import { Languages } from "lucide-react";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
 import { useI18nStore } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 
 /**
- * Componente de Produto: Seletor de Idioma
- * Centraliza a lógica de troca de idioma da documentação.
- * Utiliza o ToggleGroup da UI para garantir agrupamento visual e semântica de seleção única.
- * Rastreia trocas de idioma via GA4.
+ * Componente de Produto: Seletor de Idioma.
+ * Botões PT/EN/ES agrupados via CSS standalone `.nds-lang-switcher` (mesma
+ * aparência das 4 stacks). Seleção única via `aria-pressed`. Rastreia trocas
+ * de idioma via GA4.
  */
+const LOCALE_DEFS = [
+  { value: "pt-BR", label: "PT", ariaLabel: "Português" },
+  { value: "en", label: "EN", ariaLabel: "English" },
+  { value: "es", label: "ES", ariaLabel: "Español" },
+] as const;
+
 export function LanguageSwitcher() {
   const { locale, setLocale } = useI18nStore();
 
   return (
-    <div className="flex items-center gap-1 nds-bg-muted-30 p-1 rounded-(--radius-input) border nds-border-border-40">
-      <ToggleGroup
-        type="single"
-        value={locale}
-        onValueChange={(value: string) => {
-          if (!value || value === locale) return;
-          track('language_switched', {
-            previous_language: locale,
-            new_language: value as typeof locale,
-          });
-          setLocale(value as typeof locale);
-        }}
-        variant="outline"
-        size="sm"
-        className="h-(--height-sm)"
-      >
-        <ToggleGroupItem
-          value="pt-BR"
-          aria-label="Português"
-          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
+    <div className="nds-lang-switcher" role="group" aria-label="Idioma">
+      {LOCALE_DEFS.map(({ value, label, ariaLabel }) => (
+        <button
+          key={value}
+          type="button"
+          className="nds-lang-switcher-button"
+          data-locale={value}
+          aria-label={ariaLabel}
+          aria-pressed={value === locale}
+          onClick={() => {
+            if (value === locale) return;
+            track("language_switched", {
+              previous_language: locale,
+              new_language: value,
+            });
+            setLocale(value);
+          }}
         >
-          PT
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="en"
-          aria-label="English"
-          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
-        >
-          EN
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="es"
-          aria-label="Español"
-          className="h-(--height-xs) px-2 nds-text-2xs data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
-        >
-          ES
-        </ToggleGroupItem>
-      </ToggleGroup>
-
-      <div className="ml-1 border-l nds-border-soft h-3 pl-2 flex items-center">
-        <Languages className="h-3 w-3 text-muted-foreground/50" />
-      </div>
+          {label}
+        </button>
+      ))}
     </div>
   );
 }

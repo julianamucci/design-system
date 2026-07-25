@@ -37,7 +37,7 @@ function buildLabeled(opts: {
 
   const label = document.createElement('label');
   label.htmlFor = opts.id;
-  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = opts.labelText;
 
   const textarea = createTextarea({

@@ -123,7 +123,7 @@ export const ComAriaLive: Story = {
     return (
       <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
         <p
-          className="nds-text-body nds-text-muted-foreground"
+          className="nds-text-body"
           aria-live="polite"
         >
           {value}% concluído

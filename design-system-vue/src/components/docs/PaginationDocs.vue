@@ -913,7 +913,7 @@ const a11yCritCols = computed(() => ({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-          <p class="nds-text-body nds-text-muted-foreground" style="text-align: center">
+          <p class="nds-text-body" style="text-align: center">
             Página {{ compInteractiveCurrent }} de 8
           </p>
         </div>

@@ -30,7 +30,7 @@ withDefaults(defineProps<{
         data-spacing="md"
       >
         <p
-          class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
+          class="nds-text-body nds-leading-relaxed"
           v-html="DOMPurify.sanitize(summary)"
         />
         <ul

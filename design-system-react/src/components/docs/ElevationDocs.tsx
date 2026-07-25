@@ -20,14 +20,14 @@ function ElevationSpecimens() {
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Specimens</h2>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <h2 className="nds-text-h2 nds-text-foreground">Specimens</h2>
+        <p className="nds-text-body">
           Cards com cada nível de sombra e cada token de radius aplicado.
         </p>
       </div>
 
       <div className="nds-stack" data-spacing="sm">
-        <h3 className="nds-text-body nds-font-medium nds-text-foreground">Sombras</h3>
+        <h3 className="nds-text-body nds-font-medium">Sombras</h3>
         <div
           className="nds-grid nds-p-6 nds-rounded-lg"
           data-spacing="lg"
@@ -47,7 +47,7 @@ function ElevationSpecimens() {
       </div>
 
       <div className="nds-stack" data-spacing="sm">
-        <h3 className="nds-text-body nds-font-medium nds-text-foreground">Radius</h3>
+        <h3 className="nds-text-body nds-font-medium">Radius</h3>
         <div
           className="nds-grid"
           data-spacing="md"

@@ -718,7 +718,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         Verifique o endereço antes de enviar o link de acesso.
       </DialogDescription>
     </DialogHeader>
-    <p className="nds-text-body nds-text-muted-foreground">
+    <p className="nds-text-body">
       Vamos enviar um link para maria@exemplo.com.
     </p>
     <DialogFooter>
@@ -739,7 +739,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       Verifique o endereço antes de enviar o link de acesso.
                     </DialogDescription>
                   </DialogHeader>
-                  <p className="nds-text-body nds-text-muted-foreground">
+                  <p className="nds-text-body">
                     Vamos enviar um link para maria@exemplo.com.
                   </p>
                   <DialogFooter>

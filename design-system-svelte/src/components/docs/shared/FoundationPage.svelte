@@ -58,34 +58,34 @@
   });
 </script>
 
-<div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-  <div class="p-8 max-w-6xl mx-auto space-y-8">
+<div class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+  <div class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
 
     <!-- Header -->
-    <header class="space-y-4 pb-8">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <Badge variant="secondary" class="rounded-md nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0">
-            {$tStore('category')}
-          </Badge>
-          <Badge variant="outline" class="rounded-md text-muted-foreground font-normal px-2 py-0">
-            {$tStore('type')}
-          </Badge>
+    <header class="nds-stack nds-pb-8">
+      <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+        <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
+          {$tStore('category')}
+        </Badge>
+        <Badge variant="outline" class="nds-text-muted-foreground nds-font-normal">
+          {$tStore('type')}
+        </Badge>
+        <div class="nds-spacer-start">
+          <LanguageSwitcher />
         </div>
-        <LanguageSwitcher />
       </div>
 
-      <h1 class="text-4xl font-bold nds-tracking-tight text-foreground">
+      <h1 class="nds-text-h1 nds-text-foreground">
         {$tStore('title')}
       </h1>
 
-      <p class="text-muted-foreground max-w-3xl nds-leading-relaxed">
+      <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
         {$tStore('description')}
       </p>
     </header>
 
     {#each sections as [key, value] (key)}
-      <section class="space-y-6 border-t nds-border-soft pt-8">
+      <section class="nds-stack nds-docs-section-divider" data-spacing="md">
         <FoundationSection node={value} level={2} />
       </section>
     {/each}

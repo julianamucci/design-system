@@ -198,7 +198,7 @@ export const ComCardDestacado: Story = {
       cardTitle.className = 'nds-text-base nds-font-semibold nds-leading-tight';
       cardTitle.textContent = 'Comece em 5 minutos';
       const cardDesc = document.createElement('p');
-      cardDesc.className = 'nds-mt-2 nds-text-body nds-text-muted-foreground';
+      cardDesc.className = 'nds-mt-2 nds-text-body';
       cardDesc.style.lineHeight = '1.375';
       cardDesc.textContent = 'Crie sua primeira integração com nosso quickstart.';
       card.append(cardTitle, cardDesc);

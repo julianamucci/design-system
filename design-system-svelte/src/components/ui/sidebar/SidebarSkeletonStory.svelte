@@ -50,7 +50,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Estado de carregamento</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body nds-text-muted-foreground">SidebarMenuSkeleton com showIcon=true exibindo placeholders de carregamento.</p>
+        <p class="nds-text-body">SidebarMenuSkeleton com showIcon=true exibindo placeholders de carregamento.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

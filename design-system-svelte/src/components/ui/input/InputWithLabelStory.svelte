@@ -40,7 +40,7 @@
     aria-describedby={describedBy}
   />
   {#if hint}
-    <p id={hintId} class="nds-text-body nds-text-muted-foreground">{hint}</p>
+    <p id={hintId} class="nds-text-body">{hint}</p>
   {/if}
   {#if errorMessage}
     <p id={errorId} class="nds-text-body nds-text-destructive">{errorMessage}</p>

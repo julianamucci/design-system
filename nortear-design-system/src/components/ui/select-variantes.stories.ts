@@ -163,7 +163,7 @@ export const WithIcon: Story = {
     title.textContent = 'Variante indisponível no Basecoat';
 
     const note = document.createElement('p');
-    note.className = 'nds-text-body nds-text-muted-foreground';
+    note.className = 'nds-text-body';
     note.textContent =
       'O factory custom é um wrapper do <select> HTML nativo. O navegador não permite renderizar ícones inline em <option>, portanto a variante "WithIcon" não é suportada nessa stack. Para essa necessidade, use Combobox ou uma implementação custom de dropdown.';
 

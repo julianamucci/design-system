@@ -202,7 +202,7 @@ export const EmFormulario: Story = {
     form.appendChild(submit);
 
     const out = document.createElement('p');
-    out.className = 'nds-text-body nds-text-muted-foreground';
+    out.className = 'nds-text-body';
     out.dataset.testid = 'form-output';
     form.appendChild(out);
 

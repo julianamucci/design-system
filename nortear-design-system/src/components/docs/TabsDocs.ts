@@ -102,7 +102,7 @@ function richPanel(title: string, description: string): HTMLElement {
   h.className = 'nds-text-body nds-font-semibold';
   h.textContent = title;
   const p = document.createElement('p');
-  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.className = 'nds-text-body';
   p.textContent = description;
   wrap.append(h, p);
   return wrap;

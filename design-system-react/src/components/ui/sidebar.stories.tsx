@@ -110,7 +110,7 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
           <span className="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
         </header>
         <div className="nds-p-6">
-          <p className="nds-text-muted-foreground nds-text-body">
+          <p className="nds-text-body">
             Use os controles do painel para alterar <code>variant</code>, <code>collapsible</code> e <code>side</code>.
           </p>
         </div>

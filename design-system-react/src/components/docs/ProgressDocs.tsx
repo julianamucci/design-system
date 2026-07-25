@@ -381,7 +381,7 @@ interface ProgressProps extends Progress.Root.Props {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <p className="nds-text-body nds-text-muted-foreground" aria-live="polite">
+                <p className="nds-text-body" aria-live="polite">
                   50%
                 </p>
                 <Progress value={50} aria-label="Progresso do upload" />
@@ -389,7 +389,7 @@ interface ProgressProps extends Progress.Root.Props {
             ),
             dontPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <p className="nds-text-body nds-text-muted-foreground" aria-live="assertive">
+                <p className="nds-text-body" aria-live="assertive">
                   51%
                 </p>
                 <Progress value={51} aria-label="Progresso do upload" />

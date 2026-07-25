@@ -107,7 +107,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'nds-text-body nds-text-muted-foreground';
+    descEl.className = 'nds-text-body';
     descEl.style.marginTop = 'var(--spacing-1)';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);

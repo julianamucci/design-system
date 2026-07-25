@@ -101,7 +101,7 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
                     </span>
                     <span className="nds-text-body nds-font-medium">{item.criterion}</span>
                   </div>
-                  <p className="nds-text-body nds-text-muted-foreground">{item.how}</p>
+                  <p className="nds-text-body">{item.how}</p>
               </Card>
             ))}
           </div>

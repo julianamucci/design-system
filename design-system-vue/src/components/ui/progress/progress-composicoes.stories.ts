@@ -165,7 +165,7 @@ export const IndeterminateProcessing: Story = {
     components: { Progress },
     template: `
       <div class="" data-spacing="xs" style="width: 360px">
-        <div class="nds-text-body nds-text-foreground">Processando…</div>
+        <div class="nds-text-body">Processando…</div>
         <Progress
           :model-value="null"
           class="[&>div]:animate-indeterminate"

@@ -54,11 +54,11 @@ export const Playground: Story = {
 
     if (args.orientation === 'horizontal') {
       const top = document.createElement('p');
-      top.className = 'nds-text-body nds-text-foreground';
+      top.className = 'nds-text-body';
       top.textContent = 'Seção superior';
 
       const bottom = document.createElement('p');
-      bottom.className = 'nds-text-body nds-text-muted-foreground';
+      bottom.className = 'nds-text-body';
       bottom.textContent = 'Seção inferior';
 
       wrapper.append(
@@ -68,7 +68,7 @@ export const Playground: Story = {
       );
     } else {
       const left = document.createElement('span');
-      left.className = 'nds-text-body nds-text-foreground';
+      left.className = 'nds-text-body';
       left.textContent = 'Item A';
 
       const right = document.createElement('span');

@@ -175,14 +175,14 @@ import { Label } from "@/components/ui/label";`;
     <RadioGroupItem value="padrao" id="d-padrao" className="nds-mt-0-5" />
     <div className="nds-stack" data-spacing="xs">
       <Label htmlFor="d-padrao">Padrão</Label>
-      <p className="nds-text-body nds-text-muted-foreground">Entrega em até 5 dias úteis.</p>
+      <p className="nds-text-body">Entrega em até 5 dias úteis.</p>
     </div>
   </div>
   <div className="nds-cluster" data-spacing="xs" data-align="start">
     <RadioGroupItem value="expressa" id="d-expressa" className="nds-mt-0-5" />
     <div className="nds-stack" data-spacing="xs">
       <Label htmlFor="d-expressa">Expressa</Label>
-      <p className="nds-text-body nds-text-muted-foreground">Entrega em 1 dia útil.</p>
+      <p className="nds-text-body">Entrega em 1 dia útil.</p>
     </div>
   </div>
 </RadioGroup>`;
@@ -313,7 +313,7 @@ interface RadioGroupItemProps {
                   <Label htmlFor="demo-desc-standard">
                     {tContent("demonstration.labels.standard")}
                   </Label>
-                  <p className="nds-text-body nds-text-muted-foreground">
+                  <p className="nds-text-body">
                     {locale === "en"
                       ? "Free shipping in 5 business days."
                       : locale === "es"
@@ -332,7 +332,7 @@ interface RadioGroupItemProps {
                   <Label htmlFor="demo-desc-express">
                     {tContent("demonstration.labels.express")}
                   </Label>
-                  <p className="nds-text-body nds-text-muted-foreground">
+                  <p className="nds-text-body">
                     {locale === "en"
                       ? "Delivery in 1 business day."
                       : locale === "es"
@@ -351,7 +351,7 @@ interface RadioGroupItemProps {
                   <Label htmlFor="demo-desc-pickup">
                     {tContent("demonstration.labels.pickup")}
                   </Label>
-                  <p className="nds-text-body nds-text-muted-foreground">
+                  <p className="nds-text-body">
                     {locale === "en"
                       ? "Available within 2 hours."
                       : locale === "es"
@@ -588,7 +588,7 @@ interface RadioGroupItemProps {
                   />
                   <div className="nds-stack" data-spacing="xs">
                     <Label htmlFor="var-d-padrao">Padrão</Label>
-                    <p className="nds-text-body nds-text-muted-foreground">
+                    <p className="nds-text-body">
                       Entrega em até 5 dias úteis.
                     </p>
                   </div>
@@ -601,7 +601,7 @@ interface RadioGroupItemProps {
                   />
                   <div className="nds-stack" data-spacing="xs">
                     <Label htmlFor="var-d-expressa">Expressa</Label>
-                    <p className="nds-text-body nds-text-muted-foreground">
+                    <p className="nds-text-body">
                       Entrega em 1 dia útil.
                     </p>
                   </div>
@@ -694,7 +694,7 @@ interface RadioGroupItemProps {
                     <RadioGroupItem value="standard" id="rd-standard" className="nds-mt-1" />
                     <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="rd-standard">Padrão</Label>
-                      <p className="nds-text-body nds-text-muted-foreground">
+                      <p className="nds-text-body">
                         Entrega em 5 dias úteis — frete grátis acima de R$ 199.
                       </p>
                     </div>
@@ -703,7 +703,7 @@ interface RadioGroupItemProps {
                     <RadioGroupItem value="express" id="rd-express" className="nds-mt-1" />
                     <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="rd-express">Expressa</Label>
-                      <p className="nds-text-body nds-text-muted-foreground">
+                      <p className="nds-text-body">
                         Receba em 1 dia útil — taxa adicional de R$ 19,90.
                       </p>
                     </div>
@@ -712,7 +712,7 @@ interface RadioGroupItemProps {
                     <RadioGroupItem value="pickup" id="rd-pickup" className="nds-mt-1" />
                     <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="rd-pickup">Retirar na loja</Label>
-                      <p className="nds-text-body nds-text-muted-foreground">
+                      <p className="nds-text-body">
                         Disponível em 2h — sem custo de frete.
                       </p>
                     </div>
@@ -758,7 +758,7 @@ interface RadioGroupItemProps {
                 <Button type="submit" style={{ alignSelf: 'flex-end' }}>
                   Continuar
                 </Button>
-                <p className="nds-text-body nds-text-muted-foreground">
+                <p className="nds-text-body">
                   Selecionado: {formOutput}
                 </p>
               </form>

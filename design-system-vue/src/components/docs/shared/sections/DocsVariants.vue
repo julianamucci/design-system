@@ -57,7 +57,7 @@ function trackId(name: string): string | undefined {
             {{ item.name }}
           </p>
           <p
-            class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed"
+            class="nds-text-body nds-mt-1 nds-leading-relaxed"
             v-html="DOMPurify.sanitize(item.description)"
           />
         </div>

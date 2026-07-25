@@ -49,7 +49,7 @@ defineProps<{
             <Card class="nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4">
               <slot :name="`do-preview-${index}`" />
             </Card>
-            <p class="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">
+            <p class="nds-text-body nds-italic nds-px-1">
               {{ pair.doCaption }}
             </p>
           </div>
@@ -71,7 +71,7 @@ defineProps<{
             <Card class="nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4">
               <slot :name="`dont-preview-${index}`" />
             </Card>
-            <p class="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">
+            <p class="nds-text-body nds-italic nds-px-1">
               {{ pair.dontCaption }}
             </p>
           </div>

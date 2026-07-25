@@ -595,19 +595,19 @@ interface TabsContentProps {
   <TabsContent value="profile">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+      <p className="nds-text-body">Edite suas informações públicas.</p>
     </div>
   </TabsContent>
   <TabsContent value="account">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Conta</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+      <p className="nds-text-body">Email, idioma e preferências.</p>
     </div>
   </TabsContent>
   <TabsContent value="security">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+      <p className="nds-text-body">Senha e autenticação em dois fatores.</p>
     </div>
   </TabsContent>
 </Tabs>`,
@@ -636,19 +636,19 @@ interface TabsContentProps {
                 <TabsContent value="profile">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+                    <p className="nds-text-body">Edite suas informações públicas.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="account">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Conta</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+                    <p className="nds-text-body">Email, idioma e preferências.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="security">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                    <p className="nds-text-body">Senha e autenticação em dois fatores.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -679,19 +679,19 @@ interface TabsContentProps {
   <TabsContent value="inbox">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Caixa de entrada</h3>
-      <p className="nds-text-body nds-text-muted-foreground">12 mensagens não lidas</p>
+      <p className="nds-text-body">12 mensagens não lidas</p>
     </div>
   </TabsContent>
   <TabsContent value="spam">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Spam</h3>
-      <p className="nds-text-body nds-text-muted-foreground">3 marcadas como spam</p>
+      <p className="nds-text-body">3 marcadas como spam</p>
     </div>
   </TabsContent>
   <TabsContent value="trash">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Lixeira</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+      <p className="nds-text-body">Itens excluídos nos últimos 30 dias.</p>
     </div>
   </TabsContent>
 </Tabs>`,
@@ -717,19 +717,19 @@ interface TabsContentProps {
                 <TabsContent value="inbox">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Caixa de entrada</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">12 mensagens não lidas</p>
+                    <p className="nds-text-body">12 mensagens não lidas</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="spam">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Spam</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">3 marcadas como spam</p>
+                    <p className="nds-text-body">3 marcadas como spam</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="trash">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Lixeira</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Itens excluídos nos últimos 30 dias.</p>
+                    <p className="nds-text-body">Itens excluídos nos últimos 30 dias.</p>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -748,19 +748,19 @@ interface TabsContentProps {
   <TabsContent value="profile">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+      <p className="nds-text-body">Edite suas informações públicas.</p>
     </div>
   </TabsContent>
   <TabsContent value="account">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Conta</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+      <p className="nds-text-body">Email, idioma e preferências.</p>
     </div>
   </TabsContent>
   <TabsContent value="security">
     <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
-      <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+      <p className="nds-text-body">Senha e autenticação em dois fatores.</p>
     </div>
   </TabsContent>
 </Tabs>`,
@@ -781,19 +781,19 @@ interface TabsContentProps {
                 <TabsContent value="profile">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Perfil</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+                    <p className="nds-text-body">Edite suas informações públicas.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="account">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Conta</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+                    <p className="nds-text-body">Email, idioma e preferências.</p>
                   </div>
                 </TabsContent>
                 <TabsContent value="security">
                   <div className="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
                     <h3 className="nds-text-body nds-font-semibold">Segurança</h3>
-                    <p className="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+                    <p className="nds-text-body">Senha e autenticação em dois fatores.</p>
                   </div>
                 </TabsContent>
               </Tabs>

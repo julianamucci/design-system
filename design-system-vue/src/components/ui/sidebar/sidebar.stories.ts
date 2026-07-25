@@ -164,7 +164,7 @@ export const Playground: Story = {
             <span class="nds-text-body nds-text-muted-foreground">Conteúdo principal</span>
           </header>
           <main id="main-content" class="nds-p-4">
-            <p class="nds-text-body nds-text-muted-foreground">Use os controles para alterar variant, collapsible e side.</p>
+            <p class="nds-text-body">Use os controles para alterar variant, collapsible e side.</p>
           </main>
         </SidebarInset>
       </SidebarProvider>

@@ -32,7 +32,7 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                   <Card className="nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4">
                     {pair.doPreview}
                   </Card>
-                  <p className="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">{pair.doCaption}</p>
+                  <p className="nds-text-body nds-italic nds-px-1">{pair.doCaption}</p>
                 </div>
                 {/* DON'T */}
                 <div className="nds-stack" data-spacing="sm">
@@ -43,7 +43,7 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                   <Card className="nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4">
                     {pair.dontPreview}
                   </Card>
-                  <p className="nds-text-body nds-text-muted-foreground nds-italic nds-px-1">{pair.dontCaption}</p>
+                  <p className="nds-text-body nds-italic nds-px-1">{pair.dontCaption}</p>
                 </div>
               </div>
             ))}

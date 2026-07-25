@@ -150,7 +150,7 @@ const codeDefault = `<div class="nds-cluster" data-spacing="sm">
 const codeWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
   <div class="nds-stack" data-spacing="xs">
     <Label :for="'marketing'">Emails de marketing</Label>
-    <p class="nds-text-body nds-text-muted-foreground">
+    <p class="nds-text-body">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
@@ -212,7 +212,7 @@ const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
 const codeCompWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
   <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
     <Label for="sw-marketing">Emails de marketing</Label>
-    <p class="nds-text-body nds-text-muted-foreground">
+    <p class="nds-text-body">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
@@ -224,21 +224,21 @@ const codeCompSettingsList = `<div class="nds-stack" data-spacing="sm" style="wi
   <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
     <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-email">Receber novidades por email</Label>
-      <p class="nds-text-body nds-text-muted-foreground">Resumo semanal sobre o produto.</p>
+      <p class="nds-text-body">Resumo semanal sobre o produto.</p>
     </div>
     <Switch id="pref-email" :checked="true" />
   </div>
   <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
     <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-push">Receber notificações push</Label>
-      <p class="nds-text-body nds-text-muted-foreground">Alertas no dispositivo em tempo real.</p>
+      <p class="nds-text-body">Alertas no dispositivo em tempo real.</p>
     </div>
     <Switch id="pref-push" />
   </div>
   <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
     <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
       <Label for="pref-sms">Alertas por SMS</Label>
-      <p class="nds-text-body nds-text-muted-foreground">Eventos críticos via mensagem de texto.</p>
+      <p class="nds-text-body">Eventos críticos via mensagem de texto.</p>
     </div>
     <Switch id="pref-sms" />
   </div>
@@ -408,7 +408,7 @@ const visualTestItems = computed(() => [
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
           <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'demo-marketing'">{{ tContent('demonstration.labels.marketing') }}</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               {{ tContent('demonstration.labels.marketingDesc') }}
             </p>
           </div>
@@ -422,7 +422,7 @@ const visualTestItems = computed(() => [
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
           <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'demo-darkmode'">{{ tContent('demonstration.labels.darkMode') }}</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               {{ tContent('demonstration.labels.darkModeDesc') }}
             </p>
           </div>
@@ -606,7 +606,7 @@ const visualTestItems = computed(() => [
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
           <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'variant-marketing'">Emails de marketing</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -654,7 +654,7 @@ const visualTestItems = computed(() => [
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
           <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
             <Label :for="'sw-marketing'">Emails de marketing</Label>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
             </p>
           </div>
@@ -674,7 +674,7 @@ const visualTestItems = computed(() => [
           <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
             <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-email'">Receber novidades por email</Label>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Resumo semanal sobre o produto.
               </p>
             </div>
@@ -686,7 +686,7 @@ const visualTestItems = computed(() => [
           <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
             <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-push'">Receber notificações push</Label>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Alertas no dispositivo em tempo real.
               </p>
             </div>
@@ -695,7 +695,7 @@ const visualTestItems = computed(() => [
           <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
             <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
               <Label :for="'pref-sms'">Alertas por SMS</Label>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Eventos críticos via mensagem de texto.
               </p>
             </div>

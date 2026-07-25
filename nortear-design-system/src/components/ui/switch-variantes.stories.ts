@@ -89,7 +89,7 @@ export const WithDescription: Story = {
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
-    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.className = 'nds-text-body';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
     textGroup.append(label, desc);

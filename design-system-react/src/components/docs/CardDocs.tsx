@@ -293,7 +293,7 @@ interface CardProps extends React.ComponentProps<"div"> {
         <CardTitle className="nds-text-h4 nds-font-semibold">{metricValue}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="nds-text-body nds-text-muted-foreground nds-cluster" data-spacing="xs">
+        <p className="nds-text-body nds-cluster" data-spacing="xs">
           <TrendingUp aria-hidden="true" className="nds-icon-sm" />
           {metricTrend}
         </p>

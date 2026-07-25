@@ -136,16 +136,16 @@ export function IconsDocs() {
 
         {/* ── Como usar ────────────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
-          <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('howToUse.title')}</h2>
+          <h2 className="nds-text-h2 nds-text-foreground">{t('howToUse.title')}</h2>
           <div className="nds-grid" data-spacing="md" data-min="18rem">
             <div className="nds-stack" data-spacing="sm">
-              <p className="nds-text-body nds-font-medium nds-text-foreground">{t('howToUse.individual.title')}</p>
+              <p className="nds-text-body nds-font-medium">{t('howToUse.individual.title')}</p>
               <pre className="nds-docs-code">
                 <code>{`import { Search, Settings, User } from 'lucide-react';\n\n<Search className="nds-icon" aria-hidden="true" />`}</code>
               </pre>
             </div>
             <div className="nds-stack" data-spacing="sm">
-              <p className="nds-text-body nds-font-medium nds-text-foreground">{t('howToUse.sizes.title')}</p>
+              <p className="nds-text-body nds-font-medium">{t('howToUse.sizes.title')}</p>
               <pre className="nds-docs-code">
                 <code>{`h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo`}</code>
               </pre>
@@ -155,10 +155,10 @@ export function IconsDocs() {
 
         {/* ── Acessibilidade ───────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
-          <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('accessibility.title')}</h2>
+          <h2 className="nds-text-h2 nds-text-foreground">{t('accessibility.title')}</h2>
           <div className="nds-grid" data-spacing="sm" data-min="18rem">
             <div className="nds-stack" data-spacing="sm">
-              <p className="nds-text-body nds-font-medium nds-text-foreground">
+              <p className="nds-text-body nds-font-medium">
                 {t('accessibility.decorative.title')}
               </p>
               <pre className="nds-docs-code">
@@ -166,7 +166,7 @@ export function IconsDocs() {
               </pre>
             </div>
             <div className="nds-stack" data-spacing="sm">
-              <p className="nds-text-body nds-font-medium nds-text-foreground">
+              <p className="nds-text-body nds-font-medium">
                 {t('accessibility.functional.title')}
               </p>
               <pre className="nds-docs-code">
@@ -190,8 +190,8 @@ export function IconsDocs() {
         {/* ── Busca ────────────────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="sm">
           <div className="nds-stack" data-spacing="xs">
-            <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">{t('search.title')}</h2>
-            <p className="nds-text-body nds-text-muted-foreground">{t('search.subtitle')}</p>
+            <h2 className="nds-text-h2 nds-text-foreground">{t('search.title')}</h2>
+            <p className="nds-text-body">{t('search.subtitle')}</p>
           </div>
           <div className="nds-icon-search-wrap">
             <Search className="nds-icon-search-svg" aria-hidden="true" />
@@ -205,7 +205,7 @@ export function IconsDocs() {
             />
           </div>
           <p
-            className="nds-text-body nds-text-muted-foreground"
+            className="nds-text-body"
             aria-live="polite"
             aria-atomic="true"
           >

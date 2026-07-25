@@ -125,10 +125,10 @@ export function createIconsDocs(): HTMLElement {
   searchWrapper.dataset.spacing = 'sm';
 
   const searchTitle = document.createElement('h2');
-  searchTitle.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+  searchTitle.className = 'nds-text-h2 nds-text-foreground';
 
   const searchSubtitle = document.createElement('p');
-  searchSubtitle.className = 'nds-text-body nds-text-muted-foreground';
+  searchSubtitle.className = 'nds-text-body';
 
   const inputWrapper = document.createElement('div');
   inputWrapper.className = 'nds-icon-search-wrap';
@@ -139,7 +139,7 @@ export function createIconsDocs(): HTMLElement {
   searchInput.className = 'nds-icon-search-input';
 
   const searchStatus = document.createElement('p');
-  searchStatus.className = 'nds-text-body nds-text-muted-foreground';
+  searchStatus.className = 'nds-text-body';
   searchStatus.setAttribute('aria-live', 'polite');
   searchStatus.setAttribute('aria-atomic', 'true');
 
@@ -241,7 +241,7 @@ export function createIconsDocs(): HTMLElement {
   howToUseSection.dataset.spacing = 'lg';
 
   const howToUseTitle = document.createElement('h2');
-  howToUseTitle.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+  howToUseTitle.className = 'nds-text-h2 nds-text-foreground';
 
   const howToUseGrid = document.createElement('div');
   howToUseGrid.className = 'nds-grid';
@@ -252,7 +252,7 @@ export function createIconsDocs(): HTMLElement {
   individualDiv.className = 'nds-stack';
   individualDiv.dataset.spacing = 'sm';
   const individualTitle = document.createElement('p');
-  individualTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  individualTitle.className = 'nds-text-body nds-font-medium';
   const individualCode = document.createElement('pre');
   individualCode.className = 'nds-docs-code';
   individualCode.innerHTML = `<code>import { Search, Settings, User } from 'lucide';\n\ncreateIcons({ icons: { Search, Settings, User } });\n// &lt;i data-lucide="search" class="" aria-hidden="true"&gt;&lt;/i&gt;</code>`;
@@ -262,7 +262,7 @@ export function createIconsDocs(): HTMLElement {
   sizesDiv.className = 'nds-stack';
   sizesDiv.dataset.spacing = 'sm';
   const sizesTitle = document.createElement('p');
-  sizesTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  sizesTitle.className = 'nds-text-body nds-font-medium';
   const sizesCode = document.createElement('pre');
   sizesCode.className = 'nds-docs-code';
   sizesCode.innerHTML = `<code>h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo</code>`;
@@ -277,7 +277,7 @@ export function createIconsDocs(): HTMLElement {
   a11ySection.dataset.spacing = 'md';
 
   const a11yTitle = document.createElement('h2');
-  a11yTitle.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+  a11yTitle.className = 'nds-text-h2 nds-text-foreground';
 
   const a11yGrid = document.createElement('div');
   a11yGrid.className = 'nds-grid';
@@ -288,7 +288,7 @@ export function createIconsDocs(): HTMLElement {
   decorativeBox.className = 'nds-stack';
   decorativeBox.dataset.spacing = 'sm';
   const decorativeTitle = document.createElement('p');
-  decorativeTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  decorativeTitle.className = 'nds-text-body nds-font-medium';
   const decorativeCode = document.createElement('pre');
   decorativeCode.className = 'nds-docs-code';
   decorativeCode.innerHTML = `<code>&lt;button&gt;\n  &lt;i data-lucide="save" class="" aria-hidden="true"&gt;&lt;/i&gt;\n  Salvar\n&lt;/button&gt;</code>`;
@@ -298,7 +298,7 @@ export function createIconsDocs(): HTMLElement {
   functionalBox.className = 'nds-stack';
   functionalBox.dataset.spacing = 'sm';
   const functionalTitle = document.createElement('p');
-  functionalTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  functionalTitle.className = 'nds-text-body nds-font-medium';
   const functionalCode = document.createElement('pre');
   functionalCode.className = 'nds-docs-code';
   functionalCode.innerHTML = `<code>&lt;button\n  aria-label="Excluir produto"\n&gt;\n  &lt;i data-lucide="trash-2" class="" aria-hidden="true"&gt;&lt;/i&gt;\n&lt;/button&gt;</code>`;

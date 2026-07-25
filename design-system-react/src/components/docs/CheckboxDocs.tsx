@@ -194,7 +194,7 @@ export function CheckboxDocs() {
     >
       Receber novidades por email
     </label>
-    <p className="nds-text-body nds-text-muted-foreground">
+    <p className="nds-text-body">
       Enviaremos no máximo 2 emails por semana.
     </p>
   </div>
@@ -464,7 +464,7 @@ export function CheckboxDocs() {
                       >
                         {tContent("demonstration.labels.newsletter")}
                       </label>
-                      <p className="nds-text-body nds-text-muted-foreground">
+                      <p className="nds-text-body">
                         Enviaremos no máximo 2 emails por semana.
                       </p>
                     </div>
@@ -507,7 +507,7 @@ export function CheckboxDocs() {
   <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
   <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-    <p className="nds-text-body nds-text-muted-foreground">
+    <p className="nds-text-body">
       Enviaremos atualizações sobre novos recursos e melhorias do produto.
     </p>
   </div>
@@ -517,7 +517,7 @@ export function CheckboxDocs() {
                     <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
                     <div className="nds-stack" data-spacing="xs">
                       <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-                      <p className="nds-text-body nds-text-muted-foreground">
+                      <p className="nds-text-body">
                         Enviaremos atualizações sobre novos recursos e melhorias do produto.
                       </p>
                     </div>

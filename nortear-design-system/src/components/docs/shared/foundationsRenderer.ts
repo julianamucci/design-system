@@ -17,6 +17,13 @@ import { getLocale, createTranslation } from '@/lib/i18n';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import {
+  createCard,
+  createCardHeader,
+  createCardTitle,
+  createCardDescription,
+  createCardContent,
+} from '@/components/ui/card';
+import {
   createTable,
   createTableHeader,
   createTableBody,
@@ -115,7 +122,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   topRow.append(badgeCategory, badgeType, switcher);
 
   const h1 = document.createElement('h1');
-  h1.className = 'nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground';
+  h1.className = 'nds-text-h1 nds-text-foreground';
 
   const desc = document.createElement('p');
   desc.className = 'nds-text-muted-foreground nds-leading-relaxed';
@@ -137,21 +144,21 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
 
   function makeSectionTitle(key: string): HTMLHeadingElement {
     const h = document.createElement('h2');
-    h.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+    h.className = 'nds-text-h2 nds-text-foreground';
     addText(h, key, true);
     return h;
   }
 
   function makeSectionSubtitle(key: string): HTMLParagraphElement {
     const p = document.createElement('p');
-    p.className = 'nds-text-body nds-text-muted-foreground';
+    p.className = 'nds-text-body';
     addText(p, key, true);
     return p;
   }
 
   function makeParagraph(key: string): HTMLParagraphElement {
     const p = document.createElement('p');
-    p.className = 'nds-text-body nds-text-foreground nds-leading-relaxed';
+    p.className = 'nds-text-body nds-leading-relaxed';
     addText(p, key, true);
     return p;
   }
@@ -208,7 +215,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   /** Lista simples de strings (array) → <ul>. */
   function renderStringList(parent: HTMLElement, basePath: string, arr: string[]) {
     const ul = document.createElement('ul');
-    ul.className = 'nds-stack nds-text-body nds-text-foreground nds-leading-relaxed';
+    ul.className = 'nds-stack nds-text-body nds-leading-relaxed';
     ul.dataset.spacing = 'sm';
     ul.style.listStyle = 'disc';
     ul.style.paddingInlineStart = '1.5rem';
@@ -220,55 +227,81 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
     parent.appendChild(ul);
   }
 
-  /** items: { key: { title, body, … } } → grid de cards. */
+  // Chaves candidatas a título e a corpo de um card (na ordem de preferência).
+  const TITLE_KEYS = ['title', 'name', 'label'];
+  const BODY_KEYS = ['body', 'description', 'usage', 'use', 'text'];
+
+  /**
+   * items → cada item vira um <Card> (title + description + extras) num grid fixo
+   * de 2 colunas. Itens apenas-string viram uma lista vertical simples.
+   */
   function renderItemsGrid(parent: HTMLElement, basePath: string, node: AnyRecord) {
+    const isCards = Object.values(node).some((v) => isPlainObject(v));
+
+    // Só strings → lista vertical (sem cards), como nas demais stacks.
+    if (!isCards) {
+      const ul = document.createElement('ul');
+      ul.className = 'nds-stack nds-list-none';
+      ul.dataset.spacing = 'md';
+      Object.keys(node).forEach((k) => {
+        const li = document.createElement('li');
+        li.className = 'nds-text-body nds-leading-relaxed nds-accent-start';
+        addText(li, `${basePath}.${k}`, true);
+        ul.appendChild(li);
+      });
+      parent.appendChild(ul);
+      return;
+    }
+
     const grid = document.createElement('div');
     grid.className = 'nds-grid';
     grid.dataset.spacing = 'md';
-    grid.dataset.min = '18rem';
+    grid.dataset.cols = '2';
+    grid.dataset.fixed = 'true';
 
     Object.keys(node).forEach((k) => {
       const item = node[k];
-      const card = document.createElement('div');
-      card.className = 'nds-stack nds-p-4 nds-rounded-md nds-border-soft nds-bg-card';
-      card.dataset.spacing = 'xs';
-      card.style.padding = '1rem';
+      const card = createCard();
+      const header = createCardHeader();
 
       if (isPlainObject(item)) {
-        // Procura title-like e body-like
-        const titleKey = ['title', 'name', 'label'].find((x) => typeof item[x] === 'string');
-        const bodyKey = ['body', 'description', 'use', 'text'].find(
-          (x) => typeof item[x] === 'string',
-        );
+        const titleKey = TITLE_KEYS.find((x) => typeof item[x] === 'string');
+        const bodyKey = BODY_KEYS.find((x) => typeof item[x] === 'string');
         if (titleKey) {
-          const h4 = document.createElement('h4');
-          h4.className = 'nds-text-body nds-font-semibold nds-text-foreground';
-          addText(h4, `${basePath}.${k}.${titleKey}`, true);
-          card.appendChild(h4);
+          const titleEl = createCardTitle();
+          addText(titleEl, `${basePath}.${k}.${titleKey}`, true);
+          header.appendChild(titleEl);
         }
         if (bodyKey) {
-          const p = document.createElement('p');
-          p.className = 'nds-text-body nds-text-muted-foreground nds-leading-relaxed';
-          addText(p, `${basePath}.${k}.${bodyKey}`, true);
-          card.appendChild(p);
+          const descEl = createCardDescription();
+          addText(descEl, `${basePath}.${k}.${bodyKey}`, true);
+          header.appendChild(descEl);
         }
-        // Render restantes como chave: valor
-        Object.keys(item).forEach((sk) => {
-          if (sk === titleKey || sk === bodyKey) return;
-          const v = item[sk];
-          if (typeof v !== 'string') return;
-          const meta = document.createElement('p');
-          meta.className = 'nds-text-small nds-text-muted-foreground';
-          meta.style.fontSize = '0.75rem';
-          addText(meta, `${basePath}.${k}.${sk}`, true);
-          card.appendChild(meta);
-        });
+        card.appendChild(header);
+
+        // Campos extras → CardContent (metadados).
+        const extraKeys = Object.keys(item).filter(
+          (sk) => typeof item[sk] === 'string' && sk !== titleKey && sk !== bodyKey,
+        );
+        if (extraKeys.length) {
+          const content = createCardContent();
+          content.classList.add('nds-stack');
+          content.dataset.spacing = 'xs';
+          extraKeys.forEach((sk) => {
+            const p = document.createElement('p');
+            p.className = 'nds-text-caption nds-text-muted-foreground nds-m-0';
+            addText(p, `${basePath}.${k}.${sk}`, true);
+            content.appendChild(p);
+          });
+          card.appendChild(content);
+        }
       } else if (typeof item === 'string') {
-        const p = document.createElement('p');
-        p.className = 'nds-text-body nds-text-foreground nds-leading-relaxed';
-        addText(p, `${basePath}.${k}`, true);
-        card.appendChild(p);
+        const descEl = createCardDescription();
+        addText(descEl, `${basePath}.${k}`, true);
+        header.appendChild(descEl);
+        card.appendChild(header);
       }
+
       grid.appendChild(card);
     });
 
@@ -279,7 +312,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   function renderSection(key: string, node: unknown) {
     const section = document.createElement('section');
     section.className = 'nds-stack nds-docs-section-divider';
-    section.dataset.spacing = 'lg';
+    section.dataset.spacing = 'md';
 
     if (typeof node === 'string') {
       section.appendChild(makeSectionTitle(`${key}.title`));
@@ -297,7 +330,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
     } else {
       // Fallback: usa a própria chave como título
       const h = document.createElement('h2');
-      h.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+      h.className = 'nds-text-h2 nds-text-foreground';
       h.textContent = key.charAt(0).toUpperCase() + key.slice(1);
       section.appendChild(h);
     }
@@ -305,13 +338,29 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       section.appendChild(makeSectionSubtitle(`${key}.subtitle`));
     }
 
+    // body / audience → parágrafos simples (sem rótulo de chave), como nas demais
+    // stacks (React/Vue/Svelte tratam essas chaves como texto direto da seção).
+    if (typeof node['body'] === 'string') {
+      section.appendChild(makeParagraph(`${key}.body`));
+    }
+    if (typeof node['audience'] === 'string') {
+      section.appendChild(makeParagraph(`${key}.audience`));
+    }
+
     // Tabela cols + rows
     if (isPlainObject(node['cols']) && isPlainObject(node['rows'])) {
       renderTable(section, key, node);
     }
 
+    // items → grid de cards (cada item = um card com title + body), como nas
+    // demais stacks. Sem esse tratamento, o laço genérico criava um heading
+    // "Items" e quebrava cada {title, body} em dois cards separados.
+    if (isPlainObject(node['items'])) {
+      renderItemsGrid(section, `${key}.items`, node['items'] as AnyRecord);
+    }
+
     // Iterar restantes
-    const skip = new Set(['title', 'subtitle', 'cols', 'rows']);
+    const skip = new Set(['title', 'subtitle', 'body', 'audience', 'cols', 'rows', 'items']);
     Object.keys(node).forEach((sk) => {
       if (skip.has(sk)) return;
       const child = node[sk];
@@ -321,10 +370,10 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
         block.className = 'nds-stack';
         block.dataset.spacing = 'xs';
         const h4 = document.createElement('h3');
-        h4.className = 'nds-text-body nds-font-semibold nds-text-foreground';
+        h4.className = 'nds-text-body nds-font-semibold';
         h4.textContent = sk.charAt(0).toUpperCase() + sk.slice(1);
         const p = document.createElement('p');
-        p.className = 'nds-text-body nds-text-foreground nds-leading-relaxed';
+        p.className = 'nds-text-body nds-leading-relaxed';
         addText(p, `${key}.${sk}`, true);
         block.append(h4, p);
         section.appendChild(block);
@@ -336,7 +385,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
         block.className = 'nds-stack';
         block.dataset.spacing = 'xs';
         const h4 = document.createElement('h3');
-        h4.className = 'nds-text-body nds-font-semibold nds-text-foreground';
+        h4.className = 'nds-text-body nds-font-semibold';
         h4.textContent = sk.charAt(0).toUpperCase() + sk.slice(1);
         block.appendChild(h4);
         renderStringList(block, `${key}.${sk}`, child);
@@ -352,18 +401,18 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
 
         if (typeof child['title'] === 'string') {
           const h3 = document.createElement('h3');
-          h3.className = 'nds-text-body nds-font-semibold nds-text-foreground';
+          h3.className = 'nds-text-body nds-font-semibold';
           addText(h3, `${key}.${sk}.title`, true);
           sub.appendChild(h3);
         } else {
           const h3 = document.createElement('h3');
-          h3.className = 'nds-text-body nds-font-semibold nds-text-foreground';
+          h3.className = 'nds-text-body nds-font-semibold';
           h3.textContent = sk.charAt(0).toUpperCase() + sk.slice(1);
           sub.appendChild(h3);
         }
         if (typeof child['subtitle'] === 'string') {
           const psub = document.createElement('p');
-          psub.className = 'nds-text-body nds-text-muted-foreground';
+          psub.className = 'nds-text-body';
           addText(psub, `${key}.${sk}.subtitle`, true);
           sub.appendChild(psub);
         }
@@ -383,7 +432,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
           const v = child[ssk];
           if (typeof v === 'string') {
             const p = document.createElement('p');
-            p.className = 'nds-text-body nds-text-foreground nds-leading-relaxed';
+            p.className = 'nds-text-body nds-leading-relaxed';
             addText(p, `${key}.${sk}.${ssk}`, true);
             sub.appendChild(p);
           } else if (isStringArray(v)) {

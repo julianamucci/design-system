@@ -42,13 +42,13 @@ export const PerfilDeUsuario: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="nds-text-body nds-text-muted-foreground">
+      <p className="nds-text-body">
         Conteúdo de{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
             <a
               href="/users/joana"
-              className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
+              className="nds-text-body nds-font-medium" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
             >
               @joana
             </a>
@@ -97,13 +97,13 @@ export const PreviewDeLink: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="nds-text-body nds-text-muted-foreground">
+      <p className="nds-text-body">
         Saiba mais em{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
             <a
               href="https://example.com"
-              className="nds-text-body nds-font-medium nds-text-foreground" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
+              className="nds-text-body nds-font-medium" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
             >
               example.com
             </a>
@@ -153,13 +153,13 @@ export const DefinicaoDeTermo: Story = {
   },
   render: () => (
     <div style={wrapperStyle}>
-      <p className="nds-text-body nds-text-muted-foreground">
+      <p className="nds-text-body">
         Atende{" "}
         <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
           <HoverCardTrigger asChild>
             <button
               type="button"
-              className="nds-text-body nds-font-medium underline decoration-dotted underline-offset-4 nds-text-foreground cursor-help"
+              className="nds-text-body nds-font-medium underline decoration-dotted underline-offset-4 cursor-help"
             >
               WCAG 2.1 AA
             </button>

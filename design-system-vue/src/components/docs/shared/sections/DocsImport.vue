@@ -27,7 +27,7 @@ defineProps<{
     </h2>
     <p
       v-if="description"
-      class="nds-text-body nds-text-muted-foreground nds-mb-4"
+      class="nds-text-body nds-mb-4"
     >
       {{ description }}
     </p>
@@ -37,7 +37,7 @@ defineProps<{
     <template v-if="secondaryCode">
       <p
         v-if="secondaryDescription"
-        class="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4"
+        class="nds-text-body nds-mt-4 nds-mb-4"
       >
         {{ secondaryDescription }}
       </p>

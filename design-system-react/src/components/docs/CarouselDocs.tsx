@@ -698,7 +698,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             </span>
           </div>
           <CardContent className="nds-p-4">
-            <h3 className="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+            <h3 className="nds-text-body nds-font-semibold">{photo.title}</h3>
             <p className="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
           </CardContent>
         </Card>
@@ -740,7 +740,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                           </span>
                         </div>
                         <CardContent className="nds-p-4">
-                          <h3 className="nds-text-body nds-font-semibold nds-text-foreground">{photo.title}</h3>
+                          <h3 className="nds-text-body nds-font-semibold">{photo.title}</h3>
                           <p className="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
                         </CardContent>
                       </Card>

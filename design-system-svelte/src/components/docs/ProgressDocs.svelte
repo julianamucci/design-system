@@ -312,13 +312,13 @@ interface ProgressProps {
   {/snippet}
   {#snippet doPair2()}
     <div class="nds-stack nds-w-full" data-spacing="xs">
-      <p class="nds-text-body nds-text-muted-foreground" aria-live="polite">50%</p>
+      <p class="nds-text-body" aria-live="polite">50%</p>
       <Progress value={50} aria-label="Progresso do upload" />
     </div>
   {/snippet}
   {#snippet dontPair2()}
     <div class="nds-stack nds-w-full" data-spacing="xs">
-      <p class="nds-text-body nds-text-muted-foreground" aria-live="assertive">51%</p>
+      <p class="nds-text-body" aria-live="assertive">51%</p>
       <Progress value={51} aria-label="Progresso do upload" />
     </div>
   {/snippet}

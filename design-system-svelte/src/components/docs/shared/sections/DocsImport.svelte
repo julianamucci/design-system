@@ -23,14 +23,14 @@
 <section id="importacao">
   <h2 class="nds-section-title">{title}</h2>
   {#if description}
-    <p class="nds-text-body nds-text-muted-foreground nds-mb-4">{description}</p>
+    <p class="nds-text-body nds-mb-4">{description}</p>
   {/if}
   <Card class="nds-code-block nds-shadow-none">
     <code class="nds-whitespace-pre">{code}</code>
   </Card>
   {#if secondaryCode}
     {#if secondaryDescription}
-      <p class="nds-text-body nds-text-muted-foreground nds-mt-4 nds-mb-4">{secondaryDescription}</p>
+      <p class="nds-text-body nds-mt-4 nds-mb-4">{secondaryDescription}</p>
     {/if}
     <Card class="nds-code-block nds-mt-2 nds-shadow-none">
       <code class="nds-whitespace-pre">{secondaryCode}</code>

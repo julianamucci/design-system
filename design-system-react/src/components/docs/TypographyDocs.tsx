@@ -8,8 +8,8 @@ function TypographySpecimens() {
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Specimens</h2>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <h2 className="nds-text-h2 nds-text-foreground">Specimens</h2>
+        <p className="nds-text-body">
           Hierarquia renderizada com os elementos HTML padrão do tema ativo.
         </p>
       </div>

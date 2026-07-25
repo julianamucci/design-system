@@ -129,7 +129,7 @@ export const ToggleEmPainel: Story = {
       <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style="width: 20rem">
         <div class="" data-spacing="xs">
           <p class="nds-text-body nds-font-medium">Mostrar arquivados</p>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             Inclui itens marcados como arquivados na lista.
           </p>
         </div>

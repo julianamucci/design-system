@@ -42,7 +42,7 @@
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="vertical" />
       <Pane defaultSize={70} minSize={50} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
-        <span class="nds-text-body nds-text-foreground">{contentLabel}</span>
+        <span class="nds-text-body">{contentLabel}</span>
       </Pane>
     </PaneGroup>
   </div>
@@ -54,7 +54,7 @@
       </Pane>
       <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
       <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
-        <span class="nds-text-body nds-text-foreground">{bottomLabel}</span>
+        <span class="nds-text-body">{bottomLabel}</span>
       </Pane>
     </PaneGroup>
   </div>
@@ -68,7 +68,7 @@
       <Pane defaultSize={70} minSize={40}>
         <PaneGroup direction="vertical" class="" style="height: 100%">
           <Pane defaultSize={60} minSize={20} class="nds-cluster" data-align="center" data-justify="center">
-            <span class="nds-text-body nds-text-foreground">{topLabel}</span>
+            <span class="nds-text-body">{topLabel}</span>
           </Pane>
           <Handle {withHandle} aria-label={ariaLabel} aria-orientation="horizontal" />
           <Pane defaultSize={40} minSize={20} class="nds-cluster nds-bg-muted-40" data-align="center" data-justify="center">
@@ -86,7 +86,7 @@
       </Pane>
       <Handle withHandle aria-label={ariaLabel} />
       <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster" data-align="center" data-justify="center">
-        <span class="nds-text-body nds-text-foreground">{rightLabel}</span>
+        <span class="nds-text-body">{rightLabel}</span>
       </Pane>
     </PaneGroup>
   </div>

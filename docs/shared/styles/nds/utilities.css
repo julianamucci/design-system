@@ -18,10 +18,21 @@
   margin: 0;
 }
 
+/* Item com barra de acento à esquerda (só na borda inline-start, não uma caixa).
+ * Autossuficiente: largura + estilo + cor soft + padding para afastar o texto. */
+.nds-accent-start {
+  border-inline-start: 2px solid hsl(var(--border) / 0.5);
+  padding-inline-start: var(--spacing-4);
+}
+
 /* ── Overflow ──────────────────────────────────────────────────────────────── */
 .nds-overflow-x { overflow-x: auto; }
 .nds-overflow-y { overflow-y: auto; }
+.nds-overflow-auto { overflow: auto; }
 .nds-overflow-hidden { overflow: hidden; }
+
+/* ── Height ────────────────────────────────────────────────────────────────── */
+.nds-h-full { height: 100%; }
 
 /* ── Whitespace ────────────────────────────────────────────────────────────── */
 .nds-whitespace-pre    { white-space: pre; }
@@ -55,6 +66,7 @@
 .nds-max-w-lg    { max-width: 32rem; }                 /* 512px */
 .nds-max-w-prose { max-width: 48rem; }                 /* leitura confortável */
 .nds-max-w-content { max-width: 64rem; }
+.nds-max-w-docs  { max-width: 72rem; }                 /* shell da página de docs/foundations */
 .nds-min-w-0  { min-width: 0; }
 .nds-shrink-0 { flex-shrink: 0; }
 .nds-flex-1   { flex: 1 1 0%; }

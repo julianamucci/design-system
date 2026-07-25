@@ -27,9 +27,20 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+function CardTitle({
+  className,
+  as: As = "div",
+  ...props
+}: React.ComponentProps<"div"> & {
+  /**
+   * Elemento a renderizar. Default `div` (neutro, sem forçar hierarquia de
+   * headings). Passe `h2`..`h6` quando o título do card for um heading real
+   * na hierarquia da página.
+   */
+  as?: React.ElementType
+}) {
   return (
-    <div
+    <As
       data-slot="card-title"
       className={cn("nds-card-title", className)}
       {...props}

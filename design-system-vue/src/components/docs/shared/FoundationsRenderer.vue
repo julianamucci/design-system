@@ -2,6 +2,9 @@
 import { computed } from 'vue';
 import { Badge } from '@/components/ui/badge';
 import {
+  Card, CardHeader, CardTitle, CardDescription, CardContent,
+} from '@/components/ui/card';
+import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from '@/components/ui/table';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
@@ -93,6 +96,39 @@ function itemEntries(items: Section['items']): Array<{ key: string; value: any }
   return Object.keys(items).map((k) => ({ key: k, value: items[k] }));
 }
 
+// Itens que são objetos viram cards (title + body) → grid fixo de 2 colunas.
+function itemsAreCards(items: Section['items']): boolean {
+  return !!items && Object.values(items).some((v) => v !== null && typeof v === 'object');
+}
+
+// Chaves candidatas a título e a corpo de um card (na ordem de preferência).
+const TITLE_KEYS = ['title', 'name', 'label'];
+const BODY_KEYS = ['body', 'description', 'usage', 'use', 'text'];
+
+function isCardObject(v: any): boolean {
+  return v !== null && typeof v === 'object';
+}
+function itemTitle(v: any): string {
+  if (!isCardObject(v)) return '';
+  const k = TITLE_KEYS.find((x) => typeof v[x] === 'string');
+  return k ? v[k] : '';
+}
+function itemBody(v: any): string {
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'string') return v;
+  if (typeof v !== 'object') return String(v);
+  const k = BODY_KEYS.find((x) => typeof v[x] === 'string');
+  return k ? v[k] : '';
+}
+function itemExtras(v: any): Array<{ key: string; value: string }> {
+  if (!isCardObject(v)) return [];
+  const tk = TITLE_KEYS.find((x) => typeof v[x] === 'string');
+  const bk = BODY_KEYS.find((x) => typeof v[x] === 'string');
+  return Object.entries(v)
+    .filter(([k, val]) => typeof val === 'string' && k !== tk && k !== bk)
+    .map(([k, val]) => ({ key: k, value: val as string }));
+}
+
 function rulesEntries(rules: Section['rules']): Array<{ key: string; value: string }> {
   if (!rules) return [];
   if (Array.isArray(rules)) return rules.map((v, i) => ({ key: String(i), value: String(v) }));
@@ -121,33 +157,33 @@ track('docs_page_view', {
 </script>
 
 <template>
-  <div class="sb-unstyled flex-1 h-full overflow-auto ds-docs">
-    <div class="p-8 max-w-6xl mx-auto space-y-8">
+  <div class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+    <div class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
       <!-- Header -->
-      <header class="space-y-4 pb-8">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              class="nds-bg-primary-5 text-primary nds-border-primary-10 nds-hover-bg-primary-5 font-medium px-2 py-0"
-            >
-              {{ t('category') }}
-            </Badge>
-            <Badge
-              variant="outline"
-              class="text-muted-foreground font-normal px-2 py-0"
-            >
-              {{ t('type') }}
-            </Badge>
+      <header class="nds-stack nds-pb-8">
+        <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+          <Badge
+            variant="secondary"
+            class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium"
+          >
+            {{ t('category') }}
+          </Badge>
+          <Badge
+            variant="outline"
+            class="nds-text-muted-foreground nds-font-normal"
+          >
+            {{ t('type') }}
+          </Badge>
+          <div class="nds-spacer-start">
+            <LanguageSwitcher />
           </div>
-          <LanguageSwitcher />
         </div>
 
-        <h1 class="text-4xl font-bold nds-tracking-tight text-foreground">
+        <h1 class="nds-text-h1 nds-text-foreground">
           {{ t('title') }}
         </h1>
 
-        <p class="text-muted-foreground max-w-3xl nds-leading-relaxed">
+        <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
           {{ t('description') }}
         </p>
       </header>
@@ -156,21 +192,23 @@ track('docs_page_view', {
       <section
         v-for="sec in sections"
         :key="sec.key"
-        class="space-y-4 border-t nds-border-soft pt-8"
+        class="nds-stack nds-docs-section-divider"
+        data-spacing="md"
       >
         <div
           v-if="sec.title || sec.subtitle"
-          class="space-y-1"
+          class="nds-stack"
+          data-spacing="xs"
         >
           <h2
             v-if="sec.title"
-            class="text-xl font-semibold text-foreground"
+            class="nds-text-h2 nds-text-foreground"
           >
             {{ sec.title }}
           </h2>
           <p
             v-if="sec.subtitle"
-            class="text-sm text-muted-foreground"
+            class="nds-text-body"
           >
             {{ sec.subtitle }}
           </p>
@@ -178,107 +216,97 @@ track('docs_page_view', {
 
         <p
           v-if="sec.body"
-          class="text-sm text-foreground nds-leading-relaxed max-w-3xl"
+          class="nds-text-body nds-leading-relaxed nds-max-w-prose"
           v-html="sec.body"
         />
         <p
           v-if="sec.audience"
-          class="text-sm text-muted-foreground nds-leading-relaxed max-w-3xl"
+          class="nds-text-body nds-leading-relaxed nds-max-w-prose"
         >
           {{ sec.audience }}
         </p>
 
-        <!-- Table (cols + rows) -->
-        <div
-          v-if="sec.cols && sec.rows"
-          class="rounded-lg border nds-border-soft overflow-hidden"
-        >
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead
-                  v-for="(c, i) in colsArray(sec.cols)"
-                  :key="i"
-                >
-                  {{ c }}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow
-                v-for="(row, r) in rowsArray(sec.rows, sec.cols)"
-                :key="r"
+        <!-- Table (cols + rows) — o componente Table já provê .nds-table-wrapper -->
+        <Table v-if="sec.cols && sec.rows">
+          <TableHeader>
+            <TableRow>
+              <TableHead
+                v-for="(c, i) in colsArray(sec.cols)"
+                :key="i"
               >
-                <TableCell
-                  v-for="(cell, ci) in row"
-                  :key="ci"
-                >
-                  <span v-html="cell" />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+                {{ c }}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow
+              v-for="(row, r) in rowsArray(sec.rows, sec.cols)"
+              :key="r"
+            >
+              <TableCell
+                v-for="(cell, ci) in row"
+                :key="ci"
+              >
+                <span v-html="cell" />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
-        <!-- Items (object map) -->
-        <div
-          v-if="sec.items"
-          class="grid gap-3"
-          style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))"
-        >
+        <!-- Items — objeto → grid fixo de 2 colunas de Card; string → lista simples -->
+        <template v-if="sec.items">
           <div
-            v-for="item in itemEntries(sec.items)"
-            :key="item.key"
-            class="rounded-lg border nds-border-soft p-4 space-y-1"
+            v-if="itemsAreCards(sec.items)"
+            class="nds-grid"
+            data-cols="2"
+            data-fixed="true"
+            data-spacing="md"
           >
-            <template v-if="typeof item.value === 'string'">
-              <span class="text-xs nds-uppercase nds-tracking-wide text-muted-foreground">
-                {{ item.key }}
-              </span>
-              <p
-                class="text-sm text-foreground"
-                v-html="item.value"
-              />
-            </template>
-            <template v-else>
-              <h3 class="text-sm font-semibold text-foreground">
-                {{ item.value.title ?? item.key }}
-              </h3>
-              <p
-                v-if="item.value.subtitle || item.value.description || item.value.body"
-                class="text-sm text-muted-foreground"
-                v-html="item.value.subtitle ?? item.value.description ?? item.value.body"
-              />
-              <dl
-                v-if="Object.keys(item.value).some(k => !['title','subtitle','description','body'].includes(k))"
-                class="space-y-1 pt-1"
+            <Card
+              v-for="item in itemEntries(sec.items)"
+              :key="item.key"
+            >
+              <CardHeader>
+                <CardTitle v-if="itemTitle(item.value)" as="h3">
+                  <span v-html="itemTitle(item.value)" />
+                </CardTitle>
+                <CardDescription v-if="itemBody(item.value)">
+                  <span v-html="itemBody(item.value)" />
+                </CardDescription>
+              </CardHeader>
+              <CardContent
+                v-if="itemExtras(item.value).length"
+                class="nds-stack"
+                data-spacing="xs"
               >
-                <template
-                  v-for="(val, k) in item.value"
-                  :key="k"
-                >
-                  <div
-                    v-if="!['title','subtitle','description','body'].includes(String(k)) && typeof val === 'string'"
-                    class="flex gap-2 text-xs"
-                  >
-                    <dt class="text-muted-foreground capitalize">
-                      {{ k }}:
-                    </dt>
-                    <dd
-                      class="text-foreground"
-                      v-html="val"
-                    />
-                  </div>
-                </template>
-              </dl>
-            </template>
+                <p
+                  v-for="ex in itemExtras(item.value)"
+                  :key="ex.key"
+                  class="nds-text-caption nds-text-muted-foreground nds-m-0"
+                  v-html="ex.value"
+                />
+              </CardContent>
+            </Card>
           </div>
-        </div>
+          <ul
+            v-else
+            class="nds-stack nds-list-none"
+            data-spacing="md"
+          >
+            <li
+              v-for="item in itemEntries(sec.items)"
+              :key="item.key"
+              class="nds-text-body nds-leading-relaxed nds-accent-start"
+              v-html="itemBody(item.value)"
+            />
+          </ul>
+        </template>
 
         <!-- Rules -->
         <ul
           v-if="sec.rules"
-          class="space-y-2 list-disc pl-5 text-sm text-foreground"
+          class="nds-stack nds-list-disc nds-text-body"
+          data-spacing="xs"
         >
           <li
             v-for="rule in rulesEntries(sec.rules)"
@@ -291,16 +319,20 @@ track('docs_page_view', {
         <div
           v-for="ex in sec.extras"
           :key="ex.key"
-          class="space-y-2"
+          class="nds-stack"
+          data-spacing="xs"
         >
           <template v-if="typeof ex.value === 'string'">
             <p
-              class="text-sm text-foreground"
+              class="nds-text-body"
               v-html="ex.value"
             />
           </template>
           <template v-else-if="Array.isArray(ex.value)">
-            <ul class="space-y-1 list-disc pl-5 text-sm text-foreground">
+            <ul
+              class="nds-stack nds-list-disc nds-text-body"
+              data-spacing="xs"
+            >
               <li
                 v-for="(v, i) in ex.value"
                 :key="i"

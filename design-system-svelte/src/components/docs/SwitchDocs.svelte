@@ -145,7 +145,7 @@ import { Label } from "@/components/ui/label";`;
 <div class="nds-cluster" data-justify="between">
   <div class="nds-stack" data-spacing="xs">
     <Label for="marketing">Emails de marketing</Label>
-    <p class="nds-text-body nds-text-muted-foreground">
+    <p class="nds-text-body">
       Receba novidades e promoções da plataforma.
     </p>
   </div>
@@ -212,7 +212,7 @@ interface SwitchProps {
         <div class="nds-cluster" data-justify="between">
           <div class="nds-stack" data-spacing="xs">
             <Label for="demo-marketing">{$tStore('demonstration.labels.marketing')}</Label>
-            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.marketingDesc')}</p>
+            <p class="nds-text-body">{$tStore('demonstration.labels.marketingDesc')}</p>
           </div>
           <Switch
             id="demo-marketing"
@@ -227,7 +227,7 @@ interface SwitchProps {
         <div class="nds-cluster" data-justify="between">
           <div class="nds-stack" data-spacing="xs">
             <Label for="demo-darkmode">{$tStore('demonstration.labels.darkMode')}</Label>
-            <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.darkModeDesc')}</p>
+            <p class="nds-text-body">{$tStore('demonstration.labels.darkModeDesc')}</p>
           </div>
           <Switch
             id="demo-darkmode"
@@ -437,7 +437,7 @@ interface SwitchProps {
     <div class="nds-cluster nds-w-sm" data-justify="between">
       <div class="nds-stack" data-spacing="xs">
         <Label for="var-with-desc">Emails de marketing</Label>
-        <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>
+        <p class="nds-text-body">Receba novidades e promoções da plataforma.</p>
       </div>
       <Switch id="var-with-desc" bind:checked={varWithDesc} />
     </div>
@@ -467,14 +467,14 @@ interface SwitchProps {
         name: $tStore('variants.compositions.withDescription.name'),
         description: $tStore('variants.compositions.withDescription.description'),
         useWhen: $tStore('variants.compositions.withDescription.use'),
-        code: `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">\n  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n    <Label for="sw-mkt">Emails de marketing</Label>\n    <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>\n  </div>\n  <Switch id="sw-mkt" checked />\n</div>`,
+        code: `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">\n  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n    <Label for="sw-mkt">Emails de marketing</Label>\n    <p class="nds-text-body">Receba novidades e promoções da plataforma.</p>\n  </div>\n  <Switch id="sw-mkt" checked />\n</div>`,
         preview: compWithDescription,
       },
       {
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
-        code: `<div class="nds-stack" data-spacing="sm" style="width: 24rem">\n  <h4 class="nds-text-body nds-font-medium">Preferências de notificação</h4>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body nds-text-muted-foreground">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
+        code: `<div class="nds-stack" data-spacing="sm" style="width: 24rem">\n  <h4 class="nds-text-body nds-font-medium">Preferências de notificação</h4>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
         preview: compSettingsList,
       },
       {
@@ -498,7 +498,7 @@ interface SwitchProps {
     <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
       <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
         <Label for="comp-sw-mkt">Emails de marketing</Label>
-        <p class="nds-text-body nds-text-muted-foreground">Receba novidades e promoções da plataforma.</p>
+        <p class="nds-text-body">Receba novidades e promoções da plataforma.</p>
       </div>
       <Switch id="comp-sw-mkt" bind:checked={compMarketing} />
     </div>
@@ -510,21 +510,21 @@ interface SwitchProps {
       <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
         <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-email">Email</Label>
-          <p class="nds-text-body nds-text-muted-foreground">Receba avisos importantes por email.</p>
+          <p class="nds-text-body">Receba avisos importantes por email.</p>
         </div>
         <Switch id="comp-sw-list-email" bind:checked={compSettingsEmail} />
       </div>
       <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
         <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-push">Push</Label>
-          <p class="nds-text-body nds-text-muted-foreground">Notificações em tempo real no dispositivo.</p>
+          <p class="nds-text-body">Notificações em tempo real no dispositivo.</p>
         </div>
         <Switch id="comp-sw-list-push" bind:checked={compSettingsPush} />
       </div>
       <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
         <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
           <Label for="comp-sw-list-sms">SMS</Label>
-          <p class="nds-text-body nds-text-muted-foreground">Alertas críticos por mensagem de texto.</p>
+          <p class="nds-text-body">Alertas críticos por mensagem de texto.</p>
         </div>
         <Switch id="comp-sw-list-sms" bind:checked={compSettingsSms} />
       </div>

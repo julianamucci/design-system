@@ -270,7 +270,7 @@ const codeCompositionGallery = `<Carousel class="nds-w-full nds-max-w-md" aria-l
           <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
         </div>
         <div class="nds-p-4">
-          <h3 class="nds-text-body nds-font-semibold nds-text-foreground">{{ photo.title }}</h3>
+          <h3 class="nds-text-body nds-font-semibold">{{ photo.title }}</h3>
           <p class="nds-text-caption nds-text-muted-foreground">{{ photo.description }}</p>
         </div>
       </Card>
@@ -828,7 +828,7 @@ const demoSlides = [1, 2, 3, 4, 5];
                     <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
                   </div>
                   <div class="nds-p-4">
-                    <h3 class="nds-text-body nds-font-semibold nds-text-foreground">
+                    <h3 class="nds-text-body nds-font-semibold">
                       {{ photo.title }}
                     </h3>
                     <p class="nds-text-caption nds-text-muted-foreground">

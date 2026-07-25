@@ -12,6 +12,9 @@
   import {
     Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
   } from '@/components/ui/table';
+  import {
+    Card, CardHeader, CardTitle, CardDescription, CardContent,
+  } from '@/components/ui/card';
 
   type Props = {
     node: unknown;
@@ -39,6 +42,18 @@
     }
     if (isArray(n.tableCols) && isArray(n.tableRows)) {
       return { cols: n.tableCols.map(String), rows: n.tableRows };
+    }
+    // Forma em objeto: cols = { chave: rótulo }, rows = { id: { chave: valor } }.
+    // Mapeia cada célula pela CHAVE de coluna (igual React/Vue/Vanilla).
+    if (isObject(n.cols) && isObject(n.rows)) {
+      const colKeys = Object.keys(n.cols);
+      const cols = colKeys.map((k) => String((n.cols as Record<string, unknown>)[k]));
+      const rows = Object.values(n.rows).map((row) =>
+        isObject(row)
+          ? colKeys.map((k) => (row[k] == null ? '' : String(row[k])))
+          : [String(row)],
+      );
+      return { cols, rows };
     }
     return null;
   }
@@ -78,33 +93,58 @@
     return 'h5';
   }
 
+  // Chaves candidatas a título e a corpo de um card (na ordem de preferência).
+  const TITLE_KEYS = ['title', 'name', 'label'];
+  const BODY_KEYS = ['body', 'description', 'usage', 'use', 'text'];
+
+  function itemTitle(v: unknown): string {
+    if (!isObject(v)) return '';
+    const k = TITLE_KEYS.find((x) => typeof v[x] === 'string');
+    return k ? (v[k] as string) : '';
+  }
+  function itemBody(v: unknown): string {
+    if (isString(v)) return v;
+    if (!isObject(v)) return '';
+    const k = BODY_KEYS.find((x) => typeof v[x] === 'string');
+    return k ? (v[k] as string) : '';
+  }
+  function itemExtras(v: unknown): Array<[string, string]> {
+    if (!isObject(v)) return [];
+    const tk = TITLE_KEYS.find((x) => typeof v[x] === 'string');
+    const bk = BODY_KEYS.find((x) => typeof v[x] === 'string');
+    return Object.entries(v).filter(
+      ([k, val]) => typeof val === 'string' && k !== tk && k !== bk,
+    ) as Array<[string, string]>;
+  }
+
   function headingClass(l: number): string {
-    if (l <= 2) return 'text-xl font-semibold text-foreground';
-    if (l === 3) return 'text-lg font-semibold text-foreground';
-    if (l === 4) return 'text-base font-medium text-foreground';
-    return 'text-sm font-medium text-foreground';
+    // Roles compostos do type scale já trazem o peso — não empilhar nds-font-*.
+    if (l <= 2) return 'nds-text-h2 nds-text-foreground';
+    if (l === 3) return 'nds-text-h3 nds-text-foreground';
+    if (l === 4) return 'nds-text-h4 nds-text-foreground';
+    return 'nds-text-body nds-font-medium';
   }
 </script>
 
 {#snippet renderValue(value: unknown, depth: number)}
   {#if isString(value)}
-    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html value}</p>
+    <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
   {:else if isArray(value)}
     {#if value.every((v) => isString(v))}
-      <ul class="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+      <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
         {#each value as item}
           <li>{@html item}</li>
         {/each}
       </ul>
     {:else}
-      <div class="space-y-3">
+      <div class="nds-stack" data-spacing="sm">
         {#each value as item}
           {#if isObject(item)}
-            <div class="rounded-lg border nds-border-soft p-4 space-y-2">
+            <div class="nds-stack nds-p-4 nds-rounded-md nds-border-soft nds-bg-card" data-spacing="xs">
               {@render renderObject(item, depth + 1)}
             </div>
           {:else}
-            <p class="text-sm text-muted-foreground">{String(item)}</p>
+            <p class="nds-text-body">{String(item)}</p>
           {/if}
         {/each}
       </div>
@@ -117,72 +157,73 @@
 {#snippet renderObject(obj: Record<string, unknown>, depth: number)}
   {@const table = asTable(obj)}
   {#if table}
-    <div class="rounded-lg border nds-border-soft overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {#each table.cols as col}
-              <TableHead>{col}</TableHead>
-            {/each}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {#each table.rows as row}
-            <TableRow>
-              {#if isRowArray(row)}
-                {#each row as cell}
-                  <TableCell>{@html String(cell)}</TableCell>
-                {/each}
-              {:else if isObject(row)}
-                {#each cellsOfObjectRow(row, table.cols) as cell}
-                  <TableCell>{@html cell}</TableCell>
-                {/each}
-              {/if}
-            </TableRow>
+    <!-- O componente Table já provê .nds-table-wrapper (sem wrapper extra) -->
+    <Table>
+      <TableHeader>
+        <TableRow>
+          {#each table.cols as col}
+            <TableHead>{col}</TableHead>
           {/each}
-        </TableBody>
-      </Table>
-    </div>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {#each table.rows as row}
+          <TableRow>
+            {#if isRowArray(row)}
+              {#each row as cell}
+                <TableCell>{@html String(cell)}</TableCell>
+              {/each}
+            {:else if isObject(row)}
+              {#each cellsOfObjectRow(row, table.cols) as cell}
+                <TableCell>{@html cell}</TableCell>
+              {/each}
+            {/if}
+          </TableRow>
+        {/each}
+      </TableBody>
+    </Table>
   {:else}
-    <div class="space-y-4">
+    <div class="nds-stack" data-spacing="md">
       {#each entries(obj) as [key, value]}
         {#if key === 'title' && isString(value)}
           {@const Tag = headingTag(depth)}
-          <svelte:element this={Tag} class={headingClass(depth)}>{value}</svelte:element>
+          <svelte:element this={Tag} class="{headingClass(depth)}">{value}</svelte:element>
         {:else if (key === 'subtitle' || key === 'body' || key === 'description' || key === 'intro' || key === 'audience' || key === 'note') && isString(value)}
-          <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html value}</p>
+          <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
         {:else if key === 'items' && isObject(value)}
-          <div class="grid gap-3 nds-md-grid-2">
-            {#each entries(value) as [, item]}
-              {#if isObject(item)}
-                <div class="rounded-lg border nds-border-soft p-4 space-y-2">
-                  {#if isString(item.title)}
-                    <h4 class="text-sm font-semibold text-foreground">{item.title}</h4>
-                  {/if}
-                  {#if isString(item.body)}
-                    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html item.body}</p>
-                  {:else if isString(item.description)}
-                    <p class="text-sm text-muted-foreground nds-leading-relaxed">{@html item.description}</p>
-                  {/if}
-                  {#if isArray(item.items)}
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-                      {#each item.items as sub}
-                        {#if isString(sub)}
-                          <li>{@html sub}</li>
-                        {:else if isObject(sub) && isString(sub.title)}
-                          <li><strong>{sub.title}</strong>{#if isString(sub.body)} — {@html sub.body}{/if}</li>
-                        {/if}
+          {@const itemsAreCards = Object.values(value).some((v) => v !== null && typeof v === 'object')}
+          {#if itemsAreCards}
+            <!-- Itens objeto → grid fixo de 2 colunas de Card (title + description + extras) -->
+            <div class="nds-grid" data-cols="2" data-fixed="true" data-spacing="md">
+              {#each entries(value) as [, item]}
+                <Card>
+                  <CardHeader>
+                    {#if itemTitle(item)}
+                      <CardTitle as="h3">{@html itemTitle(item)}</CardTitle>
+                    {/if}
+                    {#if itemBody(item)}
+                      <CardDescription>{@html itemBody(item)}</CardDescription>
+                    {/if}
+                  </CardHeader>
+                  {#if itemExtras(item).length}
+                    <CardContent class="nds-stack" data-spacing="xs">
+                      {#each itemExtras(item) as [, exVal]}
+                        <p class="nds-text-caption nds-text-muted-foreground nds-m-0">{@html exVal}</p>
                       {/each}
-                    </ul>
+                    </CardContent>
                   {/if}
-                </div>
-              {:else if isString(item)}
-                <p class="text-sm text-muted-foreground">{@html item}</p>
-              {/if}
-            {/each}
-          </div>
+                </Card>
+              {/each}
+            </div>
+          {:else}
+            <ul class="nds-stack nds-list-none" data-spacing="md">
+              {#each entries(value) as [, item]}
+                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
+              {/each}
+            </ul>
+          {/if}
         {:else if key === 'items' && isArray(value)}
-          <ul class="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+          <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
             {#each value as item}
               {#if isString(item)}
                 <li>{@html item}</li>
@@ -192,12 +233,12 @@
             {/each}
           </ul>
         {:else if isString(value)}
-          <div class="space-y-1">
-            <span class="text-xs font-medium nds-uppercase nds-tracking-wide text-muted-foreground">{key}</span>
-            <p class="text-sm text-foreground nds-leading-relaxed">{@html value}</p>
+          <div class="nds-stack" data-spacing="xs">
+            <span class="nds-text-caption nds-font-medium nds-uppercase nds-tracking-wide nds-text-muted-foreground">{key}</span>
+            <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
           </div>
         {:else if isArray(value) || isObject(value)}
-          <section class="space-y-2">
+          <section class="nds-stack" data-spacing="xs">
             {@render renderValue(value, depth)}
           </section>
         {/if}

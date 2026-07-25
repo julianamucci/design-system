@@ -28,7 +28,7 @@ function labeled(id: string, labelText: string, textarea: HTMLTextAreaElement): 
 
   const label = document.createElement('label');
   label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = labelText;
 
   textarea.id = id;

@@ -89,7 +89,7 @@ function buildCheckboxWithLabel(opts: {
       wrapper.removeChild(label);
     }
     const desc = document.createElement('p');
-    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.className = 'nds-text-body';
     desc.textContent = descText;
     textGroup.appendChild(desc);
     wrapper.append(textGroup);
@@ -418,7 +418,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 label.textContent = t('demonstration.labels.newsletter');
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                 const desc = document.createElement('p');
-                desc.className = 'nds-text-body nds-text-muted-foreground';
+                desc.className = 'nds-text-body';
                 desc.textContent = 'Enviaremos atualizações sobre novos recursos do produto.';
                 textGroup.append(label, desc);
                 outer.append(cb, textGroup);
@@ -481,7 +481,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
                 `label.textContent = 'Receber novidades por email';\n` +
                 `const desc = document.createElement('p');\n` +
-                `desc.className = 'nds-text-body nds-text-muted-foreground';\n` +
+                `desc.className = 'nds-text-body';\n` +
                 `desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';\n` +
                 `textGroup.append(label, desc);\n` +
                 `wrapper.append(cb, textGroup);`,
@@ -500,7 +500,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                 label.textContent = 'Receber novidades por email';
                 const desc = document.createElement('p');
-                desc.className = 'nds-text-body nds-text-muted-foreground';
+                desc.className = 'nds-text-body';
                 desc.textContent = 'Enviaremos atualizações sobre novos recursos e melhorias do produto.';
                 textGroup.append(label, desc);
                 wrapper.append(cb, textGroup);

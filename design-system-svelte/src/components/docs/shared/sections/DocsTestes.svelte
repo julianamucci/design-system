@@ -59,7 +59,7 @@
                 <kbd data-slot="kbd" class="nds-kbd">{item.level}</kbd>
                 <span class="nds-text-body nds-font-medium">{item.criterion}</span>
               </div>
-              <p class="nds-text-body nds-text-muted-foreground">{item.how}</p>
+              <p class="nds-text-body">{item.how}</p>
           </Card>
         {/each}
       </div>

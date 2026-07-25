@@ -33,7 +33,7 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
       <div>
         <p className="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>
         <p
-          className="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed"
+          className="nds-text-body nds-mt-1 nds-leading-relaxed"
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.description) }}
         />
       </div>

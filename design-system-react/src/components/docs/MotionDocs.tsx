@@ -15,8 +15,8 @@ function MotionSpecimens() {
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
       <div className="nds-stack" data-spacing="xs">
-        <h2 className="nds-text-h3 nds-font-semibold nds-text-foreground">Specimens</h2>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <h2 className="nds-text-h2 nds-text-foreground">Specimens</h2>
+        <p className="nds-text-body">
           Passe o mouse sobre cada botão para sentir as três durações do sistema.
         </p>
       </div>

@@ -473,7 +473,7 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
                     label.replaceWith(tg);
                     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
                     const desc = document.createElement('p');
-                    desc.className = 'nds-text-body nds-text-muted-foreground';
+                    desc.className = 'nds-text-body';
                     desc.textContent = item.description;
                     tg.append(label, desc);
                   }
@@ -570,7 +570,7 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
               label.replaceWith(textGroup);
               label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
               const desc = document.createElement('p');
-              desc.className = 'nds-text-body nds-text-muted-foreground';
+              desc.className = 'nds-text-body';
               desc.textContent = item.description;
               textGroup.append(label, desc);
             }
@@ -616,7 +616,7 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
           form.appendChild(submit);
 
           const out = document.createElement('p');
-          out.className = 'nds-text-body nds-text-muted-foreground';
+          out.className = 'nds-text-body';
           out.dataset.testid = 'form-output';
           form.appendChild(out);
 
@@ -692,7 +692,7 @@ items.forEach((item, idx) => {
     label.replaceWith(textGroup);
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
     const desc = document.createElement('p');
-    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.className = 'nds-text-body';
     desc.textContent = item.description;
     textGroup.append(label, desc);
   }
@@ -727,7 +727,7 @@ submit.textContent = 'Continuar';
 form.appendChild(submit);
 
 const out = document.createElement('p');
-out.className = 'nds-text-body nds-text-muted-foreground';
+out.className = 'nds-text-body';
 out.dataset.testid = 'form-output';
 form.appendChild(out);
 

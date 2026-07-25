@@ -67,7 +67,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'small'}
@@ -77,7 +77,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="nds-text-body nds-text-muted-foreground">{metricValue}</p>
+      <p class="nds-text-body">{metricValue}</p>
     </CardContent>
   </Card>
 {:else if variant === 'withFooter'}
@@ -87,7 +87,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body">{productPrice} · {productStock}</p>
     </CardContent>
     <CardFooter class="" data-justify="end" data-spacing="sm">
       <Button variant="outline" size="sm">{actionCancel}</Button>
@@ -104,7 +104,7 @@
       </CardAction>
     </CardHeader>
     <CardContent>
-      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'withImage'}
@@ -115,7 +115,7 @@
       <CardDescription>{description}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
+      <p class="nds-text-body">{productPrice} · {productStock}</p>
     </CardContent>
   </Card>
 {:else if variant === 'clickable'}
@@ -130,7 +130,7 @@
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p class="nds-text-body nds-text-muted-foreground">{productPrice} · {productStock}</p>
+        <p class="nds-text-body">{productPrice} · {productStock}</p>
       </CardContent>
     </Card>
   </a>

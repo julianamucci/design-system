@@ -56,7 +56,7 @@ export const WithDescription: Story = {
     <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style={{ width: "20rem" }}>
       <div className="" data-spacing="xs">
         <Label htmlFor="var-marketing">Emails de marketing</Label>
-        <p className="nds-text-body nds-text-muted-foreground">
+        <p className="nds-text-body">
           Receba novidades e promoções da plataforma.
         </p>
       </div>

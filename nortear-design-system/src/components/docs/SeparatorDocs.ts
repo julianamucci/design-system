@@ -57,7 +57,7 @@ function buildHorizontalDemo(label: string): HTMLElement {
   top.textContent = 'Configurações';
 
   const bottom = document.createElement('p');
-  bottom.className = 'nds-text-body nds-text-muted-foreground';
+  bottom.className = 'nds-text-body';
   bottom.textContent = 'Preferências';
 
   wrap.append(caption, top, createSeparator({ orientation: 'horizontal' }), bottom);

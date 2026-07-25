@@ -55,5 +55,12 @@
 .nds-mt-4    { margin-top: var(--spacing-4); }
 .nds-mt-6    { margin-top: var(--spacing-6); }
 
+/* ── Padding-bottom (pb) ───────────────────────────────────────────────────── */
+.nds-pb-2    { padding-bottom: var(--spacing-2); }
+.nds-pb-4    { padding-bottom: var(--spacing-4); }
+.nds-pb-6    { padding-bottom: var(--spacing-6); }
+.nds-pb-8    { padding-bottom: var(--spacing-8); }
+
 /* ── Margin (todos) ────────────────────────────────────────────────────────── */
-.nds-m-0    { margin: 0; }
+.nds-m-0     { margin: 0; }
+.nds-mx-auto { margin-inline: auto; }

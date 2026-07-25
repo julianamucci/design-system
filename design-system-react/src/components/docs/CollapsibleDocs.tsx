@@ -251,7 +251,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         <div className="nds-w-full nds-stack" data-spacing="xl">
           {/* Default — uncontrolled */}
           <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
+            <p className="nds-text-body nds-font-medium">
               Padrão (não-controlado)
             </p>
             <Collapsible className="nds-w-full nds-max-w-sm">
@@ -277,7 +277,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
           {/* Controlled */}
           <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
+            <p className="nds-text-body nds-font-medium">
               Controlado
             </p>
             <ControlledDemo tContent={tContent} />
@@ -285,7 +285,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
           {/* Disabled */}
           <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-medium nds-text-muted-foreground">
+            <p className="nds-text-body nds-font-medium">
               Desabilitado
             </p>
             <Collapsible className="nds-w-full nds-max-w-sm">

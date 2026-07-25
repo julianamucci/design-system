@@ -91,14 +91,14 @@ function readActiveTheme(): { brandClass: string; isDark: boolean } {
 
 function sectionTitle(text: string): HTMLHeadingElement {
   const h = document.createElement('h2');
-  h.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
+  h.className = 'nds-text-h2 nds-text-foreground';
   h.textContent = text;
   return h;
 }
 
 function sectionSubtitle(text: string): HTMLParagraphElement {
   const p = document.createElement('p');
-  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.className = 'nds-text-body';
   p.textContent = text;
   return p;
 }
@@ -347,7 +347,7 @@ export function createThemeColorsDocs(): HTMLElement {
   densityHeader.className = 'nds-stack';
   densityHeader.dataset.spacing = 'xs';
   const densityTitle = document.createElement('h3');
-  densityTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  densityTitle.className = 'nds-text-body nds-font-medium';
   const densitySubtitle = sectionSubtitle('');
   densityHeader.append(densityTitle, densitySubtitle);
 
@@ -424,7 +424,7 @@ export function createThemeColorsDocs(): HTMLElement {
   fontsHeader.className = 'nds-stack';
   fontsHeader.dataset.spacing = 'xs';
   const fontsTitle = document.createElement('h3');
-  fontsTitle.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  fontsTitle.className = 'nds-text-body nds-font-medium';
   const fontsSubtitle = sectionSubtitle('');
   fontsHeader.append(fontsTitle, fontsSubtitle);
 

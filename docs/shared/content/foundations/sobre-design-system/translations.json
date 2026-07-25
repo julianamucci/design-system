@@ -18,37 +18,37 @@
     },
     "stacks": {
       "title": "Os quatro stacks",
-      "subtitle": "Cada implementação é um pacote npm independente em sua própria pasta, com Storybook próprio rodando em uma porta dedicada.",
+      "subtitle": "Cada implementação é um pacote npm independente em sua própria pasta, com Storybook próprio publicado em seu subdomínio.",
       "cols": {
         "stack": "Stack",
         "base": "UI Base",
-        "port": "Porta",
+        "url": "Storybook",
         "when": "Quando escolher"
       },
       "rows": {
         "react": {
-          "name": "React",
+          "stack": "React",
           "base": "base-ui + CSS .nds-*",
-          "port": "6006",
-          "when": "Aplicações React 19 com necessidade de SSR via Next/Remix"
+          "url": "<a href=\"https://react.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">react.norteardesign.com.br</a>",
+          "when": "Qualquer aplicação React 19 — SPA, SSR ou SSG (Vite, Next, Remix)"
         },
         "vue": {
-          "name": "Vue",
+          "stack": "Vue",
           "base": "reka-ui + CSS .nds-*",
-          "port": "6007",
-          "when": "Aplicações Vue 3 com Composition API e Nuxt"
+          "url": "<a href=\"https://vue.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vue.norteardesign.com.br</a>",
+          "when": "Qualquer aplicação Vue 3 — SPA ou SSR (Vite, Nuxt)"
         },
         "svelte": {
-          "name": "Svelte",
+          "stack": "Svelte",
           "base": "bits-ui + CSS .nds-*",
-          "port": "6008",
-          "when": "Aplicações Svelte 5 com runes e SvelteKit"
+          "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
+          "when": "Qualquer aplicação Svelte 5 — SPA ou SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "name": "Nortear",
+          "stack": "Nortear",
           "base": "basecoat-css + Vanilla TS",
-          "port": "6009",
-          "when": "Sites estáticos, micro-frontends ou bases legadas sem framework"
+          "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
+          "when": "Sites estáticos, micro-frontends ou qualquer base sem framework de UI"
         }
       }
     },
@@ -96,7 +96,7 @@
     },
     "links": {
       "title": "Como navegar",
-      "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher a porta correta de acordo com o framework do seu projeto."
+      "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher o Storybook correto de acordo com o framework do seu projeto."
     },
     "nav": {
       "overview": "Visão geral",
@@ -125,37 +125,37 @@
     },
     "stacks": {
       "title": "The four stacks",
-      "subtitle": "Each implementation is an independent npm package in its own folder, with its own Storybook running on a dedicated port.",
+      "subtitle": "Each implementation is an independent npm package in its own folder, with its own Storybook published on its subdomain.",
       "cols": {
         "stack": "Stack",
         "base": "Base UI",
-        "port": "Port",
+        "url": "Storybook",
         "when": "When to pick"
       },
       "rows": {
         "react": {
-          "name": "React",
+          "stack": "React",
           "base": "base-ui + CSS .nds-*",
-          "port": "6006",
-          "when": "React 19 apps needing SSR via Next/Remix"
+          "url": "<a href=\"https://react.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">react.norteardesign.com.br</a>",
+          "when": "Any React 19 app — SPA, SSR or SSG (Vite, Next, Remix)"
         },
         "vue": {
-          "name": "Vue",
+          "stack": "Vue",
           "base": "reka-ui + CSS .nds-*",
-          "port": "6007",
-          "when": "Vue 3 apps with Composition API and Nuxt"
+          "url": "<a href=\"https://vue.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vue.norteardesign.com.br</a>",
+          "when": "Any Vue 3 app — SPA or SSR (Vite, Nuxt)"
         },
         "svelte": {
-          "name": "Svelte",
+          "stack": "Svelte",
           "base": "bits-ui + CSS .nds-*",
-          "port": "6008",
-          "when": "Svelte 5 apps with runes and SvelteKit"
+          "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
+          "when": "Any Svelte 5 app — SPA or SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "name": "Nortear",
+          "stack": "Nortear",
           "base": "basecoat-css + Vanilla TS",
-          "port": "6009",
-          "when": "Static sites, micro-frontends or legacy bases without a framework"
+          "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
+          "when": "Static sites, micro-frontends or any base without a UI framework"
         }
       }
     },
@@ -203,7 +203,7 @@
     },
     "links": {
       "title": "How to navigate",
-      "subtitle": "Each stack has its own Storybook. Use the table above to pick the right port based on your project's framework."
+      "subtitle": "Each stack has its own Storybook. Use the table above to pick the right Storybook based on your project's framework."
     },
     "nav": {
       "overview": "Overview",
@@ -232,37 +232,37 @@
     },
     "stacks": {
       "title": "Los cuatro stacks",
-      "subtitle": "Cada implementación es un paquete npm independiente en su propia carpeta, con Storybook propio corriendo en un puerto dedicado.",
+      "subtitle": "Cada implementación es un paquete npm independiente en su propia carpeta, con Storybook propio publicado en su subdominio.",
       "cols": {
         "stack": "Stack",
         "base": "UI Base",
-        "port": "Puerto",
+        "url": "Storybook",
         "when": "Cuándo elegir"
       },
       "rows": {
         "react": {
-          "name": "React",
+          "stack": "React",
           "base": "base-ui + CSS .nds-*",
-          "port": "6006",
-          "when": "Aplicaciones React 19 con necesidad de SSR vía Next/Remix"
+          "url": "<a href=\"https://react.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">react.norteardesign.com.br</a>",
+          "when": "Cualquier aplicación React 19 — SPA, SSR o SSG (Vite, Next, Remix)"
         },
         "vue": {
-          "name": "Vue",
+          "stack": "Vue",
           "base": "reka-ui + CSS .nds-*",
-          "port": "6007",
-          "when": "Aplicaciones Vue 3 con Composition API y Nuxt"
+          "url": "<a href=\"https://vue.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vue.norteardesign.com.br</a>",
+          "when": "Cualquier aplicación Vue 3 — SPA o SSR (Vite, Nuxt)"
         },
         "svelte": {
-          "name": "Svelte",
+          "stack": "Svelte",
           "base": "bits-ui + CSS .nds-*",
-          "port": "6008",
-          "when": "Aplicaciones Svelte 5 con runes y SvelteKit"
+          "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
+          "when": "Cualquier aplicación Svelte 5 — SPA o SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "name": "Nortear",
+          "stack": "Nortear",
           "base": "basecoat-css + Vanilla TS",
-          "port": "6009",
-          "when": "Sitios estáticos, micro-frontends o bases legadas sin framework"
+          "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
+          "when": "Sitios estáticos, micro-frontends o cualquier base sin framework de UI"
         }
       }
     },
@@ -310,7 +310,7 @@
     },
     "links": {
       "title": "Cómo navegar",
-      "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el puerto correcto según el framework de tu proyecto."
+      "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el Storybook correcto según el framework de tu proyecto."
     },
     "nav": {
       "overview": "Visión general",

@@ -424,7 +424,7 @@ const visualTestItems = computed(() => [
       <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="lg">
         <!-- Demo 1: Default (não-controlado) -->
         <div class="nds-stack" data-spacing="xs">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Default (não-controlado)
           </p>
           <Collapsible class="nds-w-full">
@@ -444,7 +444,7 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 2: Controlado -->
         <div class="nds-stack" data-spacing="xs">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Controlado (v-model:open)
           </p>
           <div class="nds-stack" data-spacing="sm">
@@ -482,7 +482,7 @@ const visualTestItems = computed(() => [
 
         <!-- Demo 3: Desabilitado -->
         <div class="nds-stack" data-spacing="xs">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">
+          <p class="nds-text-body nds-font-medium">
             Desabilitado
           </p>
           <Collapsible

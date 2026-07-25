@@ -225,7 +225,7 @@ export const Vertical: Story = {
     wrap.style.width = '18rem';
 
     const note = document.createElement('p');
-    note.className = 'nds-text-body nds-text-muted-foreground nds-italic';
+    note.className = 'nds-text-body nds-italic';
     note.style.textAlign = 'center';
     note.textContent =
       'A variante "vertical" NÃO é suportada de forma acessível no Basecoat — <input type="range"> nativo não expõe orientação vertical via ARIA. Use a variante horizontal.';

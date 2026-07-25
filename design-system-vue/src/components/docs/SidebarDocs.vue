@@ -611,7 +611,7 @@ const compositionItems = computed(() => [
               id="main-content"
               class="nds-p-4"
             >
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 {{ tContent('description') }}
               </p>
             </main>

@@ -72,7 +72,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Modo icon colapsado</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body nds-text-muted-foreground">Apenas ícones visíveis na sidebar. Passe o mouse para ver os tooltips.</p>
+        <p class="nds-text-body">Apenas ícones visíveis na sidebar. Passe o mouse para ver os tooltips.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

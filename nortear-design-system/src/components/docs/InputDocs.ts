@@ -61,7 +61,7 @@ function buildDemoInput(opts: {
 
   if (opts.labelText) {
     const label = document.createElement('label');
-    label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+    label.className = 'nds-text-body nds-font-medium';
     label.textContent = opts.labelText;
     wrapper.appendChild(label);
   }
@@ -289,7 +289,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.className = 'nds-stack nds-w-full';
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -301,7 +301,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.className = 'nds-stack nds-w-full';
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'Digite seu email' });
                 wrapper.appendChild(label);
@@ -319,7 +319,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.className = 'nds-stack nds-w-full';
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -331,7 +331,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.className = 'nds-stack nds-w-full';
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'text', placeholder: 'ex: joao@empresa.com' });
                 wrapper.appendChild(label);
@@ -349,7 +349,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.className = 'nds-stack nds-w-full';
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Nome completo';
                 const input = createInput({ type: 'text', placeholder: 'ex: João da Silva' });
                 wrapper.appendChild(label);
@@ -420,7 +420,7 @@ export function createInputDocs(): HTMLElement {
           `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
           `const label = document.createElement('label');\n` +
           `label.htmlFor = 'input-nome';\n` +
-          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.className = 'nds-text-body nds-font-medium';\n` +
           `label.textContent = 'Nome completo';\n` +
           `const input = createInput({ type: 'text', id: 'input-nome', placeholder: 'ex: João da Silva' });\n` +
           `wrapper.append(label, input);`;
@@ -430,7 +430,7 @@ export function createInputDocs(): HTMLElement {
           `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
           `const label = document.createElement('label');\n` +
           `label.htmlFor = 'input-email';\n` +
-          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.className = 'nds-text-body nds-font-medium';\n` +
           `label.textContent = 'Email';\n` +
           `const input = createInput({ type: 'email', id: 'input-email', placeholder: 'ex: joao@empresa.com' });\n` +
           `const hint = document.createElement('p');\n` +
@@ -443,7 +443,7 @@ export function createInputDocs(): HTMLElement {
           `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
           `const label = document.createElement('label');\n` +
           `label.htmlFor = 'input-email-err';\n` +
-          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.className = 'nds-text-body nds-font-medium';\n` +
           `label.textContent = 'Email';\n` +
           `const input = createInput({ type: 'email', id: 'input-email-err', placeholder: 'ex: joao@empresa.com' });\n` +
           `input.setAttribute('aria-invalid', 'true');\n` +
@@ -459,7 +459,7 @@ export function createInputDocs(): HTMLElement {
           `wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';\n` +
           `const label = document.createElement('label');\n` +
           `label.htmlFor = 'input-url';\n` +
-          `label.className = 'nds-text-body nds-font-medium nds-text-foreground';\n` +
+          `label.className = 'nds-text-body nds-font-medium';\n` +
           `label.textContent = 'URL do site';\n` +
           `const row = document.createElement('div');\n` +
           `row.className = 'nds-cluster nds-rounded-md nds-border-default border-input focus-within:ring-2 focus-within:ring-ring/50 nds-overflow-hidden';\n` +
@@ -487,7 +487,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'input-nome';
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Nome completo';
                 const input = createInput({ type: 'text', id: 'input-nome', placeholder: 'ex: João da Silva' });
                 wrapper.append(label, input);
@@ -505,7 +505,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'input-email';
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', id: 'input-email', placeholder: 'ex: joao@empresa.com' });
                 const hint = document.createElement('p');
@@ -526,7 +526,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'input-email-err';
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'Email';
                 const input = createInput({ type: 'email', id: 'input-email-err', placeholder: 'ex: joao@empresa.com' });
                 input.setAttribute('aria-invalid', 'true');
@@ -550,7 +550,7 @@ export function createInputDocs(): HTMLElement {
                 wrapper.dataset.spacing = 'xs';
                 const label = document.createElement('label');
                 label.htmlFor = 'input-url';
-                label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+                label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'URL do site';
                 const row = document.createElement('div');
                 row.className = 'nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden';

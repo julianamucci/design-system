@@ -275,7 +275,7 @@ const codeCompositionConfirmEmail = `<Dialog>
       <DialogTitle>Confirmar e-mail</DialogTitle>
       <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
     </DialogHeader>
-    <p class="nds-text-body nds-text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+    <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
     <DialogFooter>
       <DialogClose as-child>
         <Button variant="outline">Cancelar</Button>
@@ -811,7 +811,7 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Confirmar e-mail</DialogTitle>
               <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
             </DialogHeader>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               Vamos enviar um link para maria@exemplo.com.
             </p>
             <DialogFooter>

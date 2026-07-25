@@ -869,7 +869,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Perfil
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
@@ -879,7 +879,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Conta
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
@@ -889,7 +889,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Segurança
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Configurações, painéis administrativos, navegação por categorias reconhecíveis (Perfil, Conta, Segurança).
               </p>
             </div>
@@ -923,7 +923,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Caixa de entrada
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
@@ -933,7 +933,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Spam
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
@@ -943,7 +943,7 @@ function handleTabChange(value: string) {
               <h3 class="nds-text-body nds-font-semibold">
                 Lixeira
               </h3>
-              <p class="nds-text-body nds-text-muted-foreground">
+              <p class="nds-text-body">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
             </div>
@@ -979,7 +979,7 @@ function handleTabChange(value: string) {
                 <h3 class="nds-text-body nds-font-semibold">
                   Perfil
                 </h3>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>
@@ -989,7 +989,7 @@ function handleTabChange(value: string) {
                 <h3 class="nds-text-body nds-font-semibold">
                   Conta
                 </h3>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>
@@ -999,7 +999,7 @@ function handleTabChange(value: string) {
                 <h3 class="nds-text-body nds-font-semibold">
                   Segurança
                 </h3>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
                 </p>
               </div>

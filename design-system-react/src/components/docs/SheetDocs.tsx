@@ -442,7 +442,7 @@ export function SheetDocs() {
                         Sem descrição visível
                       </SheetDescription>
                     </SheetHeader>
-                    <p className="nds-px-4 nds-text-body nds-text-muted-foreground">
+                    <p className="nds-px-4 nds-text-body">
                       Conteúdo sem cabeçalho — leitores de tela perdem contexto.
                     </p>
                   </SheetContent>

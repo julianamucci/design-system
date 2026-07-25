@@ -181,10 +181,10 @@ onUnmounted(() => {
       <!-- ── Paleta semântica ───────────────────────────────────────────────── -->
       <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
         <div class="nds-stack" data-spacing="xs">
-          <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">
+          <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('palette.title') }}
           </h2>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             {{ t('palette.subtitle') }}
           </p>
         </div>
@@ -218,10 +218,10 @@ onUnmounted(() => {
       <!-- ── Temas de marca ─────────────────────────────────────────────────── -->
       <section class="nds-stack nds-docs-section-divider" data-spacing="md">
         <div class="nds-stack" data-spacing="xs">
-          <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">
+          <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('brand.title') }}
           </h2>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             {{ t('brand.subtitle') }}
           </p>
         </div>
@@ -251,10 +251,10 @@ onUnmounted(() => {
       <!-- ── Light e Dark ───────────────────────────────────────────────────── -->
       <section class="nds-stack nds-docs-section-divider" data-spacing="md">
         <div class="nds-stack" data-spacing="xs">
-          <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">
+          <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('modes.title') }}
           </h2>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             {{ t('modes.subtitle') }}
           </p>
         </div>
@@ -284,10 +284,10 @@ onUnmounted(() => {
       <!-- ── Densidade e Fontes ─────────────────────────────────────────────── -->
       <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
         <div class="nds-stack" data-spacing="xs">
-          <h2 class="nds-text-h3 nds-font-semibold nds-text-foreground">
+          <h2 class="nds-text-h2 nds-text-foreground">
             {{ t('axes.title') }}
           </h2>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             {{ t('axes.subtitle') }}
           </p>
         </div>
@@ -295,10 +295,10 @@ onUnmounted(() => {
         <!-- Densidade -->
         <div class="nds-stack" data-spacing="md">
           <div class="nds-stack" data-spacing="xs">
-            <h3 class="nds-text-body nds-font-medium nds-text-foreground">
+            <h3 class="nds-text-body nds-font-medium">
               {{ t('axes.density.title') }}
             </h3>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               {{ t('axes.density.subtitle') }}
             </p>
           </div>
@@ -345,10 +345,10 @@ onUnmounted(() => {
         <!-- Fontes -->
         <div class="nds-stack" data-spacing="md">
           <div class="nds-stack" data-spacing="xs">
-            <h3 class="nds-text-body nds-font-medium nds-text-foreground">
+            <h3 class="nds-text-body nds-font-medium">
               {{ t('axes.fonts.title') }}
             </h3>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               {{ t('axes.fonts.subtitle') }}
             </p>
           </div>

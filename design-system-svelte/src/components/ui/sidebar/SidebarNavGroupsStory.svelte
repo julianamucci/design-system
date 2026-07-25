@@ -103,7 +103,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com grupos de navegação</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body nds-text-muted-foreground">Sidebar com múltiplos grupos, badges e campo de busca.</p>
+        <p class="nds-text-body">Sidebar com múltiplos grupos, badges e campo de busca.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

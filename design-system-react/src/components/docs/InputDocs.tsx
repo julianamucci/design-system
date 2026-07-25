@@ -267,7 +267,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
           <div className="nds-stack" data-spacing="xs">
-            <label htmlFor="demo-nome" className="nds-text-body nds-font-medium nds-text-foreground">
+            <label htmlFor="demo-nome" className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.defaultLabel")}
             </label>
             <Input
@@ -277,7 +277,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             />
           </div>
           <div className="nds-stack" data-spacing="xs">
-            <label htmlFor="demo-email" className="nds-text-body nds-font-medium nds-text-foreground">
+            <label htmlFor="demo-email" className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.emailLabel")}
             </label>
             <Input
@@ -287,7 +287,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             />
           </div>
           <div className="nds-stack" data-spacing="xs">
-            <label htmlFor="demo-search" className="nds-text-body nds-font-medium nds-text-foreground">
+            <label htmlFor="demo-search" className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.searchLabel")}
             </label>
             <InputGroup>
@@ -302,7 +302,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             </InputGroup>
           </div>
           <div className="nds-stack" data-spacing="xs">
-            <label htmlFor="demo-disabled" className="nds-text-body nds-font-medium nds-text-foreground">
+            <label htmlFor="demo-disabled" className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.disabledLabel")}
             </label>
             <Input
@@ -313,7 +313,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             />
           </div>
           <div className="nds-stack" data-spacing="xs">
-            <label htmlFor="demo-error" className="nds-text-body nds-font-medium nds-text-foreground">
+            <label htmlFor="demo-error" className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.errorLabel")}
             </label>
             <Input
@@ -328,7 +328,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             </p>
           </div>
           <div className="nds-stack" data-spacing="xs">
-            <label className="nds-text-body nds-font-medium nds-text-foreground">
+            <label className="nds-text-body nds-font-medium">
               {tContent("demonstration.labels.passwordLabel")}
             </label>
             <PasswordToggleDemo
@@ -408,13 +408,13 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="dodont-1-do" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
+                <label htmlFor="dodont-1-do" className="nds-text-body nds-font-medium">Email</label>
                 <Input id="dodont-1-do" type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
             dontPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="dodont-1-dont" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
+                <label htmlFor="dodont-1-dont" className="nds-text-body nds-font-medium">Email</label>
                 <Input id="dodont-1-dont" type="email" placeholder="Digite seu email" />
               </div>
             ),
@@ -426,13 +426,13 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="dodont-2-do" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
+                <label htmlFor="dodont-2-do" className="nds-text-body nds-font-medium">Email</label>
                 <Input id="dodont-2-do" type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
             dontPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="dodont-2-dont" className="nds-text-body nds-font-medium nds-text-foreground">Email</label>
+                <label htmlFor="dodont-2-dont" className="nds-text-body nds-font-medium">Email</label>
                 <Input id="dodont-2-dont" type="text" placeholder="ex: joao@empresa.com" />
               </div>
             ),
@@ -444,7 +444,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="dodont-3-do" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="dodont-3-do" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.defaultLabel")}
                 </label>
                 <Input id="dodont-3-do" type="text" placeholder="ex: João da Silva" />
@@ -480,7 +480,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeText,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-text" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-text" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.defaultLabel")}
                 </label>
                 <Input id="var-text" type="text" placeholder={tContent("demonstration.labels.defaultPlaceholder")} />
@@ -493,7 +493,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeEmail,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-email" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-email" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.emailLabel")}
                 </label>
                 <Input id="var-email" type="email" placeholder={tContent("demonstration.labels.emailPlaceholder")} />
@@ -506,7 +506,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codePassword,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-password" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-password" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.passwordLabel")}
                 </label>
                 <Input id="var-password" type="password" placeholder={tContent("demonstration.labels.passwordPlaceholder")} />
@@ -519,7 +519,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeNumber,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-number" className="nds-text-body nds-font-medium nds-text-foreground">Quantidade</label>
+                <label htmlFor="var-number" className="nds-text-body nds-font-medium">Quantidade</label>
                 <Input id="var-number" type="number" placeholder="0" />
               </div>
             ),
@@ -530,7 +530,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeFile,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-file" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-file" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.fileLabel")}
                 </label>
                 <Input id="var-file" type="file" />
@@ -543,7 +543,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeInputGroupSearch,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-group-search" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-group-search" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.searchLabel")}
                 </label>
                 <InputGroup>
@@ -565,7 +565,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             code: codeInputGroupEmail,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
-                <label htmlFor="var-group-email" className="nds-text-body nds-font-medium nds-text-foreground">
+                <label htmlFor="var-group-email" className="nds-text-body nds-font-medium">
                   {tContent("demonstration.labels.emailLabel")}
                 </label>
                 <InputGroup>

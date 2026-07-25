@@ -607,7 +607,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTitle>Confirmar e-mail</DialogTitle>
       <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
     </DialogHeader>
-    <p class="nds-text-body nds-text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+    <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
     <DialogFooter>
       <DialogClose>...</DialogClose>
       <Button>Enviar link</Button>
@@ -667,7 +667,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Confirmar e-mail</DialogTitle>
           <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
         </DialogHeader>
-        <p class="nds-text-body nds-text-muted-foreground">Vamos enviar um link para maria@exemplo.com.</p>
+        <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
         <DialogFooter>
           <DialogClose>
             {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}

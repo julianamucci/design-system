@@ -81,7 +81,7 @@ function buildToastEl(opts: {
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'nds-text-body nds-text-muted-foreground nds-mt-1';
+    descEl.className = 'nds-text-body nds-mt-1';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);
   }

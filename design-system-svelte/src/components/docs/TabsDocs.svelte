@@ -507,19 +507,19 @@ interface TabsContentProps {
       <TabsContent value="profile">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Perfil</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+          <p class="nds-text-body">Edite suas informações públicas.</p>
         </div>
       </TabsContent>
       <TabsContent value="account">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Conta</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+          <p class="nds-text-body">Email, idioma e preferências.</p>
         </div>
       </TabsContent>
       <TabsContent value="security">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Segurança</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+          <p class="nds-text-body">Senha e autenticação em dois fatores.</p>
         </div>
       </TabsContent>
     </Tabs>
@@ -539,19 +539,19 @@ interface TabsContentProps {
       <TabsContent value="inbox">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Caixa de entrada</h3>
-          <p class="nds-text-body nds-text-muted-foreground">12 mensagens não lidas.</p>
+          <p class="nds-text-body">12 mensagens não lidas.</p>
         </div>
       </TabsContent>
       <TabsContent value="spam">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Spam</h3>
-          <p class="nds-text-body nds-text-muted-foreground">3 itens marcados como spam.</p>
+          <p class="nds-text-body">3 itens marcados como spam.</p>
         </div>
       </TabsContent>
       <TabsContent value="trash">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Lixeira</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Itens excluídos recentemente.</p>
+          <p class="nds-text-body">Itens excluídos recentemente.</p>
         </div>
       </TabsContent>
     </Tabs>
@@ -567,19 +567,19 @@ interface TabsContentProps {
       <TabsContent value="profile">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Perfil</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Edite suas informações públicas.</p>
+          <p class="nds-text-body">Edite suas informações públicas.</p>
         </div>
       </TabsContent>
       <TabsContent value="account">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Conta</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Email, idioma e preferências.</p>
+          <p class="nds-text-body">Email, idioma e preferências.</p>
         </div>
       </TabsContent>
       <TabsContent value="security">
         <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-semibold">Segurança</h3>
-          <p class="nds-text-body nds-text-muted-foreground">Senha e autenticação em dois fatores.</p>
+          <p class="nds-text-body">Senha e autenticação em dois fatores.</p>
         </div>
       </TabsContent>
     </Tabs>
@@ -592,9 +592,9 @@ interface TabsContentProps {
         <TabsTrigger value="active">Ativos</TabsTrigger>
         <TabsTrigger value="archived">Arquivados</TabsTrigger>
       </TabsList>
-      <TabsContent value="all"><p class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Mostrando todos os itens.</p></TabsContent>
-      <TabsContent value="active"><p class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Apenas itens ativos.</p></TabsContent>
-      <TabsContent value="archived"><p class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Itens arquivados.</p></TabsContent>
+      <TabsContent value="all"><p class="nds-text-body" style="padding-top: 0.75rem">Mostrando todos os itens.</p></TabsContent>
+      <TabsContent value="active"><p class="nds-text-body" style="padding-top: 0.75rem">Apenas itens ativos.</p></TabsContent>
+      <TabsContent value="archived"><p class="nds-text-body" style="padding-top: 0.75rem">Itens arquivados.</p></TabsContent>
     </Tabs>
   {/snippet}
 

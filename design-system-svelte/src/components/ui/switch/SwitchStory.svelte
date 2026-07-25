@@ -37,7 +37,7 @@
       <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
         {labelText}
       </Label>
-      <p id="{id}-description" class="nds-text-body nds-text-muted-foreground">{descriptionText}</p>
+      <p id="{id}-description" class="nds-text-body">{descriptionText}</p>
     </div>
     <Switch
       {id}

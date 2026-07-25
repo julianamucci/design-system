@@ -116,7 +116,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com sub-menu</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body nds-text-muted-foreground">Sidebar com submenu expansível em "Componentes".</p>
+        <p class="nds-text-body">Sidebar com submenu expansível em "Componentes".</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

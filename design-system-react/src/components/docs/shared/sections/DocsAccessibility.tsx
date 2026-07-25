@@ -21,7 +21,7 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
       <Card className="nds-p-4 nds-stack" data-spacing="lg">
         <div className="nds-stack" data-spacing="md">
           <p
-            className="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
+            className="nds-text-body nds-leading-relaxed"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(summary) }}
           />
           <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="sm">

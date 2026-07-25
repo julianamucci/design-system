@@ -92,7 +92,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     criterionSpan.textContent = item.criterion;
     top.append(levelKbd, criterionSpan);
     const howP = document.createElement('p');
-    howP.className = 'nds-text-body nds-text-muted-foreground';
+    howP.className = 'nds-text-body';
     howP.textContent = item.how;
     card.append(top, howP);
     a11yGrid.appendChild(card);

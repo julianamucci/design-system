@@ -88,7 +88,7 @@ function VolumeDemo({ label }: { label: string }) {
     <div className="nds-stack nds-w-full" data-spacing="xs">
       <div className="nds-cluster" data-justify="between">
         <Label>{label}</Label>
-        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
+        <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
           {value[0]}%
         </span>
       </div>
@@ -109,7 +109,7 @@ function PriceRangeDemo({ label }: { label: string }) {
     <div className="nds-stack nds-w-full" data-spacing="sm">
       <div className="nds-cluster" data-justify="between">
         <Label>{label}</Label>
-        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
+        <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
           R$ {value[0]} — R$ {value[1]}
         </span>
       </div>
@@ -129,7 +129,7 @@ function VerticalDemo({ label }: { label: string }) {
   const [value, setValue] = useState<number[]>([60]);
   return (
     <div className="nds-stack" data-spacing="sm" style={{ alignItems: "center", height: "10rem", width: "8rem" }}>
-      <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
+      <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
         {value[0]}%
       </span>
       <Slider
@@ -150,7 +150,7 @@ function BrightnessCompDemo() {
     <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
       <div className="nds-cluster" data-justify="between">
         <Label>Brilho</Label>
-        <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
+        <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
           {value[0]}%
         </span>
       </div>
@@ -181,7 +181,7 @@ function FormCompDemo() {
       <div className="nds-stack" data-spacing="sm">
         <div className="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" className="nds-text-body nds-text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>
+          <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
             {value[0]}%
           </span>
         </div>

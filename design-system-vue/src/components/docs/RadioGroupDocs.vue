@@ -170,7 +170,7 @@ const codeWithDescription = `<RadioGroup aria-label="Forma de pagamento">
     <RadioGroupItem value="cartao" id="d-cartao" class="nds-mt-0-5" aria-describedby="d-cartao-desc" />
     <div class="nds-stack" data-spacing="xs">
       <Label :for="'d-cartao'">Cartão de crédito</Label>
-      <p id="d-cartao-desc" class="nds-text-body nds-text-muted-foreground">
+      <p id="d-cartao-desc" class="nds-text-body">
         Aprovação imediata em até 12x.
       </p>
     </div>
@@ -179,7 +179,7 @@ const codeWithDescription = `<RadioGroup aria-label="Forma de pagamento">
     <RadioGroupItem value="pix" id="d-pix" class="nds-mt-0-5" aria-describedby="d-pix-desc" />
     <div class="nds-stack" data-spacing="xs">
       <Label :for="'d-pix'">Pix</Label>
-      <p id="d-pix-desc" class="nds-text-body nds-text-muted-foreground">
+      <p id="d-pix-desc" class="nds-text-body">
         Pagamento instantâneo com 5% de desconto.
       </p>
     </div>
@@ -292,21 +292,21 @@ const codeCompWithDescription = `<div class="nds-stack nds-w-sm" data-spacing="s
       <RadioGroupItem value="standard" id="comp-d-standard" class="nds-mt-1" />
       <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-standard'">Padrão</Label>
-        <p class="nds-text-body nds-text-muted-foreground">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
+        <p class="nds-text-body">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
       </div>
     </div>
     <div class="nds-cluster" data-spacing="xs" data-align="start">
       <RadioGroupItem value="express" id="comp-d-express" class="nds-mt-1" />
       <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-express'">Expressa</Label>
-        <p class="nds-text-body nds-text-muted-foreground">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
+        <p class="nds-text-body">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
       </div>
     </div>
     <div class="nds-cluster" data-spacing="xs" data-align="start">
       <RadioGroupItem value="pickup" id="comp-d-pickup" class="nds-mt-1" />
       <div class="nds-stack" data-spacing="xs">
         <Label :for="'comp-d-pickup'">Retirar na loja</Label>
-        <p class="nds-text-body nds-text-muted-foreground">Disponível em 2h — sem custo de frete.</p>
+        <p class="nds-text-body">Disponível em 2h — sem custo de frete.</p>
       </div>
     </div>
   </RadioGroup>
@@ -335,7 +335,7 @@ const codeCompInForm = `<form
     </RadioGroup>
   </fieldset>
   <Button type="submit" style="align-self: flex-end">Continuar</Button>
-  <p class="nds-text-body nds-text-muted-foreground">Selecionado: {{ output }}</p>
+  <p class="nds-text-body">Selecionado: {{ output }}</p>
 </form>`;
 
 const compositionItems = computed(() => [
@@ -578,7 +578,7 @@ const visualTestItems = computed(() => [
                 <Label :for="'demo-d-cartao'">{{ tContent('demonstration.labels.card') }}</Label>
                 <p
                   id="demo-d-cartao-desc"
-                  class="nds-text-body nds-text-muted-foreground"
+                  class="nds-text-body"
                 >
                   Visa, Mastercard, Amex · até 12x
                 </p>
@@ -595,7 +595,7 @@ const visualTestItems = computed(() => [
                 <Label :for="'demo-d-pix'">{{ tContent('demonstration.labels.pix') }}</Label>
                 <p
                   id="demo-d-pix-desc"
-                  class="nds-text-body nds-text-muted-foreground"
+                  class="nds-text-body"
                 >
                   Aprovação instantânea · 5% de desconto
                 </p>
@@ -867,7 +867,7 @@ const visualTestItems = computed(() => [
               <Label :for="'var-d-cartao'">Cartão de crédito</Label>
               <p
                 id="var-d-cartao-desc"
-                class="nds-text-body nds-text-muted-foreground"
+                class="nds-text-body"
               >
                 Aprovação imediata em até 12x.
               </p>
@@ -884,7 +884,7 @@ const visualTestItems = computed(() => [
               <Label :for="'var-d-pix'">Pix</Label>
               <p
                 id="var-d-pix-desc"
-                class="nds-text-body nds-text-muted-foreground"
+                class="nds-text-body"
               >
                 Pagamento instantâneo com 5% de desconto.
               </p>
@@ -999,7 +999,7 @@ const visualTestItems = computed(() => [
               />
               <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-standard'">Padrão</Label>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Entrega em 5 dias úteis — frete grátis acima de R$ 199.
                 </p>
               </div>
@@ -1012,7 +1012,7 @@ const visualTestItems = computed(() => [
               />
               <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-express'">Expressa</Label>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Receba em 1 dia útil — taxa adicional de R$ 19,90.
                 </p>
               </div>
@@ -1025,7 +1025,7 @@ const visualTestItems = computed(() => [
               />
               <div class="nds-stack" data-spacing="xs">
                 <Label :for="'comp-d-pickup'">Retirar na loja</Label>
-                <p class="nds-text-body nds-text-muted-foreground">
+                <p class="nds-text-body">
                   Disponível em 2h — sem custo de frete.
                 </p>
               </div>
@@ -1075,7 +1075,7 @@ const visualTestItems = computed(() => [
           >
             Continuar
           </Button>
-          <p class="nds-text-body nds-text-muted-foreground">
+          <p class="nds-text-body">
             Selecionado: {{ inFormOutput }}
           </p>
         </form>

@@ -39,7 +39,7 @@ function createTextareaField(opts: {
 
   const label = document.createElement('label');
   label.htmlFor = opts.labelFor;
-  label.className = 'nds-text-body nds-font-medium nds-text-foreground';
+  label.className = 'nds-text-body nds-font-medium';
   label.textContent = opts.labelText;
 
   opts.textareaEl.id = opts.labelFor;

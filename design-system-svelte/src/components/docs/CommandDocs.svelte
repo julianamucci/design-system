@@ -437,7 +437,7 @@ interface CommandLoadingProps {
 
         <!-- Demo 1: Inline -->
         <div class="nds-w-full nds-max-w-sm">
-          <p class="nds-mb-2 nds-text-body nds-font-medium nds-text-muted-foreground">Inline</p>
+          <p class="nds-mb-2 nds-text-body nds-font-medium">Inline</p>
           <div class="nds-rounded-md nds-border-default nds-shadow-md">
             <Command.Root>
               <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
@@ -458,7 +458,7 @@ interface CommandLoadingProps {
 
         <!-- Demo 2: Com CommandLoading -->
         <div class="nds-w-full nds-max-w-sm">
-          <p class="nds-mb-2 nds-text-body nds-font-medium nds-text-muted-foreground">Com CommandLoading</p>
+          <p class="nds-mb-2 nds-text-body nds-font-medium">Com CommandLoading</p>
           <div class="nds-rounded-md nds-border-default nds-shadow-md">
             <Command.Root>
               <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
@@ -477,7 +477,7 @@ interface CommandLoadingProps {
 
         <!-- Demo 3: Command Palette -->
         <div class="nds-stack" data-spacing="sm" style="align-items: center">
-          <p class="nds-text-body nds-font-medium nds-text-muted-foreground">Command Palette</p>
+          <p class="nds-text-body nds-font-medium">Command Palette</p>
           <Button
             variant="outline"
             class="nds-cluster nds-text-muted-foreground"

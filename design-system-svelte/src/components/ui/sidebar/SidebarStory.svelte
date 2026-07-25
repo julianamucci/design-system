@@ -77,7 +77,7 @@
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Conteúdo principal</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-        <p class="nds-text-body nds-text-muted-foreground">Área de conteúdo da aplicação.</p>
+        <p class="nds-text-body">Área de conteúdo da aplicação.</p>
       </main>
     </SidebarInset>
   </SidebarProvider>

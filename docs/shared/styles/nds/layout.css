@@ -228,6 +228,13 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--grid-min), 18rem)), 1fr));
 }
 
+/* data-fixed — respeita EXATAMENTE o data-cols (colunas fixas, sem auto-fit).
+ * Use quando o número de colunas é intencional (ex.: grids de cards em pares).
+ * minmax(0, 1fr) permite as colunas encolherem sem estourar o container. */
+.nds-grid[data-fixed][data-cols="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 
 /* ── nds-sidebar-layout ────────────────────────────────────────────────────
  * Sidebar + conteúdo principal lado-a-lado. Abaixo de um threshold (definido

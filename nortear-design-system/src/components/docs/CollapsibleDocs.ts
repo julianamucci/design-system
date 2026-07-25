@@ -247,7 +247,7 @@ export function createCollapsibleDocs(): HTMLElement {
         block1.className = 'nds-stack';
         block1.dataset.spacing = 'sm';
         const label1 = document.createElement('p');
-        label1.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
+        label1.className = 'nds-text-body nds-font-medium';
         label1.textContent = 'Padrão (não-controlado, fechado)';
         block1.appendChild(label1);
         block1.appendChild(buildDemoDefault());
@@ -257,7 +257,7 @@ export function createCollapsibleDocs(): HTMLElement {
         block2.className = 'nds-stack';
         block2.dataset.spacing = 'sm';
         const label2 = document.createElement('p');
-        label2.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
+        label2.className = 'nds-text-body nds-font-medium';
         label2.textContent = 'Aberto por padrão (defaultOpen: true)';
         block2.appendChild(label2);
         block2.appendChild(buildDemoDefaultOpen());
@@ -267,7 +267,7 @@ export function createCollapsibleDocs(): HTMLElement {
         block3.className = 'nds-stack';
         block3.dataset.spacing = 'sm';
         const label3 = document.createElement('p');
-        label3.className = 'nds-text-body nds-font-medium nds-text-muted-foreground';
+        label3.className = 'nds-text-body nds-font-medium';
         label3.textContent = 'Desabilitado';
         block3.appendChild(label3);
         block3.appendChild(buildDemoDisabled());

@@ -116,7 +116,7 @@ const priorityClass = (p: string) =>
               <Kbd>{{ item.level }}</Kbd>
               <span class="nds-text-body nds-font-medium">{{ item.criterion }}</span>
             </div>
-            <p class="nds-text-body nds-text-muted-foreground">
+            <p class="nds-text-body">
               {{ item.how }}
             </p>
           </Card>

@@ -77,7 +77,7 @@ function buildProductCardPreview(): HTMLElement {
   price.className = 'nds-text-lead nds-font-semibold';
   price.textContent = t('demonstration.labels.productPrice');
   const stock = document.createElement('p');
-  stock.className = 'nds-text-body nds-text-muted-foreground nds-mt-1';
+  stock.className = 'nds-text-body nds-mt-1';
   stock.textContent = t('demonstration.labels.productStock');
   content.append(price, stock);
 
@@ -143,7 +143,7 @@ function buildMetricCardPreview(): HTMLElement {
   value.className = 'nds-text-h4 nds-font-semibold';
   value.textContent = t('demonstration.labels.metricValue');
   const trend = document.createElement('p');
-  trend.className = 'nds-text-body nds-text-muted-foreground nds-mt-1';
+  trend.className = 'nds-text-body nds-mt-1';
   trend.textContent = t('demonstration.labels.metricTrend');
   content.append(value, trend);
   card.append(header, content);
@@ -423,7 +423,7 @@ export function createCardDocs(): HTMLElement {
                 const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
                 const content = createCardContent({ className: 'nds-p-4' });
                 const p = document.createElement('p');
-                p.className = 'nds-text-body nds-text-muted-foreground';
+                p.className = 'nds-text-body';
                 p.textContent = '—';
                 content.appendChild(p);
                 card.appendChild(content);

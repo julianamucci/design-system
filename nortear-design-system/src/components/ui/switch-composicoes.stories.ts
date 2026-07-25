@@ -84,7 +84,7 @@ export const ComDescricao: Story = {
     label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
-    desc.className = 'nds-text-body nds-text-muted-foreground';
+    desc.className = 'nds-text-body';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
     textGroup.append(label, desc);
@@ -148,7 +148,7 @@ export const ListaDeConfiguracoes: Story = {
       label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
       const desc = document.createElement('p');
-      desc.className = 'nds-text-body nds-text-muted-foreground';
+      desc.className = 'nds-text-body';
       desc.textContent = descText;
 
       textGroup.append(label, desc);
