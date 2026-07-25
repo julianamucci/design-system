@@ -8,7 +8,6 @@
 				default: "",
 				outline: "",
 			},
-			// PATCH: theme — alturas via tokens (--height-*) (ver PATCHES.md#toggle-dimension-tokens)
 			size: {
 				default: "",
 				sm: "",

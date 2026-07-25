@@ -25,7 +25,6 @@
 		bind:this={ref}
 		data-slot={dataSlot}
 		class={cn(
-			// PATCH: theme — altura via token (--height-default) + file:h-(--height-xs) (ver PATCHES.md#input-dimension-tokens)
 				"nds-input",
 			className
 		)}
@@ -39,7 +38,6 @@
 		bind:this={ref}
 		data-slot={dataSlot}
 		class={cn(
-			// PATCH: theme — altura via token (--height-default) + file:h-(--height-xs) (ver PATCHES.md#input-dimension-tokens)
 				"nds-input",
 			className
 		)}

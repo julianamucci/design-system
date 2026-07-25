@@ -1,9 +1,7 @@
 <script lang="ts" module>
 	import { cva, type VariantProps } from "class-variance-authority";
 
-	// PATCH: theme — altura via token (--height-badge) (ver PATCHES.md#badge-dimension-tokens)
 	export const badgeVariants = cva("nds-badge", {
-		// PATCH: theme — rounded via token --radius-badge
 		
 		variants: {
 			variant: {

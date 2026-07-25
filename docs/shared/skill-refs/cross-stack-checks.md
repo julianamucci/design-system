@@ -138,35 +138,29 @@ Após ler docs pages no check 7, inspecionar seção `do-dont`:
 
 ---
 
-## Check 10 — Patches sobre upstream shadcn
+## Check 10 — Patches sobre libs primitivas/externas
 
-**Toda divergência intencional entre `components/ui/` e shadcn upstream deve ter:**
+**Toda divergência intencional em relação ao comportamento das libs primitivas (`@base-ui/react`, `reka-ui`, `bits-ui`) ou libs externas de componente (`sonner`, `cmdk`, `react-day-picker`, `lucide`) deve ter:**
 
 1. Marker `// PATCH: <categoria> — <motivo> (ver PATCHES.md#<anchor>)` imediatamente acima da linha customizada
 2. Entrada correspondente em `PATCHES.md` com diff antes/depois, motivo e instrução de verificação
 
 Categorias: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 
-**Quando dispara:** correção envolveu adicionar classes/estrutura que `shadcn@latest add <slug>` **não** geraria.
+**Quando dispara:** correção contorna/sobrescreve comportamento vindo de uma dessas libs (ARIA, foco, eventos, DOM) — não escolhas visuais das classes `.nds-*` (essas são o design do próprio sistema, não patch).
 
 **Sinais de patch:**
-- Classe Tailwind nova que não existia em nenhuma stack
-- Mudou tag HTML do primitive
-- Removeu/substituiu regra do CSS compartilhado `.nds-*` via override local
-- Adicionou atributo ARIA/role que upstream não define
-- Introduziu comportamento JS que upstream não tem
+- Mudou tag HTML/role/ARIA que a lib primitiva define
+- Contornou comportamento JS da lib (foco, teclado, portal)
+- `a11y.disable`/regra desabilitada por limitação de lib externa (exige justificativa)
+- Alteração via `patch-package` em `node_modules/`
 
 **Sinais de cross-stack (não é patch):**
-- Copiou classes do React para Vue/Svelte/Vanilla (já no upstream React)
+- Copiou classes do React para Vue/Svelte/Vanilla (React é referência)
 - Alinhou nome de variante/tamanho entre stacks
 - Adicionou story ou preencheu docs
 
-**Verificar diff vs upstream:**
-```bash
-npx shadcn@latest view <slug> 2>/dev/null | head -80
-```
-
-**Auditoria geral (mode `all`):** 1 `Grep` (pattern `"PATCH:"`, path `nortear-design-system-*/src/components/ui/`). Cruze com `PATCHES.md`.
+**Auditoria geral (mode `all`):** 1 `Grep` (pattern `"PATCH:"`, path `nortear-design-system-*/src/`). Cruze com `PATCHES.md`.
 
 - Marker no código sem entrada = bug (reportar, não deletar marker)
 - Entrada sem marker = patch resolvido upstream (atualizar status)
@@ -256,7 +250,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | Do & Don't layout correto | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Section containers (não inline) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 
-### Patches sobre upstream shadcn
+### Patches sobre libs primitivas/externas
 | Arquivo | Marker no código | Entrada em PATCHES.md | Status |
 
 ### Divergências idiomáticas Vanilla

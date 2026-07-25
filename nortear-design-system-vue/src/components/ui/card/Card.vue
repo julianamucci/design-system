@@ -11,10 +11,6 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <!--
-    PATCH: bugfix — has-[>[data-slot=card-footer]] restringe a filho direto para
-    não zerar pb em Cards aninhados com footer (ver PATCHES.md#card-footer-direct-child).
-  -->
   <div
     data-slot="card"
     :data-size="size"

@@ -1,7 +1,6 @@
 <script lang="ts" module>
 	import { cva, type VariantProps } from "class-variance-authority";
 
-	// PATCH: theme — rounded via token --radius-alert
 	export const alertVariants = cva("nds-alert", {
 		
 		variants: {

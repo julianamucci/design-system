@@ -27,7 +27,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 1. **Catálogo de checks**: `docs/shared/skill-refs/cross-stack-checks.md` — todos os 11 checks com pseudocódigo e thresholds. **Use como playbook completo**.
 2. `docs/shared/guidelines/11-consistencia-cross-stack.md` — regras gerais
-3. `PATCHES.md` (raiz) — divergências intencionais sobre o upstream shadcn
+3. `PATCHES.md` (raiz) — divergências intencionais sobre libs primitivas/externas
 4. `docs/shared/guidelines/12-tokenizacao-dimensoes.md` — exceções aceitas
 
 ---
@@ -55,7 +55,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, sanitizeHtml, structureCode, breadcrumb, SEO completo) | Read × 4 | Variável |
 | 8 | Cobertura de stories | Glob × 4 | Bug |
 | 9 | Do & Don't layout (bug recorrente) | inspeção visual após Read | Bloqueante |
-| 10 | Patches sobre upstream shadcn (markers + PATCHES.md) | Grep × 1 + leitura | Crítico |
+| 10 | Patches sobre libs primitivas/externas (markers + PATCHES.md) | Grep × 1 + leitura | Crítico |
 | 11 | Divergências idiomáticas Vanilla (3 camadas: notes, DocsProps, story) | inspeção após Read | Bug |
 | 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 4 | Bug |
 
