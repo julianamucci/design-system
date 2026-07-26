@@ -64,28 +64,28 @@
         "light": "Light",
         "dark": "Dark"
       },
-      "rows": [
-        [
-          "--elevation-sm",
-          "0 1px 2px rgba(0,0,0,.1)",
-          "0 1px 2px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-md",
-          "0 4px 6px -1px rgba(0,0,0,.1)",
-          "0 4px 6px -1px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-lg",
-          "0 10px 15px -3px rgba(0,0,0,.1)",
-          "0 10px 15px -3px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-xl",
-          "0 20px 25px -5px rgba(0,0,0,.1)",
-          "0 20px 25px -5px rgba(0,0,0,.3)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "token": "--elevation-sm",
+          "light": "0 1px 2px rgba(0,0,0,.1)",
+          "dark": "0 1px 2px rgba(0,0,0,.3)"
+        },
+        "r2": {
+          "token": "--elevation-md",
+          "light": "0 4px 6px -1px rgba(0,0,0,.1)",
+          "dark": "0 4px 6px -1px rgba(0,0,0,.3)"
+        },
+        "r3": {
+          "token": "--elevation-lg",
+          "light": "0 10px 15px -3px rgba(0,0,0,.1)",
+          "dark": "0 10px 15px -3px rgba(0,0,0,.3)"
+        },
+        "r4": {
+          "token": "--elevation-xl",
+          "light": "0 20px 25px -5px rgba(0,0,0,.1)",
+          "dark": "0 20px 25px -5px rgba(0,0,0,.3)"
+        }
+      }
     },
     "radius": {
       "title": "Tokens de radius",
@@ -179,30 +179,30 @@
         "example": "Exemplo no sistema"
       },
       "rows": {
-        "0": [
-          "--radius (10px)",
-          "--spacing-1 (4px)",
-          "--radius-sm (6px)",
-          "Tabs trigger; itens de Dropdown, Menubar e Command"
-        ],
-        "1": [
-          "--radius (10px)",
-          "2px",
-          "--radius-md (8px)",
-          "Botão do InputGroup; opção do Select"
-        ],
-        "2": [
-          "--radius-card (14px)",
-          "--spacing-1 (4px)",
-          "--radius (10px)",
-          "Bloco interno colado à borda de um Card"
-        ],
-        "3": [
-          "qualquer",
-          "0 (full-bleed)",
-          "mesmo raio do pai",
-          "Imagem no topo do Card"
-        ]
+        "0": {
+          "parent": "--radius (10px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius-sm (6px)",
+          "example": "Tabs trigger; itens de Dropdown, Menubar e Command"
+        },
+        "1": {
+          "parent": "--radius (10px)",
+          "inset": "2px",
+          "child": "--radius-md (8px)",
+          "example": "Botão do InputGroup; opção do Select"
+        },
+        "2": {
+          "parent": "--radius-card (14px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius (10px)",
+          "example": "Bloco interno colado à borda de um Card"
+        },
+        "3": {
+          "parent": "qualquer",
+          "inset": "0 (full-bleed)",
+          "child": "mesmo raio do pai",
+          "example": "Imagem no topo do Card"
+        }
       },
       "rules": {
         "utility": "Para aninhamentos dinâmicos use <code>.nds-radius-nested</code> — o container define <code>--nested-parent-radius</code> e <code>--nested-inset</code>; <code>max(0px, …)</code> zera o raio quando o inset é maior que o raio do pai.",
@@ -230,48 +230,48 @@
         "border": "Border"
       },
       "rows": {
-        "0": [
-          "Card",
-          "radius-card (14px)",
-          "elevation-sm",
-          "ring 1px"
-        ],
-        "1": [
-          "Button",
-          "radius-button (10px)",
-          "—",
-          "transparent / border"
-        ],
-        "2": [
-          "Input",
-          "radius-input (10px)",
-          "—",
-          "input"
-        ],
-        "3": [
-          "Dropdown / Popover / Select",
-          "radius (10px)",
-          "elevation-md",
-          "border"
-        ],
-        "4": [
-          "Dialog / Sheet",
-          "radius-card (14px)",
-          "elevation-lg",
-          "ring 1px"
-        ],
-        "5": [
-          "Tooltip / Toast / HoverCard",
-          "radius-sm (6px)",
-          "elevation-xl",
-          "—"
-        ],
-        "6": [
-          "Badge",
-          "radius-badge (pill)",
-          "—",
-          "transparent"
-        ]
+        "0": {
+          "component": "Card",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-sm",
+          "border": "ring 1px"
+        },
+        "1": {
+          "component": "Button",
+          "radius": "radius-button (10px)",
+          "shadow": "—",
+          "border": "transparent / border"
+        },
+        "2": {
+          "component": "Input",
+          "radius": "radius-input (10px)",
+          "shadow": "—",
+          "border": "input"
+        },
+        "3": {
+          "component": "Dropdown / Popover / Select",
+          "radius": "radius (10px)",
+          "shadow": "elevation-md",
+          "border": "border"
+        },
+        "4": {
+          "component": "Dialog / Sheet",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-lg",
+          "border": "ring 1px"
+        },
+        "5": {
+          "component": "Tooltip / Toast / HoverCard",
+          "radius": "radius-sm (6px)",
+          "shadow": "elevation-xl",
+          "border": "—"
+        },
+        "6": {
+          "component": "Badge",
+          "radius": "radius-badge (pill)",
+          "shadow": "—",
+          "border": "transparent"
+        }
       }
     },
     "rules": {
@@ -360,28 +360,28 @@
         "light": "Light",
         "dark": "Dark"
       },
-      "rows": [
-        [
-          "--elevation-sm",
-          "0 1px 2px rgba(0,0,0,.1)",
-          "0 1px 2px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-md",
-          "0 4px 6px -1px rgba(0,0,0,.1)",
-          "0 4px 6px -1px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-lg",
-          "0 10px 15px -3px rgba(0,0,0,.1)",
-          "0 10px 15px -3px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-xl",
-          "0 20px 25px -5px rgba(0,0,0,.1)",
-          "0 20px 25px -5px rgba(0,0,0,.3)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "token": "--elevation-sm",
+          "light": "0 1px 2px rgba(0,0,0,.1)",
+          "dark": "0 1px 2px rgba(0,0,0,.3)"
+        },
+        "r2": {
+          "token": "--elevation-md",
+          "light": "0 4px 6px -1px rgba(0,0,0,.1)",
+          "dark": "0 4px 6px -1px rgba(0,0,0,.3)"
+        },
+        "r3": {
+          "token": "--elevation-lg",
+          "light": "0 10px 15px -3px rgba(0,0,0,.1)",
+          "dark": "0 10px 15px -3px rgba(0,0,0,.3)"
+        },
+        "r4": {
+          "token": "--elevation-xl",
+          "light": "0 20px 25px -5px rgba(0,0,0,.1)",
+          "dark": "0 20px 25px -5px rgba(0,0,0,.3)"
+        }
+      }
     },
     "radius": {
       "title": "Radius tokens",
@@ -475,30 +475,30 @@
         "example": "Example in the system"
       },
       "rows": {
-        "0": [
-          "--radius (10px)",
-          "--spacing-1 (4px)",
-          "--radius-sm (6px)",
-          "Tabs trigger; Dropdown, Menubar and Command items"
-        ],
-        "1": [
-          "--radius (10px)",
-          "2px",
-          "--radius-md (8px)",
-          "InputGroup button; Select option"
-        ],
-        "2": [
-          "--radius-card (14px)",
-          "--spacing-1 (4px)",
-          "--radius (10px)",
-          "Inner block flush to a Card edge"
-        ],
-        "3": [
-          "any",
-          "0 (full-bleed)",
-          "same as parent",
-          "Image at the top of a Card"
-        ]
+        "0": {
+          "parent": "--radius (10px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius-sm (6px)",
+          "example": "Tabs trigger; Dropdown, Menubar and Command items"
+        },
+        "1": {
+          "parent": "--radius (10px)",
+          "inset": "2px",
+          "child": "--radius-md (8px)",
+          "example": "InputGroup button; Select option"
+        },
+        "2": {
+          "parent": "--radius-card (14px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius (10px)",
+          "example": "Inner block flush to a Card edge"
+        },
+        "3": {
+          "parent": "any",
+          "inset": "0 (full-bleed)",
+          "child": "same as parent",
+          "example": "Image at the top of a Card"
+        }
       },
       "rules": {
         "utility": "For dynamic nesting use <code>.nds-radius-nested</code> — the container sets <code>--nested-parent-radius</code> and <code>--nested-inset</code>; <code>max(0px, …)</code> zeroes the radius when the inset exceeds the parent radius.",
@@ -526,48 +526,48 @@
         "border": "Border"
       },
       "rows": {
-        "0": [
-          "Card",
-          "radius-card (14px)",
-          "elevation-sm",
-          "1px ring"
-        ],
-        "1": [
-          "Button",
-          "radius-button (10px)",
-          "—",
-          "transparent / border"
-        ],
-        "2": [
-          "Input",
-          "radius-input (10px)",
-          "—",
-          "input"
-        ],
-        "3": [
-          "Dropdown / Popover / Select",
-          "radius (10px)",
-          "elevation-md",
-          "border"
-        ],
-        "4": [
-          "Dialog / Sheet",
-          "radius-card (14px)",
-          "elevation-lg",
-          "1px ring"
-        ],
-        "5": [
-          "Tooltip / Toast / HoverCard",
-          "radius-sm (6px)",
-          "elevation-xl",
-          "—"
-        ],
-        "6": [
-          "Badge",
-          "radius-badge (pill)",
-          "—",
-          "transparent"
-        ]
+        "0": {
+          "component": "Card",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-sm",
+          "border": "1px ring"
+        },
+        "1": {
+          "component": "Button",
+          "radius": "radius-button (10px)",
+          "shadow": "—",
+          "border": "transparent / border"
+        },
+        "2": {
+          "component": "Input",
+          "radius": "radius-input (10px)",
+          "shadow": "—",
+          "border": "input"
+        },
+        "3": {
+          "component": "Dropdown / Popover / Select",
+          "radius": "radius (10px)",
+          "shadow": "elevation-md",
+          "border": "border"
+        },
+        "4": {
+          "component": "Dialog / Sheet",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-lg",
+          "border": "1px ring"
+        },
+        "5": {
+          "component": "Tooltip / Toast / HoverCard",
+          "radius": "radius-sm (6px)",
+          "shadow": "elevation-xl",
+          "border": "—"
+        },
+        "6": {
+          "component": "Badge",
+          "radius": "radius-badge (pill)",
+          "shadow": "—",
+          "border": "transparent"
+        }
       }
     },
     "rules": {
@@ -656,28 +656,28 @@
         "light": "Light",
         "dark": "Dark"
       },
-      "rows": [
-        [
-          "--elevation-sm",
-          "0 1px 2px rgba(0,0,0,.1)",
-          "0 1px 2px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-md",
-          "0 4px 6px -1px rgba(0,0,0,.1)",
-          "0 4px 6px -1px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-lg",
-          "0 10px 15px -3px rgba(0,0,0,.1)",
-          "0 10px 15px -3px rgba(0,0,0,.3)"
-        ],
-        [
-          "--elevation-xl",
-          "0 20px 25px -5px rgba(0,0,0,.1)",
-          "0 20px 25px -5px rgba(0,0,0,.3)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "token": "--elevation-sm",
+          "light": "0 1px 2px rgba(0,0,0,.1)",
+          "dark": "0 1px 2px rgba(0,0,0,.3)"
+        },
+        "r2": {
+          "token": "--elevation-md",
+          "light": "0 4px 6px -1px rgba(0,0,0,.1)",
+          "dark": "0 4px 6px -1px rgba(0,0,0,.3)"
+        },
+        "r3": {
+          "token": "--elevation-lg",
+          "light": "0 10px 15px -3px rgba(0,0,0,.1)",
+          "dark": "0 10px 15px -3px rgba(0,0,0,.3)"
+        },
+        "r4": {
+          "token": "--elevation-xl",
+          "light": "0 20px 25px -5px rgba(0,0,0,.1)",
+          "dark": "0 20px 25px -5px rgba(0,0,0,.3)"
+        }
+      }
     },
     "radius": {
       "title": "Tokens de radius",
@@ -771,30 +771,30 @@
         "example": "Ejemplo en el sistema"
       },
       "rows": {
-        "0": [
-          "--radius (10px)",
-          "--spacing-1 (4px)",
-          "--radius-sm (6px)",
-          "Tabs trigger; ítems de Dropdown, Menubar y Command"
-        ],
-        "1": [
-          "--radius (10px)",
-          "2px",
-          "--radius-md (8px)",
-          "Botón del InputGroup; opción del Select"
-        ],
-        "2": [
-          "--radius-card (14px)",
-          "--spacing-1 (4px)",
-          "--radius (10px)",
-          "Bloque interno pegado al borde de un Card"
-        ],
-        "3": [
-          "cualquiera",
-          "0 (full-bleed)",
-          "mismo radio del padre",
-          "Imagen en la parte superior de un Card"
-        ]
+        "0": {
+          "parent": "--radius (10px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius-sm (6px)",
+          "example": "Tabs trigger; ítems de Dropdown, Menubar y Command"
+        },
+        "1": {
+          "parent": "--radius (10px)",
+          "inset": "2px",
+          "child": "--radius-md (8px)",
+          "example": "Botón del InputGroup; opción del Select"
+        },
+        "2": {
+          "parent": "--radius-card (14px)",
+          "inset": "--spacing-1 (4px)",
+          "child": "--radius (10px)",
+          "example": "Bloque interno pegado al borde de un Card"
+        },
+        "3": {
+          "parent": "cualquiera",
+          "inset": "0 (full-bleed)",
+          "child": "mismo radio del padre",
+          "example": "Imagen en la parte superior de un Card"
+        }
       },
       "rules": {
         "utility": "Para anidamientos dinámicos usa <code>.nds-radius-nested</code> — el contenedor define <code>--nested-parent-radius</code> y <code>--nested-inset</code>; <code>max(0px, …)</code> anula el radio cuando el inset supera el radio del padre.",
@@ -822,48 +822,48 @@
         "border": "Border"
       },
       "rows": {
-        "0": [
-          "Card",
-          "radius-card (14px)",
-          "elevation-sm",
-          "ring 1px"
-        ],
-        "1": [
-          "Button",
-          "radius-button (10px)",
-          "—",
-          "transparent / border"
-        ],
-        "2": [
-          "Input",
-          "radius-input (10px)",
-          "—",
-          "input"
-        ],
-        "3": [
-          "Dropdown / Popover / Select",
-          "radius (10px)",
-          "elevation-md",
-          "border"
-        ],
-        "4": [
-          "Dialog / Sheet",
-          "radius-card (14px)",
-          "elevation-lg",
-          "ring 1px"
-        ],
-        "5": [
-          "Tooltip / Toast / HoverCard",
-          "radius-sm (6px)",
-          "elevation-xl",
-          "—"
-        ],
-        "6": [
-          "Badge",
-          "radius-badge (pill)",
-          "—",
-          "transparent"
-        ]
+        "0": {
+          "component": "Card",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-sm",
+          "border": "ring 1px"
+        },
+        "1": {
+          "component": "Button",
+          "radius": "radius-button (10px)",
+          "shadow": "—",
+          "border": "transparent / border"
+        },
+        "2": {
+          "component": "Input",
+          "radius": "radius-input (10px)",
+          "shadow": "—",
+          "border": "input"
+        },
+        "3": {
+          "component": "Dropdown / Popover / Select",
+          "radius": "radius (10px)",
+          "shadow": "elevation-md",
+          "border": "border"
+        },
+        "4": {
+          "component": "Dialog / Sheet",
+          "radius": "radius-card (14px)",
+          "shadow": "elevation-lg",
+          "border": "ring 1px"
+        },
+        "5": {
+          "component": "Tooltip / Toast / HoverCard",
+          "radius": "radius-sm (6px)",
+          "shadow": "elevation-xl",
+          "border": "—"
+        },
+        "6": {
+          "component": "Badge",
+          "radius": "radius-badge (pill)",
+          "shadow": "—",
+          "border": "transparent"
+        }
       }
     },
     "rules": {

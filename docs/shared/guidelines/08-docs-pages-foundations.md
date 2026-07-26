@@ -704,4 +704,19 @@ Toda foundation page usa o renderer genérico da stack (`FoundationPage.tsx` / `
 - Itens objeto → grid `nds-grid` `data-cols="2" data-fixed data-spacing="md"` de componente **Card**: `CardHeader > CardTitle as="h3" + CardDescription` (title-like: `title|name|label`; body-like: `body|description|usage|use|text`); campos extras em `CardContent` (`nds-text-caption nds-text-muted-foreground`).
 - Itens string → `ul.nds-stack.nds-list-none` `data-spacing="md"` com `li.nds-text-body.nds-leading-relaxed.nds-accent-start`.
 
-**Tabelas** (`cols`+`rows`, objeto ou array): componente `Table` renderizado direto, sem wrapper com borda. Células mapeadas pela CHAVE da coluna — as chaves de `rows.*` devem bater com as de `cols` no translations.json.
+**Tabelas** — forma canônica ÚNICA no translations.json:
+
+```json
+"minhaTabela": {
+  "title": "…", "subtitle": "…",
+  "cols": { "context": "Contexto", "duration": "Duração" },
+  "rows": {
+    "hover":  { "context": "Hover em primitivos", "duration": "120ms" },
+    "toggle": { "context": "Toggle de estado",    "duration": "120ms" }
+  }
+}
+```
+
+`cols` = objeto `{ chave: rótulo }`; `rows` = objeto `{ id: { <chave da coluna>: valor } }` — cada célula mapeada pela CHAVE da coluna, nunca por posição. O componente `Table` é renderizado direto, sem wrapper com borda.
+
+**PROIBIDO gerar `rows` como array (posicional)** — `rows: [["a","b"], …]` ou `rows: { "0": ["a","b"] }`. A forma posicional quebrou os renderers Svelte/Vanilla três vezes (squash em célula única, texto solto com vírgulas); todas as tabelas existentes foram normalizadas para a forma canônica em 2026-07. Os renderers ainda toleram arrays por segurança, mas conteúdo novo deve usar SOMENTE a forma por chave.

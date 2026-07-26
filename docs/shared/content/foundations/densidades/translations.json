@@ -20,26 +20,26 @@
         "spacingBase": "Spacing base",
         "heightDefault": "Altura default"
       },
-      "rows": [
-        [
-          "Condensado",
-          "densidade-condensado",
-          "3.2px (~80%)",
-          "28px"
-        ],
-        [
-          "Default",
-          "densidade-default (ou nenhuma)",
-          "4px (100%)",
-          "32px"
-        ],
-        [
-          "Confortável",
-          "densidade-confortavel",
-          "5px (~125%)",
-          "40px"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "name": "Condensado",
+          "class": "densidade-condensado",
+          "spacingBase": "3.2px (~80%)",
+          "heightDefault": "28px"
+        },
+        "r2": {
+          "name": "Default",
+          "class": "densidade-default (ou nenhuma)",
+          "spacingBase": "4px (100%)",
+          "heightDefault": "32px"
+        },
+        "r3": {
+          "name": "Confortável",
+          "class": "densidade-confortavel",
+          "spacingBase": "5px (~125%)",
+          "heightDefault": "40px"
+        }
+      }
     },
     "tokens": {
       "title": "Tokens afetados",
@@ -80,23 +80,23 @@
         "context": "Contexto ideal",
         "examples": "Exemplos"
       },
-      "rows": [
-        [
-          "Condensado",
-          "Telas data-heavy onde caber mais informação é crítico",
-          "DataTable, dashboards de monitoramento, planilhas, terminais admin"
-        ],
-        [
-          "Default",
-          "Fluxo padrão de produto, equilíbrio entre densidade e respiro",
-          "Formulários, settings, listas, maioria das telas SaaS"
-        ],
-        [
-          "Confortável",
-          "Produtos consumer ou mobile-first onde o toque precisa de área generosa",
-          "Apps mobile, fluxos onboarding, telas para usuários menos técnicos"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "level": "Condensado",
+          "context": "Telas data-heavy onde caber mais informação é crítico",
+          "examples": "DataTable, dashboards de monitoramento, planilhas, terminais admin"
+        },
+        "r2": {
+          "level": "Default",
+          "context": "Fluxo padrão de produto, equilíbrio entre densidade e respiro",
+          "examples": "Formulários, settings, listas, maioria das telas SaaS"
+        },
+        "r3": {
+          "level": "Confortável",
+          "context": "Produtos consumer ou mobile-first onde o toque precisa de área generosa",
+          "examples": "Apps mobile, fluxos onboarding, telas para usuários menos técnicos"
+        }
+      }
     },
     "rules": {
       "title": "Regras críticas",
@@ -138,26 +138,26 @@
         "spacingBase": "Spacing base",
         "heightDefault": "Default height"
       },
-      "rows": [
-        [
-          "Condensed",
-          "densidade-condensado",
-          "3.2px (~80%)",
-          "28px"
-        ],
-        [
-          "Default",
-          "densidade-default (or none)",
-          "4px (100%)",
-          "32px"
-        ],
-        [
-          "Comfortable",
-          "densidade-confortavel",
-          "5px (~125%)",
-          "40px"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "name": "Condensed",
+          "class": "densidade-condensado",
+          "spacingBase": "3.2px (~80%)",
+          "heightDefault": "28px"
+        },
+        "r2": {
+          "name": "Default",
+          "class": "densidade-default (or none)",
+          "spacingBase": "4px (100%)",
+          "heightDefault": "32px"
+        },
+        "r3": {
+          "name": "Comfortable",
+          "class": "densidade-confortavel",
+          "spacingBase": "5px (~125%)",
+          "heightDefault": "40px"
+        }
+      }
     },
     "tokens": {
       "title": "Affected tokens",
@@ -198,23 +198,23 @@
         "context": "Ideal context",
         "examples": "Examples"
       },
-      "rows": [
-        [
-          "Condensed",
-          "Data-heavy screens where fitting more on screen is critical",
-          "DataTable, monitoring dashboards, spreadsheets, admin terminals"
-        ],
-        [
-          "Default",
-          "Standard product flow, balanced density and breathing room",
-          "Forms, settings, lists, most SaaS screens"
-        ],
-        [
-          "Comfortable",
-          "Consumer or mobile-first products where touch needs generous area",
-          "Mobile apps, onboarding flows, screens for less technical users"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "level": "Condensed",
+          "context": "Data-heavy screens where fitting more on screen is critical",
+          "examples": "DataTable, monitoring dashboards, spreadsheets, admin terminals"
+        },
+        "r2": {
+          "level": "Default",
+          "context": "Standard product flow, balanced density and breathing room",
+          "examples": "Forms, settings, lists, most SaaS screens"
+        },
+        "r3": {
+          "level": "Comfortable",
+          "context": "Consumer or mobile-first products where touch needs generous area",
+          "examples": "Mobile apps, onboarding flows, screens for less technical users"
+        }
+      }
     },
     "rules": {
       "title": "Critical rules",
@@ -256,26 +256,26 @@
         "spacingBase": "Spacing base",
         "heightDefault": "Altura default"
       },
-      "rows": [
-        [
-          "Condensado",
-          "densidade-condensado",
-          "3.2px (~80%)",
-          "28px"
-        ],
-        [
-          "Default",
-          "densidade-default (o ninguna)",
-          "4px (100%)",
-          "32px"
-        ],
-        [
-          "Cómodo",
-          "densidade-confortavel",
-          "5px (~125%)",
-          "40px"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "name": "Condensado",
+          "class": "densidade-condensado",
+          "spacingBase": "3.2px (~80%)",
+          "heightDefault": "28px"
+        },
+        "r2": {
+          "name": "Default",
+          "class": "densidade-default (o ninguna)",
+          "spacingBase": "4px (100%)",
+          "heightDefault": "32px"
+        },
+        "r3": {
+          "name": "Cómodo",
+          "class": "densidade-confortavel",
+          "spacingBase": "5px (~125%)",
+          "heightDefault": "40px"
+        }
+      }
     },
     "tokens": {
       "title": "Tokens afectados",
@@ -316,23 +316,23 @@
         "context": "Contexto ideal",
         "examples": "Ejemplos"
       },
-      "rows": [
-        [
-          "Condensado",
-          "Pantallas data-heavy donde caber más información es crítico",
-          "DataTable, dashboards de monitoreo, planillas, terminales admin"
-        ],
-        [
-          "Default",
-          "Flujo estándar de producto, equilibrio entre densidad y respiro",
-          "Formularios, settings, listas, la mayoría de pantallas SaaS"
-        ],
-        [
-          "Cómodo",
-          "Productos consumer o mobile-first donde el toque necesita área generosa",
-          "Apps mobile, flujos de onboarding, pantallas para usuarios menos técnicos"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "level": "Condensado",
+          "context": "Pantallas data-heavy donde caber más información es crítico",
+          "examples": "DataTable, dashboards de monitoreo, planillas, terminales admin"
+        },
+        "r2": {
+          "level": "Default",
+          "context": "Flujo estándar de producto, equilibrio entre densidad y respiro",
+          "examples": "Formularios, settings, listas, la mayoría de pantallas SaaS"
+        },
+        "r3": {
+          "level": "Cómodo",
+          "context": "Productos consumer o mobile-first donde el toque necesita área generosa",
+          "examples": "Apps mobile, flujos de onboarding, pantallas para usuarios menos técnicos"
+        }
+      }
     },
     "rules": {
       "title": "Reglas críticas",

@@ -29,23 +29,23 @@
         "person": "Tratamento",
         "tone": "Tom"
       },
-      "rows": [
-        [
-          "pt-BR",
-          "<code>você</code> (informal direto)",
-          "Semi-formal, sem 'tu' ou 'o usuário'"
-        ],
-        [
-          "en",
-          "Impessoal (<code>use</code>, <code>avoid</code>)",
-          "Direto, prescritivo no infinitivo"
-        ],
-        [
-          "es",
-          "<code>tú</code> em UI, <code>usted</code> em docs",
-          "Informal próximo, sem coloquialismos"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "lang": "pt-BR",
+          "person": "<code>você</code> (informal direto)",
+          "tone": "Semi-formal, sem 'tu' ou 'o usuário'"
+        },
+        "r2": {
+          "lang": "en",
+          "person": "Impessoal (<code>use</code>, <code>avoid</code>)",
+          "tone": "Direto, prescritivo no infinitivo"
+        },
+        "r3": {
+          "lang": "es",
+          "person": "<code>tú</code> em UI, <code>usted</code> em docs",
+          "tone": "Informal próximo, sem coloquialismos"
+        }
+      }
     },
     "elementRules": {
       "title": "Regras por elemento",
@@ -68,40 +68,40 @@
           "use": "Use",
           "avoid": "Evite"
         },
-        "rows": [
-          [
-            "Salvar",
-            "Gravar, registrar, guardar"
-          ],
-          [
-            "Adicionar / Criar",
-            "Inserir, incluir, cadastrar"
-          ],
-          [
-            "Excluir",
-            "Deletar, apagar"
-          ],
-          [
-            "Cancelar",
-            "Abortar, sair sem salvar"
-          ],
-          [
-            "Enviar",
-            "Submeter, fazer upload"
-          ],
-          [
-            "Editar / Configurar",
-            "Modificar, ajustar"
-          ],
-          [
-            "Desabilitado",
-            "Bloqueado, inativo"
-          ],
-          [
-            "Carregando",
-            "Loading, aguarde"
-          ]
-        ]
+        "rows": {
+          "r1": {
+            "use": "Salvar",
+            "avoid": "Gravar, registrar, guardar"
+          },
+          "r2": {
+            "use": "Adicionar / Criar",
+            "avoid": "Inserir, incluir, cadastrar"
+          },
+          "r3": {
+            "use": "Excluir",
+            "avoid": "Deletar, apagar"
+          },
+          "r4": {
+            "use": "Cancelar",
+            "avoid": "Abortar, sair sem salvar"
+          },
+          "r5": {
+            "use": "Enviar",
+            "avoid": "Submeter, fazer upload"
+          },
+          "r6": {
+            "use": "Editar / Configurar",
+            "avoid": "Modificar, ajustar"
+          },
+          "r7": {
+            "use": "Desabilitado",
+            "avoid": "Bloqueado, inativo"
+          },
+          "r8": {
+            "use": "Carregando",
+            "avoid": "Loading, aguarde"
+          }
+        }
       }
     },
     "examples": {
@@ -112,43 +112,43 @@
         "correct": "Correto",
         "avoid": "Evitar"
       },
-      "rows": [
-        [
-          "Column header",
-          "Status",
-          "Está ativo?"
-        ],
-        [
-          "Button label",
-          "Salvar alterações",
-          "Clique para salvar"
-        ],
-        [
-          "Error message",
-          "Email inválido. Use o formato nome@dominio.com",
-          "Erro de validação: email"
-        ],
-        [
-          "Empty state",
-          "Nenhum item ainda. Adicione o primeiro para começar.",
-          "Ops! Parece que não há nada aqui..."
-        ],
-        [
-          "Tooltip",
-          "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "Clique aqui para salvar o documento atual"
-        ],
-        [
-          "Toast de sucesso",
-          "Alterações salvas.",
-          "Ótimo! Suas alterações foram salvas com sucesso!"
-        ],
-        [
-          "Dialog title",
-          "Excluir conta",
-          "Tem certeza?"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Column header",
+          "correct": "Status",
+          "avoid": "Está ativo?"
+        },
+        "r2": {
+          "context": "Button label",
+          "correct": "Salvar alterações",
+          "avoid": "Clique para salvar"
+        },
+        "r3": {
+          "context": "Error message",
+          "correct": "Email inválido. Use o formato nome@dominio.com",
+          "avoid": "Erro de validação: email"
+        },
+        "r4": {
+          "context": "Empty state",
+          "correct": "Nenhum item ainda. Adicione o primeiro para começar.",
+          "avoid": "Ops! Parece que não há nada aqui..."
+        },
+        "r5": {
+          "context": "Tooltip",
+          "correct": "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "avoid": "Clique aqui para salvar o documento atual"
+        },
+        "r6": {
+          "context": "Toast de sucesso",
+          "correct": "Alterações salvas.",
+          "avoid": "Ótimo! Suas alterações foram salvas com sucesso!"
+        },
+        "r7": {
+          "context": "Dialog title",
+          "correct": "Excluir conta",
+          "avoid": "Tem certeza?"
+        }
+      }
     },
     "writing": {
       "title": "Regras específicas para translations",
@@ -213,23 +213,23 @@
         "person": "Address",
         "tone": "Tone"
       },
-      "rows": [
-        [
-          "pt-BR",
-          "<code>você</code> (informal, direct)",
-          "Semi-formal, no 'tu' or 'the user'"
-        ],
-        [
-          "en",
-          "Impersonal (<code>use</code>, <code>avoid</code>)",
-          "Direct, prescriptive in the infinitive"
-        ],
-        [
-          "es",
-          "<code>tú</code> in UI, <code>usted</code> in docs",
-          "Close-informal, no colloquialisms"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "lang": "pt-BR",
+          "person": "<code>você</code> (informal, direct)",
+          "tone": "Semi-formal, no 'tu' or 'the user'"
+        },
+        "r2": {
+          "lang": "en",
+          "person": "Impersonal (<code>use</code>, <code>avoid</code>)",
+          "tone": "Direct, prescriptive in the infinitive"
+        },
+        "r3": {
+          "lang": "es",
+          "person": "<code>tú</code> in UI, <code>usted</code> in docs",
+          "tone": "Close-informal, no colloquialisms"
+        }
+      }
     },
     "elementRules": {
       "title": "Rules per element",
@@ -252,40 +252,40 @@
           "use": "Use",
           "avoid": "Avoid"
         },
-        "rows": [
-          [
-            "Save",
-            "Store, persist, keep"
-          ],
-          [
-            "Add / Create",
-            "Insert, register"
-          ],
-          [
-            "Delete",
-            "Erase, wipe"
-          ],
-          [
-            "Cancel",
-            "Abort, exit without saving"
-          ],
-          [
-            "Send / Upload",
-            "Submit, transmit"
-          ],
-          [
-            "Edit / Configure",
-            "Modify, tweak"
-          ],
-          [
-            "Disabled",
-            "Blocked, inactive"
-          ],
-          [
-            "Loading",
-            "Wait, please hold"
-          ]
-        ]
+        "rows": {
+          "r1": {
+            "use": "Save",
+            "avoid": "Store, persist, keep"
+          },
+          "r2": {
+            "use": "Add / Create",
+            "avoid": "Insert, register"
+          },
+          "r3": {
+            "use": "Delete",
+            "avoid": "Erase, wipe"
+          },
+          "r4": {
+            "use": "Cancel",
+            "avoid": "Abort, exit without saving"
+          },
+          "r5": {
+            "use": "Send / Upload",
+            "avoid": "Submit, transmit"
+          },
+          "r6": {
+            "use": "Edit / Configure",
+            "avoid": "Modify, tweak"
+          },
+          "r7": {
+            "use": "Disabled",
+            "avoid": "Blocked, inactive"
+          },
+          "r8": {
+            "use": "Loading",
+            "avoid": "Wait, please hold"
+          }
+        }
       }
     },
     "examples": {
@@ -296,43 +296,43 @@
         "correct": "Correct",
         "avoid": "Avoid"
       },
-      "rows": [
-        [
-          "Column header",
-          "Status",
-          "Is it active?"
-        ],
-        [
-          "Button label",
-          "Save changes",
-          "Click to save"
-        ],
-        [
-          "Error message",
-          "Invalid email. Use the format name@domain.com",
-          "Validation error: email"
-        ],
-        [
-          "Empty state",
-          "No items yet. Add the first one to get started.",
-          "Oops! Looks like there's nothing here..."
-        ],
-        [
-          "Tooltip",
-          "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "Click here to save the current document"
-        ],
-        [
-          "Success toast",
-          "Changes saved.",
-          "Great! Your changes were saved successfully!"
-        ],
-        [
-          "Dialog title",
-          "Delete account",
-          "Are you sure?"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Column header",
+          "correct": "Status",
+          "avoid": "Is it active?"
+        },
+        "r2": {
+          "context": "Button label",
+          "correct": "Save changes",
+          "avoid": "Click to save"
+        },
+        "r3": {
+          "context": "Error message",
+          "correct": "Invalid email. Use the format name@domain.com",
+          "avoid": "Validation error: email"
+        },
+        "r4": {
+          "context": "Empty state",
+          "correct": "No items yet. Add the first one to get started.",
+          "avoid": "Oops! Looks like there's nothing here..."
+        },
+        "r5": {
+          "context": "Tooltip",
+          "correct": "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "avoid": "Click here to save the current document"
+        },
+        "r6": {
+          "context": "Success toast",
+          "correct": "Changes saved.",
+          "avoid": "Great! Your changes were saved successfully!"
+        },
+        "r7": {
+          "context": "Dialog title",
+          "correct": "Delete account",
+          "avoid": "Are you sure?"
+        }
+      }
     },
     "writing": {
       "title": "Specific rules for translations",
@@ -397,23 +397,23 @@
         "person": "Tratamiento",
         "tone": "Tono"
       },
-      "rows": [
-        [
-          "pt-BR",
-          "<code>você</code> (informal directo)",
-          "Semi-formal, sin 'tu' ni 'el usuario'"
-        ],
-        [
-          "en",
-          "Impersonal (<code>use</code>, <code>avoid</code>)",
-          "Directo, prescriptivo en infinitivo"
-        ],
-        [
-          "es",
-          "<code>tú</code> en UI, <code>usted</code> en docs",
-          "Cercano-informal, sin coloquialismos"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "lang": "pt-BR",
+          "person": "<code>você</code> (informal directo)",
+          "tone": "Semi-formal, sin 'tu' ni 'el usuario'"
+        },
+        "r2": {
+          "lang": "en",
+          "person": "Impersonal (<code>use</code>, <code>avoid</code>)",
+          "tone": "Directo, prescriptivo en infinitivo"
+        },
+        "r3": {
+          "lang": "es",
+          "person": "<code>tú</code> en UI, <code>usted</code> en docs",
+          "tone": "Cercano-informal, sin coloquialismos"
+        }
+      }
     },
     "elementRules": {
       "title": "Reglas por elemento",
@@ -436,40 +436,40 @@
           "use": "Usa",
           "avoid": "Evita"
         },
-        "rows": [
-          [
-            "Guardar",
-            "Grabar, registrar"
-          ],
-          [
-            "Agregar / Crear",
-            "Insertar, incluir"
-          ],
-          [
-            "Eliminar",
-            "Borrar, suprimir"
-          ],
-          [
-            "Cancelar",
-            "Abortar, salir sin guardar"
-          ],
-          [
-            "Enviar",
-            "Submeter, hacer upload"
-          ],
-          [
-            "Editar / Configurar",
-            "Modificar, ajustar"
-          ],
-          [
-            "Deshabilitado",
-            "Bloqueado, inactivo"
-          ],
-          [
-            "Cargando",
-            "Loading, espera"
-          ]
-        ]
+        "rows": {
+          "r1": {
+            "use": "Guardar",
+            "avoid": "Grabar, registrar"
+          },
+          "r2": {
+            "use": "Agregar / Crear",
+            "avoid": "Insertar, incluir"
+          },
+          "r3": {
+            "use": "Eliminar",
+            "avoid": "Borrar, suprimir"
+          },
+          "r4": {
+            "use": "Cancelar",
+            "avoid": "Abortar, salir sin guardar"
+          },
+          "r5": {
+            "use": "Enviar",
+            "avoid": "Submeter, hacer upload"
+          },
+          "r6": {
+            "use": "Editar / Configurar",
+            "avoid": "Modificar, ajustar"
+          },
+          "r7": {
+            "use": "Deshabilitado",
+            "avoid": "Bloqueado, inactivo"
+          },
+          "r8": {
+            "use": "Cargando",
+            "avoid": "Loading, espera"
+          }
+        }
       }
     },
     "examples": {
@@ -480,43 +480,43 @@
         "correct": "Correcto",
         "avoid": "Evitar"
       },
-      "rows": [
-        [
-          "Column header",
-          "Estado",
-          "¿Está activo?"
-        ],
-        [
-          "Button label",
-          "Guardar cambios",
-          "Haz clic para guardar"
-        ],
-        [
-          "Error message",
-          "Email inválido. Usa el formato nombre@dominio.com",
-          "Error de validación: email"
-        ],
-        [
-          "Empty state",
-          "Aún no hay elementos. Agrega el primero para comenzar.",
-          "¡Vaya! Parece que no hay nada aquí..."
-        ],
-        [
-          "Tooltip",
-          "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "Haz clic aquí para guardar el documento actual"
-        ],
-        [
-          "Toast de éxito",
-          "Cambios guardados.",
-          "¡Genial! ¡Tus cambios fueron guardados con éxito!"
-        ],
-        [
-          "Dialog title",
-          "Eliminar cuenta",
-          "¿Estás seguro?"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Column header",
+          "correct": "Estado",
+          "avoid": "¿Está activo?"
+        },
+        "r2": {
+          "context": "Button label",
+          "correct": "Guardar cambios",
+          "avoid": "Haz clic para guardar"
+        },
+        "r3": {
+          "context": "Error message",
+          "correct": "Email inválido. Usa el formato nombre@dominio.com",
+          "avoid": "Error de validación: email"
+        },
+        "r4": {
+          "context": "Empty state",
+          "correct": "Aún no hay elementos. Agrega el primero para comenzar.",
+          "avoid": "¡Vaya! Parece que no hay nada aquí..."
+        },
+        "r5": {
+          "context": "Tooltip",
+          "correct": "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
+          "avoid": "Haz clic aquí para guardar el documento actual"
+        },
+        "r6": {
+          "context": "Toast de éxito",
+          "correct": "Cambios guardados.",
+          "avoid": "¡Genial! ¡Tus cambios fueron guardados con éxito!"
+        },
+        "r7": {
+          "context": "Dialog title",
+          "correct": "Eliminar cuenta",
+          "avoid": "¿Estás seguro?"
+        }
+      }
     },
     "writing": {
       "title": "Reglas específicas para translations",

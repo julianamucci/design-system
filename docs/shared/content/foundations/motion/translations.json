@@ -114,38 +114,38 @@
         "duration": "Duração",
         "easing": "Easing"
       },
-      "rows": [
-        [
-          "Hover / focus em primitivos",
-          "120ms (fast)",
-          "--ease-standard"
-        ],
-        [
-          "Toggle de estado (switch, checkbox)",
-          "120ms (fast)",
-          "--ease-entrance"
-        ],
-        [
-          "Abertura de dropdown / popover",
-          "120–200ms (fast–base)",
-          "--ease-entrance"
-        ],
-        [
-          "Entrada de Dialog / Sheet",
-          "200–320ms (base–moderate)",
-          "--ease-entrance"
-        ],
-        [
-          "Saída de overlays",
-          "120ms (fast)",
-          "--ease-exit"
-        ],
-        [
-          "Feedback de ação (toast, badge pulse)",
-          "320ms (moderate)",
-          "spring suave (biblioteca)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Hover / focus em primitivos",
+          "duration": "120ms (fast)",
+          "easing": "--ease-standard"
+        },
+        "r2": {
+          "context": "Toggle de estado (switch, checkbox)",
+          "duration": "120ms (fast)",
+          "easing": "--ease-entrance"
+        },
+        "r3": {
+          "context": "Abertura de dropdown / popover",
+          "duration": "120–200ms (fast–base)",
+          "easing": "--ease-entrance"
+        },
+        "r4": {
+          "context": "Entrada de Dialog / Sheet",
+          "duration": "200–320ms (base–moderate)",
+          "easing": "--ease-entrance"
+        },
+        "r5": {
+          "context": "Saída de overlays",
+          "duration": "120ms (fast)",
+          "easing": "--ease-exit"
+        },
+        "r6": {
+          "context": "Feedback de ação (toast, badge pulse)",
+          "duration": "320ms (moderate)",
+          "easing": "spring suave (biblioteca)"
+        }
+      }
     },
     "reducedMotion": {
       "title": "Reduced motion",
@@ -292,38 +292,38 @@
         "duration": "Duration",
         "easing": "Easing"
       },
-      "rows": [
-        [
-          "Hover / focus on primitives",
-          "120ms (fast)",
-          "--ease-standard"
-        ],
-        [
-          "State toggle (switch, checkbox)",
-          "120ms (fast)",
-          "--ease-entrance"
-        ],
-        [
-          "Dropdown / popover opening",
-          "120–200ms (fast–base)",
-          "--ease-entrance"
-        ],
-        [
-          "Dialog / Sheet entrance",
-          "200–320ms (base–moderate)",
-          "--ease-entrance"
-        ],
-        [
-          "Overlay exit",
-          "120ms (fast)",
-          "--ease-exit"
-        ],
-        [
-          "Action feedback (toast, badge pulse)",
-          "320ms (moderate)",
-          "soft spring (library)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Hover / focus on primitives",
+          "duration": "120ms (fast)",
+          "easing": "--ease-standard"
+        },
+        "r2": {
+          "context": "State toggle (switch, checkbox)",
+          "duration": "120ms (fast)",
+          "easing": "--ease-entrance"
+        },
+        "r3": {
+          "context": "Dropdown / popover opening",
+          "duration": "120–200ms (fast–base)",
+          "easing": "--ease-entrance"
+        },
+        "r4": {
+          "context": "Dialog / Sheet entrance",
+          "duration": "200–320ms (base–moderate)",
+          "easing": "--ease-entrance"
+        },
+        "r5": {
+          "context": "Overlay exit",
+          "duration": "120ms (fast)",
+          "easing": "--ease-exit"
+        },
+        "r6": {
+          "context": "Action feedback (toast, badge pulse)",
+          "duration": "320ms (moderate)",
+          "easing": "soft spring (library)"
+        }
+      }
     },
     "reducedMotion": {
       "title": "Reduced motion",
@@ -470,38 +470,38 @@
         "duration": "Duración",
         "easing": "Easing"
       },
-      "rows": [
-        [
-          "Hover / focus en primitivos",
-          "120ms (fast)",
-          "--ease-standard"
-        ],
-        [
-          "Toggle de estado (switch, checkbox)",
-          "120ms (fast)",
-          "--ease-entrance"
-        ],
-        [
-          "Apertura de dropdown / popover",
-          "120–200ms (fast–base)",
-          "--ease-entrance"
-        ],
-        [
-          "Entrada de Dialog / Sheet",
-          "200–320ms (base–moderate)",
-          "--ease-entrance"
-        ],
-        [
-          "Salida de overlays",
-          "120ms (fast)",
-          "--ease-exit"
-        ],
-        [
-          "Feedback de acción (toast, badge pulse)",
-          "320ms (moderate)",
-          "spring suave (biblioteca)"
-        ]
-      ]
+      "rows": {
+        "r1": {
+          "context": "Hover / focus en primitivos",
+          "duration": "120ms (fast)",
+          "easing": "--ease-standard"
+        },
+        "r2": {
+          "context": "Toggle de estado (switch, checkbox)",
+          "duration": "120ms (fast)",
+          "easing": "--ease-entrance"
+        },
+        "r3": {
+          "context": "Apertura de dropdown / popover",
+          "duration": "120–200ms (fast–base)",
+          "easing": "--ease-entrance"
+        },
+        "r4": {
+          "context": "Entrada de Dialog / Sheet",
+          "duration": "200–320ms (base–moderate)",
+          "easing": "--ease-entrance"
+        },
+        "r5": {
+          "context": "Salida de overlays",
+          "duration": "120ms (fast)",
+          "easing": "--ease-exit"
+        },
+        "r6": {
+          "context": "Feedback de acción (toast, badge pulse)",
+          "duration": "320ms (moderate)",
+          "easing": "spring suave (biblioteca)"
+        }
+      }
     },
     "reducedMotion": {
       "title": "Reduced motion",
