@@ -17,8 +17,10 @@ const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 const CODE_SPRING = `// npm i motion
 import { animate } from 'motion';
 
-// ao soltar o elemento arrastado:
-animate(el, { x: 0, y: 0 }, { type: 'spring', stiffness: 400, damping: 22 });`;
+// ao soltar o elemento arrastado — velocity é a velocidade do gesto (px/s),
+// medida nos últimos pointermove; sem ela a spring parte do repouso:
+animate(el, { x: [x, 0] }, { type: 'spring', stiffness: 400, damping: 26, velocity: vx });
+animate(el, { y: [y, 0] }, { type: 'spring', stiffness: 400, damping: 26, velocity: vy });`;
 
 const CODE_STAGGER = `import { animate, stagger } from 'motion';
 
@@ -158,24 +160,45 @@ export function createMotionDocs(): HTMLElement {
       let dragging = false;
       let x = 0;
       let y = 0;
+      // velocidade do gesto (px/s) — vira velocidade inicial da spring no soltar
+      let vx = 0;
+      let vy = 0;
+      let lastT = 0;
       chip.addEventListener('pointerdown', (e) => {
         dragging = true;
         chip.setPointerCapture(e.pointerId);
         chip.style.scale = '1.05';
+        vx = 0;
+        vy = 0;
+        lastT = performance.now();
       });
       chip.addEventListener('pointermove', (e) => {
         if (!dragging) return;
         x += e.movementX;
         y += e.movementY;
+        const now = performance.now();
+        const dt = Math.max(now - lastT, 1);
+        // média móvel simples — suaviza o ruído do pointermove
+        vx = 0.6 * vx + 0.4 * (e.movementX / dt) * 1000;
+        vy = 0.6 * vy + 0.4 * (e.movementY / dt) * 1000;
+        lastT = now;
         chip.style.transform = `translate(${x}px, ${y}px)`;
       });
       chip.addEventListener('pointerup', () => {
         dragging = false;
         chip.style.scale = '';
-        animate(chip, { x: [x, 0], y: [y, 0] }, { type: 'spring', stiffness: 400, damping: 22 })
-          .finished.then(() => {
-            chip.style.transform = '';
-          });
+        // gesto parado antes de soltar → sem velocidade residual
+        if (performance.now() - lastT > 100) {
+          vx = 0;
+          vy = 0;
+        }
+        const spring = { type: 'spring', stiffness: 400, damping: 26 } as const;
+        Promise.all([
+          animate(chip, { x: [x, 0] }, { ...spring, velocity: vx }).finished,
+          animate(chip, { y: [y, 0] }, { ...spring, velocity: vy }).finished,
+        ]).then(() => {
+          chip.style.transform = '';
+        });
         x = 0;
         y = 0;
       });

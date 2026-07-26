@@ -22,9 +22,13 @@
 
   const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
-  // Spring físico nativo (svelte/motion) — arrasta e solta, volta ao centro
-  const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.15, damping: 0.4 });
+  // Spring físico nativo (svelte/motion). Durante o arrasto a mola PERSEGUE o
+  // ponteiro (sem instant) — assim acumula velocidade real e o retorno ao
+  // centro honra a velocidade do gesto. `instant` zeraria a velocidade interna.
+  const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.5 });
   let dragging = $state(false);
+  let tx = 0;
+  let ty = 0;
 
   function onPointerDown(e: PointerEvent) {
     dragging = true;
@@ -32,10 +36,14 @@
   }
   function onPointerMove(e: PointerEvent) {
     if (!dragging) return;
-    coords.set({ x: coords.current.x + e.movementX, y: coords.current.y + e.movementY }, { instant: true });
+    tx += e.movementX;
+    ty += e.movementY;
+    coords.target = { x: tx, y: ty };
   }
   function onPointerUp() {
     dragging = false;
+    tx = 0;
+    ty = 0;
     coords.target = { x: 0, y: 0 };
   }
 
@@ -45,9 +53,12 @@
   const CODE_SPRING = `// nativo — svelte/motion (zero dependência)
 import { Spring } from 'svelte/motion';
 
-const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.15, damping: 0.4 });
-// durante o arrasto: coords.set({ x, y }, { instant: true });
-// ao soltar:         coords.target = { x: 0, y: 0 };
+const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.5 });
+// durante o arrasto a mola persegue o ponteiro (acumula velocidade real):
+//   coords.target = { x, y };
+// ao soltar, o retorno honra a velocidade do gesto:
+//   coords.target = { x: 0, y: 0 };
+// (instant: true zeraria a velocidade interna a cada set)
 
 <div style="transform: translate({coords.current.x}px, {coords.current.y}px)" />`;
 
