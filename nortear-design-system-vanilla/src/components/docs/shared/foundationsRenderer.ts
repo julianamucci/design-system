@@ -440,20 +440,37 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       }
 
       if (isPlainObject(child)) {
-        // Sub-seção com title/subtitle?
+        // Mapa puro de strings sem title (ex.: usage.ranges) → lista de acento,
+        // sem heading inventado a partir do nome da chave (igual às demais stacks)
+        const childVals = Object.values(child);
+        if (
+          typeof child['title'] !== 'string' &&
+          childVals.length > 0 &&
+          childVals.every((v) => typeof v === 'string')
+        ) {
+          const ul = document.createElement('ul');
+          ul.className = 'nds-stack nds-list-none';
+          ul.dataset.spacing = 'md';
+          Object.keys(child).forEach((ssk) => {
+            const li = document.createElement('li');
+            li.className = 'nds-text-body nds-leading-relaxed nds-accent-start';
+            addText(li, `${key}.${sk}.${ssk}`, true);
+            ul.appendChild(li);
+          });
+          section.appendChild(ul);
+          return;
+        }
+
+        // Sub-seção com title/subtitle
         const sub = document.createElement('div');
         sub.className = 'nds-stack';
         sub.dataset.spacing = 'sm';
 
         if (typeof child['title'] === 'string') {
+          // mesmo nível visual das demais stacks (h3 do type scale)
           const h3 = document.createElement('h3');
-          h3.className = 'nds-text-body nds-font-semibold';
+          h3.className = 'nds-text-h3 nds-text-foreground';
           addText(h3, `${key}.${sk}.title`, true);
-          sub.appendChild(h3);
-        } else {
-          const h3 = document.createElement('h3');
-          h3.className = 'nds-text-body nds-font-semibold';
-          h3.textContent = sk.charAt(0).toUpperCase() + sk.slice(1);
           sub.appendChild(h3);
         }
         if (typeof child['subtitle'] === 'string') {

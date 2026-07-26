@@ -262,6 +262,14 @@
           {:else}
             <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
           {/if}
+        {:else if (isArray(value) || isObject(value)) && (isArray(value) ? value : Object.values(value)).every((x) => typeof x === 'string') && (isArray(value) ? value : Object.values(value)).length > 0}
+          <!-- mapa/array puro de strings (ex.: usage.ranges) → lista de acento,
+               igual React/Vue — sem heading inventado, sem parágrafos soltos -->
+          <ul class="nds-stack nds-list-none" data-spacing="md">
+            {#each (isArray(value) ? value : Object.values(value)) as item}
+              <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
+            {/each}
+          </ul>
         {:else if isArray(value) || isObject(value)}
           <section class="nds-stack" data-spacing="xs">
             {@render renderValue(value, depth)}
