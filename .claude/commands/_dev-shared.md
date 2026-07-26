@@ -56,6 +56,7 @@ Exceções: `px-*`/`gap-*`/`py-*` (spacing), `[&_svg]:size-4` (ícones decorativ
 - **Cards de conteúdo usam o componente Card** (`CardHeader > CardTitle + CardDescription`; campos extras em `CardContent`), nunca `div` com classes de card. `CardTitle` aceita `as` — passe `h2`–`h6` quando for heading real na hierarquia. Grid de cards em pares: `nds-grid` + `data-cols="2"` + `data-fixed`.
 - **Listas simples**: `ul` com `nds-stack nds-list-none` + `data-spacing="md"`, itens com `nds-accent-start`.
 - **Raio aninhado**: elemento arredondado dentro de container arredondado segue `Rᵢ = Rₑ − inset` — use os pares prontos (pai `--radius` + inset 4px → filho `--radius-sm`; inset 2px → `--radius-md`; pai `--radius-card` + 4px → `--radius`) ou `.nds-radius-nested`. Nunca repita o raio do pai nem chute valor. Contrato de tema: temas sobrescrevem só `--radius` + tokens por componente; a escala `xs–xl` nunca. Ver Elevação §Raio aninhado.
+- **Motion**: micro-interações de componente são CSS-first com os tokens de `motion.css` (`--duration-*`, `--ease-*`, `--motion-offset-*`) — nunca valores literais de duração/easing. A biblioteca Motion (MIT; `motion` no React/Vanilla, `motion-v` no Vue; Svelte usa `svelte/motion`/`svelte/transition` nativos) entra APENAS para spring físico, gestos, stagger, presence e layout animation — nunca como dependência de primitivos em `ui/`. Receitas e demos: página Motion §Recursos avançados.
 
 Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/08-docs-pages-foundations.md` §14.
 

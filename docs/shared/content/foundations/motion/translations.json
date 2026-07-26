@@ -6,7 +6,30 @@
     "description": "Motion serve à função, nunca à decoração. O Design System usa durações breves, easings semânticos e respeita <code>prefers-reduced-motion</code> globalmente. Cada animação tem um propósito: confirmar uma ação, orientar o foco ou suavizar uma transição de contexto.",
     "specimens": {
       "title": "Espécimes",
-      "subtitle": "Passe o mouse sobre cada botão para sentir as três durações do sistema."
+      "subtitle": "Passe o mouse sobre cada botão para sentir as três durações do sistema.",
+      "advanced": {
+        "title": "Recursos avançados — biblioteca Motion",
+        "subtitle": "As micro-interações do sistema são CSS puro sobre os tokens desta página. Para física de mola, gestos e animações de saída, a recomendação é a biblioteca Motion (licença MIT) — cada stack usa o binding idiomático correspondente. As demos abaixo são interativas; o snippet mostra o código desta stack.",
+        "note": "Regra prática: se a animação tem começo e fim conhecidos (hover, entrada, saída simples), use CSS com os tokens. Se depende de física, gesto ou da posição de outro elemento (spring, drag, layout), use a biblioteca. Sob prefers-reduced-motion, reduza ou desative também as animações da biblioteca.",
+        "spring": {
+          "title": "Spring físico com gesto de arrastar",
+          "desc": "Arraste o elemento e solte: ele retorna ao centro com física de mola (stiffness/damping) — sem duração fixa, a velocidade do gesto vira velocidade inicial da animação."
+        },
+        "stagger": {
+          "title": "Entrada em cascata (stagger)",
+          "desc": "Itens entram em sequência com um atraso incremental — cria hierarquia temporal sem alongar a duração total."
+        },
+        "presence": {
+          "title": "Animação de saída (presence)",
+          "desc": "Elementos removidos da interface animam antes de sair do DOM — o desaparecimento abrupto é a lacuna clássica do CSS puro."
+        },
+        "labels": {
+          "drag": "Arraste-me",
+          "replay": "Reproduzir",
+          "show": "Mostrar",
+          "hide": "Remover"
+        }
+      }
     },
     "seo": {
       "title": "Motion",
@@ -139,7 +162,30 @@
     "description": "Motion serves function, never decoration. The Design System uses brief durations, semantic easings, and respects <code>prefers-reduced-motion</code> globally. Every animation has a purpose: confirm an action, guide focus, or smooth a context change.",
     "specimens": {
       "title": "Specimens",
-      "subtitle": "Hover over each button to feel the system's three durations."
+      "subtitle": "Hover over each button to feel the system's three durations.",
+      "advanced": {
+        "title": "Advanced resources — Motion library",
+        "subtitle": "The system micro-interactions are pure CSS over the tokens on this page. For spring physics, gestures and exit animations, the recommendation is the Motion library (MIT license) — each stack uses its idiomatic binding. The demos below are interactive; the snippet shows the code for this stack.",
+        "note": "Rule of thumb: if the animation has a known start and end (hover, entrance, simple exit), use CSS with the tokens. If it depends on physics, gestures or another element’s position (spring, drag, layout), use the library. Under prefers-reduced-motion, reduce or disable library animations too.",
+        "spring": {
+          "title": "Spring physics with drag gesture",
+          "desc": "Drag the element and release: it returns to the center with spring physics (stiffness/damping) — no fixed duration; the gesture velocity becomes the animation’s initial velocity."
+        },
+        "stagger": {
+          "title": "Staggered entrance",
+          "desc": "Items enter in sequence with an incremental delay — temporal hierarchy without stretching the total duration."
+        },
+        "presence": {
+          "title": "Exit animation (presence)",
+          "desc": "Elements removed from the UI animate before leaving the DOM — abrupt disappearance is the classic gap of pure CSS."
+        },
+        "labels": {
+          "drag": "Drag me",
+          "replay": "Replay",
+          "show": "Show",
+          "hide": "Remove"
+        }
+      }
     },
     "seo": {
       "title": "Motion",
@@ -272,7 +318,30 @@
     "description": "Motion sirve a la función, nunca a la decoración. El Design System usa duraciones breves, easings semánticos y respeta <code>prefers-reduced-motion</code> globalmente. Cada animación tiene un propósito: confirmar una acción, guiar el foco o suavizar un cambio de contexto.",
     "specimens": {
       "title": "Especímenes",
-      "subtitle": "Pasa el cursor sobre cada botón para sentir las tres duraciones del sistema."
+      "subtitle": "Pasa el cursor sobre cada botón para sentir las tres duraciones del sistema.",
+      "advanced": {
+        "title": "Recursos avanzados — biblioteca Motion",
+        "subtitle": "Las micro-interacciones del sistema son CSS puro sobre los tokens de esta página. Para física de resorte, gestos y animaciones de salida, la recomendación es la biblioteca Motion (licencia MIT) — cada stack usa su binding idiomático. Las demos son interactivas; el snippet muestra el código de este stack.",
+        "note": "Regla práctica: si la animación tiene inicio y fin conocidos (hover, entrada, salida simple), usa CSS con los tokens. Si depende de física, gestos o de la posición de otro elemento (spring, drag, layout), usa la biblioteca. Bajo prefers-reduced-motion, reduce o desactiva también las animaciones de la biblioteca.",
+        "spring": {
+          "title": "Física de resorte con gesto de arrastre",
+          "desc": "Arrastra el elemento y suéltalo: vuelve al centro con física de resorte (stiffness/damping) — sin duración fija; la velocidad del gesto se convierte en la velocidad inicial de la animación."
+        },
+        "stagger": {
+          "title": "Entrada en cascada (stagger)",
+          "desc": "Los ítems entran en secuencia con un retraso incremental — jerarquía temporal sin alargar la duración total."
+        },
+        "presence": {
+          "title": "Animación de salida (presence)",
+          "desc": "Los elementos eliminados de la interfaz animan antes de salir del DOM — la desaparición abrupta es la carencia clásica del CSS puro."
+        },
+        "labels": {
+          "drag": "Arrástrame",
+          "replay": "Reproducir",
+          "show": "Mostrar",
+          "hide": "Quitar"
+        }
+      }
     },
     "seo": {
       "title": "Motion",
