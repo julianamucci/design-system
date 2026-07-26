@@ -363,8 +363,9 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       section.appendChild(makeParagraph(`${key}.audience`));
     }
 
-    // Tabela cols + rows
-    if (isPlainObject(node['cols']) && isPlainObject(node['rows'])) {
+    // Tabela cols + rows — rows pode ser objeto {id: linha} ou ARRAY de arrays
+    // (posicional, ex.: "Tipos de uso" da página Motion); renderTable trata os dois
+    if (isPlainObject(node['cols']) && (isPlainObject(node['rows']) || Array.isArray(node['rows']))) {
       renderTable(section, key, node);
     }
 

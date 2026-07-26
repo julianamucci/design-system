@@ -43,6 +43,12 @@
     if (isArray(n.tableCols) && isArray(n.tableRows)) {
       return { cols: n.tableCols.map(String), rows: n.tableRows };
     }
+    // Forma mista: cols = { chave: rótulo }, rows = ARRAY de arrays (posicional)
+    // — ex.: "Tipos de uso" da página Motion.
+    if (isObject(n.cols) && isArray(n.rows)) {
+      const cols = Object.values(n.cols).map(String);
+      return { cols, rows: n.rows };
+    }
     // Forma em objeto: cols = { chave: rótulo }, rows = { id: { chave: valor } }.
     // Mapeia cada célula pela CHAVE de coluna (igual React/Vue/Vanilla).
     if (isObject(n.cols) && isObject(n.rows)) {
