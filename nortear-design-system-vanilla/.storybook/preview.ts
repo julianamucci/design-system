@@ -40,7 +40,8 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
-          'Foundations', ['Sobre', 'Comece por Aqui', 'Cores e Temas', 'Tipografia', 'Espaçamento', 'Elevação, Bordas e Sombras', 'Icons', 'Motion', 'Densidades', 'Acessibilidade', 'Tom de Voz', 'Sistema de Temas', 'Internacionalização', 'Analytics', 'SEO e GEO', 'Divergências Cross-Stack'],
+          'Sobre o Nortear DS', ['Sobre', 'Acessibilidade', 'Analytics', 'SEO e GEO', 'Tom de Voz'],
+          'Foundations', ['Comece por Aqui', 'Cores e Temas', 'Tipografia', 'Espaçamento', 'Elevação, Bordas e Sombras', 'Icons', 'Motion', 'Densidades', 'Sistema de Temas', 'Internacionalização', 'Divergências Cross-Stack'],
           'UI', ['*', ['Docs', 'Playground', 'Variantes', 'Tamanhos', 'Composições', 'Estados', '*']],
           '*',
         ],
