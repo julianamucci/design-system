@@ -67,7 +67,8 @@ const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.8 });
 
 {#key run}
   {#each items as item, i (item)}
-    <li in:fly={{ y: 8, duration: 200, delay: i * 60 }}>{item}</li>
+    <!-- |global: sem ele a transição não dispara quando o {#key} recria a lista -->
+    <li in:fly|global={{ y: 8, duration: 200, delay: i * 60 }}>{item}</li>
   {/each}
 {/key}`;
 
@@ -151,8 +152,10 @@ const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.8 });
           {#key run}
             <ul class="nds-cluster nds-list-none" data-spacing="sm">
               {#each STAGGER_ITEMS as item, i (item)}
+                <!-- |global: transições são locais por default e não disparam
+                     quando um ancestral ({#key}) é recriado -->
                 <li
-                  in:fly={{ y: 8, duration: 200, delay: i * 60 }}
+                  in:fly|global={{ y: 8, duration: 200, delay: i * 60 }}
                   class="nds-bg-muted-50 nds-rounded-md nds-px-4 nds-py-2 nds-text-caption"
                 >
                   {item}
