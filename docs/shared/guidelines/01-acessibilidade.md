@@ -439,7 +439,7 @@ Para trechos em outro idioma dentro da página:
 ```css
 /* Transições customizadas — só aplicam quando o usuário permite movimento */
 @media (prefers-reduced-motion: no-preference) {
-  .nds-animated { transition: all var(--transition-normal) var(--transition-timing); }
+  .nds-animated { transition: all var(--duration-base) var(--ease-standard); }
 }
 
 /* Skeleton — desliga o pulse em reduce */

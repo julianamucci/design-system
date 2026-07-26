@@ -924,43 +924,52 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 
 ### Tokens de Transição
 
-Os tokens de duração e easing estão definidos no tema e devem ser usados via `var()` no CSS do componente.
+A escada de durações e easings vive em `docs/shared/tokens/motion.css` e deve ser usada via `var()` no CSS do componente. Nunca use valores literais de duração/easing.
 
 ```css
-/* Disponíveis no CSS de tokens e em cada tema */
---transition-fast:   150ms;   /* Feedback imediato: hover, focus, toggle */
---transition-normal: 300ms;   /* Maioria das transições de estado */
---transition-slow:   500ms;   /* Entrada de painéis, modais, sidebars */
---transition-timing: cubic-bezier(0.4, 0, 0.2, 1);  /* Easing padrão (ease-in-out suave) */
+/* Escada de durações (motion.css) — durações zeram sob prefers-reduced-motion */
+--duration-instant:  0ms;      /* trocas sem animação */
+--duration-fast:     120ms;    /* hover, focus ring, press feedback, micro-interações */
+--duration-base:     200ms;    /* default — opacity, transforms pequenos, painéis de menu */
+--duration-moderate: 320ms;    /* enter/exit de overlays maiores (toast, popover) */
+--duration-slow:     500ms;    /* mudanças de layout, transforms grandes */
+--duration-stately:  800ms;    /* transições de página, reveal em tela cheia */
+
+/* Easings */
+--ease-standard: cubic-bezier(0.2, 0, 0, 1);   /* default — transições contínuas */
+--ease-emphasis: cubic-bezier(0.3, 0, 0, 1);   /* chegada mais dramática */
+--ease-entrance: cubic-bezier(0, 0, 0, 1);     /* elementos entrando */
+--ease-exit:     cubic-bezier(0.3, 0, 1, 1);   /* elementos saindo */
 ```
 
 ### Mapeamento de Situações para Tokens
 
-Aplique o token de duração adequado no CSS `.nds-*` do componente:
+Aplique o degrau adequado no CSS `.nds-*` do componente:
 
 | Situação | Propriedade / duração | Token |
 |----------|----------------------|-------|
-| Hover de cor/opacidade | `transition: color var(--transition-fast)` | `--transition-fast` |
-| Hover de sombra/borda | `transition: box-shadow var(--transition-fast)` | `--transition-fast` |
-| Estado ativo/selecionado | `transition: all var(--transition-normal)` | `--transition-normal` |
-| Expansão de painel | `transition: all var(--transition-slow)` | `--transition-slow` |
+| Hover de cor/opacidade | `transition: color var(--duration-fast)` | `--duration-fast` |
+| Hover de sombra/borda | `transition: box-shadow var(--duration-fast)` | `--duration-fast` |
+| Estado ativo/selecionado | `transition: all var(--duration-base)` | `--duration-base` |
+| Enter/exit de overlay | `animation: ... var(--duration-moderate)` | `--duration-moderate` |
+| Expansão de painel grande | `transition: all var(--duration-slow)` | `--duration-slow` |
 
 ### Quando Usar Cada Duração
 
 ```css
-/* Fast (150ms): reações a hover e focus — devem ser quase imperceptíveis */
+/* Fast (120ms): reações a hover e focus — devem ser quase imperceptíveis */
 .nds-button {
-  transition: background-color var(--transition-fast) var(--transition-timing);
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
-/* Normal (300ms): mudanças de estado visíveis, mas não bloqueiam o usuário */
-.nds-collapsible[data-state="open"] {
-  transition: opacity var(--transition-normal) var(--transition-timing);
+/* Base (200ms): mudanças de estado visíveis, mas não bloqueiam o usuário */
+.nds-collapsible [data-slot="collapsible-content"] {
+  transition: height var(--duration-base) ease-out;
 }
 
 /* Slow (500ms): entradas de elementos grandes — use com parcimônia */
 .nds-sheet-content {
-  transition: transform var(--transition-slow) var(--transition-timing);
+  transition: transform var(--duration-slow) var(--ease-entrance);
 }
 ```
 
@@ -1014,7 +1023,7 @@ Para animações específicas de um componente, guarde a transição atrás da m
 /* A animação só ocorre se o usuário não preferir movimento reduzido */
 @media (prefers-reduced-motion: no-preference) {
   .nds-animated {
-    transition: all var(--transition-normal) var(--transition-timing);
+    transition: all var(--duration-base) var(--ease-standard);
   }
 }
 ```
@@ -1023,7 +1032,7 @@ Para animações específicas de um componente, guarde a transição atrás da m
 
 Ao adicionar qualquer transição ou animação:
 
-- [ ] Usa duração dos tokens (`--transition-fast/normal/slow`)
+- [ ] Usa a escada de tokens (`--duration-*` + `--ease-*` de motion.css)
 - [ ] Respeita `prefers-reduced-motion` (media query `reduce`)
 - [ ] Não sobrescreve animações dos componentes do design system
 - [ ] Loading usa apenas os padrões aprovados (pulse do Skeleton ou `.nds-animate-spin` no ícone)
@@ -1193,4 +1202,4 @@ export function ExampleDocs() {
 - Bordas: `--border`, `--input`, `--ring`
 - Tipografia: `--text-h1` a `--text-label`, `--font-weight-*`
 - Raios: `--radius`, `--radius-button`, `--radius-card`
-- Motion: `--transition-fast` (150ms), `--transition-normal` (300ms), `--transition-slow` (500ms), `--transition-timing`
+- Motion: `--duration-instant/fast/base/moderate/slow/stately` (0–800ms), `--ease-standard/emphasis/entrance/exit`
