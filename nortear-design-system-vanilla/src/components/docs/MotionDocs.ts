@@ -18,9 +18,10 @@ const CODE_SPRING = `// npm i motion
 import { animate } from 'motion';
 
 // ao soltar o elemento arrastado — velocity é a velocidade do gesto (px/s),
-// medida nos últimos pointermove; sem ela a spring parte do repouso:
-animate(el, { x: [x, 0] }, { type: 'spring', stiffness: 400, damping: 26, velocity: vx });
-animate(el, { y: [y, 0] }, { type: 'spring', stiffness: 400, damping: 26, velocity: vy });`;
+// medida nos últimos pointermove; sem ela a spring parte do repouso.
+// damping 40 = crítico para stiffness 400 (2·√k): retorna sem overshoot.
+animate(el, { x: [x, 0] }, { type: 'spring', stiffness: 400, damping: 40, velocity: vx });
+animate(el, { y: [y, 0] }, { type: 'spring', stiffness: 400, damping: 40, velocity: vy });`;
 
 const CODE_STAGGER = `import { animate, stagger } from 'motion';
 
@@ -192,7 +193,9 @@ export function createMotionDocs(): HTMLElement {
           vx = 0;
           vy = 0;
         }
-        const spring = { type: 'spring', stiffness: 400, damping: 26 } as const;
+        // damping 40 = amortecimento crítico para stiffness 400 (2·√400) —
+        // retorna sem overshoot, igual às demais stacks
+        const spring = { type: 'spring', stiffness: 400, damping: 40 } as const;
         Promise.all([
           animate(chip, { x: [x, 0] }, { ...spring, velocity: vx }).finished,
           animate(chip, { y: [y, 0] }, { ...spring, velocity: vy }).finished,

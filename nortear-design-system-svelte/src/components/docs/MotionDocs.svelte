@@ -23,9 +23,10 @@
   const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
   // Spring físico nativo (svelte/motion). Durante o arrasto a mola PERSEGUE o
-  // ponteiro (sem instant) — assim acumula velocidade real e o retorno ao
-  // centro honra a velocidade do gesto. `instant` zeraria a velocidade interna.
-  const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.5 });
+  // ponteiro (sem instant — instant zeraria a velocidade interna a cada set).
+  // No soltar, preserveMomentum deixa a trajetória continuar por 120ms antes
+  // da mola puxar de volta — o fling fica proporcional à velocidade do gesto.
+  const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.8 });
   let dragging = $state(false);
   let tx = 0;
   let ty = 0;
@@ -44,7 +45,7 @@
     dragging = false;
     tx = 0;
     ty = 0;
-    coords.target = { x: 0, y: 0 };
+    coords.set({ x: 0, y: 0 }, { preserveMomentum: 120 });
   }
 
   let run = $state(0);
@@ -53,12 +54,12 @@
   const CODE_SPRING = `// nativo — svelte/motion (zero dependência)
 import { Spring } from 'svelte/motion';
 
-const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.5 });
+const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.3, damping: 0.8 });
 // durante o arrasto a mola persegue o ponteiro (acumula velocidade real):
 //   coords.target = { x, y };
-// ao soltar, o retorno honra a velocidade do gesto:
-//   coords.target = { x: 0, y: 0 };
-// (instant: true zeraria a velocidade interna a cada set)
+// ao soltar, preserveMomentum continua a trajetória por 120ms — o fling
+// fica proporcional à velocidade do gesto (instant zeraria a velocidade):
+//   coords.set({ x: 0, y: 0 }, { preserveMomentum: 120 });
 
 <div style="transform: translate({coords.current.x}px, {coords.current.y}px)" />`;
 
