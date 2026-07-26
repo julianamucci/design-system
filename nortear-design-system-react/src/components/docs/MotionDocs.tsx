@@ -96,19 +96,23 @@ interface DemoCardProps {
   title: string;
   desc: string;
   code: string;
+  /** Centraliza o conteúdo da área de demo (spring/drag). Default: stack
+      ancorado ao topo — evita que o conteúdo pule quando um filho sai. */
+  center?: boolean;
   children: React.ReactNode;
 }
 
-function DemoCard({ title, desc, code, children }: DemoCardProps) {
+function DemoCard({ title, desc, code, center = false, children }: DemoCardProps) {
   return (
     <div className="nds-stack" data-spacing="sm">
       <h3 className="nds-text-body nds-font-medium">{title}</h3>
       <p className="nds-text-body">{desc}</p>
       <div
-        className="nds-bg-card nds-border-soft nds-rounded-lg nds-p-6 nds-cluster"
-        data-align="center"
-        data-justify="center"
-        style={{ minHeight: '9rem', overflow: 'hidden' }}
+        className={`nds-bg-card nds-border-soft nds-rounded-lg nds-p-6 ${center ? 'nds-cluster' : 'nds-stack'}`}
+        data-align={center ? 'center' : undefined}
+        data-justify={center ? 'center' : undefined}
+        data-spacing={center ? undefined : 'sm'}
+        style={{ minHeight: '9rem', overflow: center ? 'hidden' : undefined }}
       >
         {children}
       </div>
@@ -135,6 +139,7 @@ function AdvancedMotion() {
         title={t('specimens.advanced.spring.title')}
         desc={t('specimens.advanced.spring.desc')}
         code={CODE_SPRING}
+        center
       >
         <motion.div
           drag

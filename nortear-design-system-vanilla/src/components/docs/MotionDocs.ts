@@ -69,7 +69,7 @@ export function createMotionDocs(): HTMLElement {
   return createFoundationsDocs({
     translations: translations as Record<string, unknown>,
     componentSlug: 'motion',
-    extraSection: ({ addText }) => {
+    extraSection: ({ t, addText }) => {
       const wrapper = document.createElement('div');
       wrapper.className = 'nds-stack';
       wrapper.dataset.spacing = 'xl';
@@ -226,7 +226,13 @@ export function createMotionDocs(): HTMLElement {
       card.textContent = 'Presence';
 
       let visible = true;
-      const syncLabel = () => addText(toggleBtn, visible ? 'specimens.advanced.labels.hide' : 'specimens.advanced.labels.show');
+      // addText só registra para o rerender de locale — aplica o texto na hora
+      // via t() e registra a chave atual para a troca de idioma.
+      const syncLabel = () => {
+        const key = visible ? 'specimens.advanced.labels.hide' : 'specimens.advanced.labels.show';
+        toggleBtn.textContent = t(key);
+        addText(toggleBtn, key);
+      };
       syncLabel();
       toggleBtn.addEventListener('click', () => {
         if (visible) {
