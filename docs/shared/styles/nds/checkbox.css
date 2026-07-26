@@ -87,3 +87,16 @@
   position: absolute;
   inset: -0.5rem -0.75rem;                      /* -8px vertical, -12px lateral */
 }
+
+/* ── Pop do indicador — o check entra com scale (dispara quando o estado
+      checked passa a valer; durações zeram sob prefers-reduced-motion) ────── */
+@keyframes nds-indicator-pop {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.nds-checkbox[data-state="checked"] .nds-checkbox-indicator > svg,
+.nds-checkbox[data-checked] .nds-checkbox-indicator > svg,
+.nds-checkbox[aria-checked="true"] .nds-checkbox-indicator > svg {
+  animation: nds-indicator-pop var(--duration-fast) var(--ease-entrance);
+}

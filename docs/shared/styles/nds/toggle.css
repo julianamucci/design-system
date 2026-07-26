@@ -31,7 +31,7 @@
   color: inherit;
   cursor: pointer;
   outline: 0;
-  transition: background-color var(--duration-fast), color var(--duration-fast), box-shadow var(--duration-fast);
+  transition: background-color var(--duration-fast), color var(--duration-fast), box-shadow var(--duration-fast), transform var(--duration-fast);
 }
 
 .nds-toggle:hover {
@@ -92,7 +92,15 @@
   pointer-events: none;
 }
 
+/* Press feedback */
+.nds-toggle:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .nds-toggle:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+    transform: none;
+  }
   .nds-toggle {
     transition: none;
   }

@@ -196,7 +196,7 @@
   height: 100%;
   width: auto;
   padding: var(--spacing-1);
-  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity var(--duration-moderate) var(--ease-emphasis), transform var(--duration-moderate) var(--ease-emphasis);
 }
 
 .nds-navigation-menu-popup-content[data-starting-style],
@@ -210,7 +210,7 @@
   height: var(--positioner-height);
   width: var(--positioner-width);
   max-width: var(--available-width);
-  transition: top 0.35s cubic-bezier(0.22, 1, 0.36, 1), left 0.35s cubic-bezier(0.22, 1, 0.36, 1), right 0.35s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: top var(--duration-moderate) var(--ease-emphasis), left var(--duration-moderate) var(--ease-emphasis), right var(--duration-moderate) var(--ease-emphasis), bottom var(--duration-moderate) var(--ease-emphasis);
 }
 
 .nds-navigation-menu-positioner[data-instant] {
@@ -230,7 +230,7 @@
   box-shadow: var(--elevation-md);
 
   outline: 0;
-  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity var(--duration-moderate) var(--ease-emphasis), transform var(--duration-moderate) var(--ease-emphasis), width var(--duration-moderate) var(--ease-emphasis), height var(--duration-moderate) var(--ease-emphasis);
 }
 
 .nds-navigation-menu-popup[data-starting-style],

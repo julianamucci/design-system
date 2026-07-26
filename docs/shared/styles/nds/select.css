@@ -259,11 +259,11 @@
 }
 
 .nds-select-content[data-open] {
-  animation: nds-select-zoom-in 100ms ease-out;
+  animation: nds-select-zoom-in var(--duration-fast) var(--ease-entrance);
 }
 
 .nds-select-content[data-closed] {
-  animation: nds-select-zoom-out 100ms ease-in;
+  animation: nds-select-zoom-out var(--duration-fast) var(--ease-exit);
 }
 
 /* Alinhado ao trigger (alignItemWithTrigger): sem animação de entrada */

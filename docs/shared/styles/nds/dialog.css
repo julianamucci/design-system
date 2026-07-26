@@ -179,6 +179,16 @@
  * o elemento ainda montado. Reaproveita as keyframes acima nesses attrs.
  */
 
+.nds-dialog-overlay[data-open],
+.nds-dialog-overlay[data-state="open"] {
+  animation: nds-dialog-fade-in var(--duration-base) var(--ease-entrance);
+}
+
+.nds-dialog-content[data-open],
+.nds-dialog-content[data-state="open"] {
+  animation: nds-dialog-zoom-in var(--duration-base) var(--ease-entrance);
+}
+
 .nds-dialog-overlay[data-closed] {
   animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
 }

@@ -44,7 +44,7 @@
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast), opacity var(--duration-fast);
+  transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast), opacity var(--duration-fast), transform var(--duration-fast);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -257,7 +257,15 @@
 }
 
 /* ── Animação reduzida ─────────────────────────────────────────────────────── */
+/* Press feedback — resposta tátil ao clique (estado não depende só disso) */
+.nds-button:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .nds-button:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+    transform: none;
+  }
   .nds-button {
     transition: none;
   }

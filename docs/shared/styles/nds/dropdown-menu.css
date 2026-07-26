@@ -255,9 +255,32 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* ── Enter/exit do painel — fade + zoom com leve drift (escada: fast).
+      base-ui/reka emitem data-open/data-closed; bits usa data-state. ──────── */
+@keyframes nds-menu-in {
+  from { opacity: 0; transform: translateY(calc(var(--motion-offset-xs) * -1)) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes nds-menu-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(calc(var(--motion-offset-xs) * -1)) scale(0.98); }
+}
+
+.nds-dropdown-menu-content[data-open],
+.nds-dropdown-menu-content[data-state="open"] {
+  animation: nds-menu-in var(--duration-fast) var(--ease-entrance);
+}
+
+.nds-dropdown-menu-content[data-closed],
+.nds-dropdown-menu-content[data-state="closed"] {
+  animation: nds-menu-out var(--duration-fast) var(--ease-exit);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-dropdown-menu-item,
   .nds-dropdown-menu-content {
     transition: none;
+    animation: none;
   }
 }
