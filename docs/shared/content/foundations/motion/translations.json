@@ -57,11 +57,6 @@
     "durations": {
       "title": "Durações",
       "subtitle": "A escada oficial do sistema (motion.css). Seis degraus com amplitude de 0 a 800ms — cada contexto tem seu degrau; não invente valores intermediários.",
-      "cols": {
-        "token": "Token",
-        "value": "Valor",
-        "usage": "Quando usar"
-      },
       "items": {
         "instant": {
           "token": "--duration-instant",
@@ -235,11 +230,6 @@
     "durations": {
       "title": "Durations",
       "subtitle": "The system’s official ladder (motion.css). Six steps spanning 0 to 800ms — each context has its step; don’t invent in-between values.",
-      "cols": {
-        "token": "Token",
-        "value": "Value",
-        "usage": "When to use"
-      },
       "items": {
         "instant": {
           "token": "--duration-instant",
@@ -413,11 +403,6 @@
     "durations": {
       "title": "Duraciones",
       "subtitle": "La escalera oficial del sistema (motion.css). Seis pasos con amplitud de 0 a 800ms — cada contexto tiene su paso; no inventes valores intermedios.",
-      "cols": {
-        "token": "Token",
-        "value": "Valor",
-        "usage": "Cuándo usar"
-      },
       "items": {
         "instant": {
           "token": "--duration-instant",

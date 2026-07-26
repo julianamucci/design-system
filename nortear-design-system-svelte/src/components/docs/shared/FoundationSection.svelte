@@ -193,8 +193,10 @@
               {/each}
             </TableBody>
           </Table>
-        {:else if (key === 'rows' || key === 'tableRows') && table}
-          <!-- consumida pela tabela renderizada na chave cols -->
+        {:else if key === 'rows' || key === 'tableRows' || key === 'cols' || key === 'tableCols'}
+          <!-- consumidas pela tabela renderizada na chave cols; um `cols` órfão
+               (sem rows — seção de cards) é metadado e não deve virar texto solto,
+               igual aos renderers das demais stacks -->
         {:else if key === 'title' && isString(value)}
           {@const Tag = headingTag(depth)}
           <svelte:element this={Tag} class="{headingClass(depth)}">{@html value}</svelte:element>
