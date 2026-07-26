@@ -8,7 +8,7 @@
       "title": "Badge — Feedback",
       "description": "Documentação do Badge: 4 variantes (default, secondary, destructive, outline), uso inline para status, contagens e categorias com tokens semânticos.",
       "aiSummary": "Componente Badge com 4 variantes (default, secondary, destructive, outline), sem size prop, não interativo por padrão, baseado em div com suporte a HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -336,7 +336,7 @@
       "title": "Badge — Feedback",
       "description": "Documentation for Badge: 4 variants (default, secondary, destructive, outline), inline use for status, counts, and categories with semantic tokens.",
       "aiSummary": "Badge component with 4 variants (default, secondary, destructive, outline), no size prop, non-interactive by default, built on div with HTMLAttributes support.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -664,7 +664,7 @@
       "title": "Badge — Feedback",
       "description": "Documentación del Badge: 4 variantes (default, secondary, destructive, outline), uso inline para estados, conteos y categorías con tokens semánticos.",
       "aiSummary": "Componente Badge con 4 variantes (default, secondary, destructive, outline), sin prop size, no interactivo por defecto, basado en div con soporte para HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.1, status indicator, tag, pill",
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
       "aiIntent": "informational"
     },
     "demonstration": {

@@ -161,7 +161,7 @@ export const DefinicaoDeTermo: Story = {
               type="button"
               className="nds-text-body nds-font-medium underline decoration-dotted underline-offset-4 cursor-help"
             >
-              WCAG 2.1 AA
+              WCAG 2.2 AA
             </button>
           </HoverCardTrigger>
           <HoverCardContent>

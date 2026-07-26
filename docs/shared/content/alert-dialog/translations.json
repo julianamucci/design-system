@@ -8,7 +8,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentação do AlertDialog: modal de confirmação crítica, focus trap, ARIA automático e composição com Cancel e Action.",
       "aiSummary": "Componente AlertDialog modal de confirmação para ações destrutivas, com focus trap, role=\"alertdialog\", aria-labelledby e aria-describedby automáticos via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -226,7 +226,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.1 AA: 2.1.2 (sem armadilhas de teclado com escape), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
+      "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado com escape), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — diferencia de <code>dialog</code> comum e sinaliza ao leitor que é uma decisão obrigatória.",
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>AlertDialogTitle</code> e <code>AlertDialogDescription</code>. Ambos são obrigatórios.",
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial no <code>AlertDialogCancel</code> para evitar ação acidental.",
@@ -360,7 +360,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentation for AlertDialog: critical confirmation modal, focus trap, automatic ARIA, and composition with Cancel and Action.",
       "aiSummary": "AlertDialog modal confirmation component for destructive actions, with focus trap, role=\"alertdialog\", and automatic aria-labelledby and aria-describedby via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -578,7 +578,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "AlertDialog uses <code>role=\"alertdialog\"</code> with automatic focus trap and focus return to the trigger. Meets WCAG 2.1 AA: 2.1.2 (no keyboard trap without escape), 2.4.3 (focus order), 4.1.2 (name, role, value).",
+      "summary": "AlertDialog uses <code>role=\"alertdialog\"</code> with automatic focus trap and focus return to the trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap without escape), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"alertdialog\"</strong> — differentiates from plain <code>dialog</code> and signals to the reader that a mandatory decision is required.",
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code>. Both are required.",
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus on <code>AlertDialogCancel</code> to prevent accidental action.",
@@ -712,7 +712,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentación del AlertDialog: modal de confirmación crítica, focus trap, ARIA automático y composición con Cancel y Action.",
       "aiSummary": "Componente AlertDialog modal de confirmación para acciones destructivas, con focus trap, role=\"alertdialog\", aria-labelledby y aria-describedby automáticos vía Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, role alertdialog, focus trap",
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -930,7 +930,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.1 AA: 2.1.2 (sin trampas de teclado con escape), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
+      "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado con escape), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — se diferencia del <code>dialog</code> común y señala al lector que es una decisión obligatoria.",
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>AlertDialogTitle</code> y <code>AlertDialogDescription</code>. Ambos son obligatorios.",
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. Foco inicial en <code>AlertDialogCancel</code> para evitar acción accidental.",

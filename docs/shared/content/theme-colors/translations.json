@@ -31,7 +31,7 @@
     },
     "modes": {
       "title": "Light e Dark",
-      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark), mantendo contraste WCAG 2.1 AA nos dois modos. Exceção: os tokens de gráficos usam a mesma paleta em ambos.",
+      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark), mantendo contraste WCAG 2.2 AA nos dois modos. Exceção: os tokens de gráficos usam a mesma paleta em ambos.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -113,7 +113,7 @@
     },
     "modes": {
       "title": "Light and Dark",
-      "subtitle": "Each color token has a light (:root) and dark (.dark) value, preserving WCAG 2.1 AA contrast in both modes. Exception: chart tokens use the same palette in both.",
+      "subtitle": "Each color token has a light (:root) and dark (.dark) value, preserving WCAG 2.2 AA contrast in both modes. Exception: chart tokens use the same palette in both.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -195,7 +195,7 @@
     },
     "modes": {
       "title": "Light y Dark",
-      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark), manteniendo contraste WCAG 2.1 AA en ambos modos. Excepción: los tokens de gráficos usan la misma paleta en ambos.",
+      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark), manteniendo contraste WCAG 2.2 AA en ambos modos. Excepción: los tokens de gráficos usan la misma paleta en ambos.",
       "light": "Light",
       "dark": "Dark"
     },

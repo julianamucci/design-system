@@ -8,7 +8,7 @@
       "title": "Breadcrumb — Navegação",
       "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -222,7 +222,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> e <code>aria-current=\"page\"</code> no item atual. Cumpre WCAG 2.1 AA: 2.4.8 (localização), 4.1.2 (nome, função, valor).",
+      "summary": "O Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> e <code>aria-current=\"page\"</code> no item atual. Cumpre WCAG 2.2 AA: 2.4.8 (localização), 4.1.2 (nome, função, valor).",
       "item1": "<strong>nav com aria-label</strong> — o container usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciando-se de outros <code>&lt;nav&gt;</code> da página.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplicado automaticamente no <code>BreadcrumbPage</code>; leitor de tela anuncia como página atual.",
       "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tem <code>role=\"presentation\"</code> e <code>aria-hidden=\"true\"</code>; não são lidos.",
@@ -347,7 +347,7 @@
       "title": "Breadcrumb — Navigation",
       "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
       "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -561,7 +561,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Breadcrumb uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> and <code>aria-current=\"page\"</code> on the current item. Meets WCAG 2.1 AA: 2.4.8 (location), 4.1.2 (name, role, value).",
+      "summary": "Breadcrumb uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> and <code>aria-current=\"page\"</code> on the current item. Meets WCAG 2.2 AA: 2.4.8 (location), 4.1.2 (name, role, value).",
       "item1": "<strong>nav with aria-label</strong> — the container uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, distinguishing it from other <code>&lt;nav&gt;</code> elements on the page.",
       "item2": "<strong>aria-current=\"page\"</strong> — automatically applied on <code>BreadcrumbPage</code>; screen readers announce it as the current page.",
       "item3": "<strong>Decorative separators</strong> — <code>BreadcrumbSeparator</code> has <code>role=\"presentation\"</code> and <code>aria-hidden=\"true\"</code>; not read.",
@@ -686,7 +686,7 @@
       "title": "Breadcrumb — Navegación",
       "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.1, aria-current, BreadcrumbList, Schema.org",
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -900,7 +900,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> y <code>aria-current=\"page\"</code> en el ítem actual. Cumple WCAG 2.1 AA: 2.4.8 (ubicación), 4.1.2 (nombre, rol, valor).",
+      "summary": "Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> y <code>aria-current=\"page\"</code> en el ítem actual. Cumple WCAG 2.2 AA: 2.4.8 (ubicación), 4.1.2 (nombre, rol, valor).",
       "item1": "<strong>nav con aria-label</strong> — el contenedor usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciándose de otros <code>&lt;nav&gt;</code> de la página.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplicado automáticamente en <code>BreadcrumbPage</code>; el lector de pantalla lo anuncia como página actual.",
       "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tiene <code>role=\"presentation\"</code> y <code>aria-hidden=\"true\"</code>; no se leen.",

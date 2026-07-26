@@ -8,7 +8,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentação do Context Menu: submenus, checkboxes, radio items, shortcuts e acessibilidade WCAG para menus de clique direito.",
       "aiSummary": "Componente Context Menu ativado por right-click com suporte a itens, submenus, checkboxes, radio groups, separadores e atalhos de teclado visuais.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.1, role menu, aria-haspopup",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -228,7 +228,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente via Base UI. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente via Base UI. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda ação disponível no Context Menu deve ter uma alternativa acessível — botão visível, ícone de ação na linha ou DropdownMenu.",
       "keyboard": {
         "rightClick": "Clique direito (ou menu key) abre o menu na posição do cursor.",
@@ -372,7 +372,7 @@
       "title": "Context Menu — Overlay",
       "description": "Context Menu docs: submenus, checkboxes, radio items, keyboard shortcuts and WCAG accessibility for right-click menus.",
       "aiSummary": "Context Menu component triggered by right-click with support for items, submenus, checkboxes, radio groups, separators and visual keyboard shortcuts.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.1, role menu, aria-haspopup",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -592,7 +592,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically via Base UI. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically via Base UI. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Critical warning: every action in the Context Menu must have an accessible alternative — visible button, inline action icon, or DropdownMenu.",
       "keyboard": {
         "rightClick": "Right-click (or menu key) opens the menu at cursor position.",
@@ -736,7 +736,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentación del Context Menu: submenús, checkboxes, radio items, atajos y accesibilidad WCAG para menús de clic derecho.",
       "aiSummary": "Componente Context Menu activado por clic derecho con soporte para ítems, submenús, checkboxes, radio groups, separadores y atajos de teclado visuales.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.1, role menu, aria-haspopup",
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -956,7 +956,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente vía Base UI. Atención: el clic derecho es inaccesible en touch y no es descubrible por teclado — toda acción debe tener una alternativa accesible. Cumple WCAG 2.1 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente vía Base UI. Atención: el clic derecho es inaccesible en touch y no es descubrible por teclado — toda acción debe tener una alternativa accesible. Cumple WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda acción disponible en el Context Menu debe tener una alternativa accesible — botón visible, ícono de acción en la fila o DropdownMenu.",
       "keyboard": {
         "rightClick": "Clic derecho (o tecla de menú) abre el menú en la posición del cursor.",

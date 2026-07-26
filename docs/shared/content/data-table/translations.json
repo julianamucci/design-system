@@ -8,7 +8,7 @@
       "title": "DataTable — Display",
       "description": "Transforme listas estáticas em ferramentas exploráveis: ordene, filtre, selecione e edite milhares de linhas com performance e acessibilidade WCAG.",
       "aiSummary": "Componente DataTable construído sobre TanStack Table v8 (headless). Estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -278,7 +278,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O DataTable atende WCAG 2.1 AA via tabela semântica do <code>Table</code> primitivo, <code>aria-label</code> em todos os botões interativos (ordenação, filtro, paginação, resize), tri-state no checkbox de cabeçalho e foco visível em todas as ações.",
+      "summary": "O DataTable atende WCAG 2.2 AA via tabela semântica do <code>Table</code> primitivo, <code>aria-label</code> em todos os botões interativos (ordenação, filtro, paginação, resize), tri-state no checkbox de cabeçalho e foco visível em todas as ações.",
       "item1": "<strong>Tabela semântica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> e <code>&lt;td&gt;</code> do primitivo Table. Cabeçalhos têm <code>scope=\"col\"</code> implícito quando renderizados.",
       "item2": "<strong>Botões com aria-label contextual</strong> — \"Ordenar por <em>nome da coluna</em>\", \"Filtrar <em>nome</em>\", \"Selecionar linha\", \"Próxima página\". Sem ícones decorativos isolados sem texto acessível.",
       "item3": "<strong>Tri-state na seleção</strong> — checkbox do cabeçalho usa <code>indeterminate</code> quando há seleção parcial. Marca todas, desmarca todas ou estado misto, conforme estado real.",
@@ -408,7 +408,7 @@
       "title": "DataTable — Display",
       "description": "Turn static lists into explorable tools: sort, filter, select, and edit thousands of rows with performance and WCAG-grade accessibility.",
       "aiSummary": "DataTable component built on TanStack Table v8 (headless). Extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -678,7 +678,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "DataTable meets WCAG 2.1 AA via the semantic table from the <code>Table</code> primitive, <code>aria-label</code> on every interactive button (sort, filter, pagination, resize), checkbox tri-state on the header, and visible focus on all actions.",
+      "summary": "DataTable meets WCAG 2.2 AA via the semantic table from the <code>Table</code> primitive, <code>aria-label</code> on every interactive button (sort, filter, pagination, resize), checkbox tri-state on the header, and visible focus on all actions.",
       "item1": "<strong>Semantic table</strong> — uses <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code>, and <code>&lt;td&gt;</code> from the primitive Table. Headers have implicit <code>scope=\"col\"</code> when rendered.",
       "item2": "<strong>Contextual aria-label buttons</strong> — \"Sort by <em>column name</em>\", \"Filter <em>name</em>\", \"Select row\", \"Next page\". No decorative-only icons without accessible text.",
       "item3": "<strong>Selection tri-state</strong> — header checkbox uses <code>indeterminate</code> when selection is partial. Marks all, clears all, or mixed state matches the real state.",
@@ -808,7 +808,7 @@
       "title": "DataTable — Display",
       "description": "Convierte listas estáticas en herramientas explorables: ordena, filtra, selecciona y edita miles de filas con performance y accesibilidad WCAG.",
       "aiSummary": "Componente DataTable construido sobre TanStack Table v8 (headless). Extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.1",
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1078,7 +1078,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "DataTable cumple WCAG 2.1 AA gracias a la tabla semántica del primitivo <code>Table</code>, <code>aria-label</code> en todos los botones interactivos (orden, filtro, paginación, resize), tri-state en el checkbox de cabecera y foco visible en todas las acciones.",
+      "summary": "DataTable cumple WCAG 2.2 AA gracias a la tabla semántica del primitivo <code>Table</code>, <code>aria-label</code> en todos los botones interactivos (orden, filtro, paginación, resize), tri-state en el checkbox de cabecera y foco visible en todas las acciones.",
       "item1": "<strong>Tabla semántica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> y <code>&lt;td&gt;</code> del primitivo Table. Las cabeceras tienen <code>scope=\"col\"</code> implícito cuando se renderizan.",
       "item2": "<strong>Botones con aria-label contextual</strong> — \"Ordenar por <em>nombre de columna</em>\", \"Filtrar <em>nombre</em>\", \"Seleccionar fila\", \"Página siguiente\". Sin íconos decorativos aislados sin texto accesible.",
       "item3": "<strong>Tri-state en la selección</strong> — el checkbox de cabecera usa <code>indeterminate</code> cuando la selección es parcial. Marca todas, desmarca todas o estado mixto, según el estado real.",

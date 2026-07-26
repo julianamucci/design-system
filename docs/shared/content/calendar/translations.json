@@ -8,7 +8,7 @@
       "title": "Calendar — Formulário",
       "description": "Documentação do Calendar: wrapper de react-day-picker v9 com modos single/multiple/range, captionLayout, locale e acessibilidade WCAG.",
       "aiSummary": "Componente Calendar baseado em react-day-picker v9 com modos single/multiple/range, captionLayout label/dropdown, suporte a locale pt-BR/en/es e datas desabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -234,7 +234,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Calendar herda do <code>react-day-picker v9</code> toda a acessibilidade nativa: grid com <code>role=\"grid\"</code>, foco por Arrow keys, anúncio de seleção e respeito a <code>prefers-reduced-motion</code>. Cumpre WCAG 2.1 AA: 2.1.1 (teclado), 2.4.7 (foco visível), 4.1.2 (nome, função, valor).",
+      "summary": "O Calendar herda do <code>react-day-picker v9</code> toda a acessibilidade nativa: grid com <code>role=\"grid\"</code>, foco por Arrow keys, anúncio de seleção e respeito a <code>prefers-reduced-motion</code>. Cumpre WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visível), 4.1.2 (nome, função, valor).",
       "item1": "<strong>Grid semântico</strong> — <code>role=\"grid\"</code> no calendário com <code>gridcell</code> por célula e <code>rowheader</code> nos dias da semana.",
       "item2": "<strong>Foco gerenciado</strong> — apenas uma célula tem <code>tabIndex=0</code>; as demais respondem às Arrow keys.",
       "item3": "<strong>aria-selected</strong> — aplicado automaticamente na(s) data(s) selecionada(s).",
@@ -364,7 +364,7 @@
       "title": "Calendar — Form",
       "description": "Documentation for Calendar: react-day-picker v9 wrapper with single/multiple/range modes, captionLayout, locale and WCAG accessibility.",
       "aiSummary": "Calendar component built on react-day-picker v9 with single/multiple/range modes, label/dropdown captionLayout, pt-BR/en/es locale support and disabled dates.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -590,7 +590,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Calendar inherits full native accessibility from <code>react-day-picker v9</code>: <code>role=\"grid\"</code>, Arrow key focus, selection announcement and <code>prefers-reduced-motion</code> support. Meets WCAG 2.1 AA: 2.1.1 (keyboard), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
+      "summary": "Calendar inherits full native accessibility from <code>react-day-picker v9</code>: <code>role=\"grid\"</code>, Arrow key focus, selection announcement and <code>prefers-reduced-motion</code> support. Meets WCAG 2.2 AA: 2.1.1 (keyboard), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Semantic grid</strong> — <code>role=\"grid\"</code> on the calendar with <code>gridcell</code> per cell and <code>rowheader</code> on weekday headers.",
       "item2": "<strong>Managed focus</strong> — only one cell has <code>tabIndex=0</code>; others respond to Arrow keys.",
       "item3": "<strong>aria-selected</strong> — automatically set on the selected date(s).",
@@ -720,7 +720,7 @@
       "title": "Calendar — Formulario",
       "description": "Documentación del Calendar: wrapper de react-day-picker v9 con modos single/multiple/range, captionLayout, locale y accesibilidad WCAG.",
       "aiSummary": "Componente Calendar basado en react-day-picker v9 con modos single/multiple/range, captionLayout label/dropdown, soporte de locale pt-BR/en/es y fechas deshabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.1, date-fns",
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -946,7 +946,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Calendar hereda de <code>react-day-picker v9</code> toda la accesibilidad nativa: grid con <code>role=\"grid\"</code>, foco con Arrow keys, anuncio de selección y respeto a <code>prefers-reduced-motion</code>. Cumple WCAG 2.1 AA: 2.1.1 (teclado), 2.4.7 (foco visible), 4.1.2 (nombre, rol, valor).",
+      "summary": "Calendar hereda de <code>react-day-picker v9</code> toda la accesibilidad nativa: grid con <code>role=\"grid\"</code>, foco con Arrow keys, anuncio de selección y respeto a <code>prefers-reduced-motion</code>. Cumple WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visible), 4.1.2 (nombre, rol, valor).",
       "item1": "<strong>Grid semántico</strong> — <code>role=\"grid\"</code> en el calendario con <code>gridcell</code> por celda y <code>rowheader</code> en los días de la semana.",
       "item2": "<strong>Foco gestionado</strong> — solo una celda tiene <code>tabIndex=0</code>; las demás responden a las Arrow keys.",
       "item3": "<strong>aria-selected</strong> — aplicado automáticamente en la(s) fecha(s) seleccionada(s).",

@@ -120,12 +120,12 @@ function buildDefinitionPreview(): HTMLElement {
   trigger.href = '#wcag';
   trigger.className = 'nds-text-primary nds-hover-underline';
   trigger.style.textUnderlineOffset = '4px';
-  trigger.textContent = 'WCAG 2.1';
+  trigger.textContent = 'WCAG 2.2';
 
   const content = document.createElement('div');
   const title = document.createElement('p');
   title.className = 'nds-font-medium nds-text-body';
-  title.textContent = 'WCAG 2.1';
+  title.textContent = 'WCAG 2.2';
   const desc = document.createElement('p');
   desc.className = 'nds-text-caption nds-text-muted-foreground';
   desc.textContent = 'Web Content Accessibility Guidelines: padrão internacional de acessibilidade.';
@@ -530,12 +530,12 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
 trigger.type = 'button';
 trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
 Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
-trigger.textContent = 'WCAG 2.1 AA';
+trigger.textContent = 'WCAG 2.2 AA';
 
 const content = document.createElement('div');
 const term = document.createElement('p');
 term.className = 'nds-font-medium nds-text-body';
-term.textContent = 'WCAG 2.1 AA';
+term.textContent = 'WCAG 2.2 AA';
 const def = document.createElement('p');
 def.className = 'nds-text-caption nds-text-muted-foreground';
 def.textContent =
@@ -549,12 +549,12 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
                 trigger.className =
                   'nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer';
                 Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
-                trigger.textContent = 'WCAG 2.1 AA';
+                trigger.textContent = 'WCAG 2.2 AA';
 
                 const content = document.createElement('div');
                 const term = document.createElement('p');
                 term.className = 'nds-font-medium nds-text-body';
-                term.textContent = 'WCAG 2.1 AA';
+                term.textContent = 'WCAG 2.2 AA';
                 const def = document.createElement('p');
                 def.className = 'nds-text-caption nds-text-muted-foreground';
                 def.textContent =

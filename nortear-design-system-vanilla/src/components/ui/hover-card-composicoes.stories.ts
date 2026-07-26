@@ -196,7 +196,7 @@ export const PreviewDeLink: Story = {
 export const DefinicaoDeTermo: Story = {
   name: 'Definição de Termo',
   render: () => {
-    const trigger = buildSpan('WCAG 2.1 AA');
+    const trigger = buildSpan('WCAG 2.2 AA');
 
     const content = document.createElement('div');
     content.className = 'nds-stack';
@@ -204,7 +204,7 @@ export const DefinicaoDeTermo: Story = {
 
     const term = document.createElement('p');
     term.className = 'nds-text-body nds-font-medium';
-    term.textContent = 'WCAG 2.1 AA';
+    term.textContent = 'WCAG 2.2 AA';
 
     const def = document.createElement('p');
     def.className = 'nds-text-caption nds-text-muted-foreground';

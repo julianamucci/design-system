@@ -8,7 +8,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentação do Collapsible: seção expansível com trigger explícito, modos controlado e não-controlado, acessibilidade WCAG e aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir e ocultar uma única seção de conteúdo. Suporta modo controlado (estado externo + callback de mudança) e não-controlado (estado inicial), com aria-expanded e aria-controls aplicados automaticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -184,7 +184,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Collapsible implementa o padrão de disclosure do ARIA. O Base UI aplica <code>aria-expanded</code> e <code>aria-controls</code> automaticamente no trigger. Cumpre WCAG 2.1 AA: 4.1.2 (nome, função, valor), 2.1.1 (teclado).",
+      "summary": "O Collapsible implementa o padrão de disclosure do ARIA. O Base UI aplica <code>aria-expanded</code> e <code>aria-controls</code> automaticamente no trigger. Cumpre WCAG 2.2 AA: 4.1.2 (nome, função, valor), 2.1.1 (teclado).",
       "item1": "<strong>aria-expanded automático</strong> — o Base UI mantém <code>aria-expanded=\"true\"</code> quando aberto e <code>\"false\"</code> quando fechado no CollapsibleTrigger.",
       "item2": "<strong>aria-controls automático</strong> — o Base UI associa o trigger ao painel via <code>aria-controls</code> — não reimplementar manualmente.",
       "item3": "<strong>Trigger com ícone apenas</strong> — inclua <code>&lt;span className=\"sr-only\"&gt;</code> descrevendo a ação e o objeto: 'Exibir filtros avançados'.",
@@ -307,7 +307,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Collapsible documentation: expandable section with explicit trigger, controlled and uncontrolled modes, WCAG accessibility with automatic aria-expanded.",
       "aiSummary": "Collapsible component to expand and hide a single content section. Supports controlled (external state + change callback) and uncontrolled (initial state) modes, with aria-expanded and aria-controls applied automatically.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -483,7 +483,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Collapsible implements the ARIA disclosure pattern. Base UI automatically applies <code>aria-expanded</code> and <code>aria-controls</code> to the trigger. Meets WCAG 2.1 AA: 4.1.2 (name, role, value), 2.1.1 (keyboard).",
+      "summary": "Collapsible implements the ARIA disclosure pattern. Base UI automatically applies <code>aria-expanded</code> and <code>aria-controls</code> to the trigger. Meets WCAG 2.2 AA: 4.1.2 (name, role, value), 2.1.1 (keyboard).",
       "item1": "<strong>Automatic aria-expanded</strong> — Base UI keeps <code>aria-expanded=\"true\"</code> when open and <code>\"false\"</code> when closed on CollapsibleTrigger.",
       "item2": "<strong>Automatic aria-controls</strong> — Base UI associates the trigger with the panel via <code>aria-controls</code> — do not reimplement manually.",
       "item3": "<strong>Icon-only trigger</strong> — include <code>&lt;span className=\"sr-only\"&gt;</code> describing the action and object: 'Show advanced filters'.",
@@ -606,7 +606,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentación del Collapsible: sección expandible con trigger explícito, modos controlado y no controlado, accesibilidad WCAG con aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir y ocultar una única sección de contenido. Soporta modo controlado (estado externo + callback de cambio) y no controlado (estado inicial), con aria-expanded y aria-controls aplicados automáticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.1, aria-expanded, aria-controls, disclosure pattern",
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -782,7 +782,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Collapsible implementa el patrón de disclosure de ARIA. Base UI aplica <code>aria-expanded</code> y <code>aria-controls</code> automáticamente en el trigger. Cumple WCAG 2.1 AA: 4.1.2 (nombre, función, valor), 2.1.1 (teclado).",
+      "summary": "Collapsible implementa el patrón de disclosure de ARIA. Base UI aplica <code>aria-expanded</code> y <code>aria-controls</code> automáticamente en el trigger. Cumple WCAG 2.2 AA: 4.1.2 (nombre, función, valor), 2.1.1 (teclado).",
       "item1": "<strong>aria-expanded automático</strong> — Base UI mantiene <code>aria-expanded=\"true\"</code> cuando está abierto y <code>\"false\"</code> cuando está cerrado en el CollapsibleTrigger.",
       "item2": "<strong>aria-controls automático</strong> — Base UI asocia el trigger con el panel mediante <code>aria-controls</code> — no reimplementar manualmente.",
       "item3": "<strong>Trigger solo con ícono</strong> — incluir <code>&lt;span className=\"sr-only\"&gt;</code> describiendo la acción y el objeto: 'Mostrar filtros avanzados'.",

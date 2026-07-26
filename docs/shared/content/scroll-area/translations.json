@@ -8,7 +8,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentação do ScrollArea: viewport com scroll customizado, ScrollBar estilizada e acessibilidade por teclado.",
       "aiSummary": "Componente ScrollArea com viewport, ScrollBar e Thumb estilizados, suporte a scroll vertical/horizontal/both e fallback para scroll nativo em mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -196,7 +196,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "summary": "Atende WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "Viewport recebe foco via Tab quando contém conteúdo focável",
         "item2": "Setas (↑/↓/←/→) e PageUp/PageDown rolam o conteúdo quando o viewport tem foco",
@@ -317,7 +317,7 @@
       "title": "ScrollArea — Layout",
       "description": "ScrollArea documentation: viewport with custom scroll, styled ScrollBar and keyboard accessibility.",
       "aiSummary": "ScrollArea component with viewport, styled ScrollBar and Thumb, vertical/horizontal/both support and native scroll fallback on mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -505,7 +505,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "summary": "Meets WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "Viewport receives focus via Tab when it contains focusable content",
         "item2": "Arrow keys (↑/↓/←/→) and PageUp/PageDown scroll content when viewport is focused",
@@ -626,7 +626,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentación de ScrollArea: viewport con scroll personalizado, ScrollBar estilizada y accesibilidad por teclado.",
       "aiSummary": "Componente ScrollArea con viewport, ScrollBar y Thumb estilizados, soporte vertical/horizontal/ambos y fallback a scroll nativo en móvil.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1",
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -814,7 +814,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
+      "summary": "Cumple WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "El viewport recibe foco vía Tab cuando contiene contenido focalizable",
         "item2": "Flechas (↑/↓/←/→) y PageUp/PageDown desplazan el contenido cuando el viewport tiene foco",

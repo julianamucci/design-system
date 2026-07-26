@@ -8,7 +8,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
       "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -569,7 +569,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
       "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1130,7 +1130,7 @@
       "title": "Accordion — Disclosure",
       "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
       "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.1, aria-expanded, disclosure pattern",
+      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern",
       "aiIntent": "informational"
     },
     "demonstration": {

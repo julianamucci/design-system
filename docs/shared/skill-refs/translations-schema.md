@@ -17,7 +17,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
       "title": "NomeDoComponente — Categoria · Design System",
       "description": "Documentação do NomeDoComponente: variantes, estados, acessibilidade WCAG. (≤155 chars)",
       "aiSummary": "Frase específica descrevendo o componente e seus recursos principais.",
-      "aiEntities": "ComponenteName, React, Vue, Svelte, Tailwind CSS, WCAG 2.1",
+      "aiEntities": "ComponenteName, React, Vue, Svelte, Tailwind CSS, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {

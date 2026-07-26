@@ -47,7 +47,11 @@ const preview: Preview = {
         ],
       },
     },
-    a11y: { test: 'error' },
+    a11y: {
+      test: 'error',
+      // WCAG 2.2: target-size (2.5.8) — axe não roda regras 2.2 por default
+      config: { rules: [{ id: 'target-size', enabled: true }] },
+    },
     docs: {
       codePanel: true,
       canvas: { sourceState: 'shown' },

@@ -6,9 +6,9 @@
     "description": "Cartão flutuante exibido ao passar o cursor sobre um elemento, ideal para previews de perfis, links ou conteúdo contextual.",
     "seo": {
       "title": "HoverCard — Overlay",
-      "description": "Documentação do HoverCard: cartão flutuante por hover via base-ui/reka-ui/bits-ui com delay, posicionamento e WCAG 2.1 AA.",
+      "description": "Documentação do HoverCard: cartão flutuante por hover via base-ui/reka-ui/bits-ui com delay, posicionamento e WCAG 2.2 AA.",
       "aiSummary": "Componente HoverCard construído sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Vanilla) que exibe cartão flutuante em hover/focus com delay configurável, posicionamento side/align e fechamento automático ao sair do trigger ou content.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -152,7 +152,7 @@
         "definitionTooltip": {
           "name": "Definição de termo",
           "description": "Texto disparador com sublinhado pontilhado abre cartão com o termo em destaque e a definição em 1-2 frases. Complementa o glossário sem tirar o usuário do contexto.",
-          "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.1 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso."
+          "use": "Termos técnicos, siglas (ex.: <code>WCAG 2.2 AA</code>) e jargões em prosa longa. Sempre tenha um glossário ou página dedicada como alternativa de acesso."
         },
         "metricExplainer": {
           "name": "Métrica explicada",
@@ -268,7 +268,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA — critérios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operável por teclado: Tab abre por foco, ESC fecha), 4.1.2 (name/role/value).",
+      "summary": "Atende WCAG 2.2 AA — critérios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operável por teclado: Tab abre por foco, ESC fecha), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> abre o Content ao receber foco via Tab — não exige hover.",
         "item2": "<code>HoverCardContent</code> permanece aberto enquanto cursor estiver sobre ele (hoverable) — usuário pode interagir.",
@@ -430,9 +430,9 @@
     "description": "Floating card displayed when hovering over an element, ideal for profile previews, link previews, or contextual content.",
     "seo": {
       "title": "HoverCard — Overlay",
-      "description": "HoverCard documentation: floating card on hover via base-ui/reka-ui/bits-ui with delay, positioning, and WCAG 2.1 AA.",
+      "description": "HoverCard documentation: floating card on hover via base-ui/reka-ui/bits-ui with delay, positioning, and WCAG 2.2 AA.",
       "aiSummary": "HoverCard component built on base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Vanilla) that displays a floating card on hover/focus with configurable delay, side/align positioning, and automatic close on leave.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -576,7 +576,7 @@
         "definitionTooltip": {
           "name": "Term definition",
           "description": "Trigger text with dotted underline opens a card with the highlighted term and the definition in 1-2 sentences. Complements the glossary without pulling the user out of context.",
-          "use": "Technical terms, acronyms (e.g. <code>WCAG 2.1 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path."
+          "use": "Technical terms, acronyms (e.g. <code>WCAG 2.2 AA</code>) and jargon in long prose. Always have a glossary or dedicated page as an alternative access path."
         },
         "metricExplainer": {
           "name": "Metric explainer",
@@ -692,7 +692,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA — criteria 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (keyboard operable: Tab opens by focus, ESC closes), 4.1.2 (name/role/value).",
+      "summary": "Meets WCAG 2.2 AA — criteria 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (keyboard operable: Tab opens by focus, ESC closes), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> opens Content when receiving Tab focus — does not require hover.",
         "item2": "<code>HoverCardContent</code> stays open while cursor is over it (hoverable) — user can interact.",
@@ -854,9 +854,9 @@
     "description": "Tarjeta flotante mostrada al pasar el cursor sobre un elemento, ideal para previews de perfiles, enlaces o contenido contextual.",
     "seo": {
       "title": "HoverCard — Overlay",
-      "description": "Documentación de HoverCard: tarjeta flotante por hover vía base-ui/reka-ui/bits-ui con delay, posicionamiento y WCAG 2.1 AA.",
+      "description": "Documentación de HoverCard: tarjeta flotante por hover vía base-ui/reka-ui/bits-ui con delay, posicionamiento y WCAG 2.2 AA.",
       "aiSummary": "Componente HoverCard construido sobre base-ui/preview-card (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Vanilla) que muestra tarjeta flotante en hover/focus con delay configurable, posicionamiento side/align y cierre automático al salir.",
-      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.1, role=dialog, openDelay, closeDelay",
+      "aiEntities": "HoverCard, base-ui, preview-card, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, hover, focus, WCAG 2.2, role=dialog, openDelay, closeDelay",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1000,7 +1000,7 @@
         "definitionTooltip": {
           "name": "Definición de término",
           "description": "Texto disparador con subrayado punteado abre una tarjeta con el término destacado y la definición en 1-2 frases. Complementa el glosario sin sacar al usuario del contexto.",
-          "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.1 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso."
+          "use": "Términos técnicos, siglas (ej.: <code>WCAG 2.2 AA</code>) y jerga en prosa larga. Ten siempre un glosario o página dedicada como ruta alternativa de acceso."
         },
         "metricExplainer": {
           "name": "Métrica explicada",
@@ -1116,7 +1116,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA — criterios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operable por teclado: Tab abre por foco, ESC cierra), 4.1.2 (name/role/value).",
+      "summary": "Cumple WCAG 2.2 AA — criterios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operable por teclado: Tab abre por foco, ESC cierra), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> abre el Content al recibir foco vía Tab — no requiere hover.",
         "item2": "<code>HoverCardContent</code> permanece abierto mientras el cursor esté sobre él (hoverable) — usuario puede interactuar.",

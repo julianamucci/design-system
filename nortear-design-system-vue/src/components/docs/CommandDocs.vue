@@ -532,11 +532,11 @@ const functionalTestItems = computed(() => [
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.1', how: 'axe-core' },
-  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.1', how: 'manual' },
-  { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 2.1', how: 'leitor de tela' },
-  { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 2.1', how: 'manual' },
-  { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 2.1', how: 'axe-core' },
+  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.2', how: 'axe-core' },
+  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.2', how: 'manual' },
+  { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 2.2', how: 'leitor de tela' },
+  { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 2.2', how: 'manual' },
+  { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 2.2', how: 'axe-core' },
 ]);
 
 const visualTestItems = computed(() => [

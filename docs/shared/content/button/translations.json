@@ -8,7 +8,7 @@
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
       "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -253,7 +253,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Button usa o elemento <code>&lt;button&gt;</code> nativo, que já tem suporte completo a teclado e leitor de tela. Cumpre WCAG 2.1 AA: 2.1.1 (acessível por teclado), 2.4.7 (foco visível), 4.1.2 (name, role, value).",
+      "summary": "O Button usa o elemento <code>&lt;button&gt;</code> nativo, que já tem suporte completo a teclado e leitor de tela. Cumpre WCAG 2.2 AA: 2.1.1 (acessível por teclado), 2.4.7 (foco visível), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — a semântica, o role e o comportamento de teclado vêm do HTML. Nunca substitua por <code>&lt;div onClick&gt;</code>.",
       "item2": "<strong>Foco visível</strong> — ring de 3px no token <code>--ring</code>, aplicado via pseudo-classe <code>:focus-visible</code>. Atende WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>aria-label contextual</strong> — quando o texto do botão é ambíguo (\"Editar\", \"Excluir\"), adicione contexto: <code>aria-label=\"Excluir produto Cadeira Gamer Pro\"</code>.",
@@ -378,7 +378,7 @@
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
       "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -623,7 +623,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Button uses the native <code>&lt;button&gt;</code> element, which has full keyboard and screen reader support. Meets WCAG 2.1 AA: 2.1.1 (keyboard accessible), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
+      "summary": "Button uses the native <code>&lt;button&gt;</code> element, which has full keyboard and screen reader support. Meets WCAG 2.2 AA: 2.1.1 (keyboard accessible), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Native &lt;button&gt; element</strong> — semantics, role, and keyboard behavior come from HTML. Never replace with <code>&lt;div onClick&gt;</code>.",
       "item2": "<strong>Visible focus</strong> — 3px ring in the <code>--ring</code> token, applied via the <code>:focus-visible</code> pseudo-class. Meets WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>Contextual aria-label</strong> — when the button text is ambiguous (\"Edit\", \"Delete\"), add context: <code>aria-label=\"Delete product Gaming Chair Pro\"</code>.",
@@ -748,7 +748,7 @@
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
       "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.1, class-variance-authority",
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -993,7 +993,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Button usa el elemento <code>&lt;button&gt;</code> nativo, que ya tiene soporte completo de teclado y lector de pantalla. Cumple WCAG 2.1 AA: 2.1.1 (accesible por teclado), 2.4.7 (foco visible), 4.1.2 (name, role, value).",
+      "summary": "Button usa el elemento <code>&lt;button&gt;</code> nativo, que ya tiene soporte completo de teclado y lector de pantalla. Cumple WCAG 2.2 AA: 2.1.1 (accesible por teclado), 2.4.7 (foco visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — la semántica, el role y el comportamiento de teclado vienen del HTML. Nunca lo sustituyas por <code>&lt;div onClick&gt;</code>.",
       "item2": "<strong>Foco visible</strong> — ring de 3px en el token <code>--ring</code>, aplicado vía la pseudo-clase <code>:focus-visible</code>. Cumple WCAG 2.4.7 (Focus Visible, AA).",
       "item3": "<strong>aria-label contextual</strong> — cuando el texto del botón es ambiguo (\"Editar\", \"Eliminar\"), agrega contexto: <code>aria-label=\"Eliminar producto Silla Gamer Pro\"</code>.",

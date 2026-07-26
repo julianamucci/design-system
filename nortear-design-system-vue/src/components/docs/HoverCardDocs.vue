@@ -227,11 +227,11 @@ const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
       class="nds-text-primary nds-text-body nds-font-medium"
       style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
     >
-      WCAG 2.1 AA
+      WCAG 2.2 AA
     </button>
   </HoverCardTrigger>
   <HoverCardContent>
-    <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+    <p class="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
     <p class="nds-text-caption nds-text-muted-foreground">
       Web Content Accessibility Guidelines 2.1 — nível AA.
     </p>
@@ -518,11 +518,11 @@ const a11yCritCols = computed(() => ({
                 href="#wcag"
                 class="nds-text-primary nds-hover-underline"
                 style="text-underline-offset: 4px;"
-              >WCAG 2.1</a>
+              >WCAG 2.2</a>
             </HoverCardTrigger>
             <HoverCardContent>
               <p class="nds-font-medium nds-text-body">
-                WCAG 2.1
+                WCAG 2.2
               </p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
@@ -846,12 +846,12 @@ const a11yCritCols = computed(() => ({
                 class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
                 style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
               >
-                WCAG 2.1 AA
+                WCAG 2.2 AA
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
               <p class="nds-font-medium nds-text-body">
-                WCAG 2.1 AA
+                WCAG 2.2 AA
               </p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.

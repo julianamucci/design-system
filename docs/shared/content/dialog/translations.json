@@ -8,7 +8,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentação do Dialog: modal versátil para formulários e conteúdo, com focus trap, Portal, Escape e fechamento por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formulários e conteúdo informativo, com focus trap, role=\"dialog\", aria-labelledby e aria-describedby automáticos via Base UI, Reka UI e Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -240,7 +240,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.1 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
+      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — sinaliza ao leitor que o conteúdo fora do diálogo está inativo.",
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>DialogTitle</code> e <code>DialogDescription</code>. Title é obrigatório; Description é altamente recomendado.",
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial vai para o primeiro elemento focável.",
@@ -374,7 +374,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentation for Dialog: versatile modal for forms and content, with focus trap, Portal, Escape, and overlay-click dismiss.",
       "aiSummary": "Generic Dialog modal component for forms and informational content, with focus trap, role=\"dialog\", and automatic aria-labelledby and aria-describedby via Base UI, Reka UI, and Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -606,7 +606,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.1 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
+      "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — signals to the reader that content outside the dialog is inert.",
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>DialogTitle</code> and <code>DialogDescription</code>. Title is required; Description is highly recommended.",
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus goes to the first focusable element.",
@@ -740,7 +740,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentación del Dialog: modal versátil para formularios y contenido, con focus trap, Portal, Escape y cierre por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formularios y contenido informativo, con focus trap, role=\"dialog\", aria-labelledby y aria-describedby automáticos vía Base UI, Reka UI y Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.1, role dialog, focus trap, modal, lucide",
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -972,7 +972,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.1 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
+      "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — señala al lector que el contenido fuera del diálogo está inerte.",
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>DialogTitle</code> y <code>DialogDescription</code>. Title es obligatorio; Description es muy recomendado.",
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento focalizable.",

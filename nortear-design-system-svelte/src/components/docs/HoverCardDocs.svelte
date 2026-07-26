@@ -248,11 +248,11 @@ interface HoverCardContentProps {
           <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
             <HoverCardTrigger>
               {#snippet child({ props })}
-                <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.1</a>
+                <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.2</a>
               {/snippet}
             </HoverCardTrigger>
             <HoverCardContent>
-              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
+              <p class="nds-font-medium nds-text-body">WCAG 2.2</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
               </p>
@@ -486,12 +486,12 @@ interface HoverCardContentProps {
   <HoverCardTrigger>
     {#snippet child({ props })}
       <button type="button" class="nds-text-primary nds-text-body nds-font-medium" style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help" {...props}>
-        WCAG 2.1 AA
+        WCAG 2.2 AA
       </button>
     {/snippet}
   </HoverCardTrigger>
   <HoverCardContent>
-    <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+    <p class="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
     <p class="nds-text-caption nds-text-muted-foreground">
       Web Content Accessibility Guidelines 2.1 — nível AA.
     </p>
@@ -582,12 +582,12 @@ interface HoverCardContentProps {
               style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help"
               {...props}
             >
-              WCAG 2.1 AA
+              WCAG 2.2 AA
             </button>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
-          <p class="nds-font-medium nds-text-body">WCAG 2.1 AA</p>
+          <p class="nds-font-medium nds-text-body">WCAG 2.2 AA</p>
           <p class="nds-text-caption nds-text-muted-foreground">
             Web Content Accessibility Guidelines 2.1 — nível AA. Contraste mínimo 4.5:1 e operação por teclado.
           </p>

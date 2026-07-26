@@ -3,17 +3,29 @@
     "title": "Acessibilidade",
     "category": "Foundations",
     "type": "Princípios",
-    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.1 AA por padrão e é validado com axe em toda story via <code>npm test</code> (Storybook Test). Esta página documenta os compromissos e padrões que todo componente deve seguir.",
+    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.2 AA por padrão e é validado com axe em toda story via <code>npm test</code> (Storybook Test). Esta página documenta os compromissos e padrões que todo componente deve seguir.",
     "seo": {
       "title": "Acessibilidade",
-      "description": "Compromisso WCAG 2.1 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
-      "aiSummary": "Página de fundamentos de Acessibilidade. Documenta compromisso WCAG 2.1 AA, contraste 4.5:1, navegação por teclado, focus visible, padrões ARIA, suporte a leitores de tela e estratégia de testes.",
+      "description": "Compromisso WCAG 2.2 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
+      "aiSummary": "Página de fundamentos de Acessibilidade. Documenta compromisso WCAG 2.2 AA, contraste 4.5:1, navegação por teclado, focus visible, padrões ARIA, suporte a leitores de tela e estratégia de testes.",
       "aiEntities": "acessibilidade, WCAG, contraste, teclado, focus visible, ARIA, leitor de tela, axe-playwright, VoiceOver, NVDA",
       "aiIntent": "informational"
     },
     "commitment": {
       "title": "Compromisso",
-      "body": "Todos os primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) atendem WCAG 2.1 AA. O critério é parte do <em>Definition of Done</em>: nenhum componente é considerado pronto sem axe verde, ordem de tabulação correta e suporte a leitor de tela."
+      "body": "Todos os primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) atendem WCAG 2.2 AA. O critério é parte do <em>Definition of Done</em>: nenhum componente é considerado pronto sem axe verde, ordem de tabulação correta e suporte a leitor de tela."
+    },
+    "wcag22": {
+      "title": "WCAG 2.2",
+      "subtitle": "O sistema segue WCAG 2.2 AA. Dos seis critérios novos em relação à 2.1, três são resolvidos pela biblioteca e três dependem do produto que a consome.",
+      "items": {
+        "targetSize": "<strong>2.5.8 Alvo mínimo (AA)</strong> — resolvido pela biblioteca: controles compactos (checkbox, radio, switch, slider) têm hit-area expandida ≥24×24px, independente do tamanho visual.",
+        "dragging": "<strong>2.5.7 Movimentos de arrastar (AA)</strong> — resolvido pela biblioteca: todo gesto de arrastar tem alternativa de ponteiro único (Slider aceita clique na trilha, Carousel tem botões, Sheet tem botão de fechar).",
+        "accessibleAuth": "<strong>3.3.8 Autenticação acessível (AA)</strong> — suportado pela biblioteca: InputOTP aceita colar e autofill de SMS. No produto, nunca bloqueie paste em campos de senha ou código.",
+        "focusObscured": "<strong>2.4.11 Foco não obscurecido (AA)</strong> — atenção no produto: headers e colunas sticky não podem cobrir o elemento focado. Percorra layouts com regiões fixas usando Tab e confira se o foco permanece visível.",
+        "consistentHelp": "<strong>3.2.6 Ajuda consistente (A)</strong> — responsabilidade do produto: mecanismos de ajuda (contato, chat, FAQ) devem aparecer na mesma ordem relativa em todas as páginas.",
+        "redundantEntry": "<strong>3.3.7 Entrada redundante (A)</strong> — responsabilidade do produto: não peça a mesma informação duas vezes no mesmo fluxo; reaproveite ou pré-preencha o que o usuário já informou."
+      }
     },
     "contrast": {
       "title": "Contraste",
@@ -49,7 +61,7 @@
     },
     "keyboard": {
       "title": "Navegação por teclado",
-      "subtitle": "Toda funcionalidade deve ser operável apenas com teclado (WCAG 2.1.1).",
+      "subtitle": "Toda funcionalidade deve ser operável apenas com teclado (WCAG 2.2.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — move o foco para o próximo / anterior elemento focável.",
         "enter": "<kbd>Enter</kbd> — ativa botões e links; envia formulários.",
@@ -120,6 +132,7 @@
     },
     "nav": {
       "commitment": "Compromisso",
+      "wcag22": "WCAG 2.2",
       "contrast": "Contraste",
       "keyboard": "Teclado",
       "focus": "Focus visible",
@@ -133,17 +146,29 @@
     "title": "Accessibility",
     "category": "Foundations",
     "type": "Principles",
-    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.1 AA by default and is validated with axe on every story via <code>npm test</code> (Storybook Test). This page documents the commitments and patterns every component must follow.",
+    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.2 AA by default and is validated with axe on every story via <code>npm test</code> (Storybook Test). This page documents the commitments and patterns every component must follow.",
     "seo": {
       "title": "Accessibility",
-      "description": "WCAG 2.1 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
-      "aiSummary": "Accessibility foundations page. Documents WCAG 2.1 AA commitment, 4.5:1 contrast, keyboard navigation, focus visible, ARIA patterns, screen reader support and testing strategy.",
+      "description": "WCAG 2.2 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
+      "aiSummary": "Accessibility foundations page. Documents WCAG 2.2 AA commitment, 4.5:1 contrast, keyboard navigation, focus visible, ARIA patterns, screen reader support and testing strategy.",
       "aiEntities": "accessibility, WCAG, contrast, keyboard, focus visible, ARIA, screen reader, axe-playwright, VoiceOver, NVDA",
       "aiIntent": "informational"
     },
     "commitment": {
       "title": "Commitment",
-      "body": "Every primitive (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) meets WCAG 2.1 AA. The criterion is part of the <em>Definition of Done</em>: no component is considered ready without green axe, correct tab order and screen reader support."
+      "body": "Every primitive (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) meets WCAG 2.2 AA. The criterion is part of the <em>Definition of Done</em>: no component is considered ready without green axe, correct tab order and screen reader support."
+    },
+    "wcag22": {
+      "title": "WCAG 2.2",
+      "subtitle": "The system follows WCAG 2.2 AA. Of the six criteria new since 2.1, three are handled by the library and three depend on the consuming product.",
+      "items": {
+        "targetSize": "<strong>2.5.8 Target Size Minimum (AA)</strong> — handled by the library: compact controls (checkbox, radio, switch, slider) have an expanded hit area ≥24×24px regardless of visual size.",
+        "dragging": "<strong>2.5.7 Dragging Movements (AA)</strong> — handled by the library: every drag gesture has a single-pointer alternative (Slider accepts track clicks, Carousel has buttons, Sheet has a close button).",
+        "accessibleAuth": "<strong>3.3.8 Accessible Authentication (AA)</strong> — supported by the library: InputOTP accepts paste and SMS autofill. In the product, never block paste on password or code fields.",
+        "focusObscured": "<strong>2.4.11 Focus Not Obscured (AA)</strong> — product attention: sticky headers and columns must not cover the focused element. Tab through layouts with fixed regions and confirm focus stays visible.",
+        "consistentHelp": "<strong>3.2.6 Consistent Help (A)</strong> — product responsibility: help mechanisms (contact, chat, FAQ) must appear in the same relative order on every page.",
+        "redundantEntry": "<strong>3.3.7 Redundant Entry (A)</strong> — product responsibility: never ask for the same information twice in a flow; reuse or pre-fill what the user already provided."
+      }
     },
     "contrast": {
       "title": "Contrast",
@@ -179,7 +204,7 @@
     },
     "keyboard": {
       "title": "Keyboard navigation",
-      "subtitle": "All functionality must be operable with the keyboard alone (WCAG 2.1.1).",
+      "subtitle": "All functionality must be operable with the keyboard alone (WCAG 2.2.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — moves focus to the next / previous focusable element.",
         "enter": "<kbd>Enter</kbd> — activates buttons and links; submits forms.",
@@ -250,6 +275,7 @@
     },
     "nav": {
       "commitment": "Commitment",
+      "wcag22": "WCAG 2.2",
       "contrast": "Contrast",
       "keyboard": "Keyboard",
       "focus": "Focus visible",
@@ -263,17 +289,29 @@
     "title": "Accesibilidad",
     "category": "Foundations",
     "type": "Principios",
-    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.1 AA por defecto y se valida con axe en cada story vía <code>npm test</code> (Storybook Test). Esta página documenta los compromisos y patrones que todo componente debe seguir.",
+    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.2 AA por defecto y se valida con axe en cada story vía <code>npm test</code> (Storybook Test). Esta página documenta los compromisos y patrones que todo componente debe seguir.",
     "seo": {
       "title": "Accesibilidad",
-      "description": "Compromiso WCAG 2.1 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
-      "aiSummary": "Página de fundamentos de Accesibilidad. Documenta compromiso WCAG 2.1 AA, contraste 4.5:1, navegación por teclado, focus visible, patrones ARIA, soporte a lectores de pantalla y estrategia de tests.",
+      "description": "Compromiso WCAG 2.2 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
+      "aiSummary": "Página de fundamentos de Accesibilidad. Documenta compromiso WCAG 2.2 AA, contraste 4.5:1, navegación por teclado, focus visible, patrones ARIA, soporte a lectores de pantalla y estrategia de tests.",
       "aiEntities": "accesibilidad, WCAG, contraste, teclado, focus visible, ARIA, lector de pantalla, axe-playwright, VoiceOver, NVDA",
       "aiIntent": "informational"
     },
     "commitment": {
       "title": "Compromiso",
-      "body": "Todos los primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) cumplen WCAG 2.1 AA. El criterio es parte del <em>Definition of Done</em>: ningún componente se considera listo sin axe verde, orden de tabulación correcto y soporte a lector de pantalla."
+      "body": "Todos los primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) cumplen WCAG 2.2 AA. El criterio es parte del <em>Definition of Done</em>: ningún componente se considera listo sin axe verde, orden de tabulación correcto y soporte a lector de pantalla."
+    },
+    "wcag22": {
+      "title": "WCAG 2.2",
+      "subtitle": "El sistema sigue WCAG 2.2 AA. De los seis criterios nuevos respecto a la 2.1, tres los resuelve la biblioteca y tres dependen del producto que la consume.",
+      "items": {
+        "targetSize": "<strong>2.5.8 Tamaño del objetivo mínimo (AA)</strong> — resuelto por la biblioteca: los controles compactos (checkbox, radio, switch, slider) tienen hit-area expandida ≥24×24px, independiente del tamaño visual.",
+        "dragging": "<strong>2.5.7 Movimientos de arrastre (AA)</strong> — resuelto por la biblioteca: todo gesto de arrastre tiene alternativa de puntero único (Slider acepta clic en la pista, Carousel tiene botones, Sheet tiene botón de cierre).",
+        "accessibleAuth": "<strong>3.3.8 Autenticación accesible (AA)</strong> — soportado por la biblioteca: InputOTP acepta pegar y autofill de SMS. En el producto, nunca bloquees el pegado en campos de contraseña o código.",
+        "focusObscured": "<strong>2.4.11 Foco no oscurecido (AA)</strong> — atención en el producto: headers y columnas sticky no pueden cubrir el elemento enfocado. Recorre layouts con regiones fijas usando Tab y confirma que el foco siga visible.",
+        "consistentHelp": "<strong>3.2.6 Ayuda consistente (A)</strong> — responsabilidad del producto: los mecanismos de ayuda (contacto, chat, FAQ) deben aparecer en el mismo orden relativo en todas las páginas.",
+        "redundantEntry": "<strong>3.3.7 Entrada redundante (A)</strong> — responsabilidad del producto: no pidas la misma información dos veces en el mismo flujo; reutiliza o precompleta lo ya informado."
+      }
     },
     "contrast": {
       "title": "Contraste",
@@ -309,7 +347,7 @@
     },
     "keyboard": {
       "title": "Navegación por teclado",
-      "subtitle": "Toda funcionalidad debe ser operable solo con teclado (WCAG 2.1.1).",
+      "subtitle": "Toda funcionalidad debe ser operable solo con teclado (WCAG 2.2.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — mueve el foco al siguiente / anterior elemento focalizable.",
         "enter": "<kbd>Enter</kbd> — activa botones y enlaces; envía formularios.",
@@ -380,6 +418,7 @@
     },
     "nav": {
       "commitment": "Compromiso",
+      "wcag22": "WCAG 2.2",
       "contrast": "Contraste",
       "keyboard": "Teclado",
       "focus": "Focus visible",

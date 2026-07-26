@@ -74,7 +74,7 @@ export const DefinicaoDeTermo: Story = {
   args: {
     ...baseArgs,
     variant: 'definition',
-    triggerLabel: 'WCAG 2.1',
+    triggerLabel: 'WCAG 2.2',
   },
   play: async () => {
     await waitOpen();

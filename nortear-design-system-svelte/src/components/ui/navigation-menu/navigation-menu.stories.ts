@@ -15,7 +15,7 @@ const meta = {
       page: withAutoDocsTab(NavigationMenuDocs),
       description: {
         component:
-          'NavigationMenu construído sobre bits-ui. Menu principal de navegação web com Triggers expansíveis em hover/focus, Viewport compartilhado, Links com aria-current, suporte horizontal/vertical e WCAG 2.1 AA.',
+          'NavigationMenu construído sobre bits-ui. Menu principal de navegação web com Triggers expansíveis em hover/focus, Viewport compartilhado, Links com aria-current, suporte horizontal/vertical e WCAG 2.2 AA.',
       },
     },
   },

@@ -16,7 +16,7 @@ const meta = {
       page: withAutoDocsTab(ScrollAreaDocs),
       description: {
         component:
-          'ScrollArea — viewport com scroll customizado via bits-ui. Suporta scroll vertical, horizontal ou ambos, com scrollbar estilizada e acessibilidade por teclado (WCAG 2.1).',
+          'ScrollArea — viewport com scroll customizado via bits-ui. Suporta scroll vertical, horizontal ou ambos, com scrollbar estilizada e acessibilidade por teclado (WCAG 2.2).',
       },
     },
   },

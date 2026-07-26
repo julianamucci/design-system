@@ -98,7 +98,7 @@
 }
 
 /* ── Variantes semânticas ──────────────────────────────────────────────────── *
- * Regra WCAG 2.1 AA (contraste 4.5:1):
+ * Regra WCAG 2.2 AA (contraste 4.5:1):
  *   - Container colorido: bg-soft + border-soft com tons da cor semântica
  *   - Ícone e título: podem usar a cor semântica (são curtos, contraste 3:1 ok)
  *   - Texto corrido (description): SEMPRE --foreground para garantir 4.5:1

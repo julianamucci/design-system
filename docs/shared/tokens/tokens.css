@@ -74,7 +74,7 @@
   --accent: 0 0% 96%;
   --accent-foreground: 0 0% 9%;
 
-  /* Feedback — cores com contraste WCAG 2.1 AA (≥4.5:1) para texto sobre bg colorido
+  /* Feedback — cores com contraste WCAG 2.2 AA (≥4.5:1) para texto sobre bg colorido
      E também para text-<color> sobre bg-<color>/10 (soft variants) */
   --destructive: 0 74% 42%;
   --destructive-foreground: 0 0% 100%;

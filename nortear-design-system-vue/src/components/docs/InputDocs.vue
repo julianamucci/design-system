@@ -319,8 +319,8 @@ const functionalTestItems = computed(() => [
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.1 AA', how: 'axe-core' },
-  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.1 AA', how: 'getByLabelText' },
+  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.2 AA', how: 'axe-core' },
+  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.2 AA', how: 'getByLabelText' },
   { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 3.3.1',  how: 'aria-invalid' },
   { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 1.3.1',  how: 'aria-describedby' },
   { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 1.4.3',  how: 'Contrast Analyzer' },

@@ -39,7 +39,8 @@
           "spacingBase": "5px (~125%)",
           "heightDefault": "40px"
         }
-      }
+      },
+      "note": "Acessibilidade (WCAG 2.5.8): no condensado, alturas interativas caem para 20–28px. Os controles compactos têm hit-area expandida ≥24px, mas alvos adjacentes precisam de espaçamento suficiente — um círculo de 24px centrado em cada alvo não pode invadir o vizinho."
     },
     "tokens": {
       "title": "Tokens afetados",
@@ -157,7 +158,8 @@
           "spacingBase": "5px (~125%)",
           "heightDefault": "40px"
         }
-      }
+      },
+      "note": "Accessibility (WCAG 2.5.8): in condensed, interactive heights drop to 20–28px. Compact controls have an expanded hit area ≥24px, but adjacent targets need enough spacing — a 24px circle centered on each target must not intersect its neighbor."
     },
     "tokens": {
       "title": "Affected tokens",
@@ -275,7 +277,8 @@
           "spacingBase": "5px (~125%)",
           "heightDefault": "40px"
         }
-      }
+      },
+      "note": "Accesibilidad (WCAG 2.5.8): en condensado, las alturas interactivas bajan a 20–28px. Los controles compactos tienen hit-area expandida ≥24px, pero los objetivos adyacentes necesitan espacio suficiente — un círculo de 24px centrado en cada objetivo no puede invadir al vecino."
     },
     "tokens": {
       "title": "Tokens afectados",

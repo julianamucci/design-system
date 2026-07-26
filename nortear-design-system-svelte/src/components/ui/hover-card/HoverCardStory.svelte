@@ -61,12 +61,12 @@
               </div>
               <p class="nds-font-medium">Guia de overlays acessíveis</p>
               <p class="nds-text-caption nds-text-muted-foreground">
-                Padrões para HoverCard, Popover e Dialog com WCAG 2.1 AA.
+                Padrões para HoverCard, Popover e Dialog com WCAG 2.2 AA.
               </p>
             </div>
           {:else if variant === 'definition'}
             <div class="nds-stack" data-spacing="xs">
-              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
+              <p class="nds-font-medium nds-text-body">WCAG 2.2</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.
@@ -113,12 +113,12 @@
               </div>
               <p class="nds-font-medium">Guia de overlays acessíveis</p>
               <p class="nds-text-caption nds-text-muted-foreground">
-                Padrões para HoverCard, Popover e Dialog com WCAG 2.1 AA.
+                Padrões para HoverCard, Popover e Dialog com WCAG 2.2 AA.
               </p>
             </div>
           {:else if variant === 'definition'}
             <div class="nds-stack" data-spacing="xs">
-              <p class="nds-font-medium nds-text-body">WCAG 2.1</p>
+              <p class="nds-font-medium nds-text-body">WCAG 2.2</p>
               <p class="nds-text-caption nds-text-muted-foreground">
                 Web Content Accessibility Guidelines: padrão internacional de acessibilidade para
                 conteúdo web. Critério 1.4.13 cobre conteúdo em hover/focus.

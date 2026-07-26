@@ -193,7 +193,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "AspectRatio não tem semântica própria. Toda a acessibilidade vem do conteúdo filho — atenda WCAG 2.1 AA no <code>alt</code>, <code>title</code>, legendas e foco.",
+      "summary": "AspectRatio não tem semântica própria. Toda a acessibilidade vem do conteúdo filho — atenda WCAG 2.2 AA no <code>alt</code>, <code>title</code>, legendas e foco.",
       "keyboard": {
         "title": "Teclado",
         "note": "Container não é focalizável. Se o filho for interativo (vídeo com controles, link), o foco segue o comportamento nativo do filho.",
@@ -525,7 +525,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "AspectRatio has no semantics of its own. All accessibility comes from the child — meet WCAG 2.1 AA on <code>alt</code>, <code>title</code>, captions, and focus.",
+      "summary": "AspectRatio has no semantics of its own. All accessibility comes from the child — meet WCAG 2.2 AA on <code>alt</code>, <code>title</code>, captions, and focus.",
       "keyboard": {
         "title": "Keyboard",
         "note": "The container is not focusable. If the child is interactive (video with controls, link), focus follows the child's native behavior.",
@@ -857,7 +857,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "AspectRatio no tiene semántica propia. Toda la accesibilidad viene del contenido hijo — cumple WCAG 2.1 AA en <code>alt</code>, <code>title</code>, subtítulos y foco.",
+      "summary": "AspectRatio no tiene semántica propia. Toda la accesibilidad viene del contenido hijo — cumple WCAG 2.2 AA en <code>alt</code>, <code>title</code>, subtítulos y foco.",
       "keyboard": {
         "title": "Teclado",
         "note": "El contenedor no es enfocable. Si el hijo es interactivo (vídeo con controles, enlace), el foco sigue el comportamiento nativo del hijo.",

@@ -8,7 +8,7 @@
       "title": "Avatar — Display",
       "description": "Documentação do Avatar: composição com imagem e fallback, 5 tamanhos preset (sm/md/lg/xl/2xl), agrupamento e indicador de status.",
       "aiSummary": "Componente Avatar com Avatar, AvatarImage e AvatarFallback; 5 tamanhos preset (sm/md/lg/xl/2xl) via prop size, suporte a agrupamento e indicador de status.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -226,7 +226,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "Avatar em si não é interativo. Quando usado como trigger (link ou botão), deve receber foco e ter <code>aria-label</code> descritivo. Cumpre WCAG 2.1 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) e 4.1.2 (nome e papel).",
+      "summary": "Avatar em si não é interativo. Quando usado como trigger (link ou botão), deve receber foco e ter <code>aria-label</code> descritivo. Cumpre WCAG 2.2 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) e 4.1.2 (nome e papel).",
       "item1": "<strong>Imagem identificadora</strong> — <code>alt</code> descritivo com o nome da pessoa: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca use \"avatar\" ou \"imagem\" genérico.",
       "item2": "<strong>Imagem decorativa</strong> — <code>alt=\"\"</code> quando o nome já aparece ao lado. Leitor de tela ignora a imagem e lê apenas o texto.",
       "item3": "<strong>Fallback não decorativo</strong> — iniciais e ícones do fallback devem ter <code>aria-hidden=\"true\"</code> quando a imagem tem <code>alt</code> descritivo. Evita duplicação na leitura.",
@@ -328,7 +328,7 @@
       "title": "Avatar — Display",
       "description": "Documentation for Avatar: image and fallback composition, 5 preset sizes (sm/md/lg/xl/2xl), grouping, and status indicator.",
       "aiSummary": "Avatar component with Avatar, AvatarImage, and AvatarFallback; 5 preset sizes (sm/md/lg/xl/2xl) via the size prop, with grouping and status support.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -546,7 +546,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Avatar itself is not interactive. When used as a trigger (link or button), it must be focusable and have a descriptive <code>aria-label</code>. Meets WCAG 2.1 AA: 1.1.1 (text alternative), 1.4.3 (contrast), and 4.1.2 (name and role).",
+      "summary": "Avatar itself is not interactive. When used as a trigger (link or button), it must be focusable and have a descriptive <code>aria-label</code>. Meets WCAG 2.2 AA: 1.1.1 (text alternative), 1.4.3 (contrast), and 4.1.2 (name and role).",
       "item1": "<strong>Identifying image</strong> — descriptive <code>alt</code> with the person's name: <code>\"Profile picture of Maria Rodrigues\"</code>. Never use generic \"avatar\" or \"image\".",
       "item2": "<strong>Decorative image</strong> — <code>alt=\"\"</code> when the name already appears next to it. Screen reader ignores the image and reads only the text.",
       "item3": "<strong>Non-decorative fallback</strong> — initials and icons in the fallback must have <code>aria-hidden=\"true\"</code> when the image has a descriptive <code>alt</code>. Avoids duplication.",
@@ -648,7 +648,7 @@
       "title": "Avatar — Display",
       "description": "Documentación del Avatar: composición con imagen y fallback, 5 tamaños preset (sm/md/lg/xl/2xl), agrupación e indicador de estado.",
       "aiSummary": "Componente Avatar con Avatar, AvatarImage y AvatarFallback; 5 tamaños preset (sm/md/lg/xl/2xl) vía la prop size, con soporte para agrupación e indicador de estado.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.1",
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -866,7 +866,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Avatar en sí no es interactivo. Cuando se usa como trigger (link o botón), debe recibir foco y tener <code>aria-label</code> descriptivo. Cumple WCAG 2.1 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) y 4.1.2 (nombre y rol).",
+      "summary": "Avatar en sí no es interactivo. Cuando se usa como trigger (link o botón), debe recibir foco y tener <code>aria-label</code> descriptivo. Cumple WCAG 2.2 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) y 4.1.2 (nombre y rol).",
       "item1": "<strong>Imagen identificadora</strong> — <code>alt</code> descriptivo con el nombre de la persona: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca uses \"avatar\" o \"imagen\" genérico.",
       "item2": "<strong>Imagen decorativa</strong> — <code>alt=\"\"</code> cuando el nombre ya aparece al lado. El lector de pantalla ignora la imagen y lee solo el texto.",
       "item3": "<strong>Fallback no decorativo</strong> — iniciales e íconos del fallback deben tener <code>aria-hidden=\"true\"</code> cuando la imagen tiene <code>alt</code> descriptivo. Evita duplicación en la lectura.",

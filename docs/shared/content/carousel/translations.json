@@ -8,7 +8,7 @@
       "title": "Carousel — Display",
       "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
       "aiSummary": "Componente Carousel baseado em Embla com orientação horizontal/vertical, navegação por teclado, suporte a autoplay via plugin, dots customizados via CarouselApi e role=\"region\" com aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -227,7 +227,7 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Carousel usa <code>role=\"region\"</code> com <code>aria-roledescription=\"carousel\"</code> e cada slide é <code>role=\"group\"</code> com <code>aria-roledescription=\"slide\"</code>. Navegação por teclado com setas. Cumpre WCAG 2.1 AA: 1.4.13 (conteúdo em hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
+      "summary": "O Carousel usa <code>role=\"region\"</code> com <code>aria-roledescription=\"carousel\"</code> e cada slide é <code>role=\"group\"</code> com <code>aria-roledescription=\"slide\"</code>. Navegação por teclado com setas. Cumpre WCAG 2.2 AA: 1.4.13 (conteúdo em hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
       "item1": "<strong>role=\"region\" automático</strong> — o container recebe <code>role=\"region\"</code> e <code>aria-roledescription=\"carousel\"</code>, fazendo leitores de tela anunciarem a natureza do conteúdo.",
       "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recebe <code>role=\"group\"</code> e <code>aria-roledescription=\"slide\"</code>. Considere adicionar <code>aria-label=\"Slide N de M\"</code>.",
       "item3": "<strong>Setas do teclado</strong> — <code>ArrowLeft</code> e <code>ArrowRight</code> (ou <code>ArrowUp</code>/<code>ArrowDown</code> em vertical) movem entre slides quando o container tem foco.",
@@ -354,7 +354,7 @@
       "title": "Carousel — Display",
       "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
       "aiSummary": "Embla-based Carousel component with horizontal/vertical orientation, keyboard navigation, autoplay via plugin, custom dots via CarouselApi, and role=\"region\" with aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -573,7 +573,7 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Carousel uses <code>role=\"region\"</code> with <code>aria-roledescription=\"carousel\"</code>, and each slide is <code>role=\"group\"</code> with <code>aria-roledescription=\"slide\"</code>. Arrow-key keyboard navigation. Meets WCAG 2.1 AA: 1.4.13 (content on hover/focus), 2.2.2 (pause/stop/hide for autoplay).",
+      "summary": "Carousel uses <code>role=\"region\"</code> with <code>aria-roledescription=\"carousel\"</code>, and each slide is <code>role=\"group\"</code> with <code>aria-roledescription=\"slide\"</code>. Arrow-key keyboard navigation. Meets WCAG 2.2 AA: 1.4.13 (content on hover/focus), 2.2.2 (pause/stop/hide for autoplay).",
       "item1": "<strong>Automatic role=\"region\"</strong> — the container receives <code>role=\"region\"</code> and <code>aria-roledescription=\"carousel\"</code>, so screen readers announce the nature of the content.",
       "item2": "<strong>Announced slides</strong> — each <code>CarouselItem</code> receives <code>role=\"group\"</code> and <code>aria-roledescription=\"slide\"</code>. Consider adding <code>aria-label=\"Slide N of M\"</code>.",
       "item3": "<strong>Keyboard arrows</strong> — <code>ArrowLeft</code> and <code>ArrowRight</code> (or <code>ArrowUp</code>/<code>ArrowDown</code> in vertical) move between slides when the container has focus.",
@@ -700,7 +700,7 @@
       "title": "Carousel — Display",
       "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
       "aiSummary": "Componente Carousel basado en Embla con orientación horizontal/vertical, navegación por teclado, soporte a autoplay vía plugin, dots customizados vía CarouselApi y role=\"region\" con aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.1, aria-roledescription, motion-reduce",
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -919,7 +919,7 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Carousel usa <code>role=\"region\"</code> con <code>aria-roledescription=\"carousel\"</code>, y cada slide es <code>role=\"group\"</code> con <code>aria-roledescription=\"slide\"</code>. Navegación por teclado con flechas. Cumple WCAG 2.1 AA: 1.4.13 (contenido en hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
+      "summary": "Carousel usa <code>role=\"region\"</code> con <code>aria-roledescription=\"carousel\"</code>, y cada slide es <code>role=\"group\"</code> con <code>aria-roledescription=\"slide\"</code>. Navegación por teclado con flechas. Cumple WCAG 2.2 AA: 1.4.13 (contenido en hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
       "item1": "<strong>role=\"region\" automático</strong> — el contenedor recibe <code>role=\"region\"</code> y <code>aria-roledescription=\"carousel\"</code>, haciendo que los lectores de pantalla anuncien la naturaleza del contenido.",
       "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recibe <code>role=\"group\"</code> y <code>aria-roledescription=\"slide\"</code>. Considera agregar <code>aria-label=\"Slide N de M\"</code>.",
       "item3": "<strong>Flechas del teclado</strong> — <code>ArrowLeft</code> y <code>ArrowRight</code> (o <code>ArrowUp</code>/<code>ArrowDown</code> en vertical) mueven entre slides cuando el contenedor tiene foco.",

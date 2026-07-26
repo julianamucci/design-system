@@ -6,9 +6,9 @@
     "description": "Botão de dois estados (ativo/inativo) para formatação visual, modos de exibição e filtros — não para configurações de sistema.",
     "seo": {
       "title": "Toggle — Formulário",
-      "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.1 AA.",
+      "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -235,7 +235,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> reflete o estado on/off automaticamente",
         "item2": "<code>aria-label</code> OBRIGATÓRIO em toggles icon-only",
@@ -350,9 +350,9 @@
     "description": "Two-state button (on/off) for visual formatting, view modes and filters — not for system settings.",
     "seo": {
       "title": "Toggle — Form",
-      "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.1 AA support.",
+      "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.2 AA support.",
       "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -579,7 +579,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> reflects on/off state automatically",
         "item2": "<code>aria-label</code> REQUIRED on icon-only toggles",
@@ -694,9 +694,9 @@
     "description": "Botón de dos estados (activo/inactivo) para formato visual, modos de vista y filtros — no para configuraciones de sistema.",
     "seo": {
       "title": "Toggle — Formulario",
-      "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.1 AA.",
+      "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, aria-pressed",
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -923,7 +923,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> refleja el estado on/off automáticamente",
         "item2": "<code>aria-label</code> OBLIGATORIO en toggles icon-only",

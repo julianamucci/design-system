@@ -6,9 +6,9 @@
     "description": "Painel deslizante mobile-first que entra por uma das bordas da tela com gestos de arrastar e fechamento por swipe.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentação do Drawer: painel deslizante via vaul/vaul-vue/vaul-svelte com 4 direções, gestos de arrastar, focus trap e WCAG 2.1 AA.",
+      "description": "Documentação do Drawer: painel deslizante via vaul/vaul-vue/vaul-svelte com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first construído sobre vaul (React/Vue/Svelte) que renderiza painel deslizante com 4 direções (bottom/top/left/right), suporta swipe-to-close, focus trap e ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -273,7 +273,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA — critérios 1.3.1 (estrutura semântica via dialog/aria-modal), 2.1.1 (operável por teclado: ESC fecha, Tab focus trap), 2.4.3 (ordem de foco), 4.1.2 (name/role/value).",
+      "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via dialog/aria-modal), 2.1.1 (operável por teclado: ESC fecha, Tab focus trap), 2.4.3 (ordem de foco), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> obrigatório — vincula <code>aria-labelledby</code> ao Content automaticamente.",
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> quando presente.",
@@ -379,7 +379,7 @@
         "item2": "DrawerContent tem role=dialog e aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle conectado via aria-labelledby ao Content",
         "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
-        "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
+        "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.2.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
       },
       "visual": {
@@ -436,9 +436,9 @@
     "description": "Mobile-first sliding panel that enters from any screen edge with drag gestures and swipe-to-dismiss support.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Drawer documentation: sliding panel via vaul/vaul-vue/vaul-svelte with 4 directions, drag gestures, focus trap, and WCAG 2.1 AA.",
+      "description": "Drawer documentation: sliding panel via vaul/vaul-vue/vaul-svelte with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
       "aiSummary": "Mobile-first Drawer component built on vaul (React/Vue/Svelte) renders a sliding panel with 4 directions (bottom/top/left/right), supports swipe-to-close, focus trap, and ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -703,7 +703,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA — criteria 1.3.1 (semantic structure via dialog/aria-modal), 2.1.1 (keyboard operable: ESC closes, Tab focus trap), 2.4.3 (focus order), 4.1.2 (name/role/value).",
+      "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via dialog/aria-modal), 2.1.1 (keyboard operable: ESC closes, Tab focus trap), 2.4.3 (focus order), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> required — automatically links <code>aria-labelledby</code> to Content.",
         "item2": "<code>DrawerDescription</code> optional — links <code>aria-describedby</code> when present.",
@@ -809,7 +809,7 @@
         "item2": "DrawerContent has role=dialog and aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle connected via aria-labelledby to Content",
         "item4": "Working focus trap: Tab does not escape DrawerContent",
-        "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
+        "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.2.1, 2.4.3)",
         "item6": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
       },
       "visual": {
@@ -866,9 +866,9 @@
     "description": "Panel deslizante mobile-first que entra desde cualquier borde de pantalla con gestos de arrastrar y cierre por swipe.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentación de Drawer: panel deslizante vía vaul/vaul-vue/vaul-svelte con 4 direcciones, gestos, focus trap y WCAG 2.1 AA.",
+      "description": "Documentación de Drawer: panel deslizante vía vaul/vaul-vue/vaul-svelte con 4 direcciones, gestos, focus trap y WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first construido sobre vaul (React/Vue/Svelte) que renderiza panel deslizante con 4 direcciones (bottom/top/left/right), soporta swipe-to-close, focus trap y ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.1, role=dialog, aria-modal",
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -1133,7 +1133,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA — criterios 1.3.1 (estructura semántica vía dialog/aria-modal), 2.1.1 (operable por teclado: ESC cierra, Tab focus trap), 2.4.3 (orden de foco), 4.1.2 (name/role/value).",
+      "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía dialog/aria-modal), 2.1.1 (operable por teclado: ESC cierra, Tab focus trap), 2.4.3 (orden de foco), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> obligatorio — vincula <code>aria-labelledby</code> al Content automáticamente.",
         "item2": "<code>DrawerDescription</code> opcional — vincula <code>aria-describedby</code> cuando está presente.",
@@ -1239,7 +1239,7 @@
         "item2": "DrawerContent tiene role=dialog y aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle conectado vía aria-labelledby al Content",
         "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
-        "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
+        "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.2.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
       },
       "visual": {

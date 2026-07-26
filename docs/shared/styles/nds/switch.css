@@ -14,11 +14,12 @@
  */
 
 .nds-switch {
+  position: relative;
   display: inline-flex;
   align-items: center;
 
   width: calc(var(--spacing-8) + var(--spacing-1));   /* 32 + 4 = 36px */
-  height: var(--spacing-5, 1.25rem);                  /* 20px */
+  height: 1.25rem;                                    /* 20px (height, não spacing-grid) */
   padding: 2px;
 
   background-color: hsl(var(--input, var(--border)));
@@ -27,6 +28,13 @@
   cursor: pointer;
   outline: 0;
   transition: background-color var(--duration-base);
+}
+
+/* ── Hit-area expandida (WCAG 2.5.8: alvo ≥24×24 — visual 36×20 → toque 44×36) ── */
+.nds-switch::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem -0.25rem;                            /* -8px vertical, -4px lateral */
 }
 
 .nds-switch:focus-visible {

@@ -6,9 +6,9 @@
     "description": "Estrutura de campo de formulário — wrapper que combina rótulo, controle, texto de apoio e mensagem de erro com associação acessível. Também provê fieldset com legend para agrupar campos relacionados.",
     "seo": {
       "title": "Form — Formulário",
-      "description": "Documentação do Form: wrapper de campo (label + controle + descrição + erro) e fieldset com legend, com associação acessível automática e WCAG 2.1 AA.",
+      "description": "Documentação do Form: wrapper de campo (label + controle + descrição + erro) e fieldset com legend, com associação acessível automática e WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estruturar campos de formulário com label, controle (input/textarea/select/checkbox), descrição e mensagem de erro, mais fieldset+legend para agrupamento semântico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -203,7 +203,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "O Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para associar rótulo e controle, e <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamento semântico. Cumpre WCAG 2.1 AA: 1.3.1 (informação e relações), 3.3.1 (identificação de erro), 3.3.2 (rótulos ou instruções), 4.1.3 (mensagens de status).",
+      "summary": "O Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para associar rótulo e controle, e <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamento semântico. Cumpre WCAG 2.2 AA: 1.3.1 (informação e relações), 3.3.1 (identificação de erro), 3.3.2 (rótulos ou instruções), 4.1.3 (mensagens de status).",
       "item1": "<strong>Associação automática</strong> — quando o controle não tem <code>id</code>, é gerado automaticamente e o label recebe o <code>htmlFor</code> correspondente.",
       "item2": "<strong>Erro com aria-live</strong> — o parágrafo de erro tem <code>aria-live=\"polite\"</code>, sendo anunciado pelo leitor de tela quando aparece.",
       "item3": "<strong>aria-invalid manual</strong> — aplique <code>aria-invalid=\"true\"</code> no controle quando exibir erro para anunciar estado inválido.",
@@ -300,9 +300,9 @@
     "description": "Form field structure — wrapper that combines label, control, helper text and error message with accessible association. Also provides fieldset with legend to group related fields.",
     "seo": {
       "title": "Form — Form",
-      "description": "Documentation for Form: field wrapper (label + control + description + error) and fieldset with legend, with automatic accessible association and WCAG 2.1 AA.",
+      "description": "Documentation for Form: field wrapper (label + control + description + error) and fieldset with legend, with automatic accessible association and WCAG 2.2 AA.",
       "aiSummary": "Form component to structure form fields with label, control (input/textarea/select/checkbox), description and error message, plus fieldset+legend for semantic grouping.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -497,7 +497,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Form uses native <code>&lt;label&gt;</code> + <code>htmlFor</code> to associate label and control, and <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for semantic grouping. Meets WCAG 2.1 AA: 1.3.1 (info and relationships), 3.3.1 (error identification), 3.3.2 (labels or instructions), 4.1.3 (status messages).",
+      "summary": "Form uses native <code>&lt;label&gt;</code> + <code>htmlFor</code> to associate label and control, and <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for semantic grouping. Meets WCAG 2.2 AA: 1.3.1 (info and relationships), 3.3.1 (error identification), 3.3.2 (labels or instructions), 4.1.3 (status messages).",
       "item1": "<strong>Automatic association</strong> — when the control has no <code>id</code>, one is generated and the label receives the matching <code>htmlFor</code>.",
       "item2": "<strong>Error with aria-live</strong> — the error paragraph has <code>aria-live=\"polite\"</code> and is announced by screen readers when it appears.",
       "item3": "<strong>Manual aria-invalid</strong> — apply <code>aria-invalid=\"true\"</code> on the control when showing an error to announce invalid state.",
@@ -594,9 +594,9 @@
     "description": "Estructura de campo de formulario — envoltorio que combina etiqueta, control, texto de apoyo y mensaje de error con asociación accesible. También provee fieldset con legend para agrupar campos relacionados.",
     "seo": {
       "title": "Form — Formulario",
-      "description": "Documentación del Form: envoltorio de campo (label + control + descripción + error) y fieldset con legend, con asociación accesible automática y WCAG 2.1 AA.",
+      "description": "Documentación del Form: envoltorio de campo (label + control + descripción + error) y fieldset con legend, con asociación accesible automática y WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estructurar campos de formulario con etiqueta, control (input/textarea/select/checkbox), descripción y mensaje de error, más fieldset+legend para agrupamiento semántico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.1, htmlFor, aria-invalid, aria-describedby",
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -791,7 +791,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para asociar rótulo y control, y <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamiento semántico. Cumple WCAG 2.1 AA: 1.3.1 (información y relaciones), 3.3.1 (identificación de error), 3.3.2 (etiquetas o instrucciones), 4.1.3 (mensajes de estado).",
+      "summary": "Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para asociar rótulo y control, y <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamiento semántico. Cumple WCAG 2.2 AA: 1.3.1 (información y relaciones), 3.3.1 (identificación de error), 3.3.2 (etiquetas o instrucciones), 4.1.3 (mensajes de estado).",
       "item1": "<strong>Asociación automática</strong> — cuando el control no tiene <code>id</code>, se genera uno y el label recibe el <code>htmlFor</code> correspondiente.",
       "item2": "<strong>Error con aria-live</strong> — el párrafo de error tiene <code>aria-live=\"polite\"</code> y es anunciado por el lector de pantalla al aparecer.",
       "item3": "<strong>aria-invalid manual</strong> — aplica <code>aria-invalid=\"true\"</code> en el control cuando muestres error para anunciar el estado inválido.",

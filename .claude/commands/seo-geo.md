@@ -79,8 +79,8 @@ Obrigatória nos 3 idiomas:
     "seo": {
       "title": "Alert — Feedback · Design System",
       "description": "Documentação do Alert: 2 variantes (default, destructive), composição com ícone, título e descrição, acessibilidade WCAG.",
-      "aiSummary": "Componente Alert com 2 variantes visuais, composição via AlertTitle/AlertDescription, suporte a ícones Lucide e conformidade WCAG 2.1 AA.",
-      "aiEntities": "Alert, React, base-ui, CSS .nds-*, WCAG 2.1, class-variance-authority",
+      "aiSummary": "Componente Alert com 2 variantes visuais, composição via AlertTitle/AlertDescription, suporte a ícones Lucide e conformidade WCAG 2.2 AA.",
+      "aiEntities": "Alert, React, base-ui, CSS .nds-*, WCAG 2.2, class-variance-authority",
       "aiIntent": "informational"
     }
   }

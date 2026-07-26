@@ -6,9 +6,9 @@
     "description": "Seleção de uma única opção em conjunto mutuamente exclusivo, com navegação por setas e suporte completo a teclado.",
     "seo": {
       "title": "RadioGroup — Formulário",
-      "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.1 AA.",
+      "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup com seleção única mutuamente exclusiva, navegação por setas, Label associado e role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -238,7 +238,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> no container e <code>role=\"radio\"</code> em cada item",
         "item2": "<code>aria-checked</code> reflete o estado selecionado",
@@ -356,9 +356,9 @@
     "description": "Single-choice selection in a mutually exclusive set, with arrow key navigation and full keyboard support.",
     "seo": {
       "title": "RadioGroup — Form",
-      "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.1 AA accessibility.",
+      "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.2 AA accessibility.",
       "aiSummary": "RadioGroup component with single mutually exclusive selection, arrow navigation, associated Label and automatic role=\"radiogroup\".",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -588,7 +588,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> on the container and <code>role=\"radio\"</code> on each item",
         "item2": "<code>aria-checked</code> reflects the selected state",
@@ -706,9 +706,9 @@
     "description": "Selección de una única opción en un conjunto mutuamente excluyente, con navegación por flechas y soporte completo de teclado.",
     "seo": {
       "title": "RadioGroup — Formulario",
-      "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.1 AA.",
+      "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup con selección única mutuamente excluyente, navegación por flechas, Label asociado y role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.1, role radiogroup",
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -938,7 +938,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> en el contenedor y <code>role=\"radio\"</code> en cada ítem",
         "item2": "<code>aria-checked</code> refleja el estado seleccionado",

@@ -608,3 +608,26 @@ Antes de considerar um componente acessível:
 - [ ] `data-track-label` idêntico ao `aria-label` quando ambos existem
 - [ ] Mudança de página anuncia via `aria-live` e move foco para `<main>`
 - [ ] Erros de axe-core em CI bloqueiam merge
+---
+
+## WCAG 2.2 — critérios novos em relação à 2.1
+
+O sistema segue **WCAG 2.2 AA** (out/2023). Seis critérios novos; o 4.1.1 (Parsing) foi removido. Divisão de responsabilidade:
+
+### Resolvidos pela biblioteca
+
+| Critério | Como o sistema atende |
+|----------|----------------------|
+| **2.5.8 Target Size Minimum (AA)** | Controles compactos (Checkbox, Radio, Switch, Slider) têm hit-area expandida ≥24×24px via `::after`/input sobreposto, independente do tamanho visual. Regra `target-size` do axe habilitada no preview de todas as stacks. |
+| **2.5.7 Dragging Movements (AA)** | Todo drag tem alternativa de ponteiro único: Slider aceita clique na trilha, Carousel tem botões, Sheet/Drawer têm botão de fechar, Resizable responde a teclado. |
+| **3.3.8 Accessible Authentication (AA)** | InputOTP aceita paste e autofill SMS. Nunca bloqueie paste em campos de senha/código. |
+
+### Responsabilidade do produto consumidor (documentar, não codificar na lib)
+
+| Critério | O que o produto precisa garantir |
+|----------|----------------------------------|
+| **2.4.11 Focus Not Obscured (AA)** | Headers/colunas sticky não podem cobrir o elemento focado. Checklist manual: percorrer com Tab layouts com DataTable de coluna fixa, header sticky do app-shell e sidebars; se o foco sumir atrás de região fixa, aplicar `scroll-margin`/`scroll-padding`. |
+| **3.2.6 Consistent Help (A)** | Mecanismos de ajuda (contato, chat, FAQ) na mesma ordem relativa em todas as páginas. |
+| **3.3.7 Redundant Entry (A)** | Não pedir a mesma informação duas vezes no mesmo fluxo; reaproveitar ou pré-preencher. |
+
+**Nota sobre densidade condensada**: alturas interativas caem para 20–28px; os alvos passam pela exceção de espaçamento da 2.5.8 desde que um círculo de 24px centrado em cada alvo não intersecte o vizinho — não empilhe controles compactos sem gap no condensado.

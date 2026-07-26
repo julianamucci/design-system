@@ -95,7 +95,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </CardHeader>
               <CardContent>
                 <p className="text-sm nds-text-muted-foreground">
-                  Construído seguindo diretrizes WCAG 2.1 AA de acessibilidade.
+                  Construído seguindo diretrizes WCAG 2.2 AA de acessibilidade.
                 </p>
               </CardContent>
             </Card>

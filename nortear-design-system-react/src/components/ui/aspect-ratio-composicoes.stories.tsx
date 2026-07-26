@@ -65,7 +65,7 @@ export const ComIframe: Story = {
     docs: {
       description: {
         story:
-          "Iframe de mapa com `title` obrigatório descrevendo o conteúdo embedado (requisito WCAG 2.1 — 4.1.2).",
+          "Iframe de mapa com `title` obrigatório descrevendo o conteúdo embedado (requisito WCAG 2.2 — 4.1.2).",
       },
     },
   },
@@ -95,7 +95,7 @@ export const ComVideo: Story = {
     docs: {
       description: {
         story:
-          "Elemento `<video>` nativo. Para produção, inclua `<track kind=\"captions\">` com legendas sincronizadas (WCAG 2.1 AA — 1.2.2).",
+          "Elemento `<video>` nativo. Para produção, inclua `<track kind=\"captions\">` com legendas sincronizadas (WCAG 2.2 AA — 1.2.2).",
       },
     },
   },

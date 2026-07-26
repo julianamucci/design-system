@@ -6,9 +6,9 @@
     "description": "Navegação entre páginas de um conjunto de resultados ou conteúdo paginado, com controles para anterior, próxima e páginas numeradas.",
     "seo": {
       "title": "Pagination — Navegação",
-      "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.1 AA.",
+      "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Pagination com subcomponentes Previous, Next, Link, Ellipsis e Item, navegação acessível por teclado e aria-current na página ativa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -228,7 +228,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 e 4.1.2.",
+      "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 e 4.1.2.",
       "items": {
         "item1": "<code>nav</code> com <code>aria-label=\"pagination\"</code> diferencia de outros elementos de navegação",
         "item2": "<code>aria-current=\"page\"</code> na página ativa anuncia ao leitor de tela",
@@ -301,7 +301,7 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.1 AA)",
+        "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
         "item3": "Focus ring visível em todos os links e botões",
         "item4": "aria-current=\"page\" presente na página ativa",
         "item5": "aria-label descritivo em Previous, Next e links numerados"
@@ -344,9 +344,9 @@
     "description": "Navigation between pages of a result set or paginated content, with controls for previous, next and numbered pages.",
     "seo": {
       "title": "Pagination — Navigation",
-      "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.1 AA support.",
+      "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.2 AA support.",
       "aiSummary": "Pagination component with Previous, Next, Link, Ellipsis and Item subcomponents, accessible keyboard navigation and aria-current on active page.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -566,7 +566,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 and 4.1.2.",
+      "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 and 4.1.2.",
       "items": {
         "item1": "<code>nav</code> with <code>aria-label=\"pagination\"</code> distinguishes from other navigation elements",
         "item2": "<code>aria-current=\"page\"</code> on the active page is announced to the screen reader",
@@ -639,7 +639,7 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core in the default state",
-        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.1 AA)",
+        "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
         "item3": "Visible focus ring on all links and buttons",
         "item4": "aria-current=\"page\" present on the active page",
         "item5": "Descriptive aria-label on Previous, Next and numbered links"
@@ -682,9 +682,9 @@
     "description": "Navegación entre páginas de un conjunto de resultados o contenido paginado, con controles para anterior, siguiente y páginas numeradas.",
     "seo": {
       "title": "Pagination — Navegación",
-      "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.1 AA.",
+      "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Pagination con subcomponentes Previous, Next, Link, Ellipsis e Item, navegación accesible por teclado y aria-current en la página activa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.1, aria-current, aria-label",
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
       "aiIntent": "informational"
     },
     "demonstration": {
@@ -904,7 +904,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 y 4.1.2.",
+      "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 y 4.1.2.",
       "items": {
         "item1": "<code>nav</code> con <code>aria-label=\"pagination\"</code> diferencia de otros elementos de navegación",
         "item2": "<code>aria-current=\"page\"</code> en la página activa se anuncia al lector de pantalla",
@@ -977,7 +977,7 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core en el estado por defecto",
-        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.1 AA)",
+        "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
         "item3": "Anillo de foco visible en todos los links y botones",
         "item4": "aria-current=\"page\" presente en la página activa",
         "item5": "aria-label descriptivo en Previous, Next y links numerados"

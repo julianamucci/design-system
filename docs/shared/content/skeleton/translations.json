@@ -215,7 +215,7 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.1 AA — critério 2.3.3 (Animation from Interactions) via motion-reduce, e 4.1.2 (Name, Role, Value) via aria-busy/aria-hidden combinados.",
+      "summary": "Atende WCAG 2.2 AA — critério 2.3.3 (Animation from Interactions) via motion-reduce, e 4.1.2 (Name, Role, Value) via aria-busy/aria-hidden combinados.",
       "items": {
         "item1": "Skeleton recebe <code>aria-hidden=\"true\"</code> — leitor de tela ignora o placeholder.",
         "item2": "Container pai recebe <code>aria-busy=\"true\"</code> + <code>aria-label</code> descrevendo o que carrega.",
@@ -577,7 +577,7 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.1 AA — criterion 2.3.3 (Animation from Interactions) via motion-reduce, and 4.1.2 (Name, Role, Value) via combined aria-busy/aria-hidden.",
+      "summary": "Meets WCAG 2.2 AA — criterion 2.3.3 (Animation from Interactions) via motion-reduce, and 4.1.2 (Name, Role, Value) via combined aria-busy/aria-hidden.",
       "items": {
         "item1": "Skeleton gets <code>aria-hidden=\"true\"</code> — screen reader ignores the placeholder.",
         "item2": "Parent container gets <code>aria-busy=\"true\"</code> + <code>aria-label</code> describing what is loading.",
@@ -939,7 +939,7 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.1 AA — criterio 2.3.3 (Animation from Interactions) vía motion-reduce, y 4.1.2 (Name, Role, Value) vía aria-busy/aria-hidden combinados.",
+      "summary": "Cumple WCAG 2.2 AA — criterio 2.3.3 (Animation from Interactions) vía motion-reduce, y 4.1.2 (Name, Role, Value) vía aria-busy/aria-hidden combinados.",
       "items": {
         "item1": "Skeleton recibe <code>aria-hidden=\"true\"</code> — el lector de pantalla ignora el placeholder.",
         "item2": "El container padre recibe <code>aria-busy=\"true\"</code> + <code>aria-label</code> describiendo lo que carga.",
