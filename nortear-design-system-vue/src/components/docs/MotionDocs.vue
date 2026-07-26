@@ -231,6 +231,29 @@ const CODE_PRESENCE = `import { AnimatePresence, motion } from 'motion-v';
         <p class="nds-text-body nds-accent-start">
           {{ t('specimens.advanced.note') }}
         </p>
+
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+        >
+          <h3 class="nds-text-body nds-font-medium">
+            {{ t('specimens.advanced.touch.title') }}
+          </h3>
+          <ul
+            class="nds-stack nds-list-none"
+            data-spacing="md"
+          >
+            <li class="nds-accent-start nds-text-body">
+              {{ t('specimens.advanced.touch.tap') }}
+            </li>
+            <li class="nds-accent-start nds-text-body">
+              {{ t('specimens.advanced.touch.hover') }}
+            </li>
+            <li class="nds-accent-start nds-text-body">
+              {{ t('specimens.advanced.touch.drag') }}
+            </li>
+          </ul>
+        </div>
       </section>
     </template>
   </FoundationsRenderer>

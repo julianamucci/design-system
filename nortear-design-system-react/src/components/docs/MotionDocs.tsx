@@ -189,6 +189,15 @@ function AdvancedMotion() {
       </DemoCard>
 
       <p className="nds-text-body nds-accent-start">{t('specimens.advanced.note')}</p>
+
+      <div className="nds-stack" data-spacing="sm">
+        <h3 className="nds-text-body nds-font-medium">{t('specimens.advanced.touch.title')}</h3>
+        <ul className="nds-stack nds-list-none" data-spacing="md">
+          <li className="nds-accent-start nds-text-body">{t('specimens.advanced.touch.tap')}</li>
+          <li className="nds-accent-start nds-text-body">{t('specimens.advanced.touch.hover')}</li>
+          <li className="nds-accent-start nds-text-body">{t('specimens.advanced.touch.drag')}</li>
+        </ul>
+      </div>
     </section>
   );
 }

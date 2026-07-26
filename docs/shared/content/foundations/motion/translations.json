@@ -28,6 +28,12 @@
           "replay": "Reproduzir",
           "show": "Mostrar",
           "hide": "Remover"
+        },
+        "touch": {
+          "title": "Toque e mobile",
+          "tap": "O gesto de pressionar dispara no pointerdown — cobre clique de mouse e tap de toque com o mesmo código; a variante imperativa também responde ao Enter do teclado.",
+          "hover": "Hover não existe em telas de toque: a biblioteca filtra o hover emulado que navegadores mobile disparam no tap (evita o estado preso). Trate hover como refinamento para quem tem ponteiro e garanta que toda interação também funcione com o gesto de pressionar.",
+          "drag": "O gesto de arrastar funciona com toque desde que o elemento declare touch-action: none — sem isso o navegador captura o movimento para rolagem da página."
         }
       }
     },
@@ -184,6 +190,12 @@
           "replay": "Replay",
           "show": "Show",
           "hide": "Remove"
+        },
+        "touch": {
+          "title": "Touch and mobile",
+          "tap": "The press gesture fires on pointerdown — covering mouse click and touch tap with the same code; the imperative variant also responds to the keyboard Enter key.",
+          "hover": "Hover does not exist on touch screens: the library filters out the emulated hover mobile browsers fire on tap (avoiding the stuck state). Treat hover as an enhancement for pointer users and make sure every interaction also works with the press gesture.",
+          "drag": "The drag gesture works with touch as long as the element declares touch-action: none — without it the browser captures the movement for page scrolling."
         }
       }
     },
@@ -340,6 +352,12 @@
           "replay": "Reproducir",
           "show": "Mostrar",
           "hide": "Quitar"
+        },
+        "touch": {
+          "title": "Toque y mobile",
+          "tap": "El gesto de presionar se dispara en pointerdown — cubre clic de ratón y tap táctil con el mismo código; la variante imperativa también responde al Enter del teclado.",
+          "hover": "El hover no existe en pantallas táctiles: la biblioteca filtra el hover emulado que los navegadores móviles disparan en el tap (evita el estado pegado). Trata el hover como refinamiento para quien tiene puntero y garantiza que toda interacción también funcione con el gesto de presionar.",
+          "drag": "El gesto de arrastre funciona con toque siempre que el elemento declare touch-action: none — sin eso el navegador captura el movimiento para el scroll de la página."
         }
       }
     },

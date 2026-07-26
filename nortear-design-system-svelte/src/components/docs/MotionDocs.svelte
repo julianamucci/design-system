@@ -161,6 +161,15 @@ const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.15, damping: 0.4 });
       </div>
 
       <p class="nds-text-body nds-accent-start">{$tStore('specimens.advanced.note')}</p>
+
+      <div class="nds-stack" data-spacing="sm">
+        <h3 class="nds-text-body nds-font-medium">{$tStore('specimens.advanced.touch.title')}</h3>
+        <ul class="nds-stack nds-list-none" data-spacing="md">
+          <li class="nds-accent-start nds-text-body">{$tStore('specimens.advanced.touch.tap')}</li>
+          <li class="nds-accent-start nds-text-body">{$tStore('specimens.advanced.touch.hover')}</li>
+          <li class="nds-accent-start nds-text-body">{$tStore('specimens.advanced.touch.drag')}</li>
+        </ul>
+      </div>
     </section>
   {/snippet}
 </FoundationPage>

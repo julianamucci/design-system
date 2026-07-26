@@ -232,6 +232,25 @@ export function createMotionDocs(): HTMLElement {
       addText(note, 'specimens.advanced.note');
       adv.appendChild(note);
 
+      // Toque e mobile — tap/hover/drag em telas de toque
+      const touch = document.createElement('div');
+      touch.className = 'nds-stack';
+      touch.dataset.spacing = 'sm';
+      const touchTitle = document.createElement('h3');
+      touchTitle.className = 'nds-text-body nds-font-medium';
+      addText(touchTitle, 'specimens.advanced.touch.title');
+      const touchList = document.createElement('ul');
+      touchList.className = 'nds-stack nds-list-none';
+      touchList.dataset.spacing = 'md';
+      for (const key of ['tap', 'hover', 'drag']) {
+        const li = document.createElement('li');
+        li.className = 'nds-accent-start nds-text-body';
+        addText(li, `specimens.advanced.touch.${key}`);
+        touchList.appendChild(li);
+      }
+      touch.append(touchTitle, touchList);
+      adv.appendChild(touch);
+
       wrapper.appendChild(adv);
       return wrapper;
     },
