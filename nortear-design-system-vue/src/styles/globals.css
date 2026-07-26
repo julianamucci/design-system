@@ -87,12 +87,6 @@
   --shadow-lg: var(--elevation-lg);
   --shadow-xl: var(--elevation-xl);
 
-  /* Transition Mappings */
-  --duration-fast: var(--transition-fast);
-  --duration-normal: var(--transition-normal);
-  --duration-slow: var(--transition-slow);
-  --ease-default: var(--transition-timing);
-
   /* Z-Index Mappings */
 
   /* Ring & Focus Mappings */

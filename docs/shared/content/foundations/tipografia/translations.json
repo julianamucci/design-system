@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "A tipografia do sistema é definida por uma família ativa trocável (Inter por padrão), um type scale derivado de base × ratio e pesos semânticos. Os degraus são recalculados em rem a partir de <code>--type-base</code> e <code>--type-scale</code> — troque a escala e a base pela toolbar e a página inteira reage.",
     "specimens": {
-      "title": "Espécimes",
+      "title": "Exemplos visuais",
       "subtitle": "Hierarquia renderizada com os elementos HTML padrão do tema ativo.",
       "h1": "Heading 1 — título de página",
       "h2": "Heading 2 — seção principal",
@@ -198,7 +198,7 @@
     "type": "Tokens",
     "description": "System typography is defined by a switchable active family (Inter by default), a type scale derived from base × ratio, and semantic weights. Steps are recomputed in rem from <code>--type-base</code> and <code>--type-scale</code> — switch scale and base from the toolbar and the whole page reacts.",
     "specimens": {
-      "title": "Specimens",
+      "title": "Visual examples",
       "subtitle": "Hierarchy rendered with the default HTML elements of the active theme.",
       "h1": "Heading 1 — page title",
       "h2": "Heading 2 — main section",
@@ -391,7 +391,7 @@
     "type": "Tokens",
     "description": "La tipografía del sistema se define por una familia activa intercambiable (Inter por defecto), un type scale derivado de base × ratio y pesos semánticos. Los escalones se recalculan en rem a partir de <code>--type-base</code> y <code>--type-scale</code> — cambia la escala y la base desde la toolbar y toda la página reacciona.",
     "specimens": {
-      "title": "Especímenes",
+      "title": "Ejemplos visuales",
       "subtitle": "Jerarquía renderizada con los elementos HTML por defecto del tema activo.",
       "h1": "Heading 1 — título de página",
       "h2": "Heading 2 — sección principal",

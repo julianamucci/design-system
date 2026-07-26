@@ -5,10 +5,13 @@ import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import translations from '@shared/content/foundations/motion/translations.json';
 
-const DURATIONS = [
-  { token: '--transition-fast', label: 'fast — 150ms' },
-  { token: '--transition-normal', label: 'normal — 300ms' },
-  { token: '--transition-slow', label: 'slow — 500ms' },
+const LADDER = [
+  { token: '--duration-instant', label: 'instant — 0ms' },
+  { token: '--duration-fast', label: 'fast — 120ms' },
+  { token: '--duration-base', label: 'base — 200ms' },
+  { token: '--duration-moderate', label: 'moderate — 320ms' },
+  { token: '--duration-slow', label: 'slow — 500ms' },
+  { token: '--duration-stately', label: 'stately — 800ms' },
 ];
 
 const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
@@ -48,11 +51,12 @@ const CODE_PRESENCE = `import { AnimatePresence, motion } from "motion/react";
   )}
 </AnimatePresence>`;
 
-// Specimens: botões com hover demonstrando cada duração. O timing-function é
-// o token padrão do sistema (cubic-bezier(.4,0,.2,1)). prefers-reduced-motion
-// é tratado globalmente pelo motion.css — não precisa de tratamento aqui.
+// Specimens: cada barra percorre a mesma distância em um degrau da escada
+// --duration-* — a comparação lado a lado torna a diferença perceptível.
+// prefers-reduced-motion zera as durações globalmente via motion.css.
 function MotionSpecimens() {
   const { t } = useTranslation(translations);
+  const [played, setPlayed] = useState(false);
 
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="md">
@@ -61,20 +65,27 @@ function MotionSpecimens() {
         <p className="nds-text-body">{t('specimens.subtitle')}</p>
       </div>
 
-      <div className="nds-cluster nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="md">
-        {DURATIONS.map((d) => (
-          <Button
-            key={d.token}
-            variant="outline"
-            className="nds-hover-bg-primary nds-hover-text-primary-foreground nds-hover-scale-105"
-            style={{
-              transitionProperty: 'background-color, color, transform',
-              transitionDuration: `var(${d.token})`,
-              transitionTimingFunction: 'var(--transition-timing, cubic-bezier(0.4, 0, 0.2, 1))',
-            }}
-          >
-            {d.label}
+      <div className="nds-stack nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="sm">
+        <div>
+          <Button variant="outline" size="sm" onClick={() => setPlayed((p) => !p)}>
+            {t('specimens.advanced.labels.replay')}
           </Button>
+        </div>
+        {LADDER.map((d) => (
+          <div key={d.token} className="nds-bg-muted-30 nds-rounded-lg nds-p-1 nds-overflow-hidden">
+            <div
+              className="nds-bg-primary-soft nds-border-primary-soft nds-rounded-sm nds-px-4 nds-py-1 nds-text-caption nds-whitespace-nowrap"
+              style={{
+                width: 'fit-content',
+                transform: played ? 'translateX(12rem)' : 'translateX(0)',
+                transitionProperty: 'transform',
+                transitionDuration: `var(${d.token})`,
+                transitionTimingFunction: 'var(--ease-standard)',
+              }}
+            >
+              {d.label}
+            </div>
+          </div>
         ))}
       </div>
     </section>

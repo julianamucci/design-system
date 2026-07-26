@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "O sistema de elevação combina <strong>sombra</strong> e <strong>radius</strong> para comunicar profundidade e contexto. Cinco níveis cobrem todos os containers do produto — do plano da página até o tooltip flutuante. Bordas sutis garantem definição mesmo em fundos claros.",
     "specimens": {
-      "title": "Espécimes",
+      "title": "Exemplos visuais",
       "subtitle": "Cards com cada nível de sombra e cada token de radius aplicado.",
       "shadows": "Sombras",
       "radius": "Radius",
@@ -301,7 +301,7 @@
     "type": "Tokens",
     "description": "The elevation system combines <strong>shadow</strong> and <strong>radius</strong> to communicate depth and context. Five levels cover every container in the product — from the page plane to the floating tooltip. Subtle borders provide definition even on light backgrounds.",
     "specimens": {
-      "title": "Specimens",
+      "title": "Visual examples",
       "subtitle": "Cards with each shadow level and each radius token applied.",
       "shadows": "Shadows",
       "radius": "Radius",
@@ -597,7 +597,7 @@
     "type": "Tokens",
     "description": "El sistema de elevación combina <strong>sombra</strong> y <strong>radius</strong> para comunicar profundidad y contexto. Cinco niveles cubren todos los contenedores del producto — desde el plano de página hasta el tooltip flotante. Los bordes sutiles aseguran definición incluso sobre fondos claros.",
     "specimens": {
-      "title": "Especímenes",
+      "title": "Ejemplos visuales",
       "subtitle": "Cards con cada nivel de sombra y cada token de radius aplicado.",
       "shadows": "Sombras",
       "radius": "Radius",

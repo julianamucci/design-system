@@ -9,11 +9,16 @@
 
   const { tStore } = untrack(() => useTranslation(translations));
 
-  const DURATIONS = [
-    { token: '--transition-fast', label: 'fast — 150ms' },
-    { token: '--transition-normal', label: 'normal — 300ms' },
-    { token: '--transition-slow', label: 'slow — 500ms' },
+  const LADDER = [
+    { token: '--duration-instant', label: 'instant — 0ms' },
+    { token: '--duration-fast', label: 'fast — 120ms' },
+    { token: '--duration-base', label: 'base — 200ms' },
+    { token: '--duration-moderate', label: 'moderate — 320ms' },
+    { token: '--duration-slow', label: 'slow — 500ms' },
+    { token: '--duration-stately', label: 'stately — 800ms' },
   ];
+
+  let played = $state(false);
 
   const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
@@ -74,15 +79,21 @@ const coords = new Spring({ x: 0, y: 0 }, { stiffness: 0.15, damping: 0.4 });
         <p class="nds-text-body">{$tStore('specimens.subtitle')}</p>
       </div>
 
-      <div class="nds-cluster nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="md">
-        {#each DURATIONS as d (d.token)}
-          <Button
-            variant="outline"
-            class="nds-hover-bg-primary nds-hover-text-primary-foreground nds-hover-scale-105"
-            style="transition-property: background-color, color, transform; transition-duration: var({d.token}); transition-timing-function: var(--transition-timing, cubic-bezier(0.4, 0, 0.2, 1))"
-          >
-            {d.label}
+      <div class="nds-stack nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft" data-spacing="sm">
+        <div>
+          <Button variant="outline" size="sm" onclick={() => { played = !played; }}>
+            {$tStore('specimens.advanced.labels.replay')}
           </Button>
+        </div>
+        {#each LADDER as d (d.token)}
+          <div class="nds-bg-muted-30 nds-rounded-lg nds-p-1 nds-overflow-hidden">
+            <div
+              class="nds-bg-primary-soft nds-border-primary-soft nds-rounded-sm nds-px-4 nds-py-1 nds-text-caption nds-whitespace-nowrap"
+              style="width: fit-content; transform: translateX({played ? '12rem' : '0'}); transition-property: transform; transition-duration: var({d.token}); transition-timing-function: var(--ease-standard)"
+            >
+              {d.label}
+            </div>
+          </div>
         {/each}
       </div>
     </section>

@@ -184,6 +184,8 @@
   --border-width-default: 1px;
 
   /* Transitions */
+  /* DEPRECATED — use a escada --duration-* / --ease-* de motion.css.
+     Mantidos apenas para compatibilidade; não usar em código novo. */
   --transition-fast: 150ms;
   --transition-normal: 300ms;
   --transition-slow: 500ms;

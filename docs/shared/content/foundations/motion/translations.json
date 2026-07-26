@@ -5,8 +5,8 @@
     "type": "Tokens",
     "description": "Motion serve à função, nunca à decoração. O Design System usa durações breves, easings semânticos e respeita <code>prefers-reduced-motion</code> globalmente. Cada animação tem um propósito: confirmar uma ação, orientar o foco ou suavizar uma transição de contexto.",
     "specimens": {
-      "title": "Espécimes",
-      "subtitle": "Passe o mouse sobre cada botão para sentir as três durações do sistema.",
+      "title": "Exemplos visuais",
+      "subtitle": "Clique em Reproduzir: cada barra percorre a mesma distância em um degrau da escada — a diferença entre 120ms e 800ms fica evidente no movimento (instant salta sem animar).",
       "advanced": {
         "title": "Recursos avançados — biblioteca Motion",
         "subtitle": "As micro-interações do sistema são CSS puro sobre os tokens desta página. Para física de mola, gestos e animações de saída, a recomendação é a biblioteca Motion (licença MIT) — cada stack usa o binding idiomático correspondente. As demos abaixo são interativas; o snippet mostra o código desta stack.",
@@ -40,7 +40,7 @@
     "seo": {
       "title": "Motion",
       "description": "Tokens de duração e easing, princípios de animação funcional e suporte global a prefers-reduced-motion.",
-      "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, suporte a prefers-reduced-motion e anti-padrões.",
+      "aiSummary": "Página de fundamentos de Motion. Documenta a escada de durações --duration-instant/fast/base/moderate/slow/stately (0–800ms), easings --ease-standard/entrance/exit/emphasis, tipos de uso por contexto, suporte a prefers-reduced-motion, anti-padrões e recursos avançados com a biblioteca Motion (MIT).",
       "aiEntities": "motion, animação, transition, duration, easing, prefers-reduced-motion, acessibilidade",
       "aiIntent": "informational"
     },
@@ -49,45 +49,61 @@
       "subtitle": "Quatro regras que governam toda animação no sistema.",
       "items": {
         "function": "Motion serve à função. Animação sem propósito vira ruído visual.",
-        "brief": "Duração breve. Micro-interações ≤150ms; transições maiores ≤500ms.",
-        "natural": "Easings naturais. Entrada com <code>ease-out</code>, saída com <code>ease-in</code>, transições contínuas com <code>ease-in-out</code>.",
+        "brief": "Seja breve. Micro-interações em 120ms (fast); transições maiores até 500ms (slow).",
+        "natural": "Easings naturais. Entre com <code>--ease-entrance</code>, saia com <code>--ease-exit</code>, transite com <code>--ease-standard</code>.",
         "respect": "Respeite a preferência. <code>prefers-reduced-motion</code> desliga animações não-essenciais."
       }
     },
     "durations": {
       "title": "Durações",
-      "subtitle": "Três tokens cobrem todas as transições do sistema. Use o valor nomeado, nunca números mágicos no CSS.",
+      "subtitle": "A escada oficial do sistema (motion.css). Seis degraus com amplitude de 0 a 800ms — cada contexto tem seu degrau; não invente valores intermediários.",
       "cols": {
         "token": "Token",
         "value": "Valor",
         "usage": "Quando usar"
       },
       "items": {
-        "fast": {
-          "token": "--transition-fast",
-          "value": "150ms",
-          "usage": "Hover, focus, toggle, mudança de cor, ícone trocando"
+        "instant": {
+          "token": "--duration-instant",
+          "value": "0ms",
+          "usage": "Trocas sem animação; valor aplicado a tudo sob prefers-reduced-motion"
         },
-        "normal": {
-          "token": "--transition-normal",
-          "value": "300ms",
-          "usage": "Abertura de dropdown, accordion, tabs, fade de tooltip"
+        "fast": {
+          "token": "--duration-fast",
+          "value": "120ms",
+          "usage": "Hover, focus ring, press feedback, micro-interações"
+        },
+        "base": {
+          "token": "--duration-base",
+          "value": "200ms",
+          "usage": "Default — opacity, transforms pequenos, painéis de menu"
+        },
+        "moderate": {
+          "token": "--duration-moderate",
+          "value": "320ms",
+          "usage": "Enter/exit de overlays maiores (toast, popover)"
         },
         "slow": {
-          "token": "--transition-slow",
+          "token": "--duration-slow",
           "value": "500ms",
-          "usage": "Entrada de Dialog/Sheet, transições de página, slide de Drawer"
+          "usage": "Mudanças de layout, transforms grandes"
+        },
+        "stately": {
+          "token": "--duration-stately",
+          "value": "800ms",
+          "usage": "Transições de página, reveal em tela cheia"
         }
       }
     },
     "easings": {
       "title": "Easings",
-      "subtitle": "O token padrão é <code>--transition-timing</code> com curva <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalente a <code>ease-in-out</code>. Combine com a duração apropriada.",
+      "subtitle": "Quatro curvas tokenizadas em motion.css. O padrão do sistema é <code>--ease-standard</code> — chega rápido e suaviza no fim.",
       "items": {
-        "out": "<strong>ease-out</strong> — elementos entrando ou aparecendo. Inicia rápido, desacelera.",
-        "in": "<strong>ease-in</strong> — elementos saindo ou desaparecendo. Inicia lento, acelera.",
-        "inOut": "<strong>ease-in-out</strong> — transições contínuas entre estados. Padrão do sistema.",
-        "spring": "<strong>spring</strong> — apenas em interações lúdicas (drag, swipe). Use com moderação."
+        "standard": "<strong>--ease-standard</strong> — cubic-bezier(0.2, 0, 0, 1). Transições contínuas entre estados; padrão do sistema.",
+        "entrance": "<strong>--ease-entrance</strong> — cubic-bezier(0, 0, 0, 1). Elementos entrando ou aparecendo; só desaceleração.",
+        "exit": "<strong>--ease-exit</strong> — cubic-bezier(0.3, 0, 1, 1). Elementos saindo ou desaparecendo; só aceleração.",
+        "emphasis": "<strong>--ease-emphasis</strong> — cubic-bezier(0.3, 0, 0, 1). Chegada mais dramática; destaques e navegação.",
+        "spring": "<strong>spring</strong> — física de mola, sem curva fixa; apenas via biblioteca (ver Recursos avançados)."
       }
     },
     "usage": {
@@ -101,33 +117,33 @@
       "rows": [
         [
           "Hover / focus em primitivos",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-standard"
         ],
         [
           "Toggle de estado (switch, checkbox)",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-entrance"
         ],
         [
           "Abertura de dropdown / popover",
-          "200–300ms",
-          "ease-out"
+          "120–200ms (fast–base)",
+          "--ease-entrance"
         ],
         [
           "Entrada de Dialog / Sheet",
-          "300–500ms",
-          "ease-out"
+          "200–320ms (base–moderate)",
+          "--ease-entrance"
         ],
         [
           "Saída de overlays",
-          "200ms",
-          "ease-in"
+          "120ms (fast)",
+          "--ease-exit"
         ],
         [
           "Feedback de ação (toast, badge pulse)",
-          "300ms",
-          "spring suave"
+          "320ms (moderate)",
+          "spring suave (biblioteca)"
         ]
       ]
     },
@@ -167,8 +183,8 @@
     "type": "Tokens",
     "description": "Motion serves function, never decoration. The Design System uses brief durations, semantic easings, and respects <code>prefers-reduced-motion</code> globally. Every animation has a purpose: confirm an action, guide focus, or smooth a context change.",
     "specimens": {
-      "title": "Specimens",
-      "subtitle": "Hover over each button to feel the system's three durations.",
+      "title": "Visual examples",
+      "subtitle": "Click Replay: each bar travels the same distance at one step of the ladder — the difference between 120ms and 800ms becomes evident in motion (instant jumps without animating).",
       "advanced": {
         "title": "Advanced resources — Motion library",
         "subtitle": "The system micro-interactions are pure CSS over the tokens on this page. For spring physics, gestures and exit animations, the recommendation is the Motion library (MIT license) — each stack uses its idiomatic binding. The demos below are interactive; the snippet shows the code for this stack.",
@@ -202,7 +218,7 @@
     "seo": {
       "title": "Motion",
       "description": "Duration and easing tokens, principles of functional animation, and global prefers-reduced-motion support.",
-      "aiSummary": "Motion foundations page. Documents --transition-fast/normal/slow tokens, ease-out/in/in-out/spring easings, usage types by context, prefers-reduced-motion support, and anti-patterns.",
+      "aiSummary": "Motion foundations page. Documents the duration ladder --duration-instant/fast/base/moderate/slow/stately (0–800ms), --ease-standard/entrance/exit/emphasis easings, usage types by context, prefers-reduced-motion support, anti-patterns and advanced resources with the Motion library (MIT).",
       "aiEntities": "motion, animation, transition, duration, easing, prefers-reduced-motion, accessibility",
       "aiIntent": "informational"
     },
@@ -211,45 +227,61 @@
       "subtitle": "Four rules govern every animation in the system.",
       "items": {
         "function": "Motion serves function. Animation without purpose becomes visual noise.",
-        "brief": "Keep it brief. Micro-interactions ≤150ms; larger transitions ≤500ms.",
-        "natural": "Natural easings. Enter with <code>ease-out</code>, exit with <code>ease-in</code>, continuous transitions with <code>ease-in-out</code>.",
+        "brief": "Keep it brief. Micro-interactions at 120ms (fast); larger transitions up to 500ms (slow).",
+        "natural": "Natural easings. Enter with <code>--ease-entrance</code>, exit with <code>--ease-exit</code>, transition with <code>--ease-standard</code>.",
         "respect": "Respect the preference. <code>prefers-reduced-motion</code> disables non-essential animations."
       }
     },
     "durations": {
       "title": "Durations",
-      "subtitle": "Three tokens cover every transition in the system. Use the named value, never magic numbers in CSS.",
+      "subtitle": "The system’s official ladder (motion.css). Six steps spanning 0 to 800ms — each context has its step; don’t invent in-between values.",
       "cols": {
         "token": "Token",
         "value": "Value",
         "usage": "When to use"
       },
       "items": {
-        "fast": {
-          "token": "--transition-fast",
-          "value": "150ms",
-          "usage": "Hover, focus, toggle, color change, icon swap"
+        "instant": {
+          "token": "--duration-instant",
+          "value": "0ms",
+          "usage": "Non-animated changes; applied to everything under prefers-reduced-motion"
         },
-        "normal": {
-          "token": "--transition-normal",
-          "value": "300ms",
-          "usage": "Dropdown opening, accordion, tabs, tooltip fade"
+        "fast": {
+          "token": "--duration-fast",
+          "value": "120ms",
+          "usage": "Hover, focus ring, press feedback, micro-interactions"
+        },
+        "base": {
+          "token": "--duration-base",
+          "value": "200ms",
+          "usage": "Default — opacity, small transforms, menu panels"
+        },
+        "moderate": {
+          "token": "--duration-moderate",
+          "value": "320ms",
+          "usage": "Enter/exit of larger overlays (toast, popover)"
         },
         "slow": {
-          "token": "--transition-slow",
+          "token": "--duration-slow",
           "value": "500ms",
-          "usage": "Dialog/Sheet entry, page transitions, Drawer slide"
+          "usage": "Layout changes, large transforms"
+        },
+        "stately": {
+          "token": "--duration-stately",
+          "value": "800ms",
+          "usage": "Page transitions, full-screen reveal"
         }
       }
     },
     "easings": {
       "title": "Easings",
-      "subtitle": "The default token is <code>--transition-timing</code> with curve <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalent to <code>ease-in-out</code>. Pair it with the appropriate duration.",
+      "subtitle": "Four curves tokenized in motion.css. The system default is <code>--ease-standard</code> — arrives fast and settles gently.",
       "items": {
-        "out": "<strong>ease-out</strong> — elements entering or appearing. Starts fast, decelerates.",
-        "in": "<strong>ease-in</strong> — elements exiting or disappearing. Starts slow, accelerates.",
-        "inOut": "<strong>ease-in-out</strong> — continuous transitions between states. System default.",
-        "spring": "<strong>spring</strong> — only in playful interactions (drag, swipe). Use sparingly."
+        "standard": "<strong>--ease-standard</strong> — cubic-bezier(0.2, 0, 0, 1). Continuous transitions between states; system default.",
+        "entrance": "<strong>--ease-entrance</strong> — cubic-bezier(0, 0, 0, 1). Entering or appearing elements; deceleration only.",
+        "exit": "<strong>--ease-exit</strong> — cubic-bezier(0.3, 0, 1, 1). Exiting or disappearing elements; acceleration only.",
+        "emphasis": "<strong>--ease-emphasis</strong> — cubic-bezier(0.3, 0, 0, 1). More dramatic arrival; highlights and navigation.",
+        "spring": "<strong>spring</strong> — spring physics, no fixed curve; only via the library (see Advanced resources)."
       }
     },
     "usage": {
@@ -263,33 +295,33 @@
       "rows": [
         [
           "Hover / focus on primitives",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-standard"
         ],
         [
           "State toggle (switch, checkbox)",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-entrance"
         ],
         [
-          "Dropdown / popover open",
-          "200–300ms",
-          "ease-out"
+          "Dropdown / popover opening",
+          "120–200ms (fast–base)",
+          "--ease-entrance"
         ],
         [
-          "Dialog / Sheet entry",
-          "300–500ms",
-          "ease-out"
+          "Dialog / Sheet entrance",
+          "200–320ms (base–moderate)",
+          "--ease-entrance"
         ],
         [
           "Overlay exit",
-          "200ms",
-          "ease-in"
+          "120ms (fast)",
+          "--ease-exit"
         ],
         [
           "Action feedback (toast, badge pulse)",
-          "300ms",
-          "soft spring"
+          "320ms (moderate)",
+          "soft spring (library)"
         ]
       ]
     },
@@ -329,8 +361,8 @@
     "type": "Tokens",
     "description": "Motion sirve a la función, nunca a la decoración. El Design System usa duraciones breves, easings semánticos y respeta <code>prefers-reduced-motion</code> globalmente. Cada animación tiene un propósito: confirmar una acción, guiar el foco o suavizar un cambio de contexto.",
     "specimens": {
-      "title": "Especímenes",
-      "subtitle": "Pasa el cursor sobre cada botón para sentir las tres duraciones del sistema.",
+      "title": "Ejemplos visuales",
+      "subtitle": "Haz clic en Reproducir: cada barra recorre la misma distancia en un paso de la escalera — la diferencia entre 120ms y 800ms se hace evidente en el movimiento (instant salta sin animar).",
       "advanced": {
         "title": "Recursos avanzados — biblioteca Motion",
         "subtitle": "Las micro-interacciones del sistema son CSS puro sobre los tokens de esta página. Para física de resorte, gestos y animaciones de salida, la recomendación es la biblioteca Motion (licencia MIT) — cada stack usa su binding idiomático. Las demos son interactivas; el snippet muestra el código de este stack.",
@@ -364,7 +396,7 @@
     "seo": {
       "title": "Motion",
       "description": "Tokens de duración y easing, principios de animación funcional y soporte global a prefers-reduced-motion.",
-      "aiSummary": "Página de fundamentos de Motion. Documenta tokens --transition-fast/normal/slow, easings ease-out/in/in-out/spring, tipos de uso por contexto, soporte a prefers-reduced-motion y antipatrones.",
+      "aiSummary": "Página de fundamentos de Motion. Documenta la escalera de duraciones --duration-instant/fast/base/moderate/slow/stately (0–800ms), easings --ease-standard/entrance/exit/emphasis, tipos de uso por contexto, soporte de prefers-reduced-motion, antipatrones y recursos avanzados con la biblioteca Motion (MIT).",
       "aiEntities": "motion, animación, transition, duration, easing, prefers-reduced-motion, accesibilidad",
       "aiIntent": "informational"
     },
@@ -373,45 +405,61 @@
       "subtitle": "Cuatro reglas gobiernan toda animación del sistema.",
       "items": {
         "function": "Motion sirve a la función. Animación sin propósito se vuelve ruido visual.",
-        "brief": "Duración breve. Microinteracciones ≤150ms; transiciones mayores ≤500ms.",
-        "natural": "Easings naturales. Entrada con <code>ease-out</code>, salida con <code>ease-in</code>, transiciones continuas con <code>ease-in-out</code>.",
+        "brief": "Sé breve. Micro-interacciones en 120ms (fast); transiciones mayores hasta 500ms (slow).",
+        "natural": "Easings naturales. Entra con <code>--ease-entrance</code>, sal con <code>--ease-exit</code>, transiciona con <code>--ease-standard</code>.",
         "respect": "Respeta la preferencia. <code>prefers-reduced-motion</code> desactiva animaciones no esenciales."
       }
     },
     "durations": {
       "title": "Duraciones",
-      "subtitle": "Tres tokens cubren todas las transiciones del sistema. Usa el valor nombrado, nunca números mágicos en CSS.",
+      "subtitle": "La escalera oficial del sistema (motion.css). Seis pasos con amplitud de 0 a 800ms — cada contexto tiene su paso; no inventes valores intermedios.",
       "cols": {
         "token": "Token",
         "value": "Valor",
         "usage": "Cuándo usar"
       },
       "items": {
-        "fast": {
-          "token": "--transition-fast",
-          "value": "150ms",
-          "usage": "Hover, focus, toggle, cambio de color, swap de icono"
+        "instant": {
+          "token": "--duration-instant",
+          "value": "0ms",
+          "usage": "Cambios sin animación; aplicado a todo bajo prefers-reduced-motion"
         },
-        "normal": {
-          "token": "--transition-normal",
-          "value": "300ms",
-          "usage": "Apertura de dropdown, accordion, tabs, fade de tooltip"
+        "fast": {
+          "token": "--duration-fast",
+          "value": "120ms",
+          "usage": "Hover, focus ring, press feedback, micro-interacciones"
+        },
+        "base": {
+          "token": "--duration-base",
+          "value": "200ms",
+          "usage": "Default — opacity, transforms pequeños, paneles de menú"
+        },
+        "moderate": {
+          "token": "--duration-moderate",
+          "value": "320ms",
+          "usage": "Enter/exit de overlays mayores (toast, popover)"
         },
         "slow": {
-          "token": "--transition-slow",
+          "token": "--duration-slow",
           "value": "500ms",
-          "usage": "Entrada de Dialog/Sheet, transiciones de página, slide de Drawer"
+          "usage": "Cambios de layout, transforms grandes"
+        },
+        "stately": {
+          "token": "--duration-stately",
+          "value": "800ms",
+          "usage": "Transiciones de página, reveal a pantalla completa"
         }
       }
     },
     "easings": {
       "title": "Easings",
-      "subtitle": "El token por defecto es <code>--transition-timing</code> con curva <code>cubic-bezier(0.4, 0, 0.2, 1)</code> — equivalente a <code>ease-in-out</code>. Combínalo con la duración apropiada.",
+      "subtitle": "Cuatro curvas tokenizadas en motion.css. El estándar del sistema es <code>--ease-standard</code> — llega rápido y suaviza al final.",
       "items": {
-        "out": "<strong>ease-out</strong> — elementos entrando o apareciendo. Inicia rápido, desacelera.",
-        "in": "<strong>ease-in</strong> — elementos saliendo o desapareciendo. Inicia lento, acelera.",
-        "inOut": "<strong>ease-in-out</strong> — transiciones continuas entre estados. Por defecto del sistema.",
-        "spring": "<strong>spring</strong> — solo en interacciones lúdicas (drag, swipe). Úsalo con moderación."
+        "standard": "<strong>--ease-standard</strong> — cubic-bezier(0.2, 0, 0, 1). Transiciones continuas entre estados; estándar del sistema.",
+        "entrance": "<strong>--ease-entrance</strong> — cubic-bezier(0, 0, 0, 1). Elementos entrando o apareciendo; solo desaceleración.",
+        "exit": "<strong>--ease-exit</strong> — cubic-bezier(0.3, 0, 1, 1). Elementos saliendo o desapareciendo; solo aceleración.",
+        "emphasis": "<strong>--ease-emphasis</strong> — cubic-bezier(0.3, 0, 0, 1). Llegada más dramática; destaques y navegación.",
+        "spring": "<strong>spring</strong> — física de resorte, sin curva fija; solo vía biblioteca (ver Recursos avanzados)."
       }
     },
     "usage": {
@@ -425,33 +473,33 @@
       "rows": [
         [
           "Hover / focus en primitivos",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-standard"
         ],
         [
           "Toggle de estado (switch, checkbox)",
-          "150ms",
-          "ease-out"
+          "120ms (fast)",
+          "--ease-entrance"
         ],
         [
           "Apertura de dropdown / popover",
-          "200–300ms",
-          "ease-out"
+          "120–200ms (fast–base)",
+          "--ease-entrance"
         ],
         [
           "Entrada de Dialog / Sheet",
-          "300–500ms",
-          "ease-out"
+          "200–320ms (base–moderate)",
+          "--ease-entrance"
         ],
         [
           "Salida de overlays",
-          "200ms",
-          "ease-in"
+          "120ms (fast)",
+          "--ease-exit"
         ],
         [
           "Feedback de acción (toast, badge pulse)",
-          "300ms",
-          "spring suave"
+          "320ms (moderate)",
+          "spring suave (biblioteca)"
         ]
       ]
     },

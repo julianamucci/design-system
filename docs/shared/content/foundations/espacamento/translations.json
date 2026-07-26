@@ -5,7 +5,7 @@
     "type": "Tokens",
     "description": "Todo o espaçamento do sistema é construído sobre uma base de 4px e ancorado num grid de 8. Tokens <code>--spacing-*</code> alimentam as classes utilitárias <code>.nds-*</code> e as primitivas de layout, então <code>.nds-p-4</code>, <code>.nds-mb-6</code> e <code>data-spacing=\"sm\"</code> seguem automaticamente a densidade ativa do tema.",
     "specimens": {
-      "title": "Escala visual",
+      "title": "Exemplos visuais",
       "subtitle": "Cada barra tem largura igual ao token. A escala acompanha a densidade ativa do tema."
     },
     "seo": {
@@ -155,7 +155,7 @@
     "type": "Tokens",
     "description": "All spacing in the system is built on a 4px base anchored to an 8-grid. <code>--spacing-*</code> tokens feed the <code>.nds-*</code> utility classes and the layout primitives, so <code>.nds-p-4</code>, <code>.nds-mb-6</code> and <code>data-spacing=\"sm\"</code> automatically follow the theme's active density.",
     "specimens": {
-      "title": "Visual scale",
+      "title": "Visual examples",
       "subtitle": "Each bar is as wide as its token. The scale follows the theme's active density."
     },
     "seo": {
@@ -305,7 +305,7 @@
     "type": "Tokens",
     "description": "Todo el espaciado del sistema se construye sobre una base de 4px anclada a un grid de 8. Los tokens <code>--spacing-*</code> alimentan las clases utilitarias <code>.nds-*</code> y las primitivas de layout, así que <code>.nds-p-4</code>, <code>.nds-mb-6</code> y <code>data-spacing=\"sm\"</code> siguen automáticamente la densidad activa del tema.",
     "specimens": {
-      "title": "Escala visual",
+      "title": "Ejemplos visuales",
       "subtitle": "Cada barra tiene el ancho de su token. La escala sigue la densidad activa del tema."
     },
     "seo": {

@@ -3,10 +3,13 @@ import { createFoundationsDocs } from './shared/foundationsRenderer';
 import { createButton } from '@/components/ui/button';
 import translations from '@shared/content/foundations/motion/translations.json';
 
-const DURATIONS = [
-  { token: '--transition-fast', label: 'fast — 150ms' },
-  { token: '--transition-normal', label: 'normal — 300ms' },
-  { token: '--transition-slow', label: 'slow — 500ms' },
+const LADDER = [
+  { token: '--duration-instant', label: 'instant — 0ms' },
+  { token: '--duration-fast', label: 'fast — 120ms' },
+  { token: '--duration-base', label: 'base — 200ms' },
+  { token: '--duration-moderate', label: 'moderate — 320ms' },
+  { token: '--duration-slow', label: 'slow — 500ms' },
+  { token: '--duration-stately', label: 'stately — 800ms' },
 ];
 
 const STAGGER_ITEMS = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
@@ -87,22 +90,38 @@ export function createMotionDocs(): HTMLElement {
       addText(subtitle, 'specimens.subtitle');
       head.append(title, subtitle);
 
-      const cluster = document.createElement('div');
-      cluster.className = 'nds-cluster nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft';
-      cluster.dataset.spacing = 'md';
-      for (const d of DURATIONS) {
-        const btn = createButton({
-          variant: 'outline',
-          label: d.label,
-          class: 'nds-hover-bg-primary nds-hover-text-primary-foreground nds-hover-scale-105',
-        });
-        btn.style.transitionProperty = 'background-color, color, transform';
-        btn.style.transitionDuration = `var(${d.token})`;
-        btn.style.transitionTimingFunction = 'var(--transition-timing, cubic-bezier(0.4, 0, 0.2, 1))';
-        cluster.appendChild(btn);
-      }
+      const ladderBox = document.createElement('div');
+      ladderBox.className = 'nds-stack nds-p-6 nds-bg-card nds-rounded-lg nds-border-soft';
+      ladderBox.dataset.spacing = 'sm';
 
-      section.append(head, cluster);
+      const playWrap = document.createElement('div');
+      const playBtn = createButton({ variant: 'outline', size: 'sm', label: '' });
+      addText(playBtn, 'specimens.advanced.labels.replay');
+      playWrap.appendChild(playBtn);
+      ladderBox.appendChild(playWrap);
+
+      let played = false;
+      const chips: HTMLElement[] = [];
+      for (const d of LADDER) {
+        const track = document.createElement('div');
+        track.className = 'nds-bg-muted-30 nds-rounded-lg nds-p-1 nds-overflow-hidden';
+        const chip = document.createElement('div');
+        chip.className = 'nds-bg-primary-soft nds-border-primary-soft nds-rounded-sm nds-px-4 nds-py-1 nds-text-caption nds-whitespace-nowrap';
+        chip.textContent = d.label;
+        chip.style.width = 'fit-content';
+        chip.style.transitionProperty = 'transform';
+        chip.style.transitionDuration = `var(${d.token})`;
+        chip.style.transitionTimingFunction = 'var(--ease-standard)';
+        chips.push(chip);
+        track.appendChild(chip);
+        ladderBox.appendChild(track);
+      }
+      playBtn.addEventListener('click', () => {
+        played = !played;
+        for (const chip of chips) chip.style.transform = played ? 'translateX(12rem)' : 'translateX(0)';
+      });
+
+      section.append(head, ladderBox);
       wrapper.appendChild(section);
 
       // ── Recursos avançados (biblioteca Motion) ────────────────────────────
