@@ -97,6 +97,48 @@ function itemEntries(items: Section['items']): Array<{ key: string; value: any }
   return Object.keys(items).map((k) => ({ key: k, value: items[k] }));
 }
 
+// Sub-grupo aninhado em extras (ex.: tokens.affected em Densidades,
+// terms.approved em Tom de Voz, usage.ranges em Espaçamento). Antes,
+// objetos em extras eram descartados silenciosamente.
+interface SubGroup {
+  title?: string;
+  body?: string;
+  cols?: Section['cols'];
+  rows?: Section['rows'];
+  list?: Array<{ key: string; value: string }>;
+  cards?: Record<string, any>;
+}
+
+function subGroup(v: any): SubGroup | null {
+  if (!isObject(v)) return null;
+  const g: SubGroup = {};
+  if (typeof v.title === 'string') g.title = v.title;
+  const bodyKey = ['subtitle', 'body'].find((k) => typeof v[k] === 'string');
+  if (bodyKey) g.body = v[bodyKey];
+  if (v.cols && v.rows) {
+    g.cols = v.cols;
+    g.rows = v.rows;
+  }
+  const src = v.items ?? v.rules;
+  if (src && isObject(src)) {
+    if (Object.values(src).every((x) => typeof x === 'string')) {
+      g.list = Object.entries(src).map(([key, value]) => ({ key, value: String(value) }));
+    } else {
+      g.cards = src;
+    }
+  }
+  // Mapa puro (sem title/items/tabela): strings → lista; objetos → cards
+  if (!g.title && !g.cols && !src) {
+    const vals = Object.values(v);
+    if (vals.length && vals.every((x) => typeof x === 'string')) {
+      g.list = Object.entries(v).map(([key, value]) => ({ key, value: String(value) }));
+    } else if (vals.length && vals.every((x) => isObject(x))) {
+      g.cards = v;
+    }
+  }
+  return g.title || g.body || g.cols || g.list || g.cards ? g : null;
+}
+
 // Itens que são objetos viram cards (title + body) → grid fixo de 2 colunas.
 function itemsAreCards(items: Section['items']): boolean {
   return !!items && Object.values(items).some((v) => v !== null && typeof v === 'object');
@@ -368,6 +410,97 @@ track('docs_page_view', {
                 v-html="String(v)"
               />
             </ul>
+          </template>
+          <template v-else-if="subGroup(ex.value)">
+            <!-- Sub-grupo aninhado: h3 + tabela/lista/cards -->
+            <div
+              class="nds-stack"
+              data-spacing="sm"
+            >
+              <h3
+                v-if="subGroup(ex.value)!.title"
+                class="nds-text-h3 nds-text-foreground"
+                v-html="subGroup(ex.value)!.title"
+              />
+              <p
+                v-if="subGroup(ex.value)!.body"
+                class="nds-text-body nds-leading-relaxed"
+                v-html="subGroup(ex.value)!.body"
+              />
+              <Table v-if="subGroup(ex.value)!.cols">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead
+                      v-for="(c, i) in colsArray(subGroup(ex.value)!.cols)"
+                      :key="i"
+                    >
+                      {{ c }}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow
+                    v-for="(row, r) in rowsArray(subGroup(ex.value)!.rows, subGroup(ex.value)!.cols)"
+                    :key="r"
+                  >
+                    <TableCell
+                      v-for="(cell, ci) in row"
+                      :key="ci"
+                    >
+                      <span v-html="cell" />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+              <ul
+                v-if="subGroup(ex.value)!.list"
+                class="nds-stack nds-list-none"
+                data-spacing="md"
+              >
+                <li
+                  v-for="it in subGroup(ex.value)!.list"
+                  :key="it.key"
+                  class="nds-text-body nds-leading-relaxed nds-accent-start"
+                  v-html="it.value"
+                />
+              </ul>
+              <div
+                v-if="subGroup(ex.value)!.cards"
+                class="nds-grid"
+                data-cols="2"
+                data-fixed="true"
+                data-spacing="md"
+              >
+                <Card
+                  v-for="item in itemEntries(subGroup(ex.value)!.cards)"
+                  :key="item.key"
+                >
+                  <CardHeader>
+                    <CardTitle
+                      v-if="itemTitle(item.value)"
+                      as="h4"
+                    >
+                      <span v-html="itemTitle(item.value)" />
+                    </CardTitle>
+                    <CardDescription v-if="itemBody(item.value)">
+                      <span v-html="itemBody(item.value)" />
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent
+                    v-if="itemExtras(item.value).length"
+                    class="nds-stack"
+                    data-spacing="xs"
+                  >
+                    <p
+                      v-for="ext in itemExtras(item.value)"
+                      :key="ext.key"
+                      class="nds-text-caption nds-text-muted-foreground nds-m-0"
+                      v-html="ext.value"
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </template>
         </div>
       </section>

@@ -248,12 +248,29 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
           ([k, v]) =>
             !['title', 'subtitle', 'body', 'audience', 'note', 'rules', 'keys'].includes(k) &&
             isPlainObject(v) &&
-            ('title' in v || 'name' in v || 'body' in v || 'description' in v),
+            ('title' in v || 'name' in v || 'body' in v || 'description' in v) &&
+            // só vira card se for "folha" (todos os valores string) — sub-grupos
+            // com items/cols/rows aninhados são renderizados por subGroups abaixo
+            Object.values(v).every((x) => typeof x === 'string'),
         );
         if (candidates.length === 0) return undefined;
         return Object.fromEntries(candidates);
       })()
     : undefined;
+
+  // Sub-grupos aninhados dentro da seção (ex.: tokens.affected/unaffected em
+  // Densidades, terms.approved em Tom de Voz, usage.ranges em Espaçamento):
+  // objeto não-meta que carrega estrutura própria (items/rules/tabela) ou é um
+  // mapa puro de strings/objetos. Renderizados como h3 + conteúdo, igual
+  // Svelte/Vanilla — antes viravam card só-título ou eram descartados.
+  const subGroups = Object.entries(data).filter(([k, v]) => {
+    if (['title', 'subtitle', 'body', 'audience', 'note', 'rules', 'keys', 'items', 'cols', 'rows'].includes(k)) return false;
+    if (!isPlainObject(v)) return false;
+    const leafCard =
+      ('title' in v || 'name' in v || 'body' in v || 'description' in v) &&
+      Object.values(v).every((x) => typeof x === 'string');
+    return !leafCard;
+  }) as Array<[string, Record<string, unknown>]>;
 
   // Chaves string soltas (ex.: passos de instalação `cloneTitle`/`cloneCode`/
   // `installNote`): `*Title` → h3, `*Code` → bloco de código, resto → parágrafo.
@@ -326,6 +343,32 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
       {keys !== undefined && <SectionItems items={keys} />}
 
       {rules !== undefined && <SectionItems items={rules} />}
+
+      {subGroups.map(([k, g]) => {
+        const gTitle = typeof g.title === 'string' ? g.title : undefined;
+        const gBody = [g.subtitle, g.body].find((x) => typeof x === 'string') as string | undefined;
+        const gItems = g.items ?? g.rules;
+        const hasTable = g.cols !== undefined && g.rows !== undefined;
+        // Mapa puro (sem title/items): strings → lista; objetos → cards
+        const bareMap = !gTitle && !gItems && !hasTable ? g : undefined;
+        return (
+          <div key={k} className="nds-stack" data-spacing="sm">
+            {gTitle && (
+              <h3 className="nds-text-h3 nds-text-foreground">
+                <HtmlText html={gTitle} />
+              </h3>
+            )}
+            {gBody && (
+              <HtmlText as="p" html={gBody} className="nds-text-body nds-leading-relaxed" />
+            )}
+            {hasTable && (
+              <SectionTable cols={g.cols as Record<string, string>} rows={g.rows} />
+            )}
+            {gItems !== undefined && <SectionItems items={gItems} />}
+            {bareMap && <SectionItems items={bareMap} />}
+          </div>
+        );
+      })}
 
       {note && (
         <div className="nds-rounded-md nds-border-soft nds-bg-muted-30 nds-p-4">

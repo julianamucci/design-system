@@ -57,8 +57,8 @@
         "items": {
           "radius": "Tokens de radius — <code>--radius</code>, <code>--radius-card</code>, etc.",
           "colors": "Cores e contraste — proporção foreground/background é fixa",
-          "icons": "Tamanho de ícones dentro de primitivos — segue a escala tipográfica",
-          "typography": "Font-size e line-height base — densidade não tipografa"
+          "icons": "Tamanho de ícones dentro de primitivos — fixos em rem, não escalam com a densidade",
+          "typography": "Font-size e line-height — a densidade não altera tipografia"
         }
       }
     },
@@ -68,7 +68,7 @@
       "items": {
         "html": "Adicione a classe no elemento raiz: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
         "combine": "Pode combinar com qualquer tema: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
-        "toolbar": "No Storybook, use o toolbar global <code>densidade</code> para alternar e ver o efeito imediato em todas as stories",
+        "toolbar": "No Storybook, use o toolbar global <code>density</code> para alternar e ver o efeito imediato em todas as stories",
         "default": "Sem classe = densidade Default (4px base). A classe <code>densidade-default</code> existe apenas para reset explícito ao voltar de outro nível"
       }
     },
@@ -175,8 +175,8 @@
         "items": {
           "radius": "Radius tokens — <code>--radius</code>, <code>--radius-card</code>, etc.",
           "colors": "Colors and contrast — foreground/background ratio is fixed",
-          "icons": "Icon size inside primitives — follows the typography scale",
-          "typography": "Base font-size and line-height — density isn't typographic"
+          "icons": "Icon sizes inside primitives — fixed in rem, they do not scale with density",
+          "typography": "Font-size and line-height — density does not change typography"
         }
       }
     },
@@ -186,7 +186,7 @@
       "items": {
         "html": "Add the class on the root element: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
         "combine": "Combines with any theme: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
-        "toolbar": "In Storybook, use the global <code>densidade</code> toolbar to switch and see the effect across every story",
+        "toolbar": "In Storybook, use the <code>density</code> global toolbar to switch and see the effect immediately across all stories",
         "default": "No class = Default density (4px base). The <code>densidade-default</code> class exists only for explicit reset when returning from another level"
       }
     },
@@ -293,8 +293,8 @@
         "items": {
           "radius": "Tokens de radius — <code>--radius</code>, <code>--radius-card</code>, etc.",
           "colors": "Colores y contraste — la proporción foreground/background es fija",
-          "icons": "Tamaño de iconos dentro de primitivos — sigue la escala tipográfica",
-          "typography": "Font-size y line-height base — la densidad no es tipográfica"
+          "icons": "Tamaño de iconos dentro de primitivos — fijos en rem, no escalan con la densidad",
+          "typography": "Font-size y line-height — la densidad no altera la tipografía"
         }
       }
     },
@@ -304,7 +304,7 @@
       "items": {
         "html": "Agrega la clase en el elemento raíz: <code>&lt;html class=\"densidade-condensado\"&gt;</code>",
         "combine": "Se combina con cualquier tema: <code>&lt;html class=\"tema-warm dark densidade-confortavel\"&gt;</code>",
-        "toolbar": "En Storybook, usa el toolbar global <code>densidade</code> para alternar y ver el efecto inmediato en todas las stories",
+        "toolbar": "En Storybook, usa la toolbar global <code>density</code> para alternar y ver el efecto inmediato en todas las stories",
         "default": "Sin clase = densidad Default (4px base). La clase <code>densidade-default</code> existe solo para reset explícito al volver desde otro nivel"
       }
     },
