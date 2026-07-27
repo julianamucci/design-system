@@ -33,12 +33,13 @@ const stackDir = basename(process.cwd());
 const watched = ['.', '../docs/shared', '../scripts'];
 
 try {
-  // --quiet: exit 0 se NADA mudou nos paths; exit 1 se mudou
-  execSync(`git diff HEAD^ HEAD --quiet -- ${watched.join(' ')}`, { stdio: 'ignore' });
+  // --quiet: exit 0 se NADA mudou nos paths; exit 1 se mudou.
+  // HEAD~1 (e não HEAD^): no Windows o execSync usa cmd.exe, onde ^ é escape.
+  execSync(`git diff HEAD~1 HEAD --quiet -- ${watched.join(' ')}`, { stdio: 'ignore' });
   console.log(`vercel-should-build: nenhum arquivo de ${stackDir}, docs/shared ou scripts mudou — pulando build.`);
   process.exit(SKIP);
 } catch {
-  // diff encontrou mudanças (ou HEAD^ não existe — primeiro deploy/clone raso):
+  // diff encontrou mudanças (ou HEAD~1 não existe — primeiro deploy/clone raso):
   // na dúvida, builda.
   console.log(`vercel-should-build: mudanças relevantes para ${stackDir} — buildando.`);
   process.exit(BUILD);
