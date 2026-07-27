@@ -3,7 +3,7 @@
     "title": "Catálogo de Eventos Analytics",
     "category": "Foundations",
     "type": "Analytics",
-    "description": "Convenção de nomenclatura, payload base, eventos universais de docs pages e catálogo de eventos por componente. GA4 vive no manager do Storybook; o iframe não dispara nada diretamente.",
+    "description": "Eventos de analytics contam como as pessoas realmente usam o produto — o que clicam, onde param, o que trocam. Esta página define a linguagem comum desses eventos: como nomear, quais dados enviar junto e quais eventos cada componente sugere.",
     "seo": {
       "title": "Catálogo de Eventos Analytics",
       "description": "Referência completa de eventos: convenção [objeto]_[ação], payload base com component/variant/location e catálogo de eventos por componente.",
@@ -12,9 +12,11 @@
       "aiIntent": "informational"
     },
     "intro": {
-      "title": "Arquitetura",
-      "body": "GA4 carrega uma única vez no <code>manager-head.html</code> do Storybook com <code>send_page_view:false</code>. O iframe da story não tem GA4 — quando um componente precisa rastrear, chama <code>track(event, params)</code> de <code>src/lib/analytics.ts</code>, que executa <code>window.top.gtag(...)</code>. Sem isso, todo evento seria atribuído a <code>/iframe.html</code>.",
-      "audience": "Devs instrumentando docs pages, autores de componente com analytics opcional e times de produto consumindo o sistema."
+      "title": "Como funciona",
+      "subtitle": "Medir é entender comportamento. Os eventos mostram como as pessoas usam cada parte da interface, e é com esses dados que o time decide o que melhorar. O sistema resolve a parte difícil: todos os eventos seguem a mesma convenção de nomes e o mesmo formato de dados — relatórios de produtos diferentes falam a mesma língua.",
+      "body": "Dois princípios definem o desenho. Primeiro: <strong>o evento não vive dentro do componente</strong> — um botão do sistema não rastreia nada sozinho. O rastreamento é inserido quando o componente é usado na construção da página, com o contexto que só o produto conhece (qual botão, em qual tela, para qual ação). Segundo: <strong>a coleta pode ser automatizada</strong> — a skill <code>/analytics</code> instrumenta páginas inteiras seguindo os padrões definidos aqui, sem chamadas manuais espalhadas pelo código.",
+      "audience": "Esta página serve a quem instrumenta páginas de produto, a quem documenta componentes e a quem analisa os dados no GA4.",
+      "note": "Detalhe técnico da documentação: o GA4 carrega uma única vez no manager do Storybook (<code>manager-head.html</code>, com <code>send_page_view: false</code>); as páginas chamam <code>track(evento, dados)</code>, que envia via <code>window.top.gtag</code> — sem isso, todo evento seria atribuído a <code>/iframe.html</code>."
     },
     "setup": {
       "title": "Setup",
@@ -181,14 +183,19 @@
     },
     "privacy": {
       "title": "Privacidade e fallback",
-      "body": "Quando GA4 não carrega (ad blocker, SSR, ambiente de testes), <code>track()</code> é um no-op silencioso. Nenhum erro é lançado. Nenhum dado é bufferizado em <code>localStorage</code>. Toda instrumentação deve assumir que GA4 pode estar ausente e jamais bloquear UX nesse fluxo."
+      "subtitle": "Medir é desejável, mas nunca é condição para a interface funcionar — e quem bloqueia a medição não é penalizado por isso.",
+      "items": {
+        "blocked": "Nem todo acesso gera dados: bloqueadores de anúncio, ambientes de teste e navegadores com proteção de privacidade impedem a medição de carregar — e isso é esperado. Quando acontece, o <code>track()</code> simplesmente não faz nada: a página continua funcionando, nenhum erro aparece.",
+        "noBuffer": "Nada fica guardado no navegador para envio posterior: se a medição não estava ativa no momento da interação, aquele dado não existe.",
+        "noSensitive": "Não coletamos dados sensíveis: nada de e-mails, nomes ou conteúdo digitado em campos. Os eventos descrevem interações — qual componente, qual variante, em que parte da tela — não pessoas."
+      }
     }
   },
   "en": {
     "title": "Analytics Event Catalog",
     "category": "Foundations",
     "type": "Analytics",
-    "description": "Naming convention, base payload, universal docs page events and per-component event catalog. GA4 lives in the Storybook manager; the iframe never fires anything directly.",
+    "description": "Analytics events tell how people actually use the product — what they click, where they stop, what they switch. This page defines the common language for those events: how to name them, what data to send along, and which events each component suggests.",
     "seo": {
       "title": "Analytics Event Catalog",
       "description": "Full event reference: [object]_[action] convention, base payload with component/variant/location and per-component event catalog.",
@@ -197,9 +204,11 @@
       "aiIntent": "informational"
     },
     "intro": {
-      "title": "Architecture",
-      "body": "GA4 loads once in Storybook's <code>manager-head.html</code> with <code>send_page_view:false</code>. The story iframe has no GA4 — when a component needs to track, it calls <code>track(event, params)</code> from <code>src/lib/analytics.ts</code>, which runs <code>window.top.gtag(...)</code>. Without this, every event would be attributed to <code>/iframe.html</code>.",
-      "audience": "Devs instrumenting docs pages, component authors with optional analytics and product teams consuming the system."
+      "title": "How it works",
+      "subtitle": "Measuring is understanding behavior. Events show how people use each part of the interface, and that data is what the team uses to decide what to improve. The system solves the hard part: every event follows the same naming convention and the same data shape — reports from different products speak the same language.",
+      "body": "Two principles define the design. First: <strong>the event does not live inside the component</strong> — a system button tracks nothing by itself. Tracking is inserted when the component is used to build the page, with context only the product knows (which button, on which screen, for which action). Second: <strong>collection can be automated</strong> — the <code>/analytics</code> skill instruments whole pages following the standards defined here, without manual calls scattered through the code.",
+      "audience": "This page serves whoever instruments product pages, whoever documents components, and whoever analyzes the data in GA4.",
+      "note": "Documentation technical detail: GA4 loads once in the Storybook manager (<code>manager-head.html</code>, with <code>send_page_view: false</code>); pages call <code>track(event, data)</code>, which sends via <code>window.top.gtag</code> — without it, every event would be attributed to <code>/iframe.html</code>."
     },
     "setup": {
       "title": "Setup",
@@ -366,14 +375,19 @@
     },
     "privacy": {
       "title": "Privacy and fallback",
-      "body": "When GA4 fails to load (ad blocker, SSR, test environment), <code>track()</code> is a silent no-op. No error is thrown. No data is buffered in <code>localStorage</code>. All instrumentation must assume GA4 may be absent and must never block UX in that path."
+      "subtitle": "Measuring is desirable, but never a condition for the interface to work — and whoever blocks measurement is not penalized for it.",
+      "items": {
+        "blocked": "Not every visit produces data: ad blockers, test environments and privacy-protecting browsers prevent measurement from loading — and that is expected. When it happens, <code>track()</code> simply does nothing: the page keeps working, no error appears.",
+        "noBuffer": "Nothing is stored in the browser for later sending: if measurement was not active at the moment of the interaction, that data does not exist.",
+        "noSensitive": "We do not collect sensitive data: no emails, names or content typed into fields. Events describe interactions — which component, which variant, in which part of the screen — not people."
+      }
     }
   },
   "es": {
     "title": "Catálogo de Eventos Analytics",
     "category": "Foundations",
     "type": "Analytics",
-    "description": "Convención de nomenclatura, payload base, eventos universales de docs pages y catálogo de eventos por componente. GA4 vive en el manager de Storybook; el iframe nunca dispara nada directamente.",
+    "description": "Los eventos de analytics cuentan cómo las personas realmente usan el producto — qué clican, dónde se detienen, qué cambian. Esta página define el lenguaje común de esos eventos: cómo nombrarlos, qué datos enviar junto y qué eventos sugiere cada componente.",
     "seo": {
       "title": "Catálogo de Eventos Analytics",
       "description": "Referencia completa de eventos: convención [objeto]_[acción], payload base con component/variant/location y catálogo por componente.",
@@ -382,9 +396,11 @@
       "aiIntent": "informational"
     },
     "intro": {
-      "title": "Arquitectura",
-      "body": "GA4 se carga una sola vez en el <code>manager-head.html</code> de Storybook con <code>send_page_view:false</code>. El iframe de la story no tiene GA4 — cuando un componente necesita rastrear, llama a <code>track(event, params)</code> de <code>src/lib/analytics.ts</code>, que ejecuta <code>window.top.gtag(...)</code>. Sin esto, todo evento sería atribuido a <code>/iframe.html</code>.",
-      "audience": "Devs instrumentando docs pages, autores de componentes con analytics opcional y equipos de producto consumiendo el sistema."
+      "title": "Cómo funciona",
+      "subtitle": "Medir es entender comportamiento. Los eventos muestran cómo las personas usan cada parte de la interfaz, y con esos datos el equipo decide qué mejorar. El sistema resuelve la parte difícil: todos los eventos siguen la misma convención de nombres y el mismo formato de datos — reportes de productos distintos hablan el mismo idioma.",
+      "body": "Dos principios definen el diseño. Primero: <strong>el evento no vive dentro del componente</strong> — un botón del sistema no rastrea nada por sí solo. El rastreo se inserta cuando el componente se usa en la construcción de la página, con el contexto que solo el producto conoce (qué botón, en qué pantalla, para qué acción). Segundo: <strong>la recolección puede automatizarse</strong> — la skill <code>/analytics</code> instrumenta páginas enteras siguiendo los estándares definidos aquí, sin llamadas manuales dispersas por el código.",
+      "audience": "Esta página sirve a quien instrumenta páginas de producto, a quien documenta componentes y a quien analiza los datos en GA4.",
+      "note": "Detalle técnico de la documentación: GA4 carga una sola vez en el manager de Storybook (<code>manager-head.html</code>, con <code>send_page_view: false</code>); las páginas llaman <code>track(evento, datos)</code>, que envía vía <code>window.top.gtag</code> — sin eso, todo evento se atribuiría a <code>/iframe.html</code>."
     },
     "setup": {
       "title": "Setup",
@@ -551,7 +567,12 @@
     },
     "privacy": {
       "title": "Privacidad y fallback",
-      "body": "Cuando GA4 no carga (ad blocker, SSR, entorno de tests), <code>track()</code> es un no-op silencioso. No se lanza ningún error. No se bufferiza nada en <code>localStorage</code>. Toda instrumentación debe asumir que GA4 puede estar ausente y nunca bloquear UX en ese flujo."
+      "subtitle": "Medir es deseable, pero nunca es condición para que la interfaz funcione — y quien bloquea la medición no es penalizado por ello.",
+      "items": {
+        "blocked": "No todo acceso genera datos: los bloqueadores de anuncios, los entornos de prueba y los navegadores con protección de privacidad impiden que la medición cargue — y eso es esperado. Cuando ocurre, <code>track()</code> simplemente no hace nada: la página sigue funcionando, no aparece ningún error.",
+        "noBuffer": "Nada queda guardado en el navegador para envío posterior: si la medición no estaba activa en el momento de la interacción, ese dato no existe.",
+        "noSensitive": "No recolectamos datos sensibles: nada de correos, nombres o contenido escrito en campos. Los eventos describen interacciones — qué componente, qué variante, en qué parte de la pantalla — no personas."
+      }
     }
   }
 }
