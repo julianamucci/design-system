@@ -49,7 +49,7 @@
       "rules": {
         "language": "Sempre em inglês — nunca em pt-BR ou es.",
         "case": "snake_case — nunca camelCase, PascalCase ou kebab-case.",
-        "tense": "Verbo no passado (<code>click</code>, <code>submit</code>, <code>open</code>) — nunca infinitivo.",
+        "tense": "Ação na forma curta do verbo (<code>click</code>, <code>open</code>, <code>change</code>, <code>select</code>) — consistente com o catálogo tipado. Nunca gerúndio (<code>clicking</code>) nem infinitivo composto (<code>to_submit</code>).",
         "singular": "Objeto sempre no singular (<code>button</code>, não <code>buttons</code>).",
         "noAbbreviation": "Sem abreviações: <code>navigation</code> e não <code>nav</code>, <code>dropdown</code> e não <code>dd</code>.",
         "limit": "Máximo 3 palavras (<code>form_field_error</code> é o limite)."
@@ -80,7 +80,7 @@
         "location": {
           "prop": "location",
           "type": "string",
-          "required": "sim",
+          "required": "não (recomendado)",
           "desc": "Página ou seção onde o componente está (<code>header</code>, <code>checkout_form</code>)."
         },
         "label": {
@@ -99,22 +99,63 @@
     },
     "docsEvents": {
       "title": "Eventos universais de docs pages",
-      "subtitle": "Disparados por todas as docs pages — não precisam de instrumentação manual.",
+      "subtitle": "Disparados por todas as docs pages — não precisam de instrumentação manual. Payloads conforme o catálogo tipado em <code>src/lib/analytics.ts</code>.",
       "items": {
         "pageView": {
           "name": "docs_page_view",
-          "fire": "Quando uma docs page monta (disparado por <code>useSeoEffect</code> após o set de meta).",
-          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+          "fire": "Na montagem de cada página de documentação (código da própria página).",
+          "payload": "<code>{ component_name, locale, page_title }</code>"
+        },
+        "metaPageView": {
+          "name": "page_view",
+          "fire": "A cada navegação entre stories/docs — emitido pelo <code>useSeoEffect</code> após definir as metas.",
+          "payload": "<code>{ page_location, page_title, component_name?, locale? }</code>"
         },
         "sectionViewed": {
           "name": "docs_section_viewed",
           "fire": "Após 2s de visibilidade contínua de uma seção. Suprime falsos positivos durante scroll programático.",
-          "payload": "<code>{ section, page, dwell_ms }</code>"
+          "payload": "<code>{ section_id, component_name, locale }</code>"
         },
         "languageSwitched": {
           "name": "language_switched",
           "fire": "Quando o usuário troca o idioma via LanguageSwitcher.",
-          "payload": "<code>{ from, to, page }</code>"
+          "payload": "<code>{ previous_language, new_language, component_name? }</code>"
+        }
+      }
+    },
+    "autoEvents": {
+      "title": "Instrumentação automática (data-track)",
+      "subtitle": "Elementos com <code>data-track=\"{tipo}\"</code> + <code>data-track-id</code> são rastreados por um observer global (<code>docs-tracking</code>) — é o mecanismo que a skill <code>/analytics</code> usa para instrumentar páginas sem chamadas manuais.",
+      "items": {
+        "nav": {
+          "name": "docs_nav_click",
+          "fire": "Clique em item da navegação lateral da doc.",
+          "payload": "<code>{ component, section_id, label }</code>"
+        },
+        "demo": {
+          "name": "docs_demo_click",
+          "fire": "Interação com elemento de demonstração.",
+          "payload": "<code>{ component, element_id, label }</code>"
+        },
+        "variant": {
+          "name": "docs_variant_click",
+          "fire": "Clique em card/toggle de variante.",
+          "payload": "<code>{ component, variant_name, label }</code>"
+        },
+        "code": {
+          "name": "docs_code_copy",
+          "fire": "Cópia de snippet de código.",
+          "payload": "<code>{ component, snippet_id }</code>"
+        },
+        "related": {
+          "name": "docs_related_click",
+          "fire": "Clique em card de componente relacionado.",
+          "payload": "<code>{ component, target_slug, label }</code>"
+        },
+        "link": {
+          "name": "docs_link_click",
+          "fire": "Clique em link genérico rastreado.",
+          "payload": "<code>{ component, section_id, href }</code>"
         }
       }
     },
@@ -136,27 +177,33 @@
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb",
+          "component": "NavigationMenu, Breadcrumb, Sidebar",
           "when": "Ao clicar em um item de navegação.",
-          "extras": "<code>label, href</code>"
+          "extras": "<code>label, destination</code>"
         },
-        "formSubmit": {
-          "event": "form_submit",
-          "component": "Form",
-          "when": "Após validação bem-sucedida.",
-          "extras": "<code>form_id, fields_filled</code>"
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
+          "when": "Quando o valor do campo muda.",
+          "extras": "<code>field_name, value</code> (sanitizado)"
         },
         "dialogOpen": {
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Drawer",
           "when": "Quando o overlay abre.",
-          "extras": "<code>trigger</code>"
+          "extras": "<code>label, trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Ao fechar por qualquer caminho.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
         },
         "slideChange": {
           "event": "slide_change",
           "component": "Carousel",
           "when": "Ao avançar/retroceder slide.",
-          "extras": "<code>index, total, direction</code>"
+          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
         },
         "tabChange": {
           "event": "tab_change",
@@ -164,11 +211,11 @@
           "when": "Ao trocar de aba.",
           "extras": "<code>value</code>"
         },
-        "searchSubmit": {
-          "event": "search_submit",
-          "component": "Command, Input[type=search]",
-          "when": "No <code>Enter</code> ou clique em buscar.",
-          "extras": "<code>query_length</code> (não envie a query crua)"
+        "commandSelect": {
+          "event": "command_item_select",
+          "component": "Command",
+          "when": "Ao selecionar um item da lista.",
+          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
         }
       }
     },
@@ -241,7 +288,7 @@
       "rules": {
         "language": "Always English — never pt-BR or es.",
         "case": "snake_case — never camelCase, PascalCase or kebab-case.",
-        "tense": "Past-tense verb (<code>click</code>, <code>submit</code>, <code>open</code>) — never infinitive.",
+        "tense": "Action in the short verb form (<code>click</code>, <code>open</code>, <code>change</code>, <code>select</code>) — consistent with the typed catalog. Never gerunds (<code>clicking</code>) or long infinitives (<code>to_submit</code>).",
         "singular": "Object always singular (<code>button</code>, not <code>buttons</code>).",
         "noAbbreviation": "No abbreviations: <code>navigation</code> not <code>nav</code>, <code>dropdown</code> not <code>dd</code>.",
         "limit": "Max 3 words (<code>form_field_error</code> is the cap)."
@@ -272,7 +319,7 @@
         "location": {
           "prop": "location",
           "type": "string",
-          "required": "yes",
+          "required": "no (recommended)",
           "desc": "Page or section where the component sits (<code>header</code>, <code>checkout_form</code>)."
         },
         "label": {
@@ -291,22 +338,63 @@
     },
     "docsEvents": {
       "title": "Universal docs page events",
-      "subtitle": "Fired by every docs page — no manual instrumentation required.",
+      "subtitle": "Fired by every docs page — no manual instrumentation needed. Payloads follow the typed catalog in <code>src/lib/analytics.ts</code>.",
       "items": {
         "pageView": {
           "name": "docs_page_view",
-          "fire": "When a docs page mounts (fired by <code>useSeoEffect</code> after setting meta).",
-          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+          "fire": "On each documentation page mount (the page’s own code).",
+          "payload": "<code>{ component_name, locale, page_title }</code>"
+        },
+        "metaPageView": {
+          "name": "page_view",
+          "fire": "On every navigation between stories/docs — emitted by <code>useSeoEffect</code> after setting the metas.",
+          "payload": "<code>{ page_location, page_title, component_name?, locale? }</code>"
         },
         "sectionViewed": {
           "name": "docs_section_viewed",
           "fire": "After 2s of continuous visibility of a section. Suppresses false positives during programmatic scroll.",
-          "payload": "<code>{ section, page, dwell_ms }</code>"
+          "payload": "<code>{ section_id, component_name, locale }</code>"
         },
         "languageSwitched": {
           "name": "language_switched",
           "fire": "When the user switches language via LanguageSwitcher.",
-          "payload": "<code>{ from, to, page }</code>"
+          "payload": "<code>{ previous_language, new_language, component_name? }</code>"
+        }
+      }
+    },
+    "autoEvents": {
+      "title": "Automatic instrumentation (data-track)",
+      "subtitle": "Elements with <code>data-track=\"{type}\"</code> + <code>data-track-id</code> are tracked by a global observer (<code>docs-tracking</code>) — the mechanism the <code>/analytics</code> skill uses to instrument pages without manual calls.",
+      "items": {
+        "nav": {
+          "name": "docs_nav_click",
+          "fire": "Click on a doc sidebar navigation item.",
+          "payload": "<code>{ component, section_id, label }</code>"
+        },
+        "demo": {
+          "name": "docs_demo_click",
+          "fire": "Interaction with a demo element.",
+          "payload": "<code>{ component, element_id, label }</code>"
+        },
+        "variant": {
+          "name": "docs_variant_click",
+          "fire": "Click on a variant card/toggle.",
+          "payload": "<code>{ component, variant_name, label }</code>"
+        },
+        "code": {
+          "name": "docs_code_copy",
+          "fire": "Code snippet copy.",
+          "payload": "<code>{ component, snippet_id }</code>"
+        },
+        "related": {
+          "name": "docs_related_click",
+          "fire": "Click on a related-component card.",
+          "payload": "<code>{ component, target_slug, label }</code>"
+        },
+        "link": {
+          "name": "docs_link_click",
+          "fire": "Click on a generic tracked link.",
+          "payload": "<code>{ component, section_id, href }</code>"
         }
       }
     },
@@ -328,27 +416,33 @@
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb",
+          "component": "NavigationMenu, Breadcrumb, Sidebar",
           "when": "When a nav item is clicked.",
-          "extras": "<code>label, href</code>"
+          "extras": "<code>label, destination</code>"
         },
-        "formSubmit": {
-          "event": "form_submit",
-          "component": "Form",
-          "when": "After successful validation.",
-          "extras": "<code>form_id, fields_filled</code>"
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
+          "when": "When the field value changes.",
+          "extras": "<code>field_name, value</code> (sanitized)"
         },
         "dialogOpen": {
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Drawer",
           "when": "When the overlay opens.",
-          "extras": "<code>trigger</code>"
+          "extras": "<code>label, trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "On close through any path.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
         },
         "slideChange": {
           "event": "slide_change",
           "component": "Carousel",
           "when": "On slide forward/back.",
-          "extras": "<code>index, total, direction</code>"
+          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
         },
         "tabChange": {
           "event": "tab_change",
@@ -356,11 +450,11 @@
           "when": "On tab switch.",
           "extras": "<code>value</code>"
         },
-        "searchSubmit": {
-          "event": "search_submit",
-          "component": "Command, Input[type=search]",
-          "when": "On <code>Enter</code> or search click.",
-          "extras": "<code>query_length</code> (never send raw query)"
+        "commandSelect": {
+          "event": "command_item_select",
+          "component": "Command",
+          "when": "When a list item is selected.",
+          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
         }
       }
     },
@@ -433,7 +527,7 @@
       "rules": {
         "language": "Siempre en inglés — nunca pt-BR ni es.",
         "case": "snake_case — nunca camelCase, PascalCase ni kebab-case.",
-        "tense": "Verbo en pasado (<code>click</code>, <code>submit</code>, <code>open</code>) — nunca infinitivo.",
+        "tense": "Acción en la forma corta del verbo (<code>click</code>, <code>open</code>, <code>change</code>, <code>select</code>) — consistente con el catálogo tipado. Nunca gerundios (<code>clicking</code>) ni infinitivos largos (<code>to_submit</code>).",
         "singular": "Objeto siempre en singular (<code>button</code>, no <code>buttons</code>).",
         "noAbbreviation": "Sin abreviaciones: <code>navigation</code> y no <code>nav</code>, <code>dropdown</code> y no <code>dd</code>.",
         "limit": "Máximo 3 palabras (<code>form_field_error</code> es el límite)."
@@ -464,7 +558,7 @@
         "location": {
           "prop": "location",
           "type": "string",
-          "required": "sí",
+          "required": "no (recomendado)",
           "desc": "Página o sección donde está el componente (<code>header</code>, <code>checkout_form</code>)."
         },
         "label": {
@@ -483,22 +577,63 @@
     },
     "docsEvents": {
       "title": "Eventos universales de docs pages",
-      "subtitle": "Disparados por todas las docs pages — no requieren instrumentación manual.",
+      "subtitle": "Disparados por todas las docs pages — no requieren instrumentación manual. Payloads según el catálogo tipado en <code>src/lib/analytics.ts</code>.",
       "items": {
         "pageView": {
           "name": "docs_page_view",
-          "fire": "Cuando una docs page monta (disparado por <code>useSeoEffect</code> tras setear meta).",
-          "payload": "<code>{ page_title, page_location, page_path, language }</code>"
+          "fire": "Al montar cada página de documentación (código de la propia página).",
+          "payload": "<code>{ component_name, locale, page_title }</code>"
+        },
+        "metaPageView": {
+          "name": "page_view",
+          "fire": "En cada navegación entre stories/docs — emitido por <code>useSeoEffect</code> tras definir las metas.",
+          "payload": "<code>{ page_location, page_title, component_name?, locale? }</code>"
         },
         "sectionViewed": {
           "name": "docs_section_viewed",
           "fire": "Tras 2s de visibilidad continua de una sección. Suprime falsos positivos durante scroll programático.",
-          "payload": "<code>{ section, page, dwell_ms }</code>"
+          "payload": "<code>{ section_id, component_name, locale }</code>"
         },
         "languageSwitched": {
           "name": "language_switched",
           "fire": "Cuando el usuario cambia el idioma vía LanguageSwitcher.",
-          "payload": "<code>{ from, to, page }</code>"
+          "payload": "<code>{ previous_language, new_language, component_name? }</code>"
+        }
+      }
+    },
+    "autoEvents": {
+      "title": "Instrumentación automática (data-track)",
+      "subtitle": "Los elementos con <code>data-track=\"{tipo}\"</code> + <code>data-track-id</code> son rastreados por un observer global (<code>docs-tracking</code>) — el mecanismo que la skill <code>/analytics</code> usa para instrumentar páginas sin llamadas manuales.",
+      "items": {
+        "nav": {
+          "name": "docs_nav_click",
+          "fire": "Clic en un ítem de la navegación lateral de la doc.",
+          "payload": "<code>{ component, section_id, label }</code>"
+        },
+        "demo": {
+          "name": "docs_demo_click",
+          "fire": "Interacción con un elemento de demostración.",
+          "payload": "<code>{ component, element_id, label }</code>"
+        },
+        "variant": {
+          "name": "docs_variant_click",
+          "fire": "Clic en card/toggle de variante.",
+          "payload": "<code>{ component, variant_name, label }</code>"
+        },
+        "code": {
+          "name": "docs_code_copy",
+          "fire": "Copia de snippet de código.",
+          "payload": "<code>{ component, snippet_id }</code>"
+        },
+        "related": {
+          "name": "docs_related_click",
+          "fire": "Clic en card de componente relacionado.",
+          "payload": "<code>{ component, target_slug, label }</code>"
+        },
+        "link": {
+          "name": "docs_link_click",
+          "fire": "Clic en enlace genérico rastreado.",
+          "payload": "<code>{ component, section_id, href }</code>"
         }
       }
     },
@@ -520,27 +655,33 @@
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb",
+          "component": "NavigationMenu, Breadcrumb, Sidebar",
           "when": "Al hacer clic en un ítem de navegación.",
-          "extras": "<code>label, href</code>"
+          "extras": "<code>label, destination</code>"
         },
-        "formSubmit": {
-          "event": "form_submit",
-          "component": "Form",
-          "when": "Tras validación exitosa.",
-          "extras": "<code>form_id, fields_filled</code>"
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
+          "when": "Cuando cambia el valor del campo.",
+          "extras": "<code>field_name, value</code> (sanitizado)"
         },
         "dialogOpen": {
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Drawer",
           "when": "Cuando el overlay abre.",
-          "extras": "<code>trigger</code>"
+          "extras": "<code>label, trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Al cerrar por cualquier vía.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
         },
         "slideChange": {
           "event": "slide_change",
           "component": "Carousel",
           "when": "Al avanzar/retroceder slide.",
-          "extras": "<code>index, total, direction</code>"
+          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
         },
         "tabChange": {
           "event": "tab_change",
@@ -548,11 +689,11 @@
           "when": "Al cambiar de pestaña.",
           "extras": "<code>value</code>"
         },
-        "searchSubmit": {
-          "event": "search_submit",
-          "component": "Command, Input[type=search]",
-          "when": "En <code>Enter</code> o clic en buscar.",
-          "extras": "<code>query_length</code> (nunca envíes la query cruda)"
+        "commandSelect": {
+          "event": "command_item_select",
+          "component": "Command",
+          "when": "Al seleccionar un ítem de la lista.",
+          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
         }
       }
     },

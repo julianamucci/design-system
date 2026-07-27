@@ -27,7 +27,7 @@ Este arquivo define o sistema de eventos de analytics para os componentes do des
 ```
 
 - **Objeto**: o componente ou elemento que foi interagido — sempre em inglês, singular, snake_case
-- **Ação**: o que aconteceu — verbo no passado, snake_case
+- **Ação**: o que aconteceu — forma curta do verbo (click, open, change), snake_case
 
 ### Exemplos
 
@@ -42,7 +42,7 @@ Este arquivo define o sistema de eventos de analytics para os componentes do des
 ### Regras de nomenclatura
 
 - Sempre em inglês e snake_case — nunca camelCase, PascalCase ou kebab-case
-- Sempre no passado (`click`, `submit`, `open`) — nunca no infinitivo (`clicking`, `to_submit`)
+- Forma curta do verbo (`click`, `submit`, `open`), consistente com o catálogo tipado — nunca gerúndio (`clicking`) nem infinitivo composto (`to_submit`)
 - Objeto sempre no singular (`button`, não `buttons`)
 - Sem abreviações: `navigation` e não `nav`, `dropdown` e não `dd`
 - Máximo 3 palavras: `form_field_error` é o limite
@@ -451,7 +451,7 @@ export function track(event: EventName, payload: TrackPayload): void {
 **Nomenclatura:**
 - [ ] Nome do evento segue o padrão `objeto_ação` em snake_case
 - [ ] Objeto está no singular e em inglês
-- [ ] Ação está no passado
+- [ ] Ação na forma curta do verbo, consistente com o catálogo tipado
 - [ ] Máximo de 3 palavras no nome do evento
 
 **Payload:**
