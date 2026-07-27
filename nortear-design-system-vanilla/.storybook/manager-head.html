@@ -20,3 +20,12 @@
     send_page_view: false  /* page_view manual enviado por useSeoEffect a cada troca de story */
   });
 </script>
+
+<!-- Logo da sidebar em largura total — o tema do Storybook limita o brandImage
+     a 150px de largura (max-width !important via emotion); override no manager. -->
+<style>
+  .sidebar-header img {
+    max-width: 100% !important;
+    max-height: none !important;
+  }
+</style>
