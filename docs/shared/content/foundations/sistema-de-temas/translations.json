@@ -7,7 +7,7 @@
     "seo": {
       "title": "Sistema de Temas",
       "description": "Como temas funcionam: classes no <html>, tokens semânticos compartilhados, toolbar do Storybook, padrão MutationObserver e criação de novos temas.",
-      "aiSummary": "Página técnica sobre theming. Explica o padrão de classes no elemento <html> (tema, modo, densidade, fonte), localização dos arquivos de tema em docs/shared/themes, toolbar do Storybook como mecanismo de troca, padrão MutationObserver para componentes reativos e procedimento para criar tema novo.",
+      "aiSummary": "Página técnica sobre theming. Explica o padrão de classes no elemento <html> (tema, modo, densidade, fonte, type scale), tema inicial por subdomínio (theme-config.ts), toolbar do Storybook, padrão MutationObserver para componentes reativos, contrato de radius por tema e procedimento para criar tema novo.",
       "aiEntities": "tema, theming, CSS custom properties, tokens semânticos, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
       "aiIntent": "informational"
     },
@@ -18,28 +18,53 @@
     },
     "toolbar": {
       "title": "Toolbar do Storybook",
-      "subtitle": "Quatro globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) controlam as classes em tempo real. A troca é instantânea em todas as iframes abertas.",
+      "subtitle": "Sete globals controlam as classes em tempo real; a troca é instantânea em todas as iframes abertas.",
       "items": {
         "brand": {
           "name": "brand",
           "values": "default · warm · cold",
           "applies": "Classe <code>tema-*</code> no <code>&lt;html&gt;</code>"
         },
-        "mode": {
-          "name": "mode",
+        "theme": {
+          "name": "theme",
           "values": "light · dark",
-          "applies": "Classe <code>dark</code> (light remove a classe)"
+          "applies": "Classe <code>dark</code> via addon-themes (light remove a classe)"
         },
-        "densidade": {
-          "name": "densidade",
+        "density": {
+          "name": "density",
           "values": "default · condensado · confortavel",
-          "applies": "Classe <code>densidade-*</code> — redefine <code>--spacing-base</code>"
+          "applies": "Classe <code>densidade-*</code> — redefine <code>--spacing-base</code> e alturas"
         },
-        "fonte": {
-          "name": "fonte",
+        "font": {
+          "name": "font",
           "values": "default · lexend · pt-serif · lxgw-wenkai",
           "applies": "Classe <code>fonte-*</code> — redefine <code>--font-family-active</code>"
+        },
+        "typescale": {
+          "name": "typescale",
+          "values": "minor-second … golden (padrão minor-third)",
+          "applies": "Classe <code>escala-*</code> — redefine <code>--type-scale</code>"
+        },
+        "typebase": {
+          "name": "typebase",
+          "values": "s · m · l",
+          "applies": "Classe <code>base-tipo-*</code> — redefine <code>--type-base</code>"
+        },
+        "motion": {
+          "name": "motion",
+          "values": "default · reduced",
+          "applies": "Atributo <code>data-reduced-motion</code> — força animações instantâneas"
         }
+      }
+    },
+    "subdomain": {
+      "title": "Tema pelo subdomínio",
+      "subtitle": "Além da toolbar, o tema inicial pode vir do subdomínio — útil para publicar demonstrações white-label sem nenhum clique. O primeiro rótulo do hostname decide: <code>warm.norteardesign.com.br</code> (ou <code>warm.react.…</code>) abre com <code>tema-warm</code>.",
+      "items": {
+        "map": "O mapa vive em <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> e <code>cold</code> apontam para os temas; subdomínios de stack e hosts institucionais caem no Default.",
+        "wiring": "Os <code>preview.ts</code> das 4 stacks usam <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> do global <code>brand</code> — o Storybook abre já tematizado e a toolbar continua funcionando para trocar.",
+        "dev": "Em <code>localhost</code> o tema inicial é sempre Default. Fora dos domínios de produção, <code>isDevMode()</code> retorna true e a seleção manual fica liberada; em produção o seletor do sandbox exige <code>?theme-selector</code> na URL.",
+        "dns": "Para ativar um subdomínio novo de tema, basta o registro DNS/hosting apontar para o mesmo build — nenhum deploy separado é necessário."
       }
     },
     "tokens": {
@@ -60,11 +85,15 @@
         },
         "structure": {
           "name": "Estrutura",
-          "tokens": "--border, --input, --ring, --radius"
+          "tokens": "--border, --input, --ring, --radius e os tokens de radius por componente (--radius-button/input/alert/card/badge — a identidade de forma é superfície de theming)"
         },
         "chart": {
           "name": "Gráficos",
           "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "tokens": "--sidebar, --sidebar-foreground, --sidebar-primary, --sidebar-accent, --sidebar-border, --sidebar-ring"
         }
       }
     },
@@ -81,12 +110,12 @@
           "body": "Inclua um bloco <code>.tema-&lt;nome&gt;.dark</code> reescrevendo os mesmos tokens com valores escuros. Mantenha contraste WCAG AA (4.5:1 para texto)."
         },
         "import": {
-          "step": "3. Importe nos stacks",
-          "body": "Adicione um <code>@import</code> em <code>src/styles/globals.css</code> de cada stack. O CSS é compartilhado — uma definição alimenta os quatro."
+          "step": "3. Importe uma vez",
+          "body": "adicione o <code>@import</code> do arquivo novo em <code>docs/shared/themes/index.css</code>. Cada stack já importa esse índice via <code>globals.css</code>; uma linha alimenta os quatro."
         },
         "register": {
-          "step": "4. Registre na toolbar",
-          "body": "Adicione o nome em <code>globalTypes.brand.toolbar.items</code> em <code>.storybook/preview.ts</code>. O listener <code>GLOBALS_UPDATED</code> aplica a classe automaticamente."
+          "step": "4. Registre na toolbar e no contrato",
+          "body": "adicione o nome em <code>globalTypes.brand.toolbar.items</code> nos <code>preview.ts</code> das 4 stacks e, se o tema muda a identidade de forma, sobrescreva <code>--radius</code> e os tokens de radius por componente (contrato em <code>default.css</code>)."
         }
       }
     },
@@ -123,7 +152,7 @@
     "seo": {
       "title": "Theme System",
       "description": "How theming works: classes on <html>, shared semantic tokens, Storybook toolbar, MutationObserver pattern and how to author a new theme.",
-      "aiSummary": "Technical page about theming. Explains the class-on-<html> pattern (brand, mode, density, font), location of theme files in docs/shared/themes, Storybook toolbar as the switch mechanism, MutationObserver pattern for reactive components and the procedure to author a new theme.",
+      "aiSummary": "Technical theming page. Explains the class pattern on the <html> element (theme, mode, density, font, type scale), initial theme via subdomain (theme-config.ts), Storybook toolbar, MutationObserver pattern for reactive components, per-theme radius contract and the procedure to create a new theme.",
       "aiEntities": "theme, theming, CSS custom properties, semantic tokens, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
       "aiIntent": "informational"
     },
@@ -134,28 +163,53 @@
     },
     "toolbar": {
       "title": "Storybook toolbar",
-      "subtitle": "Four globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) drive the classes in real time. Switching is instant across every open iframe.",
+      "subtitle": "Seven globals control the classes in real time; switching is instantaneous across all open iframes.",
       "items": {
         "brand": {
           "name": "brand",
           "values": "default · warm · cold",
           "applies": "<code>tema-*</code> class on <code>&lt;html&gt;</code>"
         },
-        "mode": {
-          "name": "mode",
+        "theme": {
+          "name": "theme",
           "values": "light · dark",
-          "applies": "<code>dark</code> class (light removes the class)"
+          "applies": "<code>dark</code> class via addon-themes (light removes it)"
         },
-        "densidade": {
-          "name": "densidade",
+        "density": {
+          "name": "density",
           "values": "default · condensado · confortavel",
-          "applies": "<code>densidade-*</code> class — redefines <code>--spacing-base</code>"
+          "applies": "<code>densidade-*</code> class — redefines <code>--spacing-base</code> and heights"
         },
-        "fonte": {
-          "name": "fonte",
+        "font": {
+          "name": "font",
           "values": "default · lexend · pt-serif · lxgw-wenkai",
           "applies": "<code>fonte-*</code> class — redefines <code>--font-family-active</code>"
+        },
+        "typescale": {
+          "name": "typescale",
+          "values": "minor-second … golden (default minor-third)",
+          "applies": "<code>escala-*</code> class — redefines <code>--type-scale</code>"
+        },
+        "typebase": {
+          "name": "typebase",
+          "values": "s · m · l",
+          "applies": "<code>base-tipo-*</code> class — redefines <code>--type-base</code>"
+        },
+        "motion": {
+          "name": "motion",
+          "values": "default · reduced",
+          "applies": "<code>data-reduced-motion</code> attribute — forces instant animations"
         }
+      }
+    },
+    "subdomain": {
+      "title": "Theme via subdomain",
+      "subtitle": "Beyond the toolbar, the initial theme can come from the subdomain — useful for publishing white-label demos with zero clicks. The first hostname label decides: <code>warm.norteardesign.com.br</code> (or <code>warm.react.…</code>) opens with <code>tema-warm</code>.",
+      "items": {
+        "map": "The map lives in <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> and <code>cold</code> point to the themes; stack subdomains and institutional hosts fall back to Default.",
+        "wiring": "The four stacks’ <code>preview.ts</code> use <code>getThemeFromSubdomain()</code> as the <code>brand</code> global’s <code>defaultValue</code> — Storybook opens already themed and the toolbar still switches.",
+        "dev": "On <code>localhost</code> the initial theme is always Default. Outside production domains <code>isDevMode()</code> returns true and manual selection is unlocked; in production the sandbox selector requires <code>?theme-selector</code> in the URL.",
+        "dns": "To activate a new theme subdomain, point the DNS/hosting record at the same build — no separate deploy needed."
       }
     },
     "tokens": {
@@ -176,11 +230,15 @@
         },
         "structure": {
           "name": "Structure",
-          "tokens": "--border, --input, --ring, --radius"
+          "tokens": "--border, --input, --ring, --radius and the per-component radius tokens (--radius-button/input/alert/card/badge — shape identity is a theming surface)"
         },
         "chart": {
           "name": "Charts",
           "tokens": "--chart-1 through --chart-5 (categorical palette)"
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "tokens": "--sidebar, --sidebar-foreground, --sidebar-primary, --sidebar-accent, --sidebar-border, --sidebar-ring"
         }
       }
     },
@@ -197,12 +255,12 @@
           "body": "Include a <code>.tema-&lt;name&gt;.dark</code> block rewriting the same tokens with dark values. Keep WCAG AA contrast (4.5:1 for text)."
         },
         "import": {
-          "step": "3. Import in the stacks",
-          "body": "Add an <code>@import</code> in <code>src/styles/globals.css</code> of each stack. CSS is shared — one definition feeds all four."
+          "step": "3. Import once",
+          "body": "add the new file’s <code>@import</code> to <code>docs/shared/themes/index.css</code>. Every stack already imports that index via <code>globals.css</code>; one line feeds all four."
         },
         "register": {
-          "step": "4. Register in the toolbar",
-          "body": "Append the name to <code>globalTypes.brand.toolbar.items</code> in <code>.storybook/preview.ts</code>. The <code>GLOBALS_UPDATED</code> listener applies the class automatically."
+          "step": "4. Register on the toolbar and in the contract",
+          "body": "add the name to <code>globalTypes.brand.toolbar.items</code> in the four stacks’ <code>preview.ts</code> and, if the theme changes shape identity, override <code>--radius</code> and the per-component radius tokens (contract in <code>default.css</code>)."
         }
       }
     },
@@ -239,7 +297,7 @@
     "seo": {
       "title": "Sistema de Temas",
       "description": "Cómo funciona el theming: clases en <html>, tokens semánticos compartidos, toolbar de Storybook, patrón MutationObserver y creación de temas nuevos.",
-      "aiSummary": "Página técnica sobre theming. Explica el patrón de clases en <html> (tema, modo, densidad, fuente), ubicación de los archivos de tema en docs/shared/themes, toolbar de Storybook como mecanismo de cambio, patrón MutationObserver para componentes reactivos y procedimiento para crear un tema nuevo.",
+      "aiSummary": "Página técnica de theming. Explica el patrón de clases en el elemento <html> (tema, modo, densidad, fuente, type scale), tema inicial por subdominio (theme-config.ts), toolbar de Storybook, patrón MutationObserver para componentes reactivos, contrato de radius por tema y el procedimiento para crear un tema nuevo.",
       "aiEntities": "tema, theming, CSS custom properties, tokens semánticos, dark mode, densidad, MutationObserver, Storybook globals, --background, --foreground, --primary",
       "aiIntent": "informational"
     },
@@ -250,28 +308,53 @@
     },
     "toolbar": {
       "title": "Toolbar de Storybook",
-      "subtitle": "Cuatro globals (<code>brand</code>, <code>mode</code>, <code>densidade</code>, <code>fonte</code>) controlan las clases en tiempo real. El cambio es instantáneo en todos los iframes abiertos.",
+      "subtitle": "Siete globals controlan las clases en tiempo real; el cambio es instantáneo en todos los iframes abiertos.",
       "items": {
         "brand": {
           "name": "brand",
           "values": "default · warm · cold",
           "applies": "Clase <code>tema-*</code> en <code>&lt;html&gt;</code>"
         },
-        "mode": {
-          "name": "mode",
+        "theme": {
+          "name": "theme",
           "values": "light · dark",
-          "applies": "Clase <code>dark</code> (light remueve la clase)"
+          "applies": "Clase <code>dark</code> vía addon-themes (light la quita)"
         },
-        "densidade": {
-          "name": "densidade",
+        "density": {
+          "name": "density",
           "values": "default · condensado · confortavel",
-          "applies": "Clase <code>densidade-*</code> — redefine <code>--spacing-base</code>"
+          "applies": "Clase <code>densidade-*</code> — redefine <code>--spacing-base</code> y alturas"
         },
-        "fonte": {
-          "name": "fonte",
+        "font": {
+          "name": "font",
           "values": "default · lexend · pt-serif · lxgw-wenkai",
           "applies": "Clase <code>fonte-*</code> — redefine <code>--font-family-active</code>"
+        },
+        "typescale": {
+          "name": "typescale",
+          "values": "minor-second … golden (por defecto minor-third)",
+          "applies": "Clase <code>escala-*</code> — redefine <code>--type-scale</code>"
+        },
+        "typebase": {
+          "name": "typebase",
+          "values": "s · m · l",
+          "applies": "Clase <code>base-tipo-*</code> — redefine <code>--type-base</code>"
+        },
+        "motion": {
+          "name": "motion",
+          "values": "default · reduced",
+          "applies": "Atributo <code>data-reduced-motion</code> — fuerza animaciones instantáneas"
         }
+      }
+    },
+    "subdomain": {
+      "title": "Tema por subdominio",
+      "subtitle": "Además de la toolbar, el tema inicial puede venir del subdominio — útil para publicar demos white-label sin ningún clic. El primer rótulo del hostname decide: <code>warm.norteardesign.com.br</code> (o <code>warm.react.…</code>) abre con <code>tema-warm</code>.",
+      "items": {
+        "map": "El mapa vive en <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> y <code>cold</code> apuntan a los temas; los subdominios de stack y hosts institucionales caen en Default.",
+        "wiring": "Los <code>preview.ts</code> de los 4 stacks usan <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> del global <code>brand</code> — Storybook abre ya tematizado y la toolbar sigue permitiendo cambiar.",
+        "dev": "En <code>localhost</code> el tema inicial siempre es Default. Fuera de los dominios de producción, <code>isDevMode()</code> devuelve true y la selección manual queda liberada; en producción el selector del sandbox exige <code>?theme-selector</code> en la URL.",
+        "dns": "Para activar un subdominio nuevo de tema, basta apuntar el registro DNS/hosting al mismo build — no hace falta deploy separado."
       }
     },
     "tokens": {
@@ -292,11 +375,15 @@
         },
         "structure": {
           "name": "Estructura",
-          "tokens": "--border, --input, --ring, --radius"
+          "tokens": "--border, --input, --ring, --radius y los tokens de radius por componente (--radius-button/input/alert/card/badge — la identidad de forma es superficie de theming)"
         },
         "chart": {
           "name": "Gráficos",
           "tokens": "--chart-1 a --chart-5 (paleta categórica)"
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "tokens": "--sidebar, --sidebar-foreground, --sidebar-primary, --sidebar-accent, --sidebar-border, --sidebar-ring"
         }
       }
     },
@@ -313,12 +400,12 @@
           "body": "Incluye un bloque <code>.tema-&lt;nombre&gt;.dark</code> reescribiendo los mismos tokens con valores oscuros. Mantén contraste WCAG AA (4.5:1 para texto)."
         },
         "import": {
-          "step": "3. Importa en los stacks",
-          "body": "Agrega un <code>@import</code> en <code>src/styles/globals.css</code> de cada stack. El CSS es compartido — una definición alimenta los cuatro."
+          "step": "3. Importa una vez",
+          "body": "añade el <code>@import</code> del archivo nuevo en <code>docs/shared/themes/index.css</code>. Cada stack ya importa ese índice vía <code>globals.css</code>; una línea alimenta a los cuatro."
         },
         "register": {
-          "step": "4. Regístralo en la toolbar",
-          "body": "Agrega el nombre en <code>globalTypes.brand.toolbar.items</code> en <code>.storybook/preview.ts</code>. El listener <code>GLOBALS_UPDATED</code> aplica la clase automáticamente."
+          "step": "4. Regístralo en la toolbar y en el contrato",
+          "body": "añade el nombre en <code>globalTypes.brand.toolbar.items</code> en los <code>preview.ts</code> de los 4 stacks y, si el tema cambia la identidad de forma, sobrescribe <code>--radius</code> y los tokens de radius por componente (contrato en <code>default.css</code>)."
         }
       }
     },

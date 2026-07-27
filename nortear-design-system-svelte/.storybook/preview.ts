@@ -1,4 +1,5 @@
 import '../src/lib/reload-on-chunk-error';
+import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/svelte-vite';
 import { useEffect, addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
@@ -88,7 +89,8 @@ const preview: Preview = {
   globalTypes: {
     brand: {
       description: 'Tema de cor (Default / Warm / Cold)',
-      defaultValue: 'default',
+      // Tema inicial pelo subdomínio (warm.* / cold.*) — toolbar segue trocável
+      defaultValue: getThemeFromSubdomain(),
       toolbar: {
         title: 'Theme',
         icon: 'paintbrush',

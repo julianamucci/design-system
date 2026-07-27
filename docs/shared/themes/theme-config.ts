@@ -50,16 +50,28 @@ export const themeCssClasses: Record<ThemeId, string> = Object.fromEntries(
 ) as Record<ThemeId, string>;
 
 // ─── Subdomínio → tema ────────────────────────────────────────────────────────
+// O PRIMEIRO rótulo do hostname decide o tema (warm.norteardesign.com.br → warm;
+// warm.react.norteardesign.com.br → warm). Subdomínios de stack e hosts
+// institucionais caem no Default. Consumido pelos preview.ts das 4 stacks
+// (defaultValue do global `brand`) — a toolbar continua permitindo troca manual.
 
 export const subdomainThemeMap: Record<string, ThemeId> = {
+  // temas de marca
+  warm: 'warm',
+  cold: 'cold',
+  // stacks e hosts institucionais → tema padrão
   localhost: 'default',
   nortear:   'default',
   admin:     'default',
+  react:     'default',
+  vue:       'default',
+  svelte:    'default',
+  vanilla:   'default',
 };
 
 // ─── Domínios de produção ─────────────────────────────────────────────────────
 
-const PRODUCTION_DOMAINS = ['nortear.com.br', 'design-system.dev'];
+const PRODUCTION_DOMAINS = ['norteardesign.com.br', 'nortear.com.br', 'design-system.dev'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

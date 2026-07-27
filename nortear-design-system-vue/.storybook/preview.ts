@@ -1,4 +1,5 @@
 import '../src/lib/reload-on-chunk-error';
+import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview, Decorator } from '@storybook/vue3';
 import { setup } from '@storybook/vue3';
 import { createPinia } from 'pinia';
@@ -133,7 +134,8 @@ const preview: Preview = {
   globalTypes: {
     brand: {
       description: 'Tema de cor (Default / Warm / Cold)',
-      defaultValue: 'default',
+      // Tema inicial pelo subdomínio (warm.* / cold.*) — toolbar segue trocável
+      defaultValue: getThemeFromSubdomain(),
       toolbar: {
         title: 'Theme',
         icon: 'paintbrush',
