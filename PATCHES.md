@@ -9,7 +9,7 @@ Este arquivo registra toda divergência intencional entre este design system e s
    ```
    // PATCH: <categoria> — <motivo curto> (ver PATCHES.md#<anchor>)
    ```
-   Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
+   Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`, `api` (extensão de API de factory Vanilla — a stack não tem upstream, mas a mudança de contrato é registrada aqui para rastreabilidade).
 3. **Todo patch é descrito aqui.** Uma entrada por patch, com diff antes/depois, justificativa e link para PR/issue upstream se houver.
 4. **Revisão obrigatória no bump.** Ao atualizar `@base-ui/react`, `reka-ui`, `bits-ui` ou as libs externas de componente, rode `npm run patches:list` e re-valide cada entrada.
 
@@ -77,6 +77,75 @@ cd nortear-design-system-react && npm update @base-ui/react
 ## Patches ativos
 
 <!-- ordenar alfabeticamente por stack > componente -->
+
+### vanilla/carousel — `onIndexChange` expõe a origem da navegação {#vanilla-carousel-nav-source}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/carousel.ts`
+- **Categoria:** api
+- **Data:** 2026-07-27
+- **Upstream ref:** — (factory standalone)
+
+**Antes:**
+```ts
+onIndexChange?: (index: number) => void;
+// goTo(index) — chamado por botões, ArrowLeft/Right, autoplay e mount, indistinguíveis
+```
+
+**Depois:**
+```ts
+export type CarouselNavSource = 'init' | 'button' | 'keyboard' | 'autoplay';
+onIndexChange?: (index: number, source: CarouselNavSource) => void;
+```
+
+**Motivo:** o evento `slide_change` do catálogo tipado distingue `trigger: 'button' | 'swipe' | 'keyboard'`, mas o callback não informava a origem — a fiação de analytics reportava tudo como `button` (inclusive setas do teclado) e também disparava no posicionamento inicial do mount. Mudança aditiva: consumidores que ignoram o 2º parâmetro seguem funcionando.
+
+**Verificação após bump:** n/a (sem upstream). Ao evoluir a factory, manter `'init'` no mount e a origem correta em cada caminho de navegação.
+
+### vanilla/sheet — `onClose(reason)` espelhando o Dialog {#vanilla-sheet-onclose-reason}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/sheet.ts`
+- **Categoria:** api
+- **Data:** 2026-07-27
+- **Upstream ref:** — (factory standalone)
+
+**Antes:**
+```ts
+onOpenChange?: (open: boolean) => void;
+// close() único — overlay, Escape e botão X indistinguíveis
+```
+
+**Depois:**
+```ts
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+onClose?: (reason: SheetCloseReason) => void;
+// closeWithReason(reason) interno; cada caminho de fechamento passa seu motivo
+```
+
+**Motivo:** o evento `dialog_close` do catálogo tipado tem campo `reason`, e o Dialog factory já expõe `onClose(reason)` — o Sheet era o único overlay sem isso, deixando o analytics das docs pages sem distinguir escape/overlay/botão. Mudança aditiva; `onOpenChange(false)` continua disparando após `onClose`.
+
+**Verificação após bump:** n/a (sem upstream). Manter paridade de assinatura com `DialogCloseReason` se o Dialog ganhar novos motivos. Obs.: o AlertDialog **não** recebe este patch — não fecha por Escape/overlay por design (canônico), então `close-button`/action cobrem todos os caminhos.
+
+### vanilla/tooltip — `onShow` na exibição real {#vanilla-tooltip-onshow}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/tooltip.ts`
+- **Categoria:** api
+- **Data:** 2026-07-27
+- **Upstream ref:** — (factory standalone)
+
+**Antes:**
+```ts
+// sem callback de exibição; TooltipDocs espelhava o SHOW_DELAY (300ms) com
+// timer local próprio — dessincronizava se a constante do factory mudasse
+```
+
+**Depois:**
+```ts
+onShow?: () => void; // chamado dentro de show(), após o delay interno
+```
+
+**Motivo:** `tooltip_view` deve disparar quando o tooltip é de fato exibido. O timer duplicado no TooltipDocs era acoplamento frágil a uma constante privada do factory; o callback elimina a duplicação e fica disponível para qualquer consumidor.
+
+**Verificação após bump:** n/a (sem upstream). Se o factory ganhar animação/portal assíncrono, garantir que `onShow` continue sendo chamado no momento em que o painel fica visível.
 
 ### react/chart — `role="img"` no ChartContainer para satisfazer aria-prohibited-attr {#chart-aria-img-role}
 

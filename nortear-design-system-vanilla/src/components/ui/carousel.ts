@@ -6,11 +6,16 @@ import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+// PATCH: api — origem da navegação exposta para analytics (ver PATCHES.md#vanilla-carousel-nav-source)
+// 'init' é o posicionamento inicial no mount — consumidores normalmente o ignoram.
+export type CarouselNavSource = 'init' | 'button' | 'keyboard' | 'autoplay';
+
 export type CarouselOptions = {
   items: HTMLElement[];
   autoplay?: boolean;
   autoplayInterval?: number;
-  onIndexChange?: (index: number) => void;
+  // PATCH: api — origem da navegação exposta para analytics (ver PATCHES.md#vanilla-carousel-nav-source)
+  onIndexChange?: (index: number, source: CarouselNavSource) => void;
   class?: string;
 };
 
@@ -75,34 +80,34 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   root.appendChild(prevBtn);
   root.appendChild(nextBtn);
 
-  function goTo(index: number): void {
+  function goTo(index: number, source: CarouselNavSource): void {
     currentIndex = (index + items.length) % items.length;
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
     prevBtn.setAttribute('aria-disabled', currentIndex === 0 ? 'true' : 'false');
     prevBtn.toggleAttribute('disabled', currentIndex === 0);
     nextBtn.setAttribute('aria-disabled', currentIndex === items.length - 1 ? 'true' : 'false');
     nextBtn.toggleAttribute('disabled', currentIndex === items.length - 1);
-    onIndexChange?.(currentIndex);
+    onIndexChange?.(currentIndex, source);
   }
 
   prevBtn.addEventListener('click', () => {
-    goTo(currentIndex - 1);
+    goTo(currentIndex - 1, 'button');
     if (autoplay) restartAutoplay();
   });
 
   nextBtn.addEventListener('click', () => {
-    goTo(currentIndex + 1);
+    goTo(currentIndex + 1, 'button');
     if (autoplay) restartAutoplay();
   });
 
   // Keyboard navigation
   root.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { goTo(currentIndex - 1); if (autoplay) restartAutoplay(); }
-    if (e.key === 'ArrowRight') { goTo(currentIndex + 1); if (autoplay) restartAutoplay(); }
+    if (e.key === 'ArrowLeft') { goTo(currentIndex - 1, 'keyboard'); if (autoplay) restartAutoplay(); }
+    if (e.key === 'ArrowRight') { goTo(currentIndex + 1, 'keyboard'); if (autoplay) restartAutoplay(); }
   });
 
   function startAutoplay(): void {
-    autoplayTimer = setInterval(() => goTo(currentIndex + 1), autoplayInterval);
+    autoplayTimer = setInterval(() => goTo(currentIndex + 1, 'autoplay'), autoplayInterval);
   }
 
   function restartAutoplay(): void {
@@ -117,6 +122,6 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
     startAutoplay();
   }
 
-  goTo(0);
+  goTo(0, 'init');
   return root;
 }

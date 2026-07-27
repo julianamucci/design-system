@@ -77,18 +77,16 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   footer.dataset.spacing = 'xs';
   footer.append(cancel, apply);
 
-  // Fechar ao clicar nas ações: dispara click no overlay (close interno da factory).
+  // Fechar ao clicar nas ações: dispara click no overlay (close interno da
+  // factory). pendingReason sobrepõe o reason 'overlay' desse caminho sintético
+  // para que cancel/apply reportem o motivo semântico correto.
+  let pendingReason: 'close-button' | 'action' | null = null;
   const closeFromAction = () => {
     const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
     overlay?.click();
   };
   cancel.addEventListener('click', () => {
-    track('dialog_close', {
-      component: 'sheet',
-      label: opts.triggerLabel,
-      reason: 'close-button',
-      location: 'docs_demo',
-    });
+    pendingReason = 'close-button';
     closeFromAction();
   });
   apply.addEventListener('click', () => {
@@ -97,6 +95,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
       action: opts.applyLabel,
       location: 'docs_demo',
     });
+    pendingReason = 'action';
     closeFromAction();
   });
 
@@ -115,6 +114,15 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
           location: 'docs_demo',
         });
       }
+    },
+    onClose: (reason) => {
+      track('dialog_close', {
+        component: 'sheet',
+        label: opts.triggerLabel,
+        reason: pendingReason ?? reason,
+        location: 'docs_demo',
+      });
+      pendingReason = null;
     },
   });
 }

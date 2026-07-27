@@ -6,6 +6,9 @@
 
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
+// PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+
 export type SheetOptions = {
   trigger: HTMLElement;
   side?: SheetSide;
@@ -14,6 +17,8 @@ export type SheetOptions = {
   content: HTMLElement;
   footer?: HTMLElement;
   onOpenChange?: (open: boolean) => void;
+  /** Chamado no fechamento com o caminho que o causou (espelha o Dialog). */
+  onClose?: (reason: SheetCloseReason) => void;
   class?: string;
 };
 
@@ -53,7 +58,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 // ─── createSheet ──────────────────────────────────────────────────────────────
 
 export function createSheet(options: SheetOptions): HTMLElement {
-  const { trigger, side = 'right', title, description, content, footer, onOpenChange } = options;
+  const { trigger, side = 'right', title, description, content, footer, onOpenChange, onClose } = options;
 
   const sheetId = ++_sheetCounter;
   const titleId = `sheet-title-${sheetId}`;
@@ -73,7 +78,7 @@ export function createSheet(options: SheetOptions): HTMLElement {
     overlayEl = document.createElement('div');
     overlayEl.className = 'nds-sheet-overlay';
     overlayEl.dataset.slot = 'sheet-overlay';
-    overlayEl.addEventListener('click', close);
+    overlayEl.addEventListener('click', () => closeWithReason('overlay'));
 
     panelEl = document.createElement('div');
     panelEl.className = 'nds-sheet-content';
@@ -91,7 +96,7 @@ export function createSheet(options: SheetOptions): HTMLElement {
     closeBtn.className = 'nds-sheet-close';
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.appendChild(createCloseIcon());
-    closeBtn.addEventListener('click', close);
+    closeBtn.addEventListener('click', () => closeWithReason('close-button'));
 
     // Header
     if (title || description) {
@@ -146,20 +151,22 @@ export function createSheet(options: SheetOptions): HTMLElement {
     onOpenChange?.(true);
   }
 
-  function close(): void {
+  // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
+  function closeWithReason(reason: SheetCloseReason): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();
+    onClose?.(reason);
     onOpenChange?.(false);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.preventDefault();
-      close();
+      closeWithReason('escape');
       return;
     }
     if (e.key === 'Tab' && panelEl) {

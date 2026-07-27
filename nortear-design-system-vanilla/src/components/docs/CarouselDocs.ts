@@ -82,13 +82,15 @@ function buildCarouselPreview(): HTMLElement {
   wrap.appendChild(createCarousel({
     items: buildSlides(total),
     // Nortear: o factory navega apenas via setas (ou Enter/Espaço nelas) —
-    // trigger 'button' cobre o único mecanismo exposto.
-    onIndexChange: (index) => {
+    onIndexChange: (index, source) => {
+      // 'init' é o posicionamento inicial (não é interação); autoplay não é
+      // navegação do usuário — nenhum dos dois vira evento.
+      if (source === 'init' || source === 'autoplay') return;
       track('slide_change', {
         component: 'carousel',
         index,
         total,
-        trigger: 'button',
+        trigger: source,
         location: 'docs_demo',
       });
     },

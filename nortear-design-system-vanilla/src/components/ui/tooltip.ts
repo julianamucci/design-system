@@ -9,6 +9,9 @@ export type TooltipOptions = {
   trigger: HTMLElement;
   content: string;
   side?: TooltipSide;
+  // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
+  /** Chamado quando o tooltip é de fato exibido (após o delay interno). */
+  onShow?: () => void;
   class?: string;
 };
 
@@ -81,6 +84,8 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
 
     document.body.appendChild(panelEl);
     positionTooltip(trigger, panelEl, side);
+    // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
+    options.onShow?.();
   }
 
   function hide(): void {
