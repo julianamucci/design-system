@@ -7,6 +7,7 @@ import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import { useTranslation, useI18nStore } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
 // ─── Definições estáticas ──────────────────────────────────────────────────────
@@ -138,6 +139,10 @@ function syncHtmlState() {
   tokenValues.value = values;
 }
 
+// Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+const trackingRoot = ref<HTMLElement | null>(null);
+let trackingCleanup: (() => void) | null = null;
+
 onMounted(() => {
   syncHtmlState();
   htmlObserver = new MutationObserver(syncHtmlState);
@@ -145,17 +150,23 @@ onMounted(() => {
     attributes: true,
     attributeFilter: ['class'],
   });
+  if (trackingRoot.value) {
+    trackingCleanup = mountDocsTracking(trackingRoot.value, { componentSlug: 'theme-colors' });
+  }
 });
 
 onUnmounted(() => {
   htmlObserver?.disconnect();
   htmlObserver = null;
+  trackingCleanup?.();
+  trackingCleanup = null;
 });
 
 </script>
 
 <template>
   <div
+    ref="trackingRoot"
     class="sb-unstyled nds-flex-1 nds-w-full ds-docs"
     style="height: 100%; overflow: auto"
   >

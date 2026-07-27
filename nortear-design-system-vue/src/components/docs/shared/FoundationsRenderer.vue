@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { Badge } from '@/components/ui/badge';
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent,
@@ -11,6 +11,7 @@ import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 
 const props = defineProps<{
   /** Slug do componente em translations (ex. "foundations/tipografia"). */
@@ -22,6 +23,19 @@ const props = defineProps<{
 // IMPORTANTE (Vue): NUNCA usar Pinia/useLocaleStore p/ locale em docs page.
 // Sempre `useTranslation()` — historic crash documentado em MEMORY.md.
 const { t, locale } = useTranslation(props.translations);
+
+// Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+const trackingRoot = ref<HTMLElement | null>(null);
+let trackingCleanup: (() => void) | null = null;
+onMounted(() => {
+  if (trackingRoot.value) {
+    trackingCleanup = mountDocsTracking(trackingRoot.value, { componentSlug: props.componentSlug });
+  }
+});
+onBeforeUnmount(() => {
+  trackingCleanup?.();
+  trackingCleanup = null;
+});
 
 const data = computed<Record<string, any>>(
   () => (props.translations[locale.value] ?? props.translations['pt-BR'] ?? {}) as Record<string, any>,
@@ -200,7 +214,7 @@ track('docs_page_view', {
 </script>
 
 <template>
-  <div class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+  <div ref="trackingRoot" class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
     <div
       class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"

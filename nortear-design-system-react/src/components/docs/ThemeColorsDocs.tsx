@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
@@ -6,6 +6,7 @@ import { Swatch } from '@/components/docs/shared/Swatch';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
 // ─── Definições estáticas ──────────────────────────────────────────────────────
@@ -100,6 +101,12 @@ export function ThemeColorsDocs() {
     });
   }, [locale, t]);
 
+  // ─── Analytics — cliques (observer data-track*) ──────────────────────────
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    return mountDocsTracking(rootRef.current, { componentSlug: 'theme-colors' });
+  }, []);
+
   // ─── Detecta tema/modo + relê valores HSL no <html> (reage à toolbar) ──────
   useEffect(() => {
     const read = () => {
@@ -135,7 +142,7 @@ export function ThemeColorsDocs() {
   );
 
   return (
-    <div className="sb-unstyled nds-flex-1 nds-w-full ds-docs" style={{ height: '100%', overflow: 'auto' }}>
+    <div ref={rootRef} className="sb-unstyled nds-flex-1 nds-w-full ds-docs" style={{ height: '100%', overflow: 'auto' }}>
       <div className="nds-p-8 nds-stack" data-spacing="xl" style={{ maxWidth: '72rem', marginInline: 'auto' }}>
 
         {/* ── Header ──────────────────────────────────────────────────────── */}

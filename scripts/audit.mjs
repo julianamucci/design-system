@@ -14,6 +14,9 @@
 //   - performance   wildcard imports, hardcoded dimensions, style inline, top-level Date
 //   - quality       play functions faltantes, seções faltantes, a11y.disable, tabelas irregulares
 //   - analytics     eventos não tipados em AnalyticsEvents, track() em UI primitive
+//                   + infra (slug-independente, chave "_infra" no output): observer de
+//                   cliques montado incondicionalmente, demos auto-instrumentadas,
+//                   páginas page-level sem tracking
 //   - cross-stack   (depois de quality/security/performance/analytics) divergências restantes
 //
 // Princípio: tudo que é grep+regex determinístico vive aqui; tudo que exige julgamento
@@ -265,6 +268,78 @@ function auditAnalytics(slug) {
   return violations;
 }
 
+// ─── Analytics: infra (slug-independente) ───────────────────────────────────
+// Regras POSITIVAS de instrumentação: verificam que o mecanismo de tracking
+// está montado, não apenas que não há tracking errado. Sem elas, uma página com
+// zero instrumentação passa limpa (grep não encontra o evento que nunca foi
+// escrito) — foi assim que ⅔ das docs pages ficaram sem tracking de clique até
+// o fix sistêmico (slug derivado da URL + observer sempre montado + demos
+// auto-instrumentadas). Estas regras impedem a regressão daquele fix.
+
+const PAGE_EXT = { react: 'tsx', vue: 'vue', svelte: 'svelte', vanilla: 'ts' };
+
+function auditAnalyticsInfra() {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const ext = PAGE_EXT[stack];
+    const sectionsDir = join(ROOT, stackDir(stack), 'src', 'components', 'docs', 'shared', 'sections');
+
+    // 1. DocsPageLayout monta o observer, e monta SEMPRE (slug é derivado do
+    //    ?id= do iframe quando componentSlug não é passado).
+    const layoutPath = join(sectionsDir, `DocsPageLayout.${ext}`);
+    const layout = readFile(layoutPath);
+    if (layout) {
+      if (!/mountDocsTracking/.test(layout)) {
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, layoutPath), rule: 'tracking_mount_missing',
+          message: 'DocsPageLayout não chama mountDocsTracking — nenhuma docs page desta stack terá tracking de clique',
+        });
+      } else if (/if\s*\(\s*!?\s*((props\.)?componentSlug|slug)\b/.test(layout)) {
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, layoutPath), rule: 'tracking_mount_conditional',
+          message: 'mountDocsTracking condicionado ao componentSlug — o observer deve montar sempre (slug é derivado da URL do iframe)',
+        });
+      }
+    }
+
+    // 2. DocsDemonstration auto-instrumentada (data-track-container). No
+    //    vanilla o atributo é setado via dataset.trackContainer.
+    const demoPath = join(sectionsDir, `DocsDemonstration.${ext}`);
+    const demo = readFile(demoPath);
+    if (demo && !/data-track-container|dataset\.trackContainer/.test(demo)) {
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, demoPath), rule: 'demo_container_missing',
+        message: 'DocsDemonstration sem data-track-container — demos de componente não são auto-instrumentadas',
+      });
+    }
+
+    // 3. Toda página page-level (chama useSeoEffect/applySeo) precisa do
+    //    observer de cliques: via DocsPageLayout ou mountDocsTracking direto.
+    //    Pega foundation pages/renderers e páginas standalone (ThemeColors,
+    //    Icons) que ficam fora do layout de componente.
+    for (const file of globStack(stack, 'components/docs', null)) {
+      const norm = file.replace(/\\/g, '/');
+      if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+      if (norm.includes('/shared/sections/')) continue;
+      const content = readFile(file);
+      if (!content) continue;
+      if (!/useSeoEffect|applySeo/.test(content)) continue;
+      if (/DocsPageLayout|mountDocsTracking/.test(content)) continue;
+      violations.push({
+        category: 'analytics', severity: 'medium', slug: '_infra', stack,
+        file: relative(ROOT, file), rule: 'page_untracked',
+        message: 'página chama useSeoEffect/applySeo mas não monta o observer de cliques (usar DocsPageLayout ou mountDocsTracking direto)',
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
   const REQUIRED_SECTIONS = [
@@ -443,10 +518,16 @@ for (const s of slugs) {
   allViolations[s] = runAudit(s, category);
 }
 
+// Infra de analytics é slug-independente: roda 1x por processo, sob "_infra".
+if (!category || category === 'analytics') {
+  const infra = auditAnalyticsInfra();
+  if (infra.length > 0) allViolations['_infra'] = infra;
+}
+
 if (json) {
   process.stdout.write(JSON.stringify(allViolations, null, 2) + '\n');
 } else {
-  for (const s of slugs) {
+  for (const s of Object.keys(allViolations)) {
     process.stdout.write(formatText(allViolations[s], s) + '\n');
   }
 }

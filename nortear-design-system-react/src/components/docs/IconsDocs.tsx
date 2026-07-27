@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, type ComponentType, type CSSProperties } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback, type ComponentType, type CSSProperties } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { Check, Package, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
 
@@ -48,6 +49,12 @@ export function IconsDocs() {
     });
   }, [locale, t]);
 
+  // ─── Analytics — cliques (observer data-track*) ──────────────────────────
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    return mountDocsTracking(rootRef.current, { componentSlug: 'icons' });
+  }, []);
+
   // ─── Filtro ──────────────────────────────────────────────────────────────
   const filteredNames = useMemo(() => {
     const q = search.trim().toLowerCase().replace(/[\s\-_]+/g, '');
@@ -79,6 +86,7 @@ export function IconsDocs() {
 
   return (
     <div
+      ref={rootRef}
       className="sb-unstyled nds-flex-1 nds-w-full ds-docs"
       style={{ height: '100%', overflow: 'auto' }}
     >

@@ -76,6 +76,29 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /** Disparado quando o usuário descarta um alerta (botão de fechar). */
+  alert_dismiss: {
+    component: string;
+    label: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário aciona um Badge clicável (filtro ou atalho). */
+  badge_click: {
+    component: string;
+    label: string;
+    variant?: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário clica em um Avatar para abrir um perfil.
+   *  Nunca envie identificadores reais — use ids anônimos/hashed. */
+  profile_click: {
+    component: string;
+    user_id?: string;
+    location?: string;
+  };
+
   navigation_click: {
     component: 'breadcrumb' | 'navigation_menu' | 'sidebar';
     label: string;
@@ -217,6 +240,15 @@ interface AnalyticsEvents {
   menu_item_click: {
     label: string;
     menu: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
+  dialog_confirm: {
+    component: string;
+    trigger_label?: string;
+    action?: string;
+    label?: string;
     location?: string;
   };
 

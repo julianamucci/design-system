@@ -7,6 +7,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+  import { mountDocsTracking } from '@/lib/docs-tracking';
   import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
   // ─── Definições estáticas ──────────────────────────────────────────────────
@@ -134,6 +135,14 @@
 
   // ─── SEO + Analytics ──────────────────────────────────────────────────────
 
+  // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+  let trackingRoot: HTMLElement | null = $state(null);
+
+  $effect(() => {
+    if (!trackingRoot) return;
+    return mountDocsTracking(trackingRoot, { componentSlug: 'theme-colors' });
+  });
+
   $effect(() => {
     const t = $tStore;
     const cleanup = applySeo({
@@ -153,7 +162,7 @@
 
 </script>
 
-<div class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
+<div bind:this={trackingRoot} class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
   <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->

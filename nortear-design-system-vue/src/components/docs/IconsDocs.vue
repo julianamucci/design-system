@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import * as LucideIcons from 'lucide-vue-next';
 import { Package, Search, Check } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,7 @@ import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import { useTranslation, useI18nStore } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
 
@@ -95,13 +96,25 @@ function handleCopy(name: string) {
     .catch(() => {});
 }
 
+// Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+const trackingRoot = ref<HTMLElement | null>(null);
+let trackingCleanup: (() => void) | null = null;
+onMounted(() => {
+  if (trackingRoot.value) {
+    trackingCleanup = mountDocsTracking(trackingRoot.value, { componentSlug: 'icons' });
+  }
+});
+
 onUnmounted(() => {
   if (copiedTimer) clearTimeout(copiedTimer);
+  trackingCleanup?.();
+  trackingCleanup = null;
 });
 </script>
 
 <template>
   <div
+    ref="trackingRoot"
     class="sb-unstyled nds-flex-1 nds-w-full ds-docs"
     style="height: 100%; overflow: auto"
   >

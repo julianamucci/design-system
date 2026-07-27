@@ -10,6 +10,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+  import { mountDocsTracking } from '@/lib/docs-tracking';
   import DOMPurify from 'dompurify';
   import iconsTranslations from '@shared/content/icons/translations.json';
 
@@ -47,6 +48,14 @@
   let copiedTimer: ReturnType<typeof setTimeout> | null = null;
 
   // ─── SEO + Analytics ──────────────────────────────────────────────────────
+
+  // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+  let trackingRoot: HTMLElement | null = $state(null);
+
+  $effect(() => {
+    if (!trackingRoot) return;
+    return mountDocsTracking(trackingRoot, { componentSlug: 'icons' });
+  });
 
   $effect(() => {
     const t = $tStore;
@@ -115,7 +124,7 @@
   });
 </script>
 
-<div class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
+<div bind:this={trackingRoot} class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
   <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->

@@ -1,6 +1,7 @@
 import { icons as ALL_ICONS } from 'lucide';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import { getLocale, createTranslation } from '@/lib/i18n';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
@@ -75,6 +76,9 @@ export function createIconsDocs(): HTMLElement {
     cleanupSeo = updateSeo();
   });
   cleanups.push(() => { cleanupSeo(); unsubSeo(); });
+
+  // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+  cleanups.push(mountDocsTracking(root, { componentSlug: 'icons' }));
 
   // ── Header ────────────────────────────────────────────────────────────────
 

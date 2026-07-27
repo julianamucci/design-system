@@ -38,7 +38,11 @@ Templates:
 node scripts/audit.mjs <slug> --category analytics --json
 ```
 
-`audit.mjs` cobre o lado positivo (UI primitive importando `@/lib/analytics`, eventos não tipados). Esta skill cobre o lado **inverso**: interativos que deveriam ter tracking e não têm.
+O output tem duas partes:
+- **`<slug>`** — tracking errado presente: UI primitive importando `@/lib/analytics`, eventos não tipados.
+- **`_infra`** (slug-independente) — mecanismo de tracking ausente: `DocsPageLayout` sem `mountDocsTracking` ou com mount condicionado ao `componentSlug` (deve montar sempre — o slug é derivado do `?id=` do iframe), `DocsDemonstration` sem `data-track-container`, e páginas page-level (chamam `useSeoEffect`/`applySeo`) que não montam o observer — ex.: foundation pages e páginas standalone fora do `DocsPageLayout`.
+
+Qualquer violação em `_infra` tem prioridade sobre gaps por página: corrija a infra primeiro (um fix cobre todas as páginas).
 
 ### Passo 1 — Coletar arquivos em paralelo
 
@@ -52,18 +56,21 @@ node scripts/audit.mjs <slug> --category analytics --json
 - `src/components/docs/shared/sections/DocsPageLayout.{tsx,vue,svelte,ts}`
 - `src/components/docs/shared/DocsNav.{tsx,vue,svelte,ts}`
 
-**Grep** (1): `<DocsPageLayout` em cada docs page para confirmar `componentSlug` presente
-
 **Grep** (1): `data-track=` para coverage geral
 
 ### Passo 2 — Analisar (1 passagem por arquivo)
 
+Contexto do mecanismo (pós-fix sistêmico):
+- O observer monta **sempre** que a página usa `DocsPageLayout` — `componentSlug` é opcional e derivado do `?id=` do iframe (`ui-button--docs` → `button`). Passe o prop apenas quando o slug derivado estiver errado (ex.: id de story fora do padrão `ui-<slug>--docs`).
+- `DocsDemonstration` é **auto-instrumentada** (`data-track-container`): cliques em elementos interativos dentro da demo são resolvidos e rastreados sem instrumentação por página. `data-track*` manual em elementos internos tem precedência — use para labels/ids mais ricos, não por obrigação.
+- Páginas **fora** do `DocsPageLayout` (foundation pages, standalone) precisam chamar `mountDocsTracking` diretamente no mount, com cleanup no unmount.
+
 Para cada docs page, verificar:
 
-1. **DocsPageLayout `componentSlug`** — sem isso o observer não monta (CRÍTICO)
+1. **Página monta o observer?** — via `DocsPageLayout` ou `mountDocsTracking` direto (CRÍTICO; o `_infra` do Passo 0 já aponta as ausências)
 2. **`docs_page_view`** no mount com `locale` como dep
 3. **`docs_section_viewed`** via IntersectionObserver
-4. **Elementos interativos sem `data-track*`** dentro de seções de demonstração/notas (ALTO/MÉDIO conforme `analytics-arch.md`)
+4. **Interativos fora de `DocsDemonstration`** (notas, tabelas, cards custom) sem `data-track*` (ALTO/MÉDIO conforme `analytics-arch.md`)
 5. **Stories com `track()` direto** — contaminação indevida (precisa remover)
 6. **`translations.json` `analytics.table.*`** com eventos do produto (não `docs_*`)
 
@@ -72,8 +79,8 @@ Para cada docs page, verificar:
 **`--audit`**: reportar tabela ou JSON (formato em `analytics-arch.md`). Não editar.
 
 **Fix-mode** (default):
-- Adicionar `componentSlug` no `<DocsPageLayout>` se faltando
-- Adicionar `data-track`, `data-track-id` (3 partes), `data-track-label` em interativos
+- Corrigir violações `_infra` primeiro (mount incondicional no layout, `data-track-container` na demonstração, `mountDocsTracking` em páginas fora do layout)
+- Adicionar `data-track`, `data-track-id` (3 partes), `data-track-label` em interativos fora de `DocsDemonstration`
 - Remover `track()` direto de stories
 - Adicionar eventos faltantes em `analytics.table.*` no `translations.json`
 

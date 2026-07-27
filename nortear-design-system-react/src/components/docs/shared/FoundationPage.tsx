@@ -15,7 +15,7 @@
  * motion) passam `extraSection` para acrescentar specimens ao topo.
  */
 
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -36,6 +36,7 @@ import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -406,6 +407,12 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
     });
   }, [locale, slug, t]);
 
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return mountDocsTracking(rootRef.current, { componentSlug: slug });
+  }, [slug]);
+
   const dict = (translations[locale] ??
     translations['pt-BR'] ??
     {}) as Record<string, unknown>;
@@ -415,7 +422,7 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
   );
 
   return (
-    <div className="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+    <div ref={rootRef} className="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
       <div className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <header className="nds-stack nds-pb-8">

@@ -11,6 +11,7 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+  import { mountDocsTracking } from '@/lib/docs-tracking';
   import FoundationSection from './FoundationSection.svelte';
 
   type Props = {
@@ -21,6 +22,14 @@
   };
 
   let { translations, componentSlug, extra }: Props = $props();
+
+  // Observer de cliques (data-track*) — mesmo mecanismo do DocsPageLayout.
+  let rootEl: HTMLElement | null = $state(null);
+
+  $effect(() => {
+    if (!rootEl) return;
+    return mountDocsTracking(rootEl, { componentSlug });
+  });
 
   // translations é um import estático por página (não muda em runtime); tStore
   // continua reativo ao locale internamente (useTranslation deriva do store de
@@ -61,7 +70,7 @@
   });
 </script>
 
-<div class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+<div bind:this={rootEl} class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
   <div class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
 
     <!-- Header -->
