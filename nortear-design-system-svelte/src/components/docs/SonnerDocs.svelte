@@ -116,7 +116,7 @@
     toast($tStore('demonstration.labels.withAction'), {
       action: {
         label: $tStore('demonstration.labels.withActionLabel'),
-        onClick: () => track('toast_action_click', { label: $tStore('demonstration.labels.withActionLabel'), component: 'toast', location: 'docs_demo' }),
+        onClick: () => track('toast_action_click', { label: 'with-action-label', component: 'toast', location: 'docs_demo' }),
       },
     });
   }

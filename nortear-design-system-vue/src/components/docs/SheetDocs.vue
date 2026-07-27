@@ -156,7 +156,7 @@ function handleDemoOpenChange(open: boolean, side = 'right') {
 function handleDemoApply() {
   track('dialog_confirm', {
     component: 'sheet',
-    action: tContent('demonstration.labels.apply'),
+    action: 'apply',
     location: 'docs_demo',
   });
 }

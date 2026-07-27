@@ -260,7 +260,7 @@ interface PopoverContentProps {
               onOpenChange={(open) =>
                 track(open ? "popover_open" : "popover_close", {
                   component: "popover",
-                  ...(open ? { trigger_label: tContent("demonstration.labels.trigger") } : { reason: "user" }),
+                  ...(open ? { trigger_label: "trigger" } : { reason: "user" }),
                   location: "docs_demo",
                 })
               }
@@ -294,7 +294,7 @@ interface PopoverContentProps {
               onOpenChange={(open) =>
                 track(open ? "popover_open" : "popover_close", {
                   component: "popover",
-                  ...(open ? { trigger_label: tContent("demonstration.labels.title") } : { reason: "user" }),
+                  ...(open ? { trigger_label: "title" } : { reason: "user" }),
                   location: "docs_demo",
                 })
               }
@@ -338,7 +338,7 @@ interface PopoverContentProps {
               onOpenChange={(open) =>
                 track(open ? "popover_open" : "popover_close", {
                   component: "popover",
-                  ...(open ? { trigger_label: tContent("demonstration.labels.form.trigger") } : { reason: "user" }),
+                  ...(open ? { trigger_label: "trigger" } : { reason: "user" }),
                   location: "docs_demo",
                 })
               }

@@ -40,7 +40,7 @@ node scripts/audit.mjs <slug> --category analytics --json
 
 O output tem duas partes:
 - **`<slug>`** — tracking errado presente: UI primitive importando `@/lib/analytics`, eventos não tipados.
-- **`_infra`** (slug-independente) — mecanismo de tracking ausente: `DocsPageLayout` sem `mountDocsTracking` ou com mount condicionado ao `componentSlug` (deve montar sempre — o slug é derivado do `?id=` do iframe), `DocsDemonstration` sem `data-track-container`, e páginas page-level (chamam `useSeoEffect`/`applySeo`) que não montam o observer — ex.: foundation pages e páginas standalone fora do `DocsPageLayout`.
+- **`_infra`** (slug-independente) — mecanismo de tracking ausente: `DocsPageLayout` sem `mountDocsTracking` ou com mount condicionado ao `componentSlug` (deve montar sempre — o slug é derivado do `?id=` do iframe), `DocsDemonstration` sem `data-track-container`, páginas page-level (chamam `useSeoEffect`/`applySeo`) que não montam o observer, e **texto traduzido em payload** (`i18n_text_in_payload`).
 
 Qualquer violação em `_infra` tem prioridade sobre gaps por página: corrija a infra primeiro (um fix cobre todas as páginas).
 
@@ -60,6 +60,17 @@ Qualquer violação em `_infra` tem prioridade sobre gaps por página: corrija a
 
 ### Passo 2 — Analisar (1 passagem por arquivo)
 
+**Regra de payload — valores estáveis, nunca texto traduzido.** O payload identifica *o que* foi acionado, não *como o texto aparece na tela*. Mandar string localizada fragmenta o mesmo evento em um valor por locale no GA4 e inutiliza a agregação.
+
+| Em vez de | Use |
+|---|---|
+| `label: t('demonstration.labels.dashboard')` | `label: 'dashboard'` (chave/slug do item) |
+| `label: t('demonstration.labels.rightLabel')` | `label: side` (`'right'`, `'left'`…) |
+| `action: t('demonstration.labels.apply')` | `action: 'apply'` |
+| `trigger_label: tContent('...')` | a chave estável correspondente |
+
+Vale para todos os campos livres (`label`, `action`, `action_label`, `destination`, `task`, `trigger_label`, `field_name`). `destination` acompanha a chave (`'#dashboard'`). Campos que já são estáveis por natureza (`component`, `variant`, `side`, `reason`, `trigger`) não têm risco. **Única exceção**: `page_title` no `docs_page_view` — campo padrão do GA4, human-readable por definição, e o payload já carrega `locale`.
+
 Contexto do mecanismo (pós-fix sistêmico):
 - O observer monta **sempre** que a página usa `DocsPageLayout` — `componentSlug` é opcional e derivado do `?id=` do iframe (`ui-button--docs` → `button`). Passe o prop apenas quando o slug derivado estiver errado (ex.: id de story fora do padrão `ui-<slug>--docs`).
 - `DocsDemonstration` é **auto-instrumentada** (`data-track-container`): cliques em elementos interativos dentro da demo são resolvidos e rastreados sem instrumentação por página. `data-track*` manual em elementos internos tem precedência — use para labels/ids mais ricos, não por obrigação.
@@ -71,6 +82,7 @@ Para cada docs page, verificar:
 2. **`docs_page_view`** no mount com `locale` como dep
 3. **`docs_section_viewed`** via IntersectionObserver
 4. **Interativos fora de `DocsDemonstration`** (notas, tabelas, cards custom) sem `data-track*` (ALTO/MÉDIO conforme `analytics-arch.md`)
+4b. **Payloads com texto traduzido** — ver "Regra de payload" acima (o `_infra` do Passo 0 já aponta via `i18n_text_in_payload`)
 5. **Stories com `track()` direto** — contaminação indevida (precisa remover)
 6. **`translations.json` `analytics.table.*`** com eventos do produto (não `docs_*`)
 

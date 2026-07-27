@@ -16,7 +16,7 @@
 //   - analytics     eventos não tipados em AnalyticsEvents, track() em UI primitive
 //                   + infra (slug-independente, chave "_infra" no output): observer de
 //                   cliques montado incondicionalmente, demos auto-instrumentadas,
-//                   páginas page-level sem tracking
+//                   páginas page-level sem tracking, texto traduzido em payload
 //   - cross-stack   (depois de quality/security/performance/analytics) divergências restantes
 //
 // Princípio: tudo que é grep+regex determinístico vive aqui; tudo que exige julgamento
@@ -278,6 +278,69 @@ function auditAnalytics(slug) {
   return violations;
 }
 
+// ─── Analytics: texto traduzido em payload ──────────────────────────────────
+// Payloads de analytics devem levar valores ESTÁVEIS (chave/slug do item,
+// `side`, `variant`), nunca texto localizado: o mesmo evento viraria 3 valores
+// distintos no GA4, um por locale, inutilizando a agregação.
+// `page_title` é exceção — campo padrão do GA4, human-readable por definição,
+// e o payload já carrega `locale`.
+
+const I18N_CALL_RX = /\$?\b(t|tContent|tNav|tStore|tUi|tComp)\s*\(/;
+const PAYLOAD_EXEMPT_KEYS = ['page_title'];
+
+/** Extrai o payload (2º argumento) de cada `track(...)`, com balanceamento. */
+function extractTrackPayloads(content) {
+  const out = [];
+  const re = /\btrack\s*\(/g;
+  let m;
+  while ((m = re.exec(content)) !== null) {
+    let i = m.index + m[0].length;
+    let depth = 1;
+    while (i < content.length && depth > 0) {
+      const c = content[i];
+      if (c === '(') depth++;
+      else if (c === ')') depth--;
+      i++;
+    }
+    const args = content.slice(m.index + m[0].length, i - 1);
+    const comma = args.indexOf(',');
+    if (comma < 0) continue;
+    out.push({
+      payload: args.slice(comma + 1),
+      line: content.slice(0, m.index).split('\n').length,
+      event: args.slice(0, comma).trim().replace(/['"]/g, '').slice(0, 40),
+    });
+  }
+  return out;
+}
+
+function auditAnalyticsPayloads() {
+  const violations = [];
+  for (const stack of STACKS) {
+    for (const file of globStack(stack, 'components/docs', null)) {
+      const norm = file.replace(/\\/g, '/');
+      if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+      const content = readFile(file);
+      if (!content) continue;
+
+      for (const { payload, line, event } of extractTrackPayloads(content)) {
+        let p = payload;
+        for (const key of PAYLOAD_EXEMPT_KEYS) {
+          p = p.replace(new RegExp(`${key}\\s*:[^,}]*(,|)`, 'g'), '');
+        }
+        if (I18N_CALL_RX.test(p)) {
+          violations.push({
+            category: 'analytics', severity: 'medium', slug: '_infra', stack,
+            file: relative(ROOT, file), line, rule: 'i18n_text_in_payload',
+            message: `track('${event}') envia texto traduzido no payload — use valor estável (chave do item, side, variant)`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 // ─── Analytics: infra (slug-independente) ───────────────────────────────────
 // Regras POSITIVAS de instrumentação: verificam que o mecanismo de tracking
 // está montado, não apenas que não há tracking errado. Sem elas, uma página com
@@ -530,7 +593,7 @@ for (const s of slugs) {
 
 // Infra de analytics é slug-independente: roda 1x por processo, sob "_infra".
 if (!category || category === 'analytics') {
-  const infra = auditAnalyticsInfra();
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads()];
   if (infra.length > 0) allViolations['_infra'] = infra;
 }
 

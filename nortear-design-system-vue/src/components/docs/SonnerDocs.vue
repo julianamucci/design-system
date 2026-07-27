@@ -146,7 +146,7 @@ function fireWithAction() {
       label: tContent('demonstration.labels.withActionLabel'),
       onClick: () => {
         track('toast_action_click', {
-          label: tContent('demonstration.labels.withActionLabel'),
+          label: 'with-action-label',
           component: 'toast',
           location: 'docs_demo',
         });

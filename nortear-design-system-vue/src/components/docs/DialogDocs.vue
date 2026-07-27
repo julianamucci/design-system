@@ -147,7 +147,7 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 function handleDemoOpenChange(open: boolean) {
   track(open ? 'dialog_open' : 'dialog_close', {
     component: 'dialog',
-    label: tContent('demonstration.labels.title'),
+    label: 'title',
     location: 'docs_demo',
   });
 }
@@ -155,7 +155,7 @@ function handleDemoOpenChange(open: boolean) {
 function handleDemoAction() {
   track('dialog_action', {
     component: 'dialog',
-    action_label: tContent('demonstration.labels.action'),
+    action_label: 'action',
     location: 'docs_demo',
   });
 }

@@ -103,7 +103,7 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
         onOpenChange={(next) => {
           setOpen(next);
           track("collapsible_toggle", {
-            label: tContent("demonstration.labels.headerLabel"),
+            label: "header-label",
             value: next ? "open" : "closed",
             location: "docs_demo",
           });
@@ -269,7 +269,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
               className="nds-w-full nds-max-w-sm"
               onOpenChange={(open) =>
                 track("collapsible_toggle", {
-                  label: tContent("demonstration.labels.headerLabel"),
+                  label: "header-label",
                   value: open ? "open" : "closed",
                   location: "docs_demo",
                 })

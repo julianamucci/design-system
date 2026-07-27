@@ -266,7 +266,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
       <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
-        <Dialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'dialog', label: $tStore('demonstration.labels.triggerLabel'), location: 'docs_demo' })}>
+        <Dialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'dialog', label: 'trigger-label', location: 'docs_demo' })}>
           <DialogTrigger>
             {#snippet child({ props })}
               <Button {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
@@ -283,7 +283,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                   <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
                 {/snippet}
               </DialogClose>
-              <Button onclick={() => track('dialog_action', { component: 'dialog', action_label: $tStore('demonstration.labels.action'), location: 'docs_demo' })}>{$tStore('demonstration.labels.action')}</Button>
+              <Button onclick={() => track('dialog_action', { component: 'dialog', action_label: 'action', location: 'docs_demo' })}>{$tStore('demonstration.labels.action')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
