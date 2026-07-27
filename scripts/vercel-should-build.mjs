@@ -10,9 +10,14 @@
 //   1. Só builda a branch de produção (main). Previews de PR — incluindo os
 //      do Dependabot — são pulados. Para reativar previews humanos, defina
 //      a env VERCEL_PREVIEW_BUILDS=1 no projeto.
-//   2. Em main, só builda se algo relevante para ESTA stack mudou desde o
-//      último commit: a pasta da stack, docs/shared/ ou scripts/.
-//      Um push que só toca outra stack não gasta build aqui.
+//   2. Em main, só builda se algo relevante para ESTA stack mudou: a pasta da
+//      stack, docs/shared/ ou scripts/. Um push que só toca outra stack não
+//      gasta build aqui.
+//
+// Limitação conhecida: o diff é HEAD~1..HEAD. Em MERGE de PR isso cobre o PR
+// inteiro (diff contra o primeiro pai). Em push direto com vários commits,
+// só o último é comparado — se um commit antigo do push tocou a stack e o
+// último não, o build é pulado. Correção manual: botão Redeploy no painel.
 
 import { execSync } from 'node:child_process';
 import { basename } from 'node:path';
