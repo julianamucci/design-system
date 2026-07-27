@@ -3,18 +3,19 @@
     "title": "SEO + GEO",
     "category": "Foundations",
     "type": "Discoverability",
-    "description": "Otimização para buscadores tradicionais e para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta contexto iframe, escreve meta tags no documento pai e gera JSON-LD, hreflang e Open Graph automaticamente.",
+    "description": "De nada adianta uma documentação excelente que ninguém encontra. Esta página explica como cada página do sistema se torna encontrável — por quem pesquisa no Google e por quem pergunta a uma IA — e o que preencher para manter isso funcionando.",
     "seo": {
       "title": "SEO + GEO",
       "description": "Como o sistema otimiza para buscadores e LLMs: hook useSeoEffect, metadados obrigatórios, tags ai:*, JSON-LD TechArticle e hreflang trilíngue.",
-      "aiSummary": "Página técnica sobre SEO e GEO (Generative Engine Optimization). Documenta o hook useSeoEffect/applySeo, a detecção de contexto iframe que escreve meta tags no manager do Storybook, o sufixo automático '· Design System' no title, limites de descrição (155 chars), as tags GEO ai:summary/ai:entities/ai:intent para LLMs, geração automática de JSON-LD TechArticle e SoftwareSourceCode, hreflang trilíngue e Open Graph.",
+      "aiSummary": "Página sobre SEO e GEO (Generative Engine Optimization). Documenta o hook useSeoEffect/applySeo (meta tags no manager do Storybook, title com sufixo automático, hreflang quádruplo com x-default, og:*, JSON-LD BreadcrumbList), as tags experimentais ai:summary/ai:entities/ai:intent, os arquivos gerados no build (llms.txt padrão llmstxt.org, sitemap.xml, robots.txt liberado para crawlers de IA) e as regras de escrita de descrições e resumos.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "Por que duas siglas",
-      "body": "<strong>SEO</strong> otimiza para buscadores baseados em link (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — otimiza para LLMs que respondem perguntas extraindo conteúdo da web (ChatGPT, Gemini, Claude, Perplexity). Os dois compartilham metadados básicos, mas GEO exige resumos densos e listas explícitas de entidades para que o modelo cite a fonte corretamente.",
-      "audience": "Devs criando docs pages e revisores de conteúdo conferindo descobertibilidade."
+      "subtitle": "Hoje as pessoas chegam a uma documentação por dois caminhos: pesquisando num buscador (Google, Bing) ou perguntando a uma IA (ChatGPT, Gemini, Claude, Perplexity). <strong>SEO</strong> cuida do primeiro caminho; <strong>GEO</strong> — Generative Engine Optimization — cuida do segundo.",
+      "body": "A diferença prática: o buscador ranqueia links e mostra uma lista; a IA lê o conteúdo, resume e responde — citando (ou não) a fonte. Por isso GEO pede resumos densos e autossuficientes e listas explícitas de termos, para que o modelo entenda a página sem ambiguidade e cite corretamente. No sistema, tudo isso já vem pronto: quem escreve documentação só preenche os campos <code>seo.*</code> do <code>translations.json</code> — o resto é automático.",
+      "audience": "Esta página é para quem escreve ou revisa conteúdo de documentação — e para quem quer entender por que os campos seo.* existem em cada translations.json."
     },
     "hook": {
       "title": "useSeoEffect / applySeo",
@@ -30,7 +31,7 @@
         },
         "pageView": {
           "title": "Page view disparado aqui",
-          "body": "Depois de aplicar os metadados, o hook chama <code>track('docs_page_view', …)</code>. É a única forma confiável de associar o page view ao path correto (o iframe daria <code>/iframe.html</code>)."
+          "body": "Depois de aplicar os metadados, o hook chama <code>track('page_view', …)</code> — o evento genérico de navegação do GA4. É a única forma confiável de associar a visualização ao path correto (o iframe daria <code>/iframe.html</code>). O evento <code>docs_page_view</code>, mais rico, é disparado pela própria docs page na montagem."
         }
       }
     },
@@ -63,10 +64,10 @@
           "source": "<code>seo.description</code>",
           "limit": "Mesma string da description."
         },
-        "ogType": {
-          "tag": "&lt;meta property=\"og:type\"&gt;",
-          "source": "Fixo",
-          "limit": "<code>article</code>"
+        "ogUrl": {
+          "tag": "&lt;meta property=\"og:url\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "URL canônica com <code>?lang=</code> do locale ativo"
         },
         "ogLocale": {
           "tag": "&lt;meta property=\"og:locale\"&gt;",
@@ -76,38 +77,44 @@
         "hreflang": {
           "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
           "source": "<code>componentSlug</code> + locale",
-          "limit": "Três links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+          "limit": "Quatro links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code> e <code>x-default</code> (URL sem lang)"
         },
         "aiSummary": {
           "tag": "&lt;meta name=\"ai:summary\"&gt;",
           "source": "<code>seo.aiSummary</code>",
-          "limit": "≤500 chars, denso e completo"
+          "limit": "≤500 chars, denso e completo <em>(experimental — nenhum crawler de IA documenta ler esta tag; o valor real está no conteúdo denso, no JSON-LD e no llms.txt)</em>"
         },
         "aiEntities": {
           "tag": "&lt;meta name=\"ai:entities\"&gt;",
           "source": "<code>seo.aiEntities</code>",
-          "limit": "Lista separada por vírgula"
+          "limit": "Lista separada por vírgula <em>(experimental — nenhum crawler de IA documenta ler esta tag; o valor real está no conteúdo denso, no JSON-LD e no llms.txt)</em>"
         },
         "aiIntent": {
           "tag": "&lt;meta name=\"ai:intent\"&gt;",
           "source": "<code>seo.aiIntent</code>",
-          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code> <em>(experimental — nenhum crawler de IA documenta ler esta tag; o valor real está no conteúdo denso, no JSON-LD e no llms.txt)</em>"
         }
+      }
+    },
+    "llmsFiles": {
+      "title": "llms.txt e arquivos para robôs",
+      "subtitle": "No build, <code>generate-seo-files.mjs</code> gera três arquivos na raiz de cada Storybook publicado — nenhum passo manual.",
+      "items": {
+        "llms": "<strong>llms.txt</strong> — padrão emergente (llmstxt.org, 2024) adotado por documentações de ferramentas: um índice em markdown com título e descrição de cada página, no formato que LLMs conseguem consumir de uma vez. É a evolução concreta do GEO desde o início do projeto — complementa (e supera) as meta tags <code>ai:*</code>.",
+        "sitemap": "<strong>sitemap.xml</strong> — uma URL por docs page (as stories de canvas ficam de fora; o conteúdo indexável são as docs).",
+        "robots": "<strong>robots.txt</strong> — Allow geral, incluindo os crawlers de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended); ser lido por LLMs é objetivo, não risco."
       }
     },
     "jsonld": {
       "title": "JSON-LD",
-      "subtitle": "Dois schemas são injetados em cada docs page.",
+      "subtitle": "Dados estruturados Schema.org injetados pelo hook no documento indexável.",
       "items": {
-        "techArticle": {
-          "type": "TechArticle",
-          "body": "Schema.org para artigos técnicos. Inclui <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> e <code>about</code> (lista de entidades). É o que o Google e o Bing usam para rich snippets."
-        },
-        "softwareSourceCode": {
-          "type": "SoftwareSourceCode",
-          "body": "Aplicado a páginas de componente. Inclui <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> e <code>runtimePlatform</code>. Aumenta a chance de aparecer em respostas de LLMs para queries de \"como implementar X\"."
+        "breadcrumb": {
+          "type": "BreadcrumbList",
+          "body": "Emitido quando a página passa a prop <code>breadcrumb</code> (caminho navegacional: seção → página). É o que alimenta os rich snippets de trilha no Google."
         }
-      }
+      },
+      "note": "Os schemas <code>TechArticle</code> e <code>SoftwareSourceCode</code> constam no roadmap do hook, mas ainda não são emitidos — o dado equivalente chega aos LLMs via meta tags, descrições e llms.txt. Se esta página prometer um schema, confira o código antes de confiar."
     },
     "writing": {
       "title": "Regras de escrita",
@@ -134,18 +141,19 @@
     "title": "SEO + GEO",
     "category": "Foundations",
     "type": "Discoverability",
-    "description": "Optimization for traditional search engines and LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detects iframe context, writes meta tags to the parent document and auto-generates JSON-LD, hreflang and Open Graph.",
+    "description": "A great documentation nobody finds is worthless. This page explains how every system page becomes findable — by people searching on Google and by people asking an AI — and what to fill in to keep it working.",
     "seo": {
       "title": "SEO + GEO",
       "description": "How the system optimizes for engines and LLMs: useSeoEffect hook, required metadata, ai:* tags, JSON-LD TechArticle and trilingual hreflang.",
-      "aiSummary": "Technical page about SEO and GEO (Generative Engine Optimization). Documents the useSeoEffect/applySeo hook, iframe-context detection that writes meta tags into the Storybook manager, automatic '· Design System' suffix on title, description limits (155 chars), GEO ai:summary/ai:entities/ai:intent tags for LLMs, automatic JSON-LD TechArticle and SoftwareSourceCode generation, trilingual hreflang and Open Graph.",
+      "aiSummary": "Page about SEO and GEO (Generative Engine Optimization). Documents the useSeoEffect/applySeo hook (meta tags on the Storybook manager, automatic title suffix, quadruple hreflang with x-default, og:*, JSON-LD BreadcrumbList), the experimental ai:summary/ai:entities/ai:intent tags, the build-generated files (llms.txt per llmstxt.org, sitemap.xml, robots.txt open to AI crawlers) and the writing rules for descriptions and summaries.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "Why two acronyms",
-      "body": "<strong>SEO</strong> targets link-based search engines (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — targets LLMs that answer questions by extracting web content (ChatGPT, Gemini, Claude, Perplexity). Both share basic metadata, but GEO demands dense summaries and explicit entity lists so the model can cite the source accurately.",
-      "audience": "Devs authoring docs pages and reviewers checking discoverability."
+      "subtitle": "People reach documentation through two paths today: searching on an engine (Google, Bing) or asking an AI (ChatGPT, Gemini, Claude, Perplexity). <strong>SEO</strong> covers the first path; <strong>GEO</strong> — Generative Engine Optimization — covers the second.",
+      "body": "The practical difference: the search engine ranks links and shows a list; the AI reads the content, summarizes and answers — citing (or not) the source. That is why GEO asks for dense, self-sufficient summaries and explicit term lists, so the model understands the page without ambiguity and cites it correctly. In the system all of this comes ready: content writers only fill the <code>seo.*</code> fields in <code>translations.json</code> — the rest is automatic.",
+      "audience": "This page is for whoever writes or reviews documentation content — and for whoever wants to understand why the seo.* fields exist in every translations.json."
     },
     "hook": {
       "title": "useSeoEffect / applySeo",
@@ -160,8 +168,8 @@
           "body": "The hook composes <code>${title} · Design System</code>. So <code>seo.title</code> in the JSON must <strong>never</strong> include the suffix — it would duplicate."
         },
         "pageView": {
-          "title": "Page view fires here",
-          "body": "After applying metadata, the hook calls <code>track('docs_page_view', …)</code>. This is the only reliable way to attribute the page view to the right path (the iframe would give <code>/iframe.html</code>)."
+          "title": "Page view fired here",
+          "body": "After applying the metadata, the hook calls <code>track('page_view', …)</code> — GA4’s generic navigation event. It is the only reliable way to attribute the view to the correct path (the iframe would report <code>/iframe.html</code>). The richer <code>docs_page_view</code> event is fired by the docs page itself on mount."
         }
       }
     },
@@ -194,10 +202,10 @@
           "source": "<code>seo.description</code>",
           "limit": "Same as description."
         },
-        "ogType": {
-          "tag": "&lt;meta property=\"og:type\"&gt;",
-          "source": "Fixed",
-          "limit": "<code>article</code>"
+        "ogUrl": {
+          "tag": "&lt;meta property=\"og:url\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "Canonical URL with the active locale’s <code>?lang=</code>"
         },
         "ogLocale": {
           "tag": "&lt;meta property=\"og:locale\"&gt;",
@@ -207,38 +215,44 @@
         "hreflang": {
           "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
           "source": "<code>componentSlug</code> + locale",
-          "limit": "Three links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+          "limit": "Four links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code> and <code>x-default</code> (URL without lang)"
         },
         "aiSummary": {
           "tag": "&lt;meta name=\"ai:summary\"&gt;",
           "source": "<code>seo.aiSummary</code>",
-          "limit": "≤500 chars, dense and complete"
+          "limit": "≤500 chars, dense and complete <em>(experimental — no AI crawler documents reading this tag; the real value is in dense content, JSON-LD and llms.txt)</em>"
         },
         "aiEntities": {
           "tag": "&lt;meta name=\"ai:entities\"&gt;",
           "source": "<code>seo.aiEntities</code>",
-          "limit": "Comma-separated list"
+          "limit": "Comma-separated list <em>(experimental — no AI crawler documents reading this tag; the real value is in dense content, JSON-LD and llms.txt)</em>"
         },
         "aiIntent": {
           "tag": "&lt;meta name=\"ai:intent\"&gt;",
           "source": "<code>seo.aiIntent</code>",
-          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code> <em>(experimental — no AI crawler documents reading this tag; the real value is in dense content, JSON-LD and llms.txt)</em>"
         }
+      }
+    },
+    "llmsFiles": {
+      "title": "llms.txt and robot files",
+      "subtitle": "At build time, <code>generate-seo-files.mjs</code> writes three files at the root of each published Storybook — no manual step.",
+      "items": {
+        "llms": "<strong>llms.txt</strong> — an emerging standard (llmstxt.org, 2024) adopted by tool documentation sites: a markdown index with each page’s title and description, in a format LLMs can consume at once. It is the concrete GEO evolution since this project started — it complements (and surpasses) the <code>ai:*</code> meta tags.",
+        "sitemap": "<strong>sitemap.xml</strong> — one URL per docs page (canvas stories stay out; docs are the indexable content).",
+        "robots": "<strong>robots.txt</strong> — general Allow, including AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended); being read by LLMs is a goal, not a risk."
       }
     },
     "jsonld": {
       "title": "JSON-LD",
-      "subtitle": "Two schemas are injected on every docs page.",
+      "subtitle": "Schema.org structured data injected by the hook into the indexable document.",
       "items": {
-        "techArticle": {
-          "type": "TechArticle",
-          "body": "Schema.org for technical articles. Includes <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> and <code>about</code> (entity list). This is what Google and Bing use for rich snippets."
-        },
-        "softwareSourceCode": {
-          "type": "SoftwareSourceCode",
-          "body": "Applied to component pages. Includes <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> and <code>runtimePlatform</code>. Improves the chance of appearing in LLM answers to \"how to implement X\" queries."
+        "breadcrumb": {
+          "type": "BreadcrumbList",
+          "body": "Emitted when the page passes the <code>breadcrumb</code> prop (navigation path: section → page). This is what feeds trail rich snippets on Google."
         }
-      }
+      },
+      "note": "The <code>TechArticle</code> and <code>SoftwareSourceCode</code> schemas are on the hook’s roadmap but not emitted yet — equivalent data reaches LLMs via meta tags, descriptions and llms.txt. If this page ever promises a schema, check the code before trusting it."
     },
     "writing": {
       "title": "Writing rules",
@@ -265,18 +279,19 @@
     "title": "SEO + GEO",
     "category": "Foundations",
     "type": "Discoverability",
-    "description": "Optimización para buscadores tradicionales y para LLMs (ChatGPT, Gemini, Claude, Perplexity). useSeoEffect detecta el contexto iframe, escribe meta tags en el documento padre y genera JSON-LD, hreflang y Open Graph automáticamente.",
+    "description": "Una documentación excelente que nadie encuentra no sirve de nada. Esta página explica cómo cada página del sistema se vuelve encontrable — por quien busca en Google y por quien pregunta a una IA — y qué completar para que siga funcionando.",
     "seo": {
       "title": "SEO + GEO",
       "description": "Cómo el sistema optimiza para buscadores y LLMs: hook useSeoEffect, metadatos obligatorios, tags ai:*, JSON-LD TechArticle y hreflang trilingüe.",
-      "aiSummary": "Página técnica sobre SEO y GEO (Generative Engine Optimization). Documenta el hook useSeoEffect/applySeo, la detección de contexto iframe que escribe meta tags en el manager de Storybook, el sufijo automático '· Design System' en title, límites de descripción (155 chars), las tags GEO ai:summary/ai:entities/ai:intent para LLMs, generación automática de JSON-LD TechArticle y SoftwareSourceCode, hreflang trilingüe y Open Graph.",
+      "aiSummary": "Página sobre SEO y GEO (Generative Engine Optimization). Documenta el hook useSeoEffect/applySeo (meta tags en el manager de Storybook, sufijo automático del title, hreflang cuádruple con x-default, og:*, JSON-LD BreadcrumbList), las tags experimentales ai:summary/ai:entities/ai:intent, los archivos generados en el build (llms.txt según llmstxt.org, sitemap.xml, robots.txt abierto a crawlers de IA) y las reglas de escritura de descripciones y resúmenes.",
       "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "Por qué dos siglas",
-      "body": "<strong>SEO</strong> apunta a buscadores basados en enlaces (Google, Bing). <strong>GEO</strong> — Generative Engine Optimization — apunta a LLMs que responden preguntas extrayendo contenido web (ChatGPT, Gemini, Claude, Perplexity). Ambos comparten metadatos básicos, pero GEO exige resúmenes densos y listas explícitas de entidades para que el modelo cite la fuente correctamente.",
-      "audience": "Devs creando docs pages y revisores de contenido verificando descubribilidad."
+      "subtitle": "Hoy las personas llegan a una documentación por dos caminos: buscando en un buscador (Google, Bing) o preguntando a una IA (ChatGPT, Gemini, Claude, Perplexity). <strong>SEO</strong> cubre el primer camino; <strong>GEO</strong> — Generative Engine Optimization — cubre el segundo.",
+      "body": "La diferencia práctica: el buscador clasifica enlaces y muestra una lista; la IA lee el contenido, resume y responde — citando (o no) la fuente. Por eso GEO pide resúmenes densos y autosuficientes y listas explícitas de términos, para que el modelo entienda la página sin ambigüedad y cite correctamente. En el sistema todo esto ya viene listo: quien escribe documentación solo completa los campos <code>seo.*</code> del <code>translations.json</code> — el resto es automático.",
+      "audience": "Esta página es para quien escribe o revisa contenido de documentación — y para quien quiere entender por qué los campos seo.* existen en cada translations.json."
     },
     "hook": {
       "title": "useSeoEffect / applySeo",
@@ -291,8 +306,8 @@
           "body": "El hook compone <code>${title} · Design System</code>. Por eso <code>seo.title</code> en el JSON <strong>nunca</strong> debe incluir el sufijo — se duplicaría."
         },
         "pageView": {
-          "title": "Page view se dispara aquí",
-          "body": "Tras aplicar los metadatos, el hook llama <code>track('docs_page_view', …)</code>. Es la única forma fiable de asociar el page view al path correcto (el iframe daría <code>/iframe.html</code>)."
+          "title": "Page view disparado aquí",
+          "body": "Tras aplicar los metadatos, el hook llama <code>track('page_view', …)</code> — el evento genérico de navegación de GA4. Es la única forma confiable de atribuir la vista al path correcto (el iframe daría <code>/iframe.html</code>). El evento <code>docs_page_view</code>, más rico, lo dispara la propia docs page al montar."
         }
       }
     },
@@ -325,10 +340,10 @@
           "source": "<code>seo.description</code>",
           "limit": "Misma string que description."
         },
-        "ogType": {
-          "tag": "&lt;meta property=\"og:type\"&gt;",
-          "source": "Fijo",
-          "limit": "<code>article</code>"
+        "ogUrl": {
+          "tag": "&lt;meta property=\"og:url\"&gt;",
+          "source": "<code>componentSlug</code> + locale",
+          "limit": "URL canónica con el <code>?lang=</code> del locale activo"
         },
         "ogLocale": {
           "tag": "&lt;meta property=\"og:locale\"&gt;",
@@ -338,38 +353,44 @@
         "hreflang": {
           "tag": "&lt;link rel=\"alternate\" hreflang=\"…\"&gt;",
           "source": "<code>componentSlug</code> + locale",
-          "limit": "Tres links: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code>"
+          "limit": "Cuatro enlaces: <code>?lang=pt-BR</code>, <code>?lang=en</code>, <code>?lang=es</code> y <code>x-default</code> (URL sin lang)"
         },
         "aiSummary": {
           "tag": "&lt;meta name=\"ai:summary\"&gt;",
           "source": "<code>seo.aiSummary</code>",
-          "limit": "≤500 chars, denso y completo"
+          "limit": "≤500 chars, denso y completo <em>(experimental — ningún crawler de IA documenta leer esta tag; el valor real está en el contenido denso, el JSON-LD y el llms.txt)</em>"
         },
         "aiEntities": {
           "tag": "&lt;meta name=\"ai:entities\"&gt;",
           "source": "<code>seo.aiEntities</code>",
-          "limit": "Lista separada por coma"
+          "limit": "Lista separada por coma <em>(experimental — ningún crawler de IA documenta leer esta tag; el valor real está en el contenido denso, el JSON-LD y el llms.txt)</em>"
         },
         "aiIntent": {
           "tag": "&lt;meta name=\"ai:intent\"&gt;",
           "source": "<code>seo.aiIntent</code>",
-          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code>"
+          "limit": "<code>informational</code> | <code>transactional</code> | <code>navigational</code> <em>(experimental — ningún crawler de IA documenta leer esta tag; el valor real está en el contenido denso, el JSON-LD y el llms.txt)</em>"
         }
+      }
+    },
+    "llmsFiles": {
+      "title": "llms.txt y archivos para robots",
+      "subtitle": "En el build, <code>generate-seo-files.mjs</code> genera tres archivos en la raíz de cada Storybook publicado — sin paso manual.",
+      "items": {
+        "llms": "<strong>llms.txt</strong> — estándar emergente (llmstxt.org, 2024) adoptado por documentaciones de herramientas: un índice en markdown con título y descripción de cada página, en un formato que los LLMs pueden consumir de una vez. Es la evolución concreta del GEO desde el inicio del proyecto — complementa (y supera) las meta tags <code>ai:*</code>.",
+        "sitemap": "<strong>sitemap.xml</strong> — una URL por docs page (las stories de canvas quedan fuera; las docs son el contenido indexable).",
+        "robots": "<strong>robots.txt</strong> — Allow general, incluidos los crawlers de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended); ser leído por LLMs es un objetivo, no un riesgo."
       }
     },
     "jsonld": {
       "title": "JSON-LD",
-      "subtitle": "Dos esquemas se inyectan en cada docs page.",
+      "subtitle": "Datos estructurados Schema.org inyectados por el hook en el documento indexable.",
       "items": {
-        "techArticle": {
-          "type": "TechArticle",
-          "body": "Schema.org para artículos técnicos. Incluye <code>headline</code>, <code>description</code>, <code>inLanguage</code>, <code>dateModified</code>, <code>author</code> y <code>about</code> (lista de entidades). Es lo que Google y Bing usan para rich snippets."
-        },
-        "softwareSourceCode": {
-          "type": "SoftwareSourceCode",
-          "body": "Aplicado a páginas de componente. Incluye <code>programmingLanguage</code> (TypeScript), <code>codeRepository</code> y <code>runtimePlatform</code>. Aumenta la probabilidad de aparecer en respuestas de LLMs a queries de \"cómo implementar X\"."
+        "breadcrumb": {
+          "type": "BreadcrumbList",
+          "body": "Emitido cuando la página pasa la prop <code>breadcrumb</code> (camino de navegación: sección → página). Es lo que alimenta los rich snippets de ruta en Google."
         }
-      }
+      },
+      "note": "Los schemas <code>TechArticle</code> y <code>SoftwareSourceCode</code> están en el roadmap del hook pero aún no se emiten — el dato equivalente llega a los LLMs vía meta tags, descripciones y llms.txt. Si esta página promete un schema, verifica el código antes de confiar."
     },
     "writing": {
       "title": "Reglas de escritura",
