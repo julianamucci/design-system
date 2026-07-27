@@ -379,7 +379,7 @@
         "item2": "DrawerContent tem role=dialog e aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle conectado via aria-labelledby ao Content",
         "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
-        "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.2.1, 2.4.3)",
+        "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
       },
       "visual": {
@@ -809,7 +809,7 @@
         "item2": "DrawerContent has role=dialog and aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle connected via aria-labelledby to Content",
         "item4": "Working focus trap: Tab does not escape DrawerContent",
-        "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.2.1, 2.4.3)",
+        "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
       },
       "visual": {
@@ -1239,7 +1239,7 @@
         "item2": "DrawerContent tiene role=dialog y aria-modal=true (WCAG 4.1.2)",
         "item3": "DrawerTitle conectado vía aria-labelledby al Content",
         "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
-        "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.2.1, 2.4.3)",
+        "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
         "item6": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
       },
       "visual": {

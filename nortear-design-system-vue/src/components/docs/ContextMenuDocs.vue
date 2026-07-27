@@ -438,7 +438,7 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
   { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
   { criterion: tContent('testes.accessibility.item6'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item7'), level: 'WCAG 2.2.1',  how: 'Teste de teclado' },
+  { criterion: tContent('testes.accessibility.item7'), level: 'WCAG 2.1.1',  how: 'Teste de teclado' },
   { criterion: tContent('testes.accessibility.item8'), level: 'WCAG 1.4.3',  how: 'Contrast checker' },
 ]);
 

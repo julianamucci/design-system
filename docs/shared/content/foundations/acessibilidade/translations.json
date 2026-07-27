@@ -3,7 +3,7 @@
     "title": "Acessibilidade",
     "category": "Foundations",
     "type": "Princípios",
-    "description": "Acessibilidade não é uma camada opcional — é critério de aceite. Todo componente do sistema atende WCAG 2.2 AA por padrão e é validado com axe em toda story via <code>npm test</code> (Storybook Test). Esta página documenta os compromissos e padrões que todo componente deve seguir.",
+    "description": "Acessibilidade é a capacidade de qualquer pessoa usar o produto — inclusive quem navega só pelo teclado, usa leitor de tela, enxerga pouco ou tem sensibilidade a movimento. Aqui ela não é uma etapa opcional: nenhum componente entra no sistema sem passar pelos critérios desta página.",
     "seo": {
       "title": "Acessibilidade",
       "description": "Compromisso WCAG 2.2 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
@@ -13,7 +13,9 @@
     },
     "commitment": {
       "title": "Compromisso",
-      "body": "Todos os primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) atendem WCAG 2.2 AA. O critério é parte do <em>Definition of Done</em>: nenhum componente é considerado pronto sem axe verde, ordem de tabulação correta e suporte a leitor de tela."
+      "subtitle": "Todo componente do sistema atende WCAG 2.2 AA — o padrão internacional de acessibilidade — e é verificado por testes automáticos a cada mudança. Nenhum componente é considerado pronto sem passar nesses testes, ter ordem de navegação correta e funcionar com leitor de tela.",
+      "body": "Uma honestidade importante: <strong>testes automáticos não garantem que o produto final seja acessível</strong> — nem os do design system, nem os do próprio produto. Acessibilidade depende do contexto de uso e das limitações de cada pessoa, e nenhuma verificação automática cobre tudo sozinha: ela não sabe se um texto faz sentido, se um fluxo é compreensível ou se a ordem das informações ajuda quem ouve a página em vez de vê-la.",
+      "audience": "O que um design system 100% aprovado nos testes automáticos garante é outra coisa, igualmente valiosa: a segurança de não espalhar erros básicos de acessibilidade — contraste insuficiente, botões sem nome, foco invisível — para todos os produtos construídos com ele. A base chega correta; o produto continua responsável pela experiência completa, com testes manuais e pessoas reais."
     },
     "wcag22": {
       "title": "WCAG 2.2",
@@ -57,11 +59,11 @@
           "criteria": "1.4.11 Non-text Contrast"
         }
       },
-      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> e <code>--info</code> são calibrados para atingir 4.5:1 contra o background do tema em light e dark. Use sempre <code>text-foreground</code> ou <code>text-muted-foreground</code> para corpo de texto em containers coloridos."
+      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> e <code>--info</code> são calibrados para atingir 4.5:1 contra o background do tema em light e dark. Use sempre <code>.nds-text-foreground</code> ou <code>.nds-text-muted-foreground</code> para corpo de texto em containers coloridos."
     },
     "keyboard": {
       "title": "Navegação por teclado",
-      "subtitle": "Toda funcionalidade deve ser operável apenas com teclado (WCAG 2.2.1).",
+      "subtitle": "Toda funcionalidade deve ser operável apenas com teclado (WCAG 2.1.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — move o foco para o próximo / anterior elemento focável.",
         "enter": "<kbd>Enter</kbd> — ativa botões e links; envia formulários.",
@@ -76,7 +78,7 @@
       "title": "Focus visible",
       "subtitle": "Indicador de foco visual é obrigatório em qualquer elemento interativo (WCAG 2.4.7).",
       "rules": {
-        "ring": "Use <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. O token <code>--ring</code> sempre tem 100% de opacidade.",
+        "ring": "Os componentes <code>.nds-*</code> já trazem o anel de foco via <code>box-shadow</code> com o token <code>--ring</code> (sempre 100% de opacidade). Em CSS custom, use a classe <code>.nds-focus-ring</code> ou replique o padrão <code>box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring))</code>.",
         "noOutlineNone": "Nunca aplique <code>outline: none</code> sem um substituto visível imediatamente. Remover o anel de foco sem fallback é falha WCAG 2.4.7 e quebra navegação por teclado.",
         "visibleOnly": "<code>:focus-visible</code> mostra o anel só quando o usuário navega por teclado — o clique de mouse não dispara, evitando o anel após cliques.",
         "contrast": "O contraste do anel de foco contra o background adjacente deve ser ≥ 3:1 (WCAG 1.4.11)."
@@ -101,7 +103,7 @@
       "title": "Leitores de tela",
       "subtitle": "Padrões testados com VoiceOver (macOS/iOS) e NVDA (Windows).",
       "rules": {
-        "srOnly": "<code>.sr-only</code> — texto disponível apenas para leitores de tela. Use para contexto extra que sai do fluxo visual.",
+        "srOnly": "<code>.nds-sr-only</code> — texto disponível apenas para leitores de tela. Use para contexto extra que sai do fluxo visual.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — ícones decorativos (lucide), separadores visuais e elementos puramente estéticos.",
         "live": "<code>aria-live=\"polite\"</code> — toasts e mudanças não-críticas. <code>assertive</code> só para erros bloqueantes.",
         "noEmoji": "Emojis em texto vazam para o leitor de tela como descrição literal. Use ícones SVG com <code>aria-hidden</code> + label textual."
@@ -146,7 +148,7 @@
     "title": "Accessibility",
     "category": "Foundations",
     "type": "Principles",
-    "description": "Accessibility is not an optional layer — it is an acceptance criterion. Every system component meets WCAG 2.2 AA by default and is validated with axe on every story via <code>npm test</code> (Storybook Test). This page documents the commitments and patterns every component must follow.",
+    "description": "Accessibility is the ability of anyone to use the product — including people who navigate by keyboard only, use a screen reader, have low vision or are sensitive to motion. Here it is not an optional step: no component enters the system without passing the criteria on this page.",
     "seo": {
       "title": "Accessibility",
       "description": "WCAG 2.2 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
@@ -156,7 +158,9 @@
     },
     "commitment": {
       "title": "Commitment",
-      "body": "Every primitive (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) meets WCAG 2.2 AA. The criterion is part of the <em>Definition of Done</em>: no component is considered ready without green axe, correct tab order and screen reader support."
+      "subtitle": "Every component in the system meets WCAG 2.2 AA — the international accessibility standard — and is verified by automated tests on every change. No component is considered done without passing those tests, having correct navigation order and working with a screen reader.",
+      "body": "An important honesty: <strong>automated tests do not guarantee the final product is accessible</strong> — neither the design system’s nor the product’s own. Accessibility depends on context of use and on each person’s limitations, and no automated check covers everything alone: it can’t tell whether a text makes sense, whether a flow is understandable, or whether the order of information helps someone who hears the page instead of seeing it.",
+      "audience": "What a design system that passes 100% of automated tests does guarantee is something else, equally valuable: the safety of not spreading basic accessibility errors — insufficient contrast, unnamed buttons, invisible focus — into every product built with it. The foundation arrives correct; the product remains responsible for the complete experience, with manual testing and real people."
     },
     "wcag22": {
       "title": "WCAG 2.2",
@@ -200,11 +204,11 @@
           "criteria": "1.4.11 Non-text Contrast"
         }
       },
-      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> and <code>--info</code> are calibrated to reach 4.5:1 against the theme background in both light and dark. Always use <code>text-foreground</code> or <code>text-muted-foreground</code> for body text inside colored containers."
+      "note": "Tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> and <code>--info</code> are calibrated to reach 4.5:1 against the theme background in both light and dark. Always use <code>.nds-text-foreground</code> or <code>.nds-text-muted-foreground</code> for body text inside colored containers."
     },
     "keyboard": {
       "title": "Keyboard navigation",
-      "subtitle": "All functionality must be operable with the keyboard alone (WCAG 2.2.1).",
+      "subtitle": "All functionality must be operable with the keyboard alone (WCAG 2.1.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — moves focus to the next / previous focusable element.",
         "enter": "<kbd>Enter</kbd> — activates buttons and links; submits forms.",
@@ -219,7 +223,7 @@
       "title": "Focus visible",
       "subtitle": "A visual focus indicator is mandatory on every interactive element (WCAG 2.4.7).",
       "rules": {
-        "ring": "Use <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. The <code>--ring</code> token always has 100% opacity.",
+        "ring": "<code>.nds-*</code> components already ship the focus ring via <code>box-shadow</code> with the <code>--ring</code> token (always 100% opacity). In custom CSS, use the <code>.nds-focus-ring</code> class or replicate the pattern <code>box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring))</code>.",
         "noOutlineNone": "Never apply <code>outline: none</code> without an immediately visible replacement. Removing the focus ring without a fallback is a WCAG 2.4.7 failure and breaks keyboard navigation.",
         "visibleOnly": "<code>:focus-visible</code> shows the ring only when the user navigates by keyboard — mouse clicks don't trigger it, avoiding the ring after clicks.",
         "contrast": "The focus ring contrast against the adjacent background must be ≥ 3:1 (WCAG 1.4.11)."
@@ -244,7 +248,7 @@
       "title": "Screen readers",
       "subtitle": "Patterns tested with VoiceOver (macOS/iOS) and NVDA (Windows).",
       "rules": {
-        "srOnly": "<code>.sr-only</code> — text available only to screen readers. Use for extra context outside the visual flow.",
+        "srOnly": "<code>.nds-sr-only</code> — text available only to screen readers. Use it for extra context that leaves the visual flow.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — decorative icons (lucide), visual separators and purely aesthetic elements.",
         "live": "<code>aria-live=\"polite\"</code> — toasts and non-critical changes. <code>assertive</code> only for blocking errors.",
         "noEmoji": "Emojis in text leak to the screen reader as literal description. Use SVG icons with <code>aria-hidden</code> + a textual label."
@@ -289,7 +293,7 @@
     "title": "Accesibilidad",
     "category": "Foundations",
     "type": "Principios",
-    "description": "La accesibilidad no es una capa opcional — es criterio de aceptación. Todo componente del sistema cumple WCAG 2.2 AA por defecto y se valida con axe en cada story vía <code>npm test</code> (Storybook Test). Esta página documenta los compromisos y patrones que todo componente debe seguir.",
+    "description": "Accesibilidad es la capacidad de cualquier persona de usar el producto — incluida la que navega solo con teclado, usa lector de pantalla, ve poco o tiene sensibilidad al movimiento. Aquí no es una etapa opcional: ningún componente entra al sistema sin pasar los criterios de esta página.",
     "seo": {
       "title": "Accesibilidad",
       "description": "Compromiso WCAG 2.2 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
@@ -299,7 +303,9 @@
     },
     "commitment": {
       "title": "Compromiso",
-      "body": "Todos los primitives (<code>button</code>, <code>input</code>, <code>dialog</code>, <code>select</code>, etc.) cumplen WCAG 2.2 AA. El criterio es parte del <em>Definition of Done</em>: ningún componente se considera listo sin axe verde, orden de tabulación correcto y soporte a lector de pantalla."
+      "subtitle": "Todo componente del sistema cumple WCAG 2.2 AA — el estándar internacional de accesibilidad — y se verifica con pruebas automáticas en cada cambio. Ningún componente se considera listo sin pasar esas pruebas, tener orden de navegación correcto y funcionar con lector de pantalla.",
+      "body": "Una honestidad importante: <strong>las pruebas automáticas no garantizan que el producto final sea accesible</strong> — ni las del design system ni las del propio producto. La accesibilidad depende del contexto de uso y de las limitaciones de cada persona, y ninguna verificación automática lo cubre todo por sí sola: no sabe si un texto tiene sentido, si un flujo es comprensible o si el orden de la información ayuda a quien escucha la página en vez de verla.",
+      "audience": "Lo que sí garantiza un design system 100% aprobado en las pruebas automáticas es otra cosa, igual de valiosa: la seguridad de no propagar errores básicos de accesibilidad — contraste insuficiente, botones sin nombre, foco invisible — a todos los productos construidos con él. La base llega correcta; el producto sigue siendo responsable de la experiencia completa, con pruebas manuales y personas reales."
     },
     "wcag22": {
       "title": "WCAG 2.2",
@@ -343,11 +349,11 @@
           "criteria": "1.4.11 Non-text Contrast"
         }
       },
-      "note": "Los tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> y <code>--info</code> se calibran para alcanzar 4.5:1 contra el background del tema en light y dark. Usa siempre <code>text-foreground</code> o <code>text-muted-foreground</code> para cuerpo de texto en contenedores coloreados."
+      "note": "Los tokens <code>--destructive</code>, <code>--success</code>, <code>--warning</code> y <code>--info</code> se calibran para alcanzar 4.5:1 contra el background del tema en light y dark. Usa siempre <code>.nds-text-foreground</code> o <code>.nds-text-muted-foreground</code> para cuerpo de texto en contenedores coloreados."
     },
     "keyboard": {
       "title": "Navegación por teclado",
-      "subtitle": "Toda funcionalidad debe ser operable solo con teclado (WCAG 2.2.1).",
+      "subtitle": "Toda funcionalidad debe ser operable solo con teclado (WCAG 2.1.1).",
       "keys": {
         "tab": "<kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> — mueve el foco al siguiente / anterior elemento focalizable.",
         "enter": "<kbd>Enter</kbd> — activa botones y enlaces; envía formularios.",
@@ -362,7 +368,7 @@
       "title": "Focus visible",
       "subtitle": "Indicador de foco visual es obligatorio en cualquier elemento interactivo (WCAG 2.4.7).",
       "rules": {
-        "ring": "Usa <code>focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</code>. El token <code>--ring</code> siempre tiene 100% de opacidad.",
+        "ring": "Los componentes <code>.nds-*</code> ya traen el anillo de foco vía <code>box-shadow</code> con el token <code>--ring</code> (siempre 100% de opacidad). En CSS custom, usa la clase <code>.nds-focus-ring</code> o replica el patrón <code>box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring))</code>.",
         "noOutlineNone": "Nunca apliques <code>outline: none</code> sin un sustituto visible inmediato. Quitar el anillo de foco sin fallback es falla WCAG 2.4.7 y rompe navegación por teclado.",
         "visibleOnly": "<code>:focus-visible</code> muestra el anillo solo cuando el usuario navega por teclado — el clic de ratón no lo dispara, evitando el anillo tras clics.",
         "contrast": "El contraste del anillo de foco contra el background adyacente debe ser ≥ 3:1 (WCAG 1.4.11)."
@@ -387,7 +393,7 @@
       "title": "Lectores de pantalla",
       "subtitle": "Patrones probados con VoiceOver (macOS/iOS) y NVDA (Windows).",
       "rules": {
-        "srOnly": "<code>.sr-only</code> — texto disponible solo para lectores de pantalla. Úsalo para contexto extra fuera del flujo visual.",
+        "srOnly": "<code>.nds-sr-only</code> — texto disponible solo para lectores de pantalla. Úsalo para contexto extra que sale del flujo visual.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — iconos decorativos (lucide), separadores visuales y elementos puramente estéticos.",
         "live": "<code>aria-live=\"polite\"</code> — toasts y cambios no críticos. <code>assertive</code> solo para errores bloqueantes.",
         "noEmoji": "Los emojis en texto se filtran al lector de pantalla como descripción literal. Usa iconos SVG con <code>aria-hidden</code> + label textual."
