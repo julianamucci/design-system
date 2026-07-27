@@ -36,6 +36,7 @@ export function IconsDocs() {
     description: t('description'),
     locale,
     componentSlug: 'icons',
+    kind: 'guide',
   });
 
   // ─── Analytics — page view ───────────────────────────────────────────────

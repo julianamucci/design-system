@@ -185,6 +185,7 @@ useSeoEffect(
     description: t('description'),
     locale: locale.value,
     componentSlug: props.componentSlug,
+    kind: 'guide' as const,
     aiSummary: t('seo.aiSummary', ''),
     aiEntities: t('seo.aiEntities', ''),
     aiIntent: t('seo.aiIntent', 'informational'),

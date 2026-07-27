@@ -91,6 +91,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
       description: t('description'),
       locale,
       componentSlug,
+      kind: 'guide',
     });
     track('docs_page_view', {
       component_name: componentSlug,

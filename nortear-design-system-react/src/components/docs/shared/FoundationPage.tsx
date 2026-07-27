@@ -393,6 +393,7 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
     description: t('seo.description', t('description')),
     locale,
     componentSlug: slug,
+    kind: 'guide',
     aiSummary: t('seo.aiSummary', ''),
     aiEntities: t('seo.aiEntities', ''),
     aiIntent: t('seo.aiIntent', ''),

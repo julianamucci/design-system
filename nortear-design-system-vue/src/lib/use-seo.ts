@@ -14,14 +14,24 @@ interface SeoProps {
   locale: Locale;
   componentSlug: string;
   breadcrumb?: BreadcrumbEntry[];
+  /** Resumo denso (GEO) — vira `abstract` do JSON-LD TechArticle. */
   aiSummary?: string;
+  /** Entidades nomeadas em CSV (GEO) — viram `about` do JSON-LD TechArticle. */
   aiEntities?: string;
+  /** @deprecated Sem consumidor desde a migração das metas ai:* para JSON-LD. */
   aiIntent?: string;
+  /** Tipo da página: componente (emite SoftwareSourceCode) ou guia. Default: 'component'. */
+  kind?: 'component' | 'guide';
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const HREFLANG_ATTR = 'data-ds-hreflang';
 const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
+const DOCS_JSONLD_ATTR = 'data-ds-docs-jsonld';
+
+const ORG_NAME = 'Nortear';
+const REPO_URL = 'https://github.com/julianamucci/design-system';
+const RUNTIME_PLATFORM = 'Vue 3';
 
 function buildLangUrl(base: string, lang: string): string {
   try {
@@ -41,7 +51,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
   watchEffect((onCleanup) => {
     // Unwrap reactive ref if needed
     const props = 'value' in propsOrRef ? propsOrRef.value : propsOrRef;
-    const { title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent } = props;
+    const { title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind = 'component' } = props;
 
     const isIframe = window.self !== window.top;
     const targetDoc = isIframe ? window.parent.document : document;
@@ -58,13 +68,10 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
     // Meta tags
     const metas: Array<{ name?: string; property?: string; content: string }> = [
       { name: 'description', content: description },
-      { name: 'ai:summary',  content: aiSummary ?? description },
       { property: 'og:title',       content: fullTitle },
       { property: 'og:description', content: description },
       { property: 'og:locale',      content: locale.replace('-', '_') },
     ];
-    if (aiEntities) metas.push({ name: 'ai:entities', content: aiEntities });
-    if (aiIntent)   metas.push({ name: 'ai:intent',   content: aiIntent });
 
     const managed: Array<{ el: HTMLMetaElement; prev: string | null; isNew: boolean }> = [];
     for (const m of metas) {
@@ -116,6 +123,40 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
       targetDoc.head.appendChild(breadcrumbScript);
     }
 
+    // ── JSON-LD TechArticle + SoftwareSourceCode (Schema.org) ─────────────
+    // aiSummary vira `abstract`; aiEntities vira `about`. SoftwareSourceCode
+    // só em páginas de componente.
+    targetDoc.querySelectorAll(`script[${DOCS_JSONLD_ATTR}]`).forEach(el => (el as HTMLElement).remove());
+    const canonicalUrl = buildLangUrl(base, locale);
+    const article: Record<string, unknown> = {
+      '@type': 'TechArticle',
+      headline: fullTitle,
+      description,
+      inLanguage: locale,
+      mainEntityOfPage: canonicalUrl,
+      author: { '@type': 'Organization', name: ORG_NAME },
+      publisher: { '@type': 'Organization', name: ORG_NAME },
+    };
+    if (aiSummary) article.abstract = aiSummary;
+    if (aiEntities) article.about = aiEntities.split(',').map(e => e.trim()).filter(Boolean);
+    const graph: Array<Record<string, unknown>> = [article];
+    if (kind === 'component') {
+      graph.push({
+        '@type': 'SoftwareSourceCode',
+        name: fullTitle,
+        description,
+        programmingLanguage: 'TypeScript',
+        runtimePlatform: RUNTIME_PLATFORM,
+        codeRepository: REPO_URL,
+        url: canonicalUrl,
+      });
+    }
+    const docsJsonldScript = targetDoc.createElement('script');
+    docsJsonldScript.setAttribute('type', 'application/ld+json');
+    docsJsonldScript.setAttribute(DOCS_JSONLD_ATTR, 'true');
+    docsJsonldScript.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+    targetDoc.head.appendChild(docsJsonldScript);
+
     // ── GA4 page_view ─────────────────────────────────────────────────────
     track('page_view', {
       page_location: targetWin.location.href,
@@ -132,6 +173,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
       });
       hreflangLinks.forEach(el => el.remove());
       if (breadcrumbScript) breadcrumbScript.remove();
+      docsJsonldScript.remove();
     });
   });
 }

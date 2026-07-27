@@ -95,6 +95,7 @@ useSeoEffect(
     description: t('description'),
     locale: store.locale,
     componentSlug: 'theme-colors',
+    kind: 'guide' as const,
   }))
 );
 

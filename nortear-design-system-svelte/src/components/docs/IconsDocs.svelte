@@ -55,6 +55,7 @@
       description: t('description'),
       locale: $locale,
       componentSlug: 'icons',
+      kind: 'guide',
     });
     track('docs_page_view', {
       component_name: 'icons',

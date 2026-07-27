@@ -48,6 +48,7 @@
       description: seoBlock.description ?? t('description'),
       locale: $locale,
       componentSlug,
+      kind: 'guide',
       aiSummary: seoBlock.aiSummary,
       aiEntities: seoBlock.aiEntities,
       aiIntent: seoBlock.aiIntent,

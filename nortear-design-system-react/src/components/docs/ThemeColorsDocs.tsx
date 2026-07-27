@@ -88,6 +88,7 @@ export function ThemeColorsDocs() {
     description: t('description'),
     locale,
     componentSlug: 'theme-colors',
+    kind: 'guide',
   });
 
   // ─── Analytics — page view ───────────────────────────────────────────────

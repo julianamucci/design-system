@@ -59,6 +59,7 @@ export function createIconsDocs(): HTMLElement {
       description: t('description'),
       locale,
       componentSlug: 'icons',
+      kind: 'guide',
     });
     track('docs_page_view', {
       component_name: 'icons',

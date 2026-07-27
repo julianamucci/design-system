@@ -141,6 +141,7 @@
       description: t('description'),
       locale: $locale,
       componentSlug: 'theme-colors',
+      kind: 'guide',
     });
     track('docs_page_view', {
       component_name: 'theme-colors',

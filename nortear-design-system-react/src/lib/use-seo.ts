@@ -3,9 +3,11 @@
  *
  * Gerencia dinamicamente por idioma:
  *  - <title> e <html lang>
- *  - <meta name="description"> e <meta name="ai:summary">
+ *  - <meta name="description">
  *  - Open Graph: og:title, og:description, og:locale, og:url (canônica com ?lang=)
  *  - <link rel="alternate" hreflang="..."> para pt-BR, en, es e x-default
+ *  - JSON-LD Schema.org: TechArticle (+ SoftwareSourceCode em páginas de
+ *    componente) e BreadcrumbList opcional
  *
  * Limpa todos os elementos adicionados no cleanup do efeito.
  */
@@ -35,12 +37,14 @@ interface SeoProps {
   componentSlug: string;
   /** Caminho navegacional para JSON-LD BreadcrumbList (rich snippets). */
   breadcrumb?: BreadcrumbEntry[];
-  /** Resumo para LLMs (GEO). Se ausente, faz fallback para `description`. */
+  /** Resumo denso (GEO) — vira `abstract` do JSON-LD TechArticle. */
   aiSummary?: string;
-  /** Entidades nomeadas (lista CSV) para LLMs (GEO). */
+  /** Entidades nomeadas em CSV (GEO) — viram `about` do JSON-LD TechArticle. */
   aiEntities?: string;
-  /** Intenção/uso primário para LLMs (GEO). */
+  /** @deprecated Sem consumidor desde a migração das metas ai:* para JSON-LD. */
   aiIntent?: string;
+  /** Tipo da página: componente (emite SoftwareSourceCode) ou guia. Default: 'component'. */
+  kind?: 'component' | 'guide';
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -52,6 +56,13 @@ const HREFLANG_ATTR = 'data-ds-hreflang';
 
 /** Atributo sentinela para identificar o <script> JSON-LD BreadcrumbList injetado. */
 const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
+
+/** Atributo sentinela para o <script> JSON-LD TechArticle/SoftwareSourceCode. */
+const DOCS_JSONLD_ATTR = 'data-ds-docs-jsonld';
+
+const ORG_NAME = 'Nortear';
+const REPO_URL = 'https://github.com/julianamucci/design-system';
+const RUNTIME_PLATFORM = 'React 19';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -94,7 +105,7 @@ function upsertMeta(
 
 // ─── Hook principal ───────────────────────────────────────────────────────────
 
-export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent }: SeoProps): void {
+export function useSeoEffect({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind = 'component' }: SeoProps): void {
   useEffect(() => {
     // Defensive: algumas docs pages importam objetos `locale` de libs externas
     // (ex: ptBR de react-day-picker). Normaliza para string BCP 47.
@@ -118,7 +129,6 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
     // ── Meta tags ─────────────────────────────────────────────────────────
     const managedMeta = [
       upsertMeta(targetDoc, { name: 'description' }, description),
-      upsertMeta(targetDoc, { name: 'ai:summary' }, aiSummary ?? description),
       upsertMeta(targetDoc, { property: 'og:title' }, fullTitle),
       upsertMeta(targetDoc, { property: 'og:description' }, description),
       upsertMeta(targetDoc, { property: 'og:locale' }, localeStr.replace('-', '_')),
@@ -132,12 +142,6 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       ),
     ];
 
-    if (aiEntities) {
-      managedMeta.push(upsertMeta(targetDoc, { name: 'ai:entities' }, aiEntities));
-    }
-    if (aiIntent) {
-      managedMeta.push(upsertMeta(targetDoc, { name: 'ai:intent' }, aiIntent));
-    }
 
     // ── Hreflang links ────────────────────────────────────────────────────
     // Remove links anteriores deste hook para evitar duplicatas entre idiomas.
@@ -184,6 +188,42 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       targetDoc.head.appendChild(breadcrumbScript);
     }
 
+    // ── JSON-LD TechArticle + SoftwareSourceCode (Schema.org) ─────────────
+    // Dados estruturados para buscadores e LLMs. aiSummary vira `abstract`;
+    // aiEntities vira `about`. SoftwareSourceCode só em páginas de componente.
+    targetDoc.querySelectorAll(`script[${DOCS_JSONLD_ATTR}]`).forEach((el) => el.remove());
+    const canonicalUrl = buildLangUrl(base, localeStr);
+    const article: Record<string, unknown> = {
+      '@type': 'TechArticle',
+      headline: fullTitle,
+      description,
+      inLanguage: localeStr,
+      mainEntityOfPage: canonicalUrl,
+      author: { '@type': 'Organization', name: ORG_NAME },
+      publisher: { '@type': 'Organization', name: ORG_NAME },
+    };
+    if (aiSummary) article.abstract = aiSummary;
+    if (aiEntities) {
+      article.about = aiEntities.split(',').map((e) => e.trim()).filter(Boolean);
+    }
+    const graph: Array<Record<string, unknown>> = [article];
+    if (kind === 'component') {
+      graph.push({
+        '@type': 'SoftwareSourceCode',
+        name: fullTitle,
+        description,
+        programmingLanguage: 'TypeScript',
+        runtimePlatform: RUNTIME_PLATFORM,
+        codeRepository: REPO_URL,
+        url: canonicalUrl,
+      });
+    }
+    const docsJsonldScript = targetDoc.createElement('script');
+    docsJsonldScript.setAttribute('type', 'application/ld+json');
+    docsJsonldScript.setAttribute(DOCS_JSONLD_ATTR, 'true');
+    docsJsonldScript.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+    targetDoc.head.appendChild(docsJsonldScript);
+
     // ── GA4 page_view ─────────────────────────────────────────────────────
     // Dispara um page_view no GA4 do manager a cada troca de título/locale.
     // Sem isso, o GA4 só vê a URL inicial do manager e nada das stories.
@@ -207,6 +247,7 @@ export function useSeoEffect({ title, description, locale, componentSlug, breadc
       });
       hreflangLinks.forEach((el) => el.remove());
       if (breadcrumbScript) breadcrumbScript.remove();
+      docsJsonldScript.remove();
     };
-  }, [title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent]);
+  }, [title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind]);
 }

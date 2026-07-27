@@ -18,14 +18,24 @@ interface SeoProps {
   locale: Locale;
   componentSlug: string;
   breadcrumb?: BreadcrumbEntry[];
+  /** Resumo denso (GEO) — vira `abstract` do JSON-LD TechArticle. */
   aiSummary?: string;
+  /** Entidades nomeadas em CSV (GEO) — viram `about` do JSON-LD TechArticle. */
   aiEntities?: string;
+  /** @deprecated Sem consumidor desde a migração das metas ai:* para JSON-LD. */
   aiIntent?: string;
+  /** Tipo da página: componente (emite SoftwareSourceCode) ou guia. Default: 'component'. */
+  kind?: 'component' | 'guide';
 }
 
 const SUPPORTED_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const HREFLANG_ATTR = 'data-ds-hreflang';
 const BREADCRUMB_JSONLD_ATTR = 'data-ds-breadcrumb-jsonld';
+const DOCS_JSONLD_ATTR = 'data-ds-docs-jsonld';
+
+const ORG_NAME = 'Nortear';
+const REPO_URL = 'https://github.com/julianamucci/design-system';
+const RUNTIME_PLATFORM = 'Svelte 5';
 
 function buildLangUrl(base: string, lang: string): string {
   try {
@@ -66,7 +76,7 @@ function upsertMeta(
  * Aplica SEO e retorna uma função de cleanup.
  * Usar dentro de $effect(() => { return applySeo({...}); })
  */
-export function applySeo({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, aiIntent }: SeoProps): () => void {
+export function applySeo({ title, description, locale, componentSlug, breadcrumb, aiSummary, aiEntities, kind = 'component' }: SeoProps): () => void {
   const isIframe = window.self !== window.top;
   const targetDoc = isIframe ? window.parent.document : document;
   const targetWin = isIframe ? window.parent : window;
@@ -80,7 +90,6 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
 
   const managedMeta = [
     upsertMeta(targetDoc, { name: 'description' }, description),
-    upsertMeta(targetDoc, { name: 'ai:summary' }, aiSummary ?? description),
     upsertMeta(targetDoc, { property: 'og:title' }, fullTitle),
     upsertMeta(targetDoc, { property: 'og:description' }, description),
     upsertMeta(targetDoc, { property: 'og:locale' }, locale.replace('-', '_')),
@@ -94,12 +103,6 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
     ),
   ];
 
-  if (aiEntities) {
-    managedMeta.push(upsertMeta(targetDoc, { name: 'ai:entities' }, aiEntities));
-  }
-  if (aiIntent) {
-    managedMeta.push(upsertMeta(targetDoc, { name: 'ai:intent' }, aiIntent));
-  }
 
   targetDoc.querySelectorAll(`link[${HREFLANG_ATTR}]`).forEach((el) => el.remove());
 
@@ -148,6 +151,40 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
     targetDoc.head.appendChild(breadcrumbScript);
   }
 
+  // ── JSON-LD TechArticle + SoftwareSourceCode (Schema.org) ───────────────
+  // aiSummary vira `abstract`; aiEntities vira `about`. SoftwareSourceCode
+  // só em páginas de componente.
+  targetDoc.querySelectorAll(`script[${DOCS_JSONLD_ATTR}]`).forEach((el) => el.remove());
+  const canonicalUrl = buildLangUrl(base, locale);
+  const article: Record<string, unknown> = {
+    '@type': 'TechArticle',
+    headline: fullTitle,
+    description,
+    inLanguage: locale,
+    mainEntityOfPage: canonicalUrl,
+    author: { '@type': 'Organization', name: ORG_NAME },
+    publisher: { '@type': 'Organization', name: ORG_NAME },
+  };
+  if (aiSummary) article.abstract = aiSummary;
+  if (aiEntities) article.about = aiEntities.split(',').map((e) => e.trim()).filter(Boolean);
+  const graph: Array<Record<string, unknown>> = [article];
+  if (kind === 'component') {
+    graph.push({
+      '@type': 'SoftwareSourceCode',
+      name: fullTitle,
+      description,
+      programmingLanguage: 'TypeScript',
+      runtimePlatform: RUNTIME_PLATFORM,
+      codeRepository: REPO_URL,
+      url: canonicalUrl,
+    });
+  }
+  const docsJsonldScript = targetDoc.createElement('script');
+  docsJsonldScript.setAttribute('type', 'application/ld+json');
+  docsJsonldScript.setAttribute(DOCS_JSONLD_ATTR, 'true');
+  docsJsonldScript.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+  targetDoc.head.appendChild(docsJsonldScript);
+
   // ── GA4 page_view ───────────────────────────────────────────────────────
   track('page_view', {
     page_location: targetWin.location.href,
@@ -168,5 +205,6 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
     });
     hreflangLinks.forEach((el) => el.remove());
     if (breadcrumbScript) breadcrumbScript.remove();
+    docsJsonldScript.remove();
   };
 }

@@ -37,6 +37,7 @@ useSeoEffect(
     description: t('description'),
     locale: store.locale,
     componentSlug: 'icons',
+    kind: 'guide' as const,
   }))
 );
 

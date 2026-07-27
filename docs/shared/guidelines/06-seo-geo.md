@@ -36,7 +36,7 @@ export function AlertDocs() {
 O hook `useSeoEffect` gerencia internamente:
 - `document.title` no documento pai
 - `<meta name="description">` e `<meta property="og:*">` no documento pai
-- `<meta name="ai:summary">`, `<meta name="ai:entities">`, `<meta name="ai:intent">`
+- `(removida — ver JSON-LD)`, `(removida — ver JSON-LD)`, `(removida — ver JSON-LD)`
 - JSON-LD (TechArticle + SoftwareSourceCode)
 - `lang="pt-BR"` no `<html>` do documento pai
 - **GA4 `page_view`** — dispara `track('page_view', { page_location, page_title, component_name, locale })` a cada troca de story/locale
@@ -245,7 +245,7 @@ Metatags específicas para consumo por IAs generativas. Gerenciadas pelo `useSeo
 Resumo descritivo em 1–2 frases. Máximo 200 caracteres. Estilo enciclopédico.
 
 ```html
-<meta name="ai:summary" content="Documentação do Button do Design System. Cobre variantes, estados, propriedades TypeScript e integração com formulários React." />
+(removida — ver JSON-LD)
 ```
 
 ### ai:entities
@@ -253,7 +253,7 @@ Resumo descritivo em 1–2 frases. Máximo 200 caracteres. Estilo enciclopédico
 Entidades principais. Lista separada por vírgulas, máximo 10.
 
 ```html
-<meta name="ai:entities" content="Button, Design System, CSS .nds-*, React, TypeScript, base-ui, WCAG, React Hook Form, Lucide React, variantes de botão" />
+(removida — ver JSON-LD)
 ```
 
 ### ai:intent
@@ -337,10 +337,10 @@ ai:intent:   informational
 
 **Para IAs generativas:**
 1. JSON-LD Schema.org — formato estruturado preferido
-2. `<meta name="ai:summary">` — leitura direta para resumo
-3. `<meta name="ai:entities">` — mapeamento de conceitos
+2. `(removida — ver JSON-LD)` — leitura direta para resumo
+3. `(removida — ver JSON-LD)` — mapeamento de conceitos
 4. `<meta property="og:description">` — fallback
-5. `<meta name="ai:intent">` — classifica o propósito
+5. `(removida — ver JSON-LD)` — classifica o propósito
 
 ---
 
@@ -371,3 +371,16 @@ ai:intent:   informational
 | Open Graph Debugger | Metatags og:* |
 | Twitter Card Validator | Twitter Cards |
 | Schema Markup Validator | JSON-LD (padrão W3C) |
+
+
+---
+
+## Atualização 2026-07 — JSON-LD no lugar das metas ai:*
+
+As meta tags `ai:summary`/`ai:entities`/`ai:intent` foram REMOVIDAS do hook (eram proprietárias, sem consumidor documentado). Os campos do translations.json continuam obrigatórios e agora têm destino padronizado:
+
+- `seo.aiSummary` → `abstract` do JSON-LD **TechArticle** (emitido em toda docs page)
+- `seo.aiEntities` → `about` do TechArticle (array)
+- `seo.aiIntent` → aposentado (sem consumidor; opcional em conteúdo novo)
+- Páginas de componente também emitem **SoftwareSourceCode** (programmingLanguage, runtimePlatform da stack, codeRepository); páginas de guia passam `kind: [guide]` no useSeoEffect/applySeo
+- O build gera `llms.txt` (llmstxt.org) + sitemap.xml + robots.txt via generate-seo-files.mjs
