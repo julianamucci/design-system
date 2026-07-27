@@ -232,9 +232,10 @@ No painel do Vercel, pra cada uma das 4 stacks:
 1. **New Project → Import Git Repository**, seleciona o repo do seu design system
 2. **Root Directory**: aponta pro subdiretório da stack (`nortear-design-system-react`, `nortear-design-system-vue`, etc.)
 3. **Framework Preset**: Other (o `vercel.json` já configura build/install)
-4. Após criar: **Settings → Domains** → adicione `react.suamarca.com` (ou equivalente)
-5. Copie o hostname CNAME que o Vercel mostrar e configure no DNS do seu registrador
-6. Aguarde propagação + provisionamento TLS (~2-15 min)
+4. **Settings → Git → Ignored Build Step** → `node ../scripts/vercel-should-build.mjs` — ESSENCIAL para não queimar créditos: pula previews de PR (incluindo Dependabot) e só builda a stack cujos arquivos mudaram no push (um push que só toca outra stack não gasta build aqui). Para reativar previews, defina a env `VERCEL_PREVIEW_BUILDS=1` no projeto.
+5. Após criar: **Settings → Domains** → adicione `react.suamarca.com` (ou equivalente)
+6. Copie o hostname CNAME que o Vercel mostrar e configure no DNS do seu registrador
+7. Aguarde propagação + provisionamento TLS (~2-15 min)
 
 Veja a seção "Deploy" do [`README.md`](README.md) pra topologia completa.
 
