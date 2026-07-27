@@ -13,8 +13,9 @@
     },
     "intro": {
       "title": "Como funciona",
-      "body": "O sistema aplica até quatro classes em paralelo no elemento <code>&lt;html&gt;</code>: <code>tema-default | tema-warm | tema-cold</code> (marca), <code>dark</code> (modo escuro), <code>densidade-condensado | densidade-confortavel</code> (densidade) e <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (tipografia). Cada classe redefine um subconjunto de tokens CSS — o resto da árvore lê os tokens via <code>var(--token)</code> e se atualiza sem reflow extra.",
-      "audience": "Devs que vão criar um tema novo, integrar o sistema em um produto com white-label ou debugar inconsistência de tokens."
+      "subtitle": "Todo o theming acontece com classes no elemento <code>&lt;html&gt;</code> — nenhum JavaScript envolvido. Cada eixo tem seu grupo de classes: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo escuro</strong> (<code>dark</code>), <strong>densidade</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>família tipográfica</strong> (<code>fonte-*</code>) e <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). As classes podem ser combinadas livremente.",
+      "body": "Cada classe faz uma única coisa: redefinir tokens CSS (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Como os componentes leem esses tokens via <code>var(--token)</code>, a interface inteira muda de aparência no instante em que a classe muda — sem re-render e sem recarregar a página.",
+      "audience": "Esta página é para quem vai criar um tema novo, aplicar o sistema em um produto white-label ou investigar por que um token não está com o valor esperado."
     },
     "toolbar": {
       "title": "Toolbar do Storybook",
@@ -158,8 +159,9 @@
     },
     "intro": {
       "title": "How it works",
-      "body": "The system applies up to four classes in parallel on the <code>&lt;html&gt;</code> element: <code>tema-default | tema-warm | tema-cold</code> (brand), <code>dark</code> (dark mode), <code>densidade-condensado | densidade-confortavel</code> (density) and <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (typography). Each class redefines a subset of CSS tokens — the rest of the tree reads them via <code>var(--token)</code> and updates with no extra reflow.",
-      "audience": "Devs authoring a new theme, integrating the system into a white-label product or debugging token inconsistencies."
+      "subtitle": "All theming happens through classes on the <code>&lt;html&gt;</code> element — no JavaScript involved. Each axis has its own class group: <strong>brand theme</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>dark mode</strong> (<code>dark</code>), <strong>density</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>font family</strong> (<code>fonte-*</code>) and <strong>type scale</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Classes combine freely.",
+      "body": "Each class does exactly one thing: redefine CSS tokens (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Because components read these tokens via <code>var(--token)</code>, the whole interface changes appearance the moment the class changes — no re-render, no page reload.",
+      "audience": "This page is for anyone creating a new theme, applying the system to a white-label product, or investigating why a token doesn’t have the expected value."
     },
     "toolbar": {
       "title": "Storybook toolbar",
@@ -303,8 +305,9 @@
     },
     "intro": {
       "title": "Cómo funciona",
-      "body": "El sistema aplica hasta cuatro clases en paralelo en el elemento <code>&lt;html&gt;</code>: <code>tema-default | tema-warm | tema-cold</code> (marca), <code>dark</code> (modo oscuro), <code>densidade-condensado | densidade-confortavel</code> (densidad) y <code>fonte-lexend | fonte-pt-serif | fonte-lxgw-wenkai</code> (tipografía). Cada clase redefine un subconjunto de tokens CSS — el resto del árbol los lee vía <code>var(--token)</code> y se actualiza sin reflow extra.",
-      "audience": "Devs que van a crear un tema nuevo, integrar el sistema en un producto white-label o depurar inconsistencias de tokens."
+      "subtitle": "Todo el theming ocurre con clases en el elemento <code>&lt;html&gt;</code> — sin JavaScript. Cada eje tiene su grupo de clases: <strong>tema de marca</strong> (<code>tema-default</code>, <code>tema-warm</code>, <code>tema-cold</code>), <strong>modo oscuro</strong> (<code>dark</code>), <strong>densidad</strong> (<code>densidade-condensado</code>, <code>densidade-confortavel</code>), <strong>familia tipográfica</strong> (<code>fonte-*</code>) y <strong>escala tipográfica</strong> (<code>escala-*</code>, <code>base-tipo-*</code>). Las clases se combinan libremente.",
+      "body": "Cada clase hace una sola cosa: redefinir tokens CSS (<code>--background</code>, <code>--primary</code>, <code>--spacing-base</code>…). Como los componentes leen esos tokens vía <code>var(--token)</code>, toda la interfaz cambia de apariencia en el instante en que cambia la clase — sin re-render y sin recargar la página.",
+      "audience": "Esta página es para quien va a crear un tema nuevo, aplicar el sistema en un producto white-label o investigar por qué un token no tiene el valor esperado."
     },
     "toolbar": {
       "title": "Toolbar de Storybook",
