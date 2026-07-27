@@ -24,7 +24,8 @@ const rootRef = ref<HTMLElement | null>(null);
 let cleanup: (() => void) | null = null;
 
 onMounted(() => {
-  if (props.componentSlug && rootRef.value) {
+  // slug omitido → derivado do ?id= do iframe (mountDocsTracking)
+  if (rootRef.value) {
     cleanup = mountDocsTracking(rootRef.value, { componentSlug: props.componentSlug });
   }
 });
@@ -32,7 +33,7 @@ onMounted(() => {
 watch(() => props.componentSlug, (slug) => {
   cleanup?.();
   cleanup = null;
-  if (slug && rootRef.value) {
+  if (rootRef.value) {
     cleanup = mountDocsTracking(rootRef.value, { componentSlug: slug });
   }
 });

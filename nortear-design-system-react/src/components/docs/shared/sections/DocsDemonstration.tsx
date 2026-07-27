@@ -25,7 +25,12 @@ export interface DocsDemonstrationProps {
 
 export function DocsDemonstration({ title, children }: DocsDemonstrationProps) {
   return (
-    <section id="demonstracao">
+    <section
+      id="demonstracao"
+      data-track="demo"
+      data-track-container="true"
+      data-track-id="page:demonstracao:demo"
+    >
       <h2 className="nds-section-title">{title}</h2>
       <ComponentDemo>{children}</ComponentDemo>
     </section>

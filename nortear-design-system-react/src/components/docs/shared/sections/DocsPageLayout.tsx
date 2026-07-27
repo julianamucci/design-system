@@ -15,7 +15,7 @@ export function DocsPageLayout({ navGroups, activeSection, header, children, com
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (!componentSlug) return;
+    // slug omitido → derivado do ?id= do iframe (mountDocsTracking)
     return mountDocsTracking(rootRef.current, { componentSlug });
   }, [componentSlug]);
 

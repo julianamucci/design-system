@@ -21,7 +21,12 @@ defineProps<{ title: string; componentSlug?: string }>();
 </script>
 
 <template>
-  <section id="demonstracao">
+  <section
+    id="demonstracao"
+    data-track="demo"
+    data-track-container="true"
+    data-track-id="page:demonstracao:demo"
+  >
     <h2 class="nds-section-title">
       {{ title }}
     </h2>

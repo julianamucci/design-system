@@ -19,9 +19,32 @@
 import { track } from './analytics';
 
 export interface MountDocsTrackingOptions {
-  /** Slug do componente (primeiro segmento de todo `data-track-id`). */
-  componentSlug: string;
+  /** Slug do componente. Se omitido, é derivado do `?id=` do iframe do
+   *  Storybook (ex.: `ui-button--docs` → `button`). */
+  componentSlug?: string;
 }
+
+/** Deriva o slug do componente a partir da URL do iframe do Storybook. */
+function deriveSlugFromUrl(): string {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id') ?? params.get('path')?.split('/').pop() ?? '';
+    const slug = id.replace(/^ui-/, '').replace(/--.*$/, '');
+    return slug || 'docs';
+  } catch {
+    return 'docs';
+  }
+}
+
+/** Elementos considerados interativos ao resolver cliques dentro de um
+ *  container `data-track-container` (demos auto-instrumentadas). */
+const INTERACTIVE_SELECTOR = [
+  'button', 'a[href]', 'input', 'select', 'textarea', 'summary',
+  '[role="button"]', '[role="switch"]', '[role="checkbox"]', '[role="radio"]',
+  '[role="tab"]', '[role="menuitem"]', '[role="menuitemcheckbox"]',
+  '[role="menuitemradio"]', '[role="option"]', '[role="slider"]',
+  '[role="combobox"]', '[role="link"]',
+].join(', ');
 
 /**
  * Monta click listener no root. Retorna função de cleanup.
@@ -29,9 +52,10 @@ export interface MountDocsTrackingOptions {
  */
 export function mountDocsTracking(
   root: HTMLElement | null,
-  { componentSlug }: MountDocsTrackingOptions,
+  { componentSlug: slugOption }: MountDocsTrackingOptions = {},
 ): () => void {
   if (!root) return () => {};
+  const componentSlug = slugOption ?? deriveSlugFromUrl();
 
   const handler = (ev: Event) => {
     const target = ev.target as HTMLElement | null;
@@ -42,12 +66,25 @@ export function mountDocsTracking(
 
     const type = trigger.getAttribute('data-track');
     const id = trigger.getAttribute('data-track-id') ?? '';
-    const label = trigger.getAttribute('data-track-label') ?? trigger.textContent?.trim() ?? '';
+    const labelAttr = trigger.getAttribute('data-track-label') ?? trigger.textContent?.trim() ?? '';
 
     // Extrai o segmento `element` (parte 3 do id estruturado).
     const parts = id.split(':');
     const section = parts[1] ?? '';
-    const element = parts.slice(2).join(':');
+    let element = parts.slice(2).join(':');
+    let label = labelAttr;
+
+    // Container auto-instrumentado (ex.: área de demonstração): resolve o
+    // elemento interativo REALMENTE clicado; cliques no vazio são ignorados.
+    if (trigger.hasAttribute('data-track-container')) {
+      const interactive = target.closest<HTMLElement>(INTERACTIVE_SELECTOR);
+      if (!interactive || !trigger.contains(interactive)) return;
+      label =
+        interactive.getAttribute('aria-label') ??
+        interactive.textContent?.trim().slice(0, 80) ??
+        '';
+      element = interactive.id || label || element;
+    }
 
     switch (type) {
       case 'nav':

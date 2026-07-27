@@ -69,9 +69,8 @@ export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayout
 
   rebuildNav(props.navGroups);
 
-  const trackingCleanup = props.componentSlug
-    ? mountDocsTracking(root, { componentSlug: props.componentSlug })
-    : () => {};
+  // slug omitido → derivado do ?id= do iframe (mountDocsTracking)
+  const trackingCleanup = mountDocsTracking(root, { componentSlug: props.componentSlug });
 
   return {
     root,

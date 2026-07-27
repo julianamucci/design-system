@@ -25,7 +25,7 @@
   } = $props();
 </script>
 
-<section id="demonstracao">
+<section id="demonstracao" data-track="demo" data-track-container="true" data-track-id="page:demonstracao:demo">
   <h2 class="nds-section-title">{title}</h2>
   <ComponentDemo>
     {@render children()}

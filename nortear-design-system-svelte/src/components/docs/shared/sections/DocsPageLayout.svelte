@@ -17,7 +17,8 @@
   let rootEl: HTMLElement | null = $state(null);
 
   $effect(() => {
-    if (!componentSlug || !rootEl) return;
+    if (!rootEl) return;
+    // slug omitido → derivado do ?id= do iframe (mountDocsTracking)
     return mountDocsTracking(rootEl, { componentSlug });
   });
 </script>

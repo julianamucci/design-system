@@ -31,6 +31,10 @@ export interface DocsDemonstrationProps {
 export function createDocsDemonstration(props: DocsDemonstrationProps): HTMLElement {
   const section = document.createElement('section');
   section.id = 'demonstracao';
+  // Demo auto-instrumentada: o observer resolve o elemento interativo clicado
+  section.dataset.track = 'demo';
+  section.dataset.trackContainer = 'true';
+  section.dataset.trackId = 'page:demonstracao:demo';
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
