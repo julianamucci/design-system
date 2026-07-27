@@ -13,7 +13,7 @@
     },
     "intro": {
       "title": "Visão geral",
-      "body": "Cada componente possui um único <code>translations.json</code> em <code>docs/shared/content/&lt;slug&gt;/</code>, com chaves idênticas nos três idiomas. Os quatro stacks consomem o mesmo arquivo via hook <code>useTranslation(translations, overrides?)</code> (ou função equivalente no Nortear).",
+      "body": "Cada componente possui um único <code>translations.json</code> em <code>docs/shared/content/&lt;slug&gt;/</code>, com chaves idênticas nos três idiomas. Os quatro stacks consomem o mesmo arquivo via <code>useTranslation(translations, overrides?)</code> — cada stack expõe o hook (ou função equivalente) em <code>src/lib/i18n</code>.",
       "audience": "Devs que vão criar uma docs page nova ou adicionar conteúdo a uma existente."
     },
     "languages": {
@@ -52,25 +52,17 @@
       "title": "useTranslation",
       "subtitle": "Hook compartilhado pelos quatro stacks. Recebe o objeto de traduções e retorna a função <code>t(path)</code>.",
       "items": {
-        "lookup": {
-          "title": "Lookup por dot-path",
-          "body": "Chaves aninhadas são acessadas via string com pontos. <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>."
-        },
-        "fallback": {
-          "title": "Fallback transparente",
-          "body": "Quando o locale ativo não tem a chave, o hook retorna o valor de pt-BR. Quando nem isso existe, retorna a própria chave (útil para flagrar erros em dev)."
-        },
-        "memoization": {
-          "title": "Memoização",
-          "body": "O retorno de <code>useTranslation</code> é estável por locale + objeto de overrides — pode ser usado como dependência de <code>useEffect</code> sem disparar loops."
-        }
+        "lookup": "<strong>Lookup por dot-path</strong> — chaves aninhadas são acessadas via string com pontos: <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>. O dicionário é pré-achatado uma vez por locale, então cada lookup é O(1).",
+        "fallback": "<strong>Fallback</strong> — se o idioma inteiro faltar no JSON, o hook usa pt-BR. Se uma chave individual faltar, <code>t(chave, valorPadrao?)</code> retorna o valor padrão ou a própria chave — o texto cru na tela flagra o erro em dev. Não há fallback por chave para pt-BR.",
+        "initial": "<strong>Locale inicial</strong> — prioridade: query param <code>?lang=</code> na URL (links compartilháveis por idioma) → valor salvo em <code>localStorage</code> (chave <code>ds-locale</code>) → padrão pt-BR.",
+        "memoization": "<strong>Retorno estável</strong> — o resultado só muda quando locale ou overrides mudam; pode ser usado como dependência de efeitos reativos sem disparar loops."
       }
     },
     "overrides": {
       "title": "Overrides por stack",
       "subtitle": "Segundo argumento de <code>useTranslation</code>. Permite reescrever chaves específicas quando a API da lib base diverge entre stacks.",
       "explanation": "O conteúdo descritivo é API-neutro, mas nomes literais de prop (<code>multiple</code> vs <code>type=\"single\"</code>) variam. Override é aplicado no call site da docs page, não no JSON compartilhado.",
-      "scope": "Override aceita uma chave <code>\"*\"</code> para valores globais (válidos em todos os idiomas) e chaves por idioma para descrições traduzíveis. Apenas chaves consumidas via <code>t()</code> sofrem override — listas iteradas diretamente em <code>translations[locale].props.items</code> precisam de um <code>useMemo</code> local que troque o item."
+      "scope": "Override aceita uma chave <code>\"*\"</code> para valores globais (válidos em todos os idiomas) e chaves por idioma para descrições traduzíveis. Apenas chaves consumidas via <code>t()</code> sofrem override — listas iteradas diretamente em <code>translations[locale].props.items</code> precisam de uma lista local no call site que troque o item."
     },
     "switcher": {
       "title": "LanguageSwitcher",
@@ -106,7 +98,7 @@
     },
     "intro": {
       "title": "Overview",
-      "body": "Each component has a single <code>translations.json</code> at <code>docs/shared/content/&lt;slug&gt;/</code>, with identical keys across the three languages. All four stacks consume the same file via the <code>useTranslation(translations, overrides?)</code> hook (or equivalent function in Nortear).",
+      "body": "Each component has a single <code>translations.json</code> at <code>docs/shared/content/&lt;slug&gt;/</code>, with identical keys across the three languages. All four stacks consume the same file via <code>useTranslation(translations, overrides?)</code> — each stack exposes the hook (or equivalent function) in <code>src/lib/i18n</code>.",
       "audience": "Devs creating a new docs page or adding content to an existing one."
     },
     "languages": {
@@ -145,25 +137,17 @@
       "title": "useTranslation",
       "subtitle": "Hook shared by all four stacks. Receives the translations object and returns the <code>t(path)</code> function.",
       "items": {
-        "lookup": {
-          "title": "Dot-path lookup",
-          "body": "Nested keys are accessed via dotted strings. <code>t('props.table.required')</code> resolves to <code>translations[locale].props.table.required</code>."
-        },
-        "fallback": {
-          "title": "Transparent fallback",
-          "body": "When the active locale lacks a key, the hook returns the pt-BR value. When even that is missing, it returns the key itself (handy to surface errors in dev)."
-        },
-        "memoization": {
-          "title": "Memoization",
-          "body": "The <code>useTranslation</code> return is stable per locale + overrides object — safe to use as a <code>useEffect</code> dependency without firing loops."
-        }
+        "lookup": "<strong>Dot-path lookup</strong> — nested keys are accessed via dotted strings: <code>t('props.table.required')</code> equals <code>translations[locale].props.table.required</code>. The dictionary is pre-flattened once per locale, so each lookup is O(1).",
+        "fallback": "<strong>Fallback</strong> — if the whole language is missing from the JSON, the hook uses pt-BR. If an individual key is missing, <code>t(key, defaultValue?)</code> returns the default or the key itself — raw text on screen flags the error in dev. There is no per-key fallback to pt-BR.",
+        "initial": "<strong>Initial locale</strong> — priority: <code>?lang=</code> query param in the URL (shareable per-language links) → value saved in <code>localStorage</code> (<code>ds-locale</code> key) → pt-BR default.",
+        "memoization": "<strong>Stable return</strong> — the result only changes when locale or overrides change; safe to use as a reactive-effect dependency without triggering loops."
       }
     },
     "overrides": {
       "title": "Per-stack overrides",
       "subtitle": "Second argument of <code>useTranslation</code>. Lets you rewrite specific keys when the base lib API diverges between stacks.",
       "explanation": "Descriptive content is API-neutral, but literal prop names (<code>multiple</code> vs <code>type=\"single\"</code>) vary. Overrides happen at the docs page call site, not in the shared JSON.",
-      "scope": "Override accepts a <code>\"*\"</code> key for global values (valid across languages) and per-language keys for translatable descriptions. Only keys consumed via <code>t()</code> are overridden — lists iterated directly from <code>translations[locale].props.items</code> need a local <code>useMemo</code> that swaps the entry."
+      "scope": "Override accepts a <code>\"*\"</code> key for global values (valid across languages) and per-language keys for translatable descriptions. Only keys consumed via <code>t()</code> are overridden — lists iterated directly from <code>translations[locale].props.items</code> need a local list at the call site that swaps the entry."
     },
     "switcher": {
       "title": "LanguageSwitcher",
@@ -199,7 +183,7 @@
     },
     "intro": {
       "title": "Visión general",
-      "body": "Cada componente tiene un único <code>translations.json</code> en <code>docs/shared/content/&lt;slug&gt;/</code>, con claves idénticas en los tres idiomas. Los cuatro stacks consumen el mismo archivo vía el hook <code>useTranslation(translations, overrides?)</code> (o función equivalente en Nortear).",
+      "body": "Cada componente tiene un único <code>translations.json</code> en <code>docs/shared/content/&lt;slug&gt;/</code>, con claves idénticas en los tres idiomas. Los cuatro stacks consumen el mismo archivo vía <code>useTranslation(translations, overrides?)</code> — cada stack expone el hook (o función equivalente) en <code>src/lib/i18n</code>.",
       "audience": "Devs que van a crear una docs page nueva o agregar contenido a una existente."
     },
     "languages": {
@@ -238,25 +222,17 @@
       "title": "useTranslation",
       "subtitle": "Hook compartido por los cuatro stacks. Recibe el objeto de traducciones y devuelve la función <code>t(path)</code>.",
       "items": {
-        "lookup": {
-          "title": "Lookup por dot-path",
-          "body": "Las claves anidadas se acceden vía string con puntos. <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>."
-        },
-        "fallback": {
-          "title": "Fallback transparente",
-          "body": "Cuando el locale activo no tiene la clave, el hook devuelve el valor de pt-BR. Cuando ni eso existe, devuelve la propia clave (útil para detectar errores en dev)."
-        },
-        "memoization": {
-          "title": "Memoización",
-          "body": "El retorno de <code>useTranslation</code> es estable por locale + objeto de overrides — puede usarse como dependencia de <code>useEffect</code> sin disparar loops."
-        }
+        "lookup": "<strong>Lookup por dot-path</strong> — las claves anidadas se acceden vía string con puntos: <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>. El diccionario se aplana una vez por locale, así cada lookup es O(1).",
+        "fallback": "<strong>Fallback</strong> — si falta el idioma completo en el JSON, el hook usa pt-BR. Si falta una clave individual, <code>t(clave, valorPorDefecto?)</code> devuelve el valor por defecto o la propia clave — el texto crudo en pantalla delata el error en dev. No hay fallback por clave hacia pt-BR.",
+        "initial": "<strong>Locale inicial</strong> — prioridad: query param <code>?lang=</code> en la URL (enlaces compartibles por idioma) → valor guardado en <code>localStorage</code> (clave <code>ds-locale</code>) → pt-BR por defecto.",
+        "memoization": "<strong>Retorno estable</strong> — el resultado solo cambia cuando cambian el locale o los overrides; puede usarse como dependencia de efectos reactivos sin disparar bucles."
       }
     },
     "overrides": {
       "title": "Overrides por stack",
       "subtitle": "Segundo argumento de <code>useTranslation</code>. Permite reescribir claves específicas cuando la API de la lib base diverge entre stacks.",
       "explanation": "El contenido descriptivo es API-neutro, pero los nombres literales de prop (<code>multiple</code> vs <code>type=\"single\"</code>) varían. El override se aplica en el call site de la docs page, no en el JSON compartido.",
-      "scope": "El override acepta una clave <code>\"*\"</code> para valores globales (válidos en todos los idiomas) y claves por idioma para descripciones traducibles. Solo las claves consumidas vía <code>t()</code> sufren override — listas iteradas directamente desde <code>translations[locale].props.items</code> necesitan un <code>useMemo</code> local que cambie la entrada."
+      "scope": "El override acepta una clave <code>\"*\"</code> para valores globales (válidos en todos los idiomas) y claves por idioma para descripciones traducibles. Solo las claves consumidas vía <code>t()</code> sufren override — listas iteradas directamente desde <code>translations[locale].props.items</code> necesitan una lista local en el call site que cambie la entrada."
     },
     "switcher": {
       "title": "LanguageSwitcher",
