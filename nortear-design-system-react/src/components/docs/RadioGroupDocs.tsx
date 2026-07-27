@@ -236,7 +236,16 @@ interface RadioGroupItemProps {
             </p>
             <RadioGroup
               value={paymentValue}
-              onValueChange={setPaymentValue}
+              onValueChange={(value: string) => {
+                track("radio_change", {
+                  component: "radio_group",
+                  name: "payment_method",
+                  value,
+                  previous_value: paymentValue || undefined,
+                  location: "docs_demo",
+                });
+                setPaymentValue(value);
+              }}
               aria-label={tContent("demonstration.labels.groupLabel")}
             >
               <div className="nds-cluster" data-spacing="xs">
@@ -267,7 +276,16 @@ interface RadioGroupItemProps {
             </p>
             <RadioGroup
               value={deliveryValue}
-              onValueChange={setDeliveryValue}
+              onValueChange={(value: string) => {
+                track("radio_change", {
+                  component: "radio_group",
+                  name: "delivery_method",
+                  value,
+                  previous_value: deliveryValue || undefined,
+                  location: "docs_demo",
+                });
+                setDeliveryValue(value);
+              }}
               style={{ gridAutoFlow: "column", gridAutoColumns: "max-content", gap: "1.5rem" }}
               aria-label={tContent("demonstration.labels.deliveryLabel")}
             >

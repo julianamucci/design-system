@@ -145,6 +145,33 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+// Fonte do próximo toggle: cliques em trigger/rail marcam a origem (fase de
+// captura); sem clique registrado, assume o atalho de teclado (Ctrl/Cmd+B).
+const sidebarToggleSource = ref<'button' | 'rail' | 'keyboard'>('keyboard');
+
+function markToggleSource(source: 'button' | 'rail') {
+  sidebarToggleSource.value = source;
+}
+
+function handleSidebarOpenChange(open: boolean) {
+  track('sidebar_toggle', {
+    action: open ? 'open' : 'close',
+    trigger: sidebarToggleSource.value,
+  });
+  sidebarToggleSource.value = 'keyboard';
+}
+
+function handleDemoNavClick(label: string, destination: string) {
+  track('navigation_click', {
+    component: 'sidebar',
+    label,
+    destination,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { SidebarProvider, Sidebar, SidebarContent, SidebarInset } from "@/components/ui/sidebar";`;
@@ -534,7 +561,7 @@ const compositionItems = computed(() => [
         class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
         style="contain: layout; min-height: 400px; display: flex"
       >
-        <SidebarProvider>
+        <SidebarProvider @update:open="handleSidebarOpenChange">
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
             <Sidebar collapsible="offcanvas">
               <SidebarHeader
@@ -553,19 +580,26 @@ const compositionItems = computed(() => [
                           :is-active="true"
                           :tooltip="tContent('demonstration.labels.dashboard')"
                           aria-current="page"
+                          @click="handleDemoNavClick(tContent('demonstration.labels.dashboard'), '#dashboard')"
                         >
                           <LayoutDashboard aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.dashboard') }}</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton :tooltip="tContent('demonstration.labels.components')">
+                        <SidebarMenuButton
+                          :tooltip="tContent('demonstration.labels.components')"
+                          @click="handleDemoNavClick(tContent('demonstration.labels.components'), '#components')"
+                        >
                           <Blocks aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.components') }}</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton :tooltip="tContent('demonstration.labels.tokens')">
+                        <SidebarMenuButton
+                          :tooltip="tContent('demonstration.labels.tokens')"
+                          @click="handleDemoNavClick(tContent('demonstration.labels.tokens'), '#tokens')"
+                        >
                           <Palette aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.tokens') }}</span>
                         </SidebarMenuButton>
@@ -578,7 +612,10 @@ const compositionItems = computed(() => [
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton :tooltip="tContent('demonstration.labels.settings')">
+                        <SidebarMenuButton
+                          :tooltip="tContent('demonstration.labels.settings')"
+                          @click="handleDemoNavClick(tContent('demonstration.labels.settings'), '#settings')"
+                        >
                           <Settings aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.settings') }}</span>
                         </SidebarMenuButton>
@@ -590,14 +627,17 @@ const compositionItems = computed(() => [
               <SidebarFooter class="nds-p-2">
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton :tooltip="tContent('demonstration.labels.profile')">
+                    <SidebarMenuButton
+                      :tooltip="tContent('demonstration.labels.profile')"
+                      @click="handleDemoNavClick(tContent('demonstration.labels.profile'), '#profile')"
+                    >
                       <User aria-hidden="true" />
                       <span>{{ tContent('demonstration.labels.profile') }}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarFooter>
-              <SidebarRail />
+              <SidebarRail @click.capture="markToggleSource('rail')" />
             </Sidebar>
           </nav>
           <SidebarInset>
@@ -607,7 +647,7 @@ const compositionItems = computed(() => [
               data-align="center"
               style="height: 3rem"
             >
-              <SidebarTrigger />
+              <SidebarTrigger @click.capture="markToggleSource('button')" />
               <span class="nds-text-body nds-text-muted-foreground">{{ tContent('demonstration.labels.dashboard') }}</span>
             </header>
             <main

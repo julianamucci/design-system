@@ -240,7 +240,16 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             <ToggleGroup
               type="single"
               value={demoAlignment}
-              onValueChange={(v: string) => v && setDemoAlignment(v)}
+              onValueChange={(v: string) => {
+                if (!v) return;
+                setDemoAlignment(v);
+                track("field_change", {
+                  component: "toggle_group",
+                  field_name: "alignment",
+                  value: v,
+                  location: "docs_demo",
+                });
+              }}
               aria-label={tContent("demonstration.labels.alignmentLabel")}
             >
               <ToggleGroupItem value="left" aria-label={tContent("demonstration.labels.left")}>
@@ -266,7 +275,15 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             <ToggleGroup
               type="multiple"
               value={demoFormats}
-              onValueChange={(v: string[]) => setDemoFormats(v)}
+              onValueChange={(v: string[]) => {
+                setDemoFormats(v);
+                track("field_change", {
+                  component: "toggle_group",
+                  field_name: "formatting",
+                  value: v.join(","),
+                  location: "docs_demo",
+                });
+              }}
               aria-label={tContent("demonstration.labels.formattingLabel")}
             >
               <ToggleGroupItem value="bold" aria-label={tContent("demonstration.labels.bold")}>
@@ -290,7 +307,16 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
               type="single"
               orientation="vertical"
               value={demoView}
-              onValueChange={(v: string) => v && setDemoView(v)}
+              onValueChange={(v: string) => {
+                if (!v) return;
+                setDemoView(v);
+                track("field_change", {
+                  component: "toggle_group",
+                  field_name: "view_mode",
+                  value: v,
+                  location: "docs_demo",
+                });
+              }}
               aria-label={tContent("demonstration.labels.viewLabel")}
             >
               <ToggleGroupItem value="grid" aria-label={tContent("demonstration.labels.grid")}>

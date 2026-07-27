@@ -15,7 +15,6 @@ import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
@@ -38,20 +37,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string) =>
-  track("dialog_open", {
-    component: "dialog",
-    label,
-    location: "storybook:variantes",
-  });
-
-const trackAction = (action_label: string) =>
-  track("dialog_action", {
-    component: "dialog",
-    action_label,
-    location: "storybook:variantes",
-  });
-
 export const Default: Story = {
   parameters: {
     docs: {
@@ -65,7 +50,7 @@ export const Default: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -80,9 +65,7 @@ export const Default: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button onClick={() => trackAction(t("demonstration.labels.action"))}>
-              {t("demonstration.labels.action")}
-            </Button>
+            <Button>{t("demonstration.labels.action")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -106,7 +89,7 @@ export const WithForm: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -121,7 +104,6 @@ export const WithForm: Story = {
             className="nds-grid" data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
-              trackAction(t("demonstration.labels.action"));
             }}
           >
             <div className="nds-stack" data-spacing="sm">
@@ -162,7 +144,7 @@ export const WithScrollContent: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = "Termos de uso";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Ver termos
         </DialogTrigger>
@@ -187,7 +169,7 @@ export const WithScrollContent: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button onClick={() => trackAction("Aceitar")}>Aceitar</Button>
+            <Button>Aceitar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -210,7 +192,7 @@ export const NoFooter: Story = {
   render: () => {
     const title = "Sobre este recurso";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Saiba mais
         </DialogTrigger>
@@ -244,7 +226,7 @@ export const WithDestructiveAction: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = "Remover item da lista";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Remover
         </DialogTrigger>
@@ -260,12 +242,7 @@ export const WithDestructiveAction: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button
-              variant="destructive"
-              onClick={() => trackAction("Remover item")}
-            >
-              Remover item
-            </Button>
+            <Button variant="destructive">Remover item</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -290,7 +267,7 @@ export const CustomCloseInFooter: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -302,9 +279,7 @@ export const CustomCloseInFooter: Story = {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter showCloseButton>
-            <Button onClick={() => trackAction(t("demonstration.labels.action"))}>
-              {t("demonstration.labels.action")}
-            </Button>
+            <Button>{t("demonstration.labels.action")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

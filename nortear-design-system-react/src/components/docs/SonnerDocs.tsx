@@ -104,6 +104,11 @@ export function SonnerDocs() {
     });
   }, [locale, tContent]);
 
+  const trackToastDemo = useCallback(
+    (toastType: string) => track("toast_demo_triggered", { toast_type: toastType, locale }),
+    [locale]
+  );
+
   const handleSectionChange = useCallback(
     (id: string) => {
       track("docs_section_viewed", {
@@ -207,7 +212,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:default"
               data-track-label={tContent("demonstration.labels.triggerDefault")}
-              onClick={() => toast(tContent("demonstration.labels.default"))}
+              onClick={() => { trackToastDemo("default"); toast(tContent("demonstration.labels.default")); }}
             >
               {tContent("demonstration.labels.triggerDefault")}
             </Button>
@@ -217,7 +222,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:success"
               data-track-label={tContent("demonstration.labels.triggerSuccess")}
-              onClick={() => toast.success(tContent("demonstration.labels.success"))}
+              onClick={() => { trackToastDemo("success"); toast.success(tContent("demonstration.labels.success")); }}
             >
               {tContent("demonstration.labels.triggerSuccess")}
             </Button>
@@ -227,7 +232,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:error"
               data-track-label={tContent("demonstration.labels.triggerError")}
-              onClick={() => toast.error(tContent("demonstration.labels.error"))}
+              onClick={() => { trackToastDemo("error"); toast.error(tContent("demonstration.labels.error")); }}
             >
               {tContent("demonstration.labels.triggerError")}
             </Button>
@@ -237,7 +242,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:warning"
               data-track-label={tContent("demonstration.labels.triggerWarning")}
-              onClick={() => toast.warning(tContent("demonstration.labels.warning"))}
+              onClick={() => { trackToastDemo("warning"); toast.warning(tContent("demonstration.labels.warning")); }}
             >
               {tContent("demonstration.labels.triggerWarning")}
             </Button>
@@ -247,7 +252,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:info"
               data-track-label={tContent("demonstration.labels.triggerInfo")}
-              onClick={() => toast.info(tContent("demonstration.labels.info"))}
+              onClick={() => { trackToastDemo("info"); toast.info(tContent("demonstration.labels.info")); }}
             >
               {tContent("demonstration.labels.triggerInfo")}
             </Button>
@@ -257,7 +262,7 @@ interface ToasterProps {
               data-track="demo"
               data-track-id="sonner:demo:loading"
               data-track-label={tContent("demonstration.labels.triggerLoading")}
-              onClick={() => toast.loading(tContent("demonstration.labels.loading"))}
+              onClick={() => { trackToastDemo("loading"); toast.loading(tContent("demonstration.labels.loading")); }}
             >
               {tContent("demonstration.labels.triggerLoading")}
             </Button>
@@ -626,7 +631,7 @@ interface ToasterProps {
                         track("toast_action_click", {
                           label: tContent("demonstration.labels.withActionLabel"),
                           component: "toast",
-                          location: "sonner:estados:withAction",
+                          location: "docs_demo",
                         });
                       },
                     },

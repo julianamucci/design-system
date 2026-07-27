@@ -96,9 +96,27 @@
   let uploadValue = $state(0);
   let loadingValue = $state(0);
 
+  // Marcos de task_progress/task_complete: apenas no primeiro ciclo da animação,
+  // para não inundar o GA4 com o loop infinito da demo.
+  const uploadStart = Date.now();
+  const uploadMilestonesFired = new Set<number>();
+  let uploadCompleted = false;
+
   $effect(() => {
     const id = setInterval(() => {
       uploadValue = uploadValue >= 100 ? 0 : uploadValue + 5;
+      if (!uploadCompleted) {
+        for (const milestone of [25, 50, 75, 100]) {
+          if (uploadValue >= milestone && !uploadMilestonesFired.has(milestone)) {
+            uploadMilestonesFired.add(milestone);
+            track('task_progress', { component: 'progress', task: 'upload', percent: milestone, location: 'docs_demo' });
+          }
+        }
+        if (uploadValue >= 100) {
+          uploadCompleted = true;
+          track('task_complete', { component: 'progress', task: 'upload', duration_ms: Date.now() - uploadStart, location: 'docs_demo' });
+        }
+      }
     }, 500);
     return () => clearInterval(id);
   });

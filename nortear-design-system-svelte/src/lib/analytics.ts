@@ -243,6 +243,25 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /** Disparado quando o usuário muda de página em Pagination. */
+  page_change: {
+    component?: string;
+    trigger_label?: string;
+    page?: number;
+    total_pages?: number;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário muda de aba em Tabs. */
+  tab_change: {
+    component?: string;
+    value?: string;
+    label?: string;
+    index?: number;
+    total?: number;
+    location?: string;
+  };
+
   /** Disparado ao focar um campo de formulário (apenas funis críticos). */
   field_focus: {
     component: string;
@@ -265,12 +284,100 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /** Disparado quando o usuário dispara um toast na demonstração do Sonner. */
+  toast_demo_triggered: {
+    toast_type: string;
+    locale: Locale;
+  };
+
   /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */
   toast_action_click: {
     label: string;
     component: 'toast';
     location?: string;
   };
+
+  /** Disparado quando um Popover abre. */
+  popover_open: {
+    component: string;
+    trigger_label?: string;
+    location?: string;
+  };
+
+  /** Disparado quando um Popover fecha. */
+  popover_close: {
+    component: string;
+    reason?: string;
+    location?: string;
+  };
+
+  /** Disparado quando uma tarefa acompanhada por Progress atinge um marco. */
+  task_progress: {
+    component: string;
+    task: string;
+    percent: number;
+    location?: string;
+  };
+
+  /** Disparado quando uma tarefa acompanhada por Progress conclui. */
+  task_complete: {
+    component: string;
+    task: string;
+    duration_ms?: number;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário muda a opção de um RadioGroup. */
+  radio_change: {
+    component: string;
+    name: string;
+    value: string;
+    previous_value?: string;
+    location?: string;
+  };
+
+  /** Disparado ao final do redimensionamento de painéis (Resizable). */
+  panel_resize: {
+    component: string;
+    group_id?: string;
+    sizes?: string;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário rola um ScrollArea até um marco relevante. */
+  content_scroll: {
+    component: string;
+    target_id?: string;
+    percent_visible?: number;
+    location?: string;
+  };
+
+  /** Disparado quando o usuário seleciona uma opção em Select/Combobox. */
+  option_select: {
+    component: string;
+    field_name?: string;
+    value?: string;
+    label?: string;
+    location?: string;
+  };
+
+  /** Disparado quando o valor do Slider é commitado (fim do drag ou teclado). */
+  slider_change: {
+    component: string;
+    field_name?: string;
+    value?: number | string;
+    min?: number;
+    max?: number;
+    location?: string;
+  };
+
+  /** Disparado quando um Tooltip fica visível tempo suficiente para leitura. */
+  tooltip_view: {
+    component: string;
+    trigger_id?: string;
+    location?: string;
+  };
+
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

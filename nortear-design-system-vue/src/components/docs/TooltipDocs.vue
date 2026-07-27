@@ -134,6 +134,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoTooltipOpenChange(triggerId: string, open: boolean) {
+  if (!open) return;
+  track('tooltip_view', {
+    component: 'tooltip',
+    trigger_id: triggerId,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -412,7 +423,7 @@ const a11yCritCols = computed(() => ({
           data-spacing="lg"
           style="contain: layout; min-height: 120px; position: relative;"
         >
-          <Tooltip>
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-save', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -427,7 +438,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-delete', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"
@@ -442,7 +453,7 @@ const a11yCritCols = computed(() => ({
             </TooltipContent>
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-share', open)">
             <TooltipTrigger as-child>
               <Button
                 variant="outline"

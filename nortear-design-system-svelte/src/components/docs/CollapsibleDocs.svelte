@@ -200,7 +200,7 @@ interface CollapsibleContentProps {
           <p class="nds-text-body nds-font-medium">
             Não-controlado
           </p>
-          <Collapsible class="nds-w-full">
+          <Collapsible class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: $tStore('demonstration.labels.headerLabel'), value: o ? 'open' : 'closed', location: 'docs_demo' })}>
             <CollapsibleTrigger
               class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
             >
@@ -225,7 +225,7 @@ interface CollapsibleContentProps {
           <p class="nds-text-body nds-font-medium">
             Controlado
           </p>
-          <Collapsible bind:open={controlledOpen} class="nds-w-full">
+          <Collapsible bind:open={controlledOpen} class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: $tStore('demonstration.labels.triggerClosed'), value: o ? 'open' : 'closed', location: 'docs_demo' })}>
             <CollapsibleTrigger
               class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
             >

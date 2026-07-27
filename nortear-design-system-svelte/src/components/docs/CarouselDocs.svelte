@@ -107,7 +107,17 @@
     if (!a) return;
     demoScrollSnaps = a.scrollSnapList();
     demoSelectedIndex = a.selectedScrollSnap();
-    a.on('select', () => { demoSelectedIndex = a.selectedScrollSnap(); });
+    a.on('select', () => {
+      demoSelectedIndex = a.selectedScrollSnap();
+      const isDragging = Boolean(a.internalEngine?.()?.dragHandler?.pointerDown?.());
+      track('slide_change', {
+        component: 'carousel',
+        index: demoSelectedIndex,
+        total: a.scrollSnapList().length,
+        trigger: isDragging ? 'swipe' : 'button',
+        location: 'docs_demo',
+      });
+    });
     a.on('reInit', () => {
       demoScrollSnaps = a.scrollSnapList();
       demoSelectedIndex = a.selectedScrollSnap();

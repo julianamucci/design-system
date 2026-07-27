@@ -244,7 +244,16 @@ interface TooltipContentProps {
             data-spacing="lg"
             style={{ contain: "layout", minHeight: 120, position: "relative" }}
           >
-            <Tooltip>
+            <Tooltip
+              onOpenChange={(open) =>
+                open &&
+                track("tooltip_view", {
+                  component: "tooltip",
+                  trigger_id: "save",
+                  location: "docs_demo",
+                })
+              }
+            >
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelSaveBtn}>
@@ -255,7 +264,16 @@ interface TooltipContentProps {
               <TooltipContent>{labelSave}</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
+            <Tooltip
+              onOpenChange={(open) =>
+                open &&
+                track("tooltip_view", {
+                  component: "tooltip",
+                  trigger_id: "delete",
+                  location: "docs_demo",
+                })
+              }
+            >
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelDeleteBtn}>
@@ -266,7 +284,16 @@ interface TooltipContentProps {
               <TooltipContent>{labelDelete}</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
+            <Tooltip
+              onOpenChange={(open) =>
+                open &&
+                track("tooltip_view", {
+                  component: "tooltip",
+                  trigger_id: "share",
+                  location: "docs_demo",
+                })
+              }
+            >
               <TooltipTrigger
                 render={(props) => (
                   <Button {...props} variant="ghost" size="icon" aria-label={labelShareBtn}>

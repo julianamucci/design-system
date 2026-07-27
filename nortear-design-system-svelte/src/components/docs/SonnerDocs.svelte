@@ -93,29 +93,36 @@
 
   // ─── Toast triggers ───────────────────────────────────────────────────────────
 
-  function fireDefault() { toast($tStore('demonstration.labels.default')); }
-  function fireSuccess() { toast.success($tStore('demonstration.labels.success')); }
-  function fireError()   { toast.error($tStore('demonstration.labels.error')); }
-  function fireWarning() { toast.warning($tStore('demonstration.labels.warning')); }
-  function fireInfo()    { toast.info($tStore('demonstration.labels.info')); }
-  function fireLoading() { toast.loading($tStore('demonstration.labels.loading')); }
+  function trackToastDemo(toastType: string) {
+    track('toast_demo_triggered', { toast_type: toastType, locale: $locale });
+  }
+
+  function fireDefault() { trackToastDemo('default'); toast($tStore('demonstration.labels.default')); }
+  function fireSuccess() { trackToastDemo('success'); toast.success($tStore('demonstration.labels.success')); }
+  function fireError()   { trackToastDemo('error'); toast.error($tStore('demonstration.labels.error')); }
+  function fireWarning() { trackToastDemo('warning'); toast.warning($tStore('demonstration.labels.warning')); }
+  function fireInfo()    { trackToastDemo('info'); toast.info($tStore('demonstration.labels.info')); }
+  function fireLoading() { trackToastDemo('loading'); toast.loading($tStore('demonstration.labels.loading')); }
 
   function fireWithDescription() {
+    trackToastDemo('with_description');
     toast.success($tStore('demonstration.labels.withDescription'), {
       description: $tStore('demonstration.labels.withDescriptionDesc'),
     });
   }
 
   function fireWithAction() {
+    trackToastDemo('with_action');
     toast($tStore('demonstration.labels.withAction'), {
       action: {
         label: $tStore('demonstration.labels.withActionLabel'),
-        onClick: () => track('toast_action_click', { label: $tStore('demonstration.labels.withActionLabel'), component: 'toast', location: 'docs-demonstration' }),
+        onClick: () => track('toast_action_click', { label: $tStore('demonstration.labels.withActionLabel'), component: 'toast', location: 'docs_demo' }),
       },
     });
   }
 
   function firePromise() {
+    trackToastDemo('promise');
     const promise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
     toast.promise(promise, {
       loading: $tStore('demonstration.labels.promiseLoading'),
@@ -125,6 +132,7 @@
   }
 
   function firePersistent() {
+    trackToastDemo('persistent');
     toast.error($tStore('demonstration.labels.persistent'), { duration: Infinity, dismissible: true });
   }
 

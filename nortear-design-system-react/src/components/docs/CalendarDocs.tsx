@@ -225,7 +225,17 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
     <Calendar
       mode="single"
       selected={singleDate}
-      onSelect={setSingleDate}
+      onSelect={(date) => {
+        setSingleDate(date);
+        if (date) {
+          track("field_change", {
+            component: "calendar",
+            field_name: "single_date",
+            value: date.toISOString(),
+            location: "docs_demo",
+          });
+        }
+      }}
       locale={ptBR}
     />
   );

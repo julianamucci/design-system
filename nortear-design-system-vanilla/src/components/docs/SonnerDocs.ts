@@ -123,7 +123,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
       track('toast_action_click', {
         label: opts.actionLabel!,
         component: 'toast',
-        location: 'docs-sonner',
+        location: 'docs_demo',
       });
       opts.onAction!();
       toastEl.style.opacity = '0';

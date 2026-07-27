@@ -121,6 +121,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoCheckboxChange(fieldName: string, value: boolean | 'indeterminate') {
+  track('field_change', {
+    component: 'checkbox',
+    field_name: fieldName,
+    value: String(value),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Checkbox } from "@/components/ui/checkbox";`;
@@ -392,7 +403,10 @@ const visualTestItems = computed(() => [
           class="nds-cluster"
           data-spacing="xs"
         >
-          <Checkbox id="demo-terms" />
+          <Checkbox
+            id="demo-terms"
+            @update:model-value="(v) => handleDemoCheckboxChange('demo-terms', v)"
+          />
           <label
             for="demo-terms"
             class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
@@ -407,6 +421,7 @@ const visualTestItems = computed(() => [
           <Checkbox
             id="demo-newsletter"
             :checked="true"
+            @update:model-value="(v) => handleDemoCheckboxChange('demo-newsletter', v)"
           />
           <label
             for="demo-newsletter"
@@ -439,6 +454,7 @@ const visualTestItems = computed(() => [
           <Checkbox
             id="demo-notif"
             style="margin-top: 0.125rem"
+            @update:model-value="(v) => handleDemoCheckboxChange('demo-notif', v)"
           />
           <div
             class="nds-stack"

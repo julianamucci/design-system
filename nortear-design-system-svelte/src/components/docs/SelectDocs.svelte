@@ -284,7 +284,7 @@ interface SelectItemProps {
         <!-- Demo 1: default -->
         <div class="nds-stack" data-spacing="sm" style="contain: layout">
           <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</p>
-          <Select type="single" bind:value={demoStateValue}>
+          <Select type="single" bind:value={demoStateValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
             <SelectTrigger
               class="nds-w-full"
               aria-label={demoLabels.stateLabel}
@@ -309,7 +309,7 @@ interface SelectItemProps {
         <!-- Demo 2: groups -->
         <div class="nds-stack" data-spacing="sm" style="contain: layout">
           <p class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</p>
-          <Select type="single" bind:value={demoRegionValue}>
+          <Select type="single" bind:value={demoRegionValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'region', value: v, label: findLabelInGroups(regionGroups, v), location: 'docs_demo' })}>
             <SelectTrigger
               class="nds-w-full"
               aria-label={demoLabels.regionLabel}
@@ -339,7 +339,7 @@ interface SelectItemProps {
         <!-- Demo 3: size sm -->
         <div class="nds-stack" data-spacing="sm" style="contain: layout; grid-column: 1 / -1;">
           <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel} (sm)</p>
-          <Select type="single" bind:value={demoSmValue}>
+          <Select type="single" bind:value={demoSmValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state_sm', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
             <SelectTrigger
               size="sm"
               style="width: 14rem;"

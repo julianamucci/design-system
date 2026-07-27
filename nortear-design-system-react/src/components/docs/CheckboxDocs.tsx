@@ -245,19 +245,50 @@ export function CheckboxDocs() {
           <DocsDemonstration title={tContent("demonstration.title")}>
             <div className="nds-stack" data-spacing="sm">
               <div className="nds-cluster" data-spacing="xs">
-                <Checkbox id="demo-terms" />
+                <Checkbox
+                  id="demo-terms"
+                  onCheckedChange={(checked) =>
+                    track("field_change", {
+                      component: "checkbox",
+                      field_name: "accept_terms",
+                      value: String(checked),
+                      location: "docs_demo",
+                    })
+                  }
+                />
                 <label htmlFor="demo-terms" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.acceptTerms")}
                 </label>
               </div>
               <div className="nds-cluster" data-spacing="xs">
-                <Checkbox id="demo-newsletter" defaultChecked />
+                <Checkbox
+                  id="demo-newsletter"
+                  defaultChecked
+                  onCheckedChange={(checked) =>
+                    track("field_change", {
+                      component: "checkbox",
+                      field_name: "newsletter",
+                      value: String(checked),
+                      location: "docs_demo",
+                    })
+                  }
+                />
                 <label htmlFor="demo-newsletter" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.newsletter")}
                 </label>
               </div>
               <div className="nds-cluster" data-spacing="xs">
-                <Checkbox id="demo-remember" />
+                <Checkbox
+                  id="demo-remember"
+                  onCheckedChange={(checked) =>
+                    track("field_change", {
+                      component: "checkbox",
+                      field_name: "remember_me",
+                      value: String(checked),
+                      location: "docs_demo",
+                    })
+                  }
+                />
                 <label htmlFor="demo-remember" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                   {tContent("demonstration.labels.rememberMe")}
                 </label>

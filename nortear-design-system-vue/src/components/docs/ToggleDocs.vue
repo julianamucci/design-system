@@ -136,6 +136,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function trackDemoToggleChange(fieldName: string, value: boolean) {
+  track('field_change', {
+    component: 'toggle',
+    field_name: fieldName,
+    value: String(value),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Toggle } from "@/components/ui/toggle";
@@ -380,21 +391,21 @@ const visualTestItems = computed(() => [
           <Toggle
             :model-value="demoBold"
             :aria-label="tContent('demonstration.labels.bold')"
-            @update:model-value="(v: boolean) => demoBold = v"
+            @update:model-value="(v: boolean) => { demoBold = v; trackDemoToggleChange('bold', v); }"
           >
             <Bold aria-hidden="true" />
           </Toggle>
           <Toggle
             :model-value="demoItalic"
             :aria-label="tContent('demonstration.labels.italic')"
-            @update:model-value="(v: boolean) => demoItalic = v"
+            @update:model-value="(v: boolean) => { demoItalic = v; trackDemoToggleChange('italic', v); }"
           >
             <Italic aria-hidden="true" />
           </Toggle>
           <Toggle
             :model-value="demoUnderline"
             :aria-label="tContent('demonstration.labels.underline')"
-            @update:model-value="(v: boolean) => demoUnderline = v"
+            @update:model-value="(v: boolean) => { demoUnderline = v; trackDemoToggleChange('underline', v); }"
           >
             <Underline aria-hidden="true" />
           </Toggle>
@@ -408,7 +419,7 @@ const visualTestItems = computed(() => [
           <Toggle
             variant="outline"
             :model-value="demoShowHidden"
-            @update:model-value="(v: boolean) => demoShowHidden = v"
+            @update:model-value="(v: boolean) => { demoShowHidden = v; trackDemoToggleChange('show-hidden', v); }"
           >
             <Eye aria-hidden="true" />
             {{ tContent('demonstration.labels.showHidden') }}
@@ -416,7 +427,7 @@ const visualTestItems = computed(() => [
           <Toggle
             variant="outline"
             :model-value="demoCompact"
-            @update:model-value="(v: boolean) => demoCompact = v"
+            @update:model-value="(v: boolean) => { demoCompact = v; trackDemoToggleChange('compact-view', v); }"
           >
             <LayoutGrid aria-hidden="true" />
             {{ tContent('demonstration.labels.compactView') }}

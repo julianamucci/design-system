@@ -3,7 +3,6 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
-import { track } from '@/lib/analytics';
 
 const meta = {
   title: 'UI/Popover/Composicoes',
@@ -23,12 +22,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const trackOpen = (label: string, location: string) => () =>
-  track('popover_open', { component: 'popover', trigger_label: label, location });
-
-const trackClose = (location: string, reason: string) => () =>
-  track('popover_close', { component: 'popover', reason, location });
 
 const waitOpen = async () => {
   const body = within(document.body);
@@ -51,8 +44,6 @@ export const ConteudoLivre: Story = {
     variant: 'default',
     triggerLabel: 'Abrir popover',
     description: 'Conteúdo contextual livre. Use para snippets curtos sem header.',
-    onAction: trackOpen('Abrir popover', 'storybook:composicoes:conteudo-livre'),
-    onCancel: trackClose('storybook:composicoes:conteudo-livre', 'cancel'),
   },
   play: waitOpen,
 };
@@ -75,8 +66,6 @@ export const ConfiguracoesComTitulo: Story = {
     description: 'Ajuste a aparência do conteúdo da página.',
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
-    onAction: trackOpen('Configuracoes', 'storybook:composicoes:configuracoes'),
-    onCancel: trackClose('storybook:composicoes:configuracoes', 'cancel'),
   },
   play: async () => {
     await waitOpen();
@@ -104,7 +93,6 @@ export const FormularioInline: Story = {
     nameLabel: 'Nome',
     emailLabel: 'Email',
     submitLabel: 'Atualizar',
-    onAction: trackOpen('Editar perfil', 'storybook:composicoes:formulario-inline'),
   },
   play: async () => {
     await waitOpen();

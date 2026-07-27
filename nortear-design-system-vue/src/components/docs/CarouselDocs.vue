@@ -470,6 +470,24 @@ const visualTestItems = computed(() => [
 ]);
 
 const demoSlides = [1, 2, 3, 4, 5];
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+const demoSlideIndex = ref(0);
+
+function handleDemoSlideNav(direction: 1 | -1) {
+  demoSlideIndex.value = Math.min(
+    Math.max(demoSlideIndex.value + direction, 0),
+    demoSlides.length - 1,
+  );
+  track('slide_change', {
+    component: 'carousel',
+    index: demoSlideIndex.value,
+    total: demoSlides.length,
+    trigger: 'button',
+    location: 'docs_demo',
+  });
+}
 </script>
 
 <template>
@@ -519,8 +537,14 @@ const demoSlides = [1, 2, 3, 4, 5];
               </Card>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
-          <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          <CarouselPrevious
+            :aria-label="tContent('demonstration.labels.previous')"
+            @click="handleDemoSlideNav(-1)"
+          />
+          <CarouselNext
+            :aria-label="tContent('demonstration.labels.next')"
+            @click="handleDemoSlideNav(1)"
+          />
         </Carousel>
       </div>
     </DocsDemonstration>

@@ -129,6 +129,21 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+const demoPreviousValues: Record<string, string | undefined> = {};
+
+function handleDemoRadioChange(name: string, value: string) {
+  track('radio_change', {
+    component: 'radio_group',
+    name,
+    value,
+    previous_value: demoPreviousValues[name],
+    location: 'docs_demo',
+  });
+  demoPreviousValues[name] = value;
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -506,6 +521,7 @@ const visualTestItems = computed(() => [
           </legend>
           <RadioGroup
             :aria-label="tContent('demonstration.labels.groupLabel')"
+            @update:model-value="(v) => handleDemoRadioChange('payment-method', String(v))"
           >
             <div
               class="nds-cluster"
@@ -552,6 +568,7 @@ const visualTestItems = computed(() => [
             orientation="horizontal"
             :aria-label="tContent('demonstration.labels.deliveryLabel')"
             style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
+            @update:model-value="(v) => handleDemoRadioChange('delivery-method', String(v))"
           >
             <div
               class="nds-cluster"
@@ -596,6 +613,7 @@ const visualTestItems = computed(() => [
           </legend>
           <RadioGroup
             :aria-label="tContent('demonstration.labels.groupLabel')"
+            @update:model-value="(v) => handleDemoRadioChange('payment-method-detailed', String(v))"
           >
             <div
               class="nds-cluster"

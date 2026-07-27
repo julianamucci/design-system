@@ -141,6 +141,24 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoOpenChange(open: boolean) {
+  track(open ? 'dialog_open' : 'dialog_close', {
+    component: 'dialog',
+    label: tContent('demonstration.labels.title'),
+    location: 'docs_demo',
+  });
+}
+
+function handleDemoAction() {
+  track('dialog_action', {
+    component: 'dialog',
+    action_label: tContent('demonstration.labels.action'),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -479,7 +497,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="md"
         style="flex-wrap: wrap"
       >
-        <Dialog>
+        <Dialog @update:open="handleDemoOpenChange">
           <DialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.triggerLabel') }}</Button>
           </DialogTrigger>
@@ -494,7 +512,9 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>{{ tContent('demonstration.labels.action') }}</Button>
+              <Button @click="handleDemoAction">
+                {{ tContent('demonstration.labels.action') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

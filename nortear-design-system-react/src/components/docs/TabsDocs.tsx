@@ -134,7 +134,7 @@ export function TabsDocs() {
         label,
         index,
         total,
-        location: "docs_demonstration",
+        location: "docs_demo",
       });
     },
     []

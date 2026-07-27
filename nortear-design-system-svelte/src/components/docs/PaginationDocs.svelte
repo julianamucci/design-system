@@ -197,7 +197,7 @@ interface PaginationDirectionalProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
       <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-        <Pagination count={120} perPage={10} page={6} siblingCount={1}>
+        <Pagination count={120} perPage={10} page={6} siblingCount={1} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
           {#snippet children({ pages, currentPage })}
             <PaginationContent>
               <PaginationItem>

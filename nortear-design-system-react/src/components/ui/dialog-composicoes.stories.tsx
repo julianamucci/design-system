@@ -14,7 +14,6 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
-import { track } from "@/lib/analytics";
 
 const meta = {
   title: "UI/Dialog/Composicoes",
@@ -35,12 +34,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string, location: string) =>
-  track("dialog_open", { component: "dialog", label, location });
-
-const trackAction = (action_label: string, location: string) =>
-  track("dialog_action", { component: "dialog", action_label, location });
-
 export const ConfirmEmail: Story = {
   parameters: {
     docs: {
@@ -51,10 +44,9 @@ export const ConfirmEmail: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:confirm-email";
     const title = "Confirmar e-mail";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Confirmar e-mail
         </DialogTrigger>
@@ -70,9 +62,7 @@ export const ConfirmEmail: Story = {
             <DialogClose render={<Button variant="outline" />}>
               Cancelar
             </DialogClose>
-            <Button onClick={() => trackAction("Enviar link", location)}>
-              Enviar link
-            </Button>
+            <Button>Enviar link</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -94,10 +84,9 @@ export const ProfileEdit: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:profile-edit";
     const title = "Editar perfil";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Editar perfil
         </DialogTrigger>
@@ -113,7 +102,6 @@ export const ProfileEdit: Story = {
             className="nds-grid" data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
-              trackAction("Salvar alterações", location);
             }}
           >
             <div className="nds-stack" data-spacing="sm">
@@ -151,10 +139,9 @@ export const MediaPreview: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:media-preview";
     const title = "Pôr-do-sol na praia";
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Ver imagem
         </DialogTrigger>

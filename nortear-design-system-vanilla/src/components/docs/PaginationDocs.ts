@@ -51,7 +51,14 @@ function buildDemoPagination(total: number, current: number): HTMLElement {
   return createPagination({
     total,
     current,
-    onPageChange: () => {},
+    onPageChange: (page) => {
+      track('page_change', {
+        component: 'pagination',
+        page,
+        total_pages: total,
+        location: 'docs_demo',
+      });
+    },
   });
 }
 

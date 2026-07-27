@@ -184,14 +184,14 @@ import { Plus } from "lucide-react";`;
                 <Button
                   key={label}
                   {...(variant ? { variant } : {})}
-                  onClick={() => track("button_click", { component: "button", variant: variant ?? "default", label, location: "docs_demonstration" })}
+                  onClick={() => track("button_click", { component: "button", variant: variant ?? "default", label, location: "docs_demo" })}
                 >
                   {label}
                 </Button>
               ))}
               <Button
                 variant="outline"
-                onClick={() => track("button_click", { component: "button", variant: "outline", label: tContent("demonstration.labels.withIcon"), location: "docs_demonstration" })}
+                onClick={() => track("button_click", { component: "button", variant: "outline", label: tContent("demonstration.labels.withIcon"), location: "docs_demo" })}
               >
                 <Plus aria-hidden="true" />
                 {tContent("demonstration.labels.withIcon")}
@@ -199,7 +199,7 @@ import { Plus } from "lucide-react";`;
               <Button
                 size="icon"
                 aria-label={tContent("demonstration.labels.iconOnly")}
-                onClick={() => track("button_click", { component: "button", variant: "default", label: tContent("demonstration.labels.iconOnly"), location: "docs_demonstration" })}
+                onClick={() => track("button_click", { component: "button", variant: "default", label: tContent("demonstration.labels.iconOnly"), location: "docs_demo" })}
               >
                 <Trash2 aria-hidden="true" />
               </Button>

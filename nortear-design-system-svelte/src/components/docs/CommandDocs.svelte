@@ -135,6 +135,7 @@ import uiTranslations from '@/i18n/ui.json';
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         paletteOpen = !paletteOpen;
+        if (paletteOpen) track('command_palette_open', { trigger: 'keyboard' });
       }
     }
     window.addEventListener('keydown', onKeydown);
@@ -444,12 +445,12 @@ interface CommandLoadingProps {
               <Command.List>
                 <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
                 <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
-                  <Command.Item value="button">{$tStore('demonstration.labels.itemButton')}</Command.Item>
-                  <Command.Item value="input">{$tStore('demonstration.labels.itemInput')}</Command.Item>
+                  <Command.Item value="button" onSelect={() => track('command_item_select', { label: 'button', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemButton')}</Command.Item>
+                  <Command.Item value="input" onSelect={() => track('command_item_select', { label: 'input', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemInput')}</Command.Item>
                 </Command.Group>
                 <Command.Separator />
                 <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
-                  <Command.Item value="separator">{$tStore('demonstration.labels.itemSeparator')}</Command.Item>
+                  <Command.Item value="separator" onSelect={() => track('command_item_select', { label: 'separator', group: 'utils', pattern: 'inline' })}>{$tStore('demonstration.labels.itemSeparator')}</Command.Item>
                 </Command.Group>
               </Command.List>
             </Command.Root>
@@ -483,7 +484,7 @@ interface CommandLoadingProps {
             class="nds-cluster nds-text-muted-foreground"
             data-justify="between"
             style="width: 280px"
-            onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button', locale: $locale }); }}
+            onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button' }); }}
           >
             <span class="nds-cluster" data-spacing="sm">
               <Search class="nds-size-4" aria-hidden="true" />
@@ -498,23 +499,23 @@ interface CommandLoadingProps {
             <Command.List>
               <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
               <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
-                <Command.Item value="dashboard" onselect={() => { paletteOpen = false; }}>
+                <Command.Item value="dashboard" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'dashboard', group: 'components', pattern: 'palette' }); }}>
                   <LayoutDashboard aria-hidden="true" />
                   Dashboard
                   <Command.Shortcut>⌘D</Command.Shortcut>
                 </Command.Item>
-                <Command.Item value="documents" onselect={() => { paletteOpen = false; }}>
+                <Command.Item value="documents" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'documents', group: 'components', pattern: 'palette' }); }}>
                   <FileText aria-hidden="true" />
                   Documentos
                 </Command.Item>
-                <Command.Item value="users" onselect={() => { paletteOpen = false; }}>
+                <Command.Item value="users" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'users', group: 'components', pattern: 'palette' }); }}>
                   <Users aria-hidden="true" />
                   Usuários
                 </Command.Item>
               </Command.Group>
               <Command.Separator />
               <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
-                <Command.Item value="settings" onselect={() => { paletteOpen = false; }}>
+                <Command.Item value="settings" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'settings', group: 'utils', pattern: 'palette' }); }}>
                   <Settings aria-hidden="true" />
                   Configurações
                   <Command.Shortcut>⌘,</Command.Shortcut>

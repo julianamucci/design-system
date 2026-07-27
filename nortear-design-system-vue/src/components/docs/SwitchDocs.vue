@@ -136,6 +136,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function trackDemoSwitchChange(fieldName: string, value: boolean) {
+  track('field_change', {
+    component: 'switch',
+    field_name: fieldName,
+    value: String(value),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Switch } from "@/components/ui/switch";
@@ -405,7 +416,7 @@ const visualTestItems = computed(() => [
           <Switch
             id="demo-notifications"
             :model-value="demoNotifications"
-            @update:model-value="(v: boolean) => demoNotifications = v"
+            @update:model-value="(v: boolean) => { demoNotifications = v; trackDemoSwitchChange('demo-notifications', v); }"
           />
           <Label :for="'demo-notifications'">{{ tContent('demonstration.labels.notifications') }}</Label>
         </div>
@@ -428,7 +439,7 @@ const visualTestItems = computed(() => [
           <Switch
             id="demo-marketing"
             :model-value="demoMarketing"
-            @update:model-value="(v: boolean) => demoMarketing = v"
+            @update:model-value="(v: boolean) => { demoMarketing = v; trackDemoSwitchChange('demo-marketing', v); }"
           />
         </div>
 
@@ -450,7 +461,7 @@ const visualTestItems = computed(() => [
           <Switch
             id="demo-darkmode"
             :model-value="demoDarkMode"
-            @update:model-value="(v: boolean) => demoDarkMode = v"
+            @update:model-value="(v: boolean) => { demoDarkMode = v; trackDemoSwitchChange('demo-darkmode', v); }"
           />
         </div>
 
@@ -462,7 +473,7 @@ const visualTestItems = computed(() => [
             id="demo-sm"
             size="sm"
             :model-value="demoSm"
-            @update:model-value="(v: boolean) => demoSm = v"
+            @update:model-value="(v: boolean) => { demoSm = v; trackDemoSwitchChange('demo-sm', v); }"
           />
           <Label
             :for="'demo-sm'"

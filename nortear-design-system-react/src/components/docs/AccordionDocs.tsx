@@ -155,7 +155,7 @@ export function AccordionDocs() {
       track(isOpening ? "accordion_expand" : "accordion_collapse", {
         component: "accordion",
         label,
-        location: "docs_demonstration",
+        location: "docs_demo",
       });
     },
     []

@@ -210,6 +210,7 @@ interface CalendarProps {
         <Calendar
           type="single"
           bind:value={demoValue}
+          onValueChange={(v: DateValue | undefined) => track('field_change', { component: 'calendar', field_name: 'date', value: v ? v.toString() : '', location: 'docs_demo' })}
           locale={previewLocale}
         />
         <p class="nds-text-caption nds-text-muted-foreground">

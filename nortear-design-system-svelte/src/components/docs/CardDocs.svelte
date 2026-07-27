@@ -245,10 +245,10 @@ interface CardPartProps {
             <p class="nds-text-base nds-font-semibold">{$tStore('demonstration.labels.productPrice')}</p>
           </CardContent>
           <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
-            <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`}>
+            <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: $tStore('demonstration.labels.actionEdit'), variant: 'outline', location: 'docs_demo' })}>
               {$tStore('demonstration.labels.actionEdit')}
             </Button>
-            <Button variant="destructive" size="sm" aria-label={`${$tStore('demonstration.labels.actionDelete')} ${$tStore('demonstration.labels.productTitle')}`}>
+            <Button variant="destructive" size="sm" aria-label={`${$tStore('demonstration.labels.actionDelete')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: $tStore('demonstration.labels.actionDelete'), variant: 'destructive', location: 'docs_demo' })}>
               {$tStore('demonstration.labels.actionDelete')}
             </Button>
           </CardFooter>
@@ -278,7 +278,7 @@ interface CardPartProps {
             </div>
           </CardHeader>
           <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
-            <Button variant="outline" size="sm">{$tStore('demonstration.labels.actionEdit')}</Button>
+            <Button variant="outline" size="sm" onclick={() => track('button_click', { component: 'button', label: $tStore('demonstration.labels.actionEdit'), variant: 'outline', location: 'docs_demo' })}>{$tStore('demonstration.labels.actionEdit')}</Button>
           </CardFooter>
         </Card>
       </div>

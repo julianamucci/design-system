@@ -256,7 +256,15 @@ interface PopoverContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
-            <Popover>
+            <Popover
+              onOpenChange={(open) =>
+                track(open ? "popover_open" : "popover_close", {
+                  component: "popover",
+                  ...(open ? { trigger_label: tContent("demonstration.labels.trigger") } : { reason: "user" }),
+                  location: "docs_demo",
+                })
+              }
+            >
               <PopoverTrigger asChild>
                 <Button variant="outline">
                   {tContent("demonstration.labels.trigger")}
@@ -282,7 +290,15 @@ interface PopoverContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withTitle")}
             </p>
-            <Popover>
+            <Popover
+              onOpenChange={(open) =>
+                track(open ? "popover_open" : "popover_close", {
+                  component: "popover",
+                  ...(open ? { trigger_label: tContent("demonstration.labels.title") } : { reason: "user" }),
+                  location: "docs_demo",
+                })
+              }
+            >
               <PopoverTrigger asChild>
                 <Button variant="outline">
                   {tContent("demonstration.labels.title")}
@@ -318,7 +334,15 @@ interface PopoverContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.form")}
             </p>
-            <Popover>
+            <Popover
+              onOpenChange={(open) =>
+                track(open ? "popover_open" : "popover_close", {
+                  component: "popover",
+                  ...(open ? { trigger_label: tContent("demonstration.labels.form.trigger") } : { reason: "user" }),
+                  location: "docs_demo",
+                })
+              }
+            >
               <PopoverTrigger asChild>
                 <Button variant="outline">
                   {tContent("demonstration.labels.form.trigger")}

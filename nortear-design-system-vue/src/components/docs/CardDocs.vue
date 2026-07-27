@@ -134,6 +134,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoActionClick(label: string, variant: string) {
+  track('button_click', {
+    component: 'button',
+    label,
+    variant,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -441,12 +452,14 @@ const visualTestItems = computed(() => [
               variant="outline"
               size="sm"
               :aria-label="`${tContent('demonstration.labels.actionEdit')} ${tContent('demonstration.labels.productTitle')}`"
+              @click="handleDemoActionClick(tContent('demonstration.labels.actionEdit'), 'outline')"
             >
               {{ tContent('demonstration.labels.actionEdit') }}
             </Button>
             <Button
               size="sm"
               :aria-label="`${tContent('demonstration.labels.actionDelete')} ${tContent('demonstration.labels.productTitle')}`"
+              @click="handleDemoActionClick(tContent('demonstration.labels.actionDelete'), 'default')"
             >
               {{ tContent('demonstration.labels.actionDelete') }}
             </Button>

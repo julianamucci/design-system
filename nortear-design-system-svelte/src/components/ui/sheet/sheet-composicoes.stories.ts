@@ -3,7 +3,6 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
-import { track } from '@/lib/analytics';
 
 const meta = {
   title: 'UI/Sheet/Composicoes',
@@ -42,12 +41,6 @@ export const AdvancedFilters: Story = {
     description: 'Refine os resultados configurando os filtros abaixo.',
     actionLabel: 'Aplicar filtros',
     cancelLabel: 'Cancelar',
-    onAction: () =>
-      track('dialog_confirm', {
-        component: 'sheet',
-        action: 'Aplicar filtros',
-        location: 'storybook:composicoes:advanced-filters',
-      }),
   },
   parameters: {
     docs: {
@@ -75,12 +68,6 @@ export const ProfileEdit: Story = {
     description: 'Atualize seu nome e e-mail. As mudanças são salvas ao confirmar.',
     actionLabel: 'Salvar alterações',
     cancelLabel: 'Cancelar',
-    onAction: () =>
-      track('dialog_confirm', {
-        component: 'sheet',
-        action: 'Salvar alterações',
-        location: 'storybook:composicoes:profile-edit',
-      }),
   },
   parameters: {
     docs: {
@@ -106,12 +93,6 @@ export const TermsWithScroll: Story = {
     description: 'Leia atentamente antes de aceitar.',
     actionLabel: 'Aceitar',
     cancelLabel: 'Recusar',
-    onAction: () =>
-      track('dialog_confirm', {
-        component: 'sheet',
-        action: 'Aceitar',
-        location: 'storybook:composicoes:terms-with-scroll',
-      }),
   },
   parameters: {
     docs: {

@@ -136,6 +136,9 @@ import uiTranslations from '@/i18n/ui.json';
 
   // ─── Navigation items for demos ──────────────────────────────────────────────
 
+  // Estado da sidebar da demonstração — usado para derivar action no sidebar_toggle
+  let demoSidebarOpen = $state(true);
+
   const navItems = [
     { icon: LayoutDashboard, label: 'demonstration.labels.dashboard', isActive: true  },
     { icon: Box,             label: 'demonstration.labels.components', isActive: false },
@@ -269,7 +272,7 @@ interface SidebarMenuButtonProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
       <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 400px">
-        <SidebarProvider defaultOpen={true}>
+        <SidebarProvider defaultOpen={true} bind:open={demoSidebarOpen}>
           <nav aria-label={$tStore('demonstration.labels.mainNav')}>
             <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
               <SidebarHeader class="nds-px-4" style="padding-block: 0.75rem; border-bottom: 1px solid var(--sidebar-border)">
@@ -286,6 +289,7 @@ interface SidebarMenuButtonProps {
                             isActive={item.isActive}
                             tooltip={$tStore(item.label)}
                             aria-current={item.isActive ? 'page' : undefined}
+                            onclick={() => track('navigation_click', { component: 'sidebar', label: item.label.split('.').pop() ?? item.label, destination: `#${item.label.split('.').pop()}`, location: 'docs_demo' })}
                           >
                             <item.icon aria-hidden="true" />
                             <span>{$tStore(item.label)}</span>
@@ -304,7 +308,7 @@ interface SidebarMenuButtonProps {
           </nav>
           <SidebarInset>
             <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
-              <SidebarTrigger />
+              <SidebarTrigger onclick={() => track('sidebar_toggle', { action: demoSidebarOpen ? 'close' : 'open', trigger: 'button' })} />
               <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Dashboard</span>
             </header>
             <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">

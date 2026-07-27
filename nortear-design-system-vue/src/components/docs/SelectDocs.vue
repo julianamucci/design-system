@@ -137,6 +137,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoSelect(fieldName: string, value: unknown) {
+  track('option_select', {
+    component: 'select',
+    field_name: fieldName,
+    value: String(value),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -471,7 +482,7 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Label for="demo-estado">{{ tContent('demonstration.labels.stateLabel') }}</Label>
-          <Select>
+          <Select @update:model-value="(v) => handleDemoSelect('demo-estado', v)">
             <SelectTrigger
               id="demo-estado"
               :aria-label="tContent('demonstration.labels.stateLabel')"
@@ -502,7 +513,7 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Label for="demo-regiao">{{ tContent('demonstration.labels.regionLabel') }}</Label>
-          <Select>
+          <Select @update:model-value="(v) => handleDemoSelect('demo-regiao', v)">
             <SelectTrigger
               id="demo-regiao"
               :aria-label="tContent('demonstration.labels.regionLabel')"
@@ -548,7 +559,7 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Label for="demo-sm">{{ tContent('demonstration.labels.stateLabel') }} (sm)</Label>
-          <Select>
+          <Select @update:model-value="(v) => handleDemoSelect('demo-sm', v)">
             <SelectTrigger
               id="demo-sm"
               size="sm"

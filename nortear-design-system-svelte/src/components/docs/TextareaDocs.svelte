@@ -198,6 +198,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
           <Textarea
             id="demo-descricao"
             bind:value={demoDescriptionValue}
+            onblur={() => { if (demoDescriptionValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'description', location: 'docs_demo' }); }}
             maxlength={demoMax}
             placeholder={$tStore('demonstration.labels.descriptionPlaceholder')}
             class="nds-resize-y nds-min-h-30"
@@ -215,6 +216,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
           <Textarea
             id="demo-bio"
             bind:value={demoBioValue}
+            onblur={() => { if (demoBioValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'bio', location: 'docs_demo' }); }}
             maxlength={demoBioMax}
             placeholder={$tStore('demonstration.labels.bioPlaceholder')}
             class="nds-resize-none nds-min-h-25"
@@ -230,6 +232,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
           <Label for="demo-feedback">{$tStore('demonstration.labels.feedbackLabel')}</Label>
           <Textarea
             id="demo-feedback"
+            onblur={(e: FocusEvent) => { if ((e.currentTarget as HTMLTextAreaElement).value.length > 0) track('field_blur', { component: 'textarea', field_name: 'feedback', location: 'docs_demo' }); }}
             placeholder={$tStore('demonstration.labels.feedbackPlaceholder')}
             class="nds-resize-y nds-min-h-30"
           />

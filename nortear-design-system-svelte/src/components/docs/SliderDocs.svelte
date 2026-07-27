@@ -225,6 +225,7 @@ interface SliderProps {
             </div>
             <Slider
               bind:value={demoVolume}
+              onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'volume', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
               min={0}
               max={100}
               step={1}
@@ -245,6 +246,7 @@ interface SliderProps {
             </div>
             <Slider
               bind:value={demoPriceRange}
+              onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'price_range', value: v.join('-'), min: 0, max: 500, location: 'docs_demo' })}
               min={0}
               max={500}
               step={10}
@@ -264,6 +266,7 @@ interface SliderProps {
             <div class="nds-cluster" data-justify="center" style="height: 10rem;">
               <Slider
                 bind:value={demoBrightness}
+                onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'brightness', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
                 orientation="vertical"
                 min={0}
                 max={100}
@@ -524,7 +527,7 @@ interface SliderProps {
         </div>
         <Slider
           bind:value={compFormVolume}
-          onValueCommit={(v: number[]) => (compFormCommitted = v[0])}
+          onValueCommit={(v: number[]) => { compFormCommitted = v[0]; track('slider_change', { component: 'slider', field_name: 'volume', value: v[0], min: 0, max: 100, location: 'docs_demo' }); }}
           min={0}
           max={100}
           aria-label="Volume"

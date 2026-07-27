@@ -152,6 +152,18 @@ function disablePastDates(date: any) {
   return date.compare(demoAnchor) < 0;
 }
 
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+watch(demoSelectedSingle, (newDate) => {
+  if (!newDate) return;
+  track('field_change', {
+    component: 'calendar',
+    field_name: 'demo-date',
+    value: String(newDate),
+    location: 'docs_demo',
+  });
+});
+
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {

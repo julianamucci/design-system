@@ -337,7 +337,7 @@ function handleDemoClick(variant: string) {
   track('button_click', {
     component: 'button',
     variant,
-    location: 'docs_demonstration',
+    location: 'docs_demo',
   });
 }
 </script>

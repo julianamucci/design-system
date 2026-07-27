@@ -98,7 +98,18 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
           {tContent("demonstration.labels.triggerOpen")}
         </Button>
       </div>
-      <Collapsible open={open} onOpenChange={setOpen} className="nds-w-full nds-text-body">
+      <Collapsible
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next);
+          track("collapsible_toggle", {
+            label: tContent("demonstration.labels.headerLabel"),
+            value: next ? "open" : "closed",
+            location: "docs_demo",
+          });
+        }}
+        className="nds-w-full nds-text-body"
+      >
         <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
@@ -254,7 +265,16 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             <p className="nds-text-body nds-font-medium">
               Padrão (não-controlado)
             </p>
-            <Collapsible className="nds-w-full nds-max-w-sm">
+            <Collapsible
+              className="nds-w-full nds-max-w-sm"
+              onOpenChange={(open) =>
+                track("collapsible_toggle", {
+                  label: tContent("demonstration.labels.headerLabel"),
+                  value: open ? "open" : "closed",
+                  location: "docs_demo",
+                })
+              }
+            >
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"

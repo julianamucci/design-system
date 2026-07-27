@@ -135,6 +135,19 @@ const volumeValue = ref<number[]>([50]);
 const priceValue = ref<number[]>([100, 400]);
 const verticalValue = ref<number[]>([60]);
 
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoSliderCommit(fieldName: string, value: number[], min: number, max: number) {
+  track('slider_change', {
+    component: 'slider',
+    field_name: fieldName,
+    value: value.join('-'),
+    min,
+    max,
+    location: 'docs_demo',
+  });
+}
+
 // Composições
 const compVolume = ref<number[]>([50]);
 const compBrightness = ref<number[]>([75]);
@@ -491,6 +504,7 @@ const visualTestItems = computed(() => [
             :max="100"
             :step="1"
             :aria-label="tContent('demonstration.labels.volume')"
+            @value-commit="(v: number[]) => handleDemoSliderCommit('volume', v, 0, 100)"
           />
         </div>
 
@@ -518,6 +532,7 @@ const visualTestItems = computed(() => [
             :max="500"
             :step="10"
             :aria-label="tContent('demonstration.labels.priceRange')"
+            @value-commit="(v: number[]) => handleDemoSliderCommit('price-range', v, 0, 500)"
           />
         </div>
 
@@ -551,6 +566,7 @@ const visualTestItems = computed(() => [
               :max="100"
               :step="1"
               :aria-label="tContent('demonstration.labels.brightness')"
+              @value-commit="(v: number[]) => handleDemoSliderCommit('brightness', v, 0, 100)"
             />
           </div>
         </div>

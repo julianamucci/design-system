@@ -249,7 +249,7 @@ export function createSwitchDocs(): HTMLElement {
                   component: 'switch',
                   field_name: 'notifications',
                   value: String(val),
-                  location: 'docs-demo',
+                  location: 'docs_demo',
                 });
               },
             }));
@@ -265,7 +265,7 @@ export function createSwitchDocs(): HTMLElement {
                   component: 'switch',
                   field_name: 'marketing',
                   value: String(val),
-                  location: 'docs-demo',
+                  location: 'docs_demo',
                 });
               },
             }));
@@ -281,7 +281,7 @@ export function createSwitchDocs(): HTMLElement {
                   component: 'switch',
                   field_name: 'dark_mode',
                   value: String(val),
-                  location: 'docs-demo',
+                  location: 'docs_demo',
                 });
               },
             }));

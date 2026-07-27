@@ -135,6 +135,18 @@ export function SwitchDocs() {
   // ─── Estados controlados para o demo ────────────────────────────────────────
 
   const [demoNotifications, setDemoNotifications] = useState(true);
+
+  const trackSwitchChange =
+    (fieldName: string, setter: (checked: boolean) => void) =>
+    (checked: boolean) => {
+      setter(checked);
+      track("field_change", {
+        component: "switch",
+        field_name: fieldName,
+        value: String(checked),
+        location: "docs_demo",
+      });
+    };
   const [demoMarketing, setDemoMarketing] = useState(false);
   const [demoDarkMode, setDemoDarkMode] = useState(false);
   const [demoSm, setDemoSm] = useState(false);
@@ -220,7 +232,7 @@ import { Label } from "@/components/ui/label";`;
             <Switch
               id="demo-notifications"
               checked={demoNotifications}
-              onCheckedChange={setDemoNotifications}
+              onCheckedChange={trackSwitchChange("notifications", setDemoNotifications)}
             />
             <Label htmlFor="demo-notifications">
               {tContent("demonstration.labels.notifications")}
@@ -239,7 +251,7 @@ import { Label } from "@/components/ui/label";`;
             <Switch
               id="demo-marketing"
               checked={demoMarketing}
-              onCheckedChange={setDemoMarketing}
+              onCheckedChange={trackSwitchChange("marketing_emails", setDemoMarketing)}
             />
           </div>
 
@@ -255,7 +267,7 @@ import { Label } from "@/components/ui/label";`;
             <Switch
               id="demo-darkmode"
               checked={demoDarkMode}
-              onCheckedChange={setDemoDarkMode}
+              onCheckedChange={trackSwitchChange("dark_mode", setDemoDarkMode)}
             />
           </div>
 
@@ -264,7 +276,7 @@ import { Label } from "@/components/ui/label";`;
               id="demo-sm"
               size="sm"
               checked={demoSm}
-              onCheckedChange={setDemoSm}
+              onCheckedChange={trackSwitchChange("compact_switch", setDemoSm)}
             />
             <Label htmlFor="demo-sm" className="nds-text-caption">
               {tContent("demonstration.labels.sm")}

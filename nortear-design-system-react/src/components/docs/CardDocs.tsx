@@ -278,10 +278,30 @@ interface CardProps extends React.ComponentProps<"div"> {
         <Button
           variant="outline"
           aria-label={`${actionEdit} ${productTitle}`}
+          onClick={() =>
+            track("button_click", {
+              component: "button",
+              variant: "outline",
+              label: actionEdit,
+              location: "docs_demo",
+            })
+          }
         >
           {actionEdit}
         </Button>
-        <Button aria-label={`${actionSave} ${productTitle}`}>{actionSave}</Button>
+        <Button
+          aria-label={`${actionSave} ${productTitle}`}
+          onClick={() =>
+            track("button_click", {
+              component: "button",
+              variant: "default",
+              label: actionSave,
+              location: "docs_demo",
+            })
+          }
+        >
+          {actionSave}
+        </Button>
       </CardFooter>
     </Card>
   );

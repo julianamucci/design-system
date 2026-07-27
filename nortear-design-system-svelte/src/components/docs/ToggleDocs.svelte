@@ -193,6 +193,7 @@ interface ToggleProps {
         <div class="nds-cluster" data-spacing="xs">
           <Toggle
             bind:pressed={demoBold}
+            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'bold', value: String(v), location: 'docs_demo' })}
             aria-label={$tStore('demonstration.labels.bold')}
             data-track="demo"
             data-track-id="toggle:demo:bold"
@@ -202,6 +203,7 @@ interface ToggleProps {
           </Toggle>
           <Toggle
             bind:pressed={demoItalic}
+            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'italic', value: String(v), location: 'docs_demo' })}
             aria-label={$tStore('demonstration.labels.italic')}
             data-track="demo"
             data-track-id="toggle:demo:italic"
@@ -211,6 +213,7 @@ interface ToggleProps {
           </Toggle>
           <Toggle
             bind:pressed={demoUnderline}
+            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'underline', value: String(v), location: 'docs_demo' })}
             aria-label={$tStore('demonstration.labels.underline')}
             data-track="demo"
             data-track-id="toggle:demo:underline"
@@ -223,6 +226,7 @@ interface ToggleProps {
         <!-- Outline com label visível -->
         <Toggle
           bind:pressed={demoShowHidden}
+          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'showHidden', value: String(v), location: 'docs_demo' })}
           variant="outline"
           data-track="demo"
           data-track-id="toggle:demo:showHidden"
@@ -235,6 +239,7 @@ interface ToggleProps {
         <!-- Tamanho lg com label visível -->
         <Toggle
           bind:pressed={demoCompact}
+          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'compactView', value: String(v), location: 'docs_demo' })}
           variant="outline"
           size="lg"
           data-track="demo"

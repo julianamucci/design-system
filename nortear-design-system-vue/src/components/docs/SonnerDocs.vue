@@ -121,20 +121,26 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 });
 // ─── Toast actions (demonstração) ─────────────────────────────────────────────
 
-function fireDefault()  { toast(tContent('demonstration.labels.default')); }
-function fireSuccess()  { toast.success(tContent('demonstration.labels.success')); }
-function fireError()    { toast.error(tContent('demonstration.labels.error')); }
-function fireWarning()  { toast.warning(tContent('demonstration.labels.warning')); }
-function fireInfo()     { toast.info(tContent('demonstration.labels.info')); }
-function fireLoading()  { toast.loading(tContent('demonstration.labels.loading')); }
+function trackToastDemo(toastType: string) {
+  track('toast_demo_triggered', { toast_type: toastType, locale: locale.value });
+}
+
+function fireDefault()  { trackToastDemo('default'); toast(tContent('demonstration.labels.default')); }
+function fireSuccess()  { trackToastDemo('success'); toast.success(tContent('demonstration.labels.success')); }
+function fireError()    { trackToastDemo('error'); toast.error(tContent('demonstration.labels.error')); }
+function fireWarning()  { trackToastDemo('warning'); toast.warning(tContent('demonstration.labels.warning')); }
+function fireInfo()     { trackToastDemo('info'); toast.info(tContent('demonstration.labels.info')); }
+function fireLoading()  { trackToastDemo('loading'); toast.loading(tContent('demonstration.labels.loading')); }
 
 function fireWithDescription() {
+  trackToastDemo('with-description');
   toast.success(tContent('demonstration.labels.withDescription'), {
     description: tContent('demonstration.labels.withDescriptionDesc'),
   });
 }
 
 function fireWithAction() {
+  trackToastDemo('with-action');
   toast(tContent('demonstration.labels.withAction'), {
     action: {
       label: tContent('demonstration.labels.withActionLabel'),
@@ -142,7 +148,7 @@ function fireWithAction() {
         track('toast_action_click', {
           label: tContent('demonstration.labels.withActionLabel'),
           component: 'toast',
-          location: 'sonner-docs-demonstration',
+          location: 'docs_demo',
         });
       },
     },
@@ -150,6 +156,7 @@ function fireWithAction() {
 }
 
 function firePromise() {
+  trackToastDemo('promise');
   const promise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
   toast.promise(promise, {
     loading: tContent('demonstration.labels.promiseLoading'),
@@ -159,6 +166,7 @@ function firePromise() {
 }
 
 function firePersistent() {
+  trackToastDemo('persistent');
   toast.error(tContent('demonstration.labels.persistent'), {
     duration: Infinity,
     dismissible: true,

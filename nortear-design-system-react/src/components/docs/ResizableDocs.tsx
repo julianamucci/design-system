@@ -263,7 +263,18 @@ interface PanelResizeHandleProps {
               className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
               style={demoBoxStyle}
             >
-              <ResizablePanelGroup direction="horizontal">
+              <ResizablePanelGroup
+                direction="horizontal"
+                onLayoutChanged={(layout, meta) => {
+                  if (!meta.isUserInteraction) return;
+                  track("panel_resize", {
+                    component: "resizable",
+                    group_id: "demo_horizontal",
+                    sizes: Object.values(layout).map((n) => Math.round(n)).join("/"),
+                    location: "docs_demo",
+                  });
+                }}
+              >
                 <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
                   <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblSidebar}
@@ -288,7 +299,18 @@ interface PanelResizeHandleProps {
               className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
               style={{ minHeight: 260, contain: "layout" }}
             >
-              <ResizablePanelGroup direction="vertical">
+              <ResizablePanelGroup
+                direction="vertical"
+                onLayoutChanged={(layout, meta) => {
+                  if (!meta.isUserInteraction) return;
+                  track("panel_resize", {
+                    component: "resizable",
+                    group_id: "demo_vertical",
+                    sizes: Object.values(layout).map((n) => Math.round(n)).join("/"),
+                    location: "docs_demo",
+                  });
+                }}
+              >
                 <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
                   <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblTop}
@@ -313,7 +335,18 @@ interface PanelResizeHandleProps {
               className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
               style={{ minHeight: 300, contain: "layout" }}
             >
-              <ResizablePanelGroup direction="horizontal">
+              <ResizablePanelGroup
+                direction="horizontal"
+                onLayoutChanged={(layout, meta) => {
+                  if (!meta.isUserInteraction) return;
+                  track("panel_resize", {
+                    component: "resizable",
+                    group_id: "demo_nested",
+                    sizes: Object.values(layout).map((n) => Math.round(n)).join("/"),
+                    location: "docs_demo",
+                  });
+                }}
+              >
                 <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
                   <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblSidebar}

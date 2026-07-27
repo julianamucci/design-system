@@ -104,7 +104,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
           component: "dialog",
           label: title,
           ...(open ? {} : { reason: "user" }),
-          location: "docs:demo",
+          location: "docs_demo",
         })
       }
     >
@@ -121,7 +121,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
               track("dialog_action", {
                 component: "dialog",
                 action_label: action,
-                location: "docs:demo",
+                location: "docs_demo",
               })
             }
           >
@@ -137,11 +137,11 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
   return (
     <Dialog
       onOpenChange={(open) =>
-        open &&
-        track("dialog_open", {
+        track(open ? "dialog_open" : "dialog_close", {
           component: "dialog",
           label: title,
-          location: "docs:demo:form",
+          ...(open ? {} : { reason: "user" }),
+          location: "docs_demo",
         })
       }
     >
@@ -159,7 +159,7 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
             track("dialog_action", {
               component: "dialog",
               action_label: action,
-              location: "docs:demo:form",
+              location: "docs_demo",
             });
           }}
         >

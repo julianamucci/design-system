@@ -194,7 +194,7 @@ interface TriggerProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
       <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap; contain: layout">
-        <Sheet>
+        <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_demo' })}>
           <SheetTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>{$tStore('demonstration.labels.rightLabel')}</Button>
@@ -211,12 +211,12 @@ interface TriggerProps {
                   <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
                 {/snippet}
               </SheetClose>
-              <Button>{$tStore('demonstration.labels.apply')}</Button>
+              <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
 
-        <Sheet>
+        <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'left', location: 'docs_demo' })}>
           <SheetTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>{$tStore('demonstration.labels.leftLabel')}</Button>
@@ -233,12 +233,12 @@ interface TriggerProps {
                   <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
                 {/snippet}
               </SheetClose>
-              <Button>{$tStore('demonstration.labels.apply')}</Button>
+              <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
 
-        <Sheet>
+        <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'top', location: 'docs_demo' })}>
           <SheetTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>{$tStore('demonstration.labels.topLabel')}</Button>
@@ -255,12 +255,12 @@ interface TriggerProps {
                   <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
                 {/snippet}
               </SheetClose>
-              <Button>{$tStore('demonstration.labels.apply')}</Button>
+              <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
 
-        <Sheet>
+        <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'bottom', location: 'docs_demo' })}>
           <SheetTrigger>
             {#snippet child({ props })}
               <Button variant="outline" {...props}>{$tStore('demonstration.labels.bottomLabel')}</Button>
@@ -277,7 +277,7 @@ interface TriggerProps {
                   <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
                 {/snippet}
               </SheetClose>
-              <Button>{$tStore('demonstration.labels.apply')}</Button>
+              <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>

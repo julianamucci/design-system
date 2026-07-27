@@ -140,6 +140,32 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoOpenChange(open: boolean) {
+  if (open) {
+    track('dialog_open', {
+      component: 'sheet',
+      label: tContent('demonstration.labels.trigger'),
+      location: 'docs_demo',
+    });
+  } else {
+    track('dialog_close', {
+      component: 'sheet',
+      label: tContent('demonstration.labels.trigger'),
+      location: 'docs_demo',
+    });
+  }
+}
+
+function handleDemoApply() {
+  track('dialog_confirm', {
+    component: 'sheet',
+    action: tContent('demonstration.labels.apply'),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -441,7 +467,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="sm"
         style="flex-wrap: wrap;"
       >
-        <Sheet>
+        <Sheet @update:open="handleDemoOpenChange">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -465,7 +491,9 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </SheetClose>
-              <Button>{{ tContent('demonstration.labels.apply') }}</Button>
+              <Button @click="handleDemoApply">
+                {{ tContent('demonstration.labels.apply') }}
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>

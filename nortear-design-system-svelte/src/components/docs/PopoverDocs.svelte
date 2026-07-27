@@ -238,7 +238,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <div class="nds-cluster nds-w-full" data-spacing="lg" data-justify="center">
         <!-- Default -->
         <div class="nds-stack" data-spacing="sm" style="contain: layout; align-items: center">
-          <Popover>
+          <Popover onOpenChange={(o: boolean) => (o
+            ? track('popover_open', { component: 'popover', trigger_label: $tStore('demonstration.labels.trigger'), location: 'docs_demo' })
+            : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
             <PopoverTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -263,7 +265,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
         <!-- Form -->
         <div class="nds-stack" data-spacing="sm" style="contain: layout; align-items: center">
-          <Popover>
+          <Popover onOpenChange={(o: boolean) => (o
+            ? track('popover_open', { component: 'popover', trigger_label: $tStore('demonstration.labels.form.trigger'), location: 'docs_demo' })
+            : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
             <PopoverTrigger>
               {#snippet child({ props })}
                 <Button {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>

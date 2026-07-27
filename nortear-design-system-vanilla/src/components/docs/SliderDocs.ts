@@ -246,6 +246,23 @@ export function createSliderDocs(): HTMLElement {
             wrap.className = 'nds-stack';
             wrap.dataset.spacing = 'xl';
 
+            // Factory não expõe onValueCommitted — debounce manual para emitir
+            // apenas o valor commitado (fim do arrasto/teclado), sem spam.
+            const debounceIds: Record<string, ReturnType<typeof setTimeout>> = {};
+            const trackCommitted = (fieldName: string, min: number, max: number) => (v: number) => {
+              if (debounceIds[fieldName]) clearTimeout(debounceIds[fieldName]);
+              debounceIds[fieldName] = setTimeout(() => {
+                track('slider_change', {
+                  component: 'slider',
+                  field_name: fieldName,
+                  value: v,
+                  min,
+                  max,
+                  location: 'docs_demo',
+                });
+              }, 300);
+            };
+
             // Volume — single
             const volume = buildLabeledSlider({
               idPrefix: 'demo-volume',
@@ -256,14 +273,7 @@ export function createSliderDocs(): HTMLElement {
               step: 1,
               value: 50,
               unit: '%',
-              onValueChange: (v) => {
-                track('field_change', {
-                  component: 'slider',
-                  field_name: 'volume',
-                  value: String(v),
-                  location: 'docs-demo',
-                });
-              },
+              onValueChange: trackCommitted('volume', 0, 100),
             });
             wrap.appendChild(volume);
 
@@ -277,6 +287,7 @@ export function createSliderDocs(): HTMLElement {
               step: 5,
               value: 75,
               unit: '%',
+              onValueChange: trackCommitted('brightness', 0, 100),
             });
             wrap.appendChild(brightness);
 

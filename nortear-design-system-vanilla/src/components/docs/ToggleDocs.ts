@@ -104,7 +104,7 @@ function buildIconToggle(opts: {
         component: 'toggle',
         field_name: opts.fieldName!,
         value: String(pressed),
-        location: 'docs-demo',
+        location: 'docs_demo',
       });
     };
   }
@@ -144,7 +144,7 @@ function buildLabelToggle(opts: {
         component: 'toggle',
         field_name: opts.fieldName!,
         value: String(pressed),
-        location: 'docs-demo',
+        location: 'docs_demo',
       });
     };
   }

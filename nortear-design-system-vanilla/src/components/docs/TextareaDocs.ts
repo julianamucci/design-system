@@ -146,7 +146,7 @@ function buildField(opts: FieldOpts): HTMLElement {
         track('field_blur', {
           component: 'textarea',
           field_name: opts.trackName!,
-          location: 'docs-demo',
+          location: 'docs_demo',
         });
       }
     });

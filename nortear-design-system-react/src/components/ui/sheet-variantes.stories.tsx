@@ -13,7 +13,6 @@ import {
 } from "./sheet";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
 const meta = {
@@ -42,13 +41,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string) =>
-  track("dialog_open", {
-    component: "sheet",
-    trigger_label: label,
-    location: "storybook:variantes",
-  });
-
 export const Right: Story = {
   parameters: {
     docs: {
@@ -61,7 +53,7 @@ export const Right: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("right")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -100,7 +92,7 @@ export const Left: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("left")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -139,7 +131,7 @@ export const Top: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("top")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -178,7 +170,7 @@ export const Bottom: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("bottom")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>

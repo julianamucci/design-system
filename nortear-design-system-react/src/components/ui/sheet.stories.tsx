@@ -13,7 +13,6 @@ import {
 } from "./sheet";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 import { SheetDocs } from "@/components/docs/SheetDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -57,25 +56,7 @@ export const Playground: Story = {
   render: (args) => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet
-        {...args}
-        onOpenChange={(open) => {
-          args.onOpenChange?.(open, undefined as never);
-          if (open) {
-            track("dialog_open", {
-              component: "sheet",
-              trigger_label: t("demonstration.labels.trigger"),
-              location: "storybook:playground",
-            });
-          } else {
-            track("dialog_close", {
-              component: "sheet",
-              reason: "user",
-              location: "storybook:playground",
-            });
-          }
-        }}
-      >
+      <Sheet {...args}>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -90,17 +71,7 @@ export const Playground: Story = {
             <SheetClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </SheetClose>
-            <Button
-              onClick={() =>
-                track("dialog_confirm", {
-                  component: "sheet",
-                  action: t("demonstration.labels.apply"),
-                  location: "storybook:playground",
-                })
-              }
-            >
-              {t("demonstration.labels.apply")}
-            </Button>
+            <Button>{t("demonstration.labels.apply")}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

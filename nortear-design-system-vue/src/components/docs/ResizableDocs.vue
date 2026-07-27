@@ -128,6 +128,24 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+const demoGroupSizes: Record<string, number[]> = {};
+
+function handleDemoLayout(groupId: string, sizes: number[]) {
+  demoGroupSizes[groupId] = sizes;
+}
+
+function handleDemoDragging(groupId: string, isDragging: boolean) {
+  if (isDragging) return;
+  track('panel_resize', {
+    component: 'resizable',
+    group_id: groupId,
+    sizes: demoGroupSizes[groupId]?.map((s) => Math.round(s)).join(','),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -362,7 +380,10 @@ const visualTestItems = computed(() => [
             class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
             style="height: 220px; min-height: 200px; contain: layout"
           >
-            <ResizablePanelGroup direction="horizontal">
+            <ResizablePanelGroup
+              direction="horizontal"
+              @layout="(sizes: number[]) => handleDemoLayout('demo-horizontal', sizes)"
+            >
               <ResizablePanel
                 :default-size="30"
                 :min-size="20"
@@ -380,6 +401,7 @@ const visualTestItems = computed(() => [
               <ResizableHandle
                 with-handle
                 :aria-label="`${tContent('demonstration.labels.horizontal')} — use setas`"
+                @dragging="(d: boolean) => handleDemoDragging('demo-horizontal', d)"
               />
               <ResizablePanel
                 :default-size="70"
@@ -400,7 +422,10 @@ const visualTestItems = computed(() => [
             class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
             style="height: 220px; min-height: 200px; contain: layout"
           >
-            <ResizablePanelGroup direction="vertical">
+            <ResizablePanelGroup
+              direction="vertical"
+              @layout="(sizes: number[]) => handleDemoLayout('demo-vertical', sizes)"
+            >
               <ResizablePanel
                 :default-size="50"
                 :min-size="20"
@@ -418,6 +443,7 @@ const visualTestItems = computed(() => [
               <ResizableHandle
                 with-handle
                 :aria-label="`${tContent('demonstration.labels.vertical')} — use setas`"
+                @dragging="(d: boolean) => handleDemoDragging('demo-vertical', d)"
               />
               <ResizablePanel
                 :default-size="50"
@@ -440,7 +466,10 @@ const visualTestItems = computed(() => [
           class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
           style="height: 280px; min-height: 240px; contain: layout"
         >
-          <ResizablePanelGroup direction="horizontal">
+          <ResizablePanelGroup
+            direction="horizontal"
+            @layout="(sizes: number[]) => handleDemoLayout('demo-nested', sizes)"
+          >
             <ResizablePanel
               :default-size="25"
               :min-size="15"
@@ -458,12 +487,16 @@ const visualTestItems = computed(() => [
             <ResizableHandle
               with-handle
               :aria-label="`${tContent('demonstration.labels.nested')} — sidebar/conteúdo — use setas`"
+              @dragging="(d: boolean) => handleDemoDragging('demo-nested', d)"
             />
             <ResizablePanel
               :default-size="75"
               :min-size="50"
             >
-              <ResizablePanelGroup direction="vertical">
+              <ResizablePanelGroup
+                direction="vertical"
+                @layout="(sizes: number[]) => handleDemoLayout('demo-nested-vertical', sizes)"
+              >
                 <ResizablePanel
                   :default-size="65"
                   :min-size="30"
@@ -480,6 +513,7 @@ const visualTestItems = computed(() => [
                 <ResizableHandle
                   with-handle
                   :aria-label="`${tContent('demonstration.labels.nested')} — conteúdo/rodapé — use setas`"
+                  @dragging="(d: boolean) => handleDemoDragging('demo-nested-vertical', d)"
                 />
                 <ResizablePanel
                   :default-size="35"

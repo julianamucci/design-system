@@ -253,6 +253,14 @@ function Textarea({
               id="demo-description"
               value={demoDescription}
               onChange={(e) => setDemoDescription(e.target.value)}
+              onBlur={() =>
+                demoDescription.trim() &&
+                track("field_blur", {
+                  component: "textarea",
+                  field_name: "description",
+                  location: "docs_demo",
+                })
+              }
               placeholder={tContent("demonstration.labels.descriptionPlaceholder")}
               className="nds-resize-y nds-min-h-30"
               maxLength={demoMax}
@@ -280,6 +288,14 @@ function Textarea({
               id="demo-bio"
               value={demoBio}
               onChange={(e) => setDemoBio(e.target.value)}
+              onBlur={() =>
+                demoBio.trim() &&
+                track("field_blur", {
+                  component: "textarea",
+                  field_name: "bio",
+                  location: "docs_demo",
+                })
+              }
               placeholder={tContent("demonstration.labels.bioPlaceholder")}
               className="nds-resize-y nds-min-h-30"
             />
@@ -294,6 +310,14 @@ function Textarea({
               id="demo-feedback"
               value={demoFeedback}
               onChange={(e) => setDemoFeedback(e.target.value)}
+              onBlur={() =>
+                demoFeedback.trim() &&
+                track("field_blur", {
+                  component: "textarea",
+                  field_name: "feedback",
+                  location: "docs_demo",
+                })
+              }
               placeholder={tContent("demonstration.labels.feedbackPlaceholder")}
               className="nds-resize-none nds-min-h-30"
             />

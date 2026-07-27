@@ -149,20 +149,33 @@ export function createFormDocs(): HTMLElement {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full nds-max-w-sm';
 
+            const wireFieldTracking = (input: HTMLInputElement | HTMLTextAreaElement, fieldName: string) => {
+              input.addEventListener('focus', () => {
+                track('field_focus', { component: 'form', field_name: fieldName, location: 'docs_demo' });
+              });
+              input.addEventListener('blur', () => {
+                if (input.value.length > 0) {
+                  track('field_blur', { component: 'form', field_name: fieldName, location: 'docs_demo' });
+                }
+              });
+              return input;
+            };
+
             wrap.appendChild(createFormField({
               label: t('demonstration.labels.nameLabel'),
-              input: createInput({ type: 'text', placeholder: t('demonstration.labels.namePlaceholder') }),
+              input: wireFieldTracking(createInput({ type: 'text', placeholder: t('demonstration.labels.namePlaceholder') }), 'name'),
               description: t('demonstration.labels.nameDescription'),
             }));
 
             wrap.appendChild(createFormField({
               label: t('demonstration.labels.emailLabel'),
-              input: createInput({ type: 'email', placeholder: t('demonstration.labels.emailPlaceholder') }),
+              input: wireFieldTracking(createInput({ type: 'email', placeholder: t('demonstration.labels.emailPlaceholder') }), 'email'),
               description: t('demonstration.labels.emailDescription'),
             }));
 
             const pwdInput = createInput({ type: 'password', placeholder: t('demonstration.labels.passwordPlaceholder') });
             pwdInput.setAttribute('aria-invalid', 'true');
+            wireFieldTracking(pwdInput, 'password');
             wrap.appendChild(createFormField({
               label: t('demonstration.labels.passwordLabel'),
               input: pwdInput,

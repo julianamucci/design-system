@@ -132,6 +132,24 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoOpenChange(label: string, open: boolean) {
+  track(open ? 'dialog_open' : 'dialog_close', {
+    component: 'alert_dialog',
+    label,
+    location: 'docs_demo',
+  });
+}
+
+function handleDemoConfirm(label: string) {
+  track('dialog_confirm', {
+    component: 'alert_dialog',
+    label,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -441,7 +459,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="md"
         style="flex-wrap: wrap"
       >
-        <AlertDialog>
+        <AlertDialog @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.title'), open)">
           <AlertDialogTrigger as-child>
             <Button variant="destructive">
               {{ tContent('demonstration.labels.triggerLabel') }}
@@ -454,14 +472,17 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{{ tContent('demonstration.labels.cancel') }}</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive">
+              <AlertDialogAction
+                class="nds-bg-destructive"
+                @click="handleDemoConfirm(tContent('demonstration.labels.title'))"
+              >
                 {{ tContent('demonstration.labels.action') }}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
-        <AlertDialog>
+        <AlertDialog @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.neutralTitle'), open)">
           <AlertDialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.neutralTriggerLabel') }}</Button>
           </AlertDialogTrigger>
@@ -472,7 +493,9 @@ const a11yCritCols = computed(() => ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{{ tContent('demonstration.labels.cancel') }}</AlertDialogCancel>
-              <AlertDialogAction>{{ tContent('demonstration.labels.neutralAction') }}</AlertDialogAction>
+              <AlertDialogAction @click="handleDemoConfirm(tContent('demonstration.labels.neutralTitle'))">
+                {{ tContent('demonstration.labels.neutralAction') }}
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

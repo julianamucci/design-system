@@ -52,6 +52,16 @@ function priorityLabel(raw: string): string {
 
 // ─── Demo builders ────────────────────────────────────────────────────────────
 
+function trackPopoverOpenChange(triggerLabel: string): (open: boolean) => void {
+  return (open) => {
+    if (open) {
+      track('popover_open', { component: 'popover', trigger_label: triggerLabel, location: 'docs_demo' });
+    } else {
+      track('popover_close', { component: 'popover', location: 'docs_demo' });
+    }
+  };
+}
+
 function buildDefaultPopover(): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
 
@@ -64,7 +74,13 @@ function buildDefaultPopover(): HTMLElement {
   p.textContent = t('demonstration.labels.description');
   content.appendChild(p);
 
-  return createPopover({ trigger, content, side: 'bottom', align: 'center' });
+  return createPopover({
+    trigger,
+    content,
+    side: 'bottom',
+    align: 'center',
+    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.trigger')),
+  });
 }
 
 function buildWithTitlePopover(): HTMLElement {
@@ -95,7 +111,13 @@ function buildWithTitlePopover(): HTMLElement {
 
   content.append(header, actions);
 
-  return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+  return createPopover({
+    trigger,
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.trigger')),
+  });
 }
 
 function buildFormPopover(): HTMLElement {
@@ -124,7 +146,13 @@ function buildFormPopover(): HTMLElement {
 
   content.append(nameRow, emailRow, submit);
 
-  return createPopover({ trigger, content, side: 'bottom', align: 'start' });
+  return createPopover({
+    trigger,
+    content,
+    side: 'bottom',
+    align: 'start',
+    onOpenChange: trackPopoverOpenChange(t('demonstration.labels.form.trigger')),
+  });
 }
 
 // ─── createPopoverDocs ────────────────────────────────────────────────────────

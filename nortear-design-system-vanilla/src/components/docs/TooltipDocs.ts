@@ -62,17 +62,44 @@ function makeIconButton(ariaLabel: string): HTMLButtonElement {
   });
 }
 
+// A factory não expõe callback de abertura; espelhamos o delay de exibição
+// (300ms) para registrar tooltip_view apenas quando o tooltip realmente abriu.
+const TOOLTIP_SHOW_DELAY = 300;
+
+function attachTooltipViewTracking(trigger: HTMLElement, triggerId: string): void {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  const start = () => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      track('tooltip_view', { component: 'tooltip', trigger_id: triggerId, location: 'docs_demo' });
+      timer = null;
+    }, TOOLTIP_SHOW_DELAY);
+  };
+  const cancel = () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+  trigger.addEventListener('mouseenter', start);
+  trigger.addEventListener('focus', start);
+  trigger.addEventListener('mouseleave', cancel);
+  trigger.addEventListener('blur', cancel);
+}
+
 function buildDefaultTooltip(): HTMLElement {
   const trigger = createButton({
     variant: 'outline',
     label: t('demonstration.labels.saveButton'),
     ariaLabel: t('demonstration.labels.saveButton'),
   });
+  attachTooltipViewTracking(trigger, 'save');
   return createTooltip({ trigger, content: t('demonstration.labels.save'), side: 'top' });
 }
 
 function buildWithShortcutTooltip(): HTMLElement {
   const trigger = makeIconButton(t('demonstration.labels.saveButton'));
+  attachTooltipViewTracking(trigger, 'save-icon');
   return createTooltip({ trigger, content: t('demonstration.labels.save'), side: 'bottom' });
 }
 
@@ -82,6 +109,7 @@ function buildLongTextTooltip(): HTMLElement {
     label: t('demonstration.labels.shareButton'),
     ariaLabel: t('demonstration.labels.shareButton'),
   });
+  attachTooltipViewTracking(trigger, 'share');
   return createTooltip({
     trigger,
     content: t('demonstration.labels.share'),

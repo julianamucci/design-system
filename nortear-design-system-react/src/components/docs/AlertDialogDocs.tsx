@@ -96,7 +96,17 @@ type DestructiveDemoProps = {
 
 function DestructiveDemo({ triggerLabel, title, description, cancel, action, defaultOpen }: DestructiveDemoProps) {
   return (
-    <AlertDialog defaultOpen={defaultOpen}>
+    <AlertDialog
+      defaultOpen={defaultOpen}
+      onOpenChange={(open) =>
+        track(open ? "dialog_open" : "dialog_close", {
+          component: "alert_dialog",
+          label: title,
+          ...(open ? {} : { reason: "user" }),
+          location: "docs_demo",
+        })
+      }
+    >
       <AlertDialogTrigger asChild>
         <Button variant="destructive">{triggerLabel}</Button>
       </AlertDialogTrigger>
@@ -107,7 +117,16 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action, def
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
-          <AlertDialogAction className="nds-bg-destructive">
+          <AlertDialogAction
+            className="nds-bg-destructive"
+            onClick={() =>
+              track("dialog_confirm", {
+                component: "alert_dialog",
+                label: action,
+                location: "docs_demo",
+              })
+            }
+          >
             {action}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -127,7 +146,17 @@ type NeutralDemoProps = {
 
 function NeutralDemo({ triggerLabel, title, description, cancel, action, defaultOpen }: NeutralDemoProps) {
   return (
-    <AlertDialog defaultOpen={defaultOpen}>
+    <AlertDialog
+      defaultOpen={defaultOpen}
+      onOpenChange={(open) =>
+        track(open ? "dialog_open" : "dialog_close", {
+          component: "alert_dialog",
+          label: title,
+          ...(open ? {} : { reason: "user" }),
+          location: "docs_demo",
+        })
+      }
+    >
       <AlertDialogTrigger asChild>
         <Button variant="outline">{triggerLabel}</Button>
       </AlertDialogTrigger>
@@ -138,7 +167,17 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action, default
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
-          <AlertDialogAction>{action}</AlertDialogAction>
+          <AlertDialogAction
+            onClick={() =>
+              track("dialog_confirm", {
+                component: "alert_dialog",
+                label: action,
+                location: "docs_demo",
+              })
+            }
+          >
+            {action}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

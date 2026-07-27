@@ -124,9 +124,25 @@ function SidebarDemoPreview({
   side?: "left" | "right";
   defaultOpen?: boolean;
 }) {
+  const trackNav = (label: string) => () =>
+    track("navigation_click", {
+      component: "sidebar",
+      label,
+      destination: "#",
+      location: "docs_demo",
+    });
+
   return (
     <div className="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style={{ contain: "layout", minHeight: "300px", display: "flex" }}>
-      <SidebarProvider defaultOpen={defaultOpen}>
+      <SidebarProvider
+        defaultOpen={defaultOpen}
+        onOpenChange={(open) =>
+          track("sidebar_toggle", {
+            action: open ? "open" : "close",
+            trigger: "button",
+          })
+        }
+      >
         <nav aria-label="Navegação principal">
           <Sidebar variant={variant} collapsible={collapsible} side={side}>
             <SidebarHeader style={{ padding: "0.75rem" }}>
@@ -138,20 +154,20 @@ function SidebarDemoPreview({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton isActive tooltip="Dashboard" aria-current="page">
+                      <SidebarMenuButton isActive tooltip="Dashboard" aria-current="page" onClick={trackNav("Dashboard")}>
                         <LayoutDashboard aria-hidden="true" />
                         <span>Dashboard</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Componentes">
+                      <SidebarMenuButton tooltip="Componentes" onClick={trackNav("Componentes")}>
                         <Blocks aria-hidden="true" />
                         <span>Componentes</span>
                       </SidebarMenuButton>
                       <SidebarMenuBadge>12</SidebarMenuBadge>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Tokens">
+                      <SidebarMenuButton tooltip="Tokens" onClick={trackNav("Tokens")}>
                         <Coins aria-hidden="true" />
                         <span>Tokens</span>
                       </SidebarMenuButton>
@@ -165,14 +181,14 @@ function SidebarDemoPreview({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Notificações">
+                      <SidebarMenuButton tooltip="Notificações" onClick={trackNav("Notificações")}>
                         <Bell aria-hidden="true" />
                         <span>Notificações</span>
                       </SidebarMenuButton>
                       <SidebarMenuBadge>3</SidebarMenuBadge>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações">
+                      <SidebarMenuButton tooltip="Configurações" onClick={trackNav("Configurações")}>
                         <Settings aria-hidden="true" />
                         <span>Configurações</span>
                       </SidebarMenuButton>
@@ -184,7 +200,7 @@ function SidebarDemoPreview({
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Perfil">
+                  <SidebarMenuButton tooltip="Perfil" onClick={trackNav("Perfil")}>
                     <User aria-hidden="true" />
                     <span>Perfil</span>
                   </SidebarMenuButton>

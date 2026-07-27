@@ -127,7 +127,7 @@ function buildDemoTabs(): HTMLElement {
         label: items[idx]?.label ?? value,
         index: idx,
         total: items.length,
-        location: 'docs_demonstration',
+        location: 'docs_demo',
       });
     },
   });

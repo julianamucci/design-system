@@ -14,7 +14,6 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
-import { track } from "@/lib/analytics";
 
 const meta = {
   title: "UI/Sheet/Composicoes",
@@ -42,12 +41,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string, location: string) =>
-  track("dialog_open", { component: "sheet", trigger_label: label, location });
-
-const trackConfirm = (action: string, location: string) =>
-  track("dialog_confirm", { component: "sheet", action, location });
-
 export const FiltersPanel: Story = {
   parameters: {
     docs: {
@@ -58,10 +51,9 @@ export const FiltersPanel: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:filters";
     const title = "Filtros avançados";
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           Abrir filtros
         </SheetTrigger>
@@ -76,7 +68,6 @@ export const FiltersPanel: Story = {
             className="nds-grid nds-px-4" data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
-              trackConfirm("Aplicar filtros", location);
             }}
           >
             <div className="nds-stack" data-spacing="sm">
@@ -96,9 +87,7 @@ export const FiltersPanel: Story = {
             <SheetClose render={<Button type="button" variant="outline" />}>
               Cancelar
             </SheetClose>
-            <Button onClick={() => trackConfirm("Aplicar filtros", location)}>
-              Aplicar filtros
-            </Button>
+            <Button>Aplicar filtros</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -122,10 +111,9 @@ export const SecondaryNavigation: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:nav";
     const title = "Navegação";
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           Abrir menu
         </SheetTrigger>
@@ -143,13 +131,6 @@ export const SecondaryNavigation: Story = {
                   key={label}
                   variant="ghost"
                   className="" data-justify="start"
-                  onClick={() =>
-                    track("dialog_confirm", {
-                      component: "sheet",
-                      action: `nav:${label}`,
-                      location,
-                    })
-                  }
                 >
                   {label}
                 </Button>
@@ -178,10 +159,9 @@ export const BottomPanel: Story = {
     },
   },
   render: () => {
-    const location = "storybook:composicoes:bottom";
     const title = "Ações rápidas";
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen(title, location)}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           Abrir ações
         </SheetTrigger>
@@ -193,24 +173,9 @@ export const BottomPanel: Story = {
             </SheetDescription>
           </SheetHeader>
           <div className="nds-cluster nds-px-4" data-spacing="sm" style={{ flexWrap: "wrap" }}>
-            <Button
-              variant="outline"
-              onClick={() => trackConfirm("Compartilhar", location)}
-            >
-              Compartilhar
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => trackConfirm("Duplicar", location)}
-            >
-              Duplicar
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => trackConfirm("Excluir", location)}
-            >
-              Excluir
-            </Button>
+            <Button variant="outline">Compartilhar</Button>
+            <Button variant="outline">Duplicar</Button>
+            <Button variant="destructive">Excluir</Button>
           </div>
           <SheetFooter>
             <SheetClose render={<Button variant="outline" />}>

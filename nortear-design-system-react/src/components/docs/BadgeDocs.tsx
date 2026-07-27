@@ -387,7 +387,19 @@ const badgeVariants = cva(
             useWhen: tContent("variants.compositions.asLink.use"),
             code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" style={{ display: 'inline-flex' }}>\n  <Badge variant="secondary">Design</Badge>\n</a>`,
             preview: (
-              <a href="#design" aria-label="Ver todos os itens da categoria Design" style={{ display: 'inline-flex' }}>
+              <a
+                href="#design"
+                aria-label="Ver todos os itens da categoria Design"
+                style={{ display: 'inline-flex' }}
+                onClick={() =>
+                  track("badge_click", {
+                    component: "badge",
+                    label: "Design",
+                    variant: "secondary",
+                    location: "docs_demo",
+                  })
+                }
+              >
                 <Badge variant="secondary">Design</Badge>
               </a>
             ),
@@ -398,7 +410,20 @@ const badgeVariants = cva(
             useWhen: tContent("variants.compositions.asTrigger.use"),
             code: `<button type="button" aria-label="Filtrar por React" className="nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ display: 'inline-flex', padding: 0, border: 0 }}>\n  <Badge variant="outline">React</Badge>\n</button>`,
             preview: (
-              <button type="button" aria-label="Filtrar por React" className="nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ display: 'inline-flex', padding: 0, border: 0 }}>
+              <button
+                type="button"
+                aria-label="Filtrar por React"
+                className="nds-rounded-md nds-cursor-pointer nds-bg-transparent"
+                style={{ display: 'inline-flex', padding: 0, border: 0 }}
+                onClick={() =>
+                  track("badge_click", {
+                    component: "badge",
+                    label: "React",
+                    variant: "outline",
+                    location: "docs_demo",
+                  })
+                }
+              >
                 <Badge variant="outline">React</Badge>
               </button>
             ),

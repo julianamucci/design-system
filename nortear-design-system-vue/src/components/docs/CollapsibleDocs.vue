@@ -125,6 +125,21 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 const demoControlledOpen = ref(false);
 
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function trackDemoToggle(label: string, open: boolean) {
+  track('collapsible_toggle', {
+    label,
+    value: open ? 'open' : 'closed',
+    location: 'docs_demo',
+  });
+}
+
+function handleControlledToggle(open: boolean) {
+  demoControlledOpen.value = open;
+  trackDemoToggle(tContent('demonstration.labels.triggerClosed'), open);
+}
+
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";`;
@@ -433,7 +448,10 @@ const visualTestItems = computed(() => [
           <p class="nds-text-body nds-font-medium">
             Default (não-controlado)
           </p>
-          <Collapsible class="nds-w-full">
+          <Collapsible
+            class="nds-w-full"
+            @update:open="(v: boolean) => trackDemoToggle(tContent('demonstration.labels.triggerClosed'), v)"
+          >
             <CollapsibleTrigger
               class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"
               data-justify="between"
@@ -476,7 +494,7 @@ const visualTestItems = computed(() => [
               <button
                 class="nds-rounded-md nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent"
                 style="padding-inline: 0.75rem"
-                @click="demoControlledOpen = !demoControlledOpen"
+                @click="handleControlledToggle(!demoControlledOpen)"
               >
                 {{ demoControlledOpen ? 'Fechar' : 'Abrir' }}
               </button>
@@ -484,7 +502,7 @@ const visualTestItems = computed(() => [
             <Collapsible
               :open="demoControlledOpen"
               class="nds-w-full"
-              @update:open="(v) => demoControlledOpen = v"
+              @update:open="handleControlledToggle"
             >
               <CollapsibleTrigger
                 class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent"

@@ -148,6 +148,21 @@ const comboboxItems = [
 function comboboxSelect(value: string) {
   comboboxValue.value = value === comboboxValue.value ? '' : value;
   comboboxOpen.value = false;
+  track('command_item_select', {
+    label: comboboxItems.find((i) => i.value === value)?.label ?? value,
+    group: 'components',
+    pattern: 'combobox',
+  });
+}
+
+// ─── Analytics — inline demo ──────────────────────────────────────────────────
+
+function handleInlineSelect(label: string, group: string) {
+  track('command_item_select', {
+    label,
+    group,
+    pattern: 'inline',
+  });
 }
 
 // ─── Demo: Command Palette state ──────────────────────────────────────────────
@@ -159,8 +174,20 @@ function openPalette() {
   paletteOpen.value = true;
 }
 
-function paletteSelect(_value: string) {
+const paletteItemMeta: Record<string, { label: string; group: string }> = {
+  button: { label: 'Button', group: 'components' },
+  input: { label: 'Input', group: 'components' },
+  separator: { label: 'Separator', group: 'utils' },
+};
+
+function paletteSelect(value: string) {
   paletteOpen.value = false;
+  const meta = paletteItemMeta[value];
+  track('command_item_select', {
+    label: meta?.label ?? value,
+    group: meta?.group ?? 'components',
+    pattern: 'palette',
+  });
 }
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
@@ -583,16 +610,25 @@ const visualTestItems = computed(() => [
               <CommandList>
                 <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
                 <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                  <CommandItem value="button">
+                  <CommandItem
+                    value="button"
+                    @select="handleInlineSelect(tContent('demonstration.labels.itemButton'), 'components')"
+                  >
                     {{ tContent('demonstration.labels.itemButton') }}
                   </CommandItem>
-                  <CommandItem value="input">
+                  <CommandItem
+                    value="input"
+                    @select="handleInlineSelect(tContent('demonstration.labels.itemInput'), 'components')"
+                  >
                     {{ tContent('demonstration.labels.itemInput') }}
                   </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandGroup :heading="tContent('demonstration.labels.groupUtils')">
-                  <CommandItem value="separator">
+                  <CommandItem
+                    value="separator"
+                    @select="handleInlineSelect(tContent('demonstration.labels.itemSeparator'), 'utils')"
+                  >
                     {{ tContent('demonstration.labels.itemSeparator') }}
                   </CommandItem>
                 </CommandGroup>

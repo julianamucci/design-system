@@ -137,6 +137,23 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoOpenChange(triggerLabel: string, open: boolean) {
+  if (open) {
+    track('popover_open', {
+      component: 'popover',
+      trigger_label: triggerLabel,
+      location: 'docs_demo',
+    });
+  } else {
+    track('popover_close', {
+      component: 'popover',
+      location: 'docs_demo',
+    });
+  }
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -451,7 +468,7 @@ const a11yCritCols = computed(() => ({
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.default'))"
           />
-          <Popover>
+          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.trigger'), open)">
             <PopoverTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
@@ -481,7 +498,7 @@ const a11yCritCols = computed(() => ({
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.withTitle'))"
           />
-          <Popover>
+          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.title'), open)">
             <PopoverTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.title') }}
@@ -528,7 +545,7 @@ const a11yCritCols = computed(() => ({
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
             v-html="DOMPurify.sanitize(tContent('variants.items.form'))"
           />
-          <Popover>
+          <Popover @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.form.trigger'), open)">
             <PopoverTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.form.trigger') }}

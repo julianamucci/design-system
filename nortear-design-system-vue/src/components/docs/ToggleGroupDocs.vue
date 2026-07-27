@@ -138,6 +138,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function trackDemoGroupChange(fieldName: string, value: string | string[] | undefined) {
+  track('field_change', {
+    component: 'toggle_group',
+    field_name: fieldName,
+    value: Array.isArray(value) ? value.join(',') : String(value ?? ''),
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -480,7 +491,7 @@ const visualTestItems = computed(() => [
           type="single"
           :model-value="demoAlignment"
           :aria-label="tContent('demonstration.labels.alignmentLabel')"
-          @update:model-value="(v) => demoAlignment = (v as string)"
+          @update:model-value="(v) => { demoAlignment = (v as string); trackDemoGroupChange('alignment', v as string); }"
         >
           <ToggleGroupItem
             value="left"
@@ -513,7 +524,7 @@ const visualTestItems = computed(() => [
           type="multiple"
           :model-value="demoFormatting"
           :aria-label="tContent('demonstration.labels.formattingLabel')"
-          @update:model-value="(v) => demoFormatting = (v as string[])"
+          @update:model-value="(v) => { demoFormatting = (v as string[]); trackDemoGroupChange('formatting', v as string[]); }"
         >
           <ToggleGroupItem
             value="bold"
@@ -541,7 +552,7 @@ const visualTestItems = computed(() => [
           variant="outline"
           :model-value="demoView"
           :aria-label="tContent('demonstration.labels.viewLabel')"
-          @update:model-value="(v) => demoView = (v as string)"
+          @update:model-value="(v) => { demoView = (v as string); trackDemoGroupChange('view-mode', v as string); }"
         >
           <ToggleGroupItem
             value="grid"

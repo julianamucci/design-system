@@ -78,7 +78,21 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 function buildCarouselPreview(): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-max-w-md';
-  wrap.appendChild(createCarousel({ items: buildSlides(5) }));
+  const total = 5;
+  wrap.appendChild(createCarousel({
+    items: buildSlides(total),
+    // Nortear: o factory navega apenas via setas (ou Enter/Espaço nelas) —
+    // trigger 'button' cobre o único mecanismo exposto.
+    onIndexChange: (index) => {
+      track('slide_change', {
+        component: 'carousel',
+        index,
+        total,
+        trigger: 'button',
+        location: 'docs_demo',
+      });
+    },
+  }));
   return wrap;
 }
 

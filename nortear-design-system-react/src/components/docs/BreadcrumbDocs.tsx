@@ -290,15 +290,23 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
 
   // ─── Previews reutilizáveis ─────────────────────────────────────────────────
 
+  const trackBreadcrumbNav = (label: string) => () =>
+    track("navigation_click", {
+      component: "breadcrumb",
+      label,
+      destination: "#",
+      location: "docs_demo",
+    });
+
   const previewDefault = (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -312,7 +320,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -320,7 +328,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -334,13 +342,13 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>
           <Slash />
         </BreadcrumbSeparator>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>
           <Slash />
@@ -356,11 +364,20 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <DropdownMenu>
+          <DropdownMenu
+            onOpenChange={(open) =>
+              open &&
+              track("breadcrumb_ellipsis_open", {
+                component: "breadcrumb",
+                hidden_count: 3,
+                location: "docs_demo",
+              })
+            }
+          >
             <DropdownMenuTrigger
               className="nds-cluster"
               data-spacing="xs"
@@ -510,11 +527,11 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -527,11 +544,11 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -551,7 +568,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -567,7 +584,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -637,11 +654,11 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -660,7 +677,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -668,7 +685,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -701,11 +718,11 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>/</BreadcrumbSeparator>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>/</BreadcrumbSeparator>
                   <BreadcrumbItem>
@@ -746,7 +763,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{home}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -758,7 +775,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#">{components}</BreadcrumbLink>
+                    <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(components)}>{components}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>

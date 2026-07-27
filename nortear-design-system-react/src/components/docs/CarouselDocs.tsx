@@ -207,6 +207,26 @@ export function CarouselDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // Slide change tracking na demonstração — embla expõe a API imperativa via setApi.
+  const [demoApi, setDemoApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!demoApi) return;
+    const onSelect = () => {
+      track("slide_change", {
+        component: "carousel",
+        index: demoApi.selectedScrollSnap(),
+        total: demoApi.scrollSnapList().length,
+        trigger: "button",
+        location: "docs_demo",
+      });
+    };
+    demoApi.on("select", onSelect);
+    return () => {
+      demoApi.off("select", onSelect);
+    };
+  }, [demoApi]);
+
   const previousLabel = tContent("demonstration.labels.previous");
   const nextLabel = tContent("demonstration.labels.next");
 
@@ -336,6 +356,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           <Carousel
             className="nds-w-full nds-max-w-md"
             aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+            setApi={setDemoApi}
           >
             <CarouselContent>
               {Array.from({ length: 5 }).map((_, i) => (

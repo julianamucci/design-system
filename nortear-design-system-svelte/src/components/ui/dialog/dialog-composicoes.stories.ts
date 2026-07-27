@@ -5,7 +5,6 @@ import { within, expect } from 'storybook/test';
 import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import DialogProfileEditStory from './DialogProfileEditStory.svelte';
 import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
-import { track } from '@/lib/analytics';
 
 const meta = {
   title: 'UI/Dialog/Composicoes',
@@ -25,14 +24,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpenChange = (label: string, location: string) => (open: boolean) => {
-  if (open) {
-    track('dialog_open', { component: 'dialog', label, location });
-  } else {
-    track('dialog_close', { component: 'dialog', label, reason: 'close-button', location });
-  }
-};
-
 export const ConfirmEmail: Story = {
   parameters: {
     controls: { disable: true },
@@ -47,13 +38,6 @@ export const ConfirmEmail: Story = {
     Component: DialogConfirmEmailStory,
     props: {
       open: true,
-      onOpenChange: trackOpenChange('Confirmar novo email', 'storybook:composicoes:confirm-email'),
-      onAction: () =>
-        track('dialog_action', {
-          component: 'dialog',
-          action_label: 'Enviar confirmação',
-          location: 'storybook:composicoes:confirm-email',
-        }),
     },
   }),
   play: async () => {
@@ -80,13 +64,6 @@ export const ProfileEdit: Story = {
     Component: DialogProfileEditStory,
     props: {
       open: true,
-      onOpenChange: trackOpenChange('Editar perfil', 'storybook:composicoes:profile-edit'),
-      onAction: () =>
-        track('dialog_action', {
-          component: 'dialog',
-          action_label: 'Salvar alterações',
-          location: 'storybook:composicoes:profile-edit',
-        }),
     },
   }),
   play: async () => {
@@ -112,7 +89,6 @@ export const MediaPreview: Story = {
     Component: DialogMediaPreviewStory,
     props: {
       open: true,
-      onOpenChange: trackOpenChange('Pôr-do-sol na praia', 'storybook:composicoes:media-preview'),
     },
   }),
   play: async () => {

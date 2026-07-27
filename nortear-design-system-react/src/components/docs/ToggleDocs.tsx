@@ -134,6 +134,18 @@ export function ToggleDocs() {
   // ─── Estados controlados para o demo ────────────────────────────────────────
 
   const [demoBold, setDemoBold] = useState(false);
+
+  const trackToggleChange =
+    (fieldName: string, setter: (pressed: boolean) => void) =>
+    (pressed: boolean) => {
+      setter(pressed);
+      track("field_change", {
+        component: "toggle",
+        field_name: fieldName,
+        value: String(pressed),
+        location: "docs_demo",
+      });
+    };
   const [demoItalic, setDemoItalic] = useState(true);
   const [demoUnderline, setDemoUnderline] = useState(false);
   const [demoShowHidden, setDemoShowHidden] = useState(false);
@@ -210,21 +222,21 @@ import { Bold } from "lucide-react";`;
           <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-spacing="xs">
             <Toggle
               pressed={demoBold}
-              onPressedChange={setDemoBold}
+              onPressedChange={trackToggleChange("bold", setDemoBold)}
               aria-label={tContent("demonstration.labels.bold")}
             >
               <Bold aria-hidden="true" />
             </Toggle>
             <Toggle
               pressed={demoItalic}
-              onPressedChange={setDemoItalic}
+              onPressedChange={trackToggleChange("italic", setDemoItalic)}
               aria-label={tContent("demonstration.labels.italic")}
             >
               <Italic aria-hidden="true" />
             </Toggle>
             <Toggle
               pressed={demoUnderline}
-              onPressedChange={setDemoUnderline}
+              onPressedChange={trackToggleChange("underline", setDemoUnderline)}
               aria-label={tContent("demonstration.labels.underline")}
             >
               <Underline aria-hidden="true" />
@@ -237,7 +249,7 @@ import { Bold } from "lucide-react";`;
           <Toggle
             variant="outline"
             pressed={demoShowHidden}
-            onPressedChange={setDemoShowHidden}
+            onPressedChange={trackToggleChange("show_hidden", setDemoShowHidden)}
             aria-label={tContent("demonstration.labels.showHidden")}
           >
             <Eye aria-hidden="true" />
@@ -248,7 +260,7 @@ import { Bold } from "lucide-react";`;
             <Toggle
               size="sm"
               pressed={demoCompact}
-              onPressedChange={setDemoCompact}
+              onPressedChange={trackToggleChange("compact_view", setDemoCompact)}
               aria-label={`${tContent("demonstration.labels.compactView")} (sm)`}
             >
               <Bold aria-hidden="true" />

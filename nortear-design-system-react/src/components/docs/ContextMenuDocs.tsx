@@ -106,28 +106,50 @@ const getNavGroups = (t: (key: string) => string) => [
 // ─── Demo Components ──────────────────────────────────────────────────────────
 
 function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }) {
+  const trackItemClick = (label: string) => () =>
+    track("menu_item_click", {
+      label,
+      menu: "context_menu_demo",
+      location: "docs_demo",
+    });
+
   return (
-    <ContextMenu>
+    <ContextMenu
+      onOpenChange={(open) =>
+        open &&
+        track("menu_open", {
+          component: "context_menu",
+          menu: "context_menu_demo",
+          location: "docs_demo",
+        })
+      }
+    >
       <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
         {tContent("demonstration.labels.triggerLabel")}
       </ContextMenuTrigger>
       <ContextMenuContent style={{ minWidth: "12rem" }}>
         <ContextMenuGroup>
-          <ContextMenuItem>
+          <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.edit"))}>
             {tContent("demonstration.labels.edit")}
             <ContextMenuShortcut>{tContent("demonstration.labels.editShortcut")}</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem>{tContent("demonstration.labels.duplicate")}</ContextMenuItem>
+          <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.duplicate"))}>
+            {tContent("demonstration.labels.duplicate")}
+          </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>{tContent("demonstration.labels.share")}</ContextMenuSubTrigger>
             <ContextMenuSubContent>
-              <ContextMenuItem>{tContent("demonstration.labels.shareEmail")}</ContextMenuItem>
-              <ContextMenuItem>{tContent("demonstration.labels.shareLink")}</ContextMenuItem>
+              <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.shareEmail"))}>
+                {tContent("demonstration.labels.shareEmail")}
+              </ContextMenuItem>
+              <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.shareLink"))}>
+                {tContent("demonstration.labels.shareLink")}
+              </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
         </ContextMenuGroup>
         <ContextMenuSeparator />
-        <ContextMenuItem variant="destructive">
+        <ContextMenuItem variant="destructive" onClick={trackItemClick(tContent("demonstration.labels.delete"))}>
           {tContent("demonstration.labels.delete")}
           <ContextMenuShortcut>{tContent("demonstration.labels.deleteShortcut")}</ContextMenuShortcut>
         </ContextMenuItem>

@@ -272,15 +272,15 @@ interface BreadcrumbEllipsisProps {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: $tStore('demonstration.labels.home'), destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.home')}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{$tStore('demonstration.labels.components')}</BreadcrumbLink>
+              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: $tStore('demonstration.labels.components'), destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.components')}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">{$tStore('demonstration.labels.navigation')}</BreadcrumbLink>
+              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: $tStore('demonstration.labels.navigation'), destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.navigation')}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -565,7 +565,7 @@ interface BreadcrumbEllipsisProps {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <DropdownMenu>
+          <DropdownMenu onOpenChange={(o: boolean) => { if (o) track('breadcrumb_ellipsis_open', { component: 'breadcrumb', hidden_count: 3, location: 'docs_demo' }); }}>
             <DropdownMenuTrigger
               class="nds-cluster" data-spacing="xs"
               aria-label={$tStore('demonstration.labels.more')}

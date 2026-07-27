@@ -145,6 +145,11 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
+                    track("command_item_select", {
+                      label: item.label,
+                      group: "frameworks",
+                      pattern: "combobox",
+                    });
                   }}
                 >
                   {item.label}
@@ -200,7 +205,10 @@ function CommandPaletteDemo({
       </div>
       <Button
         variant="outline"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          track("command_palette_open", { trigger: "button" });
+        }}
         aria-label={openLabel}
         data-track-click="command_palette_open"
         data-track-trigger="button"
@@ -219,12 +227,32 @@ function CommandPaletteDemo({
           <CommandList>
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup heading={groupComponents}>
-              <CommandItem value="button" onSelect={() => setOpen(false)}>
+              <CommandItem
+                value="button"
+                onSelect={() => {
+                  setOpen(false);
+                  track("command_item_select", {
+                    label: itemButton,
+                    group: groupComponents,
+                    pattern: "palette",
+                  });
+                }}
+              >
                 <LayoutIcon />
                 {itemButton}
                 <CommandShortcut>⌘B</CommandShortcut>
               </CommandItem>
-              <CommandItem value="input" onSelect={() => setOpen(false)}>
+              <CommandItem
+                value="input"
+                onSelect={() => {
+                  setOpen(false);
+                  track("command_item_select", {
+                    label: itemInput,
+                    group: groupComponents,
+                    pattern: "palette",
+                  });
+                }}
+              >
                 <TypeIcon />
                 {itemInput}
                 <CommandShortcut>⌘I</CommandShortcut>
@@ -232,7 +260,17 @@ function CommandPaletteDemo({
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading={groupUtils}>
-              <CommandItem value="separator" onSelect={() => setOpen(false)}>
+              <CommandItem
+                value="separator"
+                onSelect={() => {
+                  setOpen(false);
+                  track("command_item_select", {
+                    label: itemSeparator,
+                    group: groupUtils,
+                    pattern: "palette",
+                  });
+                }}
+              >
                 <MinusIcon />
                 {itemSeparator}
               </CommandItem>
@@ -507,18 +545,45 @@ interface CommandDialogProps
                 <CommandList>
                   <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
                   <CommandGroup heading={labels.groupComponents}>
-                    <CommandItem value="button">
+                    <CommandItem
+                      value="button"
+                      onSelect={() =>
+                        track("command_item_select", {
+                          label: labels.itemButton,
+                          group: labels.groupComponents,
+                          pattern: "inline",
+                        })
+                      }
+                    >
                       <LayoutIcon />
                       {labels.itemButton}
                     </CommandItem>
-                    <CommandItem value="input">
+                    <CommandItem
+                      value="input"
+                      onSelect={() =>
+                        track("command_item_select", {
+                          label: labels.itemInput,
+                          group: labels.groupComponents,
+                          pattern: "inline",
+                        })
+                      }
+                    >
                       <TypeIcon />
                       {labels.itemInput}
                     </CommandItem>
                   </CommandGroup>
                   <CommandSeparator />
                   <CommandGroup heading={labels.groupUtils}>
-                    <CommandItem value="separator">
+                    <CommandItem
+                      value="separator"
+                      onSelect={() =>
+                        track("command_item_select", {
+                          label: labels.itemSeparator,
+                          group: labels.groupUtils,
+                          pattern: "inline",
+                        })
+                      }
+                    >
                       <MinusIcon />
                       {labels.itemSeparator}
                     </CommandItem>

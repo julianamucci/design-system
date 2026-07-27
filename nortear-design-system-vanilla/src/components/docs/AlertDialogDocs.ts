@@ -75,12 +75,36 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
         ? 'nds-bg-destructive'
         : '',
   });
+  cancelButton.addEventListener('click', () => {
+    track('dialog_close', {
+      component: 'alert_dialog',
+      label: opts.triggerLabel,
+      reason: 'close-button',
+      location: 'docs_demo',
+    });
+  });
+  actionButton.addEventListener('click', () => {
+    track('dialog_confirm', {
+      component: 'alert_dialog',
+      label: opts.actionLabel,
+      location: 'docs_demo',
+    });
+  });
   return createAlertDialog({
     trigger,
     title: opts.title,
     description: opts.description,
     cancelButton,
     actionButton,
+    onOpenChange: (open) => {
+      if (open) {
+        track('dialog_open', {
+          component: 'alert_dialog',
+          label: opts.triggerLabel,
+          location: 'docs_demo',
+        });
+      }
+    },
   });
 }
 

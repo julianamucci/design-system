@@ -134,6 +134,25 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoMenuOpenChange(open: boolean) {
+  if (!open) return;
+  track('menu_open', {
+    component: 'context_menu',
+    location: 'docs_demo',
+    menu: 'demo',
+  });
+}
+
+function handleDemoMenuItemSelect(label: string) {
+  track('menu_item_click', {
+    label,
+    menu: 'demo',
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -579,7 +598,7 @@ const compositionItems = computed(() => [
         data-align="center"
         data-justify="center"
       >
-        <ContextMenu>
+        <ContextMenu @update:open="handleDemoMenuOpenChange">
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
@@ -590,21 +609,30 @@ const compositionItems = computed(() => [
           </ContextMenuTrigger>
           <ContextMenuContent style="min-width: 12rem">
             <ContextMenuGroup>
-              <ContextMenuItem>
+              <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.edit'))">
                 {{ tContent('demonstration.labels.edit') }}
                 <ContextMenuShortcut>{{ tContent('demonstration.labels.editShortcut') }}</ContextMenuShortcut>
               </ContextMenuItem>
-              <ContextMenuItem>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
+              <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.duplicate'))">
+                {{ tContent('demonstration.labels.duplicate') }}
+              </ContextMenuItem>
               <ContextMenuSub>
                 <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
                 <ContextMenuSubContent>
-                  <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
-                  <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
+                  <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.shareEmail'))">
+                    {{ tContent('demonstration.labels.shareEmail') }}
+                  </ContextMenuItem>
+                  <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.shareLink'))">
+                    {{ tContent('demonstration.labels.shareLink') }}
+                  </ContextMenuItem>
                 </ContextMenuSubContent>
               </ContextMenuSub>
             </ContextMenuGroup>
             <ContextMenuSeparator />
-            <ContextMenuItem variant="destructive">
+            <ContextMenuItem
+              variant="destructive"
+              @select="handleDemoMenuItemSelect(tContent('demonstration.labels.delete'))"
+            >
               {{ tContent('demonstration.labels.delete') }}
               <ContextMenuShortcut>{{ tContent('demonstration.labels.deleteShortcut') }}</ContextMenuShortcut>
             </ContextMenuItem>

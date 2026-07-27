@@ -235,7 +235,7 @@ interface TooltipTriggerProps {
     {#snippet children()}
       <TooltipProvider delayDuration={200}>
         <div class="nds-cluster nds-w-full" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; min-height: 120px; position: relative;">
-          <Tooltip>
+          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'save', location: 'docs_demo' }); }}>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
@@ -246,7 +246,7 @@ interface TooltipTriggerProps {
             <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'delete', location: 'docs_demo' }); }}>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
@@ -257,7 +257,7 @@ interface TooltipTriggerProps {
             <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'share', location: 'docs_demo' }); }}>
             <TooltipTrigger>
               {#snippet child({ props })}
                 <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>

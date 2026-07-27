@@ -68,6 +68,13 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
   const action = createButton({
     variant: opts.destructive ? 'destructive' : 'default',
     label: opts.actionLabel,
+    onClick: () => {
+      track('dialog_action', {
+        component: 'dialog',
+        action_label: opts.actionLabel,
+        location: 'docs_demo',
+      });
+    },
   });
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
@@ -87,6 +94,23 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     content: body,
     footer,
     showCloseButton: opts.showCloseButton,
+    onOpenChange: (open) => {
+      if (open) {
+        track('dialog_open', {
+          component: 'dialog',
+          label: opts.triggerLabel,
+          location: 'docs_demo',
+        });
+      }
+    },
+    onClose: (reason) => {
+      track('dialog_close', {
+        component: 'dialog',
+        label: opts.triggerLabel,
+        reason,
+        location: 'docs_demo',
+      });
+    },
   });
 }
 

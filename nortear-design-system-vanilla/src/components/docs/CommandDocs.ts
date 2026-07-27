@@ -51,22 +51,31 @@ function priorityLabel(raw: string): string {
 function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
+  const items = withGroups
+    ? [
+        { value: 'button',    label: t('demonstration.labels.itemButton'),    group: t('demonstration.labels.groupComponents') },
+        { value: 'input',     label: t('demonstration.labels.itemInput'),     group: t('demonstration.labels.groupComponents') },
+        { value: 'separator', label: t('demonstration.labels.itemSeparator'), group: t('demonstration.labels.groupComponents') },
+        { value: 'cn',        label: 'cn()',   group: t('demonstration.labels.groupUtils') },
+        { value: 'clsx',      label: 'clsx()', group: t('demonstration.labels.groupUtils') },
+      ]
+    : [
+        { value: 'button',    label: t('demonstration.labels.itemButton')    },
+        { value: 'input',     label: t('demonstration.labels.itemInput')     },
+        { value: 'separator', label: t('demonstration.labels.itemSeparator') },
+      ];
   wrap.appendChild(
     createCommand({
       placeholder,
-      items: withGroups
-        ? [
-            { value: 'button',    label: t('demonstration.labels.itemButton'),    group: t('demonstration.labels.groupComponents') },
-            { value: 'input',     label: t('demonstration.labels.itemInput'),     group: t('demonstration.labels.groupComponents') },
-            { value: 'separator', label: t('demonstration.labels.itemSeparator'), group: t('demonstration.labels.groupComponents') },
-            { value: 'cn',        label: 'cn()',   group: t('demonstration.labels.groupUtils') },
-            { value: 'clsx',      label: 'clsx()', group: t('demonstration.labels.groupUtils') },
-          ]
-        : [
-            { value: 'button',    label: t('demonstration.labels.itemButton')    },
-            { value: 'input',     label: t('demonstration.labels.itemInput')     },
-            { value: 'separator', label: t('demonstration.labels.itemSeparator') },
-          ],
+      items,
+      onSelect: (value) => {
+        const item = items.find((i) => i.value === value);
+        track('command_item_select', {
+          label: item?.label ?? value,
+          group: (item as { group?: string } | undefined)?.group ?? '',
+          pattern: 'inline',
+        });
+      },
     })
   );
   return wrap;

@@ -212,7 +212,7 @@ export function createCheckboxDocs(): HTMLElement {
                 checked,
                 id: cbId,
                 onCheckedChange: (val) => {
-                  track('field_change', { component: 'checkbox', field_name: key, value: String(val), location: 'docs-demo' });
+                  track('field_change', { component: 'checkbox', field_name: key, value: String(val), location: 'docs_demo' });
                 },
               });
               const label = document.createElement('label');

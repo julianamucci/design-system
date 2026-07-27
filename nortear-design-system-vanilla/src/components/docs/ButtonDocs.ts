@@ -170,17 +170,17 @@ export function createButtonDocs(): HTMLElement {
             wrap.className = 'nds-cluster';
             wrap.dataset.spacing = 'sm';
             wrap.append(
-              buildDemoButton('default',     t('demonstration.labels.primary'),     'docs-demo'),
-              buildDemoButton('secondary',   t('demonstration.labels.secondary'),   'docs-demo'),
-              buildDemoButton('destructive', t('demonstration.labels.destructive'), 'docs-demo'),
-              buildDemoButton('outline',     t('demonstration.labels.outline'),     'docs-demo'),
-              buildDemoButton('ghost',       t('demonstration.labels.ghost'),       'docs-demo'),
-              buildDemoButton('link',        t('demonstration.labels.link'),        'docs-demo'),
+              buildDemoButton('default',     t('demonstration.labels.primary'),     'docs_demo'),
+              buildDemoButton('secondary',   t('demonstration.labels.secondary'),   'docs_demo'),
+              buildDemoButton('destructive', t('demonstration.labels.destructive'), 'docs_demo'),
+              buildDemoButton('outline',     t('demonstration.labels.outline'),     'docs_demo'),
+              buildDemoButton('ghost',       t('demonstration.labels.ghost'),       'docs_demo'),
+              buildDemoButton('link',        t('demonstration.labels.link'),        'docs_demo'),
             );
 
             const withIcon = createButton({
               variant: 'default',
-              onClick: () => track('button_click', { component: 'button', variant: 'default', label: 'with-icon', location: 'docs-demo' }),
+              onClick: () => track('button_click', { component: 'button', variant: 'default', label: 'with-icon', location: 'docs_demo' }),
             });
             withIcon.appendChild(createButtonIcon('plus'));
             const lbl = document.createElement('span');
@@ -192,7 +192,7 @@ export function createButtonDocs(): HTMLElement {
               variant: 'destructive',
               size: 'icon',
               ariaLabel: t('demonstration.labels.iconOnly'),
-              onClick: () => track('button_click', { component: 'button', variant: 'destructive', label: 'icon-only', location: 'docs-demo' }),
+              onClick: () => track('button_click', { component: 'button', variant: 'destructive', label: 'icon-only', location: 'docs_demo' }),
             });
             iconOnly.appendChild(createButtonIcon('trash'));
             wrap.appendChild(iconOnly);

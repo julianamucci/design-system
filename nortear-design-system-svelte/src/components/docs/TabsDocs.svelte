@@ -116,10 +116,11 @@
     const labels = ['overview', 'properties', 'examples'];
     track('tab_change', {
       component: 'tabs',
+      value: next,
       label: next,
       index: labels.indexOf(next),
       total: labels.length,
-      location: 'docs_demonstration',
+      location: 'docs_demo',
     });
   });
 

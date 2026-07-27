@@ -450,7 +450,7 @@ function handleTabChange(value: string) {
     label: labels[value] ?? value,
     index: order.indexOf(value),
     total: order.length,
-    location: 'docs_demonstration',
+    location: 'docs_demo',
   });
 }
 </script>

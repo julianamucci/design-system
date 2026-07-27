@@ -254,7 +254,17 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
-            <Select value={stateValue} onValueChange={(v) => setStateValue(v ?? "")}>
+            <Select value={stateValue} onValueChange={(v) => {
+              setStateValue(v ?? "");
+              if (v) {
+                track("option_select", {
+                  component: "select",
+                  field_name: "state",
+                  value: String(v),
+                  location: "docs_demo",
+                });
+              }
+            }}>
               <SelectTrigger aria-label={tContent("demonstration.labels.stateLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>
@@ -276,7 +286,17 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withGroups")}
             </p>
-            <Select value={regionValue} onValueChange={(v) => setRegionValue(v ?? "")}>
+            <Select value={regionValue} onValueChange={(v) => {
+              setRegionValue(v ?? "");
+              if (v) {
+                track("option_select", {
+                  component: "select",
+                  field_name: "region",
+                  value: String(v),
+                  location: "docs_demo",
+                });
+              }
+            }}>
               <SelectTrigger aria-label={tContent("demonstration.labels.regionLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>
@@ -306,7 +326,17 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               size="sm"
             </p>
-            <Select value={smValue} onValueChange={(v) => setSmValue(v ?? "")}>
+            <Select value={smValue} onValueChange={(v) => {
+              setSmValue(v ?? "");
+              if (v) {
+                track("option_select", {
+                  component: "select",
+                  field_name: "state_sm",
+                  value: String(v),
+                  location: "docs_demo",
+                });
+              }
+            }}>
               <SelectTrigger size="sm" aria-label={tContent("demonstration.labels.stateLabel")}>
                 <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
               </SelectTrigger>

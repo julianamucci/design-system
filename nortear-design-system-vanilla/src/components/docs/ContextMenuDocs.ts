@@ -59,15 +59,23 @@ function makeTriggerArea(label: string): HTMLElement {
 
 function buildDemoMenu(): HTMLElement {
   const trigger = makeTriggerArea(t('demonstration.labels.triggerLabel'));
+  const trackItem = (label: string) => () => {
+    track('menu_item_click', { label, menu: 'demo', location: 'docs_demo' });
+  };
   return createContextMenu({
     trigger,
     items: [
-      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit' },
-      { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate' },
-      { type: 'item',      label: t('demonstration.labels.share'),     value: 'share' },
+      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      onClick: trackItem(t('demonstration.labels.edit')) },
+      { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate', onClick: trackItem(t('demonstration.labels.duplicate')) },
+      { type: 'item',      label: t('demonstration.labels.share'),     value: 'share',     onClick: trackItem(t('demonstration.labels.share')) },
       { type: 'separator' },
-      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete' },
+      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    onClick: trackItem(t('demonstration.labels.delete')) },
     ],
+    onOpenChange: (open) => {
+      if (open) {
+        track('menu_open', { component: 'context_menu', location: 'docs_demo', menu: 'demo' });
+      }
+    },
   });
 }
 

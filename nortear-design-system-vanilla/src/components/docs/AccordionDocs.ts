@@ -78,9 +78,9 @@ function buildDemoAccordion(): HTMLElement {
     ],
     onValueChange: (val) => {
       if (val) {
-        track('accordion_expand', { component: 'accordion', location: 'docs_demonstration' });
+        track('accordion_expand', { component: 'accordion', location: 'docs_demo' });
       } else {
-        track('accordion_collapse', { component: 'accordion', location: 'docs_demonstration' });
+        track('accordion_collapse', { component: 'accordion', location: 'docs_demo' });
       }
     },
   });

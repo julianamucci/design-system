@@ -213,19 +213,28 @@ export function createRadioGroupDocs(): HTMLElement {
                 { value: 'boleto',  label: t('demonstration.labels.boleto')  },
               ],
             });
-            const paymentGroup = payment.querySelector('[role="radiogroup"]') as HTMLElement | null;
-            paymentGroup?.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
-              btn.addEventListener('click', () => {
-                if (btn.getAttribute('aria-checked') === 'true') {
-                  track('field_change', {
-                    component: 'radio_group',
-                    field_name: 'payment',
-                    value: btn.dataset.value ?? '',
-                    location: 'docs-demo',
-                  });
-                }
+            const wireRadioTracking = (root: HTMLElement, name: string) => {
+              let previousValue = '';
+              const group = root.querySelector('[role="radiogroup"]') as HTMLElement | null;
+              group?.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                  if (btn.getAttribute('aria-checked') === 'true') {
+                    const value = btn.dataset.value ?? '';
+                    if (value === previousValue) return;
+                    track('radio_change', {
+                      component: 'radio_group',
+                      name,
+                      value,
+                      previous_value: previousValue || undefined,
+                      location: 'docs_demo',
+                    });
+                    previousValue = value;
+                  }
+                });
               });
-            });
+            };
+
+            wireRadioTracking(payment, 'payment');
             wrap.appendChild(payment);
 
             // Horizontal — Forma de entrega
@@ -240,6 +249,7 @@ export function createRadioGroupDocs(): HTMLElement {
               ],
               horizontal: true,
             });
+            wireRadioTracking(delivery, 'delivery');
             wrap.appendChild(delivery);
 
             return wrap;

@@ -231,6 +231,9 @@ export function createProgressDocs(): HTMLElement {
             grid.appendChild(animated);
 
             let pct = 0;
+            // Rastreia marcos apenas no primeiro ciclo da animação — a demo
+            // reinicia em loop e re-emitir marcos a cada ciclo geraria spam.
+            let firstCycleDone = false;
             const valueSpan = animated.querySelector('span[aria-live]') as HTMLElement | null;
             const bar = animated.querySelector('[role="progressbar"]') as HTMLElement | null;
             const indicator = bar?.firstElementChild as HTMLElement | null;
@@ -240,6 +243,13 @@ export function createProgressDocs(): HTMLElement {
               if (valueSpan) valueSpan.textContent = `${pct}%`;
               if (bar) bar.setAttribute('aria-valuenow', String(pct));
               if (indicator) indicator.style.transform = `translateX(-${100 - pct}%)`;
+              if (!firstCycleDone && (pct === 25 || pct === 50 || pct === 75 || pct === 100)) {
+                track('task_progress', { component: 'progress', task: 'upload', percent: pct, location: 'docs_demo' });
+                if (pct === 100) {
+                  track('task_complete', { component: 'progress', task: 'upload', location: 'docs_demo' });
+                  firstCycleDone = true;
+                }
+              }
             }, 400);
             demoTimers.push(timer);
 

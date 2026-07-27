@@ -145,6 +145,18 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+// field_blur só dispara ao sair do campo com conteúdo não-vazio.
+function handleDemoBlur(fieldName: string, value: string) {
+  if (!value.trim()) return;
+  track('field_blur', {
+    component: 'textarea',
+    field_name: fieldName,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Textarea } from "@/components/ui/textarea";
@@ -407,6 +419,7 @@ const visualTestItems = computed(() => [
             :placeholder="tContent('demonstration.labels.descriptionPlaceholder')"
             class="nds-resize-y nds-min-h-30"
             @update:model-value="(v) => demoDescription = String(v)"
+            @blur="handleDemoBlur('demo-description', demoDescription)"
           />
           <div
             class="nds-cluster nds-text-caption nds-text-muted-foreground"
@@ -434,6 +447,7 @@ const visualTestItems = computed(() => [
             :placeholder="tContent('demonstration.labels.bioPlaceholder')"
             class="nds-resize-y nds-min-h-30"
             @update:model-value="(v) => demoBio = String(v)"
+            @blur="handleDemoBlur('demo-bio', demoBio)"
           />
         </div>
 
@@ -446,6 +460,7 @@ const visualTestItems = computed(() => [
             id="demo-feedback"
             :placeholder="tContent('demonstration.labels.feedbackPlaceholder')"
             class="nds-resize-none nds-min-h-30"
+            @blur="(e: FocusEvent) => handleDemoBlur('demo-feedback', (e.target as HTMLTextAreaElement).value)"
           />
         </div>
       </div>

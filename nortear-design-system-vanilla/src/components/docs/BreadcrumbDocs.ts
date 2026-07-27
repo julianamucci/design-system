@@ -70,7 +70,16 @@ function buildBreadcrumb(crumbs: CrumbDef[], separator: string | HTMLElement = '
     const item = createBreadcrumbItem();
 
     if (crumb.type === 'link') {
-      item.appendChild(createBreadcrumbLink({ href: crumb.href, text: crumb.text }));
+      const link = createBreadcrumbLink({ href: crumb.href, text: crumb.text });
+      link.addEventListener('click', () => {
+        track('navigation_click', {
+          component: 'breadcrumb',
+          label: crumb.text,
+          destination: crumb.href,
+          location: 'docs_demo',
+        });
+      });
+      item.appendChild(link);
     } else if (crumb.type === 'page') {
       item.appendChild(createBreadcrumbPage({ text: crumb.text }));
     } else {

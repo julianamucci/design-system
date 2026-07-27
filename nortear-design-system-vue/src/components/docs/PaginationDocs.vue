@@ -146,6 +146,19 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+const DEMO_TOTAL_PAGES = 5;
+
+function handleDemoPageChange(page?: number) {
+  track('page_change', {
+    component: 'pagination',
+    page,
+    total_pages: DEMO_TOTAL_PAGES,
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -434,6 +447,7 @@ const a11yCritCols = computed(() => ({
           :total="50"
           :items-per-page="10"
           :default-page="1"
+          @update:page="(p: number) => handleDemoPageChange(p)"
         >
           <PaginationContent>
             <PaginationItem>
@@ -445,27 +459,40 @@ const a11yCritCols = computed(() => ({
               <PaginationLink
                 :is-active="true"
                 :aria-label="`${tContent('demonstration.labels.page')} 1`"
+                @click="handleDemoPageChange(1)"
               >
                 1
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 2`">
+              <PaginationLink
+                :aria-label="`${tContent('demonstration.labels.page')} 2`"
+                @click="handleDemoPageChange(2)"
+              >
                 2
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 3`">
+              <PaginationLink
+                :aria-label="`${tContent('demonstration.labels.page')} 3`"
+                @click="handleDemoPageChange(3)"
+              >
                 3
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 4`">
+              <PaginationLink
+                :aria-label="`${tContent('demonstration.labels.page')} 4`"
+                @click="handleDemoPageChange(4)"
+              >
                 4
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink :aria-label="`${tContent('demonstration.labels.page')} 5`">
+              <PaginationLink
+                :aria-label="`${tContent('demonstration.labels.page')} 5`"
+                @click="handleDemoPageChange(5)"
+              >
                 5
               </PaginationLink>
             </PaginationItem>

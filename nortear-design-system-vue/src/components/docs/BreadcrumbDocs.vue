@@ -128,6 +128,17 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
+
+// ─── Analytics — demo events ──────────────────────────────────────────────────
+
+function handleDemoLinkClick(label: string) {
+  track('navigation_click', {
+    component: 'breadcrumb',
+    label,
+    destination: '#',
+    location: 'docs_demo',
+  });
+}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -500,19 +511,28 @@ const visualTestItems = computed(() => [
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">
+              <BreadcrumbLink
+                href="#"
+                @click="handleDemoLinkClick(tContent('demonstration.labels.home'))"
+              >
                 {{ tContent('demonstration.labels.home') }}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">
+              <BreadcrumbLink
+                href="#"
+                @click="handleDemoLinkClick(tContent('demonstration.labels.components'))"
+              >
                 {{ tContent('demonstration.labels.components') }}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">
+              <BreadcrumbLink
+                href="#"
+                @click="handleDemoLinkClick(tContent('demonstration.labels.navigation'))"
+              >
                 {{ tContent('demonstration.labels.navigation') }}
               </BreadcrumbLink>
             </BreadcrumbItem>

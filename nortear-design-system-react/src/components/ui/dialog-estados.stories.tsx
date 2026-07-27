@@ -14,7 +14,6 @@ import {
 } from "./dialog";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
@@ -36,13 +35,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string) =>
-  track("dialog_open", {
-    component: "dialog",
-    label,
-    location: "storybook:estados",
-  });
-
 export const Closed: Story = {
   parameters: {
     docs: {
@@ -56,7 +48,7 @@ export const Closed: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -101,7 +93,7 @@ export const Open: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -142,7 +134,7 @@ export const WithCloseButtonHidden: Story = {
     const { t } = useTranslation(dialogTranslations);
     const title = t("demonstration.labels.title");
     return (
-      <Dialog defaultOpen onOpenChange={(o) => o && trackOpen(title)}>
+      <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>

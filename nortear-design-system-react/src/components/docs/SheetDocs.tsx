@@ -139,10 +139,9 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
     <div style={{ contain: "layout" }}>
       <Sheet
         onOpenChange={(open) =>
-          open &&
-          track("dialog_open", {
+          track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            trigger_label: trigger,
+            ...(open ? { trigger_label: trigger } : { reason: "user" }),
             location,
           })
         }
@@ -303,7 +302,7 @@ export function SheetDocs() {
             description={tContent("demonstration.labels.description")}
             cancel={tContent("demonstration.labels.cancel")}
             apply={tContent("demonstration.labels.apply")}
-            location="docs:demo"
+            location="docs_demo"
           />
           <FiltersFormDemo
             trigger={tContent("demonstration.labels.trigger")}
@@ -311,7 +310,7 @@ export function SheetDocs() {
             description={tContent("demonstration.labels.description")}
             cancel={tContent("demonstration.labels.cancel")}
             apply={tContent("demonstration.labels.apply")}
-            location="docs:demo:form"
+            location="docs_demo"
           />
         </div>
       </DocsDemonstration>

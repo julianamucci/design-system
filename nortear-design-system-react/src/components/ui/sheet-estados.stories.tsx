@@ -14,7 +14,6 @@ import {
 } from "./sheet";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
 const meta = {
@@ -43,13 +42,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const trackOpen = (label: string) =>
-  track("dialog_open", {
-    component: "sheet",
-    trigger_label: label,
-    location: "storybook:estados",
-  });
-
 export const Closed: Story = {
   parameters: {
     docs: {
@@ -62,7 +54,7 @@ export const Closed: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet onOpenChange={(o) => o && trackOpen("closed")}>
+      <Sheet>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -106,7 +98,7 @@ export const Open: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("open")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>
@@ -147,7 +139,7 @@ export const WithCloseButtonHidden: Story = {
   render: () => {
     const { t } = useTranslation(sheetTranslations);
     return (
-      <Sheet defaultOpen onOpenChange={(o) => o && trackOpen("no-close-btn")}>
+      <Sheet defaultOpen>
         <SheetTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.trigger")}
         </SheetTrigger>

@@ -271,13 +271,13 @@ export function createSelectDocs(): HTMLElement {
                   mg: t('demonstration.labels.mg'),
                   rs: t('demonstration.labels.rs'),
                 };
-                track('field_change', {
+                track('option_select', {
                   component: 'select',
                   field_name: 'state',
                   value,
-                  location: 'docs-demo',
+                  label: labelMap[value],
+                  location: 'docs_demo',
                 });
-                void labelMap;
               },
             });
             wrap.appendChild(stateField);
@@ -306,6 +306,17 @@ export function createSelectDocs(): HTMLElement {
                   ],
                 },
               ],
+            });
+            const regionSelect = regionField.querySelector('select');
+            regionSelect?.addEventListener('change', () => {
+              const selected = regionSelect.selectedOptions[0];
+              track('option_select', {
+                component: 'select',
+                field_name: 'region',
+                value: regionSelect.value,
+                label: selected?.textContent ?? undefined,
+                location: 'docs_demo',
+              });
             });
             wrap.appendChild(regionField);
 

@@ -107,26 +107,42 @@ function makeContent(items: string[]): HTMLElement {
 // ─── Demo factories ───────────────────────────────────────────────────────────
 
 function buildDemoDefault(): HTMLElement {
+  const label = t('demonstration.labels.triggerClosed');
   return createCollapsible({
-    trigger: t('demonstration.labels.triggerClosed'),
+    trigger: label,
     content: makeContent([
       t('demonstration.labels.advancedFilter1'),
       t('demonstration.labels.advancedFilter2'),
     ]),
     defaultOpen: false,
     class: 'nds-w-full nds-max-w-sm',
+    onOpenChange: (open) => {
+      track('collapsible_toggle', {
+        label,
+        value: open ? 'open' : 'closed',
+        location: 'docs_demo',
+      });
+    },
   });
 }
 
 function buildDemoDefaultOpen(): HTMLElement {
+  const label = t('demonstration.labels.triggerOpen');
   return createCollapsible({
-    trigger: t('demonstration.labels.triggerOpen'),
+    trigger: label,
     content: makeContent([
       t('demonstration.labels.advancedFilter1'),
       t('demonstration.labels.advancedFilter2'),
     ]),
     defaultOpen: true,
     class: 'nds-w-full nds-max-w-sm',
+    onOpenChange: (open) => {
+      track('collapsible_toggle', {
+        label,
+        value: open ? 'open' : 'closed',
+        location: 'docs_demo',
+      });
+    },
   });
 }
 

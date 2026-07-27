@@ -13,7 +13,6 @@ import {
 } from "./dialog";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
-import { track } from "@/lib/analytics";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 import { DialogDocs } from "@/components/docs/DialogDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -50,26 +49,7 @@ export const Playground: Story = {
     const { t } = useTranslation(dialogTranslations);
     const onAction = fn();
     return (
-      <Dialog
-        {...args}
-        onOpenChange={(open) => {
-          args.onOpenChange?.(open, undefined as never);
-          if (open) {
-            track("dialog_open", {
-              component: "dialog",
-              label: t("demonstration.labels.title"),
-              location: "storybook:playground",
-            });
-          } else {
-            track("dialog_close", {
-              component: "dialog",
-              label: t("demonstration.labels.title"),
-              reason: "unknown",
-              location: "storybook:playground",
-            });
-          }
-        }}
-      >
+      <Dialog {...args}>
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
@@ -81,29 +61,10 @@ export const Playground: Story = {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose
-              render={<Button variant="outline" />}
-              onClick={() =>
-                track("dialog_close", {
-                  component: "dialog",
-                  label: t("demonstration.labels.title"),
-                  reason: "action",
-                  location: "storybook:playground",
-                })
-              }
-            >
+            <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button
-              onClick={() => {
-                onAction();
-                track("dialog_action", {
-                  component: "dialog",
-                  action_label: t("demonstration.labels.action"),
-                  location: "storybook:playground",
-                });
-              }}
-            >
+            <Button onClick={() => onAction()}>
               {t("demonstration.labels.action")}
             </Button>
           </DialogFooter>

@@ -95,6 +95,16 @@ function VolumeDemo({ label }: { label: string }) {
       <Slider
         value={value}
         onValueChange={(v) => setValue(v as number[])}
+        onValueCommitted={(v) =>
+          track("slider_change", {
+            component: "slider",
+            field_name: "volume",
+            value: (v as number[])[0],
+            min: 0,
+            max: 100,
+            location: "docs_demo",
+          })
+        }
         min={0}
         max={100}
         aria-label={label}
@@ -116,6 +126,16 @@ function PriceRangeDemo({ label }: { label: string }) {
       <Slider
         value={value}
         onValueChange={(v) => setValue(v as number[])}
+        onValueCommitted={(v) =>
+          track("slider_change", {
+            component: "slider",
+            field_name: "price_range",
+            value: (v as number[]).join("-"),
+            min: 0,
+            max: 500,
+            location: "docs_demo",
+          })
+        }
         min={0}
         max={500}
         step={10}
@@ -135,6 +155,16 @@ function VerticalDemo({ label }: { label: string }) {
       <Slider
         value={value}
         onValueChange={(v) => setValue(v as number[])}
+        onValueCommitted={(v) =>
+          track("slider_change", {
+            component: "slider",
+            field_name: "brightness",
+            value: (v as number[])[0],
+            min: 0,
+            max: 100,
+            location: "docs_demo",
+          })
+        }
         orientation="vertical"
         min={0}
         max={100}
@@ -330,6 +360,16 @@ interface SliderProps {
               </div>
               <Slider
                 defaultValue={[25]}
+                onValueCommitted={(v) =>
+                  track("slider_change", {
+                    component: "slider",
+                    field_name: "single",
+                    value: (v as number[])[0],
+                    min: 0,
+                    max: 100,
+                    location: "docs_demo",
+                  })
+                }
                 min={0}
                 max={100}
                 aria-label={tContent("demonstration.labels.single")}

@@ -196,6 +196,14 @@ export function createCalendarDocs(): HTMLElement {
               createCalendar({ locale: 'pt-BR',
                 value: referenceDate(),
                 class: 'nds-rounded-md nds-border-default',
+                onSelect: (date) => {
+                  track('field_change', {
+                    component: 'calendar',
+                    field_name: 'date',
+                    value: date.toISOString().slice(0, 10),
+                    location: 'docs_demo',
+                  });
+                },
               }),
             );
             return wrap;

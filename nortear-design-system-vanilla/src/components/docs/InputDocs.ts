@@ -54,6 +54,8 @@ function buildDemoInput(opts: {
   ariaInvalid?: boolean;
   labelText?: string;
   errorText?: string;
+  /** Quando definido, dispara field_focus/field_blur nas interações reais do campo. */
+  fieldName?: string;
 }): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-full';
@@ -74,6 +76,18 @@ function buildDemoInput(opts: {
 
   if (opts.ariaInvalid) {
     input.setAttribute('aria-invalid', 'true');
+  }
+
+  if (opts.fieldName && !opts.disabled) {
+    const fieldName = opts.fieldName;
+    input.addEventListener('focus', () => {
+      track('field_focus', { component: 'input', field_name: fieldName, location: 'docs_demo' });
+    });
+    input.addEventListener('blur', () => {
+      if (input.value.length > 0) {
+        track('field_blur', { component: 'input', field_name: fieldName, location: 'docs_demo' });
+      }
+    });
   }
 
   wrapper.appendChild(input);
@@ -193,16 +207,19 @@ export function createInputDocs(): HTMLElement {
               type: 'text',
               labelText: t('demonstration.labels.defaultLabel'),
               placeholder: t('demonstration.labels.defaultPlaceholder'),
+              fieldName: 'default',
             }));
             wrap.appendChild(buildDemoInput({
               type: 'email',
               labelText: t('demonstration.labels.emailLabel'),
               placeholder: t('demonstration.labels.emailPlaceholder'),
+              fieldName: 'email',
             }));
             wrap.appendChild(buildDemoInput({
               type: 'password',
               labelText: t('demonstration.labels.passwordLabel'),
               placeholder: t('demonstration.labels.passwordPlaceholder'),
+              fieldName: 'password',
             }));
             wrap.appendChild(buildDemoInput({
               type: 'text',
@@ -216,6 +233,7 @@ export function createInputDocs(): HTMLElement {
               placeholder: t('demonstration.labels.errorPlaceholder'),
               ariaInvalid: true,
               errorText: t('demonstration.labels.errorMessage'),
+              fieldName: 'error',
             }));
 
             return wrap;

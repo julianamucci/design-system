@@ -148,7 +148,7 @@ function buildToggleGroupDemo(opts: {
         component: 'toggle_group',
         field_name: opts.fieldName,
         value: flat,
-        location: opts.location ?? 'docs-demo',
+        location: opts.location ?? 'docs_demo',
       });
     },
   });

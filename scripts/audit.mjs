@@ -232,19 +232,29 @@ function auditAnalytics(slug) {
     }
   }
 
-  // 2. Eventos mencionados em translations.json precisam estar tipados em AnalyticsEvents
+  // 2. Eventos documentados na seção analytics precisam estar tipados em
+  //    AnalyticsEvents. Suporta os DOIS formatos da tabela:
+  //    - flat:     "dismissKey": "alert_dismiss" (+ irmãs *Trigger/*Payload)
+  //    - aninhado: "slider_change": { trigger, payload }
+  //    (o regex antigo só via o flat — foi assim que 10 eventos aninhados
+  //    ficaram fora do catálogo tipado sem nenhum check acusar)
   const trPath = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
   const trContent = readFile(trPath);
   if (trContent) {
-    // Procura pares "xxxEvent": "xxx_yyy" (valor snake_case)
     const eventsInTr = new Set();
-    const eventValueRe = /"[a-zA-Z]+":\s*"([a-z][a-z_]*[a-z])"/g;
-    let m;
-    while ((m = eventValueRe.exec(trContent)) !== null) {
-      const v = m[1];
-      // Só snake_case com pelo menos 1 underscore
-      if (/^[a-z]+_[a-z_]+$/.test(v)) eventsInTr.add(v);
-    }
+    const EVENT_RX = /^[a-z]+_[a-z_]+$/;
+    try {
+      const json = JSON.parse(trContent);
+      for (const locale of Object.keys(json)) {
+        const analytics = json[locale]?.analytics;
+        const table = analytics?.table ?? analytics;
+        if (!table || typeof table !== 'object') continue;
+        for (const [key, val] of Object.entries(table)) {
+          if (typeof val === 'string' && EVENT_RX.test(val)) eventsInTr.add(val);
+          else if (val && typeof val === 'object' && EVENT_RX.test(key)) eventsInTr.add(key);
+        }
+      }
+    } catch { /* JSON inválido não é responsabilidade deste check */ }
 
     for (const stack of STACKS) {
       const analyticsPath = join(ROOT, stackDir(stack), 'src', 'lib', 'analytics.ts');

@@ -82,8 +82,23 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
     const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
     overlay?.click();
   };
-  cancel.addEventListener('click', closeFromAction);
-  apply.addEventListener('click', closeFromAction);
+  cancel.addEventListener('click', () => {
+    track('dialog_close', {
+      component: 'sheet',
+      label: opts.triggerLabel,
+      reason: 'close-button',
+      location: 'docs_demo',
+    });
+    closeFromAction();
+  });
+  apply.addEventListener('click', () => {
+    track('dialog_confirm', {
+      component: 'sheet',
+      action: opts.applyLabel,
+      location: 'docs_demo',
+    });
+    closeFromAction();
+  });
 
   return createSheet({
     trigger,
@@ -92,6 +107,15 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
     description: opts.description,
     content: body,
     footer,
+    onOpenChange: (open) => {
+      if (open) {
+        track('dialog_open', {
+          component: 'sheet',
+          label: opts.triggerLabel,
+          location: 'docs_demo',
+        });
+      }
+    },
   });
 }
 

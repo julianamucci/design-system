@@ -93,6 +93,10 @@ function buildMiniSidebar(opts: {
   const instance = createSidebar({
     defaultOpen: opts.defaultOpen ?? true,
     variant: opts.variant ?? 'sidebar',
+    // Único mecanismo de toggle na demo é o SidebarTrigger (botão).
+    onOpenChange: (open) => {
+      track('sidebar_toggle', { action: open ? 'open' : 'close', trigger: 'button' });
+    },
   });
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
 
@@ -113,6 +117,15 @@ function buildMiniSidebar(opts: {
     { label: t('demonstration.labels.settings'),    icon: ICON_SETTINGS, key: 'Configurações' },
   ];
 
+  const trackNav = (label: string) => () => {
+    track('navigation_click', {
+      component: 'sidebar',
+      label,
+      destination: '#',
+      location: 'docs_demo',
+    });
+  };
+
   if (opts.withGroups) {
     content.appendChild(
       createSidebarGroup({
@@ -122,6 +135,7 @@ function buildMiniSidebar(opts: {
           icon: makeIcon(item.icon),
           active: (opts.activeItem ?? 'Dashboard') === item.key,
           href: '#',
+          onClick: trackNav(item.label),
         })),
       }),
     );
@@ -129,7 +143,7 @@ function buildMiniSidebar(opts: {
     content.appendChild(
       createSidebarGroup({
         items: [
-          { label: t('demonstration.labels.profile'), icon: makeIcon(ICON_USER), href: '#' },
+          { label: t('demonstration.labels.profile'), icon: makeIcon(ICON_USER), href: '#', onClick: trackNav(t('demonstration.labels.profile')) },
         ],
       }),
     );
@@ -141,6 +155,7 @@ function buildMiniSidebar(opts: {
           icon: makeIcon(item.icon),
           active: (opts.activeItem ?? 'Dashboard') === item.key,
           href: '#',
+          onClick: trackNav(item.label),
         })),
       }),
     );
