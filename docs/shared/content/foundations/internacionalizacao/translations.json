@@ -69,10 +69,6 @@
       "subtitle": "Componente em <code>src/components/product/LanguageSwitcher.*</code> presente nos quatro stacks. Persiste a escolha em <code>localStorage</code> e dispara o evento de analytics <code>language_switched</code>.",
       "body": "Está visível em todas as docs pages no header. A troca remonta a árvore consumidora do hook, atualizando textos sem reload."
     },
-    "vueWarning": {
-      "title": "Regra crítica no stack Vue",
-      "body": "Em docs pages Vue, o locale vem <strong>sempre</strong> de <code>useTranslation()</code> — nunca de <code>useLocaleStore</code> ou de qualquer store Pinia. Misturar fontes de locale causa crash em runtime (referência circular durante hydration)."
-    },
     "rules": {
       "title": "Regras de conteúdo",
       "items": {
@@ -154,10 +150,6 @@
       "subtitle": "Component at <code>src/components/product/LanguageSwitcher.*</code>, present in all four stacks. Persists the choice in <code>localStorage</code> and fires the <code>language_switched</code> analytics event.",
       "body": "It is visible on every docs page in the header. Switching remounts the hook consumer tree, updating texts without a reload."
     },
-    "vueWarning": {
-      "title": "Critical rule in the Vue stack",
-      "body": "In Vue docs pages, the locale <strong>always</strong> comes from <code>useTranslation()</code> — never from <code>useLocaleStore</code> or any Pinia store. Mixing locale sources causes a runtime crash (circular reference during hydration)."
-    },
     "rules": {
       "title": "Content rules",
       "items": {
@@ -238,10 +230,6 @@
       "title": "LanguageSwitcher",
       "subtitle": "Componente en <code>src/components/product/LanguageSwitcher.*</code>, presente en los cuatro stacks. Persiste la elección en <code>localStorage</code> y dispara el evento de analytics <code>language_switched</code>.",
       "body": "Está visible en todas las docs pages en el header. El cambio remonta el árbol consumidor del hook, actualizando textos sin reload."
-    },
-    "vueWarning": {
-      "title": "Regla crítica en el stack Vue",
-      "body": "En docs pages Vue, el locale viene <strong>siempre</strong> de <code>useTranslation()</code> — nunca de <code>useLocaleStore</code> ni de ningún store Pinia. Mezclar fuentes de locale provoca crash en runtime (referencia circular durante hydration)."
     },
     "rules": {
       "title": "Reglas de contenido",
