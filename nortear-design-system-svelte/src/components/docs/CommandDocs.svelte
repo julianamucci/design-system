@@ -217,7 +217,7 @@ import uiTranslations from '@/i18n/ui.json';
   <Command.List>
     <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Páginas">
-      <Command.Item value="dashboard" onselect={() => { open = false; }}>
+      <Command.Item value="dashboard" onSelect={() => { open = false; }}>
         Dashboard
         <Command.Shortcut>⌘D</Command.Shortcut>
       </Command.Item>
@@ -263,7 +263,7 @@ import uiTranslations from '@/i18n/ui.json';
         <Command.Empty>Nenhum resultado.</Command.Empty>
         <Command.Group>
           {#each items as item}
-            <Command.Item value={item.value} onselect={() => { selected = item.value; open = false; }}>
+            <Command.Item value={item.value} onSelect={() => { selected = item.value; open = false; }}>
               {item.label}
             </Command.Item>
           {/each}
@@ -278,7 +278,7 @@ import uiTranslations from '@/i18n/ui.json';
   <Command.List>
     <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
     <Command.Group heading="Ações">
-      <Command.Item value="settings" onselect={() => { open = false; }}>
+      <Command.Item value="settings" onSelect={() => { open = false; }}>
         Configurações
         <Command.Shortcut>⌘,</Command.Shortcut>
       </Command.Item>
@@ -713,7 +713,7 @@ interface CommandLoadingProps {
               {#each comboboxItems as item}
                 <Command.Item
                   value={item.value}
-                  onselect={() => { comboboxValue = item.value; comboboxOpen = false; }}
+                  onSelect={() => { comboboxValue = item.value; comboboxOpen = false; }}
                 >
                   {item.label}
                   {#if comboboxValue === item.value}

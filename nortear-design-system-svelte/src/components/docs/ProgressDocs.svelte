@@ -117,7 +117,7 @@
           track('task_complete', { component: 'progress', task: 'upload', duration_ms: Date.now() - uploadStart, location: 'docs_demo' });
         }
       }
-    }, 500);
+    }, 400);
     return () => clearInterval(id);
   });
 

@@ -100,11 +100,14 @@ type DemoProps = {
 function SheetDemo({ trigger, title, description, cancel, apply, side = "right", location }: DemoProps) {
   return (
     <div style={{ contain: "layout" }}>
+      {/* label usa o SIDE (valor estável, não localizado) — texto traduzido
+          fragmentaria o mesmo evento em 3 valores no GA4. */}
       <Sheet
         onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            ...(open ? { trigger_label: trigger } : { reason: mapCloseReason(details?.reason) }),
+            label: side,
+            ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
             location,
           })
         }

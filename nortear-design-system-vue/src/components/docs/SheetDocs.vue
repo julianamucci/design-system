@@ -143,20 +143,14 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
 
-function handleDemoOpenChange(open: boolean) {
-  if (open) {
-    track('dialog_open', {
-      component: 'sheet',
-      label: tContent('demonstration.labels.trigger'),
-      location: 'docs_demo',
-    });
-  } else {
-    track('dialog_close', {
-      component: 'sheet',
-      label: tContent('demonstration.labels.trigger'),
-      location: 'docs_demo',
-    });
-  }
+// label usa o SIDE (valor estável, não localizado) — texto traduzido
+// fragmentaria o mesmo evento em 3 valores no GA4.
+function handleDemoOpenChange(open: boolean, side = 'right') {
+  track(open ? 'dialog_open' : 'dialog_close', {
+    component: 'sheet',
+    label: side,
+    location: 'docs_demo',
+  });
 }
 
 function handleDemoApply() {
@@ -467,7 +461,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="sm"
         style="flex-wrap: wrap;"
       >
-        <Sheet @update:open="handleDemoOpenChange">
+        <Sheet @update:open="(o: boolean) => handleDemoOpenChange(o, 'right')">
           <SheetTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}

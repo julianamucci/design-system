@@ -111,17 +111,19 @@ function buildMiniSidebar(opts: {
   const content = createSidebarContent();
 
   const items = [
-    { label: t('demonstration.labels.dashboard'),   icon: ICON_HOME,     key: 'Dashboard' },
-    { label: t('demonstration.labels.components'),  icon: ICON_LAYOUT,   key: 'Componentes' },
-    { label: t('demonstration.labels.tokens'),      icon: ICON_TOKENS,   key: 'Tokens' },
-    { label: t('demonstration.labels.settings'),    icon: ICON_SETTINGS, key: 'Configurações' },
+    { label: t('demonstration.labels.dashboard'),   icon: ICON_HOME,     key: 'Dashboard',     slug: 'dashboard' },
+    { label: t('demonstration.labels.components'),  icon: ICON_LAYOUT,   key: 'Componentes',   slug: 'components' },
+    { label: t('demonstration.labels.tokens'),      icon: ICON_TOKENS,   key: 'Tokens',        slug: 'tokens' },
+    { label: t('demonstration.labels.settings'),    icon: ICON_SETTINGS, key: 'Configurações', slug: 'settings' },
   ];
 
-  const trackNav = (label: string) => () => {
+  // label/destination usam a CHAVE estável do item (não o texto traduzido):
+  // mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
+  const trackNav = (slug: string) => () => {
     track('navigation_click', {
       component: 'sidebar',
-      label,
-      destination: '#',
+      label: slug,
+      destination: `#${slug}`,
       location: 'docs_demo',
     });
   };
@@ -135,7 +137,7 @@ function buildMiniSidebar(opts: {
           icon: makeIcon(item.icon),
           active: (opts.activeItem ?? 'Dashboard') === item.key,
           href: '#',
-          onClick: trackNav(item.label),
+          onClick: trackNav(item.slug),
         })),
       }),
     );
@@ -143,7 +145,7 @@ function buildMiniSidebar(opts: {
     content.appendChild(
       createSidebarGroup({
         items: [
-          { label: t('demonstration.labels.profile'), icon: makeIcon(ICON_USER), href: '#', onClick: trackNav(t('demonstration.labels.profile')) },
+          { label: t('demonstration.labels.profile'), icon: makeIcon(ICON_USER), href: '#', onClick: trackNav('profile') },
         ],
       }),
     );
@@ -155,7 +157,7 @@ function buildMiniSidebar(opts: {
           icon: makeIcon(item.icon),
           active: (opts.activeItem ?? 'Dashboard') === item.key,
           href: '#',
-          onClick: trackNav(item.label),
+          onClick: trackNav(item.slug),
         })),
       }),
     );

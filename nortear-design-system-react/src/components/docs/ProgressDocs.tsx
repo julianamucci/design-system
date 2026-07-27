@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Progress,
   ProgressLabel,
@@ -143,8 +143,28 @@ export function ProgressDocs() {
   const activeId = useActiveSection(allIds, handleSectionChange);
 
   // Animated values for demonstration
-  const uploadValue = useAnimatedProgress(500, 5);
+  const uploadValue = useAnimatedProgress(400, 5);
   const loadingValue = useAnimatedProgress(700, 10);
+
+  // Marcos de task_progress/task_complete apenas no primeiro ciclo da
+  // animação — a demo reinicia em loop e re-emitir marcos geraria spam.
+  const uploadStartRef = useRef(Date.now());
+  const uploadMilestonesRef = useRef(new Set<number>());
+  const uploadCompletedRef = useRef(false);
+
+  useEffect(() => {
+    if (uploadCompletedRef.current) return;
+    for (const milestone of [25, 50, 75, 100]) {
+      if (uploadValue >= milestone && !uploadMilestonesRef.current.has(milestone)) {
+        uploadMilestonesRef.current.add(milestone);
+        track("task_progress", { component: "progress", task: "upload", percent: milestone, location: "docs_demo" });
+      }
+    }
+    if (uploadValue >= 100) {
+      uploadCompletedRef.current = true;
+      track("task_complete", { component: "progress", task: "upload", duration_ms: Date.now() - uploadStartRef.current, location: "docs_demo" });
+    }
+  }, [uploadValue]);
 
   // ─── Code strings ──────────────────────────────────────────────────────────
 

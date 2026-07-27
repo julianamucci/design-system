@@ -164,6 +164,8 @@ function handleSidebarOpenChange(open: boolean) {
   sidebarToggleSource.value = 'keyboard';
 }
 
+// label/destination usam a CHAVE estável do item (não o texto traduzido):
+// mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
 function handleDemoNavClick(label: string, destination: string) {
   track('navigation_click', {
     component: 'sidebar',
@@ -580,7 +582,7 @@ const compositionItems = computed(() => [
                           :is-active="true"
                           :tooltip="tContent('demonstration.labels.dashboard')"
                           aria-current="page"
-                          @click="handleDemoNavClick(tContent('demonstration.labels.dashboard'), '#dashboard')"
+                          @click="handleDemoNavClick('dashboard', '#dashboard')"
                         >
                           <LayoutDashboard aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.dashboard') }}</span>
@@ -589,7 +591,7 @@ const compositionItems = computed(() => [
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           :tooltip="tContent('demonstration.labels.components')"
-                          @click="handleDemoNavClick(tContent('demonstration.labels.components'), '#components')"
+                          @click="handleDemoNavClick('components', '#components')"
                         >
                           <Blocks aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.components') }}</span>
@@ -598,7 +600,7 @@ const compositionItems = computed(() => [
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           :tooltip="tContent('demonstration.labels.tokens')"
-                          @click="handleDemoNavClick(tContent('demonstration.labels.tokens'), '#tokens')"
+                          @click="handleDemoNavClick('tokens', '#tokens')"
                         >
                           <Palette aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.tokens') }}</span>
@@ -614,7 +616,7 @@ const compositionItems = computed(() => [
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           :tooltip="tContent('demonstration.labels.settings')"
-                          @click="handleDemoNavClick(tContent('demonstration.labels.settings'), '#settings')"
+                          @click="handleDemoNavClick('settings', '#settings')"
                         >
                           <Settings aria-hidden="true" />
                           <span>{{ tContent('demonstration.labels.settings') }}</span>
@@ -629,7 +631,7 @@ const compositionItems = computed(() => [
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       :tooltip="tContent('demonstration.labels.profile')"
-                      @click="handleDemoNavClick(tContent('demonstration.labels.profile'), '#profile')"
+                      @click="handleDemoNavClick('profile', '#profile')"
                     >
                       <User aria-hidden="true" />
                       <span>{{ tContent('demonstration.labels.profile') }}</span>

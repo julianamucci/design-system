@@ -110,6 +110,18 @@ const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map
 
 
 
+// field_focus sempre; field_blur só com conteúdo (gatilho documentado).
+// field_error fica de fora: o erro da demo é estático, não um funil real.
+function trackFieldFocus(fieldName: string) {
+  track('field_focus', { component: 'input', field_name: fieldName, location: 'docs_demo' });
+}
+function trackFieldBlur(fieldName: string, e: FocusEvent) {
+  const value = (e.target as HTMLInputElement | null)?.value ?? '';
+  if (value.length > 0) {
+    track('field_blur', { component: 'input', field_name: fieldName, location: 'docs_demo' });
+  }
+}
+
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -364,6 +376,8 @@ const visualTestItems = computed(() => [
             id="demo-nome"
             type="text"
             :placeholder="tContent('demonstration.labels.defaultPlaceholder')"
+            @focus="trackFieldFocus('nome')"
+            @blur="trackFieldBlur('nome', $event)"
           />
         </div>
         <div
@@ -375,6 +389,8 @@ const visualTestItems = computed(() => [
             id="demo-email"
             type="email"
             :placeholder="tContent('demonstration.labels.emailPlaceholder')"
+            @focus="trackFieldFocus('email')"
+            @blur="trackFieldBlur('email', $event)"
           />
         </div>
         <div
@@ -386,6 +402,8 @@ const visualTestItems = computed(() => [
             id="demo-senha"
             type="password"
             :placeholder="tContent('demonstration.labels.passwordPlaceholder')"
+            @focus="trackFieldFocus('senha')"
+            @blur="trackFieldBlur('senha', $event)"
           />
         </div>
         <div
@@ -410,6 +428,8 @@ const visualTestItems = computed(() => [
             type="email"
             :placeholder="tContent('demonstration.labels.errorPlaceholder')"
             aria-invalid="true"
+            @focus="trackFieldFocus('email-erro')"
+            @blur="trackFieldBlur('email-erro', $event)"
           />
           <p class="nds-text-caption nds-text-destructive">
             {{ tContent('demonstration.labels.errorMessage') }}

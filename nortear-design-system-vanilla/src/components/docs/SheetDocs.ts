@@ -110,7 +110,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
       if (open) {
         track('dialog_open', {
           component: 'sheet',
-          label: opts.triggerLabel,
+          label: opts.side ?? 'right',
           location: 'docs_demo',
         });
       }
@@ -118,7 +118,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
     onClose: (reason) => {
       track('dialog_close', {
         component: 'sheet',
-        label: opts.triggerLabel,
+        label: opts.side ?? 'right',
         reason: pendingReason ?? reason,
         location: 'docs_demo',
       });

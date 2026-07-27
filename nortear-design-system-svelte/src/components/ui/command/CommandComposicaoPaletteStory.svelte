@@ -47,23 +47,23 @@
     <Command.List id="cmd-palette-listbox">
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Páginas">
-        <Command.Item value="dashboard" onselect={() => handleSelect('dashboard')}>
+        <Command.Item value="dashboard" onSelect={() => handleSelect('dashboard')}>
           <LayoutDashboard class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Dashboard
           <Command.Shortcut>⌘D</Command.Shortcut>
         </Command.Item>
-        <Command.Item value="documents" onselect={() => handleSelect('documents')}>
+        <Command.Item value="documents" onSelect={() => handleSelect('documents')}>
           <FileText class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Documentos
         </Command.Item>
-        <Command.Item value="users" onselect={() => handleSelect('users')}>
+        <Command.Item value="users" onSelect={() => handleSelect('users')}>
           <Users class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Usuários
         </Command.Item>
       </Command.Group>
       <Command.Separator />
       <Command.Group heading="Configurações">
-        <Command.Item value="settings" onselect={() => handleSelect('settings')}>
+        <Command.Item value="settings" onSelect={() => handleSelect('settings')}>
           <Settings class="" style="margin-right: 0.5rem" aria-hidden="true" />
           Configurações
           <Command.Shortcut>⌘,</Command.Shortcut>

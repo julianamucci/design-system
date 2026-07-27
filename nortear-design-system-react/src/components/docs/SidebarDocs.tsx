@@ -124,11 +124,13 @@ function SidebarDemoPreview({
   side?: "left" | "right";
   defaultOpen?: boolean;
 }) {
+  // label/destination usam a CHAVE estável do item (não o texto traduzido):
+  // mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
   const trackNav = (label: string) => () =>
     track("navigation_click", {
       component: "sidebar",
       label,
-      destination: "#",
+      destination: `#${label}`,
       location: "docs_demo",
     });
 
@@ -160,20 +162,20 @@ function SidebarDemoPreview({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton isActive tooltip="Dashboard" aria-current="page" onClick={trackNav("Dashboard")}>
+                      <SidebarMenuButton isActive tooltip="Dashboard" aria-current="page" onClick={trackNav("dashboard")}>
                         <LayoutDashboard aria-hidden="true" />
                         <span>Dashboard</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Componentes" onClick={trackNav("Componentes")}>
+                      <SidebarMenuButton tooltip="Componentes" onClick={trackNav("components")}>
                         <Blocks aria-hidden="true" />
                         <span>Componentes</span>
                       </SidebarMenuButton>
                       <SidebarMenuBadge>12</SidebarMenuBadge>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Tokens" onClick={trackNav("Tokens")}>
+                      <SidebarMenuButton tooltip="Tokens" onClick={trackNav("tokens")}>
                         <Coins aria-hidden="true" />
                         <span>Tokens</span>
                       </SidebarMenuButton>
@@ -187,14 +189,14 @@ function SidebarDemoPreview({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Notificações" onClick={trackNav("Notificações")}>
+                      <SidebarMenuButton tooltip="Notificações" onClick={trackNav("notifications")}>
                         <Bell aria-hidden="true" />
                         <span>Notificações</span>
                       </SidebarMenuButton>
                       <SidebarMenuBadge>3</SidebarMenuBadge>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configurações" onClick={trackNav("Configurações")}>
+                      <SidebarMenuButton tooltip="Configurações" onClick={trackNav("settings")}>
                         <Settings aria-hidden="true" />
                         <span>Configurações</span>
                       </SidebarMenuButton>
@@ -206,7 +208,7 @@ function SidebarDemoPreview({
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Perfil" onClick={trackNav("Perfil")}>
+                  <SidebarMenuButton tooltip="Perfil" onClick={trackNav("profile")}>
                     <User aria-hidden="true" />
                     <span>Perfil</span>
                   </SidebarMenuButton>

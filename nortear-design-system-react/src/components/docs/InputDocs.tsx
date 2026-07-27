@@ -151,6 +151,16 @@ export function InputDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // field_focus sempre; field_blur só com conteúdo (gatilho documentado).
+  // field_error fica de fora: o erro da demo é estático, não um funil real.
+  const trackFieldFocus = (fieldName: string) => () =>
+    track("field_focus", { component: "input", field_name: fieldName, location: "docs_demo" });
+  const trackFieldBlur = (fieldName: string) => (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length > 0) {
+      track("field_blur", { component: "input", field_name: fieldName, location: "docs_demo" });
+    }
+  };
+
   // ─── Code strings ─────────────────────────────────────────────────────────
 
   const codeImportBasic = `import { Input } from "@/components/ui/input";`;
@@ -274,6 +284,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               id="demo-nome"
               type="text"
               placeholder={tContent("demonstration.labels.defaultPlaceholder")}
+              onFocus={trackFieldFocus("nome")}
+              onBlur={trackFieldBlur("nome")}
             />
           </div>
           <div className="nds-stack" data-spacing="xs">
@@ -284,6 +296,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               id="demo-email"
               type="email"
               placeholder={tContent("demonstration.labels.emailPlaceholder")}
+              onFocus={trackFieldFocus("email")}
+              onBlur={trackFieldBlur("email")}
             />
           </div>
           <div className="nds-stack" data-spacing="xs">
@@ -298,6 +312,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 id="demo-search"
                 type="search"
                 placeholder={tContent("demonstration.labels.searchPlaceholder")}
+                onFocus={trackFieldFocus("busca")}
+                onBlur={trackFieldBlur("busca")}
               />
             </InputGroup>
           </div>
@@ -322,6 +338,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
               placeholder={tContent("demonstration.labels.errorPlaceholder")}
               aria-invalid="true"
               aria-describedby="demo-error-msg"
+              onFocus={trackFieldFocus("email-erro")}
+              onBlur={trackFieldBlur("email-erro")}
             />
             <p id="demo-error-msg" className="nds-text-caption nds-text-destructive">
               {tContent("demonstration.labels.errorMessage")}

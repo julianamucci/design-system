@@ -101,6 +101,9 @@
   let demoApi = $state<any>(undefined);
   let demoSelectedIndex = $state(0);
   let demoScrollSnaps = $state<number[]>([]);
+  // Modalidade da navegação — capturada no wrapper da demo (capture phase)
+  // antes de o select do embla disparar; swipe é detectado via dragHandler.
+  let demoNavModality: 'button' | 'keyboard' = 'button';
 
   function setDemoApi(a: any) {
     demoApi = a;
@@ -114,7 +117,7 @@
         component: 'carousel',
         index: demoSelectedIndex,
         total: a.scrollSnapList().length,
-        trigger: isDragging ? 'swipe' : 'button',
+        trigger: isDragging ? 'swipe' : demoNavModality,
         location: 'docs_demo',
       });
     });
@@ -332,7 +335,13 @@ interface CarouselNavProps extends ButtonProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <div class="nds-w-full nds-max-w-sm" style="margin-inline: auto">
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div
+        class="nds-w-full nds-max-w-sm"
+        style="margin-inline: auto"
+        onpointerdowncapture={() => (demoNavModality = 'button')}
+        onkeydowncapture={() => (demoNavModality = 'keyboard')}
+      >
         <Carousel
           opts={{ loop: false }}
           setApi={setDemoApi}
