@@ -472,20 +472,26 @@ const visualTestItems = computed(() => [
 const demoSlides = [1, 2, 3, 4, 5];
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
+// Tracking via API do embla (padrão @init-api, o mesmo dos dots da seção
+// Variantes) — sem @click externo nos botões Prev/Next, que interferia na
+// navegação interna. Captura botões E teclado; a modalidade é registrada em
+// capture antes de o select disparar.
 
-const demoSlideIndex = ref(0);
+let demoNavModality: 'button' | 'keyboard' = 'button';
 
-function handleDemoSlideNav(direction: 1 | -1) {
-  demoSlideIndex.value = Math.min(
-    Math.max(demoSlideIndex.value + direction, 0),
-    demoSlides.length - 1,
-  );
-  track('slide_change', {
-    component: 'carousel',
-    index: demoSlideIndex.value,
-    total: demoSlides.length,
-    trigger: 'button',
-    location: 'docs_demo',
+function onDemoNavIntent(e: Event) {
+  demoNavModality = e.type === 'keydown' ? 'keyboard' : 'button';
+}
+
+function onDemoInit(payload: any) {
+  payload.on('select', () => {
+    track('slide_change', {
+      component: 'carousel',
+      index: payload.selectedScrollSnap(),
+      total: demoSlides.length,
+      trigger: demoNavModality,
+      location: 'docs_demo',
+    });
   });
 }
 </script>
@@ -518,6 +524,9 @@ function handleDemoSlideNav(direction: 1 | -1) {
         <Carousel
           class="nds-w-full nds-max-w-sm"
           :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          @init-api="onDemoInit"
+          @pointerdown.capture="onDemoNavIntent"
+          @keydown.capture="onDemoNavIntent"
         >
           <CarouselContent>
             <CarouselItem
@@ -537,14 +546,8 @@ function handleDemoSlideNav(direction: 1 | -1) {
               </Card>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious
-            :aria-label="tContent('demonstration.labels.previous')"
-            @click="handleDemoSlideNav(-1)"
-          />
-          <CarouselNext
-            :aria-label="tContent('demonstration.labels.next')"
-            @click="handleDemoSlideNav(1)"
-          />
+          <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+          <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
         </Carousel>
       </div>
     </DocsDemonstration>

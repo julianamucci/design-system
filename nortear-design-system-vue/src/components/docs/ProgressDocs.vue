@@ -128,11 +128,22 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 const demoValue = ref(0);
 let demoTimer: ReturnType<typeof setInterval> | null = null;
+// Rastreia marcos apenas no primeiro ciclo da animação — a demo reinicia em
+// loop e re-emitir marcos a cada ciclo geraria spam (mesmo exemplo da Vanilla).
+let demoFirstCycleDone = false;
 
 onMounted(() => {
   demoTimer = setInterval(() => {
-    demoValue.value = demoValue.value >= 100 ? 0 : demoValue.value + 4;
-  }, 250);
+    demoValue.value = demoValue.value >= 100 ? 0 : demoValue.value + 5;
+    const pct = demoValue.value;
+    if (!demoFirstCycleDone && (pct === 25 || pct === 50 || pct === 75 || pct === 100)) {
+      track('task_progress', { component: 'progress', task: 'upload', percent: pct, location: 'docs_demo' });
+      if (pct === 100) {
+        track('task_complete', { component: 'progress', task: 'upload', location: 'docs_demo' });
+        demoFirstCycleDone = true;
+      }
+    }
+  }, 400);
 });
 
 onUnmounted(() => {
