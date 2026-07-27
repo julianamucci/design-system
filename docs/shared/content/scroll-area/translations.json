@@ -8,8 +8,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentação do ScrollArea: viewport com scroll customizado, ScrollBar estilizada e acessibilidade por teclado.",
       "aiSummary": "Componente ScrollArea com viewport, ScrollBar e Thumb estilizados, suporte a scroll vertical/horizontal/both e fallback para scroll nativo em mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,11 +45,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista longa em sidebar fixa", "u": "Sim", "a": "-" },
-        "item2": { "s": "Conteúdo em overlay/popover", "u": "Sim", "a": "-" },
-        "item3": { "s": "Página principal com scroll vertical", "u": "Não", "a": "Scroll nativo da página" },
-        "item4": { "s": "Mobile com gestos de swipe", "u": "Não", "a": "Overflow nativo + touch" },
-        "item5": { "s": "Tabela ampla dentro de scroll vertical", "u": "Sim (com overflow-x-auto interno)", "a": "-" }
+        "item1": {
+          "s": "Lista longa em sidebar fixa",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Conteúdo em overlay/popover",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Página principal com scroll vertical",
+          "u": "Não",
+          "a": "Scroll nativo da página"
+        },
+        "item4": {
+          "s": "Mobile com gestos de swipe",
+          "u": "Não",
+          "a": "Overflow nativo + touch"
+        },
+        "item5": {
+          "s": "Tabela ampla dentro de scroll vertical",
+          "u": "Sim (com overflow-x-auto interno)",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -184,12 +203,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "border": { "class": "bg-border", "part": "Cor do thumb da scrollbar" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco no viewport" },
-        "background": { "class": "bg-background", "part": "Fundo do viewport (consumidor define)" },
-        "foreground": { "class": "text-foreground", "part": "Texto dentro do viewport" },
-        "muted": { "class": "bg-muted", "part": "Fundo da trilha da scrollbar (raro)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Offset do anel de foco" }
+        "border": {
+          "class": "bg-border",
+          "part": "Cor do thumb da scrollbar"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco no viewport"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fundo do viewport (consumidor define)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto dentro do viewport"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo da trilha da scrollbar (raro)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Offset do anel de foco"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Espessura customizada da scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
@@ -232,10 +269,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "resizable": { "name": "Resizable", "description": "Painéis redimensionáveis que podem conter ScrollArea internamente." },
-        "sheet": { "name": "Sheet", "description": "Painel lateral que frequentemente usa ScrollArea no conteúdo." },
-        "dialog": { "name": "Dialog", "description": "Modal cujo conteúdo longo pode rolar via ScrollArea." },
-        "command": { "name": "Command", "description": "Paleta de comandos com lista rolavel via ScrollArea." }
+        "resizable": {
+          "name": "Resizable",
+          "description": "Painéis redimensionáveis que podem conter ScrollArea internamente."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Painel lateral que frequentemente usa ScrollArea no conteúdo."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal cujo conteúdo longo pode rolar via ScrollArea."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Paleta de comandos com lista rolavel via ScrollArea."
+        }
       }
     },
     "notes": {
@@ -263,10 +312,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Rolar com a roda do mouse", "result": "Conteúdo rola sem mover a página", "priority": "high" },
-        "item2": { "action": "Arrastar o thumb da scrollbar", "result": "Viewport rola proporcionalmente", "priority": "high" },
-        "item3": { "action": "Pressionar ArrowDown/Up com viewport focado", "result": "Rola em incrementos", "priority": "high" },
-        "item4": { "action": "Container pai sem altura definida", "result": "ScrollArea não funciona — conteúdo expande", "priority": "medium" }
+        "item1": {
+          "action": "Rolar com a roda do mouse",
+          "result": "Conteúdo rola sem mover a página",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Arrastar o thumb da scrollbar",
+          "result": "Viewport rola proporcionalmente",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar ArrowDown/Up com viewport focado",
+          "result": "Rola em incrementos",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Container pai sem altura definida",
+          "result": "ScrollArea não funciona — conteúdo expande",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -281,10 +346,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Vertical (lista longa)", "priority": "high" },
-        "item2": { "story": "Horizontal (cards inline)", "priority": "high" },
-        "item3": { "story": "Bidirecional (matrix/tabela ampla)", "priority": "high" },
-        "item4": { "story": "Foco no viewport", "priority": "medium" }
+        "item1": {
+          "story": "Vertical (lista longa)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Horizontal (cards inline)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bidirecional (matrix/tabela ampla)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Foco no viewport",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -317,8 +394,7 @@
       "title": "ScrollArea — Layout",
       "description": "ScrollArea documentation: viewport with custom scroll, styled ScrollBar and keyboard accessibility.",
       "aiSummary": "ScrollArea component with viewport, styled ScrollBar and Thumb, vertical/horizontal/both support and native scroll fallback on mobile.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -355,11 +431,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Long list in fixed sidebar", "u": "Yes", "a": "-" },
-        "item2": { "s": "Content in overlay/popover", "u": "Yes", "a": "-" },
-        "item3": { "s": "Main page with vertical scroll", "u": "No", "a": "Native page scroll" },
-        "item4": { "s": "Mobile with swipe gestures", "u": "No", "a": "Native overflow + touch" },
-        "item5": { "s": "Wide table inside vertical scroll", "u": "Yes (with internal overflow-x-auto)", "a": "-" }
+        "item1": {
+          "s": "Long list in fixed sidebar",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Content in overlay/popover",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Main page with vertical scroll",
+          "u": "No",
+          "a": "Native page scroll"
+        },
+        "item4": {
+          "s": "Mobile with swipe gestures",
+          "u": "No",
+          "a": "Native overflow + touch"
+        },
+        "item5": {
+          "s": "Wide table inside vertical scroll",
+          "u": "Yes (with internal overflow-x-auto)",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -493,12 +589,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "border": { "class": "bg-border", "part": "Scrollbar thumb color" },
-        "ring": { "class": "ring-ring", "part": "Viewport focus ring" },
-        "background": { "class": "bg-background", "part": "Viewport background (consumer defines)" },
-        "foreground": { "class": "text-foreground", "part": "Text inside viewport" },
-        "muted": { "class": "bg-muted", "part": "Scrollbar track background (rare)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Focus ring offset" }
+        "border": {
+          "class": "bg-border",
+          "part": "Scrollbar thumb color"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Viewport focus ring"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Viewport background (consumer defines)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Text inside viewport"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Scrollbar track background (rare)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Focus ring offset"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom scrollbar thickness */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
@@ -541,10 +655,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "resizable": { "name": "Resizable", "description": "Resizable panels that may contain ScrollArea internally." },
-        "sheet": { "name": "Sheet", "description": "Side panel that often uses ScrollArea on content." },
-        "dialog": { "name": "Dialog", "description": "Modal whose long content can scroll via ScrollArea." },
-        "command": { "name": "Command", "description": "Command palette with scrollable list via ScrollArea." }
+        "resizable": {
+          "name": "Resizable",
+          "description": "Resizable panels that may contain ScrollArea internally."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Side panel that often uses ScrollArea on content."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal whose long content can scroll via ScrollArea."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Command palette with scrollable list via ScrollArea."
+        }
       }
     },
     "notes": {
@@ -572,10 +698,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Scroll with mouse wheel", "result": "Content scrolls without moving the page", "priority": "high" },
-        "item2": { "action": "Drag the scrollbar thumb", "result": "Viewport scrolls proportionally", "priority": "high" },
-        "item3": { "action": "Press ArrowDown/Up with viewport focused", "result": "Scrolls in increments", "priority": "high" },
-        "item4": { "action": "Parent container without defined height", "result": "ScrollArea doesn't work — content expands", "priority": "medium" }
+        "item1": {
+          "action": "Scroll with mouse wheel",
+          "result": "Content scrolls without moving the page",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Drag the scrollbar thumb",
+          "result": "Viewport scrolls proportionally",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press ArrowDown/Up with viewport focused",
+          "result": "Scrolls in increments",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Parent container without defined height",
+          "result": "ScrollArea doesn't work — content expands",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -590,10 +732,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Vertical (long list)", "priority": "high" },
-        "item2": { "story": "Horizontal (inline cards)", "priority": "high" },
-        "item3": { "story": "Bidirectional (matrix/wide table)", "priority": "high" },
-        "item4": { "story": "Focused viewport", "priority": "medium" }
+        "item1": {
+          "story": "Vertical (long list)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Horizontal (inline cards)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bidirectional (matrix/wide table)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Focused viewport",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -626,8 +780,7 @@
       "title": "ScrollArea — Layout",
       "description": "Documentación de ScrollArea: viewport con scroll personalizado, ScrollBar estilizada y accesibilidad por teclado.",
       "aiSummary": "Componente ScrollArea con viewport, ScrollBar y Thumb estilizados, soporte vertical/horizontal/ambos y fallback a scroll nativo en móvil.",
-      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",
@@ -664,11 +817,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista larga en sidebar fija", "u": "Sí", "a": "-" },
-        "item2": { "s": "Contenido en overlay/popover", "u": "Sí", "a": "-" },
-        "item3": { "s": "Página principal con scroll vertical", "u": "No", "a": "Scroll nativo de página" },
-        "item4": { "s": "Móvil con gestos de swipe", "u": "No", "a": "Overflow nativo + touch" },
-        "item5": { "s": "Tabla ancha dentro de scroll vertical", "u": "Sí (con overflow-x-auto interno)", "a": "-" }
+        "item1": {
+          "s": "Lista larga en sidebar fija",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Contenido en overlay/popover",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Página principal con scroll vertical",
+          "u": "No",
+          "a": "Scroll nativo de página"
+        },
+        "item4": {
+          "s": "Móvil con gestos de swipe",
+          "u": "No",
+          "a": "Overflow nativo + touch"
+        },
+        "item5": {
+          "s": "Tabla ancha dentro de scroll vertical",
+          "u": "Sí (con overflow-x-auto interno)",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -802,12 +975,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "border": { "class": "bg-border", "part": "Color del thumb de la scrollbar" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco en el viewport" },
-        "background": { "class": "bg-background", "part": "Fondo del viewport (el consumidor define)" },
-        "foreground": { "class": "text-foreground", "part": "Texto dentro del viewport" },
-        "muted": { "class": "bg-muted", "part": "Fondo de la pista de la scrollbar (raro)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Offset del anillo de foco" }
+        "border": {
+          "class": "bg-border",
+          "part": "Color del thumb de la scrollbar"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco en el viewport"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fondo del viewport (el consumidor define)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto dentro del viewport"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo de la pista de la scrollbar (raro)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Offset del anillo de foco"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Grosor personalizado de la scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
@@ -850,10 +1041,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "resizable": { "name": "Resizable", "description": "Paneles redimensionables que pueden contener ScrollArea internamente." },
-        "sheet": { "name": "Sheet", "description": "Panel lateral que suele usar ScrollArea en el contenido." },
-        "dialog": { "name": "Dialog", "description": "Modal cuyo contenido largo puede desplazarse vía ScrollArea." },
-        "command": { "name": "Command", "description": "Paleta de comandos con lista desplazable vía ScrollArea." }
+        "resizable": {
+          "name": "Resizable",
+          "description": "Paneles redimensionables que pueden contener ScrollArea internamente."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Panel lateral que suele usar ScrollArea en el contenido."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal cuyo contenido largo puede desplazarse vía ScrollArea."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Paleta de comandos con lista desplazable vía ScrollArea."
+        }
       }
     },
     "notes": {
@@ -881,10 +1084,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Desplazar con la rueda del mouse", "result": "El contenido se desplaza sin mover la página", "priority": "high" },
-        "item2": { "action": "Arrastrar el thumb de la scrollbar", "result": "El viewport se desplaza proporcionalmente", "priority": "high" },
-        "item3": { "action": "Pulsar ArrowDown/Up con viewport enfocado", "result": "Desplaza en incrementos", "priority": "high" },
-        "item4": { "action": "Contenedor padre sin altura definida", "result": "ScrollArea no funciona — contenido se expande", "priority": "medium" }
+        "item1": {
+          "action": "Desplazar con la rueda del mouse",
+          "result": "El contenido se desplaza sin mover la página",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Arrastrar el thumb de la scrollbar",
+          "result": "El viewport se desplaza proporcionalmente",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar ArrowDown/Up con viewport enfocado",
+          "result": "Desplaza en incrementos",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Contenedor padre sin altura definida",
+          "result": "ScrollArea no funciona — contenido se expande",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -899,10 +1118,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Vertical (lista larga)", "priority": "high" },
-        "item2": { "story": "Horizontal (cards inline)", "priority": "high" },
-        "item3": { "story": "Bidireccional (matriz/tabla ancha)", "priority": "high" },
-        "item4": { "story": "Viewport enfocado", "priority": "medium" }
+        "item1": {
+          "story": "Vertical (lista larga)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Horizontal (cards inline)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bidireccional (matriz/tabla ancha)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Viewport enfocado",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

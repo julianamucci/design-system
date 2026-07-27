@@ -8,8 +8,7 @@
       "title": "Resizable — Layout",
       "description": "Documentação do Resizable: PanelGroup, Panel e Handle com redimensionamento por arrasto, teclado e suporte WCAG 2.2.",
       "aiSummary": "Componente Resizable com ResizablePanelGroup, ResizablePanel e ResizableHandle, redimensionamento via arrasto e teclado, suporte a layouts horizontal/vertical e aninhados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,11 +48,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Editor com preview lado a lado", "u": "Sim", "a": "-" },
-        "item2": { "s": "Sidebar com conteúdo principal", "u": "Sim", "a": "-" },
-        "item3": { "s": "Layout fixo sem ajuste", "u": "Não", "a": "Grid CSS" },
-        "item4": { "s": "Painel deslizante de fora", "u": "Não", "a": "Sheet ou Drawer" },
-        "item5": { "s": "Múltiplas seções rolaveis", "u": "Não", "a": "ScrollArea" }
+        "item1": {
+          "s": "Editor com preview lado a lado",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Sidebar com conteúdo principal",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Layout fixo sem ajuste",
+          "u": "Não",
+          "a": "Grid CSS"
+        },
+        "item4": {
+          "s": "Painel deslizante de fora",
+          "u": "Não",
+          "a": "Sheet ou Drawer"
+        },
+        "item5": {
+          "s": "Múltiplas seções rolaveis",
+          "u": "Não",
+          "a": "ScrollArea"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -201,12 +220,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "border": { "class": "bg-border", "part": "Cor do handle e do pegador visual" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco no handle" },
-        "background": { "class": "bg-background", "part": "Fundo dos painéis (consumidor define)" },
-        "foreground": { "class": "text-foreground", "part": "Texto dentro dos painéis" },
-        "muted": { "class": "bg-muted", "part": "Fundo de painéis secundários (sidebar)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Offset do anel de foco" }
+        "border": {
+          "class": "bg-border",
+          "part": "Cor do handle e do pegador visual"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco no handle"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fundo dos painéis (consumidor define)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto dentro dos painéis"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo de painéis secundários (sidebar)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Offset do anel de foco"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Handle mais espesso para mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
@@ -250,10 +287,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "scrollArea": { "name": "ScrollArea", "description": "Scroll interno para conteúdo dentro de painéis." },
-        "sheet": { "name": "Sheet", "description": "Painel lateral que abre/fecha completamente." },
-        "separator": { "name": "Separator", "description": "Divisor visual fixo sem redimensionamento." },
-        "aspectRatio": { "name": "AspectRatio", "description": "Mantém proporção fixa de uma área." }
+        "scrollArea": {
+          "name": "ScrollArea",
+          "description": "Scroll interno para conteúdo dentro de painéis."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Painel lateral que abre/fecha completamente."
+        },
+        "separator": {
+          "name": "Separator",
+          "description": "Divisor visual fixo sem redimensionamento."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Mantém proporção fixa de uma área."
+        }
       }
     },
     "notes": {
@@ -281,10 +330,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Arrastar o handle", "result": "Painéis ajustam tamanho em tempo real", "priority": "high" },
-        "item2": { "action": "Pressionar ArrowLeft/Right com handle focado", "result": "Painel à esquerda diminui/aumenta em incrementos", "priority": "high" },
-        "item3": { "action": "Atingir minSize/maxSize", "result": "Painel para no limite; aria-valuenow reflete", "priority": "high" },
-        "item4": { "action": "Tab para o handle", "result": "Handle recebe foco; anel visível", "priority": "medium" }
+        "item1": {
+          "action": "Arrastar o handle",
+          "result": "Painéis ajustam tamanho em tempo real",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar ArrowLeft/Right com handle focado",
+          "result": "Painel à esquerda diminui/aumenta em incrementos",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Atingir minSize/maxSize",
+          "result": "Painel para no limite; aria-valuenow reflete",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab para o handle",
+          "result": "Handle recebe foco; anel visível",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -299,10 +364,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Horizontal (split lateral)", "priority": "high" },
-        "item2": { "story": "Vertical (split vertical)", "priority": "high" },
-        "item3": { "story": "Aninhado (combinação)", "priority": "high" },
-        "item4": { "story": "Com handle visível", "priority": "medium" }
+        "item1": {
+          "story": "Horizontal (split lateral)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Vertical (split vertical)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Aninhado (combinação)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com handle visível",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -335,8 +412,7 @@
       "title": "Resizable — Layout",
       "description": "Resizable documentation: PanelGroup, Panel and Handle with drag and keyboard resizing, WCAG 2.2 support.",
       "aiSummary": "Resizable component with ResizablePanelGroup, ResizablePanel and ResizableHandle, drag and keyboard resizing, horizontal/vertical and nested layouts.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -376,11 +452,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Editor with side-by-side preview", "u": "Yes", "a": "-" },
-        "item2": { "s": "Sidebar with main content", "u": "Yes", "a": "-" },
-        "item3": { "s": "Fixed layout without adjustment", "u": "No", "a": "CSS Grid" },
-        "item4": { "s": "Sliding panel from outside", "u": "No", "a": "Sheet or Drawer" },
-        "item5": { "s": "Multiple scrollable sections", "u": "No", "a": "ScrollArea" }
+        "item1": {
+          "s": "Editor with side-by-side preview",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Sidebar with main content",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Fixed layout without adjustment",
+          "u": "No",
+          "a": "CSS Grid"
+        },
+        "item4": {
+          "s": "Sliding panel from outside",
+          "u": "No",
+          "a": "Sheet or Drawer"
+        },
+        "item5": {
+          "s": "Multiple scrollable sections",
+          "u": "No",
+          "a": "ScrollArea"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -528,12 +624,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "border": { "class": "bg-border", "part": "Handle and visual grabber color" },
-        "ring": { "class": "ring-ring", "part": "Handle focus ring" },
-        "background": { "class": "bg-background", "part": "Panel background (consumer defines)" },
-        "foreground": { "class": "text-foreground", "part": "Text inside panels" },
-        "muted": { "class": "bg-muted", "part": "Secondary panel background (sidebar)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Focus ring offset" }
+        "border": {
+          "class": "bg-border",
+          "part": "Handle and visual grabber color"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Handle focus ring"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Panel background (consumer defines)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Text inside panels"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Secondary panel background (sidebar)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Focus ring offset"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Thicker handle for mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
@@ -577,10 +691,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "scrollArea": { "name": "ScrollArea", "description": "Internal scroll for content inside panels." },
-        "sheet": { "name": "Sheet", "description": "Side panel that opens/closes completely." },
-        "separator": { "name": "Separator", "description": "Fixed visual divider without resizing." },
-        "aspectRatio": { "name": "AspectRatio", "description": "Maintains fixed proportion of an area." }
+        "scrollArea": {
+          "name": "ScrollArea",
+          "description": "Internal scroll for content inside panels."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Side panel that opens/closes completely."
+        },
+        "separator": {
+          "name": "Separator",
+          "description": "Fixed visual divider without resizing."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Maintains fixed proportion of an area."
+        }
       }
     },
     "notes": {
@@ -608,10 +734,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Drag the handle", "result": "Panels adjust size in real time", "priority": "high" },
-        "item2": { "action": "Press ArrowLeft/Right with handle focused", "result": "Left panel shrinks/grows in increments", "priority": "high" },
-        "item3": { "action": "Reach minSize/maxSize", "result": "Panel stops at limit; aria-valuenow reflects", "priority": "high" },
-        "item4": { "action": "Tab to the handle", "result": "Handle receives focus; visible ring", "priority": "medium" }
+        "item1": {
+          "action": "Drag the handle",
+          "result": "Panels adjust size in real time",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press ArrowLeft/Right with handle focused",
+          "result": "Left panel shrinks/grows in increments",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Reach minSize/maxSize",
+          "result": "Panel stops at limit; aria-valuenow reflects",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab to the handle",
+          "result": "Handle receives focus; visible ring",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -626,10 +768,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Horizontal (side split)", "priority": "high" },
-        "item2": { "story": "Vertical (vertical split)", "priority": "high" },
-        "item3": { "story": "Nested (combination)", "priority": "high" },
-        "item4": { "story": "With visible handle", "priority": "medium" }
+        "item1": {
+          "story": "Horizontal (side split)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Vertical (vertical split)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Nested (combination)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With visible handle",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -662,8 +816,7 @@
       "title": "Resizable — Layout",
       "description": "Documentación de Resizable: PanelGroup, Panel y Handle con redimensionamiento por arrastre y teclado, soporte WCAG 2.2.",
       "aiSummary": "Componente Resizable con ResizablePanelGroup, ResizablePanel y ResizableHandle, redimensionamiento por arrastre y teclado, layouts horizontal/vertical y anidados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",
@@ -703,11 +856,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Editor con vista previa lado a lado", "u": "Sí", "a": "-" },
-        "item2": { "s": "Sidebar con contenido principal", "u": "Sí", "a": "-" },
-        "item3": { "s": "Layout fijo sin ajuste", "u": "No", "a": "CSS Grid" },
-        "item4": { "s": "Panel deslizante desde fuera", "u": "No", "a": "Sheet o Drawer" },
-        "item5": { "s": "Múltiples secciones con scroll", "u": "No", "a": "ScrollArea" }
+        "item1": {
+          "s": "Editor con vista previa lado a lado",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Sidebar con contenido principal",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Layout fijo sin ajuste",
+          "u": "No",
+          "a": "CSS Grid"
+        },
+        "item4": {
+          "s": "Panel deslizante desde fuera",
+          "u": "No",
+          "a": "Sheet o Drawer"
+        },
+        "item5": {
+          "s": "Múltiples secciones con scroll",
+          "u": "No",
+          "a": "ScrollArea"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -855,12 +1028,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "border": { "class": "bg-border", "part": "Color del handle y agarre visual" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco del handle" },
-        "background": { "class": "bg-background", "part": "Fondo de los paneles (el consumidor define)" },
-        "foreground": { "class": "text-foreground", "part": "Texto dentro de los paneles" },
-        "muted": { "class": "bg-muted", "part": "Fondo de paneles secundarios (sidebar)" },
-        "ringOffset": { "class": "ring-offset-background", "part": "Offset del anillo de foco" }
+        "border": {
+          "class": "bg-border",
+          "part": "Color del handle y agarre visual"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco del handle"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fondo de los paneles (el consumidor define)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto dentro de los paneles"
+        },
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo de paneles secundarios (sidebar)"
+        },
+        "ringOffset": {
+          "class": "ring-offset-background",
+          "part": "Offset del anillo de foco"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Handle más grueso para móvil */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
@@ -904,10 +1095,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "scrollArea": { "name": "ScrollArea", "description": "Scroll interno para contenido dentro de paneles." },
-        "sheet": { "name": "Sheet", "description": "Panel lateral que abre/cierra completamente." },
-        "separator": { "name": "Separator", "description": "Divisor visual fijo sin redimensionamiento." },
-        "aspectRatio": { "name": "AspectRatio", "description": "Mantiene proporción fija de un área." }
+        "scrollArea": {
+          "name": "ScrollArea",
+          "description": "Scroll interno para contenido dentro de paneles."
+        },
+        "sheet": {
+          "name": "Sheet",
+          "description": "Panel lateral que abre/cierra completamente."
+        },
+        "separator": {
+          "name": "Separator",
+          "description": "Divisor visual fijo sin redimensionamiento."
+        },
+        "aspectRatio": {
+          "name": "AspectRatio",
+          "description": "Mantiene proporción fija de un área."
+        }
       }
     },
     "notes": {
@@ -935,10 +1138,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Arrastrar el handle", "result": "Los paneles ajustan tamaño en tiempo real", "priority": "high" },
-        "item2": { "action": "Pulsar ArrowLeft/Right con handle enfocado", "result": "El panel izquierdo disminuye/aumenta en incrementos", "priority": "high" },
-        "item3": { "action": "Alcanzar minSize/maxSize", "result": "El panel se detiene en el límite; aria-valuenow refleja", "priority": "high" },
-        "item4": { "action": "Tab al handle", "result": "El handle recibe foco; anillo visible", "priority": "medium" }
+        "item1": {
+          "action": "Arrastrar el handle",
+          "result": "Los paneles ajustan tamaño en tiempo real",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar ArrowLeft/Right con handle enfocado",
+          "result": "El panel izquierdo disminuye/aumenta en incrementos",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Alcanzar minSize/maxSize",
+          "result": "El panel se detiene en el límite; aria-valuenow refleja",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab al handle",
+          "result": "El handle recibe foco; anillo visible",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -953,10 +1172,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Horizontal (split lateral)", "priority": "high" },
-        "item2": { "story": "Vertical (split vertical)", "priority": "high" },
-        "item3": { "story": "Anidado (combinación)", "priority": "high" },
-        "item4": { "story": "Con handle visible", "priority": "medium" }
+        "item1": {
+          "story": "Horizontal (split lateral)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Vertical (split vertical)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Anidado (combinación)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con handle visible",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

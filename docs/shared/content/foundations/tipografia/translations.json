@@ -18,8 +18,7 @@
       "title": "Tipografia",
       "description": "Famílias, type scale (base × ratio), pesos e line-heights tokenizados do Design System. Hierarquia semântica e controles de escala.",
       "aiSummary": "Página de fundamentos de Tipografia. Documenta a família ativa --font-family-active e o type scale derivado de --type-base × --type-scale (ratios 1.067–1.618, base S/M/L em rem), degraus --text-h1 a --text-label, pesos 400/500/600/800, line-heights e regras de hierarquia semântica.",
-      "aiEntities": "Tipografia, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG",
-      "aiIntent": "informational"
+      "aiEntities": "Tipografia, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, hierarquia semântica, WCAG"
     },
     "families": {
       "title": "Famílias",
@@ -211,8 +210,7 @@
       "title": "Typography",
       "description": "Families, type scale (base × ratio), weights and line-heights tokenized in the Design System. Semantic hierarchy and scale controls.",
       "aiSummary": "Typography foundations page. Documents the active family --font-family-active and the type scale derived from --type-base × --type-scale (ratios 1.067–1.618, S/M/L base in rem), steps --text-h1 to --text-label, weights 400/500/600/800, line-heights and semantic hierarchy rules.",
-      "aiEntities": "Typography, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG",
-      "aiIntent": "informational"
+      "aiEntities": "Typography, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, semantic hierarchy, WCAG"
     },
     "families": {
       "title": "Families",
@@ -404,8 +402,7 @@
       "title": "Tipografía",
       "description": "Familias, type scale (base × ratio), pesos y line-heights tokenizados del Design System. Jerarquía semántica y controles de escala.",
       "aiSummary": "Página de fundamentos de Tipografía. Documenta la familia activa --font-family-active y el type scale derivado de --type-base × --type-scale (ratios 1.067–1.618, base S/M/L en rem), escalones --text-h1 a --text-label, pesos 400/500/600/800, line-heights y reglas de jerarquía semántica.",
-      "aiEntities": "Tipografía, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG",
-      "aiIntent": "informational"
+      "aiEntities": "Tipografía, type scale, Minor Third, Inter, Lexend, PT Serif, LXGW WenKai, font-family, font-weight, line-height, jerarquía semántica, WCAG"
     },
     "families": {
       "title": "Familias",

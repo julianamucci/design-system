@@ -8,8 +8,7 @@
       "title": "Select — Formulário",
       "description": "Documentação do Select: Trigger, Content, Item, Group e Label, com role=\"combobox\", navegação por teclado e WCAG 2.2 AA.",
       "aiSummary": "Componente Select com Trigger, Content, Item, Group e Label, role=\"combobox\" automático, navegação por teclado e suporte a opções agrupadas.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox",
-      "aiIntent": "informational"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -55,11 +54,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Estado civil (3-5 opções)", "u": "Sim", "a": "-" },
-        "item2": { "s": "Sim/Não (2 opções)", "u": "Não", "a": "RadioGroup" },
-        "item3": { "s": "País (200+ opções)", "u": "Não", "a": "Combobox" },
-        "item4": { "s": "Múltipla seleção", "u": "Não", "a": "Checkbox group" },
-        "item5": { "s": "Opções dinâmicas com filtro", "u": "Não", "a": "Combobox" }
+        "item1": {
+          "s": "Estado civil (3-5 opções)",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Sim/Não (2 opções)",
+          "u": "Não",
+          "a": "RadioGroup"
+        },
+        "item3": {
+          "s": "País (200+ opções)",
+          "u": "Não",
+          "a": "Combobox"
+        },
+        "item4": {
+          "s": "Múltipla seleção",
+          "u": "Não",
+          "a": "Checkbox group"
+        },
+        "item5": {
+          "s": "Opções dinâmicas com filtro",
+          "u": "Não",
+          "a": "Combobox"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -229,14 +248,38 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "input": { "class": "border-input", "part": "Borda do SelectTrigger" },
-        "popover": { "class": "bg-popover", "part": "Fundo do SelectContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto dentro do SelectContent" },
-        "accent": { "class": "bg-accent", "part": "Fundo do item em hover/focus" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Texto do item em hover/focus" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco no trigger" },
-        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do placeholder e SelectLabel" }
+        "input": {
+          "class": "border-input",
+          "part": "Borda do SelectTrigger"
+        },
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fundo do SelectContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto dentro do SelectContent"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Fundo do item em hover/focus"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Texto do item em hover/focus"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco no trigger"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda no estado inválido"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto do placeholder e SelectLabel"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Largura mínima do dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura customizada do trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
@@ -282,10 +325,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "combobox": { "name": "Combobox", "description": "Seleção com busca textual para listas longas." },
-        "radioGroup": { "name": "RadioGroup", "description": "Seleção única quando todas as opções devem estar visíveis." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de ações (não de valores) a partir de um trigger." },
-        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." }
+        "combobox": {
+          "name": "Combobox",
+          "description": "Seleção com busca textual para listas longas."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Seleção única quando todas as opções devem estar visíveis."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Lista de ações (não de valores) a partir de um trigger."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integração com validação via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -313,10 +368,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no trigger", "result": "Abre o dropdown; foco vai ao item selecionado ou ao primeiro", "priority": "high" },
-        "item2": { "action": "Selecionar item com Enter", "result": "Fecha dropdown e atualiza SelectValue", "priority": "high" },
-        "item3": { "action": "Pressionar Escape com dropdown aberto", "result": "Fecha sem alterar seleção; retorna foco ao trigger", "priority": "high" },
-        "item4": { "action": "Digitar caractere com trigger focado", "result": "Type-ahead seleciona item correspondente", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no trigger",
+          "result": "Abre o dropdown; foco vai ao item selecionado ou ao primeiro",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Selecionar item com Enter",
+          "result": "Fecha dropdown e atualiza SelectValue",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Escape com dropdown aberto",
+          "result": "Fecha sem alterar seleção; retorna foco ao trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Digitar caractere com trigger focado",
+          "result": "Type-ahead seleciona item correspondente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -331,11 +402,26 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (placeholder visível)", "priority": "high" },
-        "item2": { "story": "Com valor selecionado", "priority": "high" },
-        "item3": { "story": "Dropdown aberto", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" },
-        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (placeholder visível)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com valor selecionado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Dropdown aberto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -369,8 +455,7 @@
       "title": "Select — Form",
       "description": "Select documentation: Trigger, Content, Item, Group and Label, with role=\"combobox\", keyboard navigation and WCAG 2.2 AA.",
       "aiSummary": "Select component with Trigger, Content, Item, Group and Label, automatic role=\"combobox\", keyboard navigation and grouped options support.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox",
-      "aiIntent": "informational"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -416,11 +501,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Marital status (3-5 options)", "u": "Yes", "a": "-" },
-        "item2": { "s": "Yes/No (2 options)", "u": "No", "a": "RadioGroup" },
-        "item3": { "s": "Country (200+ options)", "u": "No", "a": "Combobox" },
-        "item4": { "s": "Multiple selection", "u": "No", "a": "Checkbox group" },
-        "item5": { "s": "Dynamic options with filter", "u": "No", "a": "Combobox" }
+        "item1": {
+          "s": "Marital status (3-5 options)",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Yes/No (2 options)",
+          "u": "No",
+          "a": "RadioGroup"
+        },
+        "item3": {
+          "s": "Country (200+ options)",
+          "u": "No",
+          "a": "Combobox"
+        },
+        "item4": {
+          "s": "Multiple selection",
+          "u": "No",
+          "a": "Checkbox group"
+        },
+        "item5": {
+          "s": "Dynamic options with filter",
+          "u": "No",
+          "a": "Combobox"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -590,14 +695,38 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "input": { "class": "border-input", "part": "SelectTrigger border" },
-        "popover": { "class": "bg-popover", "part": "SelectContent background" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Text inside SelectContent" },
-        "accent": { "class": "bg-accent", "part": "Hover/focus item background" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Hover/focus item text" },
-        "ring": { "class": "ring-ring", "part": "Focus ring on trigger" },
-        "destructive": { "class": "border-destructive", "part": "Invalid state border" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Placeholder and SelectLabel text" }
+        "input": {
+          "class": "border-input",
+          "part": "SelectTrigger border"
+        },
+        "popover": {
+          "class": "bg-popover",
+          "part": "SelectContent background"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Text inside SelectContent"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Hover/focus item background"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Hover/focus item text"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring on trigger"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Invalid state border"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Placeholder and SelectLabel text"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Minimum dropdown width */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Custom trigger height */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
@@ -643,10 +772,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "combobox": { "name": "Combobox", "description": "Selection with text search for long lists." },
-        "radioGroup": { "name": "RadioGroup", "description": "Single selection when all options must be visible." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "List of actions (not values) from a trigger." },
-        "form": { "name": "Form", "description": "Validation integration via React Hook Form." }
+        "combobox": {
+          "name": "Combobox",
+          "description": "Selection with text search for long lists."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Single selection when all options must be visible."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "List of actions (not values) from a trigger."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Validation integration via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -674,10 +815,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the trigger", "result": "Opens dropdown; focus goes to selected item or first", "priority": "high" },
-        "item2": { "action": "Select item with Enter", "result": "Closes dropdown and updates SelectValue", "priority": "high" },
-        "item3": { "action": "Press Escape with dropdown open", "result": "Closes without changing selection; returns focus to trigger", "priority": "high" },
-        "item4": { "action": "Type a character with trigger focused", "result": "Type-ahead selects matching item", "priority": "medium" }
+        "item1": {
+          "action": "Click the trigger",
+          "result": "Opens dropdown; focus goes to selected item or first",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Select item with Enter",
+          "result": "Closes dropdown and updates SelectValue",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Escape with dropdown open",
+          "result": "Closes without changing selection; returns focus to trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Type a character with trigger focused",
+          "result": "Type-ahead selects matching item",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -692,11 +849,26 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (placeholder visible)", "priority": "high" },
-        "item2": { "story": "With selected value", "priority": "high" },
-        "item3": { "story": "Dropdown open", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" },
-        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (placeholder visible)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With selected value",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Dropdown open",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -730,8 +902,7 @@
       "title": "Select — Formulario",
       "description": "Documentación de Select: Trigger, Content, Item, Group y Label, con role=\"combobox\", navegación por teclado y WCAG 2.2 AA.",
       "aiSummary": "Componente Select con Trigger, Content, Item, Group y Label, role=\"combobox\" automático, navegación por teclado y opciones agrupadas.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox",
-      "aiIntent": "informational"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demostración",
@@ -777,11 +948,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Estado civil (3-5 opciones)", "u": "Sí", "a": "-" },
-        "item2": { "s": "Sí/No (2 opciones)", "u": "No", "a": "RadioGroup" },
-        "item3": { "s": "País (200+ opciones)", "u": "No", "a": "Combobox" },
-        "item4": { "s": "Selección múltiple", "u": "No", "a": "Checkbox group" },
-        "item5": { "s": "Opciones dinámicas con filtro", "u": "No", "a": "Combobox" }
+        "item1": {
+          "s": "Estado civil (3-5 opciones)",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Sí/No (2 opciones)",
+          "u": "No",
+          "a": "RadioGroup"
+        },
+        "item3": {
+          "s": "País (200+ opciones)",
+          "u": "No",
+          "a": "Combobox"
+        },
+        "item4": {
+          "s": "Selección múltiple",
+          "u": "No",
+          "a": "Checkbox group"
+        },
+        "item5": {
+          "s": "Opciones dinámicas con filtro",
+          "u": "No",
+          "a": "Combobox"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -951,14 +1142,38 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "input": { "class": "border-input", "part": "Borde del SelectTrigger" },
-        "popover": { "class": "bg-popover", "part": "Fondo del SelectContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto dentro del SelectContent" },
-        "accent": { "class": "bg-accent", "part": "Fondo del ítem en hover/focus" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Texto del ítem en hover/focus" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco en el trigger" },
-        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del placeholder y SelectLabel" }
+        "input": {
+          "class": "border-input",
+          "part": "Borde del SelectTrigger"
+        },
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fondo del SelectContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto dentro del SelectContent"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Fondo del ítem en hover/focus"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Texto del ítem en hover/focus"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco en el trigger"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en estado inválido"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto del placeholder y SelectLabel"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Ancho mínimo del dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura personalizada del trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
@@ -1004,10 +1219,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "combobox": { "name": "Combobox", "description": "Selección con búsqueda textual para listas largas." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selección única cuando todas las opciones deben estar visibles." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de acciones (no de valores) desde un trigger." },
-        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." }
+        "combobox": {
+          "name": "Combobox",
+          "description": "Selección con búsqueda textual para listas largas."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selección única cuando todas las opciones deben estar visibles."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Lista de acciones (no de valores) desde un trigger."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integración de validación vía React Hook Form."
+        }
       }
     },
     "notes": {
@@ -1035,10 +1262,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el trigger", "result": "Abre el dropdown; el foco va al ítem seleccionado o al primero", "priority": "high" },
-        "item2": { "action": "Seleccionar ítem con Enter", "result": "Cierra el dropdown y actualiza SelectValue", "priority": "high" },
-        "item3": { "action": "Pulsar Escape con dropdown abierto", "result": "Cierra sin cambiar selección; devuelve el foco al trigger", "priority": "high" },
-        "item4": { "action": "Escribir un carácter con trigger enfocado", "result": "Type-ahead selecciona ítem correspondiente", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el trigger",
+          "result": "Abre el dropdown; el foco va al ítem seleccionado o al primero",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Seleccionar ítem con Enter",
+          "result": "Cierra el dropdown y actualiza SelectValue",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Escape con dropdown abierto",
+          "result": "Cierra sin cambiar selección; devuelve el foco al trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Escribir un carácter con trigger enfocado",
+          "result": "Type-ahead selecciona ítem correspondiente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1053,11 +1296,26 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (placeholder visible)", "priority": "high" },
-        "item2": { "story": "Con valor seleccionado", "priority": "high" },
-        "item3": { "story": "Dropdown abierto", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" },
-        "item5": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (placeholder visible)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con valor seleccionado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Dropdown abierto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

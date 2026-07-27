@@ -8,8 +8,7 @@
       "title": "Sobre o Nortear Design System",
       "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.2 AA por padrão.",
       "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semânticos, WCAG, multi-stack",
-      "aiIntent": "informational"
+      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semânticos, WCAG, multi-stack"
     },
     "intro": {
       "title": "O que é",
@@ -133,8 +132,7 @@
       "title": "About Nortear Design System",
       "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.2 AA by default.",
       "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), the shared content architecture and the core principles.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, semantic tokens, WCAG, multi-stack",
-      "aiIntent": "informational"
+      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, semantic tokens, WCAG, multi-stack"
     },
     "intro": {
       "title": "What it is",
@@ -258,8 +256,7 @@
       "title": "Sobre Nortear Design System",
       "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.2 AA por defecto.",
       "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), la arquitectura de contenido compartido y los principios fundamentales.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semánticos, WCAG, multi-stack",
-      "aiIntent": "informational"
+      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semánticos, WCAG, multi-stack"
     },
     "intro": {
       "title": "Qué es",

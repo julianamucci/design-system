@@ -8,8 +8,7 @@
       "title": "Slider — Formulário",
       "description": "Documentação do Slider: Root, Track, Range e Thumb com role=\"slider\", navegação por teclado e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Slider com Root, Track, Range e Thumb, role=\"slider\" automático, navegação por teclado (setas, Home, End, PgUp, PgDn) e suporte a single/range.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider",
-      "aiIntent": "informational"
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -48,11 +47,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Volume, brilho, opacidade", "u": "Sim", "a": "-" },
-        "item2": { "s": "Faixa de preço (min/max)", "u": "Sim, range", "a": "-" },
-        "item3": { "s": "Valor exato (ex: idade)", "u": "Não", "a": "Input type=\"number\"" },
-        "item4": { "s": "Seleção de 2-3 opções discretas", "u": "Não", "a": "RadioGroup ou ToggleGroup" },
-        "item5": { "s": "Boolean (ligado/desligado)", "u": "Não", "a": "Switch" }
+        "item1": {
+          "s": "Volume, brilho, opacidade",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Faixa de preço (min/max)",
+          "u": "Sim, range",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Valor exato (ex: idade)",
+          "u": "Não",
+          "a": "Input type=\"number\""
+        },
+        "item4": {
+          "s": "Seleção de 2-3 opções discretas",
+          "u": "Não",
+          "a": "RadioGroup ou ToggleGroup"
+        },
+        "item5": {
+          "s": "Boolean (ligado/desligado)",
+          "u": "Não",
+          "a": "Switch"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -235,12 +254,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": { "class": "bg-muted", "part": "Fundo do SliderTrack" },
-        "primary": { "class": "bg-primary", "part": "Cor do SliderRange (segmento preenchido)" },
-        "ring": { "class": "border-ring / ring-ring", "part": "Borda do Thumb e anel de foco" },
-        "background": { "class": "bg-white", "part": "Fundo do Thumb" },
-        "foreground": { "class": "text-foreground", "part": "Texto do valor adjacente" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do Label opcional" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo do SliderTrack"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Cor do SliderRange (segmento preenchido)"
+        },
+        "ring": {
+          "class": "border-ring / ring-ring",
+          "part": "Borda do Thumb e anel de foco"
+        },
+        "background": {
+          "class": "bg-white",
+          "part": "Fundo do Thumb"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto do valor adjacente"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto do Label opcional"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Tamanho customizado do Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Cor customizada do Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
@@ -287,10 +324,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "input": { "name": "Input", "description": "Use para valor numérico exato." },
-        "switch": { "name": "Switch", "description": "Toggle on/off de configuração." },
-        "progress": { "name": "Progress", "description": "Indicador passivo de progresso (não interativo)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Seleção de opções discretas (2-7)." }
+        "input": {
+          "name": "Input",
+          "description": "Use para valor numérico exato."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Toggle on/off de configuração."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Indicador passivo de progresso (não interativo)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Seleção de opções discretas (2-7)."
+        }
       }
     },
     "notes": {
@@ -318,10 +367,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar e arrastar o Thumb", "result": "Valor atualiza em tempo real via callback de mudança contínua", "priority": "high" },
-        "item2": { "action": "Soltar o Thumb", "result": "Dispara o callback de commit com o valor final", "priority": "high" },
-        "item3": { "action": "Pressionar ArrowRight com Thumb focado", "result": "Incrementa em step", "priority": "high" },
-        "item4": { "action": "Pressionar Home/End", "result": "Vai para min/max respectivamente", "priority": "medium" }
+        "item1": {
+          "action": "Clicar e arrastar o Thumb",
+          "result": "Valor atualiza em tempo real via callback de mudança contínua",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Soltar o Thumb",
+          "result": "Dispara o callback de commit com o valor final",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar ArrowRight com Thumb focado",
+          "result": "Incrementa em step",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar Home/End",
+          "result": "Vai para min/max respectivamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -336,10 +401,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Single (value=50)", "priority": "high" },
-        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Single (value=50)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Range (value=[20, 80])",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -372,8 +449,7 @@
       "title": "Slider — Form",
       "description": "Slider documentation: Root, Track, Range and Thumb with role=\"slider\", keyboard navigation and WCAG 2.2 AA support.",
       "aiSummary": "Slider component with Root, Track, Range and Thumb, automatic role=\"slider\", keyboard navigation (arrows, Home, End, PgUp, PgDn) and single/range support.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider",
-      "aiIntent": "informational"
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -412,11 +488,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Volume, brightness, opacity", "u": "Yes", "a": "-" },
-        "item2": { "s": "Price range (min/max)", "u": "Yes, range", "a": "-" },
-        "item3": { "s": "Exact value (e.g. age)", "u": "No", "a": "Input type=\"number\"" },
-        "item4": { "s": "Selection of 2-3 discrete options", "u": "No", "a": "RadioGroup or ToggleGroup" },
-        "item5": { "s": "Boolean (on/off)", "u": "No", "a": "Switch" }
+        "item1": {
+          "s": "Volume, brightness, opacity",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Price range (min/max)",
+          "u": "Yes, range",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Exact value (e.g. age)",
+          "u": "No",
+          "a": "Input type=\"number\""
+        },
+        "item4": {
+          "s": "Selection of 2-3 discrete options",
+          "u": "No",
+          "a": "RadioGroup or ToggleGroup"
+        },
+        "item5": {
+          "s": "Boolean (on/off)",
+          "u": "No",
+          "a": "Switch"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -599,12 +695,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": { "class": "bg-muted", "part": "SliderTrack background" },
-        "primary": { "class": "bg-primary", "part": "SliderRange color (filled segment)" },
-        "ring": { "class": "border-ring / ring-ring", "part": "Thumb border and focus ring" },
-        "background": { "class": "bg-white", "part": "Thumb background" },
-        "foreground": { "class": "text-foreground", "part": "Adjacent value text" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Optional Label text" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "SliderTrack background"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "SliderRange color (filled segment)"
+        },
+        "ring": {
+          "class": "border-ring / ring-ring",
+          "part": "Thumb border and focus ring"
+        },
+        "background": {
+          "class": "bg-white",
+          "part": "Thumb background"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Adjacent value text"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Optional Label text"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom Thumb size */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Custom Range color */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
@@ -651,10 +765,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "input": { "name": "Input", "description": "Use for exact numeric value." },
-        "switch": { "name": "Switch", "description": "On/off toggle setting." },
-        "progress": { "name": "Progress", "description": "Passive progress indicator (non-interactive)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selection of discrete options (2-7)." }
+        "input": {
+          "name": "Input",
+          "description": "Use for exact numeric value."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "On/off toggle setting."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Passive progress indicator (non-interactive)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selection of discrete options (2-7)."
+        }
       }
     },
     "notes": {
@@ -682,10 +808,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click and drag the Thumb", "result": "Value updates in real time via the continuous change callback", "priority": "high" },
-        "item2": { "action": "Release the Thumb", "result": "Fires the commit callback with the final value", "priority": "high" },
-        "item3": { "action": "Press ArrowRight with Thumb focused", "result": "Increments by step", "priority": "high" },
-        "item4": { "action": "Press Home/End", "result": "Goes to min/max respectively", "priority": "medium" }
+        "item1": {
+          "action": "Click and drag the Thumb",
+          "result": "Value updates in real time via the continuous change callback",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Release the Thumb",
+          "result": "Fires the commit callback with the final value",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press ArrowRight with Thumb focused",
+          "result": "Increments by step",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press Home/End",
+          "result": "Goes to min/max respectively",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -700,10 +842,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Single (value=50)", "priority": "high" },
-        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Single (value=50)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Range (value=[20, 80])",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -736,8 +890,7 @@
       "title": "Slider — Formulario",
       "description": "Documentación de Slider: Root, Track, Range y Thumb con role=\"slider\", navegación por teclado y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Slider con Root, Track, Range y Thumb, role=\"slider\" automático, navegación por teclado (flechas, Home, End, PgUp, PgDn) y soporte single/range.",
-      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider",
-      "aiIntent": "informational"
+      "aiEntities": "Slider, Range Slider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role slider"
     },
     "demonstration": {
       "title": "Demostración",
@@ -776,11 +929,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Volumen, brillo, opacidad", "u": "Sí", "a": "-" },
-        "item2": { "s": "Rango de precio (min/max)", "u": "Sí, range", "a": "-" },
-        "item3": { "s": "Valor exacto (ej. edad)", "u": "No", "a": "Input type=\"number\"" },
-        "item4": { "s": "Selección de 2-3 opciones discretas", "u": "No", "a": "RadioGroup o ToggleGroup" },
-        "item5": { "s": "Boolean (encendido/apagado)", "u": "No", "a": "Switch" }
+        "item1": {
+          "s": "Volumen, brillo, opacidad",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Rango de precio (min/max)",
+          "u": "Sí, range",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Valor exacto (ej. edad)",
+          "u": "No",
+          "a": "Input type=\"number\""
+        },
+        "item4": {
+          "s": "Selección de 2-3 opciones discretas",
+          "u": "No",
+          "a": "RadioGroup o ToggleGroup"
+        },
+        "item5": {
+          "s": "Boolean (encendido/apagado)",
+          "u": "No",
+          "a": "Switch"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -963,12 +1136,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": { "class": "bg-muted", "part": "Fondo del SliderTrack" },
-        "primary": { "class": "bg-primary", "part": "Color del SliderRange (segmento lleno)" },
-        "ring": { "class": "border-ring / ring-ring", "part": "Borde del Thumb y anillo de foco" },
-        "background": { "class": "bg-white", "part": "Fondo del Thumb" },
-        "foreground": { "class": "text-foreground", "part": "Texto del valor adyacente" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del Label opcional" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo del SliderTrack"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Color del SliderRange (segmento lleno)"
+        },
+        "ring": {
+          "class": "border-ring / ring-ring",
+          "part": "Borde del Thumb y anillo de foco"
+        },
+        "background": {
+          "class": "bg-white",
+          "part": "Fondo del Thumb"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto del valor adyacente"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto del Label opcional"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Tamaño personalizado del Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Color personalizado del Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
@@ -1015,10 +1206,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "input": { "name": "Input", "description": "Usa para valor numérico exacto." },
-        "switch": { "name": "Switch", "description": "Toggle on/off de configuración." },
-        "progress": { "name": "Progress", "description": "Indicador pasivo de progreso (no interactivo)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selección de opciones discretas (2-7)." }
+        "input": {
+          "name": "Input",
+          "description": "Usa para valor numérico exacto."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Toggle on/off de configuración."
+        },
+        "progress": {
+          "name": "Progress",
+          "description": "Indicador pasivo de progreso (no interactivo)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selección de opciones discretas (2-7)."
+        }
       }
     },
     "notes": {
@@ -1046,10 +1249,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic y arrastrar el Thumb", "result": "El valor se actualiza en tiempo real vía el callback de cambio continuo", "priority": "high" },
-        "item2": { "action": "Soltar el Thumb", "result": "Dispara el callback de commit con el valor final", "priority": "high" },
-        "item3": { "action": "Pulsar ArrowRight con Thumb enfocado", "result": "Incrementa en step", "priority": "high" },
-        "item4": { "action": "Pulsar Home/End", "result": "Va a min/max respectivamente", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic y arrastrar el Thumb",
+          "result": "El valor se actualiza en tiempo real vía el callback de cambio continuo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Soltar el Thumb",
+          "result": "Dispara el callback de commit con el valor final",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar ArrowRight con Thumb enfocado",
+          "result": "Incrementa en step",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pulsar Home/End",
+          "result": "Va a min/max respectivamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1064,10 +1283,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Single (value=50)", "priority": "high" },
-        "item2": { "story": "Range (value=[20, 80])", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Single (value=50)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Range (value=[20, 80])",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

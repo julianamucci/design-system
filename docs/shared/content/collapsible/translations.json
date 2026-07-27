@@ -8,8 +8,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentação do Collapsible: seção expansível com trigger explícito, modos controlado e não-controlado, acessibilidade WCAG e aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir e ocultar uma única seção de conteúdo. Suporta modo controlado (estado externo + callback de mudança) e não-controlado (estado inicial), com aria-expanded e aria-controls aplicados automaticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,12 +45,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Uma seção expansível isolada", "u": "Sim", "a": "-" },
-        "item2": { "s": "Filtros avançados opcionais", "u": "Sim", "a": "-" },
-        "item3": { "s": "Múltiplas seções relacionadas", "u": "Não", "a": "Accordion" },
-        "item4": { "s": "Alternância entre views paralelas", "u": "Não", "a": "Tabs" },
-        "item5": { "s": "Conteúdo sempre visível + parte ocultável", "u": "Sim", "a": "-" },
-        "item6": { "s": "FAQ com N perguntas", "u": "Não", "a": "Accordion" }
+        "item1": {
+          "s": "Uma seção expansível isolada",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Filtros avançados opcionais",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Múltiplas seções relacionadas",
+          "u": "Não",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "Alternância entre views paralelas",
+          "u": "Não",
+          "a": "Tabs"
+        },
+        "item5": {
+          "s": "Conteúdo sempre visível + parte ocultável",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item6": {
+          "s": "FAQ com N perguntas",
+          "u": "Não",
+          "a": "Accordion"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -251,30 +274,89 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Collapsible.",
-        "item1": { "action": "Clicar no trigger com painel fechado", "result": "CollapsibleContent expande e fica visível no DOM", "priority": "high" },
-        "item2": { "action": "Clicar no trigger com painel aberto", "result": "CollapsibleContent colapsa e sai do fluxo visual", "priority": "high" },
-        "item3": { "action": "Renderizar com defaultOpen={true}", "result": "CollapsibleContent renderiza expandido na montagem", "priority": "high" },
-        "item4": { "action": "Controlar via estado externo e callback de mudança", "result": "Estado do painel reflete o valor da prop controlada", "priority": "high" },
-        "item5": { "action": "Trigger composto com elemento filho Button", "result": "Button herda aria-expanded e aria-controls do trigger", "priority": "medium" },
-        "item6": { "action": "Desabilitar o trigger via prop disabled", "result": "Clique e teclado não alteram o estado do painel", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no trigger com painel fechado",
+          "result": "CollapsibleContent expande e fica visível no DOM",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar no trigger com painel aberto",
+          "result": "CollapsibleContent colapsa e sai do fluxo visual",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar com defaultOpen={true}",
+          "result": "CollapsibleContent renderiza expandido na montagem",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Controlar via estado externo e callback de mudança",
+          "result": "Estado do painel reflete o valor da prop controlada",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Trigger composto com elemento filho Button",
+          "result": "Button herda aria-expanded e aria-controls do trigger",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Desabilitar o trigger via prop disabled",
+          "result": "Clique e teclado não alteram o estado do painel",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "aria-expanded reflete o estado aberto/fechado do painel", "level": "AA", "how": "getByRole('button') e checar atributo aria-expanded no testing-library" },
-        "item2": { "criterion": "aria-controls associa trigger ao CollapsibleContent correto", "level": "AA", "how": "Verificar que aria-controls aponta para o id do painel no DOM" },
-        "item3": { "criterion": "Trigger ativável por Enter e Space", "level": "AA", "how": "Teste de teclado manual e userEvent.keyboard no testing-library" },
-        "item4": { "criterion": "Ícones decorativos com aria-hidden='true'", "level": "AA", "how": "Inspecionar atributos do SVG no DOM" },
-        "item5": { "criterion": "Sem violações axe-core nos estados aberto e fechado", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "aria-expanded reflete o estado aberto/fechado do painel",
+          "level": "AA",
+          "how": "getByRole('button') e checar atributo aria-expanded no testing-library"
+        },
+        "item2": {
+          "criterion": "aria-controls associa trigger ao CollapsibleContent correto",
+          "level": "AA",
+          "how": "Verificar que aria-controls aponta para o id do painel no DOM"
+        },
+        "item3": {
+          "criterion": "Trigger ativável por Enter e Space",
+          "level": "AA",
+          "how": "Teste de teclado manual e userEvent.keyboard no testing-library"
+        },
+        "item4": {
+          "criterion": "Ícones decorativos com aria-hidden='true'",
+          "level": "AA",
+          "how": "Inspecionar atributos do SVG no DOM"
+        },
+        "item5": {
+          "criterion": "Sem violações axe-core nos estados aberto e fechado",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — estado fechado por padrão", "priority": "high" },
-        "item2": { "story": "Playground — estado aberto por padrão", "priority": "high" },
-        "item3": { "story": "Modo controlado — abertura e fechamento via prop", "priority": "high" },
-        "item4": { "story": "Trigger com ícone giratório via data-state", "priority": "medium" },
-        "item5": { "story": "Trigger desabilitado", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado fechado por padrão",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Playground — estado aberto por padrão",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Modo controlado — abertura e fechamento via prop",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Trigger com ícone giratório via data-state",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Trigger desabilitado",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -307,8 +389,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Collapsible documentation: expandable section with explicit trigger, controlled and uncontrolled modes, WCAG accessibility with automatic aria-expanded.",
       "aiSummary": "Collapsible component to expand and hide a single content section. Supports controlled (external state + change callback) and uncontrolled (initial state) modes, with aria-expanded and aria-controls applied automatically.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -345,12 +426,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Single isolated expandable section", "u": "Yes", "a": "-" },
-        "item2": { "s": "Optional advanced filters", "u": "Yes", "a": "-" },
-        "item3": { "s": "Multiple related sections", "u": "No", "a": "Accordion" },
-        "item4": { "s": "Switching between parallel views", "u": "No", "a": "Tabs" },
-        "item5": { "s": "Always-visible content + hideable part", "u": "Yes", "a": "-" },
-        "item6": { "s": "FAQ with multiple questions", "u": "No", "a": "Accordion" }
+        "item1": {
+          "s": "Single isolated expandable section",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Optional advanced filters",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Multiple related sections",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "Switching between parallel views",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item5": {
+          "s": "Always-visible content + hideable part",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item6": {
+          "s": "FAQ with multiple questions",
+          "u": "No",
+          "a": "Accordion"
+        }
       },
       "do": {
         "title": "Use when",
@@ -550,30 +655,89 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Collapsible configuration.",
-        "item1": { "action": "Click trigger with panel closed", "result": "CollapsibleContent expands and becomes visible in the DOM", "priority": "high" },
-        "item2": { "action": "Click trigger with panel open", "result": "CollapsibleContent collapses and leaves the visual flow", "priority": "high" },
-        "item3": { "action": "Render with defaultOpen={true}", "result": "CollapsibleContent renders expanded on mount", "priority": "high" },
-        "item4": { "action": "Control via external state and change callback", "result": "Panel state reflects the controlled prop value", "priority": "high" },
-        "item5": { "action": "Trigger composed with child Button", "result": "Button inherits aria-expanded and aria-controls from the trigger", "priority": "medium" },
-        "item6": { "action": "Disable trigger via disabled prop", "result": "Click and keyboard do not change panel state", "priority": "medium" }
+        "item1": {
+          "action": "Click trigger with panel closed",
+          "result": "CollapsibleContent expands and becomes visible in the DOM",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click trigger with panel open",
+          "result": "CollapsibleContent collapses and leaves the visual flow",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render with defaultOpen={true}",
+          "result": "CollapsibleContent renders expanded on mount",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Control via external state and change callback",
+          "result": "Panel state reflects the controlled prop value",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Trigger composed with child Button",
+          "result": "Button inherits aria-expanded and aria-controls from the trigger",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Disable trigger via disabled prop",
+          "result": "Click and keyboard do not change panel state",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "aria-expanded reflects the open/closed panel state", "level": "AA", "how": "getByRole('button') and check aria-expanded attribute in testing-library" },
-        "item2": { "criterion": "aria-controls associates trigger with correct CollapsibleContent", "level": "AA", "how": "Verify aria-controls points to panel id in DOM" },
-        "item3": { "criterion": "Trigger activatable by Enter and Space", "level": "AA", "how": "Manual keyboard test and userEvent.keyboard in testing-library" },
-        "item4": { "criterion": "Decorative icons with aria-hidden='true'", "level": "AA", "how": "Inspect SVG attributes in DOM" },
-        "item5": { "criterion": "No axe-core violations in open and closed states", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "aria-expanded reflects the open/closed panel state",
+          "level": "AA",
+          "how": "getByRole('button') and check aria-expanded attribute in testing-library"
+        },
+        "item2": {
+          "criterion": "aria-controls associates trigger with correct CollapsibleContent",
+          "level": "AA",
+          "how": "Verify aria-controls points to panel id in DOM"
+        },
+        "item3": {
+          "criterion": "Trigger activatable by Enter and Space",
+          "level": "AA",
+          "how": "Manual keyboard test and userEvent.keyboard in testing-library"
+        },
+        "item4": {
+          "criterion": "Decorative icons with aria-hidden='true'",
+          "level": "AA",
+          "how": "Inspect SVG attributes in DOM"
+        },
+        "item5": {
+          "criterion": "No axe-core violations in open and closed states",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — closed by default", "priority": "high" },
-        "item2": { "story": "Playground — open by default", "priority": "high" },
-        "item3": { "story": "Controlled mode — open and close via prop", "priority": "high" },
-        "item4": { "story": "Trigger with rotating icon via data-state", "priority": "medium" },
-        "item5": { "story": "Disabled trigger", "priority": "medium" }
+        "item1": {
+          "story": "Playground — closed by default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Playground — open by default",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Controlled mode — open and close via prop",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Trigger with rotating icon via data-state",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Disabled trigger",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -606,8 +770,7 @@
       "title": "Collapsible — Disclosure",
       "description": "Documentación del Collapsible: sección expandible con trigger explícito, modos controlado y no controlado, accesibilidad WCAG con aria-expanded automático.",
       "aiSummary": "Componente Collapsible para expandir y ocultar una única sección de contenido. Soporta modo controlado (estado externo + callback de cambio) y no controlado (estado inicial), con aria-expanded y aria-controls aplicados automáticamente.",
-      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Base UI, Radix UI, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
       "title": "Demostración",
@@ -644,12 +807,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Sección expandible única y aislada", "u": "Sí", "a": "-" },
-        "item2": { "s": "Filtros avanzados opcionales", "u": "Sí", "a": "-" },
-        "item3": { "s": "Múltiples secciones relacionadas", "u": "No", "a": "Accordion" },
-        "item4": { "s": "Alternancia entre vistas paralelas", "u": "No", "a": "Tabs" },
-        "item5": { "s": "Contenido siempre visible + parte ocultable", "u": "Sí", "a": "-" },
-        "item6": { "s": "FAQ con múltiples preguntas", "u": "No", "a": "Accordion" }
+        "item1": {
+          "s": "Sección expandible única y aislada",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Filtros avanzados opcionales",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Múltiples secciones relacionadas",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "Alternancia entre vistas paralelas",
+          "u": "No",
+          "a": "Tabs"
+        },
+        "item5": {
+          "s": "Contenido siempre visible + parte ocultable",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item6": {
+          "s": "FAQ con múltiples preguntas",
+          "u": "No",
+          "a": "Accordion"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -849,30 +1036,89 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Collapsible.",
-        "item1": { "action": "Hacer clic en el trigger con el panel cerrado", "result": "CollapsibleContent se expande y se vuelve visible en el DOM", "priority": "high" },
-        "item2": { "action": "Hacer clic en el trigger con el panel abierto", "result": "CollapsibleContent se colapsa y sale del flujo visual", "priority": "high" },
-        "item3": { "action": "Renderizar con defaultOpen={true}", "result": "CollapsibleContent se renderiza expandido al montar", "priority": "high" },
-        "item4": { "action": "Controlar vía estado externo y callback de cambio", "result": "El estado del panel refleja el valor de la prop controlada", "priority": "high" },
-        "item5": { "action": "Trigger compuesto con elemento hijo Button", "result": "Button hereda aria-expanded y aria-controls del trigger", "priority": "medium" },
-        "item6": { "action": "Deshabilitar el trigger vía prop disabled", "result": "El clic y el teclado no cambian el estado del panel", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el trigger con el panel cerrado",
+          "result": "CollapsibleContent se expande y se vuelve visible en el DOM",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en el trigger con el panel abierto",
+          "result": "CollapsibleContent se colapsa y sale del flujo visual",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar con defaultOpen={true}",
+          "result": "CollapsibleContent se renderiza expandido al montar",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Controlar vía estado externo y callback de cambio",
+          "result": "El estado del panel refleja el valor de la prop controlada",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Trigger compuesto con elemento hijo Button",
+          "result": "Button hereda aria-expanded y aria-controls del trigger",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Deshabilitar el trigger vía prop disabled",
+          "result": "El clic y el teclado no cambian el estado del panel",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "aria-expanded refleja el estado abierto/cerrado del panel", "level": "AA", "how": "getByRole('button') y verificar atributo aria-expanded en testing-library" },
-        "item2": { "criterion": "aria-controls asocia el trigger con el CollapsibleContent correcto", "level": "AA", "how": "Verificar que aria-controls apunta al id del panel en el DOM" },
-        "item3": { "criterion": "Trigger activable por Enter y Space", "level": "AA", "how": "Prueba manual de teclado y userEvent.keyboard en testing-library" },
-        "item4": { "criterion": "Íconos decorativos con aria-hidden='true'", "level": "AA", "how": "Inspeccionar atributos del SVG en el DOM" },
-        "item5": { "criterion": "Sin violaciones axe-core en estados abierto y cerrado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "aria-expanded refleja el estado abierto/cerrado del panel",
+          "level": "AA",
+          "how": "getByRole('button') y verificar atributo aria-expanded en testing-library"
+        },
+        "item2": {
+          "criterion": "aria-controls asocia el trigger con el CollapsibleContent correcto",
+          "level": "AA",
+          "how": "Verificar que aria-controls apunta al id del panel en el DOM"
+        },
+        "item3": {
+          "criterion": "Trigger activable por Enter y Space",
+          "level": "AA",
+          "how": "Prueba manual de teclado y userEvent.keyboard en testing-library"
+        },
+        "item4": {
+          "criterion": "Íconos decorativos con aria-hidden='true'",
+          "level": "AA",
+          "how": "Inspeccionar atributos del SVG en el DOM"
+        },
+        "item5": {
+          "criterion": "Sin violaciones axe-core en estados abierto y cerrado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — cerrado por defecto", "priority": "high" },
-        "item2": { "story": "Playground — abierto por defecto", "priority": "high" },
-        "item3": { "story": "Modo controlado — apertura y cierre vía prop", "priority": "high" },
-        "item4": { "story": "Trigger con ícono giratorio vía data-state", "priority": "medium" },
-        "item5": { "story": "Trigger deshabilitado", "priority": "medium" }
+        "item1": {
+          "story": "Playground — cerrado por defecto",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Playground — abierto por defecto",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Modo controlado — apertura y cierre vía prop",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Trigger con ícono giratorio vía data-state",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Trigger deshabilitado",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

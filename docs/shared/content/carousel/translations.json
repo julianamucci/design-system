@@ -8,8 +8,7 @@
       "title": "Carousel — Display",
       "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
       "aiSummary": "Componente Carousel baseado em Embla com orientação horizontal/vertical, navegação por teclado, suporte a autoplay via plugin, dots customizados via CarouselApi e role=\"region\" com aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
-      "aiIntent": "informational"
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,11 +45,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Galeria de imagens de um produto", "u": "Sim, 1 item por vez", "a": "-" },
-        "item2": { "s": "Lista extensa de cards rolável", "u": "Não", "a": "ScrollArea" },
-        "item3": { "s": "Depoimentos ou destaques em home", "u": "Sim, com autoplay + loop", "a": "Grid estático" },
-        "item4": { "s": "Navegação principal por seções", "u": "Não", "a": "Tabs ou NavigationMenu" },
-        "item5": { "s": "Exibir múltiplos cards responsivos", "u": "Sim, basis responsivo", "a": "Grid responsivo" }
+        "item1": {
+          "s": "Galeria de imagens de um produto",
+          "u": "Sim, 1 item por vez",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Lista extensa de cards rolável",
+          "u": "Não",
+          "a": "ScrollArea"
+        },
+        "item3": {
+          "s": "Depoimentos ou destaques em home",
+          "u": "Sim, com autoplay + loop",
+          "a": "Grid estático"
+        },
+        "item4": {
+          "s": "Navegação principal por seções",
+          "u": "Não",
+          "a": "Tabs ou NavigationMenu"
+        },
+        "item5": {
+          "s": "Exibir múltiplos cards responsivos",
+          "u": "Sim, basis responsivo",
+          "a": "Grid responsivo"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -297,31 +316,94 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Carousel.",
-        "item1": { "action": "Renderizar com múltiplos slides", "result": "Viewport exibe primeiro slide; CarouselPrevious começa disabled", "priority": "high" },
-        "item2": { "action": "Clicar em CarouselNext", "result": "Carrossel avança um slide; CarouselPrevious habilita", "priority": "high" },
-        "item3": { "action": "Pressionar ArrowRight com foco no container", "result": "Carrossel avança um slide", "priority": "high" },
-        "item4": { "action": "Chegar no último slide sem loop", "result": "CarouselNext fica disabled", "priority": "high" },
-        "item5": { "action": "Ativar orientation=\"vertical\"", "result": "Slides empilham; botões posicionados acima e abaixo do viewport", "priority": "medium" },
-        "item6": { "action": "Aplicar CarouselItem basis-1/2", "result": "Dois itens visíveis simultaneamente no viewport", "priority": "medium" },
-        "item7": { "action": "Ativar plugin Autoplay com stopOnInteraction", "result": "Autoplay avança a cada delay; pausa ao clicar ou arrastar", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar com múltiplos slides",
+          "result": "Viewport exibe primeiro slide; CarouselPrevious começa disabled",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em CarouselNext",
+          "result": "Carrossel avança um slide; CarouselPrevious habilita",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar ArrowRight com foco no container",
+          "result": "Carrossel avança um slide",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Chegar no último slide sem loop",
+          "result": "CarouselNext fica disabled",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Ativar orientation=\"vertical\"",
+          "result": "Slides empilham; botões posicionados acima e abaixo do viewport",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Aplicar CarouselItem basis-1/2",
+          "result": "Dois itens visíveis simultaneamente no viewport",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Ativar plugin Autoplay com stopOnInteraction",
+          "result": "Autoplay avança a cada delay; pausa ao clicar ou arrastar",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "role=\"region\" e aria-roledescription=\"carousel\" no container", "level": "AA", "how": "getByRole('region') com nome acessível no testing-library" },
-        "item2": { "criterion": "CarouselItem com role=\"group\" e aria-roledescription=\"slide\"", "level": "AA", "how": "Inspecionar atributos dos slides no DOM" },
-        "item3": { "criterion": "Botões de navegação com aria-label descritivo", "level": "AA", "how": "getByRole('button', { name: /próximo item/i })" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
-        "item5": { "criterion": "Contraste mínimo 4.5:1 nos botões de navegação", "level": "AA", "how": "axe-core / Lighthouse" }
+        "item1": {
+          "criterion": "role=\"region\" e aria-roledescription=\"carousel\" no container",
+          "level": "AA",
+          "how": "getByRole('region') com nome acessível no testing-library"
+        },
+        "item2": {
+          "criterion": "CarouselItem com role=\"group\" e aria-roledescription=\"slide\"",
+          "level": "AA",
+          "how": "Inspecionar atributos dos slides no DOM"
+        },
+        "item3": {
+          "criterion": "Botões de navegação com aria-label descritivo",
+          "level": "AA",
+          "how": "getByRole('button', { name: /próximo item/i })"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item5": {
+          "criterion": "Contraste mínimo 4.5:1 nos botões de navegação",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — estado inicial com 3+ slides", "priority": "high" },
-        "item2": { "story": "Variantes — horizontal e vertical", "priority": "high" },
-        "item3": { "story": "Configurações — múltiplos itens com basis responsivo", "priority": "medium" },
-        "item4": { "story": "Estados — primeiro e último slide (disabled nos extremos)", "priority": "medium" },
-        "item5": { "story": "Composições — com autoplay e dots customizados", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado inicial com 3+ slides",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — horizontal e vertical",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurações — múltiplos itens com basis responsivo",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — primeiro e último slide (disabled nos extremos)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composições — com autoplay e dots customizados",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -354,8 +436,7 @@
       "title": "Carousel — Display",
       "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
       "aiSummary": "Embla-based Carousel component with horizontal/vertical orientation, keyboard navigation, autoplay via plugin, custom dots via CarouselApi, and role=\"region\" with aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
-      "aiIntent": "informational"
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -392,11 +473,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Product image gallery", "u": "Yes, one item at a time", "a": "-" },
-        "item2": { "s": "Long scrollable list of cards", "u": "No", "a": "ScrollArea" },
-        "item3": { "s": "Testimonials or highlights on home", "u": "Yes, with autoplay + loop", "a": "Static grid" },
-        "item4": { "s": "Primary section navigation", "u": "No", "a": "Tabs or NavigationMenu" },
-        "item5": { "s": "Show multiple responsive cards", "u": "Yes, responsive basis", "a": "Responsive grid" }
+        "item1": {
+          "s": "Product image gallery",
+          "u": "Yes, one item at a time",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Long scrollable list of cards",
+          "u": "No",
+          "a": "ScrollArea"
+        },
+        "item3": {
+          "s": "Testimonials or highlights on home",
+          "u": "Yes, with autoplay + loop",
+          "a": "Static grid"
+        },
+        "item4": {
+          "s": "Primary section navigation",
+          "u": "No",
+          "a": "Tabs or NavigationMenu"
+        },
+        "item5": {
+          "s": "Show multiple responsive cards",
+          "u": "Yes, responsive basis",
+          "a": "Responsive grid"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -643,31 +744,94 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Carousel configuration.",
-        "item1": { "action": "Render with multiple slides", "result": "Viewport shows first slide; CarouselPrevious starts disabled", "priority": "high" },
-        "item2": { "action": "Click CarouselNext", "result": "Carousel advances one slide; CarouselPrevious becomes enabled", "priority": "high" },
-        "item3": { "action": "Press ArrowRight with focus on container", "result": "Carousel advances one slide", "priority": "high" },
-        "item4": { "action": "Reach last slide without loop", "result": "CarouselNext becomes disabled", "priority": "high" },
-        "item5": { "action": "Enable orientation=\"vertical\"", "result": "Slides stack; buttons positioned above and below viewport", "priority": "medium" },
-        "item6": { "action": "Apply CarouselItem basis-1/2", "result": "Two items visible simultaneously in the viewport", "priority": "medium" },
-        "item7": { "action": "Enable Autoplay plugin with stopOnInteraction", "result": "Autoplay advances every delay; pauses on click or drag", "priority": "medium" }
+        "item1": {
+          "action": "Render with multiple slides",
+          "result": "Viewport shows first slide; CarouselPrevious starts disabled",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click CarouselNext",
+          "result": "Carousel advances one slide; CarouselPrevious becomes enabled",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press ArrowRight with focus on container",
+          "result": "Carousel advances one slide",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Reach last slide without loop",
+          "result": "CarouselNext becomes disabled",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Enable orientation=\"vertical\"",
+          "result": "Slides stack; buttons positioned above and below viewport",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Apply CarouselItem basis-1/2",
+          "result": "Two items visible simultaneously in the viewport",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Enable Autoplay plugin with stopOnInteraction",
+          "result": "Autoplay advances every delay; pauses on click or drag",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "role=\"region\" and aria-roledescription=\"carousel\" on container", "level": "AA", "how": "getByRole('region') with accessible name in testing-library" },
-        "item2": { "criterion": "CarouselItem with role=\"group\" and aria-roledescription=\"slide\"", "level": "AA", "how": "Inspect slide attributes in DOM" },
-        "item3": { "criterion": "Navigation buttons with descriptive aria-label", "level": "AA", "how": "getByRole('button', { name: /next item/i })" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
-        "item5": { "criterion": "Minimum 4.5:1 contrast on navigation buttons", "level": "AA", "how": "axe-core / Lighthouse" }
+        "item1": {
+          "criterion": "role=\"region\" and aria-roledescription=\"carousel\" on container",
+          "level": "AA",
+          "how": "getByRole('region') with accessible name in testing-library"
+        },
+        "item2": {
+          "criterion": "CarouselItem with role=\"group\" and aria-roledescription=\"slide\"",
+          "level": "AA",
+          "how": "Inspect slide attributes in DOM"
+        },
+        "item3": {
+          "criterion": "Navigation buttons with descriptive aria-label",
+          "level": "AA",
+          "how": "getByRole('button', { name: /next item/i })"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        },
+        "item5": {
+          "criterion": "Minimum 4.5:1 contrast on navigation buttons",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — initial state with 3+ slides", "priority": "high" },
-        "item2": { "story": "Variants — horizontal and vertical", "priority": "high" },
-        "item3": { "story": "Configurations — multiple items with responsive basis", "priority": "medium" },
-        "item4": { "story": "States — first and last slide (disabled at edges)", "priority": "medium" },
-        "item5": { "story": "Compositions — with autoplay and custom dots", "priority": "medium" }
+        "item1": {
+          "story": "Playground — initial state with 3+ slides",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — horizontal and vertical",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurations — multiple items with responsive basis",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — first and last slide (disabled at edges)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Compositions — with autoplay and custom dots",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -700,8 +864,7 @@
       "title": "Carousel — Display",
       "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
       "aiSummary": "Componente Carousel basado en Embla con orientación horizontal/vertical, navegación por teclado, soporte a autoplay vía plugin, dots customizados vía CarouselApi y role=\"region\" con aria-roledescription=\"carousel\".",
-      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce",
-      "aiIntent": "informational"
+      "aiEntities": "Carousel, Embla Carousel, React, Vue, Svelte, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
       "title": "Demostración",
@@ -738,11 +901,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Galería de imágenes de producto", "u": "Sí, un ítem por vez", "a": "-" },
-        "item2": { "s": "Lista extensa de cards scrolleable", "u": "No", "a": "ScrollArea" },
-        "item3": { "s": "Testimonios o destacados en home", "u": "Sí, con autoplay + loop", "a": "Grid estático" },
-        "item4": { "s": "Navegación principal por secciones", "u": "No", "a": "Tabs o NavigationMenu" },
-        "item5": { "s": "Mostrar múltiples cards responsivos", "u": "Sí, basis responsivo", "a": "Grid responsivo" }
+        "item1": {
+          "s": "Galería de imágenes de producto",
+          "u": "Sí, un ítem por vez",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Lista extensa de cards scrolleable",
+          "u": "No",
+          "a": "ScrollArea"
+        },
+        "item3": {
+          "s": "Testimonios o destacados en home",
+          "u": "Sí, con autoplay + loop",
+          "a": "Grid estático"
+        },
+        "item4": {
+          "s": "Navegación principal por secciones",
+          "u": "No",
+          "a": "Tabs o NavigationMenu"
+        },
+        "item5": {
+          "s": "Mostrar múltiples cards responsivos",
+          "u": "Sí, basis responsivo",
+          "a": "Grid responsivo"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -989,31 +1172,94 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Carousel.",
-        "item1": { "action": "Renderizar con múltiples slides", "result": "Viewport muestra el primer slide; CarouselPrevious inicia disabled", "priority": "high" },
-        "item2": { "action": "Clicar CarouselNext", "result": "Carrusel avanza un slide; CarouselPrevious se habilita", "priority": "high" },
-        "item3": { "action": "Pulsar ArrowRight con foco en el contenedor", "result": "Carrusel avanza un slide", "priority": "high" },
-        "item4": { "action": "Llegar al último slide sin loop", "result": "CarouselNext queda disabled", "priority": "high" },
-        "item5": { "action": "Activar orientation=\"vertical\"", "result": "Slides apilan; botones posicionados arriba y abajo del viewport", "priority": "medium" },
-        "item6": { "action": "Aplicar CarouselItem basis-1/2", "result": "Dos ítems visibles simultáneamente en el viewport", "priority": "medium" },
-        "item7": { "action": "Activar plugin Autoplay con stopOnInteraction", "result": "Autoplay avanza cada delay; pausa al clicar o arrastrar", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar con múltiples slides",
+          "result": "Viewport muestra el primer slide; CarouselPrevious inicia disabled",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar CarouselNext",
+          "result": "Carrusel avanza un slide; CarouselPrevious se habilita",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar ArrowRight con foco en el contenedor",
+          "result": "Carrusel avanza un slide",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Llegar al último slide sin loop",
+          "result": "CarouselNext queda disabled",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Activar orientation=\"vertical\"",
+          "result": "Slides apilan; botones posicionados arriba y abajo del viewport",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Aplicar CarouselItem basis-1/2",
+          "result": "Dos ítems visibles simultáneamente en el viewport",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Activar plugin Autoplay con stopOnInteraction",
+          "result": "Autoplay avanza cada delay; pausa al clicar o arrastrar",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "role=\"region\" y aria-roledescription=\"carousel\" en contenedor", "level": "AA", "how": "getByRole('region') con nombre accesible en testing-library" },
-        "item2": { "criterion": "CarouselItem con role=\"group\" y aria-roledescription=\"slide\"", "level": "AA", "how": "Inspeccionar atributos de los slides en el DOM" },
-        "item3": { "criterion": "Botones de navegación con aria-label descriptivo", "level": "AA", "how": "getByRole('button', { name: /próximo ítem/i })" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" },
-        "item5": { "criterion": "Contraste mínimo 4.5:1 en botones de navegación", "level": "AA", "how": "axe-core / Lighthouse" }
+        "item1": {
+          "criterion": "role=\"region\" y aria-roledescription=\"carousel\" en contenedor",
+          "level": "AA",
+          "how": "getByRole('region') con nombre accesible en testing-library"
+        },
+        "item2": {
+          "criterion": "CarouselItem con role=\"group\" y aria-roledescription=\"slide\"",
+          "level": "AA",
+          "how": "Inspeccionar atributos de los slides en el DOM"
+        },
+        "item3": {
+          "criterion": "Botones de navegación con aria-label descriptivo",
+          "level": "AA",
+          "how": "getByRole('button', { name: /próximo ítem/i })"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item5": {
+          "criterion": "Contraste mínimo 4.5:1 en botones de navegación",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — estado inicial con 3+ slides", "priority": "high" },
-        "item2": { "story": "Variantes — horizontal y vertical", "priority": "high" },
-        "item3": { "story": "Configuraciones — múltiples ítems con basis responsivo", "priority": "medium" },
-        "item4": { "story": "Estados — primer y último slide (disabled en extremos)", "priority": "medium" },
-        "item5": { "story": "Composiciones — con autoplay y dots customizados", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado inicial con 3+ slides",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — horizontal y vertical",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configuraciones — múltiples ítems con basis responsivo",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — primer y último slide (disabled en extremos)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composiciones — con autoplay y dots customizados",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

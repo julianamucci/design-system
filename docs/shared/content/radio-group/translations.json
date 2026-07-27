@@ -8,8 +8,7 @@
       "title": "RadioGroup — Formulário",
       "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup com seleção única mutuamente exclusiva, navegação por setas, Label associado e role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
-      "aiIntent": "informational"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,11 +48,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Forma de pagamento (3 opções)", "u": "Sim", "a": "-" },
-        "item2": { "s": "Aceitar termos (true/false)", "u": "Não", "a": "Checkbox" },
-        "item3": { "s": "Ligar/desligar configuração", "u": "Não", "a": "Switch" },
-        "item4": { "s": "8+ opções com filtro", "u": "Não", "a": "Select ou Combobox" },
-        "item5": { "s": "Múltipla seleção", "u": "Não", "a": "Checkbox group" }
+        "item1": {
+          "s": "Forma de pagamento (3 opções)",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Aceitar termos (true/false)",
+          "u": "Não",
+          "a": "Checkbox"
+        },
+        "item3": {
+          "s": "Ligar/desligar configuração",
+          "u": "Não",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "8+ opções com filtro",
+          "u": "Não",
+          "a": "Select ou Combobox"
+        },
+        "item5": {
+          "s": "Múltipla seleção",
+          "u": "Não",
+          "a": "Checkbox group"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -226,12 +245,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "input": { "class": "border-input", "part": "Borda do item não selecionado" },
-        "primary": { "class": "bg-primary", "part": "Fundo do item selecionado" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Bolinha interna do indicador" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
-        "foreground": { "class": "text-foreground", "part": "Cor do Label associado" }
+        "input": {
+          "class": "border-input",
+          "part": "Borda do item não selecionado"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Fundo do item selecionado"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Bolinha interna do indicador"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda no estado inválido"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Cor do Label associado"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
@@ -273,10 +310,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Seleção múltipla independente ou booleana." },
-        "switch": { "name": "Switch", "description": "Toggle on/off de configuração." },
-        "select": { "name": "Select", "description": "Seleção única com muitas opções (8+)." },
-        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Seleção múltipla independente ou booleana."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Toggle on/off de configuração."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Seleção única com muitas opções (8+)."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integração com validação via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -304,10 +353,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar em um item", "result": "Seleciona o item e desmarca o anterior", "priority": "high" },
-        "item2": { "action": "Pressionar ArrowDown com foco no grupo", "result": "Move para o próximo item e seleciona", "priority": "high" },
-        "item3": { "action": "Pressionar Tab fora do grupo", "result": "Move foco para o próximo elemento (não volta entre itens)", "priority": "high" },
-        "item4": { "action": "Clicar com disabled=true", "result": "Não muda seleção; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em um item",
+          "result": "Seleciona o item e desmarca o anterior",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar ArrowDown com foco no grupo",
+          "result": "Move para o próximo item e seleciona",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Tab fora do grupo",
+          "result": "Move foco para o próximo elemento (não volta entre itens)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar com disabled=true",
+          "result": "Não muda seleção; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -322,10 +387,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (nenhum selecionado)", "priority": "high" },
-        "item2": { "story": "Com seleção (primeiro item)", "priority": "high" },
-        "item3": { "story": "Disabled (grupo inteiro)", "priority": "high" },
-        "item4": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (nenhum selecionado)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com seleção (primeiro item)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled (grupo inteiro)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -358,8 +435,7 @@
       "title": "RadioGroup — Form",
       "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.2 AA accessibility.",
       "aiSummary": "RadioGroup component with single mutually exclusive selection, arrow navigation, associated Label and automatic role=\"radiogroup\".",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
-      "aiIntent": "informational"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -399,11 +475,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Payment method (3 options)", "u": "Yes", "a": "-" },
-        "item2": { "s": "Accept terms (true/false)", "u": "No", "a": "Checkbox" },
-        "item3": { "s": "Toggle setting on/off", "u": "No", "a": "Switch" },
-        "item4": { "s": "8+ options with filter", "u": "No", "a": "Select or Combobox" },
-        "item5": { "s": "Multiple selection", "u": "No", "a": "Checkbox group" }
+        "item1": {
+          "s": "Payment method (3 options)",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Accept terms (true/false)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item3": {
+          "s": "Toggle setting on/off",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "8+ options with filter",
+          "u": "No",
+          "a": "Select or Combobox"
+        },
+        "item5": {
+          "s": "Multiple selection",
+          "u": "No",
+          "a": "Checkbox group"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -576,12 +672,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "input": { "class": "border-input", "part": "Unselected item border" },
-        "primary": { "class": "bg-primary", "part": "Selected item background" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Inner indicator dot" },
-        "ring": { "class": "ring-ring", "part": "Focus ring" },
-        "destructive": { "class": "border-destructive", "part": "Invalid state border" },
-        "foreground": { "class": "text-foreground", "part": "Associated Label color" }
+        "input": {
+          "class": "border-input",
+          "part": "Unselected item border"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Selected item background"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Inner indicator dot"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Invalid state border"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Associated Label color"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
@@ -623,10 +737,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Independent multiple or boolean selection." },
-        "switch": { "name": "Switch", "description": "Toggle on/off setting." },
-        "select": { "name": "Select", "description": "Single selection with many options (8+)." },
-        "form": { "name": "Form", "description": "Validation integration via React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Independent multiple or boolean selection."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Toggle on/off setting."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Single selection with many options (8+)."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Validation integration via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -654,10 +780,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click an item", "result": "Selects the item and unselects the previous one", "priority": "high" },
-        "item2": { "action": "Press ArrowDown with group focused", "result": "Moves to next item and selects", "priority": "high" },
-        "item3": { "action": "Press Tab outside the group", "result": "Moves focus to next element (doesn't cycle between items)", "priority": "high" },
-        "item4": { "action": "Click with disabled=true", "result": "Doesn't change selection; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Click an item",
+          "result": "Selects the item and unselects the previous one",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press ArrowDown with group focused",
+          "result": "Moves to next item and selects",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Tab outside the group",
+          "result": "Moves focus to next element (doesn't cycle between items)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click with disabled=true",
+          "result": "Doesn't change selection; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -672,10 +814,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (none selected)", "priority": "high" },
-        "item2": { "story": "With selection (first item)", "priority": "high" },
-        "item3": { "story": "Disabled (entire group)", "priority": "high" },
-        "item4": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (none selected)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With selection (first item)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled (entire group)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -708,8 +862,7 @@
       "title": "RadioGroup — Formulario",
       "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup con selección única mutuamente excluyente, navegación por flechas, Label asociado y role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup",
-      "aiIntent": "informational"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demostración",
@@ -749,11 +902,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Forma de pago (3 opciones)", "u": "Sí", "a": "-" },
-        "item2": { "s": "Aceptar términos (true/false)", "u": "No", "a": "Checkbox" },
-        "item3": { "s": "Activar/desactivar configuración", "u": "No", "a": "Switch" },
-        "item4": { "s": "8+ opciones con filtro", "u": "No", "a": "Select o Combobox" },
-        "item5": { "s": "Selección múltiple", "u": "No", "a": "Checkbox group" }
+        "item1": {
+          "s": "Forma de pago (3 opciones)",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Aceptar términos (true/false)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item3": {
+          "s": "Activar/desactivar configuración",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "8+ opciones con filtro",
+          "u": "No",
+          "a": "Select o Combobox"
+        },
+        "item5": {
+          "s": "Selección múltiple",
+          "u": "No",
+          "a": "Checkbox group"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -926,12 +1099,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "input": { "class": "border-input", "part": "Borde del ítem no seleccionado" },
-        "primary": { "class": "bg-primary", "part": "Fondo del ítem seleccionado" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Punto interno del indicador" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
-        "foreground": { "class": "text-foreground", "part": "Color del Label asociado" }
+        "input": {
+          "class": "border-input",
+          "part": "Borde del ítem no seleccionado"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Fondo del ítem seleccionado"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Punto interno del indicador"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en estado inválido"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Color del Label asociado"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
@@ -973,10 +1164,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Selección múltiple independiente o booleana." },
-        "switch": { "name": "Switch", "description": "Toggle on/off de configuración." },
-        "select": { "name": "Select", "description": "Selección única con muchas opciones (8+)." },
-        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selección múltiple independiente o booleana."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Toggle on/off de configuración."
+        },
+        "select": {
+          "name": "Select",
+          "description": "Selección única con muchas opciones (8+)."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integración de validación vía React Hook Form."
+        }
       }
     },
     "notes": {
@@ -1004,10 +1207,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en un ítem", "result": "Selecciona el ítem y deselecciona el anterior", "priority": "high" },
-        "item2": { "action": "Pulsar ArrowDown con el grupo enfocado", "result": "Mueve al siguiente ítem y lo selecciona", "priority": "high" },
-        "item3": { "action": "Pulsar Tab fuera del grupo", "result": "Mueve el foco al siguiente elemento (no cicla entre ítems)", "priority": "high" },
-        "item4": { "action": "Clic con disabled=true", "result": "No cambia selección; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en un ítem",
+          "result": "Selecciona el ítem y deselecciona el anterior",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar ArrowDown con el grupo enfocado",
+          "result": "Mueve al siguiente ítem y lo selecciona",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Tab fuera del grupo",
+          "result": "Mueve el foco al siguiente elemento (no cicla entre ítems)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clic con disabled=true",
+          "result": "No cambia selección; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1022,10 +1241,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (ninguno seleccionado)", "priority": "high" },
-        "item2": { "story": "Con selección (primer ítem)", "priority": "high" },
-        "item3": { "story": "Disabled (grupo entero)", "priority": "high" },
-        "item4": { "story": "Invalid (aria-invalid)", "priority": "medium" }
+        "item1": {
+          "story": "Default (ninguno seleccionado)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con selección (primer ítem)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled (grupo entero)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

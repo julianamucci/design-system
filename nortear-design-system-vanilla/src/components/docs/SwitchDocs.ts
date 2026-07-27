@@ -146,7 +146,6 @@ export function createSwitchDocs(): HTMLElement {
       componentSlug: 'switch',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: t('category'), item: '/components/form' },

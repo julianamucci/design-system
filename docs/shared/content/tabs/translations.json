@@ -8,8 +8,7 @@
       "title": "Tabs — Navegação",
       "description": "Documentação do Tabs: Root, List, Trigger e Content com role=\"tablist\", navegação por setas e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tabs com Root, List, Trigger e Content, role=\"tablist\" automático, navegação por setas/Home/End e variantes default/line.",
-      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist",
-      "aiIntent": "informational"
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -53,11 +52,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Visão geral / Propriedades / Exemplos", "u": "Sim", "a": "-" },
-        "item2": { "s": "Etapas sequenciais obrigatórias", "u": "Não", "a": "Stepper" },
-        "item3": { "s": "Conteúdo expansível independente", "u": "Não", "a": "Accordion" },
-        "item4": { "s": "8+ seções com profundidade", "u": "Não", "a": "Sidebar" },
-        "item5": { "s": "Filtros de listagem", "u": "Não", "a": "Filter chips" }
+        "item1": {
+          "s": "Visão geral / Propriedades / Exemplos",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Etapas sequenciais obrigatórias",
+          "u": "Não",
+          "a": "Stepper"
+        },
+        "item3": {
+          "s": "Conteúdo expansível independente",
+          "u": "Não",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "8+ seções com profundidade",
+          "u": "Não",
+          "a": "Sidebar"
+        },
+        "item5": {
+          "s": "Filtros de listagem",
+          "u": "Não",
+          "a": "Filter chips"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -228,12 +247,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": { "class": "bg-muted", "part": "Fundo do TabsList (variant default)" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto das tabs inativas (variant default)" },
-        "background": { "class": "bg-background", "part": "Fundo da tab ativa (variant default)" },
-        "foreground": { "class": "text-foreground", "part": "Texto da tab ativa e linha inferior (variant line)" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco no trigger" },
-        "border": { "class": "border-ring", "part": "Borda no estado de foco" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo do TabsList (variant default)"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto das tabs inativas (variant default)"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fundo da tab ativa (variant default)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto da tab ativa e linha inferior (variant line)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco no trigger"
+        },
+        "border": {
+          "class": "border-ring",
+          "part": "Borda no estado de foco"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Altura customizada do TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
@@ -278,10 +315,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "stepper": { "name": "Stepper", "description": "Etapas sequenciais obrigatórias em ordem." },
-        "accordion": { "name": "Accordion", "description": "Conteúdo expansível independente." },
-        "sidebar": { "name": "Sidebar", "description": "Navegação para muitas seções (8+)." },
-        "toggleGroup": { "name": "ToggleGroup", "description": "Filtros visuais segmentados." }
+        "stepper": {
+          "name": "Stepper",
+          "description": "Etapas sequenciais obrigatórias em ordem."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "Conteúdo expansível independente."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegação para muitas seções (8+)."
+        },
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Filtros visuais segmentados."
+        }
       }
     },
     "notes": {
@@ -309,10 +358,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar em uma tab", "result": "Ativa a tab e mostra o painel correspondente", "priority": "high" },
-        "item2": { "action": "Pressionar ArrowRight com tab focada", "result": "Move para a próxima tab e ativa (mode automatic)", "priority": "high" },
-        "item3": { "action": "Pressionar Home/End", "result": "Vai para primeira/última tab respectivamente", "priority": "high" },
-        "item4": { "action": "Tab focal vai ao painel", "result": "Próximo Tab move foco para o conteúdo do painel ativo", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em uma tab",
+          "result": "Ativa a tab e mostra o painel correspondente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar ArrowRight com tab focada",
+          "result": "Move para a próxima tab e ativa (mode automatic)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Home/End",
+          "result": "Vai para primeira/última tab respectivamente",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab focal vai ao painel",
+          "result": "Próximo Tab move foco para o conteúdo do painel ativo",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -327,10 +392,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (3 tabs, primeira ativa)", "priority": "high" },
-        "item2": { "story": "Variant line", "priority": "high" },
-        "item3": { "story": "Vertical (orientation)", "priority": "high" },
-        "item4": { "story": "Com tab disabled", "priority": "medium" }
+        "item1": {
+          "story": "Default (3 tabs, primeira ativa)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variant line",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical (orientation)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com tab disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -363,8 +440,7 @@
       "title": "Tabs — Navigation",
       "description": "Tabs documentation: Root, List, Trigger and Content with role=\"tablist\", arrow navigation and WCAG 2.2 AA support.",
       "aiSummary": "Tabs component with Root, List, Trigger and Content, automatic role=\"tablist\", arrow/Home/End navigation and default/line variants.",
-      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist",
-      "aiIntent": "informational"
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -408,11 +484,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Overview / Properties / Examples", "u": "Yes", "a": "-" },
-        "item2": { "s": "Mandatory sequential steps", "u": "No", "a": "Stepper" },
-        "item3": { "s": "Independent expandable content", "u": "No", "a": "Accordion" },
-        "item4": { "s": "8+ sections with depth", "u": "No", "a": "Sidebar" },
-        "item5": { "s": "List filters", "u": "No", "a": "Filter chips" }
+        "item1": {
+          "s": "Overview / Properties / Examples",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mandatory sequential steps",
+          "u": "No",
+          "a": "Stepper"
+        },
+        "item3": {
+          "s": "Independent expandable content",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "8+ sections with depth",
+          "u": "No",
+          "a": "Sidebar"
+        },
+        "item5": {
+          "s": "List filters",
+          "u": "No",
+          "a": "Filter chips"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -583,12 +679,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": { "class": "bg-muted", "part": "TabsList background (default variant)" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Inactive tab text (default variant)" },
-        "background": { "class": "bg-background", "part": "Active tab background (default variant)" },
-        "foreground": { "class": "text-foreground", "part": "Active tab text and bottom line (line variant)" },
-        "ring": { "class": "ring-ring", "part": "Trigger focus ring" },
-        "border": { "class": "border-ring", "part": "Focus state border" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "TabsList background (default variant)"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Inactive tab text (default variant)"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Active tab background (default variant)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Active tab text and bottom line (line variant)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Trigger focus ring"
+        },
+        "border": {
+          "class": "border-ring",
+          "part": "Focus state border"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom TabsList height */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
@@ -633,10 +747,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "stepper": { "name": "Stepper", "description": "Mandatory sequential ordered steps." },
-        "accordion": { "name": "Accordion", "description": "Independent expandable content." },
-        "sidebar": { "name": "Sidebar", "description": "Navigation for many sections (8+)." },
-        "toggleGroup": { "name": "ToggleGroup", "description": "Segmented visual filters." }
+        "stepper": {
+          "name": "Stepper",
+          "description": "Mandatory sequential ordered steps."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "Independent expandable content."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navigation for many sections (8+)."
+        },
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Segmented visual filters."
+        }
       }
     },
     "notes": {
@@ -664,10 +790,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click a tab", "result": "Activates the tab and shows the corresponding panel", "priority": "high" },
-        "item2": { "action": "Press ArrowRight with tab focused", "result": "Moves to next tab and activates (automatic mode)", "priority": "high" },
-        "item3": { "action": "Press Home/End", "result": "Goes to first/last tab respectively", "priority": "high" },
-        "item4": { "action": "Tab focus to panel", "result": "Next Tab moves focus to active panel content", "priority": "medium" }
+        "item1": {
+          "action": "Click a tab",
+          "result": "Activates the tab and shows the corresponding panel",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press ArrowRight with tab focused",
+          "result": "Moves to next tab and activates (automatic mode)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Home/End",
+          "result": "Goes to first/last tab respectively",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab focus to panel",
+          "result": "Next Tab moves focus to active panel content",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -682,10 +824,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (3 tabs, first active)", "priority": "high" },
-        "item2": { "story": "Variant line", "priority": "high" },
-        "item3": { "story": "Vertical (orientation)", "priority": "high" },
-        "item4": { "story": "With disabled tab", "priority": "medium" }
+        "item1": {
+          "story": "Default (3 tabs, first active)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variant line",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical (orientation)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With disabled tab",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -718,8 +872,7 @@
       "title": "Tabs — Navegación",
       "description": "Documentación de Tabs: Root, List, Trigger y Content con role=\"tablist\", navegación por flechas y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tabs con Root, List, Trigger y Content, role=\"tablist\" automático, navegación por flechas/Home/End y variantes default/line.",
-      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist",
-      "aiIntent": "informational"
+      "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tablist"
     },
     "demonstration": {
       "title": "Demostración",
@@ -763,11 +916,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Visión general / Propiedades / Ejemplos", "u": "Sí", "a": "-" },
-        "item2": { "s": "Etapas secuenciales obligatorias", "u": "No", "a": "Stepper" },
-        "item3": { "s": "Contenido expandible independiente", "u": "No", "a": "Accordion" },
-        "item4": { "s": "8+ secciones con profundidad", "u": "No", "a": "Sidebar" },
-        "item5": { "s": "Filtros de listado", "u": "No", "a": "Filter chips" }
+        "item1": {
+          "s": "Visión general / Propiedades / Ejemplos",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Etapas secuenciales obligatorias",
+          "u": "No",
+          "a": "Stepper"
+        },
+        "item3": {
+          "s": "Contenido expandible independiente",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item4": {
+          "s": "8+ secciones con profundidad",
+          "u": "No",
+          "a": "Sidebar"
+        },
+        "item5": {
+          "s": "Filtros de listado",
+          "u": "No",
+          "a": "Filter chips"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -938,12 +1111,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": { "class": "bg-muted", "part": "Fondo del TabsList (variant default)" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de las tabs inactivas (variant default)" },
-        "background": { "class": "bg-background", "part": "Fondo de la tab activa (variant default)" },
-        "foreground": { "class": "text-foreground", "part": "Texto de la tab activa y línea inferior (variant line)" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco en el trigger" },
-        "border": { "class": "border-ring", "part": "Borde en el estado de foco" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo del TabsList (variant default)"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto de las tabs inactivas (variant default)"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Fondo de la tab activa (variant default)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto de la tab activa y línea inferior (variant line)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco en el trigger"
+        },
+        "border": {
+          "class": "border-ring",
+          "part": "Borde en el estado de foco"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Altura personalizada del TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
@@ -988,10 +1179,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "stepper": { "name": "Stepper", "description": "Etapas secuenciales obligatorias en orden." },
-        "accordion": { "name": "Accordion", "description": "Contenido expandible independiente." },
-        "sidebar": { "name": "Sidebar", "description": "Navegación para muchas secciones (8+)." },
-        "toggleGroup": { "name": "ToggleGroup", "description": "Filtros visuales segmentados." }
+        "stepper": {
+          "name": "Stepper",
+          "description": "Etapas secuenciales obligatorias en orden."
+        },
+        "accordion": {
+          "name": "Accordion",
+          "description": "Contenido expandible independiente."
+        },
+        "sidebar": {
+          "name": "Sidebar",
+          "description": "Navegación para muchas secciones (8+)."
+        },
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Filtros visuales segmentados."
+        }
       }
     },
     "notes": {
@@ -1019,10 +1222,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en una tab", "result": "Activa la tab y muestra el panel correspondiente", "priority": "high" },
-        "item2": { "action": "Pulsar ArrowRight con tab enfocada", "result": "Mueve a la siguiente tab y la activa (modo automatic)", "priority": "high" },
-        "item3": { "action": "Pulsar Home/End", "result": "Va a la primera/última tab respectivamente", "priority": "high" },
-        "item4": { "action": "Tab desde el foco va al panel", "result": "El siguiente Tab mueve el foco al contenido del panel activo", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en una tab",
+          "result": "Activa la tab y muestra el panel correspondiente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar ArrowRight con tab enfocada",
+          "result": "Mueve a la siguiente tab y la activa (modo automatic)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Home/End",
+          "result": "Va a la primera/última tab respectivamente",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab desde el foco va al panel",
+          "result": "El siguiente Tab mueve el foco al contenido del panel activo",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1037,10 +1256,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (3 tabs, primera activa)", "priority": "high" },
-        "item2": { "story": "Variant line", "priority": "high" },
-        "item3": { "story": "Vertical (orientation)", "priority": "high" },
-        "item4": { "story": "Con tab disabled", "priority": "medium" }
+        "item1": {
+          "story": "Default (3 tabs, primera activa)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variant line",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical (orientation)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con tab disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

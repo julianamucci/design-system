@@ -8,8 +8,7 @@
       "title": "Form — Formulário",
       "description": "Documentação do Form: wrapper de campo (label + controle + descrição + erro) e fieldset com legend, com associação acessível automática e WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estruturar campos de formulário com label, controle (input/textarea/select/checkbox), descrição e mensagem de erro, mais fieldset+legend para agrupamento semântico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
-      "aiIntent": "informational"
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -63,12 +62,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Campo único em formulário", "u": "Sim, FormField", "a": "-" },
-        "item2": { "s": "Grupo de campos relacionados", "u": "Sim, Fieldset com legend", "a": "-" },
-        "item3": { "s": "Validação síncrona de campo", "u": "Sim, FormField com error", "a": "-" },
-        "item4": { "s": "Mensagem de status global do form", "u": "Não", "a": "Alert" },
-        "item5": { "s": "Confirmação após submit", "u": "Não", "a": "Toast ou Dialog" },
-        "item6": { "s": "Filtros inline (sem submit)", "u": "Opcional", "a": "Primitivos diretos" }
+        "item1": {
+          "s": "Campo único em formulário",
+          "u": "Sim, FormField",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Grupo de campos relacionados",
+          "u": "Sim, Fieldset com legend",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Validação síncrona de campo",
+          "u": "Sim, FormField com error",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensagem de status global do form",
+          "u": "Não",
+          "a": "Alert"
+        },
+        "item5": {
+          "s": "Confirmação após submit",
+          "u": "Não",
+          "a": "Toast ou Dialog"
+        },
+        "item6": {
+          "s": "Filtros inline (sem submit)",
+          "u": "Opcional",
+          "a": "Primitivos diretos"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -264,14 +287,46 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Form.",
-        "item1": { "action": "Renderizar FormField com label e input", "result": "Label associado via htmlFor; clique no label foca o controle", "priority": "high" },
-        "item2": { "action": "Controle sem id explícito", "result": "ID gerado automaticamente; label.htmlFor coincide com input.id", "priority": "high" },
-        "item3": { "action": "FormField com description", "result": "Parágrafo abaixo do controle com classe nds-form-description", "priority": "medium" },
-        "item4": { "action": "FormField com error", "result": "Parágrafo em --destructive com aria-live='polite'", "priority": "high" },
-        "item5": { "action": "Fieldset com legend e children", "result": "<fieldset> com <legend> no topo e filhos espaçados em 16px", "priority": "high" },
-        "item6": { "action": "Tab dentro do form", "result": "Foco percorre os controles na ordem do DOM", "priority": "high" },
-        "item7": { "action": "FormField com input desabilitado", "result": "Controle não interativo; label permanece visível", "priority": "medium" },
-        "item8": { "action": "FormField com textarea", "result": "Textarea associada ao label corretamente", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar FormField com label e input",
+          "result": "Label associado via htmlFor; clique no label foca o controle",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Controle sem id explícito",
+          "result": "ID gerado automaticamente; label.htmlFor coincide com input.id",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "FormField com description",
+          "result": "Parágrafo abaixo do controle com classe nds-form-description",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "FormField com error",
+          "result": "Parágrafo em --destructive com aria-live='polite'",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Fieldset com legend e children",
+          "result": "<fieldset> com <legend> no topo e filhos espaçados em 16px",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Tab dentro do form",
+          "result": "Foco percorre os controles na ordem do DOM",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "FormField com input desabilitado",
+          "result": "Controle não interativo; label permanece visível",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "FormField com textarea",
+          "result": "Textarea associada ao label corretamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -285,11 +340,26 @@
       "visual": {
         "title": "Regressão Visual",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Padrão — label + input", "priority": "high" },
-        "item2": { "story": "Com descrição — abaixo do controle", "priority": "medium" },
-        "item3": { "story": "Com erro — aria-invalid + mensagem", "priority": "high" },
-        "item4": { "story": "Fieldset — agrupamento de campos", "priority": "high" },
-        "item5": { "story": "Dark mode — todos os estados", "priority": "high" }
+        "item1": {
+          "story": "Padrão — label + input",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com descrição — abaixo do controle",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Com erro — aria-invalid + mensagem",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Fieldset — agrupamento de campos",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Dark mode — todos os estados",
+          "priority": "high"
+        }
       }
     }
   },
@@ -302,8 +372,7 @@
       "title": "Form — Form",
       "description": "Documentation for Form: field wrapper (label + control + description + error) and fieldset with legend, with automatic accessible association and WCAG 2.2 AA.",
       "aiSummary": "Form component to structure form fields with label, control (input/textarea/select/checkbox), description and error message, plus fieldset+legend for semantic grouping.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
-      "aiIntent": "informational"
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -357,12 +426,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Single field in a form", "u": "Yes, FormField", "a": "-" },
-        "item2": { "s": "Group of related fields", "u": "Yes, Fieldset with legend", "a": "-" },
-        "item3": { "s": "Sync field validation", "u": "Yes, FormField with error", "a": "-" },
-        "item4": { "s": "Global form status message", "u": "No", "a": "Alert" },
-        "item5": { "s": "Post-submit confirmation", "u": "No", "a": "Toast or Dialog" },
-        "item6": { "s": "Inline filters (no submit)", "u": "Optional", "a": "Direct primitives" }
+        "item1": {
+          "s": "Single field in a form",
+          "u": "Yes, FormField",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Group of related fields",
+          "u": "Yes, Fieldset with legend",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Sync field validation",
+          "u": "Yes, FormField with error",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Global form status message",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item5": {
+          "s": "Post-submit confirmation",
+          "u": "No",
+          "a": "Toast or Dialog"
+        },
+        "item6": {
+          "s": "Inline filters (no submit)",
+          "u": "Optional",
+          "a": "Direct primitives"
+        }
       },
       "do": {
         "title": "Use when",
@@ -558,14 +651,46 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Form configuration.",
-        "item1": { "action": "Render FormField with label and input", "result": "Label associated via htmlFor; clicking the label focuses the control", "priority": "high" },
-        "item2": { "action": "Control without explicit id", "result": "ID auto-generated; label.htmlFor matches input.id", "priority": "high" },
-        "item3": { "action": "FormField with description", "result": "Paragraph below the control with class nds-form-description", "priority": "medium" },
-        "item4": { "action": "FormField with error", "result": "Paragraph in --destructive with aria-live='polite'", "priority": "high" },
-        "item5": { "action": "Fieldset with legend and children", "result": "<fieldset> with <legend> on top and children spaced by 16px", "priority": "high" },
-        "item6": { "action": "Tab within the form", "result": "Focus traverses controls in DOM order", "priority": "high" },
-        "item7": { "action": "FormField with disabled input", "result": "Control not interactive; label remains visible", "priority": "medium" },
-        "item8": { "action": "FormField with textarea", "result": "Textarea associated with label correctly", "priority": "medium" }
+        "item1": {
+          "action": "Render FormField with label and input",
+          "result": "Label associated via htmlFor; clicking the label focuses the control",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Control without explicit id",
+          "result": "ID auto-generated; label.htmlFor matches input.id",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "FormField with description",
+          "result": "Paragraph below the control with class nds-form-description",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "FormField with error",
+          "result": "Paragraph in --destructive with aria-live='polite'",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Fieldset with legend and children",
+          "result": "<fieldset> with <legend> on top and children spaced by 16px",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Tab within the form",
+          "result": "Focus traverses controls in DOM order",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "FormField with disabled input",
+          "result": "Control not interactive; label remains visible",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "FormField with textarea",
+          "result": "Textarea associated with label correctly",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -579,11 +704,26 @@
       "visual": {
         "title": "Visual Regression",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Default — label + input", "priority": "high" },
-        "item2": { "story": "With description — below the control", "priority": "medium" },
-        "item3": { "story": "With error — aria-invalid + message", "priority": "high" },
-        "item4": { "story": "Fieldset — field grouping", "priority": "high" },
-        "item5": { "story": "Dark mode — all states", "priority": "high" }
+        "item1": {
+          "story": "Default — label + input",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With description — below the control",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "With error — aria-invalid + message",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Fieldset — field grouping",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Dark mode — all states",
+          "priority": "high"
+        }
       }
     }
   },
@@ -596,8 +736,7 @@
       "title": "Form — Formulario",
       "description": "Documentación del Form: envoltorio de campo (label + control + descripción + error) y fieldset con legend, con asociación accesible automática y WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estructurar campos de formulario con etiqueta, control (input/textarea/select/checkbox), descripción y mensaje de error, más fieldset+legend para agrupamiento semántico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby",
-      "aiIntent": "informational"
+      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demostración",
@@ -651,12 +790,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Campo único en formulario", "u": "Sí, FormField", "a": "-" },
-        "item2": { "s": "Grupo de campos relacionados", "u": "Sí, Fieldset con legend", "a": "-" },
-        "item3": { "s": "Validación sincrónica de campo", "u": "Sí, FormField con error", "a": "-" },
-        "item4": { "s": "Mensaje de estado global del form", "u": "No", "a": "Alert" },
-        "item5": { "s": "Confirmación tras envío", "u": "No", "a": "Toast o Dialog" },
-        "item6": { "s": "Filtros inline (sin submit)", "u": "Opcional", "a": "Primitivos directos" }
+        "item1": {
+          "s": "Campo único en formulario",
+          "u": "Sí, FormField",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Grupo de campos relacionados",
+          "u": "Sí, Fieldset con legend",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Validación sincrónica de campo",
+          "u": "Sí, FormField con error",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensaje de estado global del form",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item5": {
+          "s": "Confirmación tras envío",
+          "u": "No",
+          "a": "Toast o Dialog"
+        },
+        "item6": {
+          "s": "Filtros inline (sin submit)",
+          "u": "Opcional",
+          "a": "Primitivos directos"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -852,14 +1015,46 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir para cada configuración del Form.",
-        "item1": { "action": "Renderizar FormField con label e input", "result": "Label asociado vía htmlFor; clic en el label enfoca el control", "priority": "high" },
-        "item2": { "action": "Control sin id explícito", "result": "ID generado automáticamente; label.htmlFor coincide con input.id", "priority": "high" },
-        "item3": { "action": "FormField con descripción", "result": "Párrafo debajo del control con clase nds-form-description", "priority": "medium" },
-        "item4": { "action": "FormField con error", "result": "Párrafo en --destructive con aria-live='polite'", "priority": "high" },
-        "item5": { "action": "Fieldset con legend e hijos", "result": "<fieldset> con <legend> arriba e hijos espaciados en 16px", "priority": "high" },
-        "item6": { "action": "Tab dentro del form", "result": "El foco recorre los controles en orden del DOM", "priority": "high" },
-        "item7": { "action": "FormField con input deshabilitado", "result": "Control no interactivo; label permanece visible", "priority": "medium" },
-        "item8": { "action": "FormField con textarea", "result": "Textarea asociada al label correctamente", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar FormField con label e input",
+          "result": "Label asociado vía htmlFor; clic en el label enfoca el control",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Control sin id explícito",
+          "result": "ID generado automáticamente; label.htmlFor coincide con input.id",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "FormField con descripción",
+          "result": "Párrafo debajo del control con clase nds-form-description",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "FormField con error",
+          "result": "Párrafo en --destructive con aria-live='polite'",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Fieldset con legend e hijos",
+          "result": "<fieldset> con <legend> arriba e hijos espaciados en 16px",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Tab dentro del form",
+          "result": "El foco recorre los controles en orden del DOM",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "FormField con input deshabilitado",
+          "result": "Control no interactivo; label permanece visible",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "FormField con textarea",
+          "result": "Textarea asociada al label correctamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -873,11 +1068,26 @@
       "visual": {
         "title": "Regresión Visual",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Predeterminado — label + input", "priority": "high" },
-        "item2": { "story": "Con descripción — debajo del control", "priority": "medium" },
-        "item3": { "story": "Con error — aria-invalid + mensaje", "priority": "high" },
-        "item4": { "story": "Fieldset — agrupamiento de campos", "priority": "high" },
-        "item5": { "story": "Dark mode — todos los estados", "priority": "high" }
+        "item1": {
+          "story": "Predeterminado — label + input",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con descripción — debajo del control",
+          "priority": "medium"
+        },
+        "item3": {
+          "story": "Con error — aria-invalid + mensaje",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Fieldset — agrupamiento de campos",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Dark mode — todos los estados",
+          "priority": "high"
+        }
       }
     }
   }

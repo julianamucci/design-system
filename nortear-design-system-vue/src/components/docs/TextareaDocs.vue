@@ -59,7 +59,6 @@ useSeoEffect(computed(() => ({
   componentSlug: 'textarea',
   aiSummary: tContent('seo.aiSummary'),
   aiEntities: tContent('seo.aiEntities'),
-  aiIntent: tContent('seo.aiIntent') as 'informational' | 'navigational',
   breadcrumb: [
     { name: 'Components', item: '/components' },
     { name: tContent('category'), item: '/components/form' },

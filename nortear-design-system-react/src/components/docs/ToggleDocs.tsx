@@ -107,7 +107,6 @@ export function ToggleDocs() {
     componentSlug: "toggle",
     aiSummary: tContent("seo.aiSummary"),
     aiEntities: tContent("seo.aiEntities"),
-    aiIntent: tContent("seo.aiIntent") as "informational" | "navigational",
     breadcrumb,
   });
 

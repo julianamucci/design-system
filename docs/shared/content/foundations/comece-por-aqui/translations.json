@@ -8,8 +8,7 @@
       "title": "Comece por Aqui — Setup do Design System",
       "description": "Pré-requisitos, instalação, scripts essenciais e estrutura de pastas do Design System multi-stack (React, Vue, Svelte, Nortear).",
       "aiSummary": "Página de onboarding técnico. Lista pré-requisitos (Node 18+, npm, git), passos de clone e install por stack, scripts essenciais (storybook, build, lint, test) e próximos passos.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalação, scripts",
-      "aiIntent": "informational"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalação, scripts"
     },
     "intro": {
       "title": "Antes de começar",
@@ -106,8 +105,7 @@
       "title": "Start Here — Design System Setup",
       "description": "Prerequisites, install, essential scripts and folder map of the multi-stack Design System (React, Vue, Svelte, Nortear).",
       "aiSummary": "Technical onboarding page. Lists prerequisites (Node 18+, npm, git), per-stack clone and install steps, essential scripts (storybook, build, lint, test) and next steps.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, install, scripts",
-      "aiIntent": "informational"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, install, scripts"
     },
     "intro": {
       "title": "Before you start",
@@ -204,8 +202,7 @@
       "title": "Empieza Aquí — Setup del Design System",
       "description": "Requisitos, instalación, scripts esenciales y estructura de carpetas del Design System multi-stack (React, Vue, Svelte, Nortear).",
       "aiSummary": "Página de onboarding técnico. Lista requisitos (Node 18+, npm, git), pasos de clon e instalación por stack, scripts esenciales (storybook, build, lint, test) y próximos pasos.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalación, scripts",
-      "aiIntent": "informational"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalación, scripts"
     },
     "intro": {
       "title": "Antes de empezar",

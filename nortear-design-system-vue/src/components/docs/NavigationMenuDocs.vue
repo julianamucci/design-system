@@ -63,7 +63,6 @@ useSeoEffect(computed(() => ({
   componentSlug: 'navigation-menu',
   aiSummary: tContent('seo.aiSummary'),
   aiEntities: tContent('seo.aiEntities'),
-  aiIntent: tContent('seo.aiIntent'),
   breadcrumb: [
     { name: 'Components', item: '/components' },
     { name: tContent('category'), item: '/components/navigation' },

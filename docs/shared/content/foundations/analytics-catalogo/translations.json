@@ -8,8 +8,7 @@
       "title": "Catálogo de Eventos Analytics",
       "description": "Referência completa de eventos: convenção [objeto]_[ação], payload base com component/variant/location e catálogo de eventos por componente.",
       "aiSummary": "Página técnica que cataloga eventos de analytics. Documenta o Measurement ID GA4, a localização do script no manager-head.html, a função track() em src/lib/analytics.ts, três eventos universais de docs pages, convenção de nomenclatura snake_case, payload base e tabela de eventos por componente.",
-      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
-      "aiIntent": "informational"
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case"
     },
     "intro": {
       "title": "Como funciona",
@@ -247,8 +246,7 @@
       "title": "Analytics Event Catalog",
       "description": "Full event reference: [object]_[action] convention, base payload with component/variant/location and per-component event catalog.",
       "aiSummary": "Technical page cataloging analytics events. Documents the GA4 Measurement ID, the script location in manager-head.html, the track() helper in src/lib/analytics.ts, three universal docs page events, snake_case naming convention, base payload and a per-component event table.",
-      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
-      "aiIntent": "informational"
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case"
     },
     "intro": {
       "title": "How it works",
@@ -486,8 +484,7 @@
       "title": "Catálogo de Eventos Analytics",
       "description": "Referencia completa de eventos: convención [objeto]_[acción], payload base con component/variant/location y catálogo por componente.",
       "aiSummary": "Página técnica que cataloga eventos de analytics. Documenta el Measurement ID GA4, la ubicación del script en manager-head.html, la función track() en src/lib/analytics.ts, tres eventos universales de docs pages, convención snake_case, payload base y tabla de eventos por componente.",
-      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case",
-      "aiIntent": "informational"
+      "aiEntities": "GA4, Google Analytics, gtag, track, manager-head, send_page_view, docs_page_view, docs_section_viewed, language_switched, button_click, snake_case"
     },
     "intro": {
       "title": "Cómo funciona",

@@ -8,8 +8,7 @@
       "title": "Sidebar — Layout",
       "description": "Documentação da Sidebar: variantes sidebar, floating e inset, modos de recolhimento offcanvas e icon, acessibilidade WCAG e atalho Ctrl+B.",
       "aiSummary": "Componente Sidebar com 3 variantes (sidebar, floating, inset), 3 modos de recolhimento (offcanvas, icon, none), overlay mobile via Sheet e atalho de teclado Ctrl+B.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current",
-      "aiIntent": "informational"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -64,11 +63,31 @@
           "use": "Usar Sidebar?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "App com múltiplas seções", "u": "Sim, variant sidebar", "a": "-" },
-        "item2": { "s": "Navegação simples (3-5 itens)", "u": "Não", "a": "NavigationMenu ou Tabs" },
-        "item3": { "s": "Dashboard flutuante com conteúdo central", "u": "Sim, variant floating", "a": "-" },
-        "item4": { "s": "Layout encaixado com bordas arredondadas", "u": "Sim, variant inset", "a": "-" },
-        "item5": { "s": "Sidebar sempre visível, sem toggle", "u": "Sim, modo fixo", "a": "-" }
+        "item1": {
+          "s": "App com múltiplas seções",
+          "u": "Sim, variant sidebar",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegação simples (3-5 itens)",
+          "u": "Não",
+          "a": "NavigationMenu ou Tabs"
+        },
+        "item3": {
+          "s": "Dashboard flutuante com conteúdo central",
+          "u": "Sim, variant floating",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Layout encaixado com bordas arredondadas",
+          "u": "Sim, variant inset",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Sidebar sempre visível, sem toggle",
+          "u": "Sim, modo fixo",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -318,35 +337,113 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração e interação da Sidebar.",
-        "item1": { "action": "Clicar em SidebarTrigger", "result": "toggleSidebar() chamado; data-state alterna entre expanded e collapsed", "priority": "high" },
-        "item2": { "action": "Pressionar Ctrl+B", "result": "toggleSidebar() chamado; estado da sidebar alterna", "priority": "high" },
-        "item3": { "action": "Redimensionar para viewport mobile", "result": "Sidebar renderiza como Sheet; SidebarTrigger abre o overlay", "priority": "high" },
-        "item4": { "action": "Renderizar com modo de recolhimento icon", "result": "Labels ocultados; sidebar reduz para --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Renderizar com modo de recolhimento none", "result": "Sidebar sempre visível; sem toggle; sem data-state de collapsed", "priority": "medium" },
-        "item6": { "action": "SidebarMenuButton com isActive=true", "result": "data-active presente; estilos de destaque aplicados; aria-current=\"page\" acessível", "priority": "high" },
-        "item7": { "action": "SidebarMenuButton com tooltip no modo icon", "result": "Tooltip exibido ao hover apenas quando state === \"collapsed\"", "priority": "medium" },
-        "item8": { "action": "Renderizar variant floating", "result": "Sidebar com border-radius, shadow e ring de sidebar-border aplicados", "priority": "medium" },
-        "item9": { "action": "SidebarMenuSkeleton com showIcon=true", "result": "Skeleton de ícone (size-4) exibido à esquerda do skeleton de texto", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em SidebarTrigger",
+          "result": "toggleSidebar() chamado; data-state alterna entre expanded e collapsed",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Ctrl+B",
+          "result": "toggleSidebar() chamado; estado da sidebar alterna",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Redimensionar para viewport mobile",
+          "result": "Sidebar renderiza como Sheet; SidebarTrigger abre o overlay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar com modo de recolhimento icon",
+          "result": "Labels ocultados; sidebar reduz para --sidebar-width-icon (3rem)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar com modo de recolhimento none",
+          "result": "Sidebar sempre visível; sem toggle; sem data-state de collapsed",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "SidebarMenuButton com isActive=true",
+          "result": "data-active presente; estilos de destaque aplicados; aria-current=\"page\" acessível",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "SidebarMenuButton com tooltip no modo icon",
+          "result": "Tooltip exibido ao hover apenas quando state === \"collapsed\"",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Renderizar variant floating",
+          "result": "Sidebar com border-radius, shadow e ring de sidebar-border aplicados",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "SidebarMenuSkeleton com showIcon=true",
+          "result": "Skeleton de ícone (size-4) exibido à esquerda do skeleton de texto",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "nav com aria-label presente no DOM", "level": "AA", "how": "getByRole('navigation', { name: /navegação principal/i })" },
-        "item2": { "criterion": "aria-current=\"page\" no item ativo", "level": "AA", "how": "getByRole('button', { current: 'page' }) no testing-library" },
-        "item3": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos SVG no DOM" },
-        "item4": { "criterion": "SidebarTrigger com texto acessível", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
-        "item5": { "criterion": "Sem violações axe-core no estado expanded", "level": "AA", "how": "axe-playwright no test-runner do Storybook" },
-        "item6": { "criterion": "Navegação completa por Tab nos itens de menu", "level": "AA", "how": "Teste manual com teclado" }
+        "item1": {
+          "criterion": "nav com aria-label presente no DOM",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: /navegação principal/i })"
+        },
+        "item2": {
+          "criterion": "aria-current=\"page\" no item ativo",
+          "level": "AA",
+          "how": "getByRole('button', { current: 'page' }) no testing-library"
+        },
+        "item3": {
+          "criterion": "Ícones com aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspecionar atributos SVG no DOM"
+        },
+        "item4": {
+          "criterion": "SidebarTrigger com texto acessível",
+          "level": "AA",
+          "how": "getByRole('button', { name: /toggle sidebar/i })"
+        },
+        "item5": {
+          "criterion": "Sem violações axe-core no estado expanded",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item6": {
+          "criterion": "Navegação completa por Tab nos itens de menu",
+          "level": "AA",
+          "how": "Teste manual com teclado"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Default — sidebar expandida, variant sidebar", "priority": "high" },
-        "item2": { "story": "Collapsed icon — modo icon com tooltips", "priority": "high" },
-        "item3": { "story": "Variant floating — borda arredondada e sombra", "priority": "high" },
-        "item4": { "story": "Variant inset — conteúdo com border-radius adjacente", "priority": "medium" },
-        "item5": { "story": "Mobile — Sheet overlay aberto", "priority": "high" },
-        "item6": { "story": "Side right — sidebar na direita", "priority": "medium" }
+        "item1": {
+          "story": "Default — sidebar expandida, variant sidebar",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Collapsed icon — modo icon com tooltips",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variant floating — borda arredondada e sombra",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Variant inset — conteúdo com border-radius adjacente",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Mobile — Sheet overlay aberto",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Side right — sidebar na direita",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -380,8 +477,7 @@
       "title": "Sidebar — Layout",
       "description": "Sidebar documentation: sidebar, floating and inset variants, offcanvas and icon collapse modes, WCAG accessibility and Ctrl+B shortcut.",
       "aiSummary": "Sidebar component with 3 variants (sidebar, floating, inset), 3 collapse modes (offcanvas, icon, none), mobile Sheet overlay, and Ctrl+B keyboard shortcut.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current",
-      "aiIntent": "informational"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -436,11 +532,31 @@
           "use": "Use Sidebar?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "App with multiple sections", "u": "Yes, sidebar variant", "a": "-" },
-        "item2": { "s": "Simple navigation (3-5 items)", "u": "No", "a": "NavigationMenu or Tabs" },
-        "item3": { "s": "Floating dashboard with central content", "u": "Yes, floating variant", "a": "-" },
-        "item4": { "s": "Inset layout with rounded content", "u": "Yes, inset variant", "a": "-" },
-        "item5": { "s": "Always-visible sidebar without toggle", "u": "Yes, fixed mode", "a": "-" }
+        "item1": {
+          "s": "App with multiple sections",
+          "u": "Yes, sidebar variant",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Simple navigation (3-5 items)",
+          "u": "No",
+          "a": "NavigationMenu or Tabs"
+        },
+        "item3": {
+          "s": "Floating dashboard with central content",
+          "u": "Yes, floating variant",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Inset layout with rounded content",
+          "u": "Yes, inset variant",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Always-visible sidebar without toggle",
+          "u": "Yes, fixed mode",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Use when",
@@ -690,35 +806,113 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Sidebar configuration and interaction.",
-        "item1": { "action": "Click SidebarTrigger", "result": "toggleSidebar() called; data-state toggles between expanded and collapsed", "priority": "high" },
-        "item2": { "action": "Press Ctrl+B", "result": "toggleSidebar() called; sidebar state toggles", "priority": "high" },
-        "item3": { "action": "Resize to mobile viewport", "result": "Sidebar renders as Sheet; SidebarTrigger opens the overlay", "priority": "high" },
-        "item4": { "action": "Render with collapse mode icon", "result": "Labels hidden; sidebar reduces to --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Render with collapse mode none", "result": "Sidebar always visible; no toggle; no collapsed data-state", "priority": "medium" },
-        "item6": { "action": "SidebarMenuButton with isActive=true", "result": "data-active present; highlight styles applied; aria-current=\"page\" accessible", "priority": "high" },
-        "item7": { "action": "SidebarMenuButton with tooltip in icon mode", "result": "Tooltip shown on hover only when state === \"collapsed\"", "priority": "medium" },
-        "item8": { "action": "Render floating variant", "result": "Sidebar with border-radius, shadow, and sidebar-border ring applied", "priority": "medium" },
-        "item9": { "action": "SidebarMenuSkeleton with showIcon=true", "result": "Icon skeleton (size-4) displayed left of text skeleton", "priority": "medium" }
+        "item1": {
+          "action": "Click SidebarTrigger",
+          "result": "toggleSidebar() called; data-state toggles between expanded and collapsed",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Ctrl+B",
+          "result": "toggleSidebar() called; sidebar state toggles",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Resize to mobile viewport",
+          "result": "Sidebar renders as Sheet; SidebarTrigger opens the overlay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render with collapse mode icon",
+          "result": "Labels hidden; sidebar reduces to --sidebar-width-icon (3rem)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Render with collapse mode none",
+          "result": "Sidebar always visible; no toggle; no collapsed data-state",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "SidebarMenuButton with isActive=true",
+          "result": "data-active present; highlight styles applied; aria-current=\"page\" accessible",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "SidebarMenuButton with tooltip in icon mode",
+          "result": "Tooltip shown on hover only when state === \"collapsed\"",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Render floating variant",
+          "result": "Sidebar with border-radius, shadow, and sidebar-border ring applied",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "SidebarMenuSkeleton with showIcon=true",
+          "result": "Icon skeleton (size-4) displayed left of text skeleton",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "nav with aria-label present in DOM", "level": "AA", "how": "getByRole('navigation', { name: /main navigation/i })" },
-        "item2": { "criterion": "aria-current=\"page\" on active item", "level": "AA", "how": "getByRole('button', { current: 'page' }) in testing-library" },
-        "item3": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
-        "item4": { "criterion": "SidebarTrigger with accessible text", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
-        "item5": { "criterion": "No axe-core violations in expanded state", "level": "AA", "how": "axe-playwright in Storybook test-runner" },
-        "item6": { "criterion": "Full Tab navigation through menu items", "level": "AA", "how": "Manual keyboard testing" }
+        "item1": {
+          "criterion": "nav with aria-label present in DOM",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: /main navigation/i })"
+        },
+        "item2": {
+          "criterion": "aria-current=\"page\" on active item",
+          "level": "AA",
+          "how": "getByRole('button', { current: 'page' }) in testing-library"
+        },
+        "item3": {
+          "criterion": "Icons with aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspect SVG attributes in DOM"
+        },
+        "item4": {
+          "criterion": "SidebarTrigger with accessible text",
+          "level": "AA",
+          "how": "getByRole('button', { name: /toggle sidebar/i })"
+        },
+        "item5": {
+          "criterion": "No axe-core violations in expanded state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        },
+        "item6": {
+          "criterion": "Full Tab navigation through menu items",
+          "level": "AA",
+          "how": "Manual keyboard testing"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Default — sidebar expanded, sidebar variant", "priority": "high" },
-        "item2": { "story": "Collapsed icon — icon mode with tooltips", "priority": "high" },
-        "item3": { "story": "Floating variant — rounded border and shadow", "priority": "high" },
-        "item4": { "story": "Inset variant — content with adjacent border-radius", "priority": "medium" },
-        "item5": { "story": "Mobile — Sheet overlay open", "priority": "high" },
-        "item6": { "story": "Side right — sidebar on the right", "priority": "medium" }
+        "item1": {
+          "story": "Default — sidebar expanded, sidebar variant",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Collapsed icon — icon mode with tooltips",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Floating variant — rounded border and shadow",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Inset variant — content with adjacent border-radius",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Mobile — Sheet overlay open",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Side right — sidebar on the right",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -752,8 +946,7 @@
       "title": "Sidebar — Layout",
       "description": "Documentación del Sidebar: variantes sidebar, floating e inset, modos de colapso offcanvas e icon, accesibilidad WCAG y atajo Ctrl+B.",
       "aiSummary": "Componente Sidebar con 3 variantes (sidebar, floating, inset), 3 modos de colapso (offcanvas, icon, none), overlay mobile vía Sheet y atajo de teclado Ctrl+B.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current",
-      "aiIntent": "informational"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demostración",
@@ -808,11 +1001,31 @@
           "use": "¿Usar Sidebar?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "App con múltiples secciones", "u": "Sí, variante sidebar", "a": "-" },
-        "item2": { "s": "Navegación simple (3-5 ítems)", "u": "No", "a": "NavigationMenu o Tabs" },
-        "item3": { "s": "Dashboard flotante con contenido central", "u": "Sí, variante floating", "a": "-" },
-        "item4": { "s": "Layout encajado con bordes redondeados", "u": "Sí, variante inset", "a": "-" },
-        "item5": { "s": "Sidebar siempre visible, sin toggle", "u": "Sí, modo fijo", "a": "-" }
+        "item1": {
+          "s": "App con múltiples secciones",
+          "u": "Sí, variante sidebar",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegación simple (3-5 ítems)",
+          "u": "No",
+          "a": "NavigationMenu o Tabs"
+        },
+        "item3": {
+          "s": "Dashboard flotante con contenido central",
+          "u": "Sí, variante floating",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Layout encajado con bordes redondeados",
+          "u": "Sí, variante inset",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Sidebar siempre visible, sin toggle",
+          "u": "Sí, modo fijo",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -1062,35 +1275,113 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración e interacción del Sidebar.",
-        "item1": { "action": "Hacer clic en SidebarTrigger", "result": "toggleSidebar() llamado; data-state alterna entre expanded y collapsed", "priority": "high" },
-        "item2": { "action": "Presionar Ctrl+B", "result": "toggleSidebar() llamado; estado del sidebar alterna", "priority": "high" },
-        "item3": { "action": "Redimensionar a viewport mobile", "result": "Sidebar se renderiza como Sheet; SidebarTrigger abre el overlay", "priority": "high" },
-        "item4": { "action": "Renderizar con modo de colapso icon", "result": "Labels ocultos; sidebar reduce a --sidebar-width-icon (3rem)", "priority": "high" },
-        "item5": { "action": "Renderizar con modo de colapso none", "result": "Sidebar siempre visible; sin toggle; sin data-state de collapsed", "priority": "medium" },
-        "item6": { "action": "SidebarMenuButton con isActive=true", "result": "data-active presente; estilos de destacado aplicados; aria-current=\"page\" accesible", "priority": "high" },
-        "item7": { "action": "SidebarMenuButton con tooltip en modo icon", "result": "Tooltip mostrado al hover solo cuando state === \"collapsed\"", "priority": "medium" },
-        "item8": { "action": "Renderizar variante floating", "result": "Sidebar con border-radius, sombra y ring de sidebar-border aplicados", "priority": "medium" },
-        "item9": { "action": "SidebarMenuSkeleton con showIcon=true", "result": "Skeleton de ícono (size-4) mostrado a la izquierda del skeleton de texto", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en SidebarTrigger",
+          "result": "toggleSidebar() llamado; data-state alterna entre expanded y collapsed",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar Ctrl+B",
+          "result": "toggleSidebar() llamado; estado del sidebar alterna",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Redimensionar a viewport mobile",
+          "result": "Sidebar se renderiza como Sheet; SidebarTrigger abre el overlay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar con modo de colapso icon",
+          "result": "Labels ocultos; sidebar reduce a --sidebar-width-icon (3rem)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar con modo de colapso none",
+          "result": "Sidebar siempre visible; sin toggle; sin data-state de collapsed",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "SidebarMenuButton con isActive=true",
+          "result": "data-active presente; estilos de destacado aplicados; aria-current=\"page\" accesible",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "SidebarMenuButton con tooltip en modo icon",
+          "result": "Tooltip mostrado al hover solo cuando state === \"collapsed\"",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Renderizar variante floating",
+          "result": "Sidebar con border-radius, sombra y ring de sidebar-border aplicados",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "SidebarMenuSkeleton con showIcon=true",
+          "result": "Skeleton de ícono (size-4) mostrado a la izquierda del skeleton de texto",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "nav con aria-label presente en el DOM", "level": "AA", "how": "getByRole('navigation', { name: /navegación principal/i })" },
-        "item2": { "criterion": "aria-current=\"page\" en el ítem activo", "level": "AA", "how": "getByRole('button', { current: 'page' }) en testing-library" },
-        "item3": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos SVG en el DOM" },
-        "item4": { "criterion": "SidebarTrigger con texto accesible", "level": "AA", "how": "getByRole('button', { name: /toggle sidebar/i })" },
-        "item5": { "criterion": "Sin violaciones axe-core en estado expandido", "level": "AA", "how": "axe-playwright en test-runner de Storybook" },
-        "item6": { "criterion": "Navegación completa por Tab en ítems de menú", "level": "AA", "how": "Prueba manual con teclado" }
+        "item1": {
+          "criterion": "nav con aria-label presente en el DOM",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: /navegación principal/i })"
+        },
+        "item2": {
+          "criterion": "aria-current=\"page\" en el ítem activo",
+          "level": "AA",
+          "how": "getByRole('button', { current: 'page' }) en testing-library"
+        },
+        "item3": {
+          "criterion": "Íconos con aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspeccionar atributos SVG en el DOM"
+        },
+        "item4": {
+          "criterion": "SidebarTrigger con texto accesible",
+          "level": "AA",
+          "how": "getByRole('button', { name: /toggle sidebar/i })"
+        },
+        "item5": {
+          "criterion": "Sin violaciones axe-core en estado expandido",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item6": {
+          "criterion": "Navegación completa por Tab en ítems de menú",
+          "level": "AA",
+          "how": "Prueba manual con teclado"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Default — sidebar expandido, variante sidebar", "priority": "high" },
-        "item2": { "story": "Collapsed icon — modo icon con tooltips", "priority": "high" },
-        "item3": { "story": "Variante floating — borde redondeado y sombra", "priority": "high" },
-        "item4": { "story": "Variante inset — contenido con border-radius adyacente", "priority": "medium" },
-        "item5": { "story": "Mobile — Sheet overlay abierto", "priority": "high" },
-        "item6": { "story": "Side right — sidebar a la derecha", "priority": "medium" }
+        "item1": {
+          "story": "Default — sidebar expandido, variante sidebar",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Collapsed icon — modo icon con tooltips",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variante floating — borde redondeado y sombra",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Variante inset — contenido con border-radius adyacente",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Mobile — Sheet overlay abierto",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Side right — sidebar a la derecha",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

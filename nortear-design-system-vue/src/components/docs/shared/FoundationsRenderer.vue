@@ -188,7 +188,6 @@ useSeoEffect(
     kind: 'guide' as const,
     aiSummary: t('seo.aiSummary', ''),
     aiEntities: t('seo.aiEntities', ''),
-    aiIntent: t('seo.aiIntent', 'informational'),
   })),
 );
 

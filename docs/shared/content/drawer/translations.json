@@ -8,8 +8,7 @@
       "title": "Drawer — Disclosure",
       "description": "Documentação do Drawer: painel deslizante via vaul/vaul-vue/vaul-svelte com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first construído sobre vaul (React/Vue/Svelte) que renderiza painel deslizante com 4 direções (bottom/top/left/right), suporta swipe-to-close, focus trap e ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
-      "aiIntent": "informational"
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -438,8 +437,7 @@
       "title": "Drawer — Disclosure",
       "description": "Drawer documentation: sliding panel via vaul/vaul-vue/vaul-svelte with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
       "aiSummary": "Mobile-first Drawer component built on vaul (React/Vue/Svelte) renders a sliding panel with 4 directions (bottom/top/left/right), supports swipe-to-close, focus trap, and ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
-      "aiIntent": "informational"
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -868,8 +866,7 @@
       "title": "Drawer — Disclosure",
       "description": "Documentación de Drawer: panel deslizante vía vaul/vaul-vue/vaul-svelte con 4 direcciones, gestos, focus trap y WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first construido sobre vaul (React/Vue/Svelte) que renderiza panel deslizante con 4 direcciones (bottom/top/left/right), soporta swipe-to-close, focus trap y ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal",
-      "aiIntent": "informational"
+      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
     },
     "demonstration": {
       "title": "Demostración",

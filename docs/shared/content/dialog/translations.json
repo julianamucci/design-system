@@ -8,8 +8,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentação do Dialog: modal versátil para formulários e conteúdo, com focus trap, Portal, Escape e fechamento por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formulários e conteúdo informativo, com focus trap, role=\"dialog\", aria-labelledby e aria-describedby automáticos via Base UI, Reka UI e Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
-      "aiIntent": "informational"
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -55,12 +54,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Editar perfil ou recurso em formulário modal", "u": "Sim, com DialogFooter e ação primária", "a": "-" },
-        "item2": { "s": "Confirmar exclusão ou ação destrutiva", "u": "Não", "a": "AlertDialog" },
-        "item3": { "s": "Visualizar detalhes de um item (read-only)", "u": "Sim, sem Footer ou só com botão Fechar", "a": "-" },
-        "item4": { "s": "Mensagem informativa passiva", "u": "Não", "a": "Alert ou Sonner" },
-        "item5": { "s": "Formulário longo em mobile", "u": "Não", "a": "Sheet ou Drawer" },
-        "item6": { "s": "Pré-visualizar mídia (imagem, vídeo)", "u": "Sim, com botão Close visível", "a": "-" }
+        "item1": {
+          "s": "Editar perfil ou recurso em formulário modal",
+          "u": "Sim, com DialogFooter e ação primária",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Confirmar exclusão ou ação destrutiva",
+          "u": "Não",
+          "a": "AlertDialog"
+        },
+        "item3": {
+          "s": "Visualizar detalhes de um item (read-only)",
+          "u": "Sim, sem Footer ou só com botão Fechar",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensagem informativa passiva",
+          "u": "Não",
+          "a": "Alert ou Sonner"
+        },
+        "item5": {
+          "s": "Formulário longo em mobile",
+          "u": "Não",
+          "a": "Sheet ou Drawer"
+        },
+        "item6": {
+          "s": "Pré-visualizar mídia (imagem, vídeo)",
+          "u": "Sim, com botão Close visível",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -314,33 +337,100 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Dialog.",
-        "item1": { "action": "Clique no trigger", "result": "DialogContent aparece com Overlay; foco vai ao primeiro elemento focável", "priority": "high" },
-        "item2": { "action": "Pressionar Escape", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
-        "item3": { "action": "Clique fora do Content (overlay)", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
-        "item4": { "action": "Clique no botão Close (X)", "result": "Diálogo fecha; foco retorna ao trigger", "priority": "high" },
-        "item5": { "action": "Pressionar Tab dentro do diálogo", "result": "Foco cicla entre elementos do Content sem sair (focus trap)", "priority": "high" },
-        "item6": { "action": "Fechar diálogo após interação", "result": "Foco retorna exatamente ao trigger original", "priority": "high" },
-        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é gerenciado externamente; o callback de mudança dispara ao interagir", "priority": "medium" }
+        "item1": {
+          "action": "Clique no trigger",
+          "result": "DialogContent aparece com Overlay; foco vai ao primeiro elemento focável",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Escape",
+          "result": "Diálogo fecha; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clique fora do Content (overlay)",
+          "result": "Diálogo fecha; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clique no botão Close (X)",
+          "result": "Diálogo fecha; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pressionar Tab dentro do diálogo",
+          "result": "Foco cicla entre elementos do Content sem sair (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Fechar diálogo após interação",
+          "result": "Foco retorna exatamente ao trigger original",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Renderizar com open controlado",
+          "result": "Estado de abertura é gerenciado externamente; o callback de mudança dispara ao interagir",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "role=\"dialog\" presente no Content", "level": "AA", "how": "getByRole('dialog') no testing-library" },
-        "item2": { "criterion": "aria-modal=\"true\" no Content", "level": "AA", "how": "Inspecionar DOM após abrir" },
-        "item3": { "criterion": "aria-labelledby apontando para DialogTitle", "level": "AA", "how": "Inspecionar DOM após abrir" },
-        "item4": { "criterion": "aria-describedby apontando para DialogDescription quando presente", "level": "AA", "how": "Inspecionar DOM após abrir" },
-        "item5": { "criterion": "Focus trap ativo — Tab não sai do diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fora não recebem foco" },
-        "item6": { "criterion": "Sem violações axe-core no estado aberto", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "role=\"dialog\" presente no Content",
+          "level": "AA",
+          "how": "getByRole('dialog') no testing-library"
+        },
+        "item2": {
+          "criterion": "aria-modal=\"true\" no Content",
+          "level": "AA",
+          "how": "Inspecionar DOM após abrir"
+        },
+        "item3": {
+          "criterion": "aria-labelledby apontando para DialogTitle",
+          "level": "AA",
+          "how": "Inspecionar DOM após abrir"
+        },
+        "item4": {
+          "criterion": "aria-describedby apontando para DialogDescription quando presente",
+          "level": "AA",
+          "how": "Inspecionar DOM após abrir"
+        },
+        "item5": {
+          "criterion": "Focus trap ativo — Tab não sai do diálogo",
+          "level": "AA",
+          "how": "userEvent.tab() repetido — elementos fora não recebem foco"
+        },
+        "item6": {
+          "criterion": "Sem violações axe-core no estado aberto",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Playground — estado aberto padrão", "priority": "high" },
-        "item2": { "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
-        "item3": { "story": "Estados — Closed, Open, WithCloseButtonHidden", "priority": "high" },
-        "item4": { "story": "Composição WithForm — formulário inline", "priority": "medium" },
-        "item5": { "story": "Composição WithScrollContent — conteúdo longo com scroll interno", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado aberto padrão",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — Closed, Open, WithCloseButtonHidden",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composição WithForm — formulário inline",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composição WithScrollContent — conteúdo longo com scroll interno",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -374,8 +464,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentation for Dialog: versatile modal for forms and content, with focus trap, Portal, Escape, and overlay-click dismiss.",
       "aiSummary": "Generic Dialog modal component for forms and informational content, with focus trap, role=\"dialog\", and automatic aria-labelledby and aria-describedby via Base UI, Reka UI, and Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
-      "aiIntent": "informational"
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -421,12 +510,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Edit profile or resource in a modal form", "u": "Yes, with DialogFooter and primary action", "a": "-" },
-        "item2": { "s": "Confirm deletion or destructive action", "u": "No", "a": "AlertDialog" },
-        "item3": { "s": "View item details (read-only)", "u": "Yes, no Footer or only with Close button", "a": "-" },
-        "item4": { "s": "Passive informational message", "u": "No", "a": "Alert or Sonner" },
-        "item5": { "s": "Long form on mobile", "u": "No", "a": "Sheet or Drawer" },
-        "item6": { "s": "Preview media (image, video)", "u": "Yes, with visible Close button", "a": "-" }
+        "item1": {
+          "s": "Edit profile or resource in a modal form",
+          "u": "Yes, with DialogFooter and primary action",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Confirm deletion or destructive action",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item3": {
+          "s": "View item details (read-only)",
+          "u": "Yes, no Footer or only with Close button",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Passive informational message",
+          "u": "No",
+          "a": "Alert or Sonner"
+        },
+        "item5": {
+          "s": "Long form on mobile",
+          "u": "No",
+          "a": "Sheet or Drawer"
+        },
+        "item6": {
+          "s": "Preview media (image, video)",
+          "u": "Yes, with visible Close button",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -680,33 +793,100 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Dialog interaction.",
-        "item1": { "action": "Click on trigger", "result": "DialogContent appears with Overlay; focus moves to first focusable element", "priority": "high" },
-        "item2": { "action": "Press Escape", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
-        "item3": { "action": "Click outside Content (overlay)", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
-        "item4": { "action": "Click on Close (X) button", "result": "Dialog closes; focus returns to trigger", "priority": "high" },
-        "item5": { "action": "Press Tab inside the dialog", "result": "Focus cycles between Content elements without leaving (focus trap)", "priority": "high" },
-        "item6": { "action": "Close dialog after interaction", "result": "Focus returns exactly to the original trigger", "priority": "high" },
-        "item7": { "action": "Render with controlled open", "result": "Open state is managed externally; the change callback fires on interaction", "priority": "medium" }
+        "item1": {
+          "action": "Click on trigger",
+          "result": "DialogContent appears with Overlay; focus moves to first focusable element",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Escape",
+          "result": "Dialog closes; focus returns to trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click outside Content (overlay)",
+          "result": "Dialog closes; focus returns to trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click on Close (X) button",
+          "result": "Dialog closes; focus returns to trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Press Tab inside the dialog",
+          "result": "Focus cycles between Content elements without leaving (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Close dialog after interaction",
+          "result": "Focus returns exactly to the original trigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Render with controlled open",
+          "result": "Open state is managed externally; the change callback fires on interaction",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "role=\"dialog\" present on Content", "level": "AA", "how": "getByRole('dialog') in testing-library" },
-        "item2": { "criterion": "aria-modal=\"true\" on Content", "level": "AA", "how": "Inspect DOM after open" },
-        "item3": { "criterion": "aria-labelledby points to DialogTitle", "level": "AA", "how": "Inspect DOM after open" },
-        "item4": { "criterion": "aria-describedby points to DialogDescription when present", "level": "AA", "how": "Inspect DOM after open" },
-        "item5": { "criterion": "Active focus trap — Tab doesn't leave the dialog", "level": "AA", "how": "Repeated userEvent.tab() — elements outside don't receive focus" },
-        "item6": { "criterion": "No axe-core violations in open state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "role=\"dialog\" present on Content",
+          "level": "AA",
+          "how": "getByRole('dialog') in testing-library"
+        },
+        "item2": {
+          "criterion": "aria-modal=\"true\" on Content",
+          "level": "AA",
+          "how": "Inspect DOM after open"
+        },
+        "item3": {
+          "criterion": "aria-labelledby points to DialogTitle",
+          "level": "AA",
+          "how": "Inspect DOM after open"
+        },
+        "item4": {
+          "criterion": "aria-describedby points to DialogDescription when present",
+          "level": "AA",
+          "how": "Inspect DOM after open"
+        },
+        "item5": {
+          "criterion": "Active focus trap — Tab doesn't leave the dialog",
+          "level": "AA",
+          "how": "Repeated userEvent.tab() — elements outside don't receive focus"
+        },
+        "item6": {
+          "criterion": "No axe-core violations in open state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Playground — default open state", "priority": "high" },
-        "item2": { "story": "Variants — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
-        "item3": { "story": "States — Closed, Open, WithCloseButtonHidden", "priority": "high" },
-        "item4": { "story": "WithForm composition — inline form", "priority": "medium" },
-        "item5": { "story": "WithScrollContent composition — long content with internal scroll", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default open state",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — Default, WithForm, NoFooter, WithDestructiveAction",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "States — Closed, Open, WithCloseButtonHidden",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "WithForm composition — inline form",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "WithScrollContent composition — long content with internal scroll",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -740,8 +920,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentación del Dialog: modal versátil para formularios y contenido, con focus trap, Portal, Escape y cierre por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formularios y contenido informativo, con focus trap, role=\"dialog\", aria-labelledby y aria-describedby automáticos vía Base UI, Reka UI y Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide",
-      "aiIntent": "informational"
+      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
     },
     "demonstration": {
       "title": "Demostración",
@@ -787,12 +966,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Editar perfil o recurso en formulario modal", "u": "Sí, con DialogFooter y acción primaria", "a": "-" },
-        "item2": { "s": "Confirmar eliminación o acción destructiva", "u": "No", "a": "AlertDialog" },
-        "item3": { "s": "Ver detalles de un ítem (read-only)", "u": "Sí, sin Footer o solo con botón Cerrar", "a": "-" },
-        "item4": { "s": "Mensaje informativo pasivo", "u": "No", "a": "Alert o Sonner" },
-        "item5": { "s": "Formulario largo en mobile", "u": "No", "a": "Sheet o Drawer" },
-        "item6": { "s": "Previsualizar media (imagen, video)", "u": "Sí, con botón Close visible", "a": "-" }
+        "item1": {
+          "s": "Editar perfil o recurso en formulario modal",
+          "u": "Sí, con DialogFooter y acción primaria",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Confirmar eliminación o acción destructiva",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item3": {
+          "s": "Ver detalles de un ítem (read-only)",
+          "u": "Sí, sin Footer o solo con botón Cerrar",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensaje informativo pasivo",
+          "u": "No",
+          "a": "Alert o Sonner"
+        },
+        "item5": {
+          "s": "Formulario largo en mobile",
+          "u": "No",
+          "a": "Sheet o Drawer"
+        },
+        "item6": {
+          "s": "Previsualizar media (imagen, video)",
+          "u": "Sí, con botón Close visible",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1046,33 +1249,100 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada interacción del Dialog.",
-        "item1": { "action": "Clic en el trigger", "result": "DialogContent aparece con Overlay; el foco va al primer elemento focalizable", "priority": "high" },
-        "item2": { "action": "Presionar Escape", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
-        "item3": { "action": "Clic fuera del Content (overlay)", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
-        "item4": { "action": "Clic en el botón Close (X)", "result": "Diálogo cierra; el foco vuelve al trigger", "priority": "high" },
-        "item5": { "action": "Presionar Tab dentro del diálogo", "result": "El foco cicla entre elementos del Content sin salir (focus trap)", "priority": "high" },
-        "item6": { "action": "Cerrar diálogo tras interacción", "result": "El foco vuelve exactamente al trigger original", "priority": "high" },
-        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona externamente; el callback de cambio dispara al interactuar", "priority": "medium" }
+        "item1": {
+          "action": "Clic en el trigger",
+          "result": "DialogContent aparece con Overlay; el foco va al primer elemento focalizable",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar Escape",
+          "result": "Diálogo cierra; el foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clic fuera del Content (overlay)",
+          "result": "Diálogo cierra; el foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clic en el botón Close (X)",
+          "result": "Diálogo cierra; el foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Presionar Tab dentro del diálogo",
+          "result": "El foco cicla entre elementos del Content sin salir (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Cerrar diálogo tras interacción",
+          "result": "El foco vuelve exactamente al trigger original",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Renderizar con open controlado",
+          "result": "El estado de apertura se gestiona externamente; el callback de cambio dispara al interactuar",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "role=\"dialog\" presente en el Content", "level": "AA", "how": "getByRole('dialog') en testing-library" },
-        "item2": { "criterion": "aria-modal=\"true\" en el Content", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
-        "item3": { "criterion": "aria-labelledby apunta a DialogTitle", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
-        "item4": { "criterion": "aria-describedby apunta a DialogDescription cuando está presente", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
-        "item5": { "criterion": "Focus trap activo — Tab no sale del diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fuera no reciben foco" },
-        "item6": { "criterion": "Sin violaciones axe-core en estado abierto", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "role=\"dialog\" presente en el Content",
+          "level": "AA",
+          "how": "getByRole('dialog') en testing-library"
+        },
+        "item2": {
+          "criterion": "aria-modal=\"true\" en el Content",
+          "level": "AA",
+          "how": "Inspeccionar DOM tras abrir"
+        },
+        "item3": {
+          "criterion": "aria-labelledby apunta a DialogTitle",
+          "level": "AA",
+          "how": "Inspeccionar DOM tras abrir"
+        },
+        "item4": {
+          "criterion": "aria-describedby apunta a DialogDescription cuando está presente",
+          "level": "AA",
+          "how": "Inspeccionar DOM tras abrir"
+        },
+        "item5": {
+          "criterion": "Focus trap activo — Tab no sale del diálogo",
+          "level": "AA",
+          "how": "userEvent.tab() repetido — elementos fuera no reciben foco"
+        },
+        "item6": {
+          "criterion": "Sin violaciones axe-core en estado abierto",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Playground — estado abierto predeterminado", "priority": "high" },
-        "item2": { "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction", "priority": "high" },
-        "item3": { "story": "Estados — Closed, Open, WithCloseButtonHidden", "priority": "high" },
-        "item4": { "story": "Composición WithForm — formulario inline", "priority": "medium" },
-        "item5": { "story": "Composición WithScrollContent — contenido largo con scroll interno", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado abierto predeterminado",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — Default, WithForm, NoFooter, WithDestructiveAction",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estados — Closed, Open, WithCloseButtonHidden",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Composición WithForm — formulario inline",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composición WithScrollContent — contenido largo con scroll interno",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

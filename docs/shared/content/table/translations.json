@@ -8,8 +8,7 @@
       "title": "Table — Display",
       "description": "Documentação do Table: 8 subcomponentes semânticos, scroll horizontal, empty state, acessibilidade WCAG com scope e caption.",
       "aiSummary": "Componente Table com 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obrigatório e integração com TanStack Table para ordenação e filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table",
-      "aiIntent": "informational"
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -72,11 +71,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista de registros com múltiplos atributos", "u": "Sim", "a": "-" },
-        "item2": { "s": "Relatório com totais e subtotais", "u": "Sim, com TableFooter", "a": "-" },
-        "item3": { "s": "Layout de colunas de página", "u": "Não", "a": "CSS Grid ou Flexbox" },
-        "item4": { "s": "Lista simples de itens", "u": "Não", "a": "ul/li ou Card" },
-        "item5": { "s": "Dados com ordenação e filtros", "u": "Sim, com TanStack Table", "a": "-" }
+        "item1": {
+          "s": "Lista de registros com múltiplos atributos",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Relatório com totais e subtotais",
+          "u": "Sim, com TableFooter",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Layout de colunas de página",
+          "u": "Não",
+          "a": "CSS Grid ou Flexbox"
+        },
+        "item4": {
+          "s": "Lista simples de itens",
+          "u": "Não",
+          "a": "ul/li ou Card"
+        },
+        "item5": {
+          "s": "Dados com ordenação e filtros",
+          "u": "Sim, com TanStack Table",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -320,29 +339,84 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada padrão de uso do Table.",
-        "item1": { "action": "Renderizar tabela básica com dados", "result": "Table, TableHeader, TableBody e TableCaption renderizados com HTML semântico correto", "priority": "high" },
-        "item2": { "action": "Renderizar tabela com array vazio", "result": "TableRow com TableCell colSpan e mensagem de empty state visível", "priority": "high" },
-        "item3": { "action": "Renderizar TableFooter com totais", "result": "tfoot com bg-muted/50 e border-t aplicados, abaixo do TableBody", "priority": "medium" },
-        "item4": { "action": "Aplicar data-[state=selected] em TableRow", "result": "Fundo bg-muted aplicado na linha selecionada", "priority": "medium" },
-        "item5": { "action": "Renderizar com conteúdo maior que o container", "result": "Scroll horizontal ativado via overflow-x-auto no container interno", "priority": "high" },
-        "item6": { "action": "Renderizar TableCaption com sr-only", "result": "Caption invisível visualmente, presente no DOM para leitores de tela", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar tabela básica com dados",
+          "result": "Table, TableHeader, TableBody e TableCaption renderizados com HTML semântico correto",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar tabela com array vazio",
+          "result": "TableRow com TableCell colSpan e mensagem de empty state visível",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar TableFooter com totais",
+          "result": "tfoot com bg-muted/50 e border-t aplicados, abaixo do TableBody",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Aplicar data-[state=selected] em TableRow",
+          "result": "Fundo bg-muted aplicado na linha selecionada",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar com conteúdo maior que o container",
+          "result": "Scroll horizontal ativado via overflow-x-auto no container interno",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar TableCaption com sr-only",
+          "result": "Caption invisível visualmente, presente no DOM para leitores de tela",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "scope=\"col\" presente em todos os TableHead", "level": "AA", "how": "Inspecionar atributos th no DOM" },
-        "item2": { "criterion": "TableCaption presente e descritivo", "level": "AA", "how": "getByRole('table', { name: /caption/ }) ou querySelector('caption')" },
-        "item3": { "criterion": "Botões de ação com aria-label contextual", "level": "AA", "how": "getByRole('button', { name: /fatura/ }) no testing-library" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "scope=\"col\" presente em todos os TableHead",
+          "level": "AA",
+          "how": "Inspecionar atributos th no DOM"
+        },
+        "item2": {
+          "criterion": "TableCaption presente e descritivo",
+          "level": "AA",
+          "how": "getByRole('table', { name: /caption/ }) ou querySelector('caption')"
+        },
+        "item3": {
+          "criterion": "Botões de ação com aria-label contextual",
+          "level": "AA",
+          "how": "getByRole('button', { name: /fatura/ }) no testing-library"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Básica — com dados completos", "priority": "high" },
-        "item2": { "story": "Estado vazio — mensagem centralizada", "priority": "high" },
-        "item3": { "story": "Com rodapé — totais e sumários", "priority": "medium" },
-        "item4": { "story": "Com ações por linha — botão ghost ou DropdownMenu", "priority": "medium" },
-        "item5": { "story": "Linha selecionada — data-[state=selected]", "priority": "medium" }
+        "item1": {
+          "story": "Básica — com dados completos",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estado vazio — mensagem centralizada",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Com rodapé — totais e sumários",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Com ações por linha — botão ghost ou DropdownMenu",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Linha selecionada — data-[state=selected]",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -376,8 +450,7 @@
       "title": "Table — Display",
       "description": "Table documentation: 8 semantic subcomponents, horizontal scroll, empty state, WCAG accessibility with scope and caption.",
       "aiSummary": "Table component with 8 subcomponents (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), automatic horizontal scroll, mandatory empty state, and TanStack Table integration for sorting and filters.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table",
-      "aiIntent": "informational"
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -440,11 +513,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Record list with multiple attributes", "u": "Yes", "a": "-" },
-        "item2": { "s": "Report with totals and subtotals", "u": "Yes, with TableFooter", "a": "-" },
-        "item3": { "s": "Page column layout", "u": "No", "a": "CSS Grid or Flexbox" },
-        "item4": { "s": "Simple list without comparable attributes", "u": "No", "a": "ul/li or Card" },
-        "item5": { "s": "Data with sorting and filters", "u": "Yes, with TanStack Table", "a": "-" }
+        "item1": {
+          "s": "Record list with multiple attributes",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Report with totals and subtotals",
+          "u": "Yes, with TableFooter",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Page column layout",
+          "u": "No",
+          "a": "CSS Grid or Flexbox"
+        },
+        "item4": {
+          "s": "Simple list without comparable attributes",
+          "u": "No",
+          "a": "ul/li or Card"
+        },
+        "item5": {
+          "s": "Data with sorting and filters",
+          "u": "Yes, with TanStack Table",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -688,29 +781,84 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Table usage pattern.",
-        "item1": { "action": "Render basic table with data", "result": "Table, TableHeader, TableBody, and TableCaption rendered with correct semantic HTML", "priority": "high" },
-        "item2": { "action": "Render table with empty array", "result": "TableRow with TableCell colSpan and visible empty state message", "priority": "high" },
-        "item3": { "action": "Render TableFooter with totals", "result": "tfoot with bg-muted/50 and border-t applied, below TableBody", "priority": "medium" },
-        "item4": { "action": "Apply data-[state=selected] on TableRow", "result": "bg-muted background applied to selected row", "priority": "medium" },
-        "item5": { "action": "Render with content wider than container", "result": "Horizontal scroll activated via overflow-x-auto on internal container", "priority": "high" },
-        "item6": { "action": "Render TableCaption with sr-only", "result": "Caption visually hidden, present in DOM for screen readers", "priority": "medium" }
+        "item1": {
+          "action": "Render basic table with data",
+          "result": "Table, TableHeader, TableBody, and TableCaption rendered with correct semantic HTML",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render table with empty array",
+          "result": "TableRow with TableCell colSpan and visible empty state message",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render TableFooter with totals",
+          "result": "tfoot with bg-muted/50 and border-t applied, below TableBody",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Apply data-[state=selected] on TableRow",
+          "result": "bg-muted background applied to selected row",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Render with content wider than container",
+          "result": "Horizontal scroll activated via overflow-x-auto on internal container",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Render TableCaption with sr-only",
+          "result": "Caption visually hidden, present in DOM for screen readers",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "scope=\"col\" present on all TableHead elements", "level": "AA", "how": "Inspect th attributes in the DOM" },
-        "item2": { "criterion": "TableCaption present and descriptive", "level": "AA", "how": "getByRole('table', { name: /caption/ }) or querySelector('caption')" },
-        "item3": { "criterion": "Action buttons with contextual aria-label", "level": "AA", "how": "getByRole('button', { name: /invoice/ }) in testing-library" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "scope=\"col\" present on all TableHead elements",
+          "level": "AA",
+          "how": "Inspect th attributes in the DOM"
+        },
+        "item2": {
+          "criterion": "TableCaption present and descriptive",
+          "level": "AA",
+          "how": "getByRole('table', { name: /caption/ }) or querySelector('caption')"
+        },
+        "item3": {
+          "criterion": "Action buttons with contextual aria-label",
+          "level": "AA",
+          "how": "getByRole('button', { name: /invoice/ }) in testing-library"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Basic — with complete data", "priority": "high" },
-        "item2": { "story": "Empty state — centered message", "priority": "high" },
-        "item3": { "story": "With footer — totals and summaries", "priority": "medium" },
-        "item4": { "story": "With row actions — ghost button or DropdownMenu", "priority": "medium" },
-        "item5": { "story": "Selected row — data-[state=selected]", "priority": "medium" }
+        "item1": {
+          "story": "Basic — with complete data",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Empty state — centered message",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "With footer — totals and summaries",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "With row actions — ghost button or DropdownMenu",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Selected row — data-[state=selected]",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -744,8 +892,7 @@
       "title": "Table — Display",
       "description": "Documentación del Table: 8 subcomponentes semánticos, scroll horizontal, empty state, accesibilidad WCAG con scope y caption.",
       "aiSummary": "Componente Table con 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obligatorio e integración con TanStack Table para ordenación y filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table",
-      "aiIntent": "informational"
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
     },
     "demonstration": {
       "title": "Demostración",
@@ -808,11 +955,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista de registros con múltiples atributos", "u": "Sí", "a": "-" },
-        "item2": { "s": "Informe con totales y subtotales", "u": "Sí, con TableFooter", "a": "-" },
-        "item3": { "s": "Layout de columnas de página", "u": "No", "a": "CSS Grid o Flexbox" },
-        "item4": { "s": "Lista simple sin atributos comparables", "u": "No", "a": "ul/li o Card" },
-        "item5": { "s": "Datos con ordenación y filtros", "u": "Sí, con TanStack Table", "a": "-" }
+        "item1": {
+          "s": "Lista de registros con múltiples atributos",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Informe con totales y subtotales",
+          "u": "Sí, con TableFooter",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Layout de columnas de página",
+          "u": "No",
+          "a": "CSS Grid o Flexbox"
+        },
+        "item4": {
+          "s": "Lista simple sin atributos comparables",
+          "u": "No",
+          "a": "ul/li o Card"
+        },
+        "item5": {
+          "s": "Datos con ordenación y filtros",
+          "u": "Sí, con TanStack Table",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1056,29 +1223,84 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada patrón de uso del Table.",
-        "item1": { "action": "Renderizar tabla básica con datos", "result": "Table, TableHeader, TableBody y TableCaption renderizados con HTML semántico correcto", "priority": "high" },
-        "item2": { "action": "Renderizar tabla con array vacío", "result": "TableRow con TableCell colSpan y mensaje de empty state visible", "priority": "high" },
-        "item3": { "action": "Renderizar TableFooter con totales", "result": "tfoot con bg-muted/50 y border-t aplicados, debajo del TableBody", "priority": "medium" },
-        "item4": { "action": "Aplicar data-[state=selected] en TableRow", "result": "Fondo bg-muted aplicado en la fila seleccionada", "priority": "medium" },
-        "item5": { "action": "Renderizar con contenido más ancho que el contenedor", "result": "Scroll horizontal activado via overflow-x-auto en el contenedor interno", "priority": "high" },
-        "item6": { "action": "Renderizar TableCaption con sr-only", "result": "Caption invisible visualmente, presente en el DOM para lectores de pantalla", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar tabla básica con datos",
+          "result": "Table, TableHeader, TableBody y TableCaption renderizados con HTML semántico correcto",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar tabla con array vacío",
+          "result": "TableRow con TableCell colSpan y mensaje de empty state visible",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar TableFooter con totales",
+          "result": "tfoot con bg-muted/50 y border-t aplicados, debajo del TableBody",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Aplicar data-[state=selected] en TableRow",
+          "result": "Fondo bg-muted aplicado en la fila seleccionada",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar con contenido más ancho que el contenedor",
+          "result": "Scroll horizontal activado via overflow-x-auto en el contenedor interno",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Renderizar TableCaption con sr-only",
+          "result": "Caption invisible visualmente, presente en el DOM para lectores de pantalla",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "scope=\"col\" presente en todos los TableHead", "level": "AA", "how": "Inspeccionar atributos th en el DOM" },
-        "item2": { "criterion": "TableCaption presente y descriptivo", "level": "AA", "how": "getByRole('table', { name: /caption/ }) o querySelector('caption')" },
-        "item3": { "criterion": "Botones de acción con aria-label contextual", "level": "AA", "how": "getByRole('button', { name: /factura/ }) en testing-library" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "scope=\"col\" presente en todos los TableHead",
+          "level": "AA",
+          "how": "Inspeccionar atributos th en el DOM"
+        },
+        "item2": {
+          "criterion": "TableCaption presente y descriptivo",
+          "level": "AA",
+          "how": "getByRole('table', { name: /caption/ }) o querySelector('caption')"
+        },
+        "item3": {
+          "criterion": "Botones de acción con aria-label contextual",
+          "level": "AA",
+          "how": "getByRole('button', { name: /factura/ }) en testing-library"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Básico — con datos completos", "priority": "high" },
-        "item2": { "story": "Estado vacío — mensaje centrado", "priority": "high" },
-        "item3": { "story": "Con pie de tabla — totales y sumarios", "priority": "medium" },
-        "item4": { "story": "Con acciones por fila — botón ghost o DropdownMenu", "priority": "medium" },
-        "item5": { "story": "Fila seleccionada — data-[state=selected]", "priority": "medium" }
+        "item1": {
+          "story": "Básico — con datos completos",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estado vacío — mensaje centrado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Con pie de tabla — totales y sumarios",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Con acciones por fila — botón ghost o DropdownMenu",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Fila seleccionada — data-[state=selected]",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

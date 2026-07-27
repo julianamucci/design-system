@@ -8,8 +8,7 @@
       "title": "Badge — Feedback",
       "description": "Documentação do Badge: 4 variantes (default, secondary, destructive, outline), uso inline para status, contagens e categorias com tokens semânticos.",
       "aiSummary": "Componente Badge com 4 variantes (default, secondary, destructive, outline), sem size prop, não interativo por padrão, baseado em div com suporte a HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
-      "aiIntent": "informational"
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,10 +48,26 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Status curto em tabela ou card", "u": "Sim, variant default ou secondary", "a": "-" },
-        "item2": { "s": "Mensagem completa com título", "u": "Não", "a": "Alert" },
-        "item3": { "s": "Filtro clicável e removível", "u": "Não", "a": "Chip ou Tag" },
-        "item4": { "s": "Contador de notificações", "u": "Sim, variant destructive", "a": "-" }
+        "item1": {
+          "s": "Status curto em tabela ou card",
+          "u": "Sim, variant default ou secondary",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mensagem completa com título",
+          "u": "Não",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Filtro clicável e removível",
+          "u": "Não",
+          "a": "Chip ou Tag"
+        },
+        "item4": {
+          "s": "Contador de notificações",
+          "u": "Sim, variant destructive",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -282,28 +297,80 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Badge.",
-        "item1": { "action": "Renderizar variante default", "result": "Container usa --primary no fundo, --primary-foreground no texto e borda transparente", "priority": "high" },
-        "item2": { "action": "Renderizar variante secondary", "result": "Fundo em --secondary com texto em --secondary-foreground", "priority": "high" },
-        "item3": { "action": "Renderizar variante destructive", "result": "Fundo soft em --destructive com texto em --foreground (contraste 4.5:1)", "priority": "high" },
-        "item4": { "action": "Renderizar variante outline", "result": "Apenas borda padrão e texto em --foreground, sem fundo", "priority": "high" },
-        "item5": { "action": "Renderizar com ícone filho", "result": "Ícone alinhado à esquerda via layout inline do container", "priority": "medium" },
-        "item6": { "action": "Badge envolto em button", "result": "Pai recebe foco e dispara onClick corretamente", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar variante default",
+          "result": "Container usa --primary no fundo, --primary-foreground no texto e borda transparente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar variante secondary",
+          "result": "Fundo em --secondary com texto em --secondary-foreground",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar variante destructive",
+          "result": "Fundo soft em --destructive com texto em --foreground (contraste 4.5:1)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar variante outline",
+          "result": "Apenas borda padrão e texto em --foreground, sem fundo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar com ícone filho",
+          "result": "Ícone alinhado à esquerda via layout inline do container",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Badge envolto em button",
+          "result": "Pai recebe foco e dispara onClick corretamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Texto do Badge comunica estado sem depender de cor", "level": "AA", "how": "Revisão de conteúdo + teste em modo alto contraste" },
-        "item2": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos do SVG no DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 em todas as variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Badge interativo (wrapped) recebe foco visível", "level": "AA", "how": "Tab navigation + inspecionar focus ring" }
+        "item1": {
+          "criterion": "Texto do Badge comunica estado sem depender de cor",
+          "level": "AA",
+          "how": "Revisão de conteúdo + teste em modo alto contraste"
+        },
+        "item2": {
+          "criterion": "Ícones com aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspecionar atributos do SVG no DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 em todas as variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Badge interativo (wrapped) recebe foco visível",
+          "level": "AA",
+          "how": "Tab navigation + inspecionar focus ring"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, secondary, destructive, outline", "priority": "high" },
-        "item3": { "story": "Configurações — com ícone, contador, como link", "priority": "medium" },
-        "item4": { "story": "Composições — Badge dentro de Card, Table e List", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, secondary, destructive, outline",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurações — com ícone, contador, como link",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composições — Badge dentro de Card, Table e List",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -336,8 +403,7 @@
       "title": "Badge — Feedback",
       "description": "Documentation for Badge: 4 variants (default, secondary, destructive, outline), inline use for status, counts, and categories with semantic tokens.",
       "aiSummary": "Badge component with 4 variants (default, secondary, destructive, outline), no size prop, non-interactive by default, built on div with HTMLAttributes support.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
-      "aiIntent": "informational"
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -377,10 +443,26 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Short status in a table or card", "u": "Yes, default or secondary variant", "a": "-" },
-        "item2": { "s": "Full message with title", "u": "No", "a": "Alert" },
-        "item3": { "s": "Clickable, removable filter", "u": "No", "a": "Chip or Tag" },
-        "item4": { "s": "Notification counter", "u": "Yes, destructive variant", "a": "-" }
+        "item1": {
+          "s": "Short status in a table or card",
+          "u": "Yes, default or secondary variant",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Full message with title",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Clickable, removable filter",
+          "u": "No",
+          "a": "Chip or Tag"
+        },
+        "item4": {
+          "s": "Notification counter",
+          "u": "Yes, destructive variant",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -610,28 +692,80 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Badge configuration.",
-        "item1": { "action": "Render default variant", "result": "Container uses --primary background, --primary-foreground text, and transparent border", "priority": "high" },
-        "item2": { "action": "Render secondary variant", "result": "Background in --secondary with text in --secondary-foreground", "priority": "high" },
-        "item3": { "action": "Render destructive variant", "result": "Soft background in --destructive with text in --foreground (4.5:1 contrast)", "priority": "high" },
-        "item4": { "action": "Render outline variant", "result": "Only default border and --foreground text, no background", "priority": "high" },
-        "item5": { "action": "Render with icon child", "result": "Icon aligned left via the container's inline layout", "priority": "medium" },
-        "item6": { "action": "Badge wrapped in button", "result": "Parent receives focus and fires onClick correctly", "priority": "medium" }
+        "item1": {
+          "action": "Render default variant",
+          "result": "Container uses --primary background, --primary-foreground text, and transparent border",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render secondary variant",
+          "result": "Background in --secondary with text in --secondary-foreground",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render destructive variant",
+          "result": "Soft background in --destructive with text in --foreground (4.5:1 contrast)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render outline variant",
+          "result": "Only default border and --foreground text, no background",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Render with icon child",
+          "result": "Icon aligned left via the container's inline layout",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Badge wrapped in button",
+          "result": "Parent receives focus and fires onClick correctly",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "Badge text communicates state without relying on color", "level": "AA", "how": "Content review + high-contrast mode test" },
-        "item2": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
-        "item3": { "criterion": "Minimum contrast 4.5:1 across all variants", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Interactive (wrapped) Badge has visible focus", "level": "AA", "how": "Tab navigation + inspect focus ring" }
+        "item1": {
+          "criterion": "Badge text communicates state without relying on color",
+          "level": "AA",
+          "how": "Content review + high-contrast mode test"
+        },
+        "item2": {
+          "criterion": "Icons with aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspect SVG attributes in DOM"
+        },
+        "item3": {
+          "criterion": "Minimum contrast 4.5:1 across all variants",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Interactive (wrapped) Badge has visible focus",
+          "level": "AA",
+          "how": "Tab navigation + inspect focus ring"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — default variant", "priority": "high" },
-        "item2": { "story": "Variants — default, secondary, destructive, outline", "priority": "high" },
-        "item3": { "story": "Configurations — with icon, counter, as link", "priority": "medium" },
-        "item4": { "story": "Compositions — Badge inside Card, Table, and List", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default variant",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — default, secondary, destructive, outline",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurations — with icon, counter, as link",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Compositions — Badge inside Card, Table, and List",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -664,8 +798,7 @@
       "title": "Badge — Feedback",
       "description": "Documentación del Badge: 4 variantes (default, secondary, destructive, outline), uso inline para estados, conteos y categorías con tokens semánticos.",
       "aiSummary": "Componente Badge con 4 variantes (default, secondary, destructive, outline), sin prop size, no interactivo por defecto, basado en div con soporte para HTMLAttributes.",
-      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill",
-      "aiIntent": "informational"
+      "aiEntities": "Badge, React, Vue, Svelte, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
       "title": "Demostración",
@@ -705,10 +838,26 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Estado corto en tabla o card", "u": "Sí, variante default o secondary", "a": "-" },
-        "item2": { "s": "Mensaje completo con título", "u": "No", "a": "Alert" },
-        "item3": { "s": "Filtro clicable y removible", "u": "No", "a": "Chip o Tag" },
-        "item4": { "s": "Contador de notificaciones", "u": "Sí, variante destructive", "a": "-" }
+        "item1": {
+          "s": "Estado corto en tabla o card",
+          "u": "Sí, variante default o secondary",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mensaje completo con título",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Filtro clicable y removible",
+          "u": "No",
+          "a": "Chip o Tag"
+        },
+        "item4": {
+          "s": "Contador de notificaciones",
+          "u": "Sí, variante destructive",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -938,28 +1087,80 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Badge.",
-        "item1": { "action": "Renderizar variante default", "result": "Contenedor usa --primary de fondo, --primary-foreground en el texto y borde transparente", "priority": "high" },
-        "item2": { "action": "Renderizar variante secondary", "result": "Fondo en --secondary con texto en --secondary-foreground", "priority": "high" },
-        "item3": { "action": "Renderizar variante destructive", "result": "Fondo soft en --destructive con texto en --foreground (contraste 4.5:1)", "priority": "high" },
-        "item4": { "action": "Renderizar variante outline", "result": "Solo borde predeterminado y texto en --foreground, sin fondo", "priority": "high" },
-        "item5": { "action": "Renderizar con ícono hijo", "result": "Ícono alineado a la izquierda vía el layout inline del contenedor", "priority": "medium" },
-        "item6": { "action": "Badge envuelto en button", "result": "El padre recibe foco y dispara onClick correctamente", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar variante default",
+          "result": "Contenedor usa --primary de fondo, --primary-foreground en el texto y borde transparente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar variante secondary",
+          "result": "Fondo en --secondary con texto en --secondary-foreground",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar variante destructive",
+          "result": "Fondo soft en --destructive con texto en --foreground (contraste 4.5:1)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar variante outline",
+          "result": "Solo borde predeterminado y texto en --foreground, sin fondo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar con ícono hijo",
+          "result": "Ícono alineado a la izquierda vía el layout inline del contenedor",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Badge envuelto en button",
+          "result": "El padre recibe foco y dispara onClick correctamente",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Texto del Badge comunica estado sin depender del color", "level": "AA", "how": "Revisión de contenido + prueba en alto contraste" },
-        "item2": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos del SVG en el DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 en todas las variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Badge interactivo (wrapped) tiene foco visible", "level": "AA", "how": "Navegación con Tab + inspeccionar focus ring" }
+        "item1": {
+          "criterion": "Texto del Badge comunica estado sin depender del color",
+          "level": "AA",
+          "how": "Revisión de contenido + prueba en alto contraste"
+        },
+        "item2": {
+          "criterion": "Íconos con aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspeccionar atributos del SVG en el DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 en todas las variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Badge interactivo (wrapped) tiene foco visible",
+          "level": "AA",
+          "how": "Navegación con Tab + inspeccionar focus ring"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, secondary, destructive, outline", "priority": "high" },
-        "item3": { "story": "Configuraciones — con ícono, contador, como link", "priority": "medium" },
-        "item4": { "story": "Composiciones — Badge dentro de Card, Table y List", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, secondary, destructive, outline",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configuraciones — con ícono, contador, como link",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composiciones — Badge dentro de Card, Table y List",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

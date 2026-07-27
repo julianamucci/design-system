@@ -8,8 +8,7 @@
       "title": "Card — Layout",
       "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
       "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens semânticos --card e --radius-card do tema.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot",
-      "aiIntent": "informational"
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -58,12 +57,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Card de produto em catálogo", "u": "Sim", "a": "-" },
-        "item2": { "s": "Apenas dividir seções visualmente", "u": "Não", "a": "Separator ou espaçamento" },
-        "item3": { "s": "Cards numa lista vertical simples", "u": "Sim, size=\"sm\"", "a": "-" },
-        "item4": { "s": "Conteúdo que precisa expandir/recolher", "u": "Não", "a": "Accordion" },
-        "item5": { "s": "Alerta ou mensagem de feedback", "u": "Não", "a": "Alert" },
-        "item6": { "s": "Métrica ou KPI em dashboard", "u": "Sim", "a": "-" }
+        "item1": {
+          "s": "Card de produto em catálogo",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Apenas dividir seções visualmente",
+          "u": "Não",
+          "a": "Separator ou espaçamento"
+        },
+        "item3": {
+          "s": "Cards numa lista vertical simples",
+          "u": "Sim, size=\"sm\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Conteúdo que precisa expandir/recolher",
+          "u": "Não",
+          "a": "Accordion"
+        },
+        "item5": {
+          "s": "Alerta ou mensagem de feedback",
+          "u": "Não",
+          "a": "Alert"
+        },
+        "item6": {
+          "s": "Métrica ou KPI em dashboard",
+          "u": "Sim",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -304,31 +327,94 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Card.",
-        "item1": { "action": "Renderizar Card com Header, Content e Footer", "result": "3 blocos visíveis; Card com <code>data-slot=\"card\"</code>; footer com borda superior e fundo soft (<code>--muted</code>)", "priority": "high" },
-        "item2": { "action": "Renderizar Card com size=\"sm\"", "result": "<code>data-size=\"sm\"</code> no root; padding reduzido; CardTitle em tamanho menor", "priority": "high" },
-        "item3": { "action": "Renderizar Card com CardAction", "result": "Header vira grid <code>[1fr_auto]</code>; ação fica à direita mantendo ordem DOM original", "priority": "medium" },
-        "item4": { "action": "Renderizar Card com imagem como primeiro filho", "result": "Imagem herda o radius superior do Card (<code>--radius-card</code>); padding do topo é removido", "priority": "medium" },
-        "item5": { "action": "Clicar em botão no CardFooter", "result": "Handler do botão é chamado; evento não borbulha para o Card raiz se houver wrapper clicável", "priority": "high" },
-        "item6": { "action": "Card envolvido em <a> com aria-label", "result": "<kbd>Tab</kbd> foca o Card; <kbd>Enter</kbd> navega; leitor anuncia o <code>aria-label</code>", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar Card com Header, Content e Footer",
+          "result": "3 blocos visíveis; Card com <code>data-slot=\"card\"</code>; footer com borda superior e fundo soft (<code>--muted</code>)",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar Card com size=\"sm\"",
+          "result": "<code>data-size=\"sm\"</code> no root; padding reduzido; CardTitle em tamanho menor",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar Card com CardAction",
+          "result": "Header vira grid <code>[1fr_auto]</code>; ação fica à direita mantendo ordem DOM original",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Renderizar Card com imagem como primeiro filho",
+          "result": "Imagem herda o radius superior do Card (<code>--radius-card</code>); padding do topo é removido",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Clicar em botão no CardFooter",
+          "result": "Handler do botão é chamado; evento não borbulha para o Card raiz se houver wrapper clicável",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Card envolvido em <a> com aria-label",
+          "result": "<kbd>Tab</kbd> foca o Card; <kbd>Enter</kbd> navega; leitor anuncia o <code>aria-label</code>",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Contraste 4.5:1 no texto do Card", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item2": { "criterion": "Contraste 4.5:1 no <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
-        "item3": { "criterion": "Botões internos com <code>aria-label</code> contextual em listas", "level": "AA", "how": "Inspecionar atributo; getByRole('button', { name: /Excluir produto/ })" },
-        "item4": { "criterion": "Focus ring visível em Card clicável e controles internos", "level": "AA", "how": "Navegação manual por <kbd>Tab</kbd>" },
-        "item5": { "criterion": "Ordem DOM reflete ordem visual (CardAction não inverte a leitura)", "level": "AA", "how": "Inspeção manual + leitor de tela" },
-        "item6": { "criterion": "Sem violações axe-core", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "Contraste 4.5:1 no texto do Card",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item2": {
+          "criterion": "Contraste 4.5:1 no <code>CardDescription</code> (muted-foreground)",
+          "level": "AA",
+          "how": "axe-core"
+        },
+        "item3": {
+          "criterion": "Botões internos com <code>aria-label</code> contextual em listas",
+          "level": "AA",
+          "how": "Inspecionar atributo; getByRole('button', { name: /Excluir produto/ })"
+        },
+        "item4": {
+          "criterion": "Focus ring visível em Card clicável e controles internos",
+          "level": "AA",
+          "how": "Navegação manual por <kbd>Tab</kbd>"
+        },
+        "item5": {
+          "criterion": "Ordem DOM reflete ordem visual (CardAction não inverte a leitura)",
+          "level": "AA",
+          "how": "Inspeção manual + leitor de tela"
+        },
+        "item6": {
+          "criterion": "Sem violações axe-core",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — Card com header, content e footer", "priority": "high" },
-        "item2": { "story": "Tamanhos — default e sm lado a lado", "priority": "high" },
-        "item3": { "story": "Composições — com CardAction, com imagem, sem footer", "priority": "medium" },
-        "item4": { "story": "Estados — Card clicável com focus ring", "priority": "medium" },
-        "item5": { "story": "Composições — dentro de grid (catálogo/dashboard)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — Card com header, content e footer",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Tamanhos — default e sm lado a lado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Composições — com CardAction, com imagem, sem footer",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — Card clicável com focus ring",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composições — dentro de grid (catálogo/dashboard)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -361,8 +447,7 @@
       "title": "Card — Layout",
       "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
       "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and semantic theme tokens --card and --radius-card.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot",
-      "aiIntent": "informational"
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -411,12 +496,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Product card in a catalog", "u": "Yes", "a": "-" },
-        "item2": { "s": "Just dividing sections visually", "u": "No", "a": "Separator or spacing" },
-        "item3": { "s": "Cards in a simple vertical list", "u": "Yes, size=\"sm\"", "a": "-" },
-        "item4": { "s": "Content needing expand/collapse", "u": "No", "a": "Accordion" },
-        "item5": { "s": "Feedback alert or message", "u": "No", "a": "Alert" },
-        "item6": { "s": "Metric or KPI in a dashboard", "u": "Yes", "a": "-" }
+        "item1": {
+          "s": "Product card in a catalog",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Just dividing sections visually",
+          "u": "No",
+          "a": "Separator or spacing"
+        },
+        "item3": {
+          "s": "Cards in a simple vertical list",
+          "u": "Yes, size=\"sm\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Content needing expand/collapse",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item5": {
+          "s": "Feedback alert or message",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item6": {
+          "s": "Metric or KPI in a dashboard",
+          "u": "Yes",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -657,31 +766,94 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Card configuration.",
-        "item1": { "action": "Render Card with Header, Content and Footer", "result": "3 blocks visible; Card with <code>data-slot=\"card\"</code>; footer with top border and soft background (<code>--muted</code>)", "priority": "high" },
-        "item2": { "action": "Render Card with size=\"sm\"", "result": "<code>data-size=\"sm\"</code> on root; reduced padding; CardTitle in smaller size", "priority": "high" },
-        "item3": { "action": "Render Card with CardAction", "result": "Header becomes <code>[1fr_auto]</code> grid; action stays right with original DOM order", "priority": "medium" },
-        "item4": { "action": "Render Card with image as first child", "result": "Image inherits the Card's top radius (<code>--radius-card</code>); top padding is removed", "priority": "medium" },
-        "item5": { "action": "Click a button in CardFooter", "result": "Button handler fires; event doesn't bubble to Card root if there's a clickable wrapper", "priority": "high" },
-        "item6": { "action": "Card wrapped in <a> with aria-label", "result": "<kbd>Tab</kbd> focuses the Card; <kbd>Enter</kbd> navigates; reader announces the <code>aria-label</code>", "priority": "medium" }
+        "item1": {
+          "action": "Render Card with Header, Content and Footer",
+          "result": "3 blocks visible; Card with <code>data-slot=\"card\"</code>; footer with top border and soft background (<code>--muted</code>)",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render Card with size=\"sm\"",
+          "result": "<code>data-size=\"sm\"</code> on root; reduced padding; CardTitle in smaller size",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render Card with CardAction",
+          "result": "Header becomes <code>[1fr_auto]</code> grid; action stays right with original DOM order",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Render Card with image as first child",
+          "result": "Image inherits the Card's top radius (<code>--radius-card</code>); top padding is removed",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Click a button in CardFooter",
+          "result": "Button handler fires; event doesn't bubble to Card root if there's a clickable wrapper",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Card wrapped in <a> with aria-label",
+          "result": "<kbd>Tab</kbd> focuses the Card; <kbd>Enter</kbd> navigates; reader announces the <code>aria-label</code>",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "4.5:1 contrast on Card text", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item2": { "criterion": "4.5:1 contrast on <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
-        "item3": { "criterion": "Internal buttons with contextual <code>aria-label</code> in lists", "level": "AA", "how": "Inspect attribute; getByRole('button', { name: /Delete product/ })" },
-        "item4": { "criterion": "Visible focus ring on clickable Card and internal controls", "level": "AA", "how": "Manual <kbd>Tab</kbd> navigation" },
-        "item5": { "criterion": "DOM order reflects visual order (CardAction doesn't invert reading)", "level": "AA", "how": "Manual inspection + screen reader" },
-        "item6": { "criterion": "No axe-core violations", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "4.5:1 contrast on Card text",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item2": {
+          "criterion": "4.5:1 contrast on <code>CardDescription</code> (muted-foreground)",
+          "level": "AA",
+          "how": "axe-core"
+        },
+        "item3": {
+          "criterion": "Internal buttons with contextual <code>aria-label</code> in lists",
+          "level": "AA",
+          "how": "Inspect attribute; getByRole('button', { name: /Delete product/ })"
+        },
+        "item4": {
+          "criterion": "Visible focus ring on clickable Card and internal controls",
+          "level": "AA",
+          "how": "Manual <kbd>Tab</kbd> navigation"
+        },
+        "item5": {
+          "criterion": "DOM order reflects visual order (CardAction doesn't invert reading)",
+          "level": "AA",
+          "how": "Manual inspection + screen reader"
+        },
+        "item6": {
+          "criterion": "No axe-core violations",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — Card with header, content and footer", "priority": "high" },
-        "item2": { "story": "Sizes — default and sm side by side", "priority": "high" },
-        "item3": { "story": "Compositions — with CardAction, with image, no footer", "priority": "medium" },
-        "item4": { "story": "States — clickable Card with focus ring", "priority": "medium" },
-        "item5": { "story": "Compositions — inside a grid (catalog/dashboard)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — Card with header, content and footer",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Sizes — default and sm side by side",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Compositions — with CardAction, with image, no footer",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — clickable Card with focus ring",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Compositions — inside a grid (catalog/dashboard)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -714,8 +886,7 @@
       "title": "Card — Layout",
       "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
       "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens semánticos --card y --radius-card del tema.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot",
-      "aiIntent": "informational"
+      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demostración",
@@ -764,12 +935,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Card de producto en catálogo", "u": "Sí", "a": "-" },
-        "item2": { "s": "Solo dividir secciones visualmente", "u": "No", "a": "Separator o espaciado" },
-        "item3": { "s": "Cards en una lista vertical simple", "u": "Sí, size=\"sm\"", "a": "-" },
-        "item4": { "s": "Contenido que debe expandirse/contraerse", "u": "No", "a": "Accordion" },
-        "item5": { "s": "Alerta o mensaje de feedback", "u": "No", "a": "Alert" },
-        "item6": { "s": "Métrica o KPI en un dashboard", "u": "Sí", "a": "-" }
+        "item1": {
+          "s": "Card de producto en catálogo",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Solo dividir secciones visualmente",
+          "u": "No",
+          "a": "Separator o espaciado"
+        },
+        "item3": {
+          "s": "Cards en una lista vertical simple",
+          "u": "Sí, size=\"sm\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Contenido que debe expandirse/contraerse",
+          "u": "No",
+          "a": "Accordion"
+        },
+        "item5": {
+          "s": "Alerta o mensaje de feedback",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item6": {
+          "s": "Métrica o KPI en un dashboard",
+          "u": "Sí",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1010,31 +1205,94 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Card.",
-        "item1": { "action": "Renderizar Card con Header, Content y Footer", "result": "3 bloques visibles; Card con <code>data-slot=\"card\"</code>; footer con borde superior y fondo soft (<code>--muted</code>)", "priority": "high" },
-        "item2": { "action": "Renderizar Card con size=\"sm\"", "result": "<code>data-size=\"sm\"</code> en el root; padding reducido; CardTitle en tamaño menor", "priority": "high" },
-        "item3": { "action": "Renderizar Card con CardAction", "result": "Header se vuelve grid <code>[1fr_auto]</code>; la acción queda a la derecha manteniendo el orden DOM original", "priority": "medium" },
-        "item4": { "action": "Renderizar Card con imagen como primer hijo", "result": "La imagen hereda el radius superior del Card (<code>--radius-card</code>); el padding superior se elimina", "priority": "medium" },
-        "item5": { "action": "Hacer clic en botón del CardFooter", "result": "El handler del botón se llama; el evento no burbujea al Card raíz si hay wrapper clicable", "priority": "high" },
-        "item6": { "action": "Card envuelto en <a> con aria-label", "result": "<kbd>Tab</kbd> enfoca el Card; <kbd>Enter</kbd> navega; el lector anuncia el <code>aria-label</code>", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar Card con Header, Content y Footer",
+          "result": "3 bloques visibles; Card con <code>data-slot=\"card\"</code>; footer con borde superior y fondo soft (<code>--muted</code>)",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar Card con size=\"sm\"",
+          "result": "<code>data-size=\"sm\"</code> en el root; padding reducido; CardTitle en tamaño menor",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar Card con CardAction",
+          "result": "Header se vuelve grid <code>[1fr_auto]</code>; la acción queda a la derecha manteniendo el orden DOM original",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Renderizar Card con imagen como primer hijo",
+          "result": "La imagen hereda el radius superior del Card (<code>--radius-card</code>); el padding superior se elimina",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Hacer clic en botón del CardFooter",
+          "result": "El handler del botón se llama; el evento no burbujea al Card raíz si hay wrapper clicable",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Card envuelto en <a> con aria-label",
+          "result": "<kbd>Tab</kbd> enfoca el Card; <kbd>Enter</kbd> navega; el lector anuncia el <code>aria-label</code>",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Contraste 4.5:1 en el texto del Card", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item2": { "criterion": "Contraste 4.5:1 en <code>CardDescription</code> (muted-foreground)", "level": "AA", "how": "axe-core" },
-        "item3": { "criterion": "Botones internos con <code>aria-label</code> contextual en listas", "level": "AA", "how": "Inspeccionar atributo; getByRole('button', { name: /Eliminar producto/ })" },
-        "item4": { "criterion": "Focus ring visible en Card clicable y controles internos", "level": "AA", "how": "Navegación manual por <kbd>Tab</kbd>" },
-        "item5": { "criterion": "El orden DOM refleja el orden visual (CardAction no invierte la lectura)", "level": "AA", "how": "Inspección manual + lector de pantalla" },
-        "item6": { "criterion": "Sin violaciones axe-core", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "Contraste 4.5:1 en el texto del Card",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item2": {
+          "criterion": "Contraste 4.5:1 en <code>CardDescription</code> (muted-foreground)",
+          "level": "AA",
+          "how": "axe-core"
+        },
+        "item3": {
+          "criterion": "Botones internos con <code>aria-label</code> contextual en listas",
+          "level": "AA",
+          "how": "Inspeccionar atributo; getByRole('button', { name: /Eliminar producto/ })"
+        },
+        "item4": {
+          "criterion": "Focus ring visible en Card clicable y controles internos",
+          "level": "AA",
+          "how": "Navegación manual por <kbd>Tab</kbd>"
+        },
+        "item5": {
+          "criterion": "El orden DOM refleja el orden visual (CardAction no invierte la lectura)",
+          "level": "AA",
+          "how": "Inspección manual + lector de pantalla"
+        },
+        "item6": {
+          "criterion": "Sin violaciones axe-core",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — Card con header, content y footer", "priority": "high" },
-        "item2": { "story": "Tamaños — default y sm lado a lado", "priority": "high" },
-        "item3": { "story": "Composiciones — con CardAction, con imagen, sin footer", "priority": "medium" },
-        "item4": { "story": "Estados — Card clicable con focus ring", "priority": "medium" },
-        "item5": { "story": "Composiciones — dentro de grid (catálogo/dashboard)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — Card con header, content y footer",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Tamaños — default y sm lado a lado",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Composiciones — con CardAction, con imagen, sin footer",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — Card clicable con focus ring",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composiciones — dentro de grid (catálogo/dashboard)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

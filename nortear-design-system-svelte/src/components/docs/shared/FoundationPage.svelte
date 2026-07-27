@@ -51,7 +51,6 @@
       kind: 'guide',
       aiSummary: seoBlock.aiSummary,
       aiEntities: seoBlock.aiEntities,
-      aiIntent: seoBlock.aiIntent,
     });
     track('docs_page_view', {
       component_name: componentSlug,

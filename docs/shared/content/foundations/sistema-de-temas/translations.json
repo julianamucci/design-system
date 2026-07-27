@@ -8,8 +8,7 @@
       "title": "Sistema de Temas",
       "description": "Como temas funcionam: classes no <html>, tokens semânticos compartilhados, toolbar do Storybook, padrão MutationObserver e criação de novos temas.",
       "aiSummary": "Página técnica sobre theming. Explica o padrão de classes no elemento <html> (tema, modo, densidade, fonte, type scale), tema inicial por subdomínio (theme-config.ts), toolbar do Storybook, padrão MutationObserver para componentes reativos, contrato de radius por tema e procedimento para criar tema novo.",
-      "aiEntities": "tema, theming, CSS custom properties, tokens semânticos, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
-      "aiIntent": "informational"
+      "aiEntities": "tema, theming, CSS custom properties, tokens semânticos, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary"
     },
     "intro": {
       "title": "Como funciona",
@@ -142,8 +141,7 @@
       "title": "Theme System",
       "description": "How theming works: classes on <html>, shared semantic tokens, Storybook toolbar, MutationObserver pattern and how to author a new theme.",
       "aiSummary": "Technical theming page. Explains the class pattern on the <html> element (theme, mode, density, font, type scale), initial theme via subdomain (theme-config.ts), Storybook toolbar, MutationObserver pattern for reactive components, per-theme radius contract and the procedure to create a new theme.",
-      "aiEntities": "theme, theming, CSS custom properties, semantic tokens, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary",
-      "aiIntent": "informational"
+      "aiEntities": "theme, theming, CSS custom properties, semantic tokens, dark mode, density, MutationObserver, Storybook globals, --background, --foreground, --primary"
     },
     "intro": {
       "title": "How it works",
@@ -276,8 +274,7 @@
       "title": "Sistema de Temas",
       "description": "Cómo funciona el theming: clases en <html>, tokens semánticos compartidos, toolbar de Storybook, patrón MutationObserver y creación de temas nuevos.",
       "aiSummary": "Página técnica de theming. Explica el patrón de clases en el elemento <html> (tema, modo, densidad, fuente, type scale), tema inicial por subdominio (theme-config.ts), toolbar de Storybook, patrón MutationObserver para componentes reactivos, contrato de radius por tema y el procedimiento para crear un tema nuevo.",
-      "aiEntities": "tema, theming, CSS custom properties, tokens semánticos, dark mode, densidad, MutationObserver, Storybook globals, --background, --foreground, --primary",
-      "aiIntent": "informational"
+      "aiEntities": "tema, theming, CSS custom properties, tokens semánticos, dark mode, densidad, MutationObserver, Storybook globals, --background, --foreground, --primary"
     },
     "intro": {
       "title": "Cómo funciona",

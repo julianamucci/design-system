@@ -45,7 +45,6 @@
       componentSlug: 'menubar',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: $tStore('category'), item: '/components/navigation' },

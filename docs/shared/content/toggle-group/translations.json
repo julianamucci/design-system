@@ -8,8 +8,7 @@
       "title": "ToggleGroup — Formulário",
       "description": "Documentação do ToggleGroup: single/multiple, orientação horizontal/vertical, ARIA com roving tabindex e WCAG 2.2 AA.",
       "aiSummary": "Componente ToggleGroup com Items, seleção single ou multiple, orientação horizontal/vertical, spacing configurável e ARIA com roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -53,11 +52,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Alinhamento de texto (3-4 opções)", "u": "Sim, type=single", "a": "-" },
-        "item2": { "s": "Formatação Bold/Italic/Underline", "u": "Sim, type=multiple", "a": "-" },
-        "item3": { "s": "Modo Grid/Lista", "u": "Sim, type=single", "a": "-" },
-        "item4": { "s": "Configuração com efeito imediato", "u": "Não", "a": "Switch" },
-        "item5": { "s": "Seleção em form com submit", "u": "Não", "a": "Checkbox / RadioGroup" }
+        "item1": {
+          "s": "Alinhamento de texto (3-4 opções)",
+          "u": "Sim, type=single",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Formatação Bold/Italic/Underline",
+          "u": "Sim, type=multiple",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Modo Grid/Lista",
+          "u": "Sim, type=single",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Configuração com efeito imediato",
+          "u": "Não",
+          "a": "Switch"
+        },
+        "item5": {
+          "s": "Seleção em form com submit",
+          "u": "Não",
+          "a": "Checkbox / RadioGroup"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -245,12 +264,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": { "class": "bg-muted", "part": "Fundo no estado selecionado e hover" },
-        "foreground": { "class": "text-foreground", "part": "Texto/ícone em hover/selected" },
-        "input": { "class": "border-input", "part": "Borda na variante outline" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borda em validação falha" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Raio do grupo e dos cantos extremos" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo no estado selecionado e hover"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto/ícone em hover/selected"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Borda na variante outline"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda em validação falha"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Raio do grupo e dos cantos extremos"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Spacing customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
@@ -295,10 +332,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "toggle": { "name": "Toggle", "description": "Toggle único isolado." },
-        "tabs": { "name": "Tabs", "description": "Alterna entre views (não combina formatação)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Seleção única textual em form com submit." },
-        "checkbox": { "name": "Checkbox", "description": "Seleção independente em form com submit." }
+        "toggle": {
+          "name": "Toggle",
+          "description": "Toggle único isolado."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Alterna entre views (não combina formatação)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Seleção única textual em form com submit."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Seleção independente em form com submit."
+        }
       }
     },
     "notes": {
@@ -326,10 +375,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar em item (single)", "result": "Ativa o item, desativa o anterior", "priority": "high" },
-        "item2": { "action": "Clicar em item (multiple)", "result": "Adiciona ou remove do array", "priority": "high" },
-        "item3": { "action": "ArrowRight com item focado", "result": "Move para o próximo item (sem ativar em single)", "priority": "high" },
-        "item4": { "action": "Space/Enter com item focado", "result": "Alterna o item focado", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em item (single)",
+          "result": "Ativa o item, desativa o anterior",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em item (multiple)",
+          "result": "Adiciona ou remove do array",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "ArrowRight com item focado",
+          "result": "Move para o próximo item (sem ativar em single)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Space/Enter com item focado",
+          "result": "Alterna o item focado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -344,11 +409,26 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Single (alinhamento, 3 itens)", "priority": "high" },
-        "item2": { "story": "Multiple (formatação, 3 itens)", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Outline variant", "priority": "medium" },
-        "item5": { "story": "Spacing > 0 (separado)", "priority": "medium" }
+        "item1": {
+          "story": "Single (alinhamento, 3 itens)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Multiple (formatação, 3 itens)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Outline variant",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Spacing > 0 (separado)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -381,8 +461,7 @@
       "title": "ToggleGroup — Form",
       "description": "ToggleGroup documentation: single/multiple, horizontal/vertical orientation, ARIA with roving tabindex and WCAG 2.2 AA.",
       "aiSummary": "ToggleGroup component with Items, single or multiple selection, horizontal/vertical orientation, configurable spacing and ARIA with roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -426,11 +505,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Text alignment (3-4 options)", "u": "Yes, type=single", "a": "-" },
-        "item2": { "s": "Bold/Italic/Underline formatting", "u": "Yes, type=multiple", "a": "-" },
-        "item3": { "s": "Grid/List mode", "u": "Yes, type=single", "a": "-" },
-        "item4": { "s": "System setting with immediate effect", "u": "No", "a": "Switch" },
-        "item5": { "s": "Selection in form with submit", "u": "No", "a": "Checkbox / RadioGroup" }
+        "item1": {
+          "s": "Text alignment (3-4 options)",
+          "u": "Yes, type=single",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Bold/Italic/Underline formatting",
+          "u": "Yes, type=multiple",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Grid/List mode",
+          "u": "Yes, type=single",
+          "a": "-"
+        },
+        "item4": {
+          "s": "System setting with immediate effect",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item5": {
+          "s": "Selection in form with submit",
+          "u": "No",
+          "a": "Checkbox / RadioGroup"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -618,12 +717,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": { "class": "bg-muted", "part": "Background in selected and hover states" },
-        "foreground": { "class": "text-foreground", "part": "Text/icon on hover/selected" },
-        "input": { "class": "border-input", "part": "Border on outline variant" },
-        "ring": { "class": "ring-ring", "part": "Focus ring" },
-        "destructive": { "class": "border-destructive", "part": "Border on failed validation" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Group radius and outermost corners" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Background in selected and hover states"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Text/icon on hover/selected"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Border on outline variant"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Border on failed validation"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Group radius and outermost corners"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
@@ -668,10 +785,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "toggle": { "name": "Toggle", "description": "Single isolated toggle." },
-        "tabs": { "name": "Tabs", "description": "Switches between views (doesn't combine formatting)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Single text selection in form with submit." },
-        "checkbox": { "name": "Checkbox", "description": "Independent selection in form with submit." }
+        "toggle": {
+          "name": "Toggle",
+          "description": "Single isolated toggle."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Switches between views (doesn't combine formatting)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Single text selection in form with submit."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Independent selection in form with submit."
+        }
       }
     },
     "notes": {
@@ -699,10 +828,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click item (single)", "result": "Activates item, deactivates previous", "priority": "high" },
-        "item2": { "action": "Click item (multiple)", "result": "Adds or removes from array", "priority": "high" },
-        "item3": { "action": "ArrowRight with item focused", "result": "Moves to next item (no activation in single)", "priority": "high" },
-        "item4": { "action": "Space/Enter with item focused", "result": "Toggles focused item", "priority": "medium" }
+        "item1": {
+          "action": "Click item (single)",
+          "result": "Activates item, deactivates previous",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click item (multiple)",
+          "result": "Adds or removes from array",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "ArrowRight with item focused",
+          "result": "Moves to next item (no activation in single)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Space/Enter with item focused",
+          "result": "Toggles focused item",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -717,11 +862,26 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Single (alignment, 3 items)", "priority": "high" },
-        "item2": { "story": "Multiple (formatting, 3 items)", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Outline variant", "priority": "medium" },
-        "item5": { "story": "Spacing > 0 (separated)", "priority": "medium" }
+        "item1": {
+          "story": "Single (alignment, 3 items)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Multiple (formatting, 3 items)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Outline variant",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Spacing > 0 (separated)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -754,8 +914,7 @@
       "title": "ToggleGroup — Formulario",
       "description": "Documentación de ToggleGroup: single/multiple, orientación horizontal/vertical, ARIA con roving tabindex y WCAG 2.2 AA.",
       "aiSummary": "Componente ToggleGroup con Items, selección single o multiple, orientación horizontal/vertical, spacing configurable y ARIA con roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demostración",
@@ -799,11 +958,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Alineación de texto (3-4 opciones)", "u": "Sí, type=single", "a": "-" },
-        "item2": { "s": "Formato Bold/Italic/Underline", "u": "Sí, type=multiple", "a": "-" },
-        "item3": { "s": "Modo Grid/Lista", "u": "Sí, type=single", "a": "-" },
-        "item4": { "s": "Configuración con efecto inmediato", "u": "No", "a": "Switch" },
-        "item5": { "s": "Selección en form con submit", "u": "No", "a": "Checkbox / RadioGroup" }
+        "item1": {
+          "s": "Alineación de texto (3-4 opciones)",
+          "u": "Sí, type=single",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Formato Bold/Italic/Underline",
+          "u": "Sí, type=multiple",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Modo Grid/Lista",
+          "u": "Sí, type=single",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Configuración con efecto inmediato",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item5": {
+          "s": "Selección en form con submit",
+          "u": "No",
+          "a": "Checkbox / RadioGroup"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -991,12 +1170,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": { "class": "bg-muted", "part": "Fondo en estados seleccionado y hover" },
-        "foreground": { "class": "text-foreground", "part": "Texto/icono en hover/seleccionado" },
-        "input": { "class": "border-input", "part": "Borde en variante outline" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borde en validación fallida" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Radio del grupo y esquinas extremas" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo en estados seleccionado y hover"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto/icono en hover/seleccionado"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Borde en variante outline"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en validación fallida"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Radio del grupo y esquinas extremas"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Spacing personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
@@ -1041,10 +1238,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "toggle": { "name": "Toggle", "description": "Toggle único aislado." },
-        "tabs": { "name": "Tabs", "description": "Alterna entre vistas (no combina formato)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selección única textual en form con submit." },
-        "checkbox": { "name": "Checkbox", "description": "Selección independiente en form con submit." }
+        "toggle": {
+          "name": "Toggle",
+          "description": "Toggle único aislado."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Alterna entre vistas (no combina formato)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selección única textual en form con submit."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selección independiente en form con submit."
+        }
       }
     },
     "notes": {
@@ -1072,10 +1281,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en ítem (single)", "result": "Activa el ítem, desactiva el anterior", "priority": "high" },
-        "item2": { "action": "Hacer clic en ítem (multiple)", "result": "Añade o quita del array", "priority": "high" },
-        "item3": { "action": "ArrowRight con ítem enfocado", "result": "Mueve al siguiente ítem (sin activar en single)", "priority": "high" },
-        "item4": { "action": "Space/Enter con ítem enfocado", "result": "Alterna el ítem enfocado", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en ítem (single)",
+          "result": "Activa el ítem, desactiva el anterior",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en ítem (multiple)",
+          "result": "Añade o quita del array",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "ArrowRight con ítem enfocado",
+          "result": "Mueve al siguiente ítem (sin activar en single)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Space/Enter con ítem enfocado",
+          "result": "Alterna el ítem enfocado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1090,11 +1315,26 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Single (alineación, 3 ítems)", "priority": "high" },
-        "item2": { "story": "Multiple (formato, 3 ítems)", "priority": "high" },
-        "item3": { "story": "Vertical", "priority": "high" },
-        "item4": { "story": "Variante outline", "priority": "medium" },
-        "item5": { "story": "Spacing > 0 (separado)", "priority": "medium" }
+        "item1": {
+          "story": "Single (alineación, 3 ítems)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Multiple (formato, 3 ítems)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Vertical",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Variante outline",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Spacing > 0 (separado)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

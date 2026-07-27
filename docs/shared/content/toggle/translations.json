@@ -8,8 +8,7 @@
       "title": "Toggle — Formulário",
       "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,11 +45,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Botão de negrito num editor", "u": "Sim", "a": "-" },
-        "item2": { "s": "Mostrar/ocultar itens arquivados", "u": "Sim", "a": "-" },
-        "item3": { "s": "Dark mode (efeito imediato)", "u": "Não", "a": "Switch" },
-        "item4": { "s": "Aceitar termos (form com submit)", "u": "Não", "a": "Checkbox" },
-        "item5": { "s": "Alinhamento de texto (3 opções)", "u": "Não", "a": "ToggleGroup type=single" }
+        "item1": {
+          "s": "Botão de negrito num editor",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar/ocultar itens arquivados",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Dark mode (efeito imediato)",
+          "u": "Não",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "Aceitar termos (form com submit)",
+          "u": "Não",
+          "a": "Checkbox"
+        },
+        "item5": {
+          "s": "Alinhamento de texto (3 opções)",
+          "u": "Não",
+          "a": "ToggleGroup type=single"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -223,12 +242,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": { "class": "bg-muted", "part": "Fundo no estado ativo (aria-pressed=true) e hover" },
-        "foreground": { "class": "text-foreground", "part": "Cor do texto/ícone no hover/ativo" },
-        "input": { "class": "border-input", "part": "Borda na variante outline" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Raio respeita multiplicador do tema" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo no estado ativo (aria-pressed=true) e hover"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Cor do texto/ícone no hover/ativo"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Borda na variante outline"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda no estado inválido"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Raio respeita multiplicador do tema"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Cor customizada do estado ativo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override do tamanho via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
@@ -267,10 +304,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "toggleGroup": { "name": "ToggleGroup", "description": "Conjunto relacionado de toggles (single ou multiple)." },
-        "switch": { "name": "Switch", "description": "Configuração de sistema com efeito imediato." },
-        "checkbox": { "name": "Checkbox", "description": "Seleção em form com submit." },
-        "button": { "name": "Button", "description": "Ação única (não-alternante)." }
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Conjunto relacionado de toggles (single ou multiple)."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Configuração de sistema com efeito imediato."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Seleção em form com submit."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Ação única (não-alternante)."
+        }
       }
     },
     "notes": {
@@ -298,10 +347,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no Toggle", "result": "Alterna o estado pressionado e dispara o callback de mudança", "priority": "high" },
-        "item2": { "action": "Pressionar Space com Toggle focado", "result": "Alterna o estado", "priority": "high" },
-        "item3": { "action": "Pressionar Enter com Toggle focado", "result": "Alterna o estado (idêntico a Space)", "priority": "medium" },
-        "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no Toggle",
+          "result": "Alterna o estado pressionado e dispara o callback de mudança",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Space com Toggle focado",
+          "result": "Alterna o estado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Enter com Toggle focado",
+          "result": "Alterna o estado (idêntico a Space)",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Clicar com disabled=true",
+          "result": "Não muda estado; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -316,10 +381,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Off (default)", "priority": "high" },
-        "item2": { "story": "On (pressed)", "priority": "high" },
-        "item3": { "story": "Outline variant", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Off (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "On (pressed)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Outline variant",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -352,8 +429,7 @@
       "title": "Toggle — Form",
       "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.2 AA support.",
       "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -390,11 +466,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Bold button in an editor", "u": "Yes", "a": "-" },
-        "item2": { "s": "Show/hide archived items", "u": "Yes", "a": "-" },
-        "item3": { "s": "Dark mode (immediate effect)", "u": "No", "a": "Switch" },
-        "item4": { "s": "Accept terms (form with submit)", "u": "No", "a": "Checkbox" },
-        "item5": { "s": "Text alignment (3 options)", "u": "No", "a": "ToggleGroup type=single" }
+        "item1": {
+          "s": "Bold button in an editor",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Show/hide archived items",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Dark mode (immediate effect)",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "Accept terms (form with submit)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item5": {
+          "s": "Text alignment (3 options)",
+          "u": "No",
+          "a": "ToggleGroup type=single"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -567,12 +663,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": { "class": "bg-muted", "part": "Background in active state (aria-pressed=true) and hover" },
-        "foreground": { "class": "text-foreground", "part": "Text/icon color on hover/active" },
-        "input": { "class": "border-input", "part": "Border on outline variant" },
-        "ring": { "class": "ring-ring", "part": "Focus ring" },
-        "destructive": { "class": "border-destructive", "part": "Border in invalid state" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Radius respects theme multiplier" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Background in active state (aria-pressed=true) and hover"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Text/icon color on hover/active"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Border on outline variant"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Border in invalid state"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Radius respects theme multiplier"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom active state color */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override size via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
@@ -611,10 +725,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "toggleGroup": { "name": "ToggleGroup", "description": "Related set of toggles (single or multiple)." },
-        "switch": { "name": "Switch", "description": "System setting with immediate effect." },
-        "checkbox": { "name": "Checkbox", "description": "Selection in form with submit." },
-        "button": { "name": "Button", "description": "Single (non-toggling) action." }
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Related set of toggles (single or multiple)."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "System setting with immediate effect."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selection in form with submit."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Single (non-toggling) action."
+        }
       }
     },
     "notes": {
@@ -642,10 +768,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the Toggle", "result": "Toggles the pressed state and fires the change callback", "priority": "high" },
-        "item2": { "action": "Press Space with Toggle focused", "result": "Toggles the state", "priority": "high" },
-        "item3": { "action": "Press Enter with Toggle focused", "result": "Toggles the state (same as Space)", "priority": "medium" },
-        "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Click the Toggle",
+          "result": "Toggles the pressed state and fires the change callback",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Space with Toggle focused",
+          "result": "Toggles the state",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Enter with Toggle focused",
+          "result": "Toggles the state (same as Space)",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Click with disabled=true",
+          "result": "Doesn't change state; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -660,10 +802,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Off (default)", "priority": "high" },
-        "item2": { "story": "On (pressed)", "priority": "high" },
-        "item3": { "story": "Outline variant", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Off (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "On (pressed)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Outline variant",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -696,8 +850,7 @@
       "title": "Toggle — Formulario",
       "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed",
-      "aiIntent": "informational"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demostración",
@@ -734,11 +887,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Botón de negrita en un editor", "u": "Sí", "a": "-" },
-        "item2": { "s": "Mostrar/ocultar ítems archivados", "u": "Sí", "a": "-" },
-        "item3": { "s": "Modo oscuro (efecto inmediato)", "u": "No", "a": "Switch" },
-        "item4": { "s": "Aceptar términos (form con submit)", "u": "No", "a": "Checkbox" },
-        "item5": { "s": "Alineación de texto (3 opciones)", "u": "No", "a": "ToggleGroup type=single" }
+        "item1": {
+          "s": "Botón de negrita en un editor",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar/ocultar ítems archivados",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Modo oscuro (efecto inmediato)",
+          "u": "No",
+          "a": "Switch"
+        },
+        "item4": {
+          "s": "Aceptar términos (form con submit)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item5": {
+          "s": "Alineación de texto (3 opciones)",
+          "u": "No",
+          "a": "ToggleGroup type=single"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -911,12 +1084,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": { "class": "bg-muted", "part": "Fondo en estado activo (aria-pressed=true) y hover" },
-        "foreground": { "class": "text-foreground", "part": "Color del texto/icono en hover/activo" },
-        "input": { "class": "border-input", "part": "Borde en variante outline" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
-        "radius": { "class": "rounded-(--radius-button)", "part": "Radio respeta el multiplicador del tema" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo en estado activo (aria-pressed=true) y hover"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Color del texto/icono en hover/activo"
+        },
+        "input": {
+          "class": "border-input",
+          "part": "Borde en variante outline"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en estado inválido"
+        },
+        "radius": {
+          "class": "rounded-(--radius-button)",
+          "part": "Radio respeta el multiplicador del tema"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Color personalizado del estado activo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override del tamaño vía tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
@@ -955,10 +1146,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "toggleGroup": { "name": "ToggleGroup", "description": "Conjunto relacionado de toggles (single o multiple)." },
-        "switch": { "name": "Switch", "description": "Configuración de sistema con efecto inmediato." },
-        "checkbox": { "name": "Checkbox", "description": "Selección en form con submit." },
-        "button": { "name": "Button", "description": "Acción única (no alternante)." }
+        "toggleGroup": {
+          "name": "ToggleGroup",
+          "description": "Conjunto relacionado de toggles (single o multiple)."
+        },
+        "switch": {
+          "name": "Switch",
+          "description": "Configuración de sistema con efecto inmediato."
+        },
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selección en form con submit."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Acción única (no alternante)."
+        }
       }
     },
     "notes": {
@@ -986,10 +1189,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el Toggle", "result": "Alterna el estado presionado y dispara el callback de cambio", "priority": "high" },
-        "item2": { "action": "Pulsar Space con Toggle enfocado", "result": "Alterna el estado", "priority": "high" },
-        "item3": { "action": "Pulsar Enter con Toggle enfocado", "result": "Alterna el estado (igual a Space)", "priority": "medium" },
-        "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el Toggle",
+          "result": "Alterna el estado presionado y dispara el callback de cambio",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar Space con Toggle enfocado",
+          "result": "Alterna el estado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Enter con Toggle enfocado",
+          "result": "Alterna el estado (igual a Space)",
+          "priority": "medium"
+        },
+        "item4": {
+          "action": "Clic con disabled=true",
+          "result": "No cambia el estado; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1004,10 +1223,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Off (default)", "priority": "high" },
-        "item2": { "story": "On (pressed)", "priority": "high" },
-        "item3": { "story": "Variante outline", "priority": "high" },
-        "item4": { "story": "Disabled", "priority": "medium" }
+        "item1": {
+          "story": "Off (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "On (pressed)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variante outline",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Disabled",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

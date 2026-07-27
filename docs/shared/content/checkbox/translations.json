@@ -8,8 +8,7 @@
       "title": "Checkbox — Formulário",
       "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Vanilla.",
       "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,11 +45,31 @@
           "use": "Componente",
           "alternative": "Observação"
         },
-        "item1": { "s": "Múltiplas seleções independentes", "u": "Checkbox", "a": "Padrão para este caso" },
-        "item2": { "s": "Seleção única em grupo", "u": "RadioGroup", "a": "Mutuamente exclusivo" },
-        "item3": { "s": "Toggle on/off de configuração", "u": "Switch", "a": "Efeito imediato" },
-        "item4": { "s": "Seleção parcial de grupo", "u": "Checkbox indeterminate", "a": "Somente Svelte nativo" },
-        "item5": { "s": "Seleção de 3+ opções em lista", "u": "Select múltiplo", "a": "Alternativa compacta" }
+        "item1": {
+          "s": "Múltiplas seleções independentes",
+          "u": "Checkbox",
+          "a": "Padrão para este caso"
+        },
+        "item2": {
+          "s": "Seleção única em grupo",
+          "u": "RadioGroup",
+          "a": "Mutuamente exclusivo"
+        },
+        "item3": {
+          "s": "Toggle on/off de configuração",
+          "u": "Switch",
+          "a": "Efeito imediato"
+        },
+        "item4": {
+          "s": "Seleção parcial de grupo",
+          "u": "Checkbox indeterminate",
+          "a": "Somente Svelte nativo"
+        },
+        "item5": {
+          "s": "Seleção de 3+ opções em lista",
+          "u": "Select múltiplo",
+          "a": "Alternativa compacta"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -270,30 +289,89 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Checkbox.",
-        "item1": { "action": "Clicar em Checkbox desmarcado", "result": "Estado muda para marcado; callback de mudança dispara com <code>true</code>", "priority": "high" },
-        "item2": { "action": "Clicar em Checkbox marcado", "result": "Estado muda para desmarcado; callback de mudança dispara com <code>false</code>", "priority": "high" },
-        "item3": { "action": "Pressionar <kbd>Space</kbd> com foco no Checkbox", "result": "Estado alterna; callback de mudança dispara", "priority": "high" },
-        "item4": { "action": "Clicar em Checkbox com <code>disabled</code>", "result": "Estado não muda; callback de mudança não dispara", "priority": "high" },
-        "item5": { "action": "Submeter formulário com Checkbox marcado", "result": "Campo <code>name</code> presente no payload com valor <code>value</code>", "priority": "medium" },
-        "item6": { "action": "Renderizar com <code>defaultChecked={true}</code>", "result": "Estado inicial marcado sem controle externo", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em Checkbox desmarcado",
+          "result": "Estado muda para marcado; callback de mudança dispara com <code>true</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em Checkbox marcado",
+          "result": "Estado muda para desmarcado; callback de mudança dispara com <code>false</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar <kbd>Space</kbd> com foco no Checkbox",
+          "result": "Estado alterna; callback de mudança dispara",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar em Checkbox com <code>disabled</code>",
+          "result": "Estado não muda; callback de mudança não dispara",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Submeter formulário com Checkbox marcado",
+          "result": "Campo <code>name</code> presente no payload com valor <code>value</code>",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar com <code>defaultChecked={true}</code>",
+          "result": "Estado inicial marcado sem controle externo",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "role=\"checkbox\" presente no elemento", "level": "AA", "how": "getByRole('checkbox') no testing-library" },
-        "item2": { "criterion": "aria-checked atualiza corretamente (false/true/mixed)", "level": "AA", "how": "Verificar atributo após interação" },
-        "item3": { "criterion": "Label visível associado via htmlFor/id", "level": "AA", "how": "getByRole('checkbox', { name }) retorna o elemento" },
-        "item4": { "criterion": "Focus ring visível ao navegar por teclado", "level": "AA", "how": "Inspecionar :focus-visible manualmente" },
-        "item5": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "role=\"checkbox\" presente no elemento",
+          "level": "AA",
+          "how": "getByRole('checkbox') no testing-library"
+        },
+        "item2": {
+          "criterion": "aria-checked atualiza corretamente (false/true/mixed)",
+          "level": "AA",
+          "how": "Verificar atributo após interação"
+        },
+        "item3": {
+          "criterion": "Label visível associado via htmlFor/id",
+          "level": "AA",
+          "how": "getByRole('checkbox', { name }) retorna o elemento"
+        },
+        "item4": {
+          "criterion": "Focus ring visível ao navegar por teclado",
+          "level": "AA",
+          "how": "Inspecionar :focus-visible manualmente"
+        },
+        "item5": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Estado desmarcado (default)", "priority": "high" },
-        "item2": { "story": "Estado marcado (checked)", "priority": "high" },
-        "item3": { "story": "Estado indeterminado — Svelte apenas", "priority": "medium" },
-        "item4": { "story": "Estado disabled (desmarcado e marcado)", "priority": "high" },
-        "item5": { "story": "Estado de erro (aria-invalid)", "priority": "high" }
+        "item1": {
+          "story": "Estado desmarcado (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estado marcado (checked)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estado indeterminado — Svelte apenas",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estado disabled (desmarcado e marcado)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estado de erro (aria-invalid)",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -326,8 +404,7 @@
       "title": "Checkbox — Form",
       "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Vanilla support.",
       "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -364,11 +441,31 @@
           "use": "Component",
           "alternative": "Note"
         },
-        "item1": { "s": "Multiple independent selections", "u": "Checkbox", "a": "Standard for this case" },
-        "item2": { "s": "Single selection in a group", "u": "RadioGroup", "a": "Mutually exclusive" },
-        "item3": { "s": "On/off settings toggle", "u": "Switch", "a": "Immediate effect" },
-        "item4": { "s": "Partial group selection", "u": "Checkbox indeterminate", "a": "Native Svelte only" },
-        "item5": { "s": "Selection from 3+ options in list", "u": "Multiple Select", "a": "Compact alternative" }
+        "item1": {
+          "s": "Multiple independent selections",
+          "u": "Checkbox",
+          "a": "Standard for this case"
+        },
+        "item2": {
+          "s": "Single selection in a group",
+          "u": "RadioGroup",
+          "a": "Mutually exclusive"
+        },
+        "item3": {
+          "s": "On/off settings toggle",
+          "u": "Switch",
+          "a": "Immediate effect"
+        },
+        "item4": {
+          "s": "Partial group selection",
+          "u": "Checkbox indeterminate",
+          "a": "Native Svelte only"
+        },
+        "item5": {
+          "s": "Selection from 3+ options in list",
+          "u": "Multiple Select",
+          "a": "Compact alternative"
+        }
       },
       "do": {
         "title": "Use when",
@@ -588,30 +685,89 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Checkbox interaction.",
-        "item1": { "action": "Click unchecked Checkbox", "result": "State changes to checked; change callback fires with <code>true</code>", "priority": "high" },
-        "item2": { "action": "Click checked Checkbox", "result": "State changes to unchecked; change callback fires with <code>false</code>", "priority": "high" },
-        "item3": { "action": "Press <kbd>Space</kbd> with focus on Checkbox", "result": "State toggles; change callback fires", "priority": "high" },
-        "item4": { "action": "Click Checkbox with <code>disabled</code>", "result": "State does not change; change callback does not fire", "priority": "high" },
-        "item5": { "action": "Submit form with Checkbox checked", "result": "<code>name</code> field present in payload with <code>value</code>", "priority": "medium" },
-        "item6": { "action": "Render with <code>defaultChecked={true}</code>", "result": "Initial state is checked without external control", "priority": "medium" }
+        "item1": {
+          "action": "Click unchecked Checkbox",
+          "result": "State changes to checked; change callback fires with <code>true</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click checked Checkbox",
+          "result": "State changes to unchecked; change callback fires with <code>false</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press <kbd>Space</kbd> with focus on Checkbox",
+          "result": "State toggles; change callback fires",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click Checkbox with <code>disabled</code>",
+          "result": "State does not change; change callback does not fire",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Submit form with Checkbox checked",
+          "result": "<code>name</code> field present in payload with <code>value</code>",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Render with <code>defaultChecked={true}</code>",
+          "result": "Initial state is checked without external control",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "role=\"checkbox\" present on element", "level": "AA", "how": "getByRole('checkbox') in testing-library" },
-        "item2": { "criterion": "aria-checked updates correctly (false/true/mixed)", "level": "AA", "how": "Check attribute after interaction" },
-        "item3": { "criterion": "Visible label associated via htmlFor/id", "level": "AA", "how": "getByRole('checkbox', { name }) returns the element" },
-        "item4": { "criterion": "Focus ring visible on keyboard navigation", "level": "AA", "how": "Inspect :focus-visible manually" },
-        "item5": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "role=\"checkbox\" present on element",
+          "level": "AA",
+          "how": "getByRole('checkbox') in testing-library"
+        },
+        "item2": {
+          "criterion": "aria-checked updates correctly (false/true/mixed)",
+          "level": "AA",
+          "how": "Check attribute after interaction"
+        },
+        "item3": {
+          "criterion": "Visible label associated via htmlFor/id",
+          "level": "AA",
+          "how": "getByRole('checkbox', { name }) returns the element"
+        },
+        "item4": {
+          "criterion": "Focus ring visible on keyboard navigation",
+          "level": "AA",
+          "how": "Inspect :focus-visible manually"
+        },
+        "item5": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Unchecked state (default)", "priority": "high" },
-        "item2": { "story": "Checked state", "priority": "high" },
-        "item3": { "story": "Indeterminate state — Svelte only", "priority": "medium" },
-        "item4": { "story": "Disabled state (unchecked and checked)", "priority": "high" },
-        "item5": { "story": "Error state (aria-invalid)", "priority": "high" }
+        "item1": {
+          "story": "Unchecked state (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Checked state",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Indeterminate state — Svelte only",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Disabled state (unchecked and checked)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Error state (aria-invalid)",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -644,8 +800,7 @@
       "title": "Checkbox — Formulario",
       "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Vanilla.",
       "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
-      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Radix UI, reka-ui, bits-ui, WCAG 2.2, FormField"
     },
     "demonstration": {
       "title": "Demostración",
@@ -682,11 +837,31 @@
           "use": "Componente",
           "alternative": "Observación"
         },
-        "item1": { "s": "Selecciones múltiples independientes", "u": "Checkbox", "a": "Estándar para este caso" },
-        "item2": { "s": "Selección única en un grupo", "u": "RadioGroup", "a": "Mutuamente exclusivo" },
-        "item3": { "s": "Toggle on/off de configuración", "u": "Switch", "a": "Efecto inmediato" },
-        "item4": { "s": "Selección parcial de grupo", "u": "Checkbox indeterminate", "a": "Solo Svelte nativo" },
-        "item5": { "s": "Selección de 3+ opciones en lista", "u": "Select múltiple", "a": "Alternativa compacta" }
+        "item1": {
+          "s": "Selecciones múltiples independientes",
+          "u": "Checkbox",
+          "a": "Estándar para este caso"
+        },
+        "item2": {
+          "s": "Selección única en un grupo",
+          "u": "RadioGroup",
+          "a": "Mutuamente exclusivo"
+        },
+        "item3": {
+          "s": "Toggle on/off de configuración",
+          "u": "Switch",
+          "a": "Efecto inmediato"
+        },
+        "item4": {
+          "s": "Selección parcial de grupo",
+          "u": "Checkbox indeterminate",
+          "a": "Solo Svelte nativo"
+        },
+        "item5": {
+          "s": "Selección de 3+ opciones en lista",
+          "u": "Select múltiple",
+          "a": "Alternativa compacta"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -906,30 +1081,89 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Checkbox.",
-        "item1": { "action": "Hacer clic en Checkbox desmarcado", "result": "Estado cambia a marcado; callback de cambio se dispara con <code>true</code>", "priority": "high" },
-        "item2": { "action": "Hacer clic en Checkbox marcado", "result": "Estado cambia a desmarcado; callback de cambio se dispara con <code>false</code>", "priority": "high" },
-        "item3": { "action": "Presionar <kbd>Space</kbd> con foco en el Checkbox", "result": "Estado alterna; callback de cambio se dispara", "priority": "high" },
-        "item4": { "action": "Hacer clic en Checkbox con <code>disabled</code>", "result": "Estado no cambia; callback de cambio no se dispara", "priority": "high" },
-        "item5": { "action": "Enviar formulario con Checkbox marcado", "result": "Campo <code>name</code> presente en el payload con el <code>value</code>", "priority": "medium" },
-        "item6": { "action": "Renderizar con <code>defaultChecked={true}</code>", "result": "Estado inicial marcado sin control externo", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en Checkbox desmarcado",
+          "result": "Estado cambia a marcado; callback de cambio se dispara con <code>true</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en Checkbox marcado",
+          "result": "Estado cambia a desmarcado; callback de cambio se dispara con <code>false</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Presionar <kbd>Space</kbd> con foco en el Checkbox",
+          "result": "Estado alterna; callback de cambio se dispara",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hacer clic en Checkbox con <code>disabled</code>",
+          "result": "Estado no cambia; callback de cambio no se dispara",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Enviar formulario con Checkbox marcado",
+          "result": "Campo <code>name</code> presente en el payload con el <code>value</code>",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar con <code>defaultChecked={true}</code>",
+          "result": "Estado inicial marcado sin control externo",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "role=\"checkbox\" presente en el elemento", "level": "AA", "how": "getByRole('checkbox') en testing-library" },
-        "item2": { "criterion": "aria-checked se actualiza correctamente (false/true/mixed)", "level": "AA", "how": "Verificar atributo tras la interacción" },
-        "item3": { "criterion": "Label visible asociado vía htmlFor/id", "level": "AA", "how": "getByRole('checkbox', { name }) retorna el elemento" },
-        "item4": { "criterion": "Focus ring visible al navegar por teclado", "level": "AA", "how": "Inspeccionar :focus-visible manualmente" },
-        "item5": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "role=\"checkbox\" presente en el elemento",
+          "level": "AA",
+          "how": "getByRole('checkbox') en testing-library"
+        },
+        "item2": {
+          "criterion": "aria-checked se actualiza correctamente (false/true/mixed)",
+          "level": "AA",
+          "how": "Verificar atributo tras la interacción"
+        },
+        "item3": {
+          "criterion": "Label visible asociado vía htmlFor/id",
+          "level": "AA",
+          "how": "getByRole('checkbox', { name }) retorna el elemento"
+        },
+        "item4": {
+          "criterion": "Focus ring visible al navegar por teclado",
+          "level": "AA",
+          "how": "Inspeccionar :focus-visible manualmente"
+        },
+        "item5": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Estado desmarcado (default)", "priority": "high" },
-        "item2": { "story": "Estado marcado (checked)", "priority": "high" },
-        "item3": { "story": "Estado indeterminado — solo Svelte", "priority": "medium" },
-        "item4": { "story": "Estado disabled (desmarcado y marcado)", "priority": "high" },
-        "item5": { "story": "Estado de error (aria-invalid)", "priority": "high" }
+        "item1": {
+          "story": "Estado desmarcado (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estado marcado (checked)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estado indeterminado — solo Svelte",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estado disabled (desmarcado y marcado)",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "Estado de error (aria-invalid)",
+          "priority": "high"
+        }
       }
     },
     "nav": {

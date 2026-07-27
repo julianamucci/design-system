@@ -8,8 +8,7 @@
       "title": "Breadcrumb — Navegação",
       "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
-      "aiIntent": "informational"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -52,11 +51,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Navegação hierárquica com 2+ níveis", "u": "Sim", "a": "-" },
-        "item2": { "s": "Navegação principal do app", "u": "Não", "a": "NavigationMenu ou Sidebar" },
-        "item3": { "s": "Passos sequenciais de um fluxo", "u": "Não", "a": "Stepper" },
-        "item4": { "s": "Paginação de lista", "u": "Não", "a": "Pagination" },
-        "item5": { "s": "Hierarquia com 5+ níveis", "u": "Sim, com ellipsis", "a": "-" }
+        "item1": {
+          "s": "Navegação hierárquica com 2+ níveis",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegação principal do app",
+          "u": "Não",
+          "a": "NavigationMenu ou Sidebar"
+        },
+        "item3": {
+          "s": "Passos sequenciais de um fluxo",
+          "u": "Não",
+          "a": "Stepper"
+        },
+        "item4": {
+          "s": "Paginação de lista",
+          "u": "Não",
+          "a": "Pagination"
+        },
+        "item5": {
+          "s": "Hierarquia com 5+ níveis",
+          "u": "Sim, com ellipsis",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -291,30 +310,90 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Breadcrumb.",
-        "item1": { "action": "Renderizar composição padrão", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> com <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> e separadores", "priority": "high" },
-        "item2": { "action": "Renderizar último item como BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sem <code>href</code>", "priority": "high" },
-        "item3": { "action": "Clicar em BreadcrumbLink", "result": "Navega para o <code>href</code> informado e dispara <code>navigation_click</code>", "priority": "high" },
-        "item4": { "action": "Renderizar BreadcrumbSeparator customizado", "result": "Substitui o <code>ChevronRight</code> padrão pelo <code>children</code> passado", "priority": "medium" },
-        "item5": { "action": "Renderizar com BreadcrumbEllipsis", "result": "Exibe <code>MoreHorizontal</code> com texto <code>sr-only</code> \"More\"", "priority": "medium" },
-        "item6": { "action": "Navegar por teclado", "result": "<kbd>Tab</kbd> foca links em ordem; <kbd>Enter</kbd> ativa link focado", "priority": "high" }
+        "item1": {
+          "action": "Renderizar composição padrão",
+          "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> com <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> e separadores",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar último item como BreadcrumbPage",
+          "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sem <code>href</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar em BreadcrumbLink",
+          "result": "Navega para o <code>href</code> informado e dispara <code>navigation_click</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar BreadcrumbSeparator customizado",
+          "result": "Substitui o <code>ChevronRight</code> padrão pelo <code>children</code> passado",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar com BreadcrumbEllipsis",
+          "result": "Exibe <code>MoreHorizontal</code> com texto <code>sr-only</code> \"More\"",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Navegar por teclado",
+          "result": "<kbd>Tab</kbd> foca links em ordem; <kbd>Enter</kbd> ativa link focado",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "<code>&lt;nav&gt;</code> com <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
-        "item2": { "criterion": "BreadcrumbPage com <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspecionar atributo no DOM" },
-        "item3": { "criterion": "Separadores com <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / inspeção manual" },
-        "item4": { "criterion": "Contraste mínimo 4.5:1 em links inativos", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visível em todos os links", "level": "AA", "how": "Navegação manual por <kbd>Tab</kbd>" },
-        "item6": { "criterion": "Sem violações axe-core", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "<code>&lt;nav&gt;</code> com <code>aria-label=\"breadcrumb\"</code>",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: 'breadcrumb' })"
+        },
+        "item2": {
+          "criterion": "BreadcrumbPage com <code>aria-current=\"page\"</code>",
+          "level": "AA",
+          "how": "Inspecionar atributo no DOM"
+        },
+        "item3": {
+          "criterion": "Separadores com <code>aria-hidden=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-core / inspeção manual"
+        },
+        "item4": {
+          "criterion": "Contraste mínimo 4.5:1 em links inativos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visível em todos os links",
+          "level": "AA",
+          "how": "Navegação manual por <kbd>Tab</kbd>"
+        },
+        "item6": {
+          "criterion": "Sem violações axe-core",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — composição padrão", "priority": "high" },
-        "item2": { "story": "Configurações — com e sem ellipsis", "priority": "high" },
-        "item3": { "story": "Configurações — separador customizado", "priority": "medium" },
-        "item4": { "story": "Composições — com DropdownMenu no mobile", "priority": "medium" }
+        "item1": {
+          "story": "Playground — composição padrão",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Configurações — com e sem ellipsis",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurações — separador customizado",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composições — com DropdownMenu no mobile",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -347,8 +426,7 @@
       "title": "Breadcrumb — Navigation",
       "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
       "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
-      "aiIntent": "informational"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -391,11 +469,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Hierarchical navigation with 2+ levels", "u": "Yes", "a": "-" },
-        "item2": { "s": "App main navigation", "u": "No", "a": "NavigationMenu or Sidebar" },
-        "item3": { "s": "Sequential flow steps", "u": "No", "a": "Stepper" },
-        "item4": { "s": "List pagination", "u": "No", "a": "Pagination" },
-        "item5": { "s": "Hierarchy with 5+ levels", "u": "Yes, with ellipsis", "a": "-" }
+        "item1": {
+          "s": "Hierarchical navigation with 2+ levels",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "App main navigation",
+          "u": "No",
+          "a": "NavigationMenu or Sidebar"
+        },
+        "item3": {
+          "s": "Sequential flow steps",
+          "u": "No",
+          "a": "Stepper"
+        },
+        "item4": {
+          "s": "List pagination",
+          "u": "No",
+          "a": "Pagination"
+        },
+        "item5": {
+          "s": "Hierarchy with 5+ levels",
+          "u": "Yes, with ellipsis",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -630,30 +728,90 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Breadcrumb configuration.",
-        "item1": { "action": "Render default composition", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> with <code>&lt;ol&gt;</code> of <code>BreadcrumbItem</code> and separators", "priority": "high" },
-        "item2": { "action": "Render last item as BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> without <code>href</code>", "priority": "high" },
-        "item3": { "action": "Click BreadcrumbLink", "result": "Navigates to the given <code>href</code> and fires <code>navigation_click</code>", "priority": "high" },
-        "item4": { "action": "Render custom BreadcrumbSeparator", "result": "Replaces the default <code>ChevronRight</code> with the passed <code>children</code>", "priority": "medium" },
-        "item5": { "action": "Render with BreadcrumbEllipsis", "result": "Shows <code>MoreHorizontal</code> with <code>sr-only</code> text \"More\"", "priority": "medium" },
-        "item6": { "action": "Navigate via keyboard", "result": "<kbd>Tab</kbd> focuses links in order; <kbd>Enter</kbd> activates focused link", "priority": "high" }
+        "item1": {
+          "action": "Render default composition",
+          "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> with <code>&lt;ol&gt;</code> of <code>BreadcrumbItem</code> and separators",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render last item as BreadcrumbPage",
+          "result": "<code>&lt;span aria-current=\"page\"&gt;</code> without <code>href</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click BreadcrumbLink",
+          "result": "Navigates to the given <code>href</code> and fires <code>navigation_click</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render custom BreadcrumbSeparator",
+          "result": "Replaces the default <code>ChevronRight</code> with the passed <code>children</code>",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Render with BreadcrumbEllipsis",
+          "result": "Shows <code>MoreHorizontal</code> with <code>sr-only</code> text \"More\"",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Navigate via keyboard",
+          "result": "<kbd>Tab</kbd> focuses links in order; <kbd>Enter</kbd> activates focused link",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "<code>&lt;nav&gt;</code> with <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
-        "item2": { "criterion": "BreadcrumbPage with <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspect attribute in DOM" },
-        "item3": { "criterion": "Separators with <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / manual inspection" },
-        "item4": { "criterion": "Minimum contrast 4.5:1 on inactive links", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visible on all links", "level": "AA", "how": "Manual <kbd>Tab</kbd> navigation" },
-        "item6": { "criterion": "No axe-core violations", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "<code>&lt;nav&gt;</code> with <code>aria-label=\"breadcrumb\"</code>",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: 'breadcrumb' })"
+        },
+        "item2": {
+          "criterion": "BreadcrumbPage with <code>aria-current=\"page\"</code>",
+          "level": "AA",
+          "how": "Inspect attribute in DOM"
+        },
+        "item3": {
+          "criterion": "Separators with <code>aria-hidden=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-core / manual inspection"
+        },
+        "item4": {
+          "criterion": "Minimum contrast 4.5:1 on inactive links",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visible on all links",
+          "level": "AA",
+          "how": "Manual <kbd>Tab</kbd> navigation"
+        },
+        "item6": {
+          "criterion": "No axe-core violations",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — default composition", "priority": "high" },
-        "item2": { "story": "Configurations — with and without ellipsis", "priority": "high" },
-        "item3": { "story": "Configurations — custom separator", "priority": "medium" },
-        "item4": { "story": "Compositions — with DropdownMenu on mobile", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default composition",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Configurations — with and without ellipsis",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurations — custom separator",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Compositions — with DropdownMenu on mobile",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -686,8 +844,7 @@
       "title": "Breadcrumb — Navegación",
       "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org",
-      "aiIntent": "informational"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demostración",
@@ -730,11 +887,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Navegación jerárquica con 2+ niveles", "u": "Sí", "a": "-" },
-        "item2": { "s": "Navegación principal del app", "u": "No", "a": "NavigationMenu o Sidebar" },
-        "item3": { "s": "Pasos secuenciales de un flujo", "u": "No", "a": "Stepper" },
-        "item4": { "s": "Paginación de lista", "u": "No", "a": "Pagination" },
-        "item5": { "s": "Jerarquía con 5+ niveles", "u": "Sí, con ellipsis", "a": "-" }
+        "item1": {
+          "s": "Navegación jerárquica con 2+ niveles",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Navegación principal del app",
+          "u": "No",
+          "a": "NavigationMenu o Sidebar"
+        },
+        "item3": {
+          "s": "Pasos secuenciales de un flujo",
+          "u": "No",
+          "a": "Stepper"
+        },
+        "item4": {
+          "s": "Paginación de lista",
+          "u": "No",
+          "a": "Pagination"
+        },
+        "item5": {
+          "s": "Jerarquía con 5+ niveles",
+          "u": "Sí, con ellipsis",
+          "a": "-"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -969,30 +1146,90 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Breadcrumb.",
-        "item1": { "action": "Renderizar composición predeterminada", "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> con <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> y separadores", "priority": "high" },
-        "item2": { "action": "Renderizar último ítem como BreadcrumbPage", "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sin <code>href</code>", "priority": "high" },
-        "item3": { "action": "Hacer clic en BreadcrumbLink", "result": "Navega al <code>href</code> indicado y dispara <code>navigation_click</code>", "priority": "high" },
-        "item4": { "action": "Renderizar BreadcrumbSeparator personalizado", "result": "Sustituye el <code>ChevronRight</code> predeterminado por el <code>children</code> pasado", "priority": "medium" },
-        "item5": { "action": "Renderizar con BreadcrumbEllipsis", "result": "Muestra <code>MoreHorizontal</code> con texto <code>sr-only</code> \"More\"", "priority": "medium" },
-        "item6": { "action": "Navegar por teclado", "result": "<kbd>Tab</kbd> enfoca enlaces en orden; <kbd>Enter</kbd> activa el enlace enfocado", "priority": "high" }
+        "item1": {
+          "action": "Renderizar composición predeterminada",
+          "result": "<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> con <code>&lt;ol&gt;</code> de <code>BreadcrumbItem</code> y separadores",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar último ítem como BreadcrumbPage",
+          "result": "<code>&lt;span aria-current=\"page\"&gt;</code> sin <code>href</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic en BreadcrumbLink",
+          "result": "Navega al <code>href</code> indicado y dispara <code>navigation_click</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar BreadcrumbSeparator personalizado",
+          "result": "Sustituye el <code>ChevronRight</code> predeterminado por el <code>children</code> pasado",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar con BreadcrumbEllipsis",
+          "result": "Muestra <code>MoreHorizontal</code> con texto <code>sr-only</code> \"More\"",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Navegar por teclado",
+          "result": "<kbd>Tab</kbd> enfoca enlaces en orden; <kbd>Enter</kbd> activa el enlace enfocado",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "<code>&lt;nav&gt;</code> con <code>aria-label=\"breadcrumb\"</code>", "level": "AA", "how": "getByRole('navigation', { name: 'breadcrumb' })" },
-        "item2": { "criterion": "BreadcrumbPage con <code>aria-current=\"page\"</code>", "level": "AA", "how": "Inspeccionar atributo en el DOM" },
-        "item3": { "criterion": "Separadores con <code>aria-hidden=\"true\"</code>", "level": "AA", "how": "axe-core / inspección manual" },
-        "item4": { "criterion": "Contraste mínimo 4.5:1 en enlaces inactivos", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visible en todos los enlaces", "level": "AA", "how": "Navegación manual por <kbd>Tab</kbd>" },
-        "item6": { "criterion": "Sin violaciones axe-core", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "<code>&lt;nav&gt;</code> con <code>aria-label=\"breadcrumb\"</code>",
+          "level": "AA",
+          "how": "getByRole('navigation', { name: 'breadcrumb' })"
+        },
+        "item2": {
+          "criterion": "BreadcrumbPage con <code>aria-current=\"page\"</code>",
+          "level": "AA",
+          "how": "Inspeccionar atributo en el DOM"
+        },
+        "item3": {
+          "criterion": "Separadores con <code>aria-hidden=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-core / inspección manual"
+        },
+        "item4": {
+          "criterion": "Contraste mínimo 4.5:1 en enlaces inactivos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visible en todos los enlaces",
+          "level": "AA",
+          "how": "Navegación manual por <kbd>Tab</kbd>"
+        },
+        "item6": {
+          "criterion": "Sin violaciones axe-core",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — composición predeterminada", "priority": "high" },
-        "item2": { "story": "Configuraciones — con y sin ellipsis", "priority": "high" },
-        "item3": { "story": "Configuraciones — separador personalizado", "priority": "medium" },
-        "item4": { "story": "Composiciones — con DropdownMenu en mobile", "priority": "medium" }
+        "item1": {
+          "story": "Playground — composición predeterminada",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Configuraciones — con y sin ellipsis",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configuraciones — separador personalizado",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composiciones — con DropdownMenu en mobile",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -8,8 +8,7 @@
       "title": "Calendar — Formulário",
       "description": "Documentação do Calendar: wrapper de react-day-picker v9 com modos single/multiple/range, captionLayout, locale e acessibilidade WCAG.",
       "aiSummary": "Componente Calendar baseado em react-day-picker v9 com modos single/multiple/range, captionLayout label/dropdown, suporte a locale pt-BR/en/es e datas desabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
-      "aiIntent": "informational"
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,12 +48,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Seleção de data em formulário", "u": "Sim, dentro de Popover", "a": "Padrão DatePicker" },
-        "item2": { "s": "Seleção de período (check-in/out)", "u": "Sim, mode=\"range\"", "a": "-" },
-        "item3": { "s": "Múltiplas datas independentes", "u": "Sim, mode=\"multiple\"", "a": "-" },
-        "item4": { "s": "Apenas hora do dia", "u": "Não", "a": "Input type=\"time\"" },
-        "item5": { "s": "Data e hora combinados", "u": "Sim, + Input time ao lado", "a": "-" },
-        "item6": { "s": "Agendamento com slots", "u": "Não", "a": "Calendar + grid de horários custom" }
+        "item1": {
+          "s": "Seleção de data em formulário",
+          "u": "Sim, dentro de Popover",
+          "a": "Padrão DatePicker"
+        },
+        "item2": {
+          "s": "Seleção de período (check-in/out)",
+          "u": "Sim, mode=\"range\"",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Múltiplas datas independentes",
+          "u": "Sim, mode=\"multiple\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Apenas hora do dia",
+          "u": "Não",
+          "a": "Input type=\"time\""
+        },
+        "item5": {
+          "s": "Data e hora combinados",
+          "u": "Sim, + Input time ao lado",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Agendamento com slots",
+          "u": "Não",
+          "a": "Calendar + grid de horários custom"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -306,32 +329,99 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Calendar.",
-        "item1": { "action": "Renderizar mode=\"single\" sem data", "result": "Grid do mês atual; dia de hoje com <code>bg-muted</code>; sem <code>aria-selected</code>", "priority": "high" },
-        "item2": { "action": "Clicar em uma data válida", "result": "Célula recebe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> é chamado com <code>Date</code>", "priority": "high" },
-        "item3": { "action": "Renderizar mode=\"range\" com from e to", "result": "Início/fim com <code>bg-primary</code>; dias do meio com <code>bg-muted</code>", "priority": "high" },
-        "item4": { "action": "Passar disabled={{ before: new Date() }}", "result": "Datas passadas com <code>aria-disabled=\"true\"</code> e <code>opacity-50</code>; clique não dispara onSelect", "priority": "high" },
-        "item5": { "action": "Navegar por teclado com Arrow keys", "result": "Foco percorre o grid conforme o mapeamento; <code>aria-label</code> anuncia a data completa", "priority": "high" },
-        "item6": { "action": "Passar locale={ptBR}", "result": "Meses e dias da semana renderizam em português do Brasil", "priority": "medium" },
-        "item7": { "action": "Renderizar captionLayout=\"dropdown\"", "result": "Mês e ano viram <code>&lt;select&gt;</code> com foco próprio e opções do range configurado", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar mode=\"single\" sem data",
+          "result": "Grid do mês atual; dia de hoje com <code>bg-muted</code>; sem <code>aria-selected</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em uma data válida",
+          "result": "Célula recebe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> é chamado com <code>Date</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar mode=\"range\" com from e to",
+          "result": "Início/fim com <code>bg-primary</code>; dias do meio com <code>bg-muted</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar disabled={{ before: new Date() }}",
+          "result": "Datas passadas com <code>aria-disabled=\"true\"</code> e <code>opacity-50</code>; clique não dispara onSelect",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Navegar por teclado com Arrow keys",
+          "result": "Foco percorre o grid conforme o mapeamento; <code>aria-label</code> anuncia a data completa",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Passar locale={ptBR}",
+          "result": "Meses e dias da semana renderizam em português do Brasil",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar captionLayout=\"dropdown\"",
+          "result": "Mês e ano viram <code>&lt;select&gt;</code> com foco próprio e opções do range configurado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Grid com <code>role=\"grid\"</code> e células com <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
-        "item2": { "criterion": "DayButton com <code>aria-label</code> trazendo a data por extenso", "level": "AA", "how": "Inspecionar atributo no DOM via devtools" },
-        "item3": { "criterion": "Data selecionada com <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspeção" },
-        "item4": { "criterion": "Contraste 4.5:1 nas células selected, today e padrão", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visível em DayButton e botões de navegação", "level": "AA", "how": "Navegação por <kbd>Tab</kbd> + <kbd>Arrow</kbd>" },
-        "item6": { "criterion": "Sem violações axe-core no estado padrão e com range selecionado", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "Grid com <code>role=\"grid\"</code> e células com <code>role=\"gridcell\"</code>",
+          "level": "AA",
+          "how": "getByRole('grid') + getAllByRole('gridcell')"
+        },
+        "item2": {
+          "criterion": "DayButton com <code>aria-label</code> trazendo a data por extenso",
+          "level": "AA",
+          "how": "Inspecionar atributo no DOM via devtools"
+        },
+        "item3": {
+          "criterion": "Data selecionada com <code>aria-selected=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-playwright + inspeção"
+        },
+        "item4": {
+          "criterion": "Contraste 4.5:1 nas células selected, today e padrão",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visível em DayButton e botões de navegação",
+          "level": "AA",
+          "how": "Navegação por <kbd>Tab</kbd> + <kbd>Arrow</kbd>"
+        },
+        "item6": {
+          "criterion": "Sem violações axe-core no estado padrão e com range selecionado",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — mode=\"single\" com data hoje destacada", "priority": "high" },
-        "item2": { "story": "Modos — Single, Multiple, Range", "priority": "high" },
-        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
-        "item4": { "story": "Estados — com datas disabled e outside days", "priority": "medium" },
-        "item5": { "story": "Composições — dentro de Popover (DatePicker)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — mode=\"single\" com data hoje destacada",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Modos — Single, Multiple, Range",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Layouts — captionLayout label vs dropdown",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — com datas disabled e outside days",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composições — dentro de Popover (DatePicker)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -364,8 +454,7 @@
       "title": "Calendar — Form",
       "description": "Documentation for Calendar: react-day-picker v9 wrapper with single/multiple/range modes, captionLayout, locale and WCAG accessibility.",
       "aiSummary": "Calendar component built on react-day-picker v9 with single/multiple/range modes, label/dropdown captionLayout, pt-BR/en/es locale support and disabled dates.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
-      "aiIntent": "informational"
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -405,12 +494,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Date selection in a form", "u": "Yes, inside Popover", "a": "DatePicker pattern" },
-        "item2": { "s": "Period selection (check-in/out)", "u": "Yes, mode=\"range\"", "a": "-" },
-        "item3": { "s": "Multiple independent dates", "u": "Yes, mode=\"multiple\"", "a": "-" },
-        "item4": { "s": "Time of day only", "u": "No", "a": "Input type=\"time\"" },
-        "item5": { "s": "Date + time combined", "u": "Yes, + time Input next to it", "a": "-" },
-        "item6": { "s": "Slot-based scheduling", "u": "No", "a": "Calendar + custom time grid" }
+        "item1": {
+          "s": "Date selection in a form",
+          "u": "Yes, inside Popover",
+          "a": "DatePicker pattern"
+        },
+        "item2": {
+          "s": "Period selection (check-in/out)",
+          "u": "Yes, mode=\"range\"",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Multiple independent dates",
+          "u": "Yes, mode=\"multiple\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Time of day only",
+          "u": "No",
+          "a": "Input type=\"time\""
+        },
+        "item5": {
+          "s": "Date + time combined",
+          "u": "Yes, + time Input next to it",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Slot-based scheduling",
+          "u": "No",
+          "a": "Calendar + custom time grid"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -662,32 +775,99 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Calendar configuration.",
-        "item1": { "action": "Render mode=\"single\" with no date", "result": "Current month grid; today with <code>bg-muted</code>; no <code>aria-selected</code>", "priority": "high" },
-        "item2": { "action": "Click a valid date", "result": "Cell gets <code>data-selected-single=\"true\"</code>; <code>onSelect</code> called with <code>Date</code>", "priority": "high" },
-        "item3": { "action": "Render mode=\"range\" with from and to", "result": "Start/end with <code>bg-primary</code>; middle days with <code>bg-muted</code>", "priority": "high" },
-        "item4": { "action": "Pass disabled={{ before: new Date() }}", "result": "Past dates with <code>aria-disabled=\"true\"</code> and <code>opacity-50</code>; click does not fire onSelect", "priority": "high" },
-        "item5": { "action": "Keyboard navigation with Arrow keys", "result": "Focus traverses the grid per mapping; <code>aria-label</code> announces full date", "priority": "high" },
-        "item6": { "action": "Pass locale={enUS}", "result": "Months and weekdays render in English (US)", "priority": "medium" },
-        "item7": { "action": "Render captionLayout=\"dropdown\"", "result": "Month and year become <code>&lt;select&gt;</code> with own focus and configured range options", "priority": "medium" }
+        "item1": {
+          "action": "Render mode=\"single\" with no date",
+          "result": "Current month grid; today with <code>bg-muted</code>; no <code>aria-selected</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click a valid date",
+          "result": "Cell gets <code>data-selected-single=\"true\"</code>; <code>onSelect</code> called with <code>Date</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render mode=\"range\" with from and to",
+          "result": "Start/end with <code>bg-primary</code>; middle days with <code>bg-muted</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass disabled={{ before: new Date() }}",
+          "result": "Past dates with <code>aria-disabled=\"true\"</code> and <code>opacity-50</code>; click does not fire onSelect",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Keyboard navigation with Arrow keys",
+          "result": "Focus traverses the grid per mapping; <code>aria-label</code> announces full date",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pass locale={enUS}",
+          "result": "Months and weekdays render in English (US)",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Render captionLayout=\"dropdown\"",
+          "result": "Month and year become <code>&lt;select&gt;</code> with own focus and configured range options",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "Grid with <code>role=\"grid\"</code> and cells with <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
-        "item2": { "criterion": "DayButton with <code>aria-label</code> carrying the full date", "level": "AA", "how": "Inspect attribute in DOM via devtools" },
-        "item3": { "criterion": "Selected date with <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspection" },
-        "item4": { "criterion": "Contrast 4.5:1 on selected, today and default cells", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visible on DayButton and nav buttons", "level": "AA", "how": "Manual <kbd>Tab</kbd> + <kbd>Arrow</kbd> navigation" },
-        "item6": { "criterion": "No axe-core violations in default state or with range selected", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "Grid with <code>role=\"grid\"</code> and cells with <code>role=\"gridcell\"</code>",
+          "level": "AA",
+          "how": "getByRole('grid') + getAllByRole('gridcell')"
+        },
+        "item2": {
+          "criterion": "DayButton with <code>aria-label</code> carrying the full date",
+          "level": "AA",
+          "how": "Inspect attribute in DOM via devtools"
+        },
+        "item3": {
+          "criterion": "Selected date with <code>aria-selected=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-playwright + inspection"
+        },
+        "item4": {
+          "criterion": "Contrast 4.5:1 on selected, today and default cells",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visible on DayButton and nav buttons",
+          "level": "AA",
+          "how": "Manual <kbd>Tab</kbd> + <kbd>Arrow</kbd> navigation"
+        },
+        "item6": {
+          "criterion": "No axe-core violations in default state or with range selected",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — mode=\"single\" with today highlighted", "priority": "high" },
-        "item2": { "story": "Modes — Single, Multiple, Range", "priority": "high" },
-        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
-        "item4": { "story": "States — with disabled dates and outside days", "priority": "medium" },
-        "item5": { "story": "Compositions — inside Popover (DatePicker)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — mode=\"single\" with today highlighted",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Modes — Single, Multiple, Range",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Layouts — captionLayout label vs dropdown",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "States — with disabled dates and outside days",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Compositions — inside Popover (DatePicker)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -720,8 +900,7 @@
       "title": "Calendar — Formulario",
       "description": "Documentación del Calendar: wrapper de react-day-picker v9 con modos single/multiple/range, captionLayout, locale y accesibilidad WCAG.",
       "aiSummary": "Componente Calendar basado en react-day-picker v9 con modos single/multiple/range, captionLayout label/dropdown, soporte de locale pt-BR/en/es y fechas deshabilitadas.",
-      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns",
-      "aiIntent": "informational"
+      "aiEntities": "Calendar, DatePicker, React, Vue, Svelte, react-day-picker, WCAG 2.2, date-fns"
     },
     "demonstration": {
       "title": "Demostración",
@@ -761,12 +940,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Selección de fecha en formulario", "u": "Sí, dentro de Popover", "a": "Patrón DatePicker" },
-        "item2": { "s": "Selección de período (check-in/out)", "u": "Sí, mode=\"range\"", "a": "-" },
-        "item3": { "s": "Varias fechas independientes", "u": "Sí, mode=\"multiple\"", "a": "-" },
-        "item4": { "s": "Solo hora del día", "u": "No", "a": "Input type=\"time\"" },
-        "item5": { "s": "Fecha y hora combinadas", "u": "Sí, + Input time al lado", "a": "-" },
-        "item6": { "s": "Agenda basada en slots", "u": "No", "a": "Calendar + grid de horarios custom" }
+        "item1": {
+          "s": "Selección de fecha en formulario",
+          "u": "Sí, dentro de Popover",
+          "a": "Patrón DatePicker"
+        },
+        "item2": {
+          "s": "Selección de período (check-in/out)",
+          "u": "Sí, mode=\"range\"",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Varias fechas independientes",
+          "u": "Sí, mode=\"multiple\"",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Solo hora del día",
+          "u": "No",
+          "a": "Input type=\"time\""
+        },
+        "item5": {
+          "s": "Fecha y hora combinadas",
+          "u": "Sí, + Input time al lado",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Agenda basada en slots",
+          "u": "No",
+          "a": "Calendar + grid de horarios custom"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1018,32 +1221,99 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Calendar.",
-        "item1": { "action": "Renderizar mode=\"single\" sin fecha", "result": "Grid del mes actual; hoy con <code>bg-muted</code>; sin <code>aria-selected</code>", "priority": "high" },
-        "item2": { "action": "Hacer clic en una fecha válida", "result": "La celda recibe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> se llama con <code>Date</code>", "priority": "high" },
-        "item3": { "action": "Renderizar mode=\"range\" con from y to", "result": "Inicio/fin con <code>bg-primary</code>; días intermedios con <code>bg-muted</code>", "priority": "high" },
-        "item4": { "action": "Pasar disabled={{ before: new Date() }}", "result": "Fechas pasadas con <code>aria-disabled=\"true\"</code> y <code>opacity-50</code>; el clic no dispara onSelect", "priority": "high" },
-        "item5": { "action": "Navegar por teclado con Arrow keys", "result": "El foco recorre el grid según el mapeo; <code>aria-label</code> anuncia la fecha completa", "priority": "high" },
-        "item6": { "action": "Pasar locale={es}", "result": "Meses y días de la semana aparecen en español", "priority": "medium" },
-        "item7": { "action": "Renderizar captionLayout=\"dropdown\"", "result": "Mes y año se vuelven <code>&lt;select&gt;</code> con foco propio y opciones del rango configurado", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar mode=\"single\" sin fecha",
+          "result": "Grid del mes actual; hoy con <code>bg-muted</code>; sin <code>aria-selected</code>",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en una fecha válida",
+          "result": "La celda recibe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> se llama con <code>Date</code>",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar mode=\"range\" con from y to",
+          "result": "Inicio/fin con <code>bg-primary</code>; días intermedios con <code>bg-muted</code>",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar disabled={{ before: new Date() }}",
+          "result": "Fechas pasadas con <code>aria-disabled=\"true\"</code> y <code>opacity-50</code>; el clic no dispara onSelect",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Navegar por teclado con Arrow keys",
+          "result": "El foco recorre el grid según el mapeo; <code>aria-label</code> anuncia la fecha completa",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pasar locale={es}",
+          "result": "Meses y días de la semana aparecen en español",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar captionLayout=\"dropdown\"",
+          "result": "Mes y año se vuelven <code>&lt;select&gt;</code> con foco propio y opciones del rango configurado",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Grid con <code>role=\"grid\"</code> y celdas con <code>role=\"gridcell\"</code>", "level": "AA", "how": "getByRole('grid') + getAllByRole('gridcell')" },
-        "item2": { "criterion": "DayButton con <code>aria-label</code> con la fecha completa", "level": "AA", "how": "Inspeccionar atributo en DOM vía devtools" },
-        "item3": { "criterion": "Fecha seleccionada con <code>aria-selected=\"true\"</code>", "level": "AA", "how": "axe-playwright + inspección" },
-        "item4": { "criterion": "Contraste 4.5:1 en celdas selected, today y predeterminadas", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item5": { "criterion": "Focus ring visible en DayButton y botones de navegación", "level": "AA", "how": "Navegación manual con <kbd>Tab</kbd> + <kbd>Arrow</kbd>" },
-        "item6": { "criterion": "Sin violaciones axe-core en estado predeterminado y con range seleccionado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "Grid con <code>role=\"grid\"</code> y celdas con <code>role=\"gridcell\"</code>",
+          "level": "AA",
+          "how": "getByRole('grid') + getAllByRole('gridcell')"
+        },
+        "item2": {
+          "criterion": "DayButton con <code>aria-label</code> con la fecha completa",
+          "level": "AA",
+          "how": "Inspeccionar atributo en DOM vía devtools"
+        },
+        "item3": {
+          "criterion": "Fecha seleccionada con <code>aria-selected=\"true\"</code>",
+          "level": "AA",
+          "how": "axe-playwright + inspección"
+        },
+        "item4": {
+          "criterion": "Contraste 4.5:1 en celdas selected, today y predeterminadas",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item5": {
+          "criterion": "Focus ring visible en DayButton y botones de navegación",
+          "level": "AA",
+          "how": "Navegación manual con <kbd>Tab</kbd> + <kbd>Arrow</kbd>"
+        },
+        "item6": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado y con range seleccionado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — mode=\"single\" con hoy destacado", "priority": "high" },
-        "item2": { "story": "Modos — Single, Multiple, Range", "priority": "high" },
-        "item3": { "story": "Layouts — captionLayout label vs dropdown", "priority": "medium" },
-        "item4": { "story": "Estados — con disabled dates y outside days", "priority": "medium" },
-        "item5": { "story": "Composiciones — dentro de Popover (DatePicker)", "priority": "medium" }
+        "item1": {
+          "story": "Playground — mode=\"single\" con hoy destacado",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Modos — Single, Multiple, Range",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Layouts — captionLayout label vs dropdown",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Estados — con disabled dates y outside days",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composiciones — dentro de Popover (DatePicker)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

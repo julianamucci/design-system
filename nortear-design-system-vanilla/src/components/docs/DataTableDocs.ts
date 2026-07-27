@@ -134,7 +134,6 @@ export function createDataTableDocs(): HTMLElement {
       componentSlug: 'data-table',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: t('category'), item: '/components/display' },

@@ -42,7 +42,7 @@ grep -oP 'var\(--[a-z-]+\)' nortear-design-system-react/src/components/ui/${slug
 #### 1.7 SEO (3 idiomas)
 - `seo.title` ≤60 chars
 - `seo.description` ≤155 chars
-- `seo.aiSummary`, `seo.aiEntities`, `seo.aiIntent`
+- `seo.aiSummary`, `seo.aiEntities`
 
 #### 1.8 Navegação
 `nav.*` cobre todas as seções presentes no JSON.

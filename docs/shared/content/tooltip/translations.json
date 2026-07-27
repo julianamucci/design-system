@@ -8,8 +8,7 @@
       "title": "Tooltip — Overlay",
       "description": "Documentação do Tooltip: Provider, Trigger, Content e Arrow com posicionamento, delay e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tooltip com Provider, Trigger e Content, posicionamento automático com Arrow, delay configurável e suporte a teclado via foco.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip",
-      "aiIntent": "informational"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -47,11 +46,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Atalho de teclado em botão icon-only", "u": "Sim", "a": "-" },
-        "item2": { "s": "Descrição curta de ação", "u": "Sim", "a": "-" },
-        "item3": { "s": "Conteúdo interativo (form, links)", "u": "Não", "a": "Popover" },
-        "item4": { "s": "Preview rico (avatar, link)", "u": "Não", "a": "HoverCard" },
-        "item5": { "s": "Mensagem de erro de validação", "u": "Não", "a": "Texto inline + aria-describedby" }
+        "item1": {
+          "s": "Atalho de teclado em botão icon-only",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Descrição curta de ação",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Conteúdo interativo (form, links)",
+          "u": "Não",
+          "a": "Popover"
+        },
+        "item4": {
+          "s": "Preview rico (avatar, link)",
+          "u": "Não",
+          "a": "HoverCard"
+        },
+        "item5": {
+          "s": "Mensagem de erro de validação",
+          "u": "Não",
+          "a": "Texto inline + aria-describedby"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -228,11 +247,26 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "foreground": { "class": "bg-foreground", "part": "Fundo do TooltipContent (escuro)" },
-        "background": { "class": "text-background", "part": "Cor do texto (contraste com foreground)" },
-        "fill": { "class": "fill-foreground", "part": "Cor do Arrow (mesma do fundo)" },
-        "radius": { "class": "rounded-md", "part": "Raio do TooltipContent" },
-        "zIndex": { "class": "z-50", "part": "Camada do portal (acima de overlays)" }
+        "foreground": {
+          "class": "bg-foreground",
+          "part": "Fundo do TooltipContent (escuro)"
+        },
+        "background": {
+          "class": "text-background",
+          "part": "Cor do texto (contraste com foreground)"
+        },
+        "fill": {
+          "class": "fill-foreground",
+          "part": "Cor do Arrow (mesma do fundo)"
+        },
+        "radius": {
+          "class": "rounded-md",
+          "part": "Raio do TooltipContent"
+        },
+        "zIndex": {
+          "class": "z-50",
+          "part": "Camada do portal (acima de overlays)"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay customizado via Provider (props.delay) */\n<TooltipProvider delay={600}>"
@@ -269,10 +303,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "popover": { "name": "Popover", "description": "Conteúdo interativo (form, links) ativado por clique." },
-        "hoverCard": { "name": "HoverCard", "description": "Preview rico (avatar, link) com imagem e texto." },
-        "button": { "name": "Button", "description": "Trigger comum de tooltips (especialmente icon-only)." },
-        "kbd": { "name": "Kbd", "description": "Indicador de tecla para atalhos dentro do tooltip." }
+        "popover": {
+          "name": "Popover",
+          "description": "Conteúdo interativo (form, links) ativado por clique."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Preview rico (avatar, link) com imagem e texto."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Trigger comum de tooltips (especialmente icon-only)."
+        },
+        "kbd": {
+          "name": "Kbd",
+          "description": "Indicador de tecla para atalhos dentro do tooltip."
+        }
       }
     },
     "notes": {
@@ -300,10 +346,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Hover no trigger", "result": "Tooltip abre após delay do Provider", "priority": "high" },
-        "item2": { "action": "Focar trigger via Tab", "result": "Tooltip abre imediatamente (sem delay)", "priority": "high" },
-        "item3": { "action": "Pressionar Escape com tooltip aberto", "result": "Fecha tooltip; foco permanece no trigger", "priority": "high" },
-        "item4": { "action": "Mover mouse para o tooltip", "result": "Tooltip permanece aberto (WCAG 1.4.13)", "priority": "medium" }
+        "item1": {
+          "action": "Hover no trigger",
+          "result": "Tooltip abre após delay do Provider",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Focar trigger via Tab",
+          "result": "Tooltip abre imediatamente (sem delay)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Escape com tooltip aberto",
+          "result": "Fecha tooltip; foco permanece no trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mover mouse para o tooltip",
+          "result": "Tooltip permanece aberto (WCAG 1.4.13)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -318,10 +380,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (open, side top)", "priority": "high" },
-        "item2": { "story": "Com atalho de teclado (kbd)", "priority": "high" },
-        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
-        "item4": { "story": "Texto longo (max-w-xs)", "priority": "medium" }
+        "item1": {
+          "story": "Default (open, side top)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com atalho de teclado (kbd)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Side bottom/left/right",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Texto longo (max-w-xs)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -354,8 +428,7 @@
       "title": "Tooltip — Overlay",
       "description": "Tooltip documentation: Provider, Trigger, Content and Arrow with positioning, delay and WCAG 2.2 AA support.",
       "aiSummary": "Tooltip component with Provider, Trigger and Content, automatic positioning with Arrow, configurable delay and keyboard support via focus.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip",
-      "aiIntent": "informational"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -393,11 +466,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Keyboard shortcut on icon-only button", "u": "Yes", "a": "-" },
-        "item2": { "s": "Short action description", "u": "Yes", "a": "-" },
-        "item3": { "s": "Interactive content (form, links)", "u": "No", "a": "Popover" },
-        "item4": { "s": "Rich preview (avatar, link)", "u": "No", "a": "HoverCard" },
-        "item5": { "s": "Validation error message", "u": "No", "a": "Inline text + aria-describedby" }
+        "item1": {
+          "s": "Keyboard shortcut on icon-only button",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Short action description",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Interactive content (form, links)",
+          "u": "No",
+          "a": "Popover"
+        },
+        "item4": {
+          "s": "Rich preview (avatar, link)",
+          "u": "No",
+          "a": "HoverCard"
+        },
+        "item5": {
+          "s": "Validation error message",
+          "u": "No",
+          "a": "Inline text + aria-describedby"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -574,11 +667,26 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "foreground": { "class": "bg-foreground", "part": "TooltipContent background (dark)" },
-        "background": { "class": "text-background", "part": "Text color (contrast with foreground)" },
-        "fill": { "class": "fill-foreground", "part": "Arrow color (matches background)" },
-        "radius": { "class": "rounded-md", "part": "TooltipContent radius" },
-        "zIndex": { "class": "z-50", "part": "Portal layer (above overlays)" }
+        "foreground": {
+          "class": "bg-foreground",
+          "part": "TooltipContent background (dark)"
+        },
+        "background": {
+          "class": "text-background",
+          "part": "Text color (contrast with foreground)"
+        },
+        "fill": {
+          "class": "fill-foreground",
+          "part": "Arrow color (matches background)"
+        },
+        "radius": {
+          "class": "rounded-md",
+          "part": "TooltipContent radius"
+        },
+        "zIndex": {
+          "class": "z-50",
+          "part": "Portal layer (above overlays)"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Custom delay via Provider (props.delay) */\n<TooltipProvider delay={600}>"
@@ -615,10 +723,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "popover": { "name": "Popover", "description": "Interactive content (form, links) activated by click." },
-        "hoverCard": { "name": "HoverCard", "description": "Rich preview (avatar, link) with image and text." },
-        "button": { "name": "Button", "description": "Common tooltip trigger (especially icon-only)." },
-        "kbd": { "name": "Kbd", "description": "Key indicator for shortcuts inside the tooltip." }
+        "popover": {
+          "name": "Popover",
+          "description": "Interactive content (form, links) activated by click."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Rich preview (avatar, link) with image and text."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Common tooltip trigger (especially icon-only)."
+        },
+        "kbd": {
+          "name": "Kbd",
+          "description": "Key indicator for shortcuts inside the tooltip."
+        }
       }
     },
     "notes": {
@@ -646,10 +766,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Hover trigger", "result": "Tooltip opens after Provider delay", "priority": "high" },
-        "item2": { "action": "Focus trigger via Tab", "result": "Tooltip opens immediately (no delay)", "priority": "high" },
-        "item3": { "action": "Press Escape with tooltip open", "result": "Closes tooltip; focus stays on trigger", "priority": "high" },
-        "item4": { "action": "Move mouse into tooltip", "result": "Tooltip stays open (WCAG 1.4.13)", "priority": "medium" }
+        "item1": {
+          "action": "Hover trigger",
+          "result": "Tooltip opens after Provider delay",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Focus trigger via Tab",
+          "result": "Tooltip opens immediately (no delay)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Escape with tooltip open",
+          "result": "Closes tooltip; focus stays on trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Move mouse into tooltip",
+          "result": "Tooltip stays open (WCAG 1.4.13)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -664,10 +800,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (open, side top)", "priority": "high" },
-        "item2": { "story": "With keyboard shortcut (kbd)", "priority": "high" },
-        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
-        "item4": { "story": "Long text (max-w-xs)", "priority": "medium" }
+        "item1": {
+          "story": "Default (open, side top)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With keyboard shortcut (kbd)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Side bottom/left/right",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Long text (max-w-xs)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -700,8 +848,7 @@
       "title": "Tooltip — Overlay",
       "description": "Documentación de Tooltip: Provider, Trigger, Content y Arrow con posicionamiento, delay y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tooltip con Provider, Trigger y Content, posicionamiento automático con Arrow, delay configurable y soporte de teclado vía foco.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip",
-      "aiIntent": "informational"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demostración",
@@ -739,11 +886,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Atajo de teclado en botón icon-only", "u": "Sí", "a": "-" },
-        "item2": { "s": "Descripción corta de acción", "u": "Sí", "a": "-" },
-        "item3": { "s": "Contenido interactivo (form, links)", "u": "No", "a": "Popover" },
-        "item4": { "s": "Vista previa rica (avatar, link)", "u": "No", "a": "HoverCard" },
-        "item5": { "s": "Mensaje de error de validación", "u": "No", "a": "Texto inline + aria-describedby" }
+        "item1": {
+          "s": "Atajo de teclado en botón icon-only",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Descripción corta de acción",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Contenido interactivo (form, links)",
+          "u": "No",
+          "a": "Popover"
+        },
+        "item4": {
+          "s": "Vista previa rica (avatar, link)",
+          "u": "No",
+          "a": "HoverCard"
+        },
+        "item5": {
+          "s": "Mensaje de error de validación",
+          "u": "No",
+          "a": "Texto inline + aria-describedby"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -920,11 +1087,26 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "foreground": { "class": "bg-foreground", "part": "Fondo del TooltipContent (oscuro)" },
-        "background": { "class": "text-background", "part": "Color del texto (contraste con foreground)" },
-        "fill": { "class": "fill-foreground", "part": "Color del Arrow (igual al fondo)" },
-        "radius": { "class": "rounded-md", "part": "Radio del TooltipContent" },
-        "zIndex": { "class": "z-50", "part": "Capa del portal (por encima de overlays)" }
+        "foreground": {
+          "class": "bg-foreground",
+          "part": "Fondo del TooltipContent (oscuro)"
+        },
+        "background": {
+          "class": "text-background",
+          "part": "Color del texto (contraste con foreground)"
+        },
+        "fill": {
+          "class": "fill-foreground",
+          "part": "Color del Arrow (igual al fondo)"
+        },
+        "radius": {
+          "class": "rounded-md",
+          "part": "Radio del TooltipContent"
+        },
+        "zIndex": {
+          "class": "z-50",
+          "part": "Capa del portal (por encima de overlays)"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay personalizado vía Provider (props.delay) */\n<TooltipProvider delay={600}>"
@@ -961,10 +1143,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "popover": { "name": "Popover", "description": "Contenido interactivo (form, links) activado por clic." },
-        "hoverCard": { "name": "HoverCard", "description": "Vista previa rica (avatar, link) con imagen y texto." },
-        "button": { "name": "Button", "description": "Trigger común de tooltips (especialmente icon-only)." },
-        "kbd": { "name": "Kbd", "description": "Indicador de tecla para atajos dentro del tooltip." }
+        "popover": {
+          "name": "Popover",
+          "description": "Contenido interactivo (form, links) activado por clic."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Vista previa rica (avatar, link) con imagen y texto."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Trigger común de tooltips (especialmente icon-only)."
+        },
+        "kbd": {
+          "name": "Kbd",
+          "description": "Indicador de tecla para atajos dentro del tooltip."
+        }
       }
     },
     "notes": {
@@ -992,10 +1186,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hover en el trigger", "result": "El tooltip abre tras el delay del Provider", "priority": "high" },
-        "item2": { "action": "Enfocar trigger vía Tab", "result": "El tooltip abre inmediatamente (sin delay)", "priority": "high" },
-        "item3": { "action": "Pulsar Escape con tooltip abierto", "result": "Cierra el tooltip; el foco permanece en el trigger", "priority": "high" },
-        "item4": { "action": "Mover mouse al tooltip", "result": "El tooltip permanece abierto (WCAG 1.4.13)", "priority": "medium" }
+        "item1": {
+          "action": "Hover en el trigger",
+          "result": "El tooltip abre tras el delay del Provider",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Enfocar trigger vía Tab",
+          "result": "El tooltip abre inmediatamente (sin delay)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pulsar Escape con tooltip abierto",
+          "result": "Cierra el tooltip; el foco permanece en el trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Mover mouse al tooltip",
+          "result": "El tooltip permanece abierto (WCAG 1.4.13)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1010,10 +1220,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (open, side top)", "priority": "high" },
-        "item2": { "story": "Con atajo de teclado (kbd)", "priority": "high" },
-        "item3": { "story": "Side bottom/left/right", "priority": "medium" },
-        "item4": { "story": "Texto largo (max-w-xs)", "priority": "medium" }
+        "item1": {
+          "story": "Default (open, side top)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con atajo de teclado (kbd)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Side bottom/left/right",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Texto largo (max-w-xs)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -8,8 +8,7 @@
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
       "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
-      "aiIntent": "informational"
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,11 +48,31 @@
           "use": "Variante recomendada",
           "alternative": "Observação"
         },
-        "item1": { "s": "Ação primária do fluxo", "u": "default", "a": "Máximo 1 por seção" },
-        "item2": { "s": "Ação secundária ou cancelar", "u": "outline ou secondary", "a": "Nunca outro default" },
-        "item3": { "s": "Ação destrutiva (excluir)", "u": "destructive", "a": "Confirmar via AlertDialog" },
-        "item4": { "s": "Ação discreta em toolbar", "u": "ghost", "a": "Sem borda, hover sutil" },
-        "item5": { "s": "Navegação inline no texto", "u": "link", "a": "Prefira compor com elemento filho <code>&lt;a&gt;</code>" }
+        "item1": {
+          "s": "Ação primária do fluxo",
+          "u": "default",
+          "a": "Máximo 1 por seção"
+        },
+        "item2": {
+          "s": "Ação secundária ou cancelar",
+          "u": "outline ou secondary",
+          "a": "Nunca outro default"
+        },
+        "item3": {
+          "s": "Ação destrutiva (excluir)",
+          "u": "destructive",
+          "a": "Confirmar via AlertDialog"
+        },
+        "item4": {
+          "s": "Ação discreta em toolbar",
+          "u": "ghost",
+          "a": "Sem borda, hover sutil"
+        },
+        "item5": {
+          "s": "Navegação inline no texto",
+          "u": "link",
+          "a": "Prefira compor com elemento filho <code>&lt;a&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -218,7 +237,7 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Propriedade",
-        "type": "Tipo",
+        "type": "Tipo HTML do botão. Use <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fora.",
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
@@ -226,7 +245,6 @@
         "size": "Tamanho do botão. Altura, padding e proporção icon-only.",
         "asChild": "Se <code>true</code>, renderiza o filho (via Radix Slot) e repassa os estilos — útil para links.",
         "disabled": "Desabilita o botão: bloqueia eventos de ponteiro e reduz a opacidade pela metade.",
-        "type": "Tipo HTML do botão. Use <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fora.",
         "onClick": "Callback disparado ao clique. Não dispara quando <code>disabled</code>.",
         "className": "Classes CSS adicionais — mescladas com as classes da variante pelo utilitário <code>cn()</code>."
       },
@@ -320,30 +338,89 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Button.",
-        "item1": { "action": "Clicar em Button habilitado", "result": "Callback <code>onClick</code> é disparado uma vez", "priority": "high" },
-        "item2": { "action": "Clicar em Button com <code>disabled</code>", "result": "<code>onClick</code> não é disparado; atributo <code>disabled</code> presente", "priority": "high" },
-        "item3": { "action": "Focar via Tab e pressionar Enter", "result": "<code>onClick</code> é disparado (comportamento nativo)", "priority": "high" },
-        "item4": { "action": "Focar via Tab e pressionar Space", "result": "<code>onClick</code> é disparado (comportamento nativo)", "priority": "high" },
-        "item5": { "action": "Renderizar composto com elemento filho <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado com classes do Button", "priority": "medium" },
-        "item6": { "action": "Renderizar botão icon-only com <code>aria-label</code>", "result": "Acessível via <code>getByRole('button', { name })</code>", "priority": "high" }
+        "item1": {
+          "action": "Clicar em Button habilitado",
+          "result": "Callback <code>onClick</code> é disparado uma vez",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em Button com <code>disabled</code>",
+          "result": "<code>onClick</code> não é disparado; atributo <code>disabled</code> presente",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Focar via Tab e pressionar Enter",
+          "result": "<code>onClick</code> é disparado (comportamento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Focar via Tab e pressionar Space",
+          "result": "<code>onClick</code> é disparado (comportamento nativo)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar composto com elemento filho <code>&lt;a&gt;</code>",
+          "result": "Elemento <code>&lt;a&gt;</code> renderizado com classes do Button",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar botão icon-only com <code>aria-label</code>",
+          "result": "Acessível via <code>getByRole('button', { name })</code>",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Elemento &lt;button&gt; nativo presente", "level": "AA", "how": "getByRole('button') no testing-library" },
-        "item2": { "criterion": "Contraste mínimo 4.5:1 em todas as variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item3": { "criterion": "Focus ring visível ao navegar por teclado", "level": "AA", "how": "Inspecionar :focus-visible manualmente" },
-        "item4": { "criterion": "aria-label presente em botões icon-only", "level": "AA", "how": "getByRole('button', { name }) retorna o botão" },
-        "item5": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "Elemento &lt;button&gt; nativo presente",
+          "level": "AA",
+          "how": "getByRole('button') no testing-library"
+        },
+        "item2": {
+          "criterion": "Contraste mínimo 4.5:1 em todas as variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item3": {
+          "criterion": "Focus ring visível ao navegar por teclado",
+          "level": "AA",
+          "how": "Inspecionar :focus-visible manualmente"
+        },
+        "item4": {
+          "criterion": "aria-label presente em botões icon-only",
+          "level": "AA",
+          "how": "getByRole('button', { name }) retorna o botão"
+        },
+        "item5": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, destructive, outline, secondary, ghost, link", "priority": "high" },
-        "item3": { "story": "Tamanhos — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
-        "item4": { "story": "Estados — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Composições — com ícone à esquerda, icon-only, link composto", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, destructive, outline, secondary, ghost, link",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tamanhos — default, sm, lg, icon, icon-sm, icon-lg",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — disabled, loading, focus-visible",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composições — com ícone à esquerda, icon-only, link composto",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -378,8 +455,7 @@
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
       "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
-      "aiIntent": "informational"
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -419,11 +495,31 @@
           "use": "Recommended variant",
           "alternative": "Note"
         },
-        "item1": { "s": "Primary action of the flow", "u": "default", "a": "Max 1 per section" },
-        "item2": { "s": "Secondary action or cancel", "u": "outline or secondary", "a": "Never another default" },
-        "item3": { "s": "Destructive action (delete)", "u": "destructive", "a": "Confirm via AlertDialog" },
-        "item4": { "s": "Discreet action in toolbar", "u": "ghost", "a": "No border, subtle hover" },
-        "item5": { "s": "Inline navigation in text", "u": "link", "a": "Prefer composing with child <code>&lt;a&gt;</code>" }
+        "item1": {
+          "s": "Primary action of the flow",
+          "u": "default",
+          "a": "Max 1 per section"
+        },
+        "item2": {
+          "s": "Secondary action or cancel",
+          "u": "outline or secondary",
+          "a": "Never another default"
+        },
+        "item3": {
+          "s": "Destructive action (delete)",
+          "u": "destructive",
+          "a": "Confirm via AlertDialog"
+        },
+        "item4": {
+          "s": "Discreet action in toolbar",
+          "u": "ghost",
+          "a": "No border, subtle hover"
+        },
+        "item5": {
+          "s": "Inline navigation in text",
+          "u": "link",
+          "a": "Prefer composing with child <code>&lt;a&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -588,7 +684,7 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Property",
-        "type": "Type",
+        "type": "HTML button type. Use <code>\"submit\"</code> inside forms, <code>\"button\"</code> outside.",
         "default": "Default",
         "required": "Required",
         "description": "Description",
@@ -596,7 +692,6 @@
         "size": "Button size. Height, padding, and icon-only proportion.",
         "asChild": "If <code>true</code>, renders the child (via Radix Slot) and forwards styles — useful for links.",
         "disabled": "Disables the button: blocks pointer events and reduces opacity by half.",
-        "type": "HTML button type. Use <code>\"submit\"</code> inside forms, <code>\"button\"</code> outside.",
         "onClick": "Callback fired on click. Doesn't fire when <code>disabled</code>.",
         "className": "Additional CSS classes — merged with variant classes via the <code>cn()</code> utility."
       },
@@ -690,30 +785,89 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Button interaction.",
-        "item1": { "action": "Click enabled Button", "result": "<code>onClick</code> callback fires once", "priority": "high" },
-        "item2": { "action": "Click Button with <code>disabled</code>", "result": "<code>onClick</code> doesn't fire; <code>disabled</code> attribute present", "priority": "high" },
-        "item3": { "action": "Focus via Tab and press Enter", "result": "<code>onClick</code> fires (native behavior)", "priority": "high" },
-        "item4": { "action": "Focus via Tab and press Space", "result": "<code>onClick</code> fires (native behavior)", "priority": "high" },
-        "item5": { "action": "Render composed with child <code>&lt;a&gt;</code>", "result": "<code>&lt;a&gt;</code> element rendered with Button classes", "priority": "medium" },
-        "item6": { "action": "Render icon-only button with <code>aria-label</code>", "result": "Accessible via <code>getByRole('button', { name })</code>", "priority": "high" }
+        "item1": {
+          "action": "Click enabled Button",
+          "result": "<code>onClick</code> callback fires once",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click Button with <code>disabled</code>",
+          "result": "<code>onClick</code> doesn't fire; <code>disabled</code> attribute present",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Focus via Tab and press Enter",
+          "result": "<code>onClick</code> fires (native behavior)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Focus via Tab and press Space",
+          "result": "<code>onClick</code> fires (native behavior)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Render composed with child <code>&lt;a&gt;</code>",
+          "result": "<code>&lt;a&gt;</code> element rendered with Button classes",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Render icon-only button with <code>aria-label</code>",
+          "result": "Accessible via <code>getByRole('button', { name })</code>",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "Native &lt;button&gt; element present", "level": "AA", "how": "getByRole('button') in testing-library" },
-        "item2": { "criterion": "Minimum contrast 4.5:1 across all variants", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item3": { "criterion": "Focus ring visible on keyboard navigation", "level": "AA", "how": "Inspect :focus-visible manually" },
-        "item4": { "criterion": "aria-label present on icon-only buttons", "level": "AA", "how": "getByRole('button', { name }) returns the button" },
-        "item5": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "Native &lt;button&gt; element present",
+          "level": "AA",
+          "how": "getByRole('button') in testing-library"
+        },
+        "item2": {
+          "criterion": "Minimum contrast 4.5:1 across all variants",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item3": {
+          "criterion": "Focus ring visible on keyboard navigation",
+          "level": "AA",
+          "how": "Inspect :focus-visible manually"
+        },
+        "item4": {
+          "criterion": "aria-label present on icon-only buttons",
+          "level": "AA",
+          "how": "getByRole('button', { name }) returns the button"
+        },
+        "item5": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — default variant", "priority": "high" },
-        "item2": { "story": "Variants — default, destructive, outline, secondary, ghost, link", "priority": "high" },
-        "item3": { "story": "Sizes — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
-        "item4": { "story": "States — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Compositions — with left icon, icon-only, composed link", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default variant",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — default, destructive, outline, secondary, ghost, link",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Sizes — default, sm, lg, icon, icon-sm, icon-lg",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "States — disabled, loading, focus-visible",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Compositions — with left icon, icon-only, composed link",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -748,8 +902,7 @@
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
       "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority",
-      "aiIntent": "informational"
+      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
     },
     "demonstration": {
       "title": "Demostración",
@@ -789,11 +942,31 @@
           "use": "Variante recomendada",
           "alternative": "Observación"
         },
-        "item1": { "s": "Acción primaria del flujo", "u": "default", "a": "Máximo 1 por sección" },
-        "item2": { "s": "Acción secundaria o cancelar", "u": "outline o secondary", "a": "Nunca otro default" },
-        "item3": { "s": "Acción destructiva (eliminar)", "u": "destructive", "a": "Confirmar vía AlertDialog" },
-        "item4": { "s": "Acción discreta en toolbar", "u": "ghost", "a": "Sin borde, hover sutil" },
-        "item5": { "s": "Navegación inline en el texto", "u": "link", "a": "Prefiere componer con hijo <code>&lt;a&gt;</code>" }
+        "item1": {
+          "s": "Acción primaria del flujo",
+          "u": "default",
+          "a": "Máximo 1 por sección"
+        },
+        "item2": {
+          "s": "Acción secundaria o cancelar",
+          "u": "outline o secondary",
+          "a": "Nunca otro default"
+        },
+        "item3": {
+          "s": "Acción destructiva (eliminar)",
+          "u": "destructive",
+          "a": "Confirmar vía AlertDialog"
+        },
+        "item4": {
+          "s": "Acción discreta en toolbar",
+          "u": "ghost",
+          "a": "Sin borde, hover sutil"
+        },
+        "item5": {
+          "s": "Navegación inline en el texto",
+          "u": "link",
+          "a": "Prefiere componer con hijo <code>&lt;a&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -958,7 +1131,7 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Propiedad",
-        "type": "Tipo",
+        "type": "Tipo HTML del botón. Usa <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fuera.",
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
@@ -966,7 +1139,6 @@
         "size": "Tamaño del botón. Altura, padding y proporción icon-only.",
         "asChild": "Si <code>true</code>, renderiza el hijo (vía Radix Slot) y reenvía los estilos — útil para enlaces.",
         "disabled": "Deshabilita el botón: bloquea eventos de puntero y reduce la opacidad a la mitad.",
-        "type": "Tipo HTML del botón. Usa <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fuera.",
         "onClick": "Callback disparado al clic. No dispara cuando <code>disabled</code>.",
         "className": "Clases CSS adicionales — se combinan con las clases de la variante vía el utilitario <code>cn()</code>."
       },
@@ -1060,30 +1232,89 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Button.",
-        "item1": { "action": "Hacer clic en Button habilitado", "result": "Callback <code>onClick</code> se dispara una vez", "priority": "high" },
-        "item2": { "action": "Hacer clic en Button con <code>disabled</code>", "result": "<code>onClick</code> no se dispara; atributo <code>disabled</code> presente", "priority": "high" },
-        "item3": { "action": "Enfocar vía Tab y presionar Enter", "result": "<code>onClick</code> se dispara (comportamiento nativo)", "priority": "high" },
-        "item4": { "action": "Enfocar vía Tab y presionar Space", "result": "<code>onClick</code> se dispara (comportamiento nativo)", "priority": "high" },
-        "item5": { "action": "Renderizar compuesto con hijo <code>&lt;a&gt;</code>", "result": "Elemento <code>&lt;a&gt;</code> renderizado con clases del Button", "priority": "medium" },
-        "item6": { "action": "Renderizar botón icon-only con <code>aria-label</code>", "result": "Accesible vía <code>getByRole('button', { name })</code>", "priority": "high" }
+        "item1": {
+          "action": "Hacer clic en Button habilitado",
+          "result": "Callback <code>onClick</code> se dispara una vez",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en Button con <code>disabled</code>",
+          "result": "<code>onClick</code> no se dispara; atributo <code>disabled</code> presente",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Enfocar vía Tab y presionar Enter",
+          "result": "<code>onClick</code> se dispara (comportamiento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Enfocar vía Tab y presionar Space",
+          "result": "<code>onClick</code> se dispara (comportamiento nativo)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Renderizar compuesto con hijo <code>&lt;a&gt;</code>",
+          "result": "Elemento <code>&lt;a&gt;</code> renderizado con clases del Button",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar botón icon-only con <code>aria-label</code>",
+          "result": "Accesible vía <code>getByRole('button', { name })</code>",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Elemento &lt;button&gt; nativo presente", "level": "AA", "how": "getByRole('button') en testing-library" },
-        "item2": { "criterion": "Contraste mínimo 4.5:1 en todas las variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item3": { "criterion": "Focus ring visible al navegar por teclado", "level": "AA", "how": "Inspeccionar :focus-visible manualmente" },
-        "item4": { "criterion": "aria-label presente en botones icon-only", "level": "AA", "how": "getByRole('button', { name }) retorna el botón" },
-        "item5": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "Elemento &lt;button&gt; nativo presente",
+          "level": "AA",
+          "how": "getByRole('button') en testing-library"
+        },
+        "item2": {
+          "criterion": "Contraste mínimo 4.5:1 en todas las variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item3": {
+          "criterion": "Focus ring visible al navegar por teclado",
+          "level": "AA",
+          "how": "Inspeccionar :focus-visible manualmente"
+        },
+        "item4": {
+          "criterion": "aria-label presente en botones icon-only",
+          "level": "AA",
+          "how": "getByRole('button', { name }) retorna el botón"
+        },
+        "item5": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, destructive, outline, secondary, ghost, link", "priority": "high" },
-        "item3": { "story": "Tamaños — default, sm, lg, icon, icon-sm, icon-lg", "priority": "high" },
-        "item4": { "story": "Estados — disabled, loading, focus-visible", "priority": "medium" },
-        "item5": { "story": "Composiciones — con ícono a la izquierda, icon-only, enlace compuesto", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, destructive, outline, secondary, ghost, link",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tamaños — default, sm, lg, icon, icon-sm, icon-lg",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Estados — disabled, loading, focus-visible",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Composiciones — con ícono a la izquierda, icon-only, enlace compuesto",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -203,7 +203,6 @@ export function SheetDocs() {
     componentSlug: "sheet",
     aiSummary: tContent("seo.aiSummary"),
     aiEntities: tContent("seo.aiEntities"),
-    aiIntent: tContent("seo.aiIntent") as "informational" | "navigational",
     breadcrumb: [
       { name: "Components", item: "/components" },
       { name: tContent("category"), item: "/components/overlay" },

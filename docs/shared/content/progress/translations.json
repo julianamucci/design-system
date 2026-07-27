@@ -8,8 +8,7 @@
       "title": "Progress — Feedback",
       "description": "Documentação do Progress: track, indicator, label e value, com role=\"progressbar\" automático e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Progress com Track, Indicator, Label e Value, role=\"progressbar\" automático, suporte a modo determinado (0-100) e indeterminate.",
-      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar",
-      "aiIntent": "informational"
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -47,11 +46,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Upload de arquivo", "u": "Sim, value 0–100", "a": "-" },
-        "item2": { "s": "Loading de duração curta (<300ms)", "u": "Não", "a": "Sem indicador" },
-        "item3": { "s": "Loading de estrutura conhecida", "u": "Não", "a": "Skeleton" },
-        "item4": { "s": "Processamento sem progresso mensurável", "u": "Sim, indeterminate", "a": "Spinner" },
-        "item5": { "s": "Notificação de tarefa concluída", "u": "Não", "a": "Toast/Sonner" }
+        "item1": {
+          "s": "Upload de arquivo",
+          "u": "Sim, value 0–100",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Loading de duração curta (<300ms)",
+          "u": "Não",
+          "a": "Sem indicador"
+        },
+        "item3": {
+          "s": "Loading de estrutura conhecida",
+          "u": "Não",
+          "a": "Skeleton"
+        },
+        "item4": {
+          "s": "Processamento sem progresso mensurável",
+          "u": "Sim, indeterminate",
+          "a": "Spinner"
+        },
+        "item5": {
+          "s": "Notificação de tarefa concluída",
+          "u": "Não",
+          "a": "Toast/Sonner"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -185,12 +204,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": { "class": "bg-muted", "part": "Fundo da trilha (ProgressTrack)" },
-        "primary": { "class": "bg-primary", "part": "Cor padrão do indicador" },
-        "primaryForeground": { "class": "text-primary-foreground", "part": "Texto sobre o indicador (raro)" },
-        "foreground": { "class": "text-foreground", "part": "Texto do ProgressLabel" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto do ProgressValue" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco quando interativo" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fundo da trilha (ProgressTrack)"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Cor padrão do indicador"
+        },
+        "primaryForeground": {
+          "class": "text-primary-foreground",
+          "part": "Texto sobre o indicador (raro)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto do ProgressLabel"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto do ProgressValue"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco quando interativo"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Override de cor do indicador via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
@@ -228,10 +265,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "skeleton": { "name": "Skeleton", "description": "Placeholder para loading de estrutura conhecida." },
-        "spinner": { "name": "Spinner", "description": "Indicador circular para duração desconhecida e curta." },
-        "alert": { "name": "Alert", "description": "Notificação de conclusão ou erro de uma operação." },
-        "sonner": { "name": "Sonner", "description": "Toast temporário para feedback de tarefa concluída." }
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Placeholder para loading de estrutura conhecida."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "Indicador circular para duração desconhecida e curta."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Notificação de conclusão ou erro de uma operação."
+        },
+        "sonner": {
+          "name": "Sonner",
+          "description": "Toast temporário para feedback de tarefa concluída."
+        }
       }
     },
     "notes": {
@@ -263,10 +312,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada mudança de valor.",
-        "item1": { "action": "Definir value=0", "result": "Indicador renderiza sem preenchimento", "priority": "high" },
-        "item2": { "action": "Definir value=50", "result": "Indicador preenche metade da trilha", "priority": "high" },
-        "item3": { "action": "Definir value=100", "result": "Indicador preenche trilha completa", "priority": "high" },
-        "item4": { "action": "Passar value=null", "result": "Modo indeterminate — animação infinita", "priority": "medium" }
+        "item1": {
+          "action": "Definir value=0",
+          "result": "Indicador renderiza sem preenchimento",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Definir value=50",
+          "result": "Indicador preenche metade da trilha",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Definir value=100",
+          "result": "Indicador preenche trilha completa",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Passar value=null",
+          "result": "Modo indeterminate — animação infinita",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -281,10 +346,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (value=0)", "priority": "high" },
-        "item2": { "story": "Loading (value=50)", "priority": "high" },
-        "item3": { "story": "Complete (value=100)", "priority": "high" },
-        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+        "item1": {
+          "story": "Default (value=0)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Loading (value=50)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Complete (value=100)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indeterminate (value=null)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -317,8 +394,7 @@
       "title": "Progress — Feedback",
       "description": "Progress documentation: track, indicator, label and value, with automatic role=\"progressbar\" and WCAG 2.2 AA support.",
       "aiSummary": "Progress component with Track, Indicator, Label and Value, automatic role=\"progressbar\", support for determinate (0-100) and indeterminate modes.",
-      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar",
-      "aiIntent": "informational"
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -356,11 +432,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "File upload", "u": "Yes, value 0–100", "a": "-" },
-        "item2": { "s": "Short loading (<300ms)", "u": "No", "a": "No indicator" },
-        "item3": { "s": "Loading of known structure", "u": "No", "a": "Skeleton" },
-        "item4": { "s": "Processing with no measurable progress", "u": "Yes, indeterminate", "a": "Spinner" },
-        "item5": { "s": "Notification of completed task", "u": "No", "a": "Toast/Sonner" }
+        "item1": {
+          "s": "File upload",
+          "u": "Yes, value 0–100",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Short loading (<300ms)",
+          "u": "No",
+          "a": "No indicator"
+        },
+        "item3": {
+          "s": "Loading of known structure",
+          "u": "No",
+          "a": "Skeleton"
+        },
+        "item4": {
+          "s": "Processing with no measurable progress",
+          "u": "Yes, indeterminate",
+          "a": "Spinner"
+        },
+        "item5": {
+          "s": "Notification of completed task",
+          "u": "No",
+          "a": "Toast/Sonner"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -494,12 +590,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": { "class": "bg-muted", "part": "Track background (ProgressTrack)" },
-        "primary": { "class": "bg-primary", "part": "Default indicator color" },
-        "primaryForeground": { "class": "text-primary-foreground", "part": "Text over the indicator (rare)" },
-        "foreground": { "class": "text-foreground", "part": "ProgressLabel text" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "ProgressValue text" },
-        "ring": { "class": "ring-ring", "part": "Focus ring when interactive" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Track background (ProgressTrack)"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Default indicator color"
+        },
+        "primaryForeground": {
+          "class": "text-primary-foreground",
+          "part": "Text over the indicator (rare)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "ProgressLabel text"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "ProgressValue text"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring when interactive"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Override indicator color via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
@@ -537,10 +651,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "skeleton": { "name": "Skeleton", "description": "Placeholder for loading content with known structure." },
-        "spinner": { "name": "Spinner", "description": "Circular indicator for unknown short duration." },
-        "alert": { "name": "Alert", "description": "Notification of completion or error of an operation." },
-        "sonner": { "name": "Sonner", "description": "Temporary toast for completed task feedback." }
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Placeholder for loading content with known structure."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "Circular indicator for unknown short duration."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Notification of completion or error of an operation."
+        },
+        "sonner": {
+          "name": "Sonner",
+          "description": "Temporary toast for completed task feedback."
+        }
       }
     },
     "notes": {
@@ -572,10 +698,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each value change.",
-        "item1": { "action": "Set value=0", "result": "Indicator renders empty", "priority": "high" },
-        "item2": { "action": "Set value=50", "result": "Indicator fills half the track", "priority": "high" },
-        "item3": { "action": "Set value=100", "result": "Indicator fills the full track", "priority": "high" },
-        "item4": { "action": "Pass value=null", "result": "Indeterminate mode — infinite animation", "priority": "medium" }
+        "item1": {
+          "action": "Set value=0",
+          "result": "Indicator renders empty",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Set value=50",
+          "result": "Indicator fills half the track",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Set value=100",
+          "result": "Indicator fills the full track",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pass value=null",
+          "result": "Indeterminate mode — infinite animation",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -590,10 +732,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (value=0)", "priority": "high" },
-        "item2": { "story": "Loading (value=50)", "priority": "high" },
-        "item3": { "story": "Complete (value=100)", "priority": "high" },
-        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+        "item1": {
+          "story": "Default (value=0)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Loading (value=50)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Complete (value=100)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indeterminate (value=null)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -626,8 +780,7 @@
       "title": "Progress — Feedback",
       "description": "Documentación de Progress: track, indicator, label y value, con role=\"progressbar\" automático y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Progress con Track, Indicator, Label y Value, role=\"progressbar\" automático, soporte para modo determinado (0-100) e indeterminate.",
-      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar",
-      "aiIntent": "informational"
+      "aiEntities": "Progress, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role progressbar"
     },
     "demonstration": {
       "title": "Demostración",
@@ -665,11 +818,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Subida de archivo", "u": "Sí, value 0–100", "a": "-" },
-        "item2": { "s": "Carga corta (<300ms)", "u": "No", "a": "Sin indicador" },
-        "item3": { "s": "Carga de estructura conocida", "u": "No", "a": "Skeleton" },
-        "item4": { "s": "Procesamiento sin progreso medible", "u": "Sí, indeterminate", "a": "Spinner" },
-        "item5": { "s": "Notificación de tarea completada", "u": "No", "a": "Toast/Sonner" }
+        "item1": {
+          "s": "Subida de archivo",
+          "u": "Sí, value 0–100",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Carga corta (<300ms)",
+          "u": "No",
+          "a": "Sin indicador"
+        },
+        "item3": {
+          "s": "Carga de estructura conocida",
+          "u": "No",
+          "a": "Skeleton"
+        },
+        "item4": {
+          "s": "Procesamiento sin progreso medible",
+          "u": "Sí, indeterminate",
+          "a": "Spinner"
+        },
+        "item5": {
+          "s": "Notificación de tarea completada",
+          "u": "No",
+          "a": "Toast/Sonner"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -803,12 +976,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": { "class": "bg-muted", "part": "Fondo de la pista (ProgressTrack)" },
-        "primary": { "class": "bg-primary", "part": "Color por defecto del indicador" },
-        "primaryForeground": { "class": "text-primary-foreground", "part": "Texto sobre el indicador (raro)" },
-        "foreground": { "class": "text-foreground", "part": "Texto del ProgressLabel" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto del ProgressValue" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco cuando interactivo" }
+        "muted": {
+          "class": "bg-muted",
+          "part": "Fondo de la pista (ProgressTrack)"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Color por defecto del indicador"
+        },
+        "primaryForeground": {
+          "class": "text-primary-foreground",
+          "part": "Texto sobre el indicador (raro)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto del ProgressLabel"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto del ProgressValue"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco cuando interactivo"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Override del color del indicador vía .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
@@ -846,10 +1037,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "skeleton": { "name": "Skeleton", "description": "Placeholder para carga de estructura conocida." },
-        "spinner": { "name": "Spinner", "description": "Indicador circular para duración desconocida y corta." },
-        "alert": { "name": "Alert", "description": "Notificación de finalización o error de una operación." },
-        "sonner": { "name": "Sonner", "description": "Toast temporal para feedback de tarea completada." }
+        "skeleton": {
+          "name": "Skeleton",
+          "description": "Placeholder para carga de estructura conocida."
+        },
+        "spinner": {
+          "name": "Spinner",
+          "description": "Indicador circular para duración desconocida y corta."
+        },
+        "alert": {
+          "name": "Alert",
+          "description": "Notificación de finalización o error de una operación."
+        },
+        "sonner": {
+          "name": "Sonner",
+          "description": "Toast temporal para feedback de tarea completada."
+        }
       }
     },
     "notes": {
@@ -881,10 +1084,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada cambio de valor.",
-        "item1": { "action": "Definir value=0", "result": "El indicador se renderiza vacío", "priority": "high" },
-        "item2": { "action": "Definir value=50", "result": "El indicador llena la mitad de la pista", "priority": "high" },
-        "item3": { "action": "Definir value=100", "result": "El indicador llena la pista completa", "priority": "high" },
-        "item4": { "action": "Pasar value=null", "result": "Modo indeterminate — animación infinita", "priority": "medium" }
+        "item1": {
+          "action": "Definir value=0",
+          "result": "El indicador se renderiza vacío",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Definir value=50",
+          "result": "El indicador llena la mitad de la pista",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Definir value=100",
+          "result": "El indicador llena la pista completa",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pasar value=null",
+          "result": "Modo indeterminate — animación infinita",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -899,10 +1118,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (value=0)", "priority": "high" },
-        "item2": { "story": "Loading (value=50)", "priority": "high" },
-        "item3": { "story": "Complete (value=100)", "priority": "high" },
-        "item4": { "story": "Indeterminate (value=null)", "priority": "medium" }
+        "item1": {
+          "story": "Default (value=0)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Loading (value=50)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Complete (value=100)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Indeterminate (value=null)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

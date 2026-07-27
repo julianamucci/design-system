@@ -8,8 +8,7 @@
       "title": "Chart — Display",
       "description": "Documentação do Chart: gráficos bar, line, area e pie via objeto declarativo, tema reativo por tokens e acessibilidade WCAG.",
       "aiSummary": "Componente Chart com ChartContainer e helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa baseada em Apache ECharts. Tokens --chart-1 a --chart-5 para cores de séries.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,12 +48,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Comparar valores entre categorias", "u": "Sim, tipo bar", "a": "-" },
-        "item2": { "s": "Mostrar tendência ao longo do tempo", "u": "Sim, tipo line ou area", "a": "-" },
-        "item3": { "s": "Dados tabulares detalhados", "u": "Não", "a": "Table ou DataTable" },
-        "item4": { "s": "Proporção entre partes de um todo", "u": "Sim, tipo pie", "a": "-" },
-        "item5": { "s": "Volume acumulado com ênfase", "u": "Sim, tipo area", "a": "-" },
-        "item6": { "s": "Dados que exigem ordenação e filtros", "u": "Não", "a": "DataTable" }
+        "item1": {
+          "s": "Comparar valores entre categorias",
+          "u": "Sim, tipo bar",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar tendência ao longo do tempo",
+          "u": "Sim, tipo line ou area",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Dados tabulares detalhados",
+          "u": "Não",
+          "a": "Table ou DataTable"
+        },
+        "item4": {
+          "s": "Proporção entre partes de um todo",
+          "u": "Sim, tipo pie",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Volume acumulado com ênfase",
+          "u": "Sim, tipo area",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Dados que exigem ordenação e filtros",
+          "u": "Não",
+          "a": "DataTable"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -298,28 +321,80 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Chart.",
-        "item1": { "action": "Estado vazio: séries vazias", "result": "Container renderiza com mensagem \"No data\" padrão; nenhuma barra ou linha visível", "priority": "high" },
-        "item2": { "action": "Tipo bar com dados válidos", "result": "Barras renderizadas com cores dos tokens --chart-*; altura proporcional aos valores", "priority": "high" },
-        "item3": { "action": "Tipo line com dados válidos", "result": "Path renderizado conectando os pontos; cor do token --chart-1 da primeira série", "priority": "high" },
-        "item4": { "action": "Hover sobre ponto de dado", "result": "Tooltip exibe label da categoria e valor formatado com indicador de cor", "priority": "high" },
-        "item5": { "action": "Multi-séries", "result": "Legenda exibe cor + label de cada série; cada série usa token de cor distinto", "priority": "medium" },
-        "item6": { "action": "Troca de tema do <html>", "result": "Cores e tipografia recalculam automaticamente; gráfico não pisca nem requer reload", "priority": "medium" }
+        "item1": {
+          "action": "Estado vazio: séries vazias",
+          "result": "Container renderiza com mensagem \"No data\" padrão; nenhuma barra ou linha visível",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Tipo bar com dados válidos",
+          "result": "Barras renderizadas com cores dos tokens --chart-*; altura proporcional aos valores",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tipo line com dados válidos",
+          "result": "Path renderizado conectando os pontos; cor do token --chart-1 da primeira série",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hover sobre ponto de dado",
+          "result": "Tooltip exibe label da categoria e valor formatado com indicador de cor",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Multi-séries",
+          "result": "Legenda exibe cor + label de cada série; cada série usa token de cor distinto",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Troca de tema do <html>",
+          "result": "Cores e tipografia recalculam automaticamente; gráfico não pisca nem requer reload",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "aria-label presente e descritivo no container", "level": "AA", "how": "Inspecionar atributo aria-label no div[data-slot=chart]" },
-        "item2": { "criterion": "role=\"img\" no container para leitores de tela", "level": "AA", "how": "Inspecionar atributo role no div[data-slot=chart]" },
-        "item3": { "criterion": "Contraste mínimo 3:1 nos elementos gráficos", "level": "AA", "how": "axe-core / Lighthouse com tokens --chart-1 a --chart-5" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "aria-label presente e descritivo no container",
+          "level": "AA",
+          "how": "Inspecionar atributo aria-label no div[data-slot=chart]"
+        },
+        "item2": {
+          "criterion": "role=\"img\" no container para leitores de tela",
+          "level": "AA",
+          "how": "Inspecionar atributo role no div[data-slot=chart]"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 3:1 nos elementos gráficos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse com tokens --chart-1 a --chart-5"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Bar chart — série única, dados completos", "priority": "high" },
-        "item2": { "story": "Line chart — multi-séries com legenda", "priority": "high" },
-        "item3": { "story": "Estado vazio — séries vazias", "priority": "high" },
-        "item4": { "story": "Dark mode — bar e line com tokens de tema", "priority": "medium" }
+        "item1": {
+          "story": "Bar chart — série única, dados completos",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Line chart — multi-séries com legenda",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estado vazio — séries vazias",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Dark mode — bar e line com tokens de tema",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -352,8 +427,7 @@
       "title": "Chart — Display",
       "description": "Chart documentation: bar, line, area, and pie via declarative object, reactive theme through tokens, and WCAG accessibility.",
       "aiSummary": "Chart component with ChartContainer and buildBarOption/buildLineOption/buildAreaOption/buildPieOption helpers. Declarative API built on Apache ECharts. Tokens --chart-1 to --chart-5 for series colors.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -393,12 +467,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Compare values across categories", "u": "Yes, bar type", "a": "-" },
-        "item2": { "s": "Show trend over time", "u": "Yes, line or area type", "a": "-" },
-        "item3": { "s": "Detailed tabular data", "u": "No", "a": "Table or DataTable" },
-        "item4": { "s": "Proportion of parts to whole", "u": "Yes, pie type", "a": "-" },
-        "item5": { "s": "Cumulative volume with emphasis", "u": "Yes, area type", "a": "-" },
-        "item6": { "s": "Data requiring sorting and filtering", "u": "No", "a": "DataTable" }
+        "item1": {
+          "s": "Compare values across categories",
+          "u": "Yes, bar type",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Show trend over time",
+          "u": "Yes, line or area type",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Detailed tabular data",
+          "u": "No",
+          "a": "Table or DataTable"
+        },
+        "item4": {
+          "s": "Proportion of parts to whole",
+          "u": "Yes, pie type",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Cumulative volume with emphasis",
+          "u": "Yes, area type",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Data requiring sorting and filtering",
+          "u": "No",
+          "a": "DataTable"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -642,28 +740,80 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Chart configuration.",
-        "item1": { "action": "Empty state: empty series", "result": "Container renders with the default \"No data\" message; no bars or lines visible", "priority": "high" },
-        "item2": { "action": "Bar type with valid data", "result": "Bars rendered with --chart-* token colors; height proportional to values", "priority": "high" },
-        "item3": { "action": "Line type with valid data", "result": "Path rendered connecting data points; color from --chart-1 token of the first series", "priority": "high" },
-        "item4": { "action": "Hover over data point", "result": "Tooltip displays category label and formatted value with color indicator", "priority": "high" },
-        "item5": { "action": "Multi-series", "result": "Legend displays color + label for each series; each series uses a distinct color token", "priority": "medium" },
-        "item6": { "action": "Theme change on <html>", "result": "Colors and typography recompute automatically; chart does not flash nor require reload", "priority": "medium" }
+        "item1": {
+          "action": "Empty state: empty series",
+          "result": "Container renders with the default \"No data\" message; no bars or lines visible",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Bar type with valid data",
+          "result": "Bars rendered with --chart-* token colors; height proportional to values",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Line type with valid data",
+          "result": "Path rendered connecting data points; color from --chart-1 token of the first series",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hover over data point",
+          "result": "Tooltip displays category label and formatted value with color indicator",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Multi-series",
+          "result": "Legend displays color + label for each series; each series uses a distinct color token",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Theme change on <html>",
+          "result": "Colors and typography recompute automatically; chart does not flash nor require reload",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "aria-label present and descriptive on the container", "level": "AA", "how": "Inspect aria-label attribute on div[data-slot=chart]" },
-        "item2": { "criterion": "role=\"img\" on the container for screen readers", "level": "AA", "how": "Inspect role attribute on div[data-slot=chart]" },
-        "item3": { "criterion": "Minimum 3:1 contrast on graphical elements", "level": "AA", "how": "axe-core / Lighthouse with --chart-1 to --chart-5 tokens" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "aria-label present and descriptive on the container",
+          "level": "AA",
+          "how": "Inspect aria-label attribute on div[data-slot=chart]"
+        },
+        "item2": {
+          "criterion": "role=\"img\" on the container for screen readers",
+          "level": "AA",
+          "how": "Inspect role attribute on div[data-slot=chart]"
+        },
+        "item3": {
+          "criterion": "Minimum 3:1 contrast on graphical elements",
+          "level": "AA",
+          "how": "axe-core / Lighthouse with --chart-1 to --chart-5 tokens"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Bar chart — single series, complete data", "priority": "high" },
-        "item2": { "story": "Line chart — multi-series with legend", "priority": "high" },
-        "item3": { "story": "Empty state — empty series", "priority": "high" },
-        "item4": { "story": "Dark mode — bar and line with theme tokens", "priority": "medium" }
+        "item1": {
+          "story": "Bar chart — single series, complete data",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Line chart — multi-series with legend",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Empty state — empty series",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Dark mode — bar and line with theme tokens",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -696,8 +846,7 @@
       "title": "Chart — Display",
       "description": "Documentación de Chart: gráficos bar, line, area y pie mediante objeto declarativo, tema reactivo por tokens y accesibilidad WCAG.",
       "aiSummary": "Componente Chart con ChartContainer y helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa basada en Apache ECharts. Tokens --chart-1 a --chart-5 para colores de series.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern",
-      "aiIntent": "informational"
+      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demostración",
@@ -737,12 +886,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Comparar valores entre categorías", "u": "Sí, tipo bar", "a": "-" },
-        "item2": { "s": "Mostrar tendencia en el tiempo", "u": "Sí, tipo line o area", "a": "-" },
-        "item3": { "s": "Datos tabulares detallados", "u": "No", "a": "Table o DataTable" },
-        "item4": { "s": "Proporción entre partes de un todo", "u": "Sí, tipo pie", "a": "-" },
-        "item5": { "s": "Volumen acumulado con énfasis", "u": "Sí, tipo area", "a": "-" },
-        "item6": { "s": "Datos que requieren orden y filtros", "u": "No", "a": "DataTable" }
+        "item1": {
+          "s": "Comparar valores entre categorías",
+          "u": "Sí, tipo bar",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar tendencia en el tiempo",
+          "u": "Sí, tipo line o area",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Datos tabulares detallados",
+          "u": "No",
+          "a": "Table o DataTable"
+        },
+        "item4": {
+          "s": "Proporción entre partes de un todo",
+          "u": "Sí, tipo pie",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Volumen acumulado con énfasis",
+          "u": "Sí, tipo area",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Datos que requieren orden y filtros",
+          "u": "No",
+          "a": "DataTable"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -986,28 +1159,80 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe pasar para cada configuración de Chart.",
-        "item1": { "action": "Estado vacío: series vacías", "result": "Container renderiza con mensaje \"No data\" por defecto; ninguna barra o línea visible", "priority": "high" },
-        "item2": { "action": "Tipo bar con datos válidos", "result": "Barras renderizadas con colores de tokens --chart-*; altura proporcional a los valores", "priority": "high" },
-        "item3": { "action": "Tipo line con datos válidos", "result": "Path renderizado conectando los puntos; color del token --chart-1 de la primera serie", "priority": "high" },
-        "item4": { "action": "Hover sobre punto de datos", "result": "Tooltip muestra label de categoría y valor formateado con indicador de color", "priority": "high" },
-        "item5": { "action": "Multi-series", "result": "Leyenda muestra color + label de cada serie; cada serie usa token de color distinto", "priority": "medium" },
-        "item6": { "action": "Cambio de tema en <html>", "result": "Colores y tipografía se recalculan automáticamente; el gráfico no parpadea ni requiere reload", "priority": "medium" }
+        "item1": {
+          "action": "Estado vacío: series vacías",
+          "result": "Container renderiza con mensaje \"No data\" por defecto; ninguna barra o línea visible",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Tipo bar con datos válidos",
+          "result": "Barras renderizadas con colores de tokens --chart-*; altura proporcional a los valores",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Tipo line con datos válidos",
+          "result": "Path renderizado conectando los puntos; color del token --chart-1 de la primera serie",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hover sobre punto de datos",
+          "result": "Tooltip muestra label de categoría y valor formateado con indicador de color",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Multi-series",
+          "result": "Leyenda muestra color + label de cada serie; cada serie usa token de color distinto",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Cambio de tema en <html>",
+          "result": "Colores y tipografía se recalculan automáticamente; el gráfico no parpadea ni requiere reload",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "aria-label presente y descriptivo en el container", "level": "AA", "how": "Inspeccionar atributo aria-label en div[data-slot=chart]" },
-        "item2": { "criterion": "role=\"img\" en el container para lectores de pantalla", "level": "AA", "how": "Inspeccionar atributo role en div[data-slot=chart]" },
-        "item3": { "criterion": "Contraste mínimo 3:1 en elementos gráficos", "level": "AA", "how": "axe-core / Lighthouse con tokens --chart-1 a --chart-5" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado por defecto", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "aria-label presente y descriptivo en el container",
+          "level": "AA",
+          "how": "Inspeccionar atributo aria-label en div[data-slot=chart]"
+        },
+        "item2": {
+          "criterion": "role=\"img\" en el container para lectores de pantalla",
+          "level": "AA",
+          "how": "Inspeccionar atributo role en div[data-slot=chart]"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 3:1 en elementos gráficos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse con tokens --chart-1 a --chart-5"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado por defecto",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Bar chart — serie única, datos completos", "priority": "high" },
-        "item2": { "story": "Line chart — multi-series con leyenda", "priority": "high" },
-        "item3": { "story": "Estado vacío — series vacías", "priority": "high" },
-        "item4": { "story": "Dark mode — bar y line con tokens de tema", "priority": "medium" }
+        "item1": {
+          "story": "Bar chart — serie única, datos completos",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Line chart — multi-series con leyenda",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Estado vacío — series vacías",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Dark mode — bar y line con tokens de tema",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -65,7 +65,6 @@ useSeoEffect(computed(() => ({
   componentSlug: 'input-otp',
   aiSummary: tContent('seo.aiSummary'),
   aiEntities: tContent('seo.aiEntities'),
-  aiIntent: tContent('seo.aiIntent'),
   breadcrumb: [
     { name: 'Components', item: '/components' },
     { name: tContent('category'), item: '/components/form' },

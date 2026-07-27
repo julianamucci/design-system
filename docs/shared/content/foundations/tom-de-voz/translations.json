@@ -8,8 +8,7 @@
       "title": "Tom de Voz",
       "description": "Personalidade, formalidade, regras de escrita por elemento, terminologia e padrões para textos de UI e translations.",
       "aiSummary": "Página de fundamentos de Tom de Voz. Define personalidade (amigável, claro, instrucional, neutro), tratamento por idioma, regras por elemento de UI, termos aprovados e padrões específicos de translations.json.",
-      "aiEntities": "tom de voz, UX writing, microcopy, terminologia, translations",
-      "aiIntent": "informational"
+      "aiEntities": "tom de voz, UX writing, microcopy, terminologia, translations"
     },
     "principles": {
       "title": "Princípios",
@@ -192,8 +191,7 @@
       "title": "Tone of Voice",
       "description": "Personality, formality, per-element writing rules, terminology, and patterns for UI text and translations.",
       "aiSummary": "Tone of Voice foundations page. Defines personality (friendly, clear, instructional, neutral), per-language address, rules by UI element, approved terms, and specific patterns for translations.json.",
-      "aiEntities": "tone of voice, UX writing, microcopy, terminology, translations",
-      "aiIntent": "informational"
+      "aiEntities": "tone of voice, UX writing, microcopy, terminology, translations"
     },
     "principles": {
       "title": "Principles",
@@ -376,8 +374,7 @@
       "title": "Tono de Voz",
       "description": "Personalidad, formalidad, reglas de escritura por elemento, terminología y patrones para textos de UI y translations.",
       "aiSummary": "Página de fundamentos de Tono de Voz. Define personalidad (amigable, claro, instruccional, neutro), tratamiento por idioma, reglas por elemento de UI, términos aprobados y patrones específicos de translations.json.",
-      "aiEntities": "tono de voz, UX writing, microcopy, terminología, translations",
-      "aiIntent": "informational"
+      "aiEntities": "tono de voz, UX writing, microcopy, terminología, translations"
     },
     "principles": {
       "title": "Principios",

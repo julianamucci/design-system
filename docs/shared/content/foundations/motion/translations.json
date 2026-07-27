@@ -41,8 +41,7 @@
       "title": "Motion",
       "description": "Tokens de duração e easing, princípios de animação funcional e suporte global a prefers-reduced-motion.",
       "aiSummary": "Página de fundamentos de Motion. Documenta a escada de durações --duration-instant/fast/base/moderate/slow/stately (0–800ms), easings --ease-standard/entrance/exit/emphasis, tipos de uso por contexto, suporte a prefers-reduced-motion, anti-padrões e recursos avançados com a biblioteca Motion (MIT).",
-      "aiEntities": "motion, animação, transition, duration, easing, prefers-reduced-motion, acessibilidade",
-      "aiIntent": "informational"
+      "aiEntities": "motion, animação, transition, duration, easing, prefers-reduced-motion, acessibilidade"
     },
     "principles": {
       "title": "Princípios",
@@ -214,8 +213,7 @@
       "title": "Motion",
       "description": "Duration and easing tokens, principles of functional animation, and global prefers-reduced-motion support.",
       "aiSummary": "Motion foundations page. Documents the duration ladder --duration-instant/fast/base/moderate/slow/stately (0–800ms), --ease-standard/entrance/exit/emphasis easings, usage types by context, prefers-reduced-motion support, anti-patterns and advanced resources with the Motion library (MIT).",
-      "aiEntities": "motion, animation, transition, duration, easing, prefers-reduced-motion, accessibility",
-      "aiIntent": "informational"
+      "aiEntities": "motion, animation, transition, duration, easing, prefers-reduced-motion, accessibility"
     },
     "principles": {
       "title": "Principles",
@@ -387,8 +385,7 @@
       "title": "Motion",
       "description": "Tokens de duración y easing, principios de animación funcional y soporte global a prefers-reduced-motion.",
       "aiSummary": "Página de fundamentos de Motion. Documenta la escalera de duraciones --duration-instant/fast/base/moderate/slow/stately (0–800ms), easings --ease-standard/entrance/exit/emphasis, tipos de uso por contexto, soporte de prefers-reduced-motion, antipatrones y recursos avanzados con la biblioteca Motion (MIT).",
-      "aiEntities": "motion, animación, transition, duration, easing, prefers-reduced-motion, accesibilidad",
-      "aiIntent": "informational"
+      "aiEntities": "motion, animación, transition, duration, easing, prefers-reduced-motion, accesibilidad"
     },
     "principles": {
       "title": "Principios",

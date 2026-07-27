@@ -8,8 +8,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentação do Context Menu: submenus, checkboxes, radio items, shortcuts e acessibilidade WCAG para menus de clique direito.",
       "aiSummary": "Componente Context Menu ativado por right-click com suporte a itens, submenus, checkboxes, radio groups, separadores e atalhos de teclado visuais.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
-      "aiIntent": "informational"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -58,10 +57,26 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Ações em arquivo ou item de canvas", "u": "Sim", "a": "-" },
-        "item2": { "s": "Ações em linha de tabela", "u": "Com cautela", "a": "DropdownMenu na linha" },
-        "item3": { "s": "Única forma de acesso à ação", "u": "Não", "a": "Botão visível + DropdownMenu" },
-        "item4": { "s": "Dispositivos touch", "u": "Não", "a": "Bottom sheet ou DropdownMenu" }
+        "item1": {
+          "s": "Ações em arquivo ou item de canvas",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Ações em linha de tabela",
+          "u": "Com cautela",
+          "a": "DropdownMenu na linha"
+        },
+        "item3": {
+          "s": "Única forma de acesso à ação",
+          "u": "Não",
+          "a": "Botão visível + DropdownMenu"
+        },
+        "item4": {
+          "s": "Dispositivos touch",
+          "u": "Não",
+          "a": "Bottom sheet ou DropdownMenu"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -306,16 +321,56 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Context Menu.",
-        "item1": { "action": "Right-click na área do trigger", "result": "Menu abre na posição do cursor com animação fade-in + zoom-in-95", "priority": "high" },
-        "item2": { "action": "Pressionar Escape com menu aberto", "result": "Menu fecha e foco retorna ao trigger", "priority": "high" },
-        "item3": { "action": "Clicar fora da área do menu", "result": "Menu fecha ao perder foco (click outside)", "priority": "high" },
-        "item4": { "action": "Navegar com Arrow Down/Up", "result": "Foco move entre itens; itens disabled são ignorados", "priority": "high" },
-        "item5": { "action": "Focar no SubTrigger e pressionar Arrow Right", "result": "Submenu abre à direita; foco vai para o primeiro item do submenu", "priority": "high" },
-        "item6": { "action": "Pressionar Arrow Left dentro do submenu", "result": "Submenu fecha; foco retorna ao SubTrigger", "priority": "high" },
-        "item7": { "action": "Selecionar CheckboxItem", "result": "Estado checked alterna; CheckIcon aparece/desaparece", "priority": "medium" },
-        "item8": { "action": "Selecionar RadioItem dentro de RadioGroup", "result": "RadioItem selecionado exibe CheckIcon; seleção anterior é limpa", "priority": "medium" },
-        "item9": { "action": "Item com disabled=true", "result": "Opacidade 50%; pointer-events-none; não recebe foco via teclado", "priority": "medium" },
-        "item10": { "action": "Renderizar item com variant destructive", "result": "Texto text-destructive; foco bg-destructive/10 text-destructive", "priority": "high" }
+        "item1": {
+          "action": "Right-click na área do trigger",
+          "result": "Menu abre na posição do cursor com animação fade-in + zoom-in-95",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Escape com menu aberto",
+          "result": "Menu fecha e foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar fora da área do menu",
+          "result": "Menu fecha ao perder foco (click outside)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Navegar com Arrow Down/Up",
+          "result": "Foco move entre itens; itens disabled são ignorados",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Focar no SubTrigger e pressionar Arrow Right",
+          "result": "Submenu abre à direita; foco vai para o primeiro item do submenu",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Pressionar Arrow Left dentro do submenu",
+          "result": "Submenu fecha; foco retorna ao SubTrigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Selecionar CheckboxItem",
+          "result": "Estado checked alterna; CheckIcon aparece/desaparece",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Selecionar RadioItem dentro de RadioGroup",
+          "result": "RadioItem selecionado exibe CheckIcon; seleção anterior é limpa",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Item com disabled=true",
+          "result": "Opacidade 50%; pointer-events-none; não recebe foco via teclado",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Renderizar item com variant destructive",
+          "result": "Texto text-destructive; foco bg-destructive/10 text-destructive",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -333,12 +388,30 @@
         "title": "Regressão Visual",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Default — menu com itens, separador e shortcut", "priority": "high" },
-        "item2": { "story": "Com item destructive", "priority": "high" },
-        "item3": { "story": "Com submenu aberto", "priority": "high" },
-        "item4": { "story": "Com CheckboxItem e RadioGroup", "priority": "medium" },
-        "item5": { "story": "Com itens disabled", "priority": "medium" },
-        "item6": { "story": "Dark mode — todas as variantes", "priority": "high" }
+        "item1": {
+          "story": "Default — menu com itens, separador e shortcut",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com item destructive",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Com submenu aberto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com CheckboxItem e RadioGroup",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Com itens disabled",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Dark mode — todas as variantes",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -372,8 +445,7 @@
       "title": "Context Menu — Overlay",
       "description": "Context Menu docs: submenus, checkboxes, radio items, keyboard shortcuts and WCAG accessibility for right-click menus.",
       "aiSummary": "Context Menu component triggered by right-click with support for items, submenus, checkboxes, radio groups, separators and visual keyboard shortcuts.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
-      "aiIntent": "informational"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -422,10 +494,26 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Actions on a file or canvas item", "u": "Yes", "a": "-" },
-        "item2": { "s": "Actions on a table row", "u": "With caution", "a": "DropdownMenu in the row" },
-        "item3": { "s": "Only way to access an action", "u": "No", "a": "Visible button + DropdownMenu" },
-        "item4": { "s": "Touch devices", "u": "No", "a": "Bottom sheet or DropdownMenu" }
+        "item1": {
+          "s": "Actions on a file or canvas item",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Actions on a table row",
+          "u": "With caution",
+          "a": "DropdownMenu in the row"
+        },
+        "item3": {
+          "s": "Only way to access an action",
+          "u": "No",
+          "a": "Visible button + DropdownMenu"
+        },
+        "item4": {
+          "s": "Touch devices",
+          "u": "No",
+          "a": "Bottom sheet or DropdownMenu"
+        }
       },
       "do": {
         "title": "Use when",
@@ -670,16 +758,56 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Context Menu interaction.",
-        "item1": { "action": "Right-click on trigger area", "result": "Menu opens at cursor position with fade-in + zoom-in-95 animation", "priority": "high" },
-        "item2": { "action": "Press Escape with menu open", "result": "Menu closes and focus returns to trigger", "priority": "high" },
-        "item3": { "action": "Click outside menu area", "result": "Menu closes on click outside", "priority": "high" },
-        "item4": { "action": "Navigate with Arrow Down/Up", "result": "Focus moves between items; disabled items are skipped", "priority": "high" },
-        "item5": { "action": "Focus SubTrigger and press Arrow Right", "result": "Submenu opens to the right; focus moves to first submenu item", "priority": "high" },
-        "item6": { "action": "Press Arrow Left inside submenu", "result": "Submenu closes; focus returns to SubTrigger", "priority": "high" },
-        "item7": { "action": "Select CheckboxItem", "result": "Checked state toggles; CheckIcon appears/disappears", "priority": "medium" },
-        "item8": { "action": "Select RadioItem inside RadioGroup", "result": "Selected RadioItem shows CheckIcon; previous selection is cleared", "priority": "medium" },
-        "item9": { "action": "Item with disabled=true", "result": "50% opacity; pointer-events-none; not reachable via keyboard", "priority": "medium" },
-        "item10": { "action": "Render item with destructive variant", "result": "Text text-destructive; focus bg-destructive/10 text-destructive", "priority": "high" }
+        "item1": {
+          "action": "Right-click on trigger area",
+          "result": "Menu opens at cursor position with fade-in + zoom-in-95 animation",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Escape with menu open",
+          "result": "Menu closes and focus returns to trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click outside menu area",
+          "result": "Menu closes on click outside",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Navigate with Arrow Down/Up",
+          "result": "Focus moves between items; disabled items are skipped",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Focus SubTrigger and press Arrow Right",
+          "result": "Submenu opens to the right; focus moves to first submenu item",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Press Arrow Left inside submenu",
+          "result": "Submenu closes; focus returns to SubTrigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Select CheckboxItem",
+          "result": "Checked state toggles; CheckIcon appears/disappears",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Select RadioItem inside RadioGroup",
+          "result": "Selected RadioItem shows CheckIcon; previous selection is cleared",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Item with disabled=true",
+          "result": "50% opacity; pointer-events-none; not reachable via keyboard",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Render item with destructive variant",
+          "result": "Text text-destructive; focus bg-destructive/10 text-destructive",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -697,12 +825,30 @@
         "title": "Visual Regression",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Default — menu with items, separator and shortcut", "priority": "high" },
-        "item2": { "story": "With destructive item", "priority": "high" },
-        "item3": { "story": "With open submenu", "priority": "high" },
-        "item4": { "story": "With CheckboxItem and RadioGroup", "priority": "medium" },
-        "item5": { "story": "With disabled items", "priority": "medium" },
-        "item6": { "story": "Dark mode — all variants", "priority": "high" }
+        "item1": {
+          "story": "Default — menu with items, separator and shortcut",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With destructive item",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "With open submenu",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With CheckboxItem and RadioGroup",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "With disabled items",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Dark mode — all variants",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -736,8 +882,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentación del Context Menu: submenús, checkboxes, radio items, atajos y accesibilidad WCAG para menús de clic derecho.",
       "aiSummary": "Componente Context Menu activado por clic derecho con soporte para ítems, submenús, checkboxes, radio groups, separadores y atajos de teclado visuales.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup",
-      "aiIntent": "informational"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demostración",
@@ -786,10 +931,26 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Acciones en archivo o ítem de canvas", "u": "Sí", "a": "-" },
-        "item2": { "s": "Acciones en fila de tabla", "u": "Con cautela", "a": "DropdownMenu en la fila" },
-        "item3": { "s": "Único acceso a la acción", "u": "No", "a": "Botón visible + DropdownMenu" },
-        "item4": { "s": "Dispositivos touch", "u": "No", "a": "Bottom sheet o DropdownMenu" }
+        "item1": {
+          "s": "Acciones en archivo o ítem de canvas",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Acciones en fila de tabla",
+          "u": "Con cautela",
+          "a": "DropdownMenu en la fila"
+        },
+        "item3": {
+          "s": "Único acceso a la acción",
+          "u": "No",
+          "a": "Botón visible + DropdownMenu"
+        },
+        "item4": {
+          "s": "Dispositivos touch",
+          "u": "No",
+          "a": "Bottom sheet o DropdownMenu"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -1034,16 +1195,56 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Context Menu.",
-        "item1": { "action": "Clic derecho en el área del trigger", "result": "Menú abre en la posición del cursor con animación fade-in + zoom-in-95", "priority": "high" },
-        "item2": { "action": "Presionar Escape con el menú abierto", "result": "Menú cierra y el foco regresa al trigger", "priority": "high" },
-        "item3": { "action": "Clic fuera del área del menú", "result": "Menú cierra al perder foco (click outside)", "priority": "high" },
-        "item4": { "action": "Navegar con Arrow Down/Up", "result": "Foco se mueve entre ítems; ítems disabled son omitidos", "priority": "high" },
-        "item5": { "action": "Enfocar SubTrigger y presionar Arrow Right", "result": "Submenú abre a la derecha; foco va al primer ítem del submenú", "priority": "high" },
-        "item6": { "action": "Presionar Arrow Left dentro del submenú", "result": "Submenú cierra; foco regresa al SubTrigger", "priority": "high" },
-        "item7": { "action": "Seleccionar CheckboxItem", "result": "Estado checked alterna; CheckIcon aparece/desaparece", "priority": "medium" },
-        "item8": { "action": "Seleccionar RadioItem dentro de RadioGroup", "result": "RadioItem seleccionado muestra CheckIcon; selección anterior se limpia", "priority": "medium" },
-        "item9": { "action": "Ítem con disabled=true", "result": "Opacidad 50%; pointer-events-none; no se alcanza vía teclado", "priority": "medium" },
-        "item10": { "action": "Renderizar ítem con variante destructive", "result": "Texto text-destructive; foco bg-destructive/10 text-destructive", "priority": "high" }
+        "item1": {
+          "action": "Clic derecho en el área del trigger",
+          "result": "Menú abre en la posición del cursor con animación fade-in + zoom-in-95",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar Escape con el menú abierto",
+          "result": "Menú cierra y el foco regresa al trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clic fuera del área del menú",
+          "result": "Menú cierra al perder foco (click outside)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Navegar con Arrow Down/Up",
+          "result": "Foco se mueve entre ítems; ítems disabled son omitidos",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Enfocar SubTrigger y presionar Arrow Right",
+          "result": "Submenú abre a la derecha; foco va al primer ítem del submenú",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Presionar Arrow Left dentro del submenú",
+          "result": "Submenú cierra; foco regresa al SubTrigger",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Seleccionar CheckboxItem",
+          "result": "Estado checked alterna; CheckIcon aparece/desaparece",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Seleccionar RadioItem dentro de RadioGroup",
+          "result": "RadioItem seleccionado muestra CheckIcon; selección anterior se limpia",
+          "priority": "medium"
+        },
+        "item9": {
+          "action": "Ítem con disabled=true",
+          "result": "Opacidad 50%; pointer-events-none; no se alcanza vía teclado",
+          "priority": "medium"
+        },
+        "item10": {
+          "action": "Renderizar ítem con variante destructive",
+          "result": "Texto text-destructive; foco bg-destructive/10 text-destructive",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1061,12 +1262,30 @@
         "title": "Regresión Visual",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Default — menú con ítems, separador y atajo", "priority": "high" },
-        "item2": { "story": "Con ítem destructive", "priority": "high" },
-        "item3": { "story": "Con submenú abierto", "priority": "high" },
-        "item4": { "story": "Con CheckboxItem y RadioGroup", "priority": "medium" },
-        "item5": { "story": "Con ítems disabled", "priority": "medium" },
-        "item6": { "story": "Dark mode — todas las variantes", "priority": "high" }
+        "item1": {
+          "story": "Default — menú con ítems, separador y atajo",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con ítem destructive",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Con submenú abierto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con CheckboxItem y RadioGroup",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Con ítems disabled",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Dark mode — todas las variantes",
+          "priority": "high"
+        }
       }
     },
     "nav": {

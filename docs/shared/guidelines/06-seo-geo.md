@@ -36,7 +36,6 @@ export function AlertDocs() {
 O hook `useSeoEffect` gerencia internamente:
 - `document.title` no documento pai
 - `<meta name="description">` e `<meta property="og:*">` no documento pai
-- `(removida — ver JSON-LD)`, `(removida — ver JSON-LD)`, `(removida — ver JSON-LD)`
 - JSON-LD (TechArticle + SoftwareSourceCode)
 - `lang="pt-BR"` no `<html>` do documento pai
 - **GA4 `page_view`** — dispara `track('page_view', { page_location, page_title, component_name, locale })` a cada troca de story/locale
@@ -234,39 +233,15 @@ Controlam como a página aparece quando compartilhada em redes sociais e mensage
 
 ---
 
-## Metatags GEO — Generative Engine Optimization
+## GEO — dados estruturados e llms.txt
 
-Metatags específicas para consumo por IAs generativas. Gerenciadas pelo `useSeoEffect`.
+O consumo por IAs generativas é servido por canais padronizados — nada de metatags proprietárias:
 
-> **Nota**: as metatags `ai:*` são uma convenção em adoção crescente, não um padrão W3C oficial. Inclua-as como camada adicional, nunca como substituto do Schema.org.
+- **JSON-LD TechArticle** (emitido pelo hook em toda docs page): `seo.aiSummary` vira `abstract` (resumo denso, 1–2 frases, estilo enciclopédico) e `seo.aiEntities` vira `about` (array de termos; máx. 10, separados por vírgula no JSON).
+- **JSON-LD SoftwareSourceCode** (só páginas de componente): linguagem, plataforma da stack e repositório.
+- **llms.txt** (gerado no build por `generate-seo-files.mjs`, padrão llmstxt.org): índice markdown de todas as docs pages com título e descrição.
 
-### ai:summary
-
-Resumo descritivo em 1–2 frases. Máximo 200 caracteres. Estilo enciclopédico.
-
-```html
-(removida — ver JSON-LD)
-```
-
-### ai:entities
-
-Entidades principais. Lista separada por vírgulas, máximo 10.
-
-```html
-(removida — ver JSON-LD)
-```
-
-### ai:intent
-
-Intenção de busca da página.
-
-| Valor | Quando usar |
-|-------|-------------|
-| `informational` | Documentação técnica — o usuário quer aprender |
-| `transactional` | O usuário está pronto para agir/instalar/usar |
-| `navigational` | O usuário busca uma página específica |
-
-Para este projeto: ComponentDocs, Showcase, Foundations → `informational`.
+Escreva `aiSummary`/`aiEntities` como TEXTO PURO — os valores entram no JSON-LD via serialização, sem HTML.
 
 ---
 
@@ -290,7 +265,6 @@ Title:       [NomeComponente] — [categoria] · Design System
 Description: Documentação do [NomeComponente]: [N] variantes, estados interativos, propriedades TypeScript e exemplos de código.
 Keyword:     [nome componente] componente design system
 Slug:        [nome-componente]
-ai:intent:   informational
 Schema:      TechArticle
 ```
 
@@ -300,7 +274,6 @@ Title:       Alert — Feedback · Design System
 Description: Documentação do Alert: variantes default e destructive, composição com AlertTitle e AlertDescription, acessibilidade WCAG via role='alert'.
 Keyword:     alert componente design system react
 Slug:        alert
-ai:intent:   informational
 ```
 
 ### Foundations Page (ThemingDocs, ThemeColorsDocs, etc.)
@@ -310,7 +283,6 @@ Title:       [Tema da Página] — Foundations · Design System
 Description: [Descrição do que está documentado].
 Keyword:     [tema] design system
 Slug:        [tema]
-ai:intent:   informational
 Schema:      TechArticle
 ```
 
@@ -321,7 +293,6 @@ Title:       [Categoria] Components — Showcase · Design System
 Description: Visualização completa de todos os componentes de [Categoria]: variantes, estados e exemplos combinados.
 Keyword:     [categoria] components design system
 Slug:        [categoria]-showcase
-ai:intent:   informational
 ```
 
 ---
@@ -336,11 +307,10 @@ ai:intent:   informational
 5. `<meta name="keywords">` — ignorado pelo Google
 
 **Para IAs generativas:**
-1. JSON-LD Schema.org — formato estruturado preferido
-2. `(removida — ver JSON-LD)` — leitura direta para resumo
-3. `(removida — ver JSON-LD)` — mapeamento de conceitos
+1. llms.txt — índice do site inteiro em markdown (llmstxt.org)
+2. JSON-LD Schema.org — TechArticle (abstract/about) + SoftwareSourceCode
+3. Conteúdo da página — resumos densos e headings semânticos
 4. `<meta property="og:description">` — fallback
-5. `(removida — ver JSON-LD)` — classifica o propósito
 
 ---
 
@@ -375,12 +345,9 @@ ai:intent:   informational
 
 ---
 
-## Atualização 2026-07 — JSON-LD no lugar das metas ai:*
-
-As meta tags `ai:summary`/`ai:entities`/`ai:intent` foram REMOVIDAS do hook (eram proprietárias, sem consumidor documentado). Os campos do translations.json continuam obrigatórios e agora têm destino padronizado:
+## Campos aiSummary / aiEntities → JSON-LD
 
 - `seo.aiSummary` → `abstract` do JSON-LD **TechArticle** (emitido em toda docs page)
 - `seo.aiEntities` → `about` do TechArticle (array)
-- `seo.aiIntent` → aposentado (sem consumidor; opcional em conteúdo novo)
-- Páginas de componente também emitem **SoftwareSourceCode** (programmingLanguage, runtimePlatform da stack, codeRepository); páginas de guia passam `kind: [guide]` no useSeoEffect/applySeo
+- Páginas de componente também emitem **SoftwareSourceCode** (programmingLanguage, runtimePlatform da stack, codeRepository); páginas de guia passam `kind: 'guide'` no useSeoEffect/applySeo
 - O build gera `llms.txt` (llmstxt.org) + sitemap.xml + robots.txt via generate-seo-files.mjs

@@ -121,7 +121,6 @@ Toda docs page renderiza TODAS estas seções com conteúdo real de `translation
 - `componentSlug`: `'<slug>'`
 - `aiSummary`: `tContent('seo.aiSummary')`
 - `aiEntities`: `tContent('seo.aiEntities')`
-- `aiIntent`: `tContent('seo.aiIntent')` (`'informational'` | `'navigational'`)
 - `breadcrumb`: `[{name:'Components',item:'/components'}, {name:tContent('category'),item:'/components/<categoria>'}, {name:tContent('title')}]`
 
 **`breadcrumb` usa `tContent('category')` dinâmico — NUNCA hardcode 'Form'/'Navigation'/etc.**
@@ -270,7 +269,7 @@ ciência: <rule> em <file> — <motivo>
 - [ ] `min-w-0` no container de conteúdo (sem ele tabelas e code blocks transbordam)
 - [ ] `sanitizeHtml()` em todo HTML dinâmico
 - [ ] Blocos de código usam `<div><code>`, nunca `<pre><code>` (exceto ASCII diagrams)
-- [ ] `useSeoEffect`/`applySeo` COMPLETO com aiSummary/aiEntities/aiIntent/breadcrumb
+- [ ] `useSeoEffect`/`applySeo` COMPLETO com aiSummary/aiEntities/breadcrumb
 - [ ] `breadcrumb` usa `tContent('category')` — NUNCA hardcode
 - [ ] `track('docs_page_view')` reativo ao locale
 - [ ] `<LanguageSwitcher />` no header

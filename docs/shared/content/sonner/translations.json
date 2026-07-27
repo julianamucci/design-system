@@ -8,8 +8,7 @@
       "title": "Sonner — Feedback",
       "description": "Documentação do Sonner: tipos de toast, composições com promise e ação, posições e acessibilidade WCAG com aria-live.",
       "aiSummary": "Componente Sonner com 6 tipos de toast (default, success, error, warning, info, loading), composições com descrição, ação, promise e persistente, e suporte a richColors e posição configurável.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -69,11 +68,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Confirmação de ação realizada", "u": "Sim, toast.success", "a": "-" },
-        "item2": { "s": "Erro crítico que bloqueia o fluxo", "u": "Não", "a": "Alert" },
-        "item3": { "s": "Erro de campo em formulário", "u": "Não", "a": "FormMessage" },
-        "item4": { "s": "Operação assíncrona com loading", "u": "Sim, toast.promise", "a": "-" },
-        "item5": { "s": "Aviso persistente de prazo", "u": "Não", "a": "Alert" }
+        "item1": {
+          "s": "Confirmação de ação realizada",
+          "u": "Sim, toast.success",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Erro crítico que bloqueia o fluxo",
+          "u": "Não",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Erro de campo em formulário",
+          "u": "Não",
+          "a": "FormMessage"
+        },
+        "item4": {
+          "s": "Operação assíncrona com loading",
+          "u": "Sim, toast.promise",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Aviso persistente de prazo",
+          "u": "Não",
+          "a": "Alert"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -267,29 +286,85 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada tipo e composição de toast.",
-        "item1": { "action": "Chamar toast.success com richColors ativo", "result": "Toast com ícone e cor verde exibido em top-right por 4000ms", "priority": "high" },
-        "item2": { "action": "Chamar toast.error com richColors ativo", "result": "Toast com ícone e cor vermelha; fecha após 4000ms ou ao clicar em X", "priority": "high" },
-        "item3": { "action": "Chamar toast.promise com promise resolvida", "result": "Toast loading transita automaticamente para success ao resolver", "priority": "high" },
-        "item4": { "action": "Chamar toast.promise com promise rejeitada", "result": "Toast loading transita automaticamente para error ao rejeitar", "priority": "high" },
-        "item5": { "action": "Toast com action.label — pressionar Tab", "result": "Foco move para o botão de ação; Enter dispara o callback onClick", "priority": "high" },
-        "item6": { "action": "Toast com duration: Infinity", "result": "Toast permanece visível até o usuário fechar manualmente", "priority": "medium" },
-        "item7": { "action": "Chamar toast sem Toaster no root", "result": "Nenhum toast exibido; nenhum erro em console", "priority": "medium" }
+        "item1": {
+          "action": "Chamar toast.success com richColors ativo",
+          "result": "Toast com ícone e cor verde exibido em top-right por 4000ms",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Chamar toast.error com richColors ativo",
+          "result": "Toast com ícone e cor vermelha; fecha após 4000ms ou ao clicar em X",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Chamar toast.promise com promise resolvida",
+          "result": "Toast loading transita automaticamente para success ao resolver",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Chamar toast.promise com promise rejeitada",
+          "result": "Toast loading transita automaticamente para error ao rejeitar",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Toast com action.label — pressionar Tab",
+          "result": "Foco move para o botão de ação; Enter dispara o callback onClick",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Toast com duration: Infinity",
+          "result": "Toast permanece visível até o usuário fechar manualmente",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Chamar toast sem Toaster no root",
+          "result": "Nenhum toast exibido; nenhum erro em console",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais com leitor de tela.",
-        "item1": { "criterion": "Toast anunciado pelo leitor de tela ao aparecer", "level": "AA", "how": "Teste manual com NVDA/VoiceOver — verificar anúncio via aria-live" },
-        "item2": { "criterion": "Botão de ação acessível por teclado (Tab + Enter)", "level": "AA", "how": "Teste manual de teclado — Tab deve focar o botão de ação" },
-        "item3": { "criterion": "Ícones decorativos não anunciados pelo leitor", "level": "AA", "how": "Inspecionar atributos aria-hidden nos SVGs gerados" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "Toast anunciado pelo leitor de tela ao aparecer",
+          "level": "AA",
+          "how": "Teste manual com NVDA/VoiceOver — verificar anúncio via aria-live"
+        },
+        "item2": {
+          "criterion": "Botão de ação acessível por teclado (Tab + Enter)",
+          "level": "AA",
+          "how": "Teste manual de teclado — Tab deve focar o botão de ação"
+        },
+        "item3": {
+          "criterion": "Ícones decorativos não anunciados pelo leitor",
+          "level": "AA",
+          "how": "Inspecionar atributos aria-hidden nos SVGs gerados"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Tipos — default, success, error, warning, info", "priority": "high" },
-        "item2": { "story": "Composicoes — com descrição, com ação, promise, persistente", "priority": "high" },
-        "item3": { "story": "Posicoes — top-right, bottom-center", "priority": "medium" },
-        "item4": { "story": "Dark mode — todos os tipos com richColors", "priority": "medium" }
+        "item1": {
+          "story": "Tipos — default, success, error, warning, info",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Composicoes — com descrição, com ação, promise, persistente",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Posicoes — top-right, bottom-center",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Dark mode — todos os tipos com richColors",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -322,8 +397,7 @@
       "title": "Sonner — Feedback",
       "description": "Sonner documentation: toast types, promise and action compositions, positions, and WCAG accessibility with aria-live.",
       "aiSummary": "Sonner component with 6 toast types (default, success, error, warning, info, loading), compositions with description, action, promise, and persistent, and support for richColors and configurable position.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -383,11 +457,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Confirmation of completed action", "u": "Yes, toast.success", "a": "-" },
-        "item2": { "s": "Critical error blocking the flow", "u": "No", "a": "Alert" },
-        "item3": { "s": "Form field validation error", "u": "No", "a": "FormMessage" },
-        "item4": { "s": "Async operation with loading state", "u": "Yes, toast.promise", "a": "-" },
-        "item5": { "s": "Persistent deadline warning", "u": "No", "a": "Alert" }
+        "item1": {
+          "s": "Confirmation of completed action",
+          "u": "Yes, toast.success",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Critical error blocking the flow",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Form field validation error",
+          "u": "No",
+          "a": "FormMessage"
+        },
+        "item4": {
+          "s": "Async operation with loading state",
+          "u": "Yes, toast.promise",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Persistent deadline warning",
+          "u": "No",
+          "a": "Alert"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -581,29 +675,85 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each toast type and composition.",
-        "item1": { "action": "Call toast.success with richColors active", "result": "Toast with green icon and color shown at top-right for 4000ms", "priority": "high" },
-        "item2": { "action": "Call toast.error with richColors active", "result": "Toast with red icon and color; closes after 4000ms or on X click", "priority": "high" },
-        "item3": { "action": "Call toast.promise with resolved promise", "result": "Loading toast automatically transitions to success on resolution", "priority": "high" },
-        "item4": { "action": "Call toast.promise with rejected promise", "result": "Loading toast automatically transitions to error on rejection", "priority": "high" },
-        "item5": { "action": "Toast with action.label — press Tab", "result": "Focus moves to action button; Enter fires the onClick callback", "priority": "high" },
-        "item6": { "action": "Toast with duration: Infinity", "result": "Toast stays visible until manually closed by the user", "priority": "medium" },
-        "item7": { "action": "Call toast without Toaster at root", "result": "No toast displayed; no console error", "priority": "medium" }
+        "item1": {
+          "action": "Call toast.success with richColors active",
+          "result": "Toast with green icon and color shown at top-right for 4000ms",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Call toast.error with richColors active",
+          "result": "Toast with red icon and color; closes after 4000ms or on X click",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Call toast.promise with resolved promise",
+          "result": "Loading toast automatically transitions to success on resolution",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Call toast.promise with rejected promise",
+          "result": "Loading toast automatically transitions to error on rejection",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Toast with action.label — press Tab",
+          "result": "Focus moves to action button; Enter fires the onClick callback",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Toast with duration: Infinity",
+          "result": "Toast stays visible until manually closed by the user",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Call toast without Toaster at root",
+          "result": "No toast displayed; no console error",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual screen reader testing.",
-        "item1": { "criterion": "Toast announced by screen reader on appear", "level": "AA", "how": "Manual test with NVDA/VoiceOver — verify announcement via aria-live" },
-        "item2": { "criterion": "Action button accessible by keyboard (Tab + Enter)", "level": "AA", "how": "Manual keyboard test — Tab must focus the action button" },
-        "item3": { "criterion": "Decorative icons not announced by screen reader", "level": "AA", "how": "Inspect aria-hidden attributes on generated SVGs" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "Toast announced by screen reader on appear",
+          "level": "AA",
+          "how": "Manual test with NVDA/VoiceOver — verify announcement via aria-live"
+        },
+        "item2": {
+          "criterion": "Action button accessible by keyboard (Tab + Enter)",
+          "level": "AA",
+          "how": "Manual keyboard test — Tab must focus the action button"
+        },
+        "item3": {
+          "criterion": "Decorative icons not announced by screen reader",
+          "level": "AA",
+          "how": "Inspect aria-hidden attributes on generated SVGs"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Types — default, success, error, warning, info", "priority": "high" },
-        "item2": { "story": "Compositions — with description, with action, promise, persistent", "priority": "high" },
-        "item3": { "story": "Positions — top-right, bottom-center", "priority": "medium" },
-        "item4": { "story": "Dark mode — all types with richColors", "priority": "medium" }
+        "item1": {
+          "story": "Types — default, success, error, warning, info",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Compositions — with description, with action, promise, persistent",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Positions — top-right, bottom-center",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Dark mode — all types with richColors",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -636,8 +786,7 @@
       "title": "Sonner — Feedback",
       "description": "Documentación del Sonner: tipos de toast, composiciones con promise y acción, posiciones y accesibilidad WCAG con aria-live.",
       "aiSummary": "Componente Sonner con 6 tipos de toast (default, success, error, warning, info, loading), composiciones con descripción, acción, promise y persistente, y soporte a richColors y posición configurable.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demostración",
@@ -697,11 +846,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Confirmación de acción realizada", "u": "Sí, toast.success", "a": "-" },
-        "item2": { "s": "Error crítico que bloquea el flujo", "u": "No", "a": "Alert" },
-        "item3": { "s": "Error de campo en formulario", "u": "No", "a": "FormMessage" },
-        "item4": { "s": "Operación asíncrona con loading", "u": "Sí, toast.promise", "a": "-" },
-        "item5": { "s": "Aviso persistente de plazo", "u": "No", "a": "Alert" }
+        "item1": {
+          "s": "Confirmación de acción realizada",
+          "u": "Sí, toast.success",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Error crítico que bloquea el flujo",
+          "u": "No",
+          "a": "Alert"
+        },
+        "item3": {
+          "s": "Error de campo en formulario",
+          "u": "No",
+          "a": "FormMessage"
+        },
+        "item4": {
+          "s": "Operación asíncrona con loading",
+          "u": "Sí, toast.promise",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Aviso persistente de plazo",
+          "u": "No",
+          "a": "Alert"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -895,29 +1064,85 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada tipo y composición de toast.",
-        "item1": { "action": "Llamar toast.success con richColors activo", "result": "Toast con ícono y color verde en top-right por 4000ms", "priority": "high" },
-        "item2": { "action": "Llamar toast.error con richColors activo", "result": "Toast con ícono y color rojo; se cierra tras 4000ms o al hacer clic en X", "priority": "high" },
-        "item3": { "action": "Llamar toast.promise con promise resuelta", "result": "Toast loading transita automáticamente a success al resolverse", "priority": "high" },
-        "item4": { "action": "Llamar toast.promise con promise rechazada", "result": "Toast loading transita automáticamente a error al rechazarse", "priority": "high" },
-        "item5": { "action": "Toast con action.label — presionar Tab", "result": "El foco se mueve al botón de acción; Enter dispara el callback onClick", "priority": "high" },
-        "item6": { "action": "Toast con duration: Infinity", "result": "El toast permanece visible hasta que el usuario lo cierre manualmente", "priority": "medium" },
-        "item7": { "action": "Llamar toast sin Toaster en el root", "result": "Ningún toast mostrado; sin error en consola", "priority": "medium" }
+        "item1": {
+          "action": "Llamar toast.success con richColors activo",
+          "result": "Toast con ícono y color verde en top-right por 4000ms",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Llamar toast.error con richColors activo",
+          "result": "Toast con ícono y color rojo; se cierra tras 4000ms o al hacer clic en X",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Llamar toast.promise con promise resuelta",
+          "result": "Toast loading transita automáticamente a success al resolverse",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Llamar toast.promise con promise rechazada",
+          "result": "Toast loading transita automáticamente a error al rechazarse",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Toast con action.label — presionar Tab",
+          "result": "El foco se mueve al botón de acción; Enter dispara el callback onClick",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Toast con duration: Infinity",
+          "result": "El toast permanece visible hasta que el usuario lo cierre manualmente",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Llamar toast sin Toaster en el root",
+          "result": "Ningún toast mostrado; sin error en consola",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales con lector de pantalla.",
-        "item1": { "criterion": "Toast anunciado por el lector de pantalla al aparecer", "level": "AA", "how": "Prueba manual con NVDA/VoiceOver — verificar anuncio vía aria-live" },
-        "item2": { "criterion": "Botón de acción accesible por teclado (Tab + Enter)", "level": "AA", "how": "Prueba manual de teclado — Tab debe enfocar el botón de acción" },
-        "item3": { "criterion": "Íconos decorativos no anunciados por el lector", "level": "AA", "how": "Inspeccionar atributos aria-hidden en los SVGs generados" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "Toast anunciado por el lector de pantalla al aparecer",
+          "level": "AA",
+          "how": "Prueba manual con NVDA/VoiceOver — verificar anuncio vía aria-live"
+        },
+        "item2": {
+          "criterion": "Botón de acción accesible por teclado (Tab + Enter)",
+          "level": "AA",
+          "how": "Prueba manual de teclado — Tab debe enfocar el botón de acción"
+        },
+        "item3": {
+          "criterion": "Íconos decorativos no anunciados por el lector",
+          "level": "AA",
+          "how": "Inspeccionar atributos aria-hidden en los SVGs generados"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Tipos — default, success, error, warning, info", "priority": "high" },
-        "item2": { "story": "Composiciones — con descripción, con acción, promise, persistente", "priority": "high" },
-        "item3": { "story": "Posiciones — top-right, bottom-center", "priority": "medium" },
-        "item4": { "story": "Dark mode — todos los tipos con richColors", "priority": "medium" }
+        "item1": {
+          "story": "Tipos — default, success, error, warning, info",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Composiciones — con descripción, con acción, promise, persistente",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Posiciones — top-right, bottom-center",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Dark mode — todos los tipos con richColors",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

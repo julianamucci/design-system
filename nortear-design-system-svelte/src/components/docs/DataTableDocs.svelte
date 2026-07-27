@@ -29,7 +29,6 @@
       componentSlug: 'data-table',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
     });
     track('docs_page_view', {
       component_name: 'data-table',

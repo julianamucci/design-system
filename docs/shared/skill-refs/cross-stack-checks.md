@@ -105,7 +105,7 @@ Placeholder = bug bloqueante. Reescrever antes de qualquer outra correção.
 
 **7i. breadcrumb dinâmico**: usa `tContent('category')` — não hardcoded "Form"/"Navigation"/etc.
 
-**7j. SEO completo**: `useSeoEffect`/`applySeo` passa todos os campos GEO (title, description, locale, componentSlug, aiSummary, aiEntities, aiIntent, breadcrumb).
+**7j. SEO completo**: `useSeoEffect`/`applySeo` passa todos os campos GEO (title, description, locale, componentSlug, aiSummary, aiEntities, breadcrumb).
 
 ---
 

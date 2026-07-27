@@ -8,8 +8,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentação do AspectRatio: container que preserva proporção fixa para imagens, vídeos e iframes, com 5 ratios canônicos e comportamento responsivo.",
       "aiSummary": "Componente AspectRatio container passivo que preserva proporção largura/altura em imagens, vídeos e iframes via Radix UI, Reka UI e Bits UI; sem estado, sem eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
-      "aiIntent": "informational"
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -303,11 +302,26 @@
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada ratio é capturado para regressão visual.",
         "required": "Obrigatório",
-        "item1": { "story": "Ratio 16/9 com imagem paisagem", "priority": "high" },
-        "item2": { "story": "Ratio 4/3 com imagem de produto", "priority": "high" },
-        "item3": { "story": "Ratio 1/1 com avatar", "priority": "high" },
-        "item4": { "story": "Ratio 3/4 com capa vertical", "priority": "medium" },
-        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+        "item1": {
+          "story": "Ratio 16/9 com imagem paisagem",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Ratio 4/3 com imagem de produto",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Ratio 1/1 com avatar",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Ratio 3/4 com capa vertical",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Ratio 21/9 ultra-wide",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -340,8 +354,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentation for AspectRatio: container that preserves fixed ratio for images, videos, and iframes, with 5 canonical ratios and responsive behavior.",
       "aiSummary": "AspectRatio component is a passive container that preserves width-to-height ratio for images, videos, and iframes via Radix UI, Reka UI, and Bits UI; no state, no events.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
-      "aiIntent": "informational"
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -635,11 +648,26 @@
         "title": "Visual Tests (Chromatic)",
         "description": "Each ratio is captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Ratio 16/9 with landscape image", "priority": "high" },
-        "item2": { "story": "Ratio 4/3 with product image", "priority": "high" },
-        "item3": { "story": "Ratio 1/1 with avatar", "priority": "high" },
-        "item4": { "story": "Ratio 3/4 with vertical cover", "priority": "medium" },
-        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+        "item1": {
+          "story": "Ratio 16/9 with landscape image",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Ratio 4/3 with product image",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Ratio 1/1 with avatar",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Ratio 3/4 with vertical cover",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Ratio 21/9 ultra-wide",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -672,8 +700,7 @@
       "title": "AspectRatio — Layout",
       "description": "Documentación del AspectRatio: contenedor que preserva proporción fija para imágenes, vídeos e iframes, con 5 ratios canónicos y comportamiento responsivo.",
       "aiSummary": "Componente AspectRatio contenedor pasivo que preserva proporción ancho/alto en imágenes, vídeos e iframes vía Radix UI, Reka UI y Bits UI; sin estado, sin eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media",
-      "aiIntent": "informational"
+      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
     },
     "demonstration": {
       "title": "Demostración",
@@ -967,11 +994,26 @@
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada ratio se captura para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Ratio 16/9 con imagen paisaje", "priority": "high" },
-        "item2": { "story": "Ratio 4/3 con imagen de producto", "priority": "high" },
-        "item3": { "story": "Ratio 1/1 con avatar", "priority": "high" },
-        "item4": { "story": "Ratio 3/4 con portada vertical", "priority": "medium" },
-        "item5": { "story": "Ratio 21/9 ultra-wide", "priority": "medium" }
+        "item1": {
+          "story": "Ratio 16/9 con imagen paisaje",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Ratio 4/3 con imagen de producto",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Ratio 1/1 con avatar",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Ratio 3/4 con portada vertical",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Ratio 21/9 ultra-wide",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

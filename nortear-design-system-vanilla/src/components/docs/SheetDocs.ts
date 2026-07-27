@@ -110,7 +110,6 @@ export function createSheetDocs(): HTMLElement {
       componentSlug: 'sheet',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: t('category'), item: '/components/overlay' },

@@ -8,8 +8,7 @@
       "title": "Acessibilidade",
       "description": "Compromisso WCAG 2.2 AA: contraste, navegação por teclado, focus visible, ARIA patterns e testes automatizados por componente.",
       "aiSummary": "Página de fundamentos de Acessibilidade. Documenta compromisso WCAG 2.2 AA, contraste 4.5:1, navegação por teclado, focus visible, padrões ARIA, suporte a leitores de tela e estratégia de testes.",
-      "aiEntities": "acessibilidade, WCAG, contraste, teclado, focus visible, ARIA, leitor de tela, axe-playwright, VoiceOver, NVDA",
-      "aiIntent": "informational"
+      "aiEntities": "acessibilidade, WCAG, contraste, teclado, focus visible, ARIA, leitor de tela, axe-playwright, VoiceOver, NVDA"
     },
     "commitment": {
       "title": "Compromisso",
@@ -153,8 +152,7 @@
       "title": "Accessibility",
       "description": "WCAG 2.2 AA commitment: contrast, keyboard navigation, focus visible, ARIA patterns and automated per-component tests.",
       "aiSummary": "Accessibility foundations page. Documents WCAG 2.2 AA commitment, 4.5:1 contrast, keyboard navigation, focus visible, ARIA patterns, screen reader support and testing strategy.",
-      "aiEntities": "accessibility, WCAG, contrast, keyboard, focus visible, ARIA, screen reader, axe-playwright, VoiceOver, NVDA",
-      "aiIntent": "informational"
+      "aiEntities": "accessibility, WCAG, contrast, keyboard, focus visible, ARIA, screen reader, axe-playwright, VoiceOver, NVDA"
     },
     "commitment": {
       "title": "Commitment",
@@ -298,8 +296,7 @@
       "title": "Accesibilidad",
       "description": "Compromiso WCAG 2.2 AA: contraste, navegación por teclado, focus visible, patrones ARIA y tests automatizados por componente.",
       "aiSummary": "Página de fundamentos de Accesibilidad. Documenta compromiso WCAG 2.2 AA, contraste 4.5:1, navegación por teclado, focus visible, patrones ARIA, soporte a lectores de pantalla y estrategia de tests.",
-      "aiEntities": "accesibilidad, WCAG, contraste, teclado, focus visible, ARIA, lector de pantalla, axe-playwright, VoiceOver, NVDA",
-      "aiIntent": "informational"
+      "aiEntities": "accesibilidad, WCAG, contraste, teclado, focus visible, ARIA, lector de pantalla, axe-playwright, VoiceOver, NVDA"
     },
     "commitment": {
       "title": "Compromiso",

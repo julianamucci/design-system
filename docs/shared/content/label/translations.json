@@ -8,8 +8,7 @@
       "title": "Label — Formulário",
       "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
       "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required",
-      "aiIntent": "informational"
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -45,10 +44,26 @@
           "use": "Abordagem",
           "alternative": "Observação"
         },
-        "item1": { "s": "Campo fora de FormField", "u": "Label com htmlFor", "a": "id no campo obrigatório" },
-        "item2": { "s": "Campo dentro de FormField", "u": "FormLabel (sem htmlFor)", "a": "Associação automática" },
-        "item3": { "s": "Campo obrigatório", "u": "span * aria-hidden + aria-required", "a": "Nunca só cor" },
-        "item4": { "s": "Campo disabled", "u": "Label herdará opacity-50", "a": "Via peer-disabled" }
+        "item1": {
+          "s": "Campo fora de FormField",
+          "u": "Label com htmlFor",
+          "a": "id no campo obrigatório"
+        },
+        "item2": {
+          "s": "Campo dentro de FormField",
+          "u": "FormLabel (sem htmlFor)",
+          "a": "Associação automática"
+        },
+        "item3": {
+          "s": "Campo obrigatório",
+          "u": "span * aria-hidden + aria-required",
+          "a": "Nunca só cor"
+        },
+        "item4": {
+          "s": "Campo disabled",
+          "u": "Label herdará opacity-50",
+          "a": "Via peer-disabled"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -183,10 +198,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada estado e configuração do Label.",
-        "item1": { "action": "Clicar no Label", "result": "Foco transferido para o campo com id correspondente ao htmlFor", "priority": "high" },
-        "item2": { "action": "Renderizar com campo disabled", "result": "Label com opacity-50 e cursor-not-allowed via peer-disabled", "priority": "high" },
-        "item3": { "action": "Renderizar com span de asterisco", "result": "Asterisco visível em text-destructive com aria-hidden=\"true\"", "priority": "high" },
-        "item4": { "action": "Renderizar dentro de grupo com data-disabled=true", "result": "Label com pointer-events-none e opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no Label",
+          "result": "Foco transferido para o campo com id correspondente ao htmlFor",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar com campo disabled",
+          "result": "Label com opacity-50 e cursor-not-allowed via peer-disabled",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar com span de asterisco",
+          "result": "Asterisco visível em text-destructive com aria-hidden=\"true\"",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar dentro de grupo com data-disabled=true",
+          "result": "Label com pointer-events-none e opacity-50 via group-data-[disabled=true]",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -200,10 +231,22 @@
         "title": "Regressão Visual",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Default", "priority": "high" },
-        "item2": { "story": "Required — com asterisco", "priority": "high" },
-        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
-        "item4": { "story": "Com Input — par completo", "priority": "medium" }
+        "item1": {
+          "story": "Default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Required — com asterisco",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled — via peer-disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com Input — par completo",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -236,8 +279,7 @@
       "title": "Label — Form",
       "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
       "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required",
-      "aiIntent": "informational"
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -273,10 +315,26 @@
           "use": "Approach",
           "alternative": "Note"
         },
-        "item1": { "s": "Field outside FormField", "u": "Label with htmlFor", "a": "id on field required" },
-        "item2": { "s": "Field inside FormField", "u": "FormLabel (no htmlFor)", "a": "Automatic association" },
-        "item3": { "s": "Required field", "u": "span * aria-hidden + aria-required", "a": "Never color alone" },
-        "item4": { "s": "Disabled field", "u": "Label inherits opacity-50", "a": "Via peer-disabled" }
+        "item1": {
+          "s": "Field outside FormField",
+          "u": "Label with htmlFor",
+          "a": "id on field required"
+        },
+        "item2": {
+          "s": "Field inside FormField",
+          "u": "FormLabel (no htmlFor)",
+          "a": "Automatic association"
+        },
+        "item3": {
+          "s": "Required field",
+          "u": "span * aria-hidden + aria-required",
+          "a": "Never color alone"
+        },
+        "item4": {
+          "s": "Disabled field",
+          "u": "Label inherits opacity-50",
+          "a": "Via peer-disabled"
+        }
       },
       "do": {
         "title": "Use when",
@@ -411,10 +469,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Label state and configuration.",
-        "item1": { "action": "Click on Label", "result": "Focus transferred to field with id matching htmlFor", "priority": "high" },
-        "item2": { "action": "Render with disabled field", "result": "Label with opacity-50 and cursor-not-allowed via peer-disabled", "priority": "high" },
-        "item3": { "action": "Render with asterisk span", "result": "Asterisk visible in text-destructive with aria-hidden=\"true\"", "priority": "high" },
-        "item4": { "action": "Render inside group with data-disabled=true", "result": "Label with pointer-events-none and opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+        "item1": {
+          "action": "Click on Label",
+          "result": "Focus transferred to field with id matching htmlFor",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render with disabled field",
+          "result": "Label with opacity-50 and cursor-not-allowed via peer-disabled",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render with asterisk span",
+          "result": "Asterisk visible in text-destructive with aria-hidden=\"true\"",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render inside group with data-disabled=true",
+          "result": "Label with pointer-events-none and opacity-50 via group-data-[disabled=true]",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -428,10 +502,22 @@
         "title": "Visual Regression",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Default", "priority": "high" },
-        "item2": { "story": "Required — with asterisk", "priority": "high" },
-        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
-        "item4": { "story": "With Input — complete pair", "priority": "medium" }
+        "item1": {
+          "story": "Default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Required — with asterisk",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled — via peer-disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With Input — complete pair",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -464,8 +550,7 @@
       "title": "Label — Formulario",
       "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
       "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required",
-      "aiIntent": "informational"
+      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
     },
     "demonstration": {
       "title": "Demostración",
@@ -501,10 +586,26 @@
           "use": "Enfoque",
           "alternative": "Nota"
         },
-        "item1": { "s": "Campo fuera de FormField", "u": "Label con htmlFor", "a": "id en el campo obligatorio" },
-        "item2": { "s": "Campo dentro de FormField", "u": "FormLabel (sin htmlFor)", "a": "Asociación automática" },
-        "item3": { "s": "Campo obligatorio", "u": "span * aria-hidden + aria-required", "a": "Nunca solo color" },
-        "item4": { "s": "Campo disabled", "u": "Label hereda opacity-50", "a": "Via peer-disabled" }
+        "item1": {
+          "s": "Campo fuera de FormField",
+          "u": "Label con htmlFor",
+          "a": "id en el campo obligatorio"
+        },
+        "item2": {
+          "s": "Campo dentro de FormField",
+          "u": "FormLabel (sin htmlFor)",
+          "a": "Asociación automática"
+        },
+        "item3": {
+          "s": "Campo obligatorio",
+          "u": "span * aria-hidden + aria-required",
+          "a": "Nunca solo color"
+        },
+        "item4": {
+          "s": "Campo disabled",
+          "u": "Label hereda opacity-50",
+          "a": "Via peer-disabled"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -639,10 +740,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada estado y configuración del Label.",
-        "item1": { "action": "Hacer clic en el Label", "result": "Foco transferido al campo con id correspondiente al htmlFor", "priority": "high" },
-        "item2": { "action": "Renderizar con campo disabled", "result": "Label con opacity-50 y cursor-not-allowed via peer-disabled", "priority": "high" },
-        "item3": { "action": "Renderizar con span de asterisco", "result": "Asterisco visible en text-destructive con aria-hidden=\"true\"", "priority": "high" },
-        "item4": { "action": "Renderizar dentro de grupo con data-disabled=true", "result": "Label con pointer-events-none y opacity-50 via group-data-[disabled=true]", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el Label",
+          "result": "Foco transferido al campo con id correspondiente al htmlFor",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar con campo disabled",
+          "result": "Label con opacity-50 y cursor-not-allowed via peer-disabled",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar con span de asterisco",
+          "result": "Asterisco visible en text-destructive con aria-hidden=\"true\"",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar dentro de grupo con data-disabled=true",
+          "result": "Label con pointer-events-none y opacity-50 via group-data-[disabled=true]",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -656,10 +773,22 @@
         "title": "Regresión Visual",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Default", "priority": "high" },
-        "item2": { "story": "Required — con asterisco", "priority": "high" },
-        "item3": { "story": "Disabled — via peer-disabled", "priority": "high" },
-        "item4": { "story": "Con Input — par completo", "priority": "medium" }
+        "item1": {
+          "story": "Default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Required — con asterisco",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled — via peer-disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con Input — par completo",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

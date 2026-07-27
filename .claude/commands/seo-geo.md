@@ -46,7 +46,7 @@ useSeoEffect(computed(() => ({
 applySeo({ title, description, locale: $locale, componentSlug: '<slug>' });
 ```
 
-O hook gerencia automaticamente: `document.title`, `<meta description>`, Open Graph, JSON-LD (`TechArticle` + `SoftwareSourceCode`), `hreflang` para pt-BR/en/es, `ai:summary`/`ai:entities`/`ai:intent`, e `page_view` no GA4. Se title/description/locale/componentSlug estão corretos, todo o resto está correto.
+O hook gerencia automaticamente: `document.title`, `<meta description>`, Open Graph, JSON-LD (`TechArticle` + `SoftwareSourceCode`), `hreflang` para pt-BR/en/es e `page_view` no GA4. Se title/description/locale/componentSlug estão corretos, todo o resto está correto.
 
 ---
 
@@ -81,13 +81,12 @@ Obrigatória nos 3 idiomas:
       "description": "Documentação do Alert: 2 variantes (default, destructive), composição com ícone, título e descrição, acessibilidade WCAG.",
       "aiSummary": "Componente Alert com 2 variantes visuais, composição via AlertTitle/AlertDescription, suporte a ícones Lucide e conformidade WCAG 2.2 AA.",
       "aiEntities": "Alert, React, base-ui, CSS .nds-*, WCAG 2.2, class-variance-authority",
-      "aiIntent": "informational"
     }
   }
 }
 ```
 
-`aiSummary` deve ser específico (não genérico). `aiIntent` é sempre `informational` para docs pages.
+`aiSummary` deve ser específico (não genérico) — vira o `abstract` do JSON-LD TechArticle; `aiEntities` vira `about`.
 
 ---
 
@@ -112,7 +111,6 @@ Depois leia as docs pages encontradas (em paralelo) para verificar o `useSeoEffe
 - [ ] `description` ≤155 chars em cada idioma
 - [ ] `aiSummary` presente e específico ao componente
 - [ ] `aiEntities` lista tecnologias reais do projeto
-- [ ] `aiIntent` é `"informational"`
 
 ### Passo 3 — Verificar docs pages
 

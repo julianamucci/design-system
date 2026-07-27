@@ -8,8 +8,7 @@
       "title": "i18n",
       "description": "Sistema de internacionalização do Design System: três idiomas, hook useTranslation, estrutura translations.json e overrides por stack.",
       "aiSummary": "Página técnica sobre i18n. Documenta os três idiomas suportados (pt-BR primário, en, es), o hook useTranslation com lookup por dot-path, a estrutura de translations.json compartilhado, convenção de chaves API-neutras, mecanismo de override por stack e o componente LanguageSwitcher.",
-      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
-      "aiIntent": "informational"
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale"
     },
     "intro": {
       "title": "Visão geral",
@@ -46,7 +45,7 @@
       "title": "Estrutura do translations.json",
       "subtitle": "Objeto raiz com os três códigos de idioma. As chaves dentro de cada idioma devem ser idênticas — o auditor falha se houver assimetria.",
       "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
-      "required": "Toda página deve ter no mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> e <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+      "required": "Toda página deve ter no mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> e <code>seo.{title,description,aiSummary,aiEntities}</code>."
     },
     "hook": {
       "title": "useTranslation",
@@ -89,8 +88,7 @@
       "title": "i18n",
       "description": "Design System internationalization: three languages, useTranslation hook, translations.json structure and per-stack overrides.",
       "aiSummary": "Technical page about i18n. Documents the three supported languages (pt-BR primary, en, es), the useTranslation hook with dot-path lookup, shared translations.json structure, API-neutral key convention, per-stack override mechanism and the LanguageSwitcher component.",
-      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
-      "aiIntent": "informational"
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale"
     },
     "intro": {
       "title": "Overview",
@@ -127,7 +125,7 @@
       "title": "translations.json structure",
       "subtitle": "Root object with the three language codes. Keys inside each language must be identical — the auditor fails on asymmetry.",
       "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
-      "required": "Every page must have at minimum: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> and <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+      "required": "Every page must have at minimum: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> and <code>seo.{title,description,aiSummary,aiEntities}</code>."
     },
     "hook": {
       "title": "useTranslation",
@@ -170,8 +168,7 @@
       "title": "i18n",
       "description": "Sistema de internacionalización del Design System: tres idiomas, hook useTranslation, estructura translations.json y overrides por stack.",
       "aiSummary": "Página técnica sobre i18n. Documenta los tres idiomas soportados (pt-BR primario, en, es), el hook useTranslation con lookup por dot-path, la estructura del translations.json compartido, convención de claves API-neutras, mecanismo de override por stack y el componente LanguageSwitcher.",
-      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale",
-      "aiIntent": "informational"
+      "aiEntities": "i18n, useTranslation, translations.json, pt-BR, en, es, dot-path, LanguageSwitcher, locale, override, Vue locale"
     },
     "intro": {
       "title": "Visión general",
@@ -208,7 +205,7 @@
       "title": "Estructura del translations.json",
       "subtitle": "Objeto raíz con los tres códigos de idioma. Las claves dentro de cada idioma deben ser idénticas — el auditor falla en caso de asimetría.",
       "shape": "{\n  \"pt-BR\": { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"en\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } },\n  \"es\":    { \"title\": \"…\", \"seo\": { … }, \"props\": { … } }\n}",
-      "required": "Toda página debe tener como mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> y <code>seo.{title,description,aiSummary,aiEntities,aiIntent}</code>."
+      "required": "Toda página debe tener como mínimo: <code>title</code>, <code>category</code>, <code>type</code>, <code>description</code> y <code>seo.{title,description,aiSummary,aiEntities}</code>."
     },
     "hook": {
       "title": "useTranslation",

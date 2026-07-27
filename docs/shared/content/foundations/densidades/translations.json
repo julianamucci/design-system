@@ -8,8 +8,7 @@
       "title": "Densidades",
       "description": "Três níveis de densidade (condensado, default, confortável) que escalam spacing e alturas proporcionalmente via classe no html.",
       "aiSummary": "Página de fundamentos de Densidades. Documenta os três níveis aplicados via classe no html, tokens afetados (--spacing-base, --height-*), quando usar cada um e regras de acessibilidade.",
-      "aiEntities": "densidade, density, spacing, height, condensado, confortavel, WCAG 2.5.8",
-      "aiIntent": "informational"
+      "aiEntities": "densidade, density, spacing, height, condensado, confortavel, WCAG 2.5.8"
     },
     "levels": {
       "title": "Os três níveis",
@@ -127,8 +126,7 @@
       "title": "Densities",
       "description": "Three density levels (condensed, default, comfortable) that scale spacing and heights proportionally via an html class.",
       "aiSummary": "Density foundations page. Documents the three levels applied via class on html, affected tokens (--spacing-base, --height-*), when to use each, and accessibility rules.",
-      "aiEntities": "density, spacing, height, condensed, comfortable, WCAG 2.5.8",
-      "aiIntent": "informational"
+      "aiEntities": "density, spacing, height, condensed, comfortable, WCAG 2.5.8"
     },
     "levels": {
       "title": "The three levels",
@@ -246,8 +244,7 @@
       "title": "Densidades",
       "description": "Tres niveles de densidad (condensado, default, cómodo) que escalan spacing y alturas proporcionalmente vía clase en el html.",
       "aiSummary": "Página de fundamentos de Densidades. Documenta los tres niveles aplicados vía clase en html, tokens afectados (--spacing-base, --height-*), cuándo usar cada uno y reglas de accesibilidad.",
-      "aiEntities": "densidad, density, spacing, height, condensado, comodo, WCAG 2.5.8",
-      "aiIntent": "informational"
+      "aiEntities": "densidad, density, spacing, height, condensado, comodo, WCAG 2.5.8"
     },
     "levels": {
       "title": "Los tres niveles",

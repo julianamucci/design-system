@@ -68,7 +68,6 @@ useSeoEffect(computed(() => ({
   componentSlug: 'drawer',
   aiSummary: tContent('seo.aiSummary'),
   aiEntities: tContent('seo.aiEntities'),
-  aiIntent: tContent('seo.aiIntent'),
   breadcrumb: [
     { name: 'Components', item: '/components' },
     { name: 'Disclosure', item: '/components/disclosure' },

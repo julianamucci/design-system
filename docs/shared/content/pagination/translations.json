@@ -8,8 +8,7 @@
       "title": "Pagination — Navegação",
       "description": "Documentação do Pagination: subcomponentes Previous, Next, Link, Ellipsis, com aria-current e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Pagination com subcomponentes Previous, Next, Link, Ellipsis e Item, navegação acessível por teclado e aria-current na página ativa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
-      "aiIntent": "informational"
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -48,10 +47,26 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista com 50+ itens", "u": "Sim", "a": "-" },
-        "item2": { "s": "Lista com menos de 10 itens", "u": "Não", "a": "Listar tudo" },
-        "item3": { "s": "Feed infinito por scroll", "u": "Não", "a": "Infinite scroll" },
-        "item4": { "s": "Tabela de dados grande", "u": "Sim", "a": "DataTable com paginação" }
+        "item1": {
+          "s": "Lista com 50+ itens",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Lista com menos de 10 itens",
+          "u": "Não",
+          "a": "Listar tudo"
+        },
+        "item3": {
+          "s": "Feed infinito por scroll",
+          "u": "Não",
+          "a": "Infinite scroll"
+        },
+        "item4": {
+          "s": "Tabela de dados grande",
+          "u": "Sim",
+          "a": "DataTable com paginação"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -216,12 +231,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "background": { "class": "bg-background", "part": "Fundo neutro do container" },
-        "foreground": { "class": "text-foreground", "part": "Texto do número da página inativa" },
-        "accent": { "class": "bg-accent", "part": "Fundo no estado hover" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Texto no estado hover" },
-        "border": { "class": "border", "part": "Borda do link da página ativa" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco visível" }
+        "background": {
+          "class": "bg-background",
+          "part": "Fundo neutro do container"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto do número da página inativa"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Fundo no estado hover"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Texto no estado hover"
+        },
+        "border": {
+          "class": "border",
+          "part": "Borda do link da página ativa"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco visível"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Override via CSS variables no escopo do componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
@@ -261,9 +294,18 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "breadcrumb": { "name": "Breadcrumb", "description": "Indica a posição na hierarquia de navegação." },
-        "tabs": { "name": "Tabs", "description": "Alterna entre views paralelas sem ordem definida." },
-        "button": { "name": "Button", "description": "Base usada pelos links da paginação." }
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Indica a posição na hierarquia de navegação."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Alterna entre views paralelas sem ordem definida."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Base usada pelos links da paginação."
+        }
       }
     },
     "notes": {
@@ -292,10 +334,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar em página numerada", "result": "Dispara onClick e atualiza página atual", "priority": "high" },
-        "item2": { "action": "Clicar em Previous na primeira página", "result": "Não navega; aria-disabled true", "priority": "high" },
-        "item3": { "action": "Clicar em Next na última página", "result": "Não navega; aria-disabled true", "priority": "high" },
-        "item4": { "action": "Pressionar Tab", "result": "Move foco entre os links em ordem visual", "priority": "medium" }
+        "item1": {
+          "action": "Clicar em página numerada",
+          "result": "Dispara onClick e atualiza página atual",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar em Previous na primeira página",
+          "result": "Não navega; aria-disabled true",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar em Next na última página",
+          "result": "Não navega; aria-disabled true",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar Tab",
+          "result": "Move foco entre os links em ordem visual",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -310,10 +368,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (paginação simples)", "priority": "high" },
-        "item2": { "story": "Com ellipsis (lista longa)", "priority": "high" },
-        "item3": { "story": "Página ativa destacada", "priority": "high" },
-        "item4": { "story": "Previous desabilitado (primeira página)", "priority": "medium" }
+        "item1": {
+          "story": "Default (paginação simples)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com ellipsis (lista longa)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Página ativa destacada",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Previous desabilitado (primeira página)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -346,8 +416,7 @@
       "title": "Pagination — Navigation",
       "description": "Pagination documentation: Previous, Next, Link, Ellipsis subcomponents with aria-current and WCAG 2.2 AA support.",
       "aiSummary": "Pagination component with Previous, Next, Link, Ellipsis and Item subcomponents, accessible keyboard navigation and aria-current on active page.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
-      "aiIntent": "informational"
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -386,10 +455,26 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "List with 50+ items", "u": "Yes", "a": "-" },
-        "item2": { "s": "List with fewer than 10 items", "u": "No", "a": "List everything" },
-        "item3": { "s": "Infinite scroll feed", "u": "No", "a": "Infinite scroll" },
-        "item4": { "s": "Large data table", "u": "Yes", "a": "DataTable with pagination" }
+        "item1": {
+          "s": "List with 50+ items",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "List with fewer than 10 items",
+          "u": "No",
+          "a": "List everything"
+        },
+        "item3": {
+          "s": "Infinite scroll feed",
+          "u": "No",
+          "a": "Infinite scroll"
+        },
+        "item4": {
+          "s": "Large data table",
+          "u": "Yes",
+          "a": "DataTable with pagination"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -554,12 +639,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "background": { "class": "bg-background", "part": "Neutral container background" },
-        "foreground": { "class": "text-foreground", "part": "Inactive page number text" },
-        "accent": { "class": "bg-accent", "part": "Hover state background" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Hover state text" },
-        "border": { "class": "border", "part": "Active page link border" },
-        "ring": { "class": "ring-ring", "part": "Visible focus ring" }
+        "background": {
+          "class": "bg-background",
+          "part": "Neutral container background"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Inactive page number text"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Hover state background"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Hover state text"
+        },
+        "border": {
+          "class": "border",
+          "part": "Active page link border"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Visible focus ring"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Override via CSS variables in component scope */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
@@ -599,9 +702,18 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "breadcrumb": { "name": "Breadcrumb", "description": "Indicates position in the navigation hierarchy." },
-        "tabs": { "name": "Tabs", "description": "Switches between parallel views without a defined order." },
-        "button": { "name": "Button", "description": "Base used by pagination links." }
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Indicates position in the navigation hierarchy."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Switches between parallel views without a defined order."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Base used by pagination links."
+        }
       }
     },
     "notes": {
@@ -630,10 +742,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click numbered page", "result": "Triggers onClick and updates current page", "priority": "high" },
-        "item2": { "action": "Click Previous on first page", "result": "Does not navigate; aria-disabled true", "priority": "high" },
-        "item3": { "action": "Click Next on last page", "result": "Does not navigate; aria-disabled true", "priority": "high" },
-        "item4": { "action": "Press Tab", "result": "Moves focus between links in visual order", "priority": "medium" }
+        "item1": {
+          "action": "Click numbered page",
+          "result": "Triggers onClick and updates current page",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click Previous on first page",
+          "result": "Does not navigate; aria-disabled true",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click Next on last page",
+          "result": "Does not navigate; aria-disabled true",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press Tab",
+          "result": "Moves focus between links in visual order",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -648,10 +776,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (simple pagination)", "priority": "high" },
-        "item2": { "story": "With ellipsis (long list)", "priority": "high" },
-        "item3": { "story": "Active page highlighted", "priority": "high" },
-        "item4": { "story": "Previous disabled (first page)", "priority": "medium" }
+        "item1": {
+          "story": "Default (simple pagination)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With ellipsis (long list)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Active page highlighted",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Previous disabled (first page)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -684,8 +824,7 @@
       "title": "Pagination — Navegación",
       "description": "Documentación de Pagination: subcomponentes Previous, Next, Link, Ellipsis con aria-current y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Pagination con subcomponentes Previous, Next, Link, Ellipsis e Item, navegación accesible por teclado y aria-current en la página activa.",
-      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label",
-      "aiIntent": "informational"
+      "aiEntities": "Pagination, React, Vue, Svelte, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
       "title": "Demostración",
@@ -724,10 +863,26 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Lista con 50+ ítems", "u": "Sí", "a": "-" },
-        "item2": { "s": "Lista con menos de 10 ítems", "u": "No", "a": "Mostrar todo" },
-        "item3": { "s": "Feed con scroll infinito", "u": "No", "a": "Infinite scroll" },
-        "item4": { "s": "Tabla de datos grande", "u": "Sí", "a": "DataTable con paginación" }
+        "item1": {
+          "s": "Lista con 50+ ítems",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Lista con menos de 10 ítems",
+          "u": "No",
+          "a": "Mostrar todo"
+        },
+        "item3": {
+          "s": "Feed con scroll infinito",
+          "u": "No",
+          "a": "Infinite scroll"
+        },
+        "item4": {
+          "s": "Tabla de datos grande",
+          "u": "Sí",
+          "a": "DataTable con paginación"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -892,12 +1047,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "background": { "class": "bg-background", "part": "Fondo neutral del contenedor" },
-        "foreground": { "class": "text-foreground", "part": "Texto del número de página inactiva" },
-        "accent": { "class": "bg-accent", "part": "Fondo en estado hover" },
-        "accentForeground": { "class": "text-accent-foreground", "part": "Texto en estado hover" },
-        "border": { "class": "border", "part": "Borde del link de la página activa" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco visible" }
+        "background": {
+          "class": "bg-background",
+          "part": "Fondo neutral del contenedor"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto del número de página inactiva"
+        },
+        "accent": {
+          "class": "bg-accent",
+          "part": "Fondo en estado hover"
+        },
+        "accentForeground": {
+          "class": "text-accent-foreground",
+          "part": "Texto en estado hover"
+        },
+        "border": {
+          "class": "border",
+          "part": "Borde del link de la página activa"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco visible"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Sobreescribe vía CSS variables en el ámbito del componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
@@ -937,9 +1110,18 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "breadcrumb": { "name": "Breadcrumb", "description": "Indica la posición en la jerarquía de navegación." },
-        "tabs": { "name": "Tabs", "description": "Alterna entre vistas paralelas sin orden definido." },
-        "button": { "name": "Button", "description": "Base usada por los links de la paginación." }
+        "breadcrumb": {
+          "name": "Breadcrumb",
+          "description": "Indica la posición en la jerarquía de navegación."
+        },
+        "tabs": {
+          "name": "Tabs",
+          "description": "Alterna entre vistas paralelas sin orden definido."
+        },
+        "button": {
+          "name": "Button",
+          "description": "Base usada por los links de la paginación."
+        }
       }
     },
     "notes": {
@@ -968,10 +1150,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en página numerada", "result": "Dispara onClick y actualiza la página actual", "priority": "high" },
-        "item2": { "action": "Hacer clic en Previous en la primera página", "result": "No navega; aria-disabled true", "priority": "high" },
-        "item3": { "action": "Hacer clic en Next en la última página", "result": "No navega; aria-disabled true", "priority": "high" },
-        "item4": { "action": "Presionar Tab", "result": "Mueve el foco entre los links en orden visual", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en página numerada",
+          "result": "Dispara onClick y actualiza la página actual",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en Previous en la primera página",
+          "result": "No navega; aria-disabled true",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic en Next en la última página",
+          "result": "No navega; aria-disabled true",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Presionar Tab",
+          "result": "Mueve el foco entre los links en orden visual",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -986,10 +1184,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (paginación simple)", "priority": "high" },
-        "item2": { "story": "Con ellipsis (lista larga)", "priority": "high" },
-        "item3": { "story": "Página activa destacada", "priority": "high" },
-        "item4": { "story": "Previous deshabilitado (primera página)", "priority": "medium" }
+        "item1": {
+          "story": "Default (paginación simple)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con ellipsis (lista larga)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Página activa destacada",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Previous deshabilitado (primera página)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

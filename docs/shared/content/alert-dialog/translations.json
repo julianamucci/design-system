@@ -8,8 +8,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentação do AlertDialog: modal de confirmação crítica, focus trap, ARIA automático e composição com Cancel e Action.",
       "aiSummary": "Componente AlertDialog modal de confirmação para ações destrutivas, com focus trap, role=\"alertdialog\", aria-labelledby e aria-describedby automáticos via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
-      "aiIntent": "informational"
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -56,11 +55,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Excluir conta, projeto ou registro", "u": "Sim, trigger e action destructive", "a": "-" },
-        "item2": { "s": "Salvar, criar, editar um recurso", "u": "Não", "a": "Dialog com formulário" },
-        "item3": { "s": "Confirmar leitura de aviso crítico", "u": "Sim, variante neutra", "a": "-" },
-        "item4": { "s": "Mensagem informativa passiva", "u": "Não", "a": "Alert ou Sonner" },
-        "item5": { "s": "Escolher entre múltiplas opções", "u": "Não", "a": "Dialog ou DropdownMenu" }
+        "item1": {
+          "s": "Excluir conta, projeto ou registro",
+          "u": "Sim, trigger e action destructive",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Salvar, criar, editar um recurso",
+          "u": "Não",
+          "a": "Dialog com formulário"
+        },
+        "item3": {
+          "s": "Confirmar leitura de aviso crítico",
+          "u": "Sim, variante neutra",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensagem informativa passiva",
+          "u": "Não",
+          "a": "Alert ou Sonner"
+        },
+        "item5": {
+          "s": "Escolher entre múltiplas opções",
+          "u": "Não",
+          "a": "Dialog ou DropdownMenu"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -300,34 +319,105 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o AlertDialog.",
-        "item1": { "action": "Clique no trigger", "result": "AlertDialogContent aparece com backdrop; foco inicial em AlertDialogCancel", "priority": "high" },
-        "item2": { "action": "Clique em AlertDialogAction", "result": "Callback onClick dispara; diálogo fecha; foco retorna ao trigger", "priority": "high" },
-        "item3": { "action": "Clique em AlertDialogCancel", "result": "Diálogo fecha sem disparar ação; foco retorna ao trigger", "priority": "high" },
-        "item4": { "action": "Pressionar Escape com diálogo aberto", "result": "Diálogo fecha (equivalente a cancelamento); foco retorna ao trigger", "priority": "high" },
-        "item5": { "action": "Pressionar Tab dentro do diálogo", "result": "Foco alterna entre Cancel e Action sem sair do diálogo (focus trap)", "priority": "high" },
-        "item6": { "action": "Clique fora do AlertDialogContent (overlay)", "result": "Diálogo fecha sem disparar ação", "priority": "medium" },
-        "item7": { "action": "Renderizar com open controlado", "result": "Estado de abertura é totalmente gerenciado pela prop open; o callback de mudança dispara ao interagir", "priority": "medium" }
+        "item1": {
+          "action": "Clique no trigger",
+          "result": "AlertDialogContent aparece com backdrop; foco inicial em AlertDialogCancel",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clique em AlertDialogAction",
+          "result": "Callback onClick dispara; diálogo fecha; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clique em AlertDialogCancel",
+          "result": "Diálogo fecha sem disparar ação; foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar Escape com diálogo aberto",
+          "result": "Diálogo fecha (equivalente a cancelamento); foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Pressionar Tab dentro do diálogo",
+          "result": "Foco alterna entre Cancel e Action sem sair do diálogo (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Clique fora do AlertDialogContent (overlay)",
+          "result": "Diálogo fecha sem disparar ação",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar com open controlado",
+          "result": "Estado de abertura é totalmente gerenciado pela prop open; o callback de mudança dispara ao interagir",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "role=\"alertdialog\" presente no Content", "level": "AA", "how": "getByRole('alertdialog') no testing-library" },
-        "item2": { "criterion": "aria-labelledby apontando para AlertDialogTitle", "level": "AA", "how": "Inspecionar DOM após abrir" },
-        "item3": { "criterion": "aria-describedby apontando para AlertDialogDescription", "level": "AA", "how": "Inspecionar DOM após abrir" },
-        "item4": { "criterion": "Focus trap ativo — Tab não sai do diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fora não recebem foco" },
-        "item5": { "criterion": "Retorno de foco ao trigger ao fechar", "level": "AA", "how": "expect(trigger).toHaveFocus() após close" },
-        "item6": { "criterion": "Contraste mínimo 4.5:1 em todos os elementos", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item7": { "criterion": "Sem violações axe-core no estado aberto", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "role=\"alertdialog\" presente no Content",
+          "level": "AA",
+          "how": "getByRole('alertdialog') no testing-library"
+        },
+        "item2": {
+          "criterion": "aria-labelledby apontando para AlertDialogTitle",
+          "level": "AA",
+          "how": "Inspecionar DOM após abrir"
+        },
+        "item3": {
+          "criterion": "aria-describedby apontando para AlertDialogDescription",
+          "level": "AA",
+          "how": "Inspecionar DOM após abrir"
+        },
+        "item4": {
+          "criterion": "Focus trap ativo — Tab não sai do diálogo",
+          "level": "AA",
+          "how": "userEvent.tab() repetido — elementos fora não recebem foco"
+        },
+        "item5": {
+          "criterion": "Retorno de foco ao trigger ao fechar",
+          "level": "AA",
+          "how": "expect(trigger).toHaveFocus() após close"
+        },
+        "item6": {
+          "criterion": "Contraste mínimo 4.5:1 em todos os elementos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item7": {
+          "criterion": "Sem violações axe-core no estado aberto",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Playground — estado aberto padrão", "priority": "high" },
-        "item2": { "story": "Variante destructive — trigger e action destructive", "priority": "high" },
-        "item3": { "story": "Variante neutra — trigger e action default", "priority": "medium" },
-        "item4": { "story": "Composição com descrição longa (2 linhas)", "priority": "medium" },
-        "item5": { "story": "Layout responsivo — mobile com botões empilhados", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado aberto padrão",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variante destructive — trigger e action destructive",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variante neutra — trigger e action default",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composição com descrição longa (2 linhas)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Layout responsivo — mobile com botões empilhados",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -360,8 +450,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentation for AlertDialog: critical confirmation modal, focus trap, automatic ARIA, and composition with Cancel and Action.",
       "aiSummary": "AlertDialog modal confirmation component for destructive actions, with focus trap, role=\"alertdialog\", and automatic aria-labelledby and aria-describedby via Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
-      "aiIntent": "informational"
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -408,11 +497,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Delete account, project, or record", "u": "Yes, destructive trigger and action", "a": "-" },
-        "item2": { "s": "Save, create, edit a resource", "u": "No", "a": "Dialog with form" },
-        "item3": { "s": "Acknowledge reading a critical notice", "u": "Yes, neutral variant", "a": "-" },
-        "item4": { "s": "Passive informational message", "u": "No", "a": "Alert or Sonner" },
-        "item5": { "s": "Choose between multiple options", "u": "No", "a": "Dialog or DropdownMenu" }
+        "item1": {
+          "s": "Delete account, project, or record",
+          "u": "Yes, destructive trigger and action",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Save, create, edit a resource",
+          "u": "No",
+          "a": "Dialog with form"
+        },
+        "item3": {
+          "s": "Acknowledge reading a critical notice",
+          "u": "Yes, neutral variant",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Passive informational message",
+          "u": "No",
+          "a": "Alert or Sonner"
+        },
+        "item5": {
+          "s": "Choose between multiple options",
+          "u": "No",
+          "a": "Dialog or DropdownMenu"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -652,34 +761,105 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each AlertDialog interaction.",
-        "item1": { "action": "Click on trigger", "result": "AlertDialogContent appears with backdrop; initial focus on AlertDialogCancel", "priority": "high" },
-        "item2": { "action": "Click on AlertDialogAction", "result": "onClick callback fires; dialog closes; focus returns to trigger", "priority": "high" },
-        "item3": { "action": "Click on AlertDialogCancel", "result": "Dialog closes without firing action; focus returns to trigger", "priority": "high" },
-        "item4": { "action": "Press Escape with dialog open", "result": "Dialog closes (equivalent to cancel); focus returns to trigger", "priority": "high" },
-        "item5": { "action": "Press Tab inside the dialog", "result": "Focus alternates between Cancel and Action without leaving the dialog (focus trap)", "priority": "high" },
-        "item6": { "action": "Click outside AlertDialogContent (overlay)", "result": "Dialog closes without firing action", "priority": "medium" },
-        "item7": { "action": "Render with controlled open", "result": "Open state is fully managed by the open prop; the change callback fires on interaction", "priority": "medium" }
+        "item1": {
+          "action": "Click on trigger",
+          "result": "AlertDialogContent appears with backdrop; initial focus on AlertDialogCancel",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click on AlertDialogAction",
+          "result": "onClick callback fires; dialog closes; focus returns to trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click on AlertDialogCancel",
+          "result": "Dialog closes without firing action; focus returns to trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press Escape with dialog open",
+          "result": "Dialog closes (equivalent to cancel); focus returns to trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Press Tab inside the dialog",
+          "result": "Focus alternates between Cancel and Action without leaving the dialog (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Click outside AlertDialogContent (overlay)",
+          "result": "Dialog closes without firing action",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Render with controlled open",
+          "result": "Open state is fully managed by the open prop; the change callback fires on interaction",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "role=\"alertdialog\" present on Content", "level": "AA", "how": "getByRole('alertdialog') in testing-library" },
-        "item2": { "criterion": "aria-labelledby points to AlertDialogTitle", "level": "AA", "how": "Inspect DOM after open" },
-        "item3": { "criterion": "aria-describedby points to AlertDialogDescription", "level": "AA", "how": "Inspect DOM after open" },
-        "item4": { "criterion": "Active focus trap — Tab doesn't leave the dialog", "level": "AA", "how": "Repeated userEvent.tab() — elements outside don't receive focus" },
-        "item5": { "criterion": "Focus returns to trigger on close", "level": "AA", "how": "expect(trigger).toHaveFocus() after close" },
-        "item6": { "criterion": "Minimum contrast 4.5:1 on all elements", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item7": { "criterion": "No axe-core violations in open state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "role=\"alertdialog\" present on Content",
+          "level": "AA",
+          "how": "getByRole('alertdialog') in testing-library"
+        },
+        "item2": {
+          "criterion": "aria-labelledby points to AlertDialogTitle",
+          "level": "AA",
+          "how": "Inspect DOM after open"
+        },
+        "item3": {
+          "criterion": "aria-describedby points to AlertDialogDescription",
+          "level": "AA",
+          "how": "Inspect DOM after open"
+        },
+        "item4": {
+          "criterion": "Active focus trap — Tab doesn't leave the dialog",
+          "level": "AA",
+          "how": "Repeated userEvent.tab() — elements outside don't receive focus"
+        },
+        "item5": {
+          "criterion": "Focus returns to trigger on close",
+          "level": "AA",
+          "how": "expect(trigger).toHaveFocus() after close"
+        },
+        "item6": {
+          "criterion": "Minimum contrast 4.5:1 on all elements",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item7": {
+          "criterion": "No axe-core violations in open state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Playground — default open state", "priority": "high" },
-        "item2": { "story": "Destructive variant — destructive trigger and action", "priority": "high" },
-        "item3": { "story": "Neutral variant — default trigger and action", "priority": "medium" },
-        "item4": { "story": "Composition with long description (2 lines)", "priority": "medium" },
-        "item5": { "story": "Responsive layout — mobile with stacked buttons", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default open state",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Destructive variant — destructive trigger and action",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Neutral variant — default trigger and action",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composition with long description (2 lines)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Responsive layout — mobile with stacked buttons",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -712,8 +892,7 @@
       "title": "AlertDialog — Overlay",
       "description": "Documentación del AlertDialog: modal de confirmación crítica, focus trap, ARIA automático y composición con Cancel y Action.",
       "aiSummary": "Componente AlertDialog modal de confirmación para acciones destructivas, con focus trap, role=\"alertdialog\", aria-labelledby y aria-describedby automáticos vía Radix UI.",
-      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap",
-      "aiIntent": "informational"
+      "aiEntities": "AlertDialog, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
       "title": "Demostración",
@@ -760,11 +939,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Eliminar cuenta, proyecto o registro", "u": "Sí, trigger y action destructive", "a": "-" },
-        "item2": { "s": "Guardar, crear, editar un recurso", "u": "No", "a": "Dialog con formulario" },
-        "item3": { "s": "Confirmar lectura de aviso crítico", "u": "Sí, variante neutra", "a": "-" },
-        "item4": { "s": "Mensaje informativo pasivo", "u": "No", "a": "Alert o Sonner" },
-        "item5": { "s": "Elegir entre múltiples opciones", "u": "No", "a": "Dialog o DropdownMenu" }
+        "item1": {
+          "s": "Eliminar cuenta, proyecto o registro",
+          "u": "Sí, trigger y action destructive",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Guardar, crear, editar un recurso",
+          "u": "No",
+          "a": "Dialog con formulario"
+        },
+        "item3": {
+          "s": "Confirmar lectura de aviso crítico",
+          "u": "Sí, variante neutra",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mensaje informativo pasivo",
+          "u": "No",
+          "a": "Alert o Sonner"
+        },
+        "item5": {
+          "s": "Elegir entre múltiples opciones",
+          "u": "No",
+          "a": "Dialog o DropdownMenu"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1004,34 +1203,105 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada interacción del AlertDialog.",
-        "item1": { "action": "Clic en el trigger", "result": "AlertDialogContent aparece con backdrop; foco inicial en AlertDialogCancel", "priority": "high" },
-        "item2": { "action": "Clic en AlertDialogAction", "result": "Callback onClick dispara; diálogo cierra; foco vuelve al trigger", "priority": "high" },
-        "item3": { "action": "Clic en AlertDialogCancel", "result": "Diálogo cierra sin disparar acción; foco vuelve al trigger", "priority": "high" },
-        "item4": { "action": "Presionar Escape con diálogo abierto", "result": "Diálogo cierra (equivalente a cancelar); foco vuelve al trigger", "priority": "high" },
-        "item5": { "action": "Presionar Tab dentro del diálogo", "result": "Foco alterna entre Cancel y Action sin salir del diálogo (focus trap)", "priority": "high" },
-        "item6": { "action": "Clic fuera de AlertDialogContent (overlay)", "result": "Diálogo cierra sin disparar acción", "priority": "medium" },
-        "item7": { "action": "Renderizar con open controlado", "result": "El estado de apertura se gestiona totalmente por la prop open; el callback de cambio dispara al interactuar", "priority": "medium" }
+        "item1": {
+          "action": "Clic en el trigger",
+          "result": "AlertDialogContent aparece con backdrop; foco inicial en AlertDialogCancel",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clic en AlertDialogAction",
+          "result": "Callback onClick dispara; diálogo cierra; foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clic en AlertDialogCancel",
+          "result": "Diálogo cierra sin disparar acción; foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Presionar Escape con diálogo abierto",
+          "result": "Diálogo cierra (equivalente a cancelar); foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Presionar Tab dentro del diálogo",
+          "result": "Foco alterna entre Cancel y Action sin salir del diálogo (focus trap)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Clic fuera de AlertDialogContent (overlay)",
+          "result": "Diálogo cierra sin disparar acción",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar con open controlado",
+          "result": "El estado de apertura se gestiona totalmente por la prop open; el callback de cambio dispara al interactuar",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "role=\"alertdialog\" presente en el Content", "level": "AA", "how": "getByRole('alertdialog') en testing-library" },
-        "item2": { "criterion": "aria-labelledby apunta a AlertDialogTitle", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
-        "item3": { "criterion": "aria-describedby apunta a AlertDialogDescription", "level": "AA", "how": "Inspeccionar DOM tras abrir" },
-        "item4": { "criterion": "Focus trap activo — Tab no sale del diálogo", "level": "AA", "how": "userEvent.tab() repetido — elementos fuera no reciben foco" },
-        "item5": { "criterion": "Retorno de foco al trigger al cerrar", "level": "AA", "how": "expect(trigger).toHaveFocus() tras cerrar" },
-        "item6": { "criterion": "Contraste mínimo 4.5:1 en todos los elementos", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item7": { "criterion": "Sin violaciones axe-core en estado abierto", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "role=\"alertdialog\" presente en el Content",
+          "level": "AA",
+          "how": "getByRole('alertdialog') en testing-library"
+        },
+        "item2": {
+          "criterion": "aria-labelledby apunta a AlertDialogTitle",
+          "level": "AA",
+          "how": "Inspeccionar DOM tras abrir"
+        },
+        "item3": {
+          "criterion": "aria-describedby apunta a AlertDialogDescription",
+          "level": "AA",
+          "how": "Inspeccionar DOM tras abrir"
+        },
+        "item4": {
+          "criterion": "Focus trap activo — Tab no sale del diálogo",
+          "level": "AA",
+          "how": "userEvent.tab() repetido — elementos fuera no reciben foco"
+        },
+        "item5": {
+          "criterion": "Retorno de foco al trigger al cerrar",
+          "level": "AA",
+          "how": "expect(trigger).toHaveFocus() tras cerrar"
+        },
+        "item6": {
+          "criterion": "Contraste mínimo 4.5:1 en todos los elementos",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item7": {
+          "criterion": "Sin violaciones axe-core en estado abierto",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Playground — estado abierto predeterminado", "priority": "high" },
-        "item2": { "story": "Variante destructive — trigger y action destructive", "priority": "high" },
-        "item3": { "story": "Variante neutra — trigger y action default", "priority": "medium" },
-        "item4": { "story": "Composición con descripción larga (2 líneas)", "priority": "medium" },
-        "item5": { "story": "Layout responsivo — mobile con botones apilados", "priority": "medium" }
+        "item1": {
+          "story": "Playground — estado abierto predeterminado",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variante destructive — trigger y action destructive",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Variante neutra — trigger y action default",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composición con descripción larga (2 líneas)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Layout responsivo — mobile con botones apilados",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

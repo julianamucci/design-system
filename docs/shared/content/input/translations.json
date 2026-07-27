@@ -8,8 +8,7 @@
       "title": "Input — Formulário",
       "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
       "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -56,12 +55,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Entrada de texto linha única", "u": "Sim", "a": "-" },
-        "item2": { "s": "Texto de múltiplas linhas", "u": "Não", "a": "Textarea" },
-        "item3": { "s": "Seleção em lista de opções", "u": "Não", "a": "Select ou Combobox" },
-        "item4": { "s": "Código OTP ou PIN", "u": "Não", "a": "InputOTP" },
-        "item5": { "s": "Busca com ação explícita", "u": "Sim, type search", "a": "-" },
-        "item6": { "s": "Input com prefixo ou sufixo", "u": "Sim, via InputGroup", "a": "-" }
+        "item1": {
+          "s": "Entrada de texto linha única",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Texto de múltiplas linhas",
+          "u": "Não",
+          "a": "Textarea"
+        },
+        "item3": {
+          "s": "Seleção em lista de opções",
+          "u": "Não",
+          "a": "Select ou Combobox"
+        },
+        "item4": {
+          "s": "Código OTP ou PIN",
+          "u": "Não",
+          "a": "InputOTP"
+        },
+        "item5": {
+          "s": "Busca com ação explícita",
+          "u": "Sim, type search",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Input com prefixo ou sufixo",
+          "u": "Sim, via InputGroup",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -301,14 +324,46 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada estado e configuração do Input.",
-        "item1": { "action": "Renderizar Input padrão", "result": "Elemento input com data-slot='input', borda border-input, fundo transparente", "priority": "high" },
-        "item2": { "action": "Focar via Tab", "result": "Borda muda para ring-ring, ring de 3px com opacidade 50% visível", "priority": "high" },
-        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, opacidade 50%, bg-input/50, campo não editável", "priority": "high" },
-        "item4": { "action": "aria-invalid='true' no campo", "result": "Borda border-destructive, ring vermelho (ring-destructive/20)", "priority": "high" },
-        "item5": { "action": "type='file' renderizado", "result": "Botão de seleção nativo, altura via token --height-xs, estilo file:*", "priority": "medium" },
-        "item6": { "action": "Digitar no campo", "result": "Valor atualizado, onChange chamado (React) ou v-model sincronizado (Vue)", "priority": "high" },
-        "item7": { "action": "InputGroup com addon inline-start", "result": "Addon posicionado à esquerda, input sem borda própria, foco no grupo", "priority": "medium" },
-        "item8": { "action": "Clicar no InputGroupAddon fora de botão", "result": "Foco transferido para o input interno", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar Input padrão",
+          "result": "Elemento input com data-slot='input', borda border-input, fundo transparente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Focar via Tab",
+          "result": "Borda muda para ring-ring, ring de 3px com opacidade 50% visível",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Prop disabled=true",
+          "result": "cursor-not-allowed, opacidade 50%, bg-input/50, campo não editável",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "aria-invalid='true' no campo",
+          "result": "Borda border-destructive, ring vermelho (ring-destructive/20)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "type='file' renderizado",
+          "result": "Botão de seleção nativo, altura via token --height-xs, estilo file:*",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Digitar no campo",
+          "result": "Valor atualizado, onChange chamado (React) ou v-model sincronizado (Vue)",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "InputGroup com addon inline-start",
+          "result": "Addon posicionado à esquerda, input sem borda própria, foco no grupo",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Clicar no InputGroupAddon fora de botão",
+          "result": "Foco transferido para o input interno",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -323,11 +378,26 @@
         "title": "Regressão Visual",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Default — estado padrão", "priority": "high" },
-        "item2": { "story": "Estados — focus, disabled, error", "priority": "high" },
-        "item3": { "story": "Tipos — email, password, search, file", "priority": "medium" },
-        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
-        "item5": { "story": "Dark mode — todos os estados", "priority": "high" }
+        "item1": {
+          "story": "Default — estado padrão",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — focus, disabled, error",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tipos — email, password, search, file",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "InputGroup — inline-start, inline-end, block-start",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Dark mode — todos os estados",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -360,8 +430,7 @@
       "title": "Input — Form",
       "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
       "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -408,12 +477,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Single-line text input", "u": "Yes", "a": "-" },
-        "item2": { "s": "Multi-line text", "u": "No", "a": "Textarea" },
-        "item3": { "s": "Selection from option list", "u": "No", "a": "Select or Combobox" },
-        "item4": { "s": "OTP or PIN code", "u": "No", "a": "InputOTP" },
-        "item5": { "s": "Search with explicit action", "u": "Yes, type search", "a": "-" },
-        "item6": { "s": "Input with prefix or suffix", "u": "Yes, via InputGroup", "a": "-" }
+        "item1": {
+          "s": "Single-line text input",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Multi-line text",
+          "u": "No",
+          "a": "Textarea"
+        },
+        "item3": {
+          "s": "Selection from option list",
+          "u": "No",
+          "a": "Select or Combobox"
+        },
+        "item4": {
+          "s": "OTP or PIN code",
+          "u": "No",
+          "a": "InputOTP"
+        },
+        "item5": {
+          "s": "Search with explicit action",
+          "u": "Yes, type search",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Input with prefix or suffix",
+          "u": "Yes, via InputGroup",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Use when",
@@ -653,14 +746,46 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Input state and configuration.",
-        "item1": { "action": "Render default Input", "result": "Input element with data-slot='input', border-input border, transparent background", "priority": "high" },
-        "item2": { "action": "Focus via Tab", "result": "Border changes to ring-ring, 3px ring with 50% opacity visible", "priority": "high" },
-        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, 50% opacity, bg-input/50, field not editable", "priority": "high" },
-        "item4": { "action": "aria-invalid='true' on field", "result": "border-destructive border, red ring (ring-destructive/20)", "priority": "high" },
-        "item5": { "action": "type='file' rendered", "result": "Native file picker button, height via --height-xs token, file:* styles", "priority": "medium" },
-        "item6": { "action": "Typing in field", "result": "Value updated, onChange called (React) or v-model synced (Vue)", "priority": "high" },
-        "item7": { "action": "InputGroup with inline-start addon", "result": "Addon positioned left, input without own border, group focus state", "priority": "medium" },
-        "item8": { "action": "Click on InputGroupAddon outside button", "result": "Focus transferred to inner input", "priority": "medium" }
+        "item1": {
+          "action": "Render default Input",
+          "result": "Input element with data-slot='input', border-input border, transparent background",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Focus via Tab",
+          "result": "Border changes to ring-ring, 3px ring with 50% opacity visible",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Prop disabled=true",
+          "result": "cursor-not-allowed, 50% opacity, bg-input/50, field not editable",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "aria-invalid='true' on field",
+          "result": "border-destructive border, red ring (ring-destructive/20)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "type='file' rendered",
+          "result": "Native file picker button, height via --height-xs token, file:* styles",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Typing in field",
+          "result": "Value updated, onChange called (React) or v-model synced (Vue)",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "InputGroup with inline-start addon",
+          "result": "Addon positioned left, input without own border, group focus state",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Click on InputGroupAddon outside button",
+          "result": "Focus transferred to inner input",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -675,11 +800,26 @@
         "title": "Visual Regression",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Default — default state", "priority": "high" },
-        "item2": { "story": "States — focus, disabled, error", "priority": "high" },
-        "item3": { "story": "Types — email, password, search, file", "priority": "medium" },
-        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
-        "item5": { "story": "Dark mode — all states", "priority": "high" }
+        "item1": {
+          "story": "Default — default state",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "States — focus, disabled, error",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Types — email, password, search, file",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "InputGroup — inline-start, inline-end, block-start",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Dark mode — all states",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -712,8 +852,7 @@
       "title": "Input — Formulario",
       "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
       "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField",
-      "aiIntent": "informational"
+      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
     },
     "demonstration": {
       "title": "Demostración",
@@ -760,12 +899,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Entrada de texto línea única", "u": "Sí", "a": "-" },
-        "item2": { "s": "Texto de múltiples líneas", "u": "No", "a": "Textarea" },
-        "item3": { "s": "Selección de lista de opciones", "u": "No", "a": "Select o Combobox" },
-        "item4": { "s": "Código OTP o PIN", "u": "No", "a": "InputOTP" },
-        "item5": { "s": "Búsqueda con acción explícita", "u": "Sí, type search", "a": "-" },
-        "item6": { "s": "Input con prefijo o sufijo", "u": "Sí, vía InputGroup", "a": "-" }
+        "item1": {
+          "s": "Entrada de texto línea única",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Texto de múltiples líneas",
+          "u": "No",
+          "a": "Textarea"
+        },
+        "item3": {
+          "s": "Selección de lista de opciones",
+          "u": "No",
+          "a": "Select o Combobox"
+        },
+        "item4": {
+          "s": "Código OTP o PIN",
+          "u": "No",
+          "a": "InputOTP"
+        },
+        "item5": {
+          "s": "Búsqueda con acción explícita",
+          "u": "Sí, type search",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Input con prefijo o sufijo",
+          "u": "Sí, vía InputGroup",
+          "a": "-"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -1005,14 +1168,46 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada estado y configuración del Input.",
-        "item1": { "action": "Renderizar Input predeterminado", "result": "Elemento input con data-slot='input', borde border-input, fondo transparente", "priority": "high" },
-        "item2": { "action": "Enfocar vía Tab", "result": "Borde cambia a ring-ring, ring de 3px con opacidad 50% visible", "priority": "high" },
-        "item3": { "action": "Prop disabled=true", "result": "cursor-not-allowed, opacidad 50%, bg-input/50, campo no editable", "priority": "high" },
-        "item4": { "action": "aria-invalid='true' en el campo", "result": "Borde border-destructive, ring rojo (ring-destructive/20)", "priority": "high" },
-        "item5": { "action": "type='file' renderizado", "result": "Botón nativo de selección, altura vía token --height-xs, estilos file:*", "priority": "medium" },
-        "item6": { "action": "Escribir en el campo", "result": "Valor actualizado, onChange llamado (React) o v-model sincronizado (Vue)", "priority": "high" },
-        "item7": { "action": "InputGroup con addon inline-start", "result": "Addon posicionado a la izquierda, input sin borde propio, foco en el grupo", "priority": "medium" },
-        "item8": { "action": "Clic en InputGroupAddon fuera de botón", "result": "Foco transferido al input interno", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar Input predeterminado",
+          "result": "Elemento input con data-slot='input', borde border-input, fondo transparente",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Enfocar vía Tab",
+          "result": "Borde cambia a ring-ring, ring de 3px con opacidad 50% visible",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Prop disabled=true",
+          "result": "cursor-not-allowed, opacidad 50%, bg-input/50, campo no editable",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "aria-invalid='true' en el campo",
+          "result": "Borde border-destructive, ring rojo (ring-destructive/20)",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "type='file' renderizado",
+          "result": "Botón nativo de selección, altura vía token --height-xs, estilos file:*",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Escribir en el campo",
+          "result": "Valor actualizado, onChange llamado (React) o v-model sincronizado (Vue)",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "InputGroup con addon inline-start",
+          "result": "Addon posicionado a la izquierda, input sin borde propio, foco en el grupo",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Clic en InputGroupAddon fuera de botón",
+          "result": "Foco transferido al input interno",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1027,11 +1222,26 @@
         "title": "Regresión Visual",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Default — estado predeterminado", "priority": "high" },
-        "item2": { "story": "Estados — focus, disabled, error", "priority": "high" },
-        "item3": { "story": "Tipos — email, password, search, file", "priority": "medium" },
-        "item4": { "story": "InputGroup — inline-start, inline-end, block-start", "priority": "medium" },
-        "item5": { "story": "Dark mode — todos los estados", "priority": "high" }
+        "item1": {
+          "story": "Default — estado predeterminado",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Estados — focus, disabled, error",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tipos — email, password, search, file",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "InputGroup — inline-start, inline-end, block-start",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Dark mode — todos los estados",
+          "priority": "high"
+        }
       }
     },
     "nav": {

@@ -129,7 +129,6 @@ export function createProgressDocs(): HTMLElement {
       componentSlug: 'progress',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent') as 'informational',
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: t('category'), item: '/components/feedback' },

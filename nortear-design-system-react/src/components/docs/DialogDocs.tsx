@@ -196,7 +196,6 @@ export function DialogDocs() {
     componentSlug: "dialog",
     aiSummary: tContent("seo.aiSummary"),
     aiEntities: tContent("seo.aiEntities"),
-    aiIntent: tContent("seo.aiIntent"),
     breadcrumb: [
       { name: "Components", item: "/components" },
       { name: "Overlay", item: "/components/overlay" },

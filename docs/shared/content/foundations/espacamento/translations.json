@@ -12,8 +12,7 @@
       "title": "Espaçamento",
       "description": "Sistema 8-grid com base de 4px, tokens --spacing-* completos, gaps por contexto e regra de off-grid como bug a corrigir.",
       "aiSummary": "Página de fundamentos de Espaçamento. Documenta o grid de 8, a base --spacing-base de 4px, a escala completa --spacing-0 a --spacing-24, recomendações de uso por intervalo e a regra de off-grid.",
-      "aiEntities": "espaçamento, grid 8, spacing-base, gap, padding, margin, densidade, off-grid",
-      "aiIntent": "informational"
+      "aiEntities": "espaçamento, grid 8, spacing-base, gap, padding, margin, densidade, off-grid"
     },
     "philosophy": {
       "title": "Filosofia 8-grid",
@@ -162,8 +161,7 @@
       "title": "Spacing",
       "description": "8-grid system with 4px base, full --spacing-* token scale, gaps by context and off-grid as a bug to fix.",
       "aiSummary": "Spacing foundations page. Documents the 8-grid, the --spacing-base 4px, the full --spacing-0 to --spacing-24 scale, usage guidance by range and the off-grid rule.",
-      "aiEntities": "spacing, 8-grid, spacing-base, gap, padding, margin, density, off-grid",
-      "aiIntent": "informational"
+      "aiEntities": "spacing, 8-grid, spacing-base, gap, padding, margin, density, off-grid"
     },
     "philosophy": {
       "title": "8-grid philosophy",
@@ -312,8 +310,7 @@
       "title": "Espaciado",
       "description": "Sistema 8-grid con base de 4px, tokens --spacing-* completos, gaps por contexto y regla de off-grid como bug a corregir.",
       "aiSummary": "Página de fundamentos de Espaciado. Documenta el grid de 8, la base --spacing-base de 4px, la escala completa --spacing-0 a --spacing-24, recomendaciones de uso por intervalo y la regla de off-grid.",
-      "aiEntities": "espaciado, grid 8, spacing-base, gap, padding, margin, densidad, off-grid",
-      "aiIntent": "informational"
+      "aiEntities": "espaciado, grid 8, spacing-base, gap, padding, margin, densidad, off-grid"
     },
     "philosophy": {
       "title": "Filosofía 8-grid",

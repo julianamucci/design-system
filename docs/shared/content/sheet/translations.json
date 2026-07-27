@@ -8,8 +8,7 @@
       "title": "Sheet — Overlay",
       "description": "Documentação do Sheet: Trigger, Content, Header, Title, Description, Footer e Close com posicionamento por side e WCAG 2.2 AA.",
       "aiSummary": "Componente Sheet com Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer e Close, baseado em Dialog com foco gerenciado.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -55,12 +54,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Filtros avançados (desktop)", "u": "Sim", "a": "-" },
-        "item2": { "s": "Configurações secundárias", "u": "Sim", "a": "-" },
-        "item3": { "s": "Painel mobile com swipe", "u": "Não", "a": "Drawer" },
-        "item4": { "s": "Modal centralizado", "u": "Não", "a": "Dialog" },
-        "item5": { "s": "Confirmação destrutiva", "u": "Não", "a": "AlertDialog" },
-        "item6": { "s": "Formulário curto inline", "u": "Não", "a": "Popover" }
+        "item1": {
+          "s": "Filtros avançados (desktop)",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Configurações secundárias",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Painel mobile com swipe",
+          "u": "Não",
+          "a": "Drawer"
+        },
+        "item4": {
+          "s": "Modal centralizado",
+          "u": "Não",
+          "a": "Dialog"
+        },
+        "item5": {
+          "s": "Confirmação destrutiva",
+          "u": "Não",
+          "a": "AlertDialog"
+        },
+        "item6": {
+          "s": "Formulário curto inline",
+          "u": "Não",
+          "a": "Popover"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -231,13 +254,34 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "popover": { "class": "bg-popover", "part": "Fundo do SheetContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto do SheetContent" },
-        "foreground": { "class": "text-foreground", "part": "Texto do SheetTitle" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto da SheetDescription" },
-        "border": { "class": "border", "part": "Borda do SheetContent por side" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco em elementos internos" },
-        "overlay": { "class": "bg-black/10", "part": "Backdrop sobre a página (SheetOverlay)" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fundo do SheetContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto do SheetContent"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto do SheetTitle"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto da SheetDescription"
+        },
+        "border": {
+          "class": "border",
+          "part": "Borda do SheetContent por side"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco em elementos internos"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Backdrop sobre a página (SheetOverlay)"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Largura customizada por side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
@@ -278,10 +322,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "drawer": { "name": "Drawer", "description": "Painel deslizante mobile com gesture de arrastar." },
-        "dialog": { "name": "Dialog", "description": "Modal centralizado para fluxos longos." },
-        "alertDialog": { "name": "AlertDialog", "description": "Confirmação destrutiva crítica." },
-        "popover": { "name": "Popover", "description": "Conteúdo contextual curto sem modal." }
+        "drawer": {
+          "name": "Drawer",
+          "description": "Painel deslizante mobile com gesture de arrastar."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal centralizado para fluxos longos."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Confirmação destrutiva crítica."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Conteúdo contextual curto sem modal."
+        }
       }
     },
     "notes": {
@@ -317,10 +373,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no trigger", "result": "Sheet abre e foco vai ao primeiro elemento focável", "priority": "high" },
-        "item2": { "action": "Pressionar Escape com Sheet aberto", "result": "Fecha e retorna foco ao trigger", "priority": "high" },
-        "item3": { "action": "Clicar no overlay", "result": "Fecha o Sheet (comportamento nativo)", "priority": "high" },
-        "item4": { "action": "Tab dentro do Sheet aberto", "result": "Focus trap mantém foco interno", "priority": "high" }
+        "item1": {
+          "action": "Clicar no trigger",
+          "result": "Sheet abre e foco vai ao primeiro elemento focável",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Escape com Sheet aberto",
+          "result": "Fecha e retorna foco ao trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar no overlay",
+          "result": "Fecha o Sheet (comportamento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab dentro do Sheet aberto",
+          "result": "Focus trap mantém foco interno",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -335,10 +407,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Right (padrão)", "priority": "high" },
-        "item2": { "story": "Left", "priority": "high" },
-        "item3": { "story": "Bottom", "priority": "high" },
-        "item4": { "story": "Com formulário longo (scroll interno)", "priority": "medium" }
+        "item1": {
+          "story": "Right (padrão)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Left",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bottom",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com formulário longo (scroll interno)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -372,8 +456,7 @@
       "title": "Sheet — Overlay",
       "description": "Sheet documentation: Trigger, Content, Header, Title, Description, Footer and Close with side positioning and WCAG 2.2 AA.",
       "aiSummary": "Sheet component with Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer and Close, based on Dialog with managed focus.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -419,12 +502,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Advanced filters (desktop)", "u": "Yes", "a": "-" },
-        "item2": { "s": "Secondary settings", "u": "Yes", "a": "-" },
-        "item3": { "s": "Mobile panel with swipe", "u": "No", "a": "Drawer" },
-        "item4": { "s": "Centered modal", "u": "No", "a": "Dialog" },
-        "item5": { "s": "Destructive confirmation", "u": "No", "a": "AlertDialog" },
-        "item6": { "s": "Short inline form", "u": "No", "a": "Popover" }
+        "item1": {
+          "s": "Advanced filters (desktop)",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Secondary settings",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Mobile panel with swipe",
+          "u": "No",
+          "a": "Drawer"
+        },
+        "item4": {
+          "s": "Centered modal",
+          "u": "No",
+          "a": "Dialog"
+        },
+        "item5": {
+          "s": "Destructive confirmation",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item6": {
+          "s": "Short inline form",
+          "u": "No",
+          "a": "Popover"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -595,13 +702,34 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "popover": { "class": "bg-popover", "part": "SheetContent background" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "SheetContent text" },
-        "foreground": { "class": "text-foreground", "part": "SheetTitle text" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "SheetDescription text" },
-        "border": { "class": "border", "part": "SheetContent border by side" },
-        "ring": { "class": "ring-ring", "part": "Focus ring on internal elements" },
-        "overlay": { "class": "bg-black/10", "part": "Backdrop over the page (SheetOverlay)" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "SheetContent background"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "SheetContent text"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "SheetTitle text"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "SheetDescription text"
+        },
+        "border": {
+          "class": "border",
+          "part": "SheetContent border by side"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring on internal elements"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Backdrop over the page (SheetOverlay)"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom width per side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
@@ -642,10 +770,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "drawer": { "name": "Drawer", "description": "Mobile sliding panel with drag gesture." },
-        "dialog": { "name": "Dialog", "description": "Centered modal for longer flows." },
-        "alertDialog": { "name": "AlertDialog", "description": "Critical destructive confirmation." },
-        "popover": { "name": "Popover", "description": "Short contextual content without modal." }
+        "drawer": {
+          "name": "Drawer",
+          "description": "Mobile sliding panel with drag gesture."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Centered modal for longer flows."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Critical destructive confirmation."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Short contextual content without modal."
+        }
       }
     },
     "notes": {
@@ -681,10 +821,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the trigger", "result": "Sheet opens and focus goes to first focusable element", "priority": "high" },
-        "item2": { "action": "Press Escape with Sheet open", "result": "Closes and returns focus to trigger", "priority": "high" },
-        "item3": { "action": "Click the overlay", "result": "Closes the Sheet (native behavior)", "priority": "high" },
-        "item4": { "action": "Tab inside open Sheet", "result": "Focus trap keeps focus inside", "priority": "high" }
+        "item1": {
+          "action": "Click the trigger",
+          "result": "Sheet opens and focus goes to first focusable element",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Escape with Sheet open",
+          "result": "Closes and returns focus to trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click the overlay",
+          "result": "Closes the Sheet (native behavior)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab inside open Sheet",
+          "result": "Focus trap keeps focus inside",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -699,10 +855,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Right (default)", "priority": "high" },
-        "item2": { "story": "Left", "priority": "high" },
-        "item3": { "story": "Bottom", "priority": "high" },
-        "item4": { "story": "With long form (internal scroll)", "priority": "medium" }
+        "item1": {
+          "story": "Right (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Left",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bottom",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With long form (internal scroll)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -736,8 +904,7 @@
       "title": "Sheet — Overlay",
       "description": "Documentación de Sheet: Trigger, Content, Header, Title, Description, Footer y Close con posicionamiento por side y WCAG 2.2 AA.",
       "aiSummary": "Componente Sheet con Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer y Close, basado en Dialog con foco gestionado.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demostración",
@@ -783,12 +950,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Filtros avanzados (desktop)", "u": "Sí", "a": "-" },
-        "item2": { "s": "Configuración secundaria", "u": "Sí", "a": "-" },
-        "item3": { "s": "Panel móvil con swipe", "u": "No", "a": "Drawer" },
-        "item4": { "s": "Modal centrado", "u": "No", "a": "Dialog" },
-        "item5": { "s": "Confirmación destructiva", "u": "No", "a": "AlertDialog" },
-        "item6": { "s": "Formulario corto inline", "u": "No", "a": "Popover" }
+        "item1": {
+          "s": "Filtros avanzados (desktop)",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Configuración secundaria",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Panel móvil con swipe",
+          "u": "No",
+          "a": "Drawer"
+        },
+        "item4": {
+          "s": "Modal centrado",
+          "u": "No",
+          "a": "Dialog"
+        },
+        "item5": {
+          "s": "Confirmación destructiva",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item6": {
+          "s": "Formulario corto inline",
+          "u": "No",
+          "a": "Popover"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -959,13 +1150,34 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "popover": { "class": "bg-popover", "part": "Fondo del SheetContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto del SheetContent" },
-        "foreground": { "class": "text-foreground", "part": "Texto del SheetTitle" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de SheetDescription" },
-        "border": { "class": "border", "part": "Borde del SheetContent por side" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco en elementos internos" },
-        "overlay": { "class": "bg-black/10", "part": "Backdrop sobre la página (SheetOverlay)" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fondo del SheetContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto del SheetContent"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto del SheetTitle"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto de SheetDescription"
+        },
+        "border": {
+          "class": "border",
+          "part": "Borde del SheetContent por side"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco en elementos internos"
+        },
+        "overlay": {
+          "class": "bg-black/10",
+          "part": "Backdrop sobre la página (SheetOverlay)"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Ancho personalizado por side */\n[data-slot=\"sheet-content\"][data-side=\"right\"],\n[data-slot=\"sheet-content\"][data-side=\"left\"] {\n  width: 400px;\n}\n@media (min-width: 640px) {\n  [data-slot=\"sheet-content\"][data-side=\"right\"],\n  [data-slot=\"sheet-content\"][data-side=\"left\"] {\n    max-width: 540px;\n  }\n}"
@@ -1006,10 +1218,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "drawer": { "name": "Drawer", "description": "Panel deslizante móvil con gesto de arrastre." },
-        "dialog": { "name": "Dialog", "description": "Modal centrado para flujos largos." },
-        "alertDialog": { "name": "AlertDialog", "description": "Confirmación destructiva crítica." },
-        "popover": { "name": "Popover", "description": "Contenido contextual corto sin modal." }
+        "drawer": {
+          "name": "Drawer",
+          "description": "Panel deslizante móvil con gesto de arrastre."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal centrado para flujos largos."
+        },
+        "alertDialog": {
+          "name": "AlertDialog",
+          "description": "Confirmación destructiva crítica."
+        },
+        "popover": {
+          "name": "Popover",
+          "description": "Contenido contextual corto sin modal."
+        }
       }
     },
     "notes": {
@@ -1045,10 +1269,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el trigger", "result": "Sheet se abre y el foco va al primer elemento focalizable", "priority": "high" },
-        "item2": { "action": "Pulsar Escape con Sheet abierto", "result": "Cierra y devuelve el foco al trigger", "priority": "high" },
-        "item3": { "action": "Hacer clic en el overlay", "result": "Cierra el Sheet (comportamiento nativo)", "priority": "high" },
-        "item4": { "action": "Tab dentro del Sheet abierto", "result": "Focus trap mantiene el foco interno", "priority": "high" }
+        "item1": {
+          "action": "Hacer clic en el trigger",
+          "result": "Sheet se abre y el foco va al primer elemento focalizable",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar Escape con Sheet abierto",
+          "result": "Cierra y devuelve el foco al trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic en el overlay",
+          "result": "Cierra el Sheet (comportamiento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab dentro del Sheet abierto",
+          "result": "Focus trap mantiene el foco interno",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1063,10 +1303,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Right (por defecto)", "priority": "high" },
-        "item2": { "story": "Left", "priority": "high" },
-        "item3": { "story": "Bottom", "priority": "high" },
-        "item4": { "story": "Con formulario largo (scroll interno)", "priority": "medium" }
+        "item1": {
+          "story": "Right (por defecto)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Left",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Bottom",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con formulario largo (scroll interno)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -8,8 +8,7 @@
       "title": "SEO + GEO",
       "description": "Como o sistema otimiza para buscadores e LLMs: hook useSeoEffect, metadados obrigatórios, tags ai:*, JSON-LD TechArticle e hreflang trilíngue.",
       "aiSummary": "Página sobre SEO e GEO (Generative Engine Optimization). Documenta o hook useSeoEffect/applySeo (meta tags no manager do Storybook, hreflang quádruplo com x-default, og:*), o JSON-LD Schema.org emitido (TechArticle com abstract/about, SoftwareSourceCode em páginas de componente, BreadcrumbList opcional), os arquivos gerados no build (llms.txt padrão llmstxt.org, sitemap.xml, robots.txt aberto a crawlers de IA) e as regras de escrita de descrições e resumos.",
-      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
-      "aiIntent": "informational"
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, SoftwareSourceCode, BreadcrumbList, abstract, hreflang, Open Graph, llms.txt, LLM, ChatGPT, Gemini, Perplexity"
     },
     "intro": {
       "title": "Por que duas siglas",
@@ -82,12 +81,11 @@
       }
     },
     "aiFields": {
-      "title": "Campos aiSummary / aiEntities / aiIntent",
-      "subtitle": "As meta tags <code>ai:*</code> foram removidas — eram proprietárias e nenhum crawler documentava lê-las. Os campos do JSON continuam, com destinos padronizados.",
+      "title": "Campos aiSummary e aiEntities",
+      "subtitle": "Dois campos do bloco <code>seo.*</code> alimentam o JSON-LD — escreva-os como texto puro, sem HTML.",
       "items": {
-        "summary": "<code>seo.aiSummary</code> → <code>abstract</code> do JSON-LD TechArticle. Continue escrevendo denso e autossuficiente.",
-        "entities": "<code>seo.aiEntities</code> → <code>about</code> do JSON-LD TechArticle (array de termos).",
-        "intent": "<code>seo.aiIntent</code> → sem consumidor no momento; o campo permanece no schema por compatibilidade e pode ser omitido em conteúdo novo."
+        "summary": "<code>seo.aiSummary</code> → <code>abstract</code> do TechArticle. Denso e autossuficiente: propósito, casos de uso e principais variações em 1–2 frases.",
+        "entities": "<code>seo.aiEntities</code> → <code>about</code> do TechArticle. Termos técnicos e nomes próprios relevantes, separados por vírgula (máx. 10)."
       }
     },
     "llmsFiles": {
@@ -122,8 +120,7 @@
       "items": {
         "description": "<code>description</code> ≤155 chars, orientada a benefício (não lista de features). \"Bordas, sombras e elevação\" ≠ \"hierarquia visual para destacar conteúdo crítico\".",
         "aiSummary": "<code>aiSummary</code> denso e auto-suficiente — um leitor (humano ou LLM) deve entender o componente sem abrir a página. Inclua propósito, casos de uso e principais variações.",
-        "aiEntities": "<code>aiEntities</code> lista substantivos próprios e termos técnicos relevantes separados por vírgula. Inclua nomes de libs base, padrões WCAG citados e tokens centrais.",
-        "aiIntent": "<code>aiIntent</code> está aposentado — sem consumidor desde a migração para JSON-LD; não é mais necessário em conteúdo novo."
+        "aiEntities": "<code>aiEntities</code> lista substantivos próprios e termos técnicos relevantes separados por vírgula. Inclua nomes de libs base, padrões WCAG citados e tokens centrais."
       }
     },
     "rules": {
@@ -134,7 +131,7 @@
         "noSuffix": "<code>seo.title</code> não inclui \"· Design System\" — duplica.",
         "locale": "Locale é dependência reativa do hook — quando o usuário troca idioma, os metadados se atualizam.",
         "slug": "<code>componentSlug</code> é obrigatório — é a base do canonical URL e dos três hreflang.",
-        "sanitize": "Conteúdo dinâmico em <code>aiSummary</code> passa por <code>sanitize-html</code> antes de virar atributo de meta."
+        "sanitize": "Escreva <code>aiSummary</code>/<code>aiEntities</code> como texto puro — os valores entram no JSON-LD via serialização; HTML ali vira ruído literal."
       }
     }
   },
@@ -147,8 +144,7 @@
       "title": "SEO + GEO",
       "description": "How the system optimizes for engines and LLMs: useSeoEffect hook, required metadata, ai:* tags, JSON-LD TechArticle and trilingual hreflang.",
       "aiSummary": "Page about SEO and GEO (Generative Engine Optimization). Documents the useSeoEffect/applySeo hook (meta tags on the Storybook manager, quadruple hreflang with x-default, og:*), the emitted Schema.org JSON-LD (TechArticle with abstract/about, SoftwareSourceCode on component pages, optional BreadcrumbList), the build-generated files (llms.txt per llmstxt.org, sitemap.xml, robots.txt open to AI crawlers) and the writing rules for descriptions and summaries.",
-      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
-      "aiIntent": "informational"
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, SoftwareSourceCode, BreadcrumbList, abstract, hreflang, Open Graph, llms.txt, LLM, ChatGPT, Gemini, Perplexity"
     },
     "intro": {
       "title": "Why two acronyms",
@@ -221,12 +217,11 @@
       }
     },
     "aiFields": {
-      "title": "aiSummary / aiEntities / aiIntent fields",
-      "subtitle": "The <code>ai:*</code> meta tags were removed — they were proprietary and no crawler documented reading them. The JSON fields remain, with standardized destinations.",
+      "title": "aiSummary and aiEntities fields",
+      "subtitle": "Two fields in the <code>seo.*</code> block feed the JSON-LD — write them as plain text, no HTML.",
       "items": {
-        "summary": "<code>seo.aiSummary</code> → the JSON-LD TechArticle <code>abstract</code>. Keep writing it dense and self-sufficient.",
-        "entities": "<code>seo.aiEntities</code> → the JSON-LD TechArticle <code>about</code> (array of terms).",
-        "intent": "<code>seo.aiIntent</code> → no consumer at the moment; the field remains in the schema for compatibility and may be omitted in new content."
+        "summary": "<code>seo.aiSummary</code> → the TechArticle <code>abstract</code>. Dense and self-sufficient: purpose, use cases and main variants in 1–2 sentences.",
+        "entities": "<code>seo.aiEntities</code> → the TechArticle <code>about</code>. Relevant technical terms and proper nouns, comma-separated (max 10)."
       }
     },
     "llmsFiles": {
@@ -261,8 +256,7 @@
       "items": {
         "description": "<code>description</code> ≤155 chars, benefit-oriented (not a feature list). \"Borders, shadows and elevation\" ≠ \"visual hierarchy to surface critical content\".",
         "aiSummary": "<code>aiSummary</code> dense and self-sufficient — a reader (human or LLM) must understand the component without opening the page. Include purpose, use cases and main variations.",
-        "aiEntities": "<code>aiEntities</code> lists proper nouns and relevant technical terms separated by commas. Include base lib names, WCAG patterns cited and core tokens.",
-        "aiIntent": "<code>aiIntent</code> is retired — no consumer since the migration to JSON-LD; no longer needed in new content."
+        "aiEntities": "<code>aiEntities</code> lists proper nouns and relevant technical terms separated by commas. Include base lib names, WCAG patterns cited and core tokens."
       }
     },
     "rules": {
@@ -273,7 +267,7 @@
         "noSuffix": "<code>seo.title</code> must not include \"· Design System\" — it duplicates.",
         "locale": "Locale is a reactive dependency of the hook — when the user switches language, metadata updates.",
         "slug": "<code>componentSlug</code> is mandatory — it is the base for the canonical URL and the three hreflangs.",
-        "sanitize": "Dynamic content in <code>aiSummary</code> passes through <code>sanitize-html</code> before becoming a meta attribute."
+        "sanitize": "Write <code>aiSummary</code>/<code>aiEntities</code> as plain text — the values enter the JSON-LD via serialization; HTML there becomes literal noise."
       }
     }
   },
@@ -286,8 +280,7 @@
       "title": "SEO + GEO",
       "description": "Cómo el sistema optimiza para buscadores y LLMs: hook useSeoEffect, metadatos obligatorios, tags ai:*, JSON-LD TechArticle y hreflang trilingüe.",
       "aiSummary": "Página sobre SEO y GEO (Generative Engine Optimization). Documenta el hook useSeoEffect/applySeo (meta tags en el manager de Storybook, hreflang cuádruple con x-default, og:*), el JSON-LD Schema.org emitido (TechArticle con abstract/about, SoftwareSourceCode en páginas de componente, BreadcrumbList opcional), los archivos generados en el build (llms.txt según llmstxt.org, sitemap.xml, robots.txt abierto a crawlers de IA) y las reglas de escritura de descripciones y resúmenes.",
-      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, hreflang, Open Graph, ai:summary, ai:entities, ai:intent, LLM, ChatGPT, Gemini, Perplexity",
-      "aiIntent": "informational"
+      "aiEntities": "SEO, GEO, useSeoEffect, applySeo, meta tags, JSON-LD, TechArticle, SoftwareSourceCode, BreadcrumbList, abstract, hreflang, Open Graph, llms.txt, LLM, ChatGPT, Gemini, Perplexity"
     },
     "intro": {
       "title": "Por qué dos siglas",
@@ -360,12 +353,11 @@
       }
     },
     "aiFields": {
-      "title": "Campos aiSummary / aiEntities / aiIntent",
-      "subtitle": "Las meta tags <code>ai:*</code> fueron eliminadas — eran propietarias y ningún crawler documentaba leerlas. Los campos del JSON permanecen, con destinos estandarizados.",
+      "title": "Campos aiSummary y aiEntities",
+      "subtitle": "Dos campos del bloque <code>seo.*</code> alimentan el JSON-LD — escríbelos como texto plano, sin HTML.",
       "items": {
-        "summary": "<code>seo.aiSummary</code> → el <code>abstract</code> del JSON-LD TechArticle. Sigue escribiéndolo denso y autosuficiente.",
-        "entities": "<code>seo.aiEntities</code> → el <code>about</code> del JSON-LD TechArticle (array de términos).",
-        "intent": "<code>seo.aiIntent</code> → sin consumidor por el momento; el campo permanece en el schema por compatibilidad y puede omitirse en contenido nuevo."
+        "summary": "<code>seo.aiSummary</code> → el <code>abstract</code> del TechArticle. Denso y autosuficiente: propósito, casos de uso y variantes principales en 1–2 frases.",
+        "entities": "<code>seo.aiEntities</code> → el <code>about</code> del TechArticle. Términos técnicos y nombres propios relevantes, separados por coma (máx. 10)."
       }
     },
     "llmsFiles": {
@@ -400,8 +392,7 @@
       "items": {
         "description": "<code>description</code> ≤155 chars, orientada a beneficio (no lista de features). \"Bordes, sombras y elevación\" ≠ \"jerarquía visual para destacar contenido crítico\".",
         "aiSummary": "<code>aiSummary</code> denso y auto-suficiente — un lector (humano o LLM) debe entender el componente sin abrir la página. Incluye propósito, casos de uso y variaciones principales.",
-        "aiEntities": "<code>aiEntities</code> lista sustantivos propios y términos técnicos relevantes separados por coma. Incluye nombres de libs base, patrones WCAG citados y tokens centrales.",
-        "aiIntent": "<code>aiIntent</code> está retirado — sin consumidor desde la migración a JSON-LD; ya no es necesario en contenido nuevo."
+        "aiEntities": "<code>aiEntities</code> lista sustantivos propios y términos técnicos relevantes separados por coma. Incluye nombres de libs base, patrones WCAG citados y tokens centrales."
       }
     },
     "rules": {
@@ -412,7 +403,7 @@
         "noSuffix": "<code>seo.title</code> no debe incluir \"· Design System\" — se duplica.",
         "locale": "Locale es dependencia reactiva del hook — cuando el usuario cambia idioma, los metadatos se actualizan.",
         "slug": "<code>componentSlug</code> es obligatorio — es la base del canonical URL y de los tres hreflang.",
-        "sanitize": "El contenido dinámico en <code>aiSummary</code> pasa por <code>sanitize-html</code> antes de convertirse en atributo de meta."
+        "sanitize": "Escribe <code>aiSummary</code>/<code>aiEntities</code> como texto plano — los valores entran al JSON-LD vía serialización; el HTML ahí se vuelve ruido literal."
       }
     }
   }

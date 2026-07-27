@@ -111,7 +111,6 @@ export function ToggleGroupDocs() {
     componentSlug: "toggle-group",
     aiSummary: tContent("seo.aiSummary"),
     aiEntities: tContent("seo.aiEntities"),
-    aiIntent: tContent("seo.aiIntent") as "informational" | "navigational",
     breadcrumb,
   });
 

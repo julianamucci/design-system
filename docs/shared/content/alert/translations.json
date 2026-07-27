@@ -8,8 +8,7 @@
       "title": "Alert — Feedback",
       "description": "Documentação do Alert: 2 variantes nativas, success e warning via className, acessibilidade WCAG com role=\"alert\" automático.",
       "aiSummary": "Componente Alert com 2 variantes nativas (default, destructive), variantes success e warning via className, role=\"alert\" automático e suporte a ícone, título e descrição.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,10 +48,26 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Erro que bloqueia o fluxo", "u": "Sim, variant destructive", "a": "-" },
-        "item2": { "s": "Confirmação temporária", "u": "Não", "a": "Sonner" },
-        "item3": { "s": "Aviso de prazo ou expiração", "u": "Sim, variant warning", "a": "AlertDialog se exige ação" },
-        "item4": { "s": "Info contextual persistente", "u": "Sim, variant default", "a": "Tooltip se for inline" }
+        "item1": {
+          "s": "Erro que bloqueia o fluxo",
+          "u": "Sim, variant destructive",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Confirmação temporária",
+          "u": "Não",
+          "a": "Sonner"
+        },
+        "item3": {
+          "s": "Aviso de prazo ou expiração",
+          "u": "Sim, variant warning",
+          "a": "AlertDialog se exige ação"
+        },
+        "item4": {
+          "s": "Info contextual persistente",
+          "u": "Sim, variant default",
+          "a": "Tooltip se for inline"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -282,28 +297,80 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Alert.",
-        "item1": { "action": "Renderizar variante default", "result": "Container usa --background, borda padrão e texto em --foreground", "priority": "high" },
-        "item2": { "action": "Renderizar variante destructive", "result": "Borda e ícone em --destructive; texto corrido em --foreground (contraste 4.5:1)", "priority": "high" },
-        "item3": { "action": "Renderizar com ícone filho direto", "result": "Ícone alinhado à coluna esquerda via CSS do componente (seletor de filho direto)", "priority": "high" },
-        "item4": { "action": "Renderizar sem AlertTitle", "result": "AlertDescription ocupa o espaço completo; sem quebra de layout", "priority": "medium" },
-        "item5": { "action": "Aplicar variante success via className", "result": "Fundo, borda e ícone em --success; texto corrido em --foreground", "priority": "medium" },
-        "item6": { "action": "Inserir Alert dinamicamente no DOM", "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)", "priority": "high" }
+        "item1": {
+          "action": "Renderizar variante default",
+          "result": "Container usa --background, borda padrão e texto em --foreground",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar variante destructive",
+          "result": "Borda e ícone em --destructive; texto corrido em --foreground (contraste 4.5:1)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar com ícone filho direto",
+          "result": "Ícone alinhado à coluna esquerda via CSS do componente (seletor de filho direto)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar sem AlertTitle",
+          "result": "AlertDescription ocupa o espaço completo; sem quebra de layout",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Aplicar variante success via className",
+          "result": "Fundo, borda e ícone em --success; texto corrido em --foreground",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Inserir Alert dinamicamente no DOM",
+          "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "role=\"alert\" presente no container", "level": "AA", "how": "getByRole('alert') no testing-library" },
-        "item2": { "criterion": "Ícones com aria-hidden=\"true\"", "level": "AA", "how": "Inspecionar atributos do SVG no DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 em todas as variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "role=\"alert\" presente no container",
+          "level": "AA",
+          "how": "getByRole('alert') no testing-library"
+        },
+        "item2": {
+          "criterion": "Ícones com aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspecionar atributos do SVG no DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 em todas as variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, destructive, success, warning", "priority": "high" },
-        "item3": { "story": "Configurações — com e sem AlertTitle", "priority": "medium" },
-        "item4": { "story": "Configurações — com e sem ícone", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, destructive, success, warning",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurações — com e sem AlertTitle",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Configurações — com e sem ícone",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -336,8 +403,7 @@
       "title": "Alert — Feedback",
       "description": "Documentation for Alert: 2 native variants, success and warning via className, WCAG accessibility with automatic role=\"alert\".",
       "aiSummary": "Alert component with 2 native variants (default, destructive), success and warning via className, automatic role=\"alert\", and support for icon, title, and description.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -377,10 +443,26 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Error blocking the flow", "u": "Yes, destructive variant", "a": "-" },
-        "item2": { "s": "Temporary confirmation", "u": "No", "a": "Sonner" },
-        "item3": { "s": "Deadline or expiry warning", "u": "Yes, warning variant", "a": "AlertDialog if action required" },
-        "item4": { "s": "Persistent contextual info", "u": "Yes, default variant", "a": "Tooltip if inline" }
+        "item1": {
+          "s": "Error blocking the flow",
+          "u": "Yes, destructive variant",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Temporary confirmation",
+          "u": "No",
+          "a": "Sonner"
+        },
+        "item3": {
+          "s": "Deadline or expiry warning",
+          "u": "Yes, warning variant",
+          "a": "AlertDialog if action required"
+        },
+        "item4": {
+          "s": "Persistent contextual info",
+          "u": "Yes, default variant",
+          "a": "Tooltip if inline"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -610,28 +692,80 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Alert configuration.",
-        "item1": { "action": "Render default variant", "result": "Container uses --background, default border, and --foreground text", "priority": "high" },
-        "item2": { "action": "Render destructive variant", "result": "Border and icon in --destructive; body text in --foreground (4.5:1 contrast)", "priority": "high" },
-        "item3": { "action": "Render with direct icon child", "result": "Icon aligned to the left column via the component's CSS (direct-child selector)", "priority": "high" },
-        "item4": { "action": "Render without AlertTitle", "result": "AlertDescription fills available space; no layout break", "priority": "medium" },
-        "item5": { "action": "Apply success variant via className", "result": "Background, border, and icon in --success; body text in --foreground", "priority": "medium" },
-        "item6": { "action": "Insert Alert dynamically in DOM", "result": "Screen reader announces content (active role=\"alert\")", "priority": "high" }
+        "item1": {
+          "action": "Render default variant",
+          "result": "Container uses --background, default border, and --foreground text",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render destructive variant",
+          "result": "Border and icon in --destructive; body text in --foreground (4.5:1 contrast)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render with direct icon child",
+          "result": "Icon aligned to the left column via the component's CSS (direct-child selector)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render without AlertTitle",
+          "result": "AlertDescription fills available space; no layout break",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Apply success variant via className",
+          "result": "Background, border, and icon in --success; body text in --foreground",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Insert Alert dynamically in DOM",
+          "result": "Screen reader announces content (active role=\"alert\")",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "role=\"alert\" present on container", "level": "AA", "how": "getByRole('alert') in testing-library" },
-        "item2": { "criterion": "Icons with aria-hidden=\"true\"", "level": "AA", "how": "Inspect SVG attributes in DOM" },
-        "item3": { "criterion": "Minimum contrast 4.5:1 across all variants", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "role=\"alert\" present on container",
+          "level": "AA",
+          "how": "getByRole('alert') in testing-library"
+        },
+        "item2": {
+          "criterion": "Icons with aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspect SVG attributes in DOM"
+        },
+        "item3": {
+          "criterion": "Minimum contrast 4.5:1 across all variants",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — default variant", "priority": "high" },
-        "item2": { "story": "Variants — default, destructive, success, warning", "priority": "high" },
-        "item3": { "story": "Configurations — with and without AlertTitle", "priority": "medium" },
-        "item4": { "story": "Configurations — with and without icon", "priority": "medium" }
+        "item1": {
+          "story": "Playground — default variant",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variants — default, destructive, success, warning",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurations — with and without AlertTitle",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Configurations — with and without icon",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -664,8 +798,7 @@
       "title": "Alert — Feedback",
       "description": "Documentación del Alert: 2 variantes nativas, success y warning vía className, accesibilidad WCAG con role=\"alert\" automático.",
       "aiSummary": "Componente Alert con 2 variantes nativas (default, destructive), success y warning vía className, role=\"alert\" automático y soporte para ícono, título y descripción.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live",
-      "aiIntent": "informational"
+      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demostración",
@@ -705,10 +838,26 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Error que bloquea el flujo", "u": "Sí, variante destructive", "a": "-" },
-        "item2": { "s": "Confirmación temporal", "u": "No", "a": "Sonner" },
-        "item3": { "s": "Advertencia de plazo o vencimiento", "u": "Sí, variante warning", "a": "AlertDialog si requiere acción" },
-        "item4": { "s": "Info contextual persistente", "u": "Sí, variante default", "a": "Tooltip si es inline" }
+        "item1": {
+          "s": "Error que bloquea el flujo",
+          "u": "Sí, variante destructive",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Confirmación temporal",
+          "u": "No",
+          "a": "Sonner"
+        },
+        "item3": {
+          "s": "Advertencia de plazo o vencimiento",
+          "u": "Sí, variante warning",
+          "a": "AlertDialog si requiere acción"
+        },
+        "item4": {
+          "s": "Info contextual persistente",
+          "u": "Sí, variante default",
+          "a": "Tooltip si es inline"
+        }
       },
       "uxWriting": {
         "title": "✍️ UX Writing",
@@ -938,28 +1087,80 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Alert.",
-        "item1": { "action": "Renderizar variante default", "result": "Contenedor usa --background, borde predeterminado y texto en --foreground", "priority": "high" },
-        "item2": { "action": "Renderizar variante destructive", "result": "Borde e ícono en --destructive; texto corrido en --foreground (contraste 4.5:1)", "priority": "high" },
-        "item3": { "action": "Renderizar con ícono hijo directo", "result": "Ícono alineado a la columna izquierda vía el CSS del componente (selector de hijo directo)", "priority": "high" },
-        "item4": { "action": "Renderizar sin AlertTitle", "result": "AlertDescription ocupa el espacio completo; sin ruptura de layout", "priority": "medium" },
-        "item5": { "action": "Aplicar variante success vía className", "result": "Fondo, borde e ícono en --success; texto corrido en --foreground", "priority": "medium" },
-        "item6": { "action": "Insertar Alert dinámicamente en el DOM", "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)", "priority": "high" }
+        "item1": {
+          "action": "Renderizar variante default",
+          "result": "Contenedor usa --background, borde predeterminado y texto en --foreground",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar variante destructive",
+          "result": "Borde e ícono en --destructive; texto corrido en --foreground (contraste 4.5:1)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar con ícono hijo directo",
+          "result": "Ícono alineado a la columna izquierda vía el CSS del componente (selector de hijo directo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar sin AlertTitle",
+          "result": "AlertDescription ocupa el espacio completo; sin ruptura de layout",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Aplicar variante success vía className",
+          "result": "Fondo, borde e ícono en --success; texto corrido en --foreground",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Insertar Alert dinámicamente en el DOM",
+          "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "role=\"alert\" presente en el contenedor", "level": "AA", "how": "getByRole('alert') en testing-library" },
-        "item2": { "criterion": "Íconos con aria-hidden=\"true\"", "level": "AA", "how": "Inspeccionar atributos del SVG en el DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 en todas las variantes", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "role=\"alert\" presente en el contenedor",
+          "level": "AA",
+          "how": "getByRole('alert') en testing-library"
+        },
+        "item2": {
+          "criterion": "Íconos con aria-hidden=\"true\"",
+          "level": "AA",
+          "how": "Inspeccionar atributos del SVG en el DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 en todas las variantes",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — variante default", "priority": "high" },
-        "item2": { "story": "Variantes — default, destructive, success, warning", "priority": "high" },
-        "item3": { "story": "Configuraciones — con y sin AlertTitle", "priority": "medium" },
-        "item4": { "story": "Configuraciones — con y sin ícono", "priority": "medium" }
+        "item1": {
+          "story": "Playground — variante default",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Variantes — default, destructive, success, warning",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configuraciones — con y sin AlertTitle",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Configuraciones — con y sin ícono",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -41,8 +41,6 @@ interface SeoProps {
   aiSummary?: string;
   /** Entidades nomeadas em CSV (GEO) — viram `about` do JSON-LD TechArticle. */
   aiEntities?: string;
-  /** @deprecated Sem consumidor desde a migração das metas ai:* para JSON-LD. */
-  aiIntent?: string;
   /** Tipo da página: componente (emite SoftwareSourceCode) ou guia. Default: 'component'. */
   kind?: 'component' | 'guide';
 }

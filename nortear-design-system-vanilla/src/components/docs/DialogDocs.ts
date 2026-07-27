@@ -105,7 +105,6 @@ export function createDialogDocs(): HTMLElement {
       componentSlug: 'dialog',
       aiSummary: t('seo.aiSummary'),
       aiEntities: t('seo.aiEntities'),
-      aiIntent: t('seo.aiIntent'),
       breadcrumb: [
         { name: 'Components', item: '/components' },
         { name: 'Overlay', item: '/components/overlay' },

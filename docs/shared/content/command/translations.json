@@ -8,8 +8,7 @@
       "title": "Command — Overlay",
       "description": "Documentação do Command: busca fuzzy integrada, padrões inline, combobox e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
       "aiSummary": "Componente Command com filtro fuzzy nativo, 3 padrões de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette",
-      "aiIntent": "informational"
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -62,11 +61,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Busca rápida de ações globais", "u": "Sim, padrão Command Palette", "a": "-" },
-        "item2": { "s": "Select com busca e 10+ itens", "u": "Sim, padrão Combobox", "a": "Select para listas fixas pequenas" },
-        "item3": { "s": "Lista de ações em menu de contexto", "u": "Não", "a": "DropdownMenu ou ContextMenu" },
-        "item4": { "s": "Busca local em seção da página", "u": "Sim, padrão inline", "a": "-" },
-        "item5": { "s": "Seleção de data ou cor", "u": "Não", "a": "DatePicker ou Popover customizado" }
+        "item1": {
+          "s": "Busca rápida de ações globais",
+          "u": "Sim, padrão Command Palette",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Select com busca e 10+ itens",
+          "u": "Sim, padrão Combobox",
+          "a": "Select para listas fixas pequenas"
+        },
+        "item3": {
+          "s": "Lista de ações em menu de contexto",
+          "u": "Não",
+          "a": "DropdownMenu ou ContextMenu"
+        },
+        "item4": {
+          "s": "Busca local em seção da página",
+          "u": "Sim, padrão inline",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Seleção de data ou cor",
+          "u": "Não",
+          "a": "DatePicker ou Popover customizado"
+        }
       },
       "do": {
         "title": "Use quando",
@@ -278,13 +297,41 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Command.",
-        "item1": { "action": "Digitar no CommandInput", "result": "Itens que não correspondem ficam ocultos; CommandEmpty aparece quando nenhum resultado", "priority": "high" },
-        "item2": { "action": "Pressionar Enter no item em destaque", "result": "onSelect é disparado com o value do item", "priority": "high" },
-        "item3": { "action": "Pressionar Escape no CommandDialog aberto", "result": "Dialog fecha e foco retorna ao trigger", "priority": "high" },
-        "item4": { "action": "Clicar em CommandItem com disabled=true", "result": "onSelect não é chamado; cursor não permitido; opacidade 50%", "priority": "high" },
-        "item5": { "action": "CommandItem com data-checked=true", "result": "CheckIcon visível à direita; oculto se CommandShortcut presente", "priority": "medium" },
-        "item6": { "action": "Pressionar Cmd+K com listener implementado", "result": "CommandDialog abre; foco vai para CommandInput", "priority": "medium" },
-        "item7": { "action": "Selecionar item no padrão Combobox", "result": "Popover fecha via setOpen(false) e valor selecionado reflete no trigger", "priority": "high" }
+        "item1": {
+          "action": "Digitar no CommandInput",
+          "result": "Itens que não correspondem ficam ocultos; CommandEmpty aparece quando nenhum resultado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Enter no item em destaque",
+          "result": "onSelect é disparado com o value do item",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Pressionar Escape no CommandDialog aberto",
+          "result": "Dialog fecha e foco retorna ao trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar em CommandItem com disabled=true",
+          "result": "onSelect não é chamado; cursor não permitido; opacidade 50%",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "CommandItem com data-checked=true",
+          "result": "CheckIcon visível à direita; oculto se CommandShortcut presente",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Pressionar Cmd+K com listener implementado",
+          "result": "CommandDialog abre; foco vai para CommandInput",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Selecionar item no padrão Combobox",
+          "result": "Popover fecha via setOpen(false) e valor selecionado reflete no trigger",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -299,11 +346,26 @@
         "title": "Regressão Visual",
         "description": "Cada story é capturada automaticamente para visual regression.",
         "required": "Obrigatório",
-        "item1": { "story": "Inline — estado padrão com grupos e separador", "priority": "high" },
-        "item2": { "story": "Inline — estado sem resultados (CommandEmpty)", "priority": "high" },
-        "item3": { "story": "Combobox — trigger fechado e aberto", "priority": "high" },
-        "item4": { "story": "Command Palette — dialog aberto com itens e shortcuts", "priority": "high" },
-        "item5": { "story": "CommandItem — estado disabled e estado checked", "priority": "medium" }
+        "item1": {
+          "story": "Inline — estado padrão com grupos e separador",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Inline — estado sem resultados (CommandEmpty)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Combobox — trigger fechado e aberto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Command Palette — dialog aberto com itens e shortcuts",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "CommandItem — estado disabled e estado checked",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -336,8 +398,7 @@
       "title": "Command — Overlay",
       "description": "Documentation for Command: built-in fuzzy search, inline, combobox, and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
       "aiSummary": "Command component with native fuzzy filtering, 3 usage patterns (inline, combobox, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette",
-      "aiIntent": "informational"
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -390,11 +451,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Quick search for global actions", "u": "Yes, Command Palette pattern", "a": "-" },
-        "item2": { "s": "Select with search and 10+ items", "u": "Yes, Combobox pattern", "a": "Select for small fixed lists" },
-        "item3": { "s": "Action list in context menu", "u": "No", "a": "DropdownMenu or ContextMenu" },
-        "item4": { "s": "Local search in page section", "u": "Yes, inline pattern", "a": "-" },
-        "item5": { "s": "Date or color picker", "u": "No", "a": "DatePicker or custom Popover" }
+        "item1": {
+          "s": "Quick search for global actions",
+          "u": "Yes, Command Palette pattern",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Select with search and 10+ items",
+          "u": "Yes, Combobox pattern",
+          "a": "Select for small fixed lists"
+        },
+        "item3": {
+          "s": "Action list in context menu",
+          "u": "No",
+          "a": "DropdownMenu or ContextMenu"
+        },
+        "item4": {
+          "s": "Local search in page section",
+          "u": "Yes, inline pattern",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Date or color picker",
+          "u": "No",
+          "a": "DatePicker or custom Popover"
+        }
       },
       "do": {
         "title": "Use when",
@@ -606,13 +687,41 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction with Command.",
-        "item1": { "action": "Type in CommandInput", "result": "Non-matching items are hidden; CommandEmpty appears when no results", "priority": "high" },
-        "item2": { "action": "Press Enter on highlighted item", "result": "onSelect is fired with the item's value", "priority": "high" },
-        "item3": { "action": "Press Escape on open CommandDialog", "result": "Dialog closes and focus returns to the trigger", "priority": "high" },
-        "item4": { "action": "Click CommandItem with disabled=true", "result": "onSelect is not called; not-allowed cursor; 50% opacity", "priority": "high" },
-        "item5": { "action": "CommandItem with data-checked=true", "result": "CheckIcon visible on right; hidden if CommandShortcut is present", "priority": "medium" },
-        "item6": { "action": "Press Cmd+K with listener implemented", "result": "CommandDialog opens; focus goes to CommandInput", "priority": "medium" },
-        "item7": { "action": "Select item in Combobox pattern", "result": "Popover closes via setOpen(false) and selected value reflects in trigger", "priority": "high" }
+        "item1": {
+          "action": "Type in CommandInput",
+          "result": "Non-matching items are hidden; CommandEmpty appears when no results",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Enter on highlighted item",
+          "result": "onSelect is fired with the item's value",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Press Escape on open CommandDialog",
+          "result": "Dialog closes and focus returns to the trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click CommandItem with disabled=true",
+          "result": "onSelect is not called; not-allowed cursor; 50% opacity",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "CommandItem with data-checked=true",
+          "result": "CheckIcon visible on right; hidden if CommandShortcut is present",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Press Cmd+K with listener implemented",
+          "result": "CommandDialog opens; focus goes to CommandInput",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Select item in Combobox pattern",
+          "result": "Popover closes via setOpen(false) and selected value reflects in trigger",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -627,11 +736,26 @@
         "title": "Visual Regression (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
         "required": "Required",
-        "item1": { "story": "Inline — default state with groups and separator", "priority": "high" },
-        "item2": { "story": "Inline — empty state (CommandEmpty)", "priority": "high" },
-        "item3": { "story": "Combobox — closed and open trigger", "priority": "high" },
-        "item4": { "story": "Command Palette — open dialog with items and shortcuts", "priority": "high" },
-        "item5": { "story": "CommandItem — disabled and checked states", "priority": "medium" }
+        "item1": {
+          "story": "Inline — default state with groups and separator",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Inline — empty state (CommandEmpty)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Combobox — closed and open trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Command Palette — open dialog with items and shortcuts",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "CommandItem — disabled and checked states",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -664,8 +788,7 @@
       "title": "Command — Overlay",
       "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline, combobox y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
       "aiSummary": "Componente Command con filtro fuzzy nativo, 3 patrones de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
-      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette",
-      "aiIntent": "informational"
+      "aiEntities": "Command, cmdk, React, Vue, Svelte, WCAG 2.2, Combobox, Command Palette"
     },
     "demonstration": {
       "title": "Demostración",
@@ -718,11 +841,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Búsqueda rápida de acciones globales", "u": "Sí, patrón Command Palette", "a": "-" },
-        "item2": { "s": "Select con búsqueda y 10+ ítems", "u": "Sí, patrón Combobox", "a": "Select para listas fijas pequeñas" },
-        "item3": { "s": "Lista de acciones en menú de contexto", "u": "No", "a": "DropdownMenu o ContextMenu" },
-        "item4": { "s": "Búsqueda local en sección de página", "u": "Sí, patrón inline", "a": "-" },
-        "item5": { "s": "Selector de fecha o color", "u": "No", "a": "DatePicker o Popover personalizado" }
+        "item1": {
+          "s": "Búsqueda rápida de acciones globales",
+          "u": "Sí, patrón Command Palette",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Select con búsqueda y 10+ ítems",
+          "u": "Sí, patrón Combobox",
+          "a": "Select para listas fijas pequeñas"
+        },
+        "item3": {
+          "s": "Lista de acciones en menú de contexto",
+          "u": "No",
+          "a": "DropdownMenu o ContextMenu"
+        },
+        "item4": {
+          "s": "Búsqueda local en sección de página",
+          "u": "Sí, patrón inline",
+          "a": "-"
+        },
+        "item5": {
+          "s": "Selector de fecha o color",
+          "u": "No",
+          "a": "DatePicker o Popover personalizado"
+        }
       },
       "do": {
         "title": "Úsalo cuando",
@@ -934,13 +1077,41 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Command.",
-        "item1": { "action": "Escribir en CommandInput", "result": "Los ítems sin coincidencia se ocultan; CommandEmpty aparece cuando no hay resultados", "priority": "high" },
-        "item2": { "action": "Presionar Enter en el ítem resaltado", "result": "onSelect se dispara con el value del ítem", "priority": "high" },
-        "item3": { "action": "Presionar Escape con CommandDialog abierto", "result": "El Dialog se cierra y el foco vuelve al trigger", "priority": "high" },
-        "item4": { "action": "Hacer clic en CommandItem con disabled=true", "result": "onSelect no se llama; cursor no permitido; opacidad 50%", "priority": "high" },
-        "item5": { "action": "CommandItem con data-checked=true", "result": "CheckIcon visible a la derecha; oculto si CommandShortcut está presente", "priority": "medium" },
-        "item6": { "action": "Presionar Cmd+K con listener implementado", "result": "CommandDialog se abre; el foco va a CommandInput", "priority": "medium" },
-        "item7": { "action": "Seleccionar ítem en patrón Combobox", "result": "Popover se cierra vía setOpen(false) y el valor seleccionado se refleja en el trigger", "priority": "high" }
+        "item1": {
+          "action": "Escribir en CommandInput",
+          "result": "Los ítems sin coincidencia se ocultan; CommandEmpty aparece cuando no hay resultados",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Presionar Enter en el ítem resaltado",
+          "result": "onSelect se dispara con el value del ítem",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Presionar Escape con CommandDialog abierto",
+          "result": "El Dialog se cierra y el foco vuelve al trigger",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Hacer clic en CommandItem con disabled=true",
+          "result": "onSelect no se llama; cursor no permitido; opacidad 50%",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "CommandItem con data-checked=true",
+          "result": "CheckIcon visible a la derecha; oculto si CommandShortcut está presente",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Presionar Cmd+K con listener implementado",
+          "result": "CommandDialog se abre; el foco va a CommandInput",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Seleccionar ítem en patrón Combobox",
+          "result": "Popover se cierra vía setOpen(false) y el valor seleccionado se refleja en el trigger",
+          "priority": "high"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -955,11 +1126,26 @@
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
         "required": "Obligatorio",
-        "item1": { "story": "Inline — estado predeterminado con grupos y separador", "priority": "high" },
-        "item2": { "story": "Inline — estado sin resultados (CommandEmpty)", "priority": "high" },
-        "item3": { "story": "Combobox — trigger cerrado y abierto", "priority": "high" },
-        "item4": { "story": "Command Palette — dialog abierto con ítems y shortcuts", "priority": "high" },
-        "item5": { "story": "CommandItem — estado disabled y estado checked", "priority": "medium" }
+        "item1": {
+          "story": "Inline — estado predeterminado con grupos y separador",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Inline — estado sin resultados (CommandEmpty)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Combobox — trigger cerrado y abierto",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Command Palette — dialog abierto con ítems y shortcuts",
+          "priority": "high"
+        },
+        "item5": {
+          "story": "CommandItem — estado disabled y estado checked",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

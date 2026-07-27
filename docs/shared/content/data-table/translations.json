@@ -8,8 +8,7 @@
       "title": "DataTable — Display",
       "description": "Transforme listas estáticas em ferramentas exploráveis: ordene, filtre, selecione e edite milhares de linhas com performance e acessibilidade WCAG.",
       "aiSummary": "Componente DataTable construído sobre TanStack Table v8 (headless). Estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -63,12 +62,36 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Listagem com ordenação e busca", "u": "Sim", "a": "-" },
-        "item2": { "s": "Tabela simples sem interação", "u": "Não", "a": "Table" },
-        "item3": { "s": "Dataset grande (&gt; 1000 linhas)", "u": "Sim, com virtualização", "a": "-" },
-        "item4": { "s": "Comparação visual de tendências", "u": "Não", "a": "Chart" },
-        "item5": { "s": "Edição em massa estilo planilha", "u": "Sim, com edição inline", "a": "-" },
-        "item6": { "s": "Lista densa em mobile", "u": "Não", "a": "Lista de Card" }
+        "item1": {
+          "s": "Listagem com ordenação e busca",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Tabela simples sem interação",
+          "u": "Não",
+          "a": "Table"
+        },
+        "item3": {
+          "s": "Dataset grande (&gt; 1000 linhas)",
+          "u": "Sim, com virtualização",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Comparação visual de tendências",
+          "u": "Não",
+          "a": "Chart"
+        },
+        "item5": {
+          "s": "Edição em massa estilo planilha",
+          "u": "Sim, com edição inline",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Lista densa em mobile",
+          "u": "Não",
+          "a": "Lista de Card"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -350,32 +373,98 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada interação do DataTable.",
-        "item1": { "action": "Filtro global preenchido", "result": "Apenas linhas que casam com o termo permanecem visíveis; contagem e paginação refletem o total filtrado", "priority": "high" },
-        "item2": { "action": "Filtro por coluna preenchido", "result": "Apenas linhas que casam com o valor permanecem; outros filtros continuam aplicados em conjunto", "priority": "high" },
-        "item3": { "action": "Clique em cabeçalho ordenável", "result": "Linhas reordenam ascendente; segundo clique inverte; terceiro remove ordenação", "priority": "high" },
-        "item4": { "action": "Checkbox do cabeçalho", "result": "Marca todas da página atual; com seleção parcial, exibe tri-state; segundo clique desmarca tudo", "priority": "high" },
-        "item5": { "action": "Edição inline confirmada", "result": "Célula sai do modo edição e exibe novo valor; onCellEdit é chamado com (rowIndex, columnId, value)", "priority": "high" },
-        "item6": { "action": "Drag de cabeçalho para reordenar", "result": "Colunas reordenam; estado persiste no columnOrder; linhas refletem nova ordem", "priority": "medium" },
-        "item7": { "action": "Virtualizado com 1000 linhas", "result": "Apenas linhas visíveis no viewport (mais overscan) são renderizadas; scroll mantém posição correta", "priority": "high" },
-        "item8": { "action": "Navegação de paginação", "result": "Botões avançam, retrocedem e saltam para primeira/última página; desabilitam corretamente nos extremos", "priority": "medium" }
+        "item1": {
+          "action": "Filtro global preenchido",
+          "result": "Apenas linhas que casam com o termo permanecem visíveis; contagem e paginação refletem o total filtrado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Filtro por coluna preenchido",
+          "result": "Apenas linhas que casam com o valor permanecem; outros filtros continuam aplicados em conjunto",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clique em cabeçalho ordenável",
+          "result": "Linhas reordenam ascendente; segundo clique inverte; terceiro remove ordenação",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Checkbox do cabeçalho",
+          "result": "Marca todas da página atual; com seleção parcial, exibe tri-state; segundo clique desmarca tudo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Edição inline confirmada",
+          "result": "Célula sai do modo edição e exibe novo valor; onCellEdit é chamado com (rowIndex, columnId, value)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Drag de cabeçalho para reordenar",
+          "result": "Colunas reordenam; estado persiste no columnOrder; linhas refletem nova ordem",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Virtualizado com 1000 linhas",
+          "result": "Apenas linhas visíveis no viewport (mais overscan) são renderizadas; scroll mantém posição correta",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Navegação de paginação",
+          "result": "Botões avançam, retrocedem e saltam para primeira/última página; desabilitam corretamente nos extremos",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "Tabela semântica com thead/tbody/th/td", "level": "AA", "how": "Inspecionar HTML — DataTable usa o primitivo Table" },
-        "item2": { "criterion": "Botões de ordenação têm aria-label contextual com nome da coluna", "level": "AA", "how": "axe-playwright + inspecionar atributo em cada <button> do cabeçalho" },
-        "item3": { "criterion": "Checkboxes têm aria-label distinguindo cabeçalho e linha", "level": "AA", "how": "Inspecionar aria-label em todos os checkboxes" },
-        "item4": { "criterion": "Sem violações axe-core nos estados padrão, filtrado e selecionado", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "Tabela semântica com thead/tbody/th/td",
+          "level": "AA",
+          "how": "Inspecionar HTML — DataTable usa o primitivo Table"
+        },
+        "item2": {
+          "criterion": "Botões de ordenação têm aria-label contextual com nome da coluna",
+          "level": "AA",
+          "how": "axe-playwright + inspecionar atributo em cada <button> do cabeçalho"
+        },
+        "item3": {
+          "criterion": "Checkboxes têm aria-label distinguindo cabeçalho e linha",
+          "level": "AA",
+          "how": "Inspecionar aria-label em todos os checkboxes"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core nos estados padrão, filtrado e selecionado",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — estado padrão com seleção", "priority": "high" },
-        "item2": { "story": "Com filtros por coluna preenchidos", "priority": "high" },
-        "item3": { "story": "Colunas redimensionadas e reordenadas", "priority": "medium" },
-        "item4": { "story": "Edição inline em progresso", "priority": "medium" },
-        "item5": { "story": "Virtualizado com scroll no meio", "priority": "high" },
-        "item6": { "story": "Estado vazio", "priority": "high" }
+        "item1": {
+          "story": "Playground — estado padrão com seleção",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com filtros por coluna preenchidos",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Colunas redimensionadas e reordenadas",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Edição inline em progresso",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Virtualizado com scroll no meio",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estado vazio",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -408,8 +497,7 @@
       "title": "DataTable — Display",
       "description": "Turn static lists into explorable tools: sort, filter, select, and edit thousands of rows with performance and WCAG-grade accessibility.",
       "aiSummary": "DataTable component built on TanStack Table v8 (headless). Extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -463,12 +551,36 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Listing with sorting and search", "u": "Yes", "a": "-" },
-        "item2": { "s": "Simple non-interactive table", "u": "No", "a": "Table" },
-        "item3": { "s": "Large dataset (&gt; 1000 rows)", "u": "Yes, with virtualization", "a": "-" },
-        "item4": { "s": "Visual trend comparison", "u": "No", "a": "Chart" },
-        "item5": { "s": "Spreadsheet-style bulk editing", "u": "Yes, with inline edit", "a": "-" },
-        "item6": { "s": "Dense list on mobile", "u": "No", "a": "Card list" }
+        "item1": {
+          "s": "Listing with sorting and search",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Simple non-interactive table",
+          "u": "No",
+          "a": "Table"
+        },
+        "item3": {
+          "s": "Large dataset (&gt; 1000 rows)",
+          "u": "Yes, with virtualization",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Visual trend comparison",
+          "u": "No",
+          "a": "Chart"
+        },
+        "item5": {
+          "s": "Spreadsheet-style bulk editing",
+          "u": "Yes, with inline edit",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Dense list on mobile",
+          "u": "No",
+          "a": "Card list"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -750,32 +862,98 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each DataTable interaction.",
-        "item1": { "action": "Global filter filled", "result": "Only rows that match the term remain visible; count and pagination reflect the filtered total", "priority": "high" },
-        "item2": { "action": "Per-column filter filled", "result": "Only rows that match remain; other filters keep applying jointly", "priority": "high" },
-        "item3": { "action": "Click on sortable header", "result": "Rows reorder ascending; second click flips; third clears sort", "priority": "high" },
-        "item4": { "action": "Header checkbox", "result": "Marks all on the current page; with partial selection shows tri-state; second click clears all", "priority": "high" },
-        "item5": { "action": "Inline edit confirmed", "result": "Cell exits edit mode and shows new value; onCellEdit is called with (rowIndex, columnId, value)", "priority": "high" },
-        "item6": { "action": "Header drag to reorder", "result": "Columns reorder; state persists in columnOrder; rows reflect the new order", "priority": "medium" },
-        "item7": { "action": "Virtualized with 1000 rows", "result": "Only rows visible in the viewport (plus overscan) are rendered; scroll keeps correct position", "priority": "high" },
-        "item8": { "action": "Pagination navigation", "result": "Buttons advance, go back, and jump to first/last; disable correctly at extremes", "priority": "medium" }
+        "item1": {
+          "action": "Global filter filled",
+          "result": "Only rows that match the term remain visible; count and pagination reflect the filtered total",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Per-column filter filled",
+          "result": "Only rows that match remain; other filters keep applying jointly",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click on sortable header",
+          "result": "Rows reorder ascending; second click flips; third clears sort",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Header checkbox",
+          "result": "Marks all on the current page; with partial selection shows tri-state; second click clears all",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Inline edit confirmed",
+          "result": "Cell exits edit mode and shows new value; onCellEdit is called with (rowIndex, columnId, value)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Header drag to reorder",
+          "result": "Columns reorder; state persists in columnOrder; rows reflect the new order",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Virtualized with 1000 rows",
+          "result": "Only rows visible in the viewport (plus overscan) are rendered; scroll keeps correct position",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Pagination navigation",
+          "result": "Buttons advance, go back, and jump to first/last; disable correctly at extremes",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "Semantic table with thead/tbody/th/td", "level": "AA", "how": "Inspect HTML — DataTable uses the Table primitive" },
-        "item2": { "criterion": "Sort buttons have contextual aria-label with column name", "level": "AA", "how": "axe-playwright + inspect attribute on each header <button>" },
-        "item3": { "criterion": "Checkboxes have aria-label distinguishing header and row", "level": "AA", "how": "Inspect aria-label on every checkbox" },
-        "item4": { "criterion": "No axe-core violations in default, filtered, and selected states", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "Semantic table with thead/tbody/th/td",
+          "level": "AA",
+          "how": "Inspect HTML — DataTable uses the Table primitive"
+        },
+        "item2": {
+          "criterion": "Sort buttons have contextual aria-label with column name",
+          "level": "AA",
+          "how": "axe-playwright + inspect attribute on each header <button>"
+        },
+        "item3": {
+          "criterion": "Checkboxes have aria-label distinguishing header and row",
+          "level": "AA",
+          "how": "Inspect aria-label on every checkbox"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default, filtered, and selected states",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is captured automatically for visual regression.",
-        "item1": { "story": "Playground — default state with selection", "priority": "high" },
-        "item2": { "story": "With per-column filters filled", "priority": "high" },
-        "item3": { "story": "Resized and reordered columns", "priority": "medium" },
-        "item4": { "story": "Inline edit in progress", "priority": "medium" },
-        "item5": { "story": "Virtualized scrolled to middle", "priority": "high" },
-        "item6": { "story": "Empty state", "priority": "high" }
+        "item1": {
+          "story": "Playground — default state with selection",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With per-column filters filled",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Resized and reordered columns",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Inline edit in progress",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Virtualized scrolled to middle",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Empty state",
+          "priority": "high"
+        }
       }
     },
     "nav": {
@@ -808,8 +986,7 @@
       "title": "DataTable — Display",
       "description": "Convierte listas estáticas en herramientas explorables: ordena, filtra, selecciona y edita miles de filas con performance y accesibilidad WCAG.",
       "aiSummary": "Componente DataTable construido sobre TanStack Table v8 (headless). Extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",
@@ -863,12 +1040,36 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Listado con orden y búsqueda", "u": "Sí", "a": "-" },
-        "item2": { "s": "Tabla simple sin interacción", "u": "No", "a": "Table" },
-        "item3": { "s": "Dataset grande (&gt; 1000 filas)", "u": "Sí, con virtualización", "a": "-" },
-        "item4": { "s": "Comparación visual de tendencias", "u": "No", "a": "Chart" },
-        "item5": { "s": "Edición en masa estilo planilla", "u": "Sí, con edición inline", "a": "-" },
-        "item6": { "s": "Lista densa en mobile", "u": "No", "a": "Lista de Card" }
+        "item1": {
+          "s": "Listado con orden y búsqueda",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Tabla simple sin interacción",
+          "u": "No",
+          "a": "Table"
+        },
+        "item3": {
+          "s": "Dataset grande (&gt; 1000 filas)",
+          "u": "Sí, con virtualización",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Comparación visual de tendencias",
+          "u": "No",
+          "a": "Chart"
+        },
+        "item5": {
+          "s": "Edición en masa estilo planilla",
+          "u": "Sí, con edición inline",
+          "a": "-"
+        },
+        "item6": {
+          "s": "Lista densa en mobile",
+          "u": "No",
+          "a": "Lista de Card"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -1150,32 +1351,98 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir para cada interacción de DataTable.",
-        "item1": { "action": "Filtro global completado", "result": "Solo permanecen visibles las filas que coinciden; el conteo y la paginación reflejan el total filtrado", "priority": "high" },
-        "item2": { "action": "Filtro por columna completado", "result": "Solo permanecen las filas que coinciden; otros filtros siguen aplicándose en conjunto", "priority": "high" },
-        "item3": { "action": "Clic en cabecera ordenable", "result": "Las filas se reordenan ascendentemente; el segundo clic invierte; el tercero quita el orden", "priority": "high" },
-        "item4": { "action": "Checkbox de cabecera", "result": "Marca todas las de la página actual; con selección parcial muestra tri-state; el segundo clic desmarca todo", "priority": "high" },
-        "item5": { "action": "Edición inline confirmada", "result": "La celda sale del modo edición y muestra el nuevo valor; onCellEdit se llama con (rowIndex, columnId, value)", "priority": "high" },
-        "item6": { "action": "Arrastrar cabecera para reordenar", "result": "Las columnas se reordenan; el estado persiste en columnOrder; las filas reflejan el nuevo orden", "priority": "medium" },
-        "item7": { "action": "Virtualizado con 1000 filas", "result": "Solo se renderizan las filas visibles en el viewport (más overscan); el scroll mantiene la posición correcta", "priority": "high" },
-        "item8": { "action": "Navegación de paginación", "result": "Los botones avanzan, retroceden y saltan a la primera/última; se desactivan correctamente en los extremos", "priority": "medium" }
+        "item1": {
+          "action": "Filtro global completado",
+          "result": "Solo permanecen visibles las filas que coinciden; el conteo y la paginación reflejan el total filtrado",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Filtro por columna completado",
+          "result": "Solo permanecen las filas que coinciden; otros filtros siguen aplicándose en conjunto",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clic en cabecera ordenable",
+          "result": "Las filas se reordenan ascendentemente; el segundo clic invierte; el tercero quita el orden",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Checkbox de cabecera",
+          "result": "Marca todas las de la página actual; con selección parcial muestra tri-state; el segundo clic desmarca todo",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Edición inline confirmada",
+          "result": "La celda sale del modo edición y muestra el nuevo valor; onCellEdit se llama con (rowIndex, columnId, value)",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Arrastrar cabecera para reordenar",
+          "result": "Las columnas se reordenan; el estado persiste en columnOrder; las filas reflejan el nuevo orden",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Virtualizado con 1000 filas",
+          "result": "Solo se renderizan las filas visibles en el viewport (más overscan); el scroll mantiene la posición correcta",
+          "priority": "high"
+        },
+        "item8": {
+          "action": "Navegación de paginación",
+          "result": "Los botones avanzan, retroceden y saltan a la primera/última; se desactivan correctamente en los extremos",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "Tabla semántica con thead/tbody/th/td", "level": "AA", "how": "Inspeccionar HTML — DataTable usa el primitivo Table" },
-        "item2": { "criterion": "Botones de orden tienen aria-label contextual con el nombre de la columna", "level": "AA", "how": "axe-playwright + inspeccionar atributo en cada <button> de cabecera" },
-        "item3": { "criterion": "Los checkboxes tienen aria-label distinguiendo cabecera y fila", "level": "AA", "how": "Inspeccionar aria-label en todos los checkboxes" },
-        "item4": { "criterion": "Sin violaciones axe-core en estados default, filtrado y seleccionado", "level": "AA", "how": "axe-playwright en el test-runner de Storybook" }
+        "item1": {
+          "criterion": "Tabla semántica con thead/tbody/th/td",
+          "level": "AA",
+          "how": "Inspeccionar HTML — DataTable usa el primitivo Table"
+        },
+        "item2": {
+          "criterion": "Botones de orden tienen aria-label contextual con el nombre de la columna",
+          "level": "AA",
+          "how": "axe-playwright + inspeccionar atributo en cada <button> de cabecera"
+        },
+        "item3": {
+          "criterion": "Los checkboxes tienen aria-label distinguiendo cabecera y fila",
+          "level": "AA",
+          "how": "Inspeccionar aria-label en todos los checkboxes"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estados default, filtrado y seleccionado",
+          "level": "AA",
+          "how": "axe-playwright en el test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — estado default con selección", "priority": "high" },
-        "item2": { "story": "Con filtros por columna completados", "priority": "high" },
-        "item3": { "story": "Columnas redimensionadas y reordenadas", "priority": "medium" },
-        "item4": { "story": "Edición inline en progreso", "priority": "medium" },
-        "item5": { "story": "Virtualizado con scroll a la mitad", "priority": "high" },
-        "item6": { "story": "Estado vacío", "priority": "high" }
+        "item1": {
+          "story": "Playground — estado default con selección",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con filtros por columna completados",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Columnas redimensionadas y reordenadas",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Edición inline en progreso",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Virtualizado con scroll a la mitad",
+          "priority": "high"
+        },
+        "item6": {
+          "story": "Estado vacío",
+          "priority": "high"
+        }
       }
     },
     "nav": {

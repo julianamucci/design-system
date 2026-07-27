@@ -8,8 +8,7 @@
       "title": "Popover — Overlay",
       "description": "Documentação do Popover: trigger, content, title e description, com posicionamento auto-flip e acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente Popover com Trigger, Content, Title e Description, posicionamento auto-flip via base-ui, foco gerenciado e role dialog.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -54,11 +53,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Formulário curto contextual", "u": "Sim", "a": "-" },
-        "item2": { "s": "Texto explicativo curto", "u": "Não", "a": "Tooltip" },
-        "item3": { "s": "Lista de ações clicáveis", "u": "Não", "a": "DropdownMenu" },
-        "item4": { "s": "Confirmação destrutiva", "u": "Não", "a": "AlertDialog" },
-        "item5": { "s": "Preview ao hover", "u": "Não", "a": "HoverCard" }
+        "item1": {
+          "s": "Formulário curto contextual",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Texto explicativo curto",
+          "u": "Não",
+          "a": "Tooltip"
+        },
+        "item3": {
+          "s": "Lista de ações clicáveis",
+          "u": "Não",
+          "a": "DropdownMenu"
+        },
+        "item4": {
+          "s": "Confirmação destrutiva",
+          "u": "Não",
+          "a": "AlertDialog"
+        },
+        "item5": {
+          "s": "Preview ao hover",
+          "u": "Não",
+          "a": "HoverCard"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -227,12 +246,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "popover": { "class": "bg-popover", "part": "Fundo do PopoverContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto principal do PopoverContent" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto da PopoverDescription" },
-        "border": { "class": "ring-foreground/10", "part": "Borda sutil do PopoverContent" },
-        "shadow": { "class": "shadow-md", "part": "Sombra do PopoverContent" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco em elementos internos" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fundo do PopoverContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto principal do PopoverContent"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto da PopoverDescription"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borda sutil do PopoverContent"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra do PopoverContent"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco em elementos internos"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Override de tokens no escopo do componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
@@ -273,10 +310,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "tooltip": { "name": "Tooltip", "description": "Texto explicativo curto ao hover ou foco." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de ações clicáveis a partir de um trigger." },
-        "dialog": { "name": "Dialog", "description": "Modal completo para fluxos longos." },
-        "hoverCard": { "name": "HoverCard", "description": "Preview informativo ao hover." }
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "Texto explicativo curto ao hover ou foco."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Lista de ações clicáveis a partir de um trigger."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal completo para fluxos longos."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Preview informativo ao hover."
+        }
       }
     },
     "notes": {
@@ -309,10 +358,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no trigger", "result": "Abre o popover; foco vai ao primeiro elemento focável", "priority": "high" },
-        "item2": { "action": "Pressionar Escape com popover aberto", "result": "Fecha e retorna foco ao trigger", "priority": "high" },
-        "item3": { "action": "Clicar fora do popover", "result": "Fecha o popover (comportamento nativo)", "priority": "high" },
-        "item4": { "action": "Tab dentro do popover", "result": "Move foco entre elementos focáveis internos", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no trigger",
+          "result": "Abre o popover; foco vai ao primeiro elemento focável",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Escape com popover aberto",
+          "result": "Fecha e retorna foco ao trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar fora do popover",
+          "result": "Fecha o popover (comportamento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab dentro do popover",
+          "result": "Move foco entre elementos focáveis internos",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -327,10 +392,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (apenas conteúdo)", "priority": "high" },
-        "item2": { "story": "Com título e descrição", "priority": "high" },
-        "item3": { "story": "Com formulário inline", "priority": "high" },
-        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+        "item1": {
+          "story": "Default (apenas conteúdo)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Com título e descrição",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Com formulário inline",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Side top (auto-flip)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -363,8 +440,7 @@
       "title": "Popover — Overlay",
       "description": "Popover documentation: trigger, content, title and description with auto-flip positioning and WCAG 2.2 AA accessibility.",
       "aiSummary": "Popover component with Trigger, Content, Title and Description, auto-flip positioning via base-ui, managed focus and dialog role.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -409,11 +485,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Short contextual form", "u": "Yes", "a": "-" },
-        "item2": { "s": "Short explanatory text", "u": "No", "a": "Tooltip" },
-        "item3": { "s": "List of clickable actions", "u": "No", "a": "DropdownMenu" },
-        "item4": { "s": "Destructive confirmation", "u": "No", "a": "AlertDialog" },
-        "item5": { "s": "Hover preview", "u": "No", "a": "HoverCard" }
+        "item1": {
+          "s": "Short contextual form",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Short explanatory text",
+          "u": "No",
+          "a": "Tooltip"
+        },
+        "item3": {
+          "s": "List of clickable actions",
+          "u": "No",
+          "a": "DropdownMenu"
+        },
+        "item4": {
+          "s": "Destructive confirmation",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item5": {
+          "s": "Hover preview",
+          "u": "No",
+          "a": "HoverCard"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -582,12 +678,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "popover": { "class": "bg-popover", "part": "PopoverContent background" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "PopoverContent main text" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "PopoverDescription text" },
-        "border": { "class": "ring-foreground/10", "part": "Subtle PopoverContent border" },
-        "shadow": { "class": "shadow-md", "part": "PopoverContent shadow" },
-        "ring": { "class": "ring-ring", "part": "Focus ring on internal elements" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "PopoverContent background"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "PopoverContent main text"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "PopoverDescription text"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Subtle PopoverContent border"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "PopoverContent shadow"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring on internal elements"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Override tokens in component scope */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
@@ -628,10 +742,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "tooltip": { "name": "Tooltip", "description": "Short explanatory text on hover or focus." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "List of clickable actions from a trigger." },
-        "dialog": { "name": "Dialog", "description": "Full modal for longer flows." },
-        "hoverCard": { "name": "HoverCard", "description": "Informative preview on hover." }
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "Short explanatory text on hover or focus."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "List of clickable actions from a trigger."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Full modal for longer flows."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Informative preview on hover."
+        }
       }
     },
     "notes": {
@@ -664,10 +790,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the trigger", "result": "Opens the popover; focus goes to the first focusable element", "priority": "high" },
-        "item2": { "action": "Press Escape with popover open", "result": "Closes and returns focus to trigger", "priority": "high" },
-        "item3": { "action": "Click outside the popover", "result": "Closes the popover (native behavior)", "priority": "high" },
-        "item4": { "action": "Tab inside the popover", "result": "Moves focus between internal focusable elements", "priority": "medium" }
+        "item1": {
+          "action": "Click the trigger",
+          "result": "Opens the popover; focus goes to the first focusable element",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Escape with popover open",
+          "result": "Closes and returns focus to trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click outside the popover",
+          "result": "Closes the popover (native behavior)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab inside the popover",
+          "result": "Moves focus between internal focusable elements",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -682,10 +824,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (content only)", "priority": "high" },
-        "item2": { "story": "With title and description", "priority": "high" },
-        "item3": { "story": "With inline form", "priority": "high" },
-        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+        "item1": {
+          "story": "Default (content only)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "With title and description",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "With inline form",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Side top (auto-flip)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -718,8 +872,7 @@
       "title": "Popover — Overlay",
       "description": "Documentación de Popover: trigger, content, title y description con posicionamiento auto-flip y accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente Popover con Trigger, Content, Title y Description, posicionamiento auto-flip vía base-ui, foco gestionado y role dialog.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog",
-      "aiIntent": "informational"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demostración",
@@ -764,11 +917,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Formulario contextual corto", "u": "Sí", "a": "-" },
-        "item2": { "s": "Texto explicativo corto", "u": "No", "a": "Tooltip" },
-        "item3": { "s": "Lista de acciones clicables", "u": "No", "a": "DropdownMenu" },
-        "item4": { "s": "Confirmación destructiva", "u": "No", "a": "AlertDialog" },
-        "item5": { "s": "Vista previa al hover", "u": "No", "a": "HoverCard" }
+        "item1": {
+          "s": "Formulario contextual corto",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Texto explicativo corto",
+          "u": "No",
+          "a": "Tooltip"
+        },
+        "item3": {
+          "s": "Lista de acciones clicables",
+          "u": "No",
+          "a": "DropdownMenu"
+        },
+        "item4": {
+          "s": "Confirmación destructiva",
+          "u": "No",
+          "a": "AlertDialog"
+        },
+        "item5": {
+          "s": "Vista previa al hover",
+          "u": "No",
+          "a": "HoverCard"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -937,12 +1110,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "popover": { "class": "bg-popover", "part": "Fondo del PopoverContent" },
-        "popoverForeground": { "class": "text-popover-foreground", "part": "Texto principal del PopoverContent" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Texto de PopoverDescription" },
-        "border": { "class": "ring-foreground/10", "part": "Borde sutil del PopoverContent" },
-        "shadow": { "class": "shadow-md", "part": "Sombra del PopoverContent" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco en elementos internos" }
+        "popover": {
+          "class": "bg-popover",
+          "part": "Fondo del PopoverContent"
+        },
+        "popoverForeground": {
+          "class": "text-popover-foreground",
+          "part": "Texto principal del PopoverContent"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Texto de PopoverDescription"
+        },
+        "border": {
+          "class": "ring-foreground/10",
+          "part": "Borde sutil del PopoverContent"
+        },
+        "shadow": {
+          "class": "shadow-md",
+          "part": "Sombra del PopoverContent"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco en elementos internos"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Override de tokens en el ámbito del componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
@@ -983,10 +1174,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "tooltip": { "name": "Tooltip", "description": "Texto explicativo corto al hover o foco." },
-        "dropdownMenu": { "name": "DropdownMenu", "description": "Lista de acciones clicables desde un trigger." },
-        "dialog": { "name": "Dialog", "description": "Modal completo para flujos largos." },
-        "hoverCard": { "name": "HoverCard", "description": "Vista previa informativa al hover." }
+        "tooltip": {
+          "name": "Tooltip",
+          "description": "Texto explicativo corto al hover o foco."
+        },
+        "dropdownMenu": {
+          "name": "DropdownMenu",
+          "description": "Lista de acciones clicables desde un trigger."
+        },
+        "dialog": {
+          "name": "Dialog",
+          "description": "Modal completo para flujos largos."
+        },
+        "hoverCard": {
+          "name": "HoverCard",
+          "description": "Vista previa informativa al hover."
+        }
       }
     },
     "notes": {
@@ -1019,10 +1222,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el trigger", "result": "Abre el popover; el foco va al primer elemento focalizable", "priority": "high" },
-        "item2": { "action": "Pulsar Escape con popover abierto", "result": "Cierra y devuelve el foco al trigger", "priority": "high" },
-        "item3": { "action": "Hacer clic fuera del popover", "result": "Cierra el popover (comportamiento nativo)", "priority": "high" },
-        "item4": { "action": "Tab dentro del popover", "result": "Mueve el foco entre elementos focalizables internos", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el trigger",
+          "result": "Abre el popover; el foco va al primer elemento focalizable",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar Escape con popover abierto",
+          "result": "Cierra y devuelve el foco al trigger",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic fuera del popover",
+          "result": "Cierra el popover (comportamiento nativo)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Tab dentro del popover",
+          "result": "Mueve el foco entre elementos focalizables internos",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1037,10 +1256,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (solo contenido)", "priority": "high" },
-        "item2": { "story": "Con título y descripción", "priority": "high" },
-        "item3": { "story": "Con formulario inline", "priority": "high" },
-        "item4": { "story": "Side top (auto-flip)", "priority": "medium" }
+        "item1": {
+          "story": "Default (solo contenido)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Con título y descripción",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Con formulario inline",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Side top (auto-flip)",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -8,8 +8,7 @@
       "title": "Textarea — Formulário",
       "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres com aria-live e integração com FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength",
-      "aiIntent": "informational"
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -52,11 +51,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Descrição de produto (até 500 chars)", "u": "Sim", "a": "-" },
-        "item2": { "s": "Biografia de usuário", "u": "Sim", "a": "-" },
-        "item3": { "s": "Comentário curto (1 linha)", "u": "Não", "a": "Input" },
-        "item4": { "s": "Email, telefone, CPF", "u": "Não", "a": "Input type específico" },
-        "item5": { "s": "Editor rico (markdown, links)", "u": "Não", "a": "Editor WYSIWYG" }
+        "item1": {
+          "s": "Descrição de produto (até 500 chars)",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Biografia de usuário",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Comentário curto (1 linha)",
+          "u": "Não",
+          "a": "Input"
+        },
+        "item4": {
+          "s": "Email, telefone, CPF",
+          "u": "Não",
+          "a": "Input type específico"
+        },
+        "item5": {
+          "s": "Editor rico (markdown, links)",
+          "u": "Não",
+          "a": "Editor WYSIWYG"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -246,12 +265,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "input": { "class": "border-input", "part": "Borda do Textarea no estado padrão" },
-        "background": { "class": "bg-transparent", "part": "Fundo transparente (herda do container)" },
-        "foreground": { "class": "text-foreground", "part": "Cor do texto digitado" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Cor do placeholder e contador" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" }
+        "input": {
+          "class": "border-input",
+          "part": "Borda do Textarea no estado padrão"
+        },
+        "background": {
+          "class": "bg-transparent",
+          "part": "Fundo transparente (herda do container)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Cor do texto digitado"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Cor do placeholder e contador"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda no estado inválido"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Altura mínima customizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borda colorida quando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
@@ -292,10 +329,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "input": { "name": "Input", "description": "Entrada de linha única." },
-        "label": { "name": "Label", "description": "Rótulo obrigatório vinculado via htmlFor." },
-        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." },
-        "inputOTP": { "name": "InputOTP", "description": "Entrada segmentada para códigos de verificação." }
+        "input": {
+          "name": "Input",
+          "description": "Entrada de linha única."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Rótulo obrigatório vinculado via htmlFor."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integração com validação via React Hook Form."
+        },
+        "inputOTP": {
+          "name": "InputOTP",
+          "description": "Entrada segmentada para códigos de verificação."
+        }
       }
     },
     "notes": {
@@ -323,10 +372,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Digitar texto", "result": "Atualiza o value e dispara onChange a cada caractere", "priority": "high" },
-        "item2": { "action": "Clicar no Label", "result": "Foca o Textarea (via htmlFor)", "priority": "high" },
-        "item3": { "action": "Atingir maxLength", "result": "Bloqueia novos caracteres; contador permanece no máximo", "priority": "high" },
-        "item4": { "action": "Pressionar Enter", "result": "Insere nova linha (comportamento nativo)", "priority": "medium" }
+        "item1": {
+          "action": "Digitar texto",
+          "result": "Atualiza o value e dispara onChange a cada caractere",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Clicar no Label",
+          "result": "Foca o Textarea (via htmlFor)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Atingir maxLength",
+          "result": "Bloqueia novos caracteres; contador permanece no máximo",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pressionar Enter",
+          "result": "Insere nova linha (comportamento nativo)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -341,11 +406,26 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Default (vazio com placeholder)", "priority": "high" },
-        "item2": { "story": "Filled (com conteúdo)", "priority": "high" },
-        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
-        "item4": { "story": "Com contador (maxLength + aria-live)", "priority": "medium" },
-        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+        "item1": {
+          "story": "Default (vazio com placeholder)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Filled (com conteúdo)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Com contador (maxLength + aria-live)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Disabled / Read-only",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -378,8 +458,7 @@
       "title": "Textarea — Form",
       "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.2 AA support.",
       "aiSummary": "Textarea component for multi-line input, with field-sizing-content, .nds-resize-y/.nds-resize-none/.nds-resize classes, character counter with aria-live and FormField integration.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength",
-      "aiIntent": "informational"
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -422,11 +501,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Product description (up to 500 chars)", "u": "Yes", "a": "-" },
-        "item2": { "s": "User bio", "u": "Yes", "a": "-" },
-        "item3": { "s": "Short comment (1 line)", "u": "No", "a": "Input" },
-        "item4": { "s": "Email, phone, SSN", "u": "No", "a": "Input with specific type" },
-        "item5": { "s": "Rich editor (markdown, links)", "u": "No", "a": "WYSIWYG Editor" }
+        "item1": {
+          "s": "Product description (up to 500 chars)",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "User bio",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Short comment (1 line)",
+          "u": "No",
+          "a": "Input"
+        },
+        "item4": {
+          "s": "Email, phone, SSN",
+          "u": "No",
+          "a": "Input with specific type"
+        },
+        "item5": {
+          "s": "Rich editor (markdown, links)",
+          "u": "No",
+          "a": "WYSIWYG Editor"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -616,12 +715,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "input": { "class": "border-input", "part": "Textarea border in default state" },
-        "background": { "class": "bg-transparent", "part": "Transparent background (inherits from container)" },
-        "foreground": { "class": "text-foreground", "part": "Typed text color" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Placeholder and counter color" },
-        "ring": { "class": "ring-ring", "part": "Focus ring" },
-        "destructive": { "class": "border-destructive", "part": "Border in invalid state" }
+        "input": {
+          "class": "border-input",
+          "part": "Textarea border in default state"
+        },
+        "background": {
+          "class": "bg-transparent",
+          "part": "Transparent background (inherits from container)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Typed text color"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Placeholder and counter color"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Border in invalid state"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom minimum height */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Colored border when invalid + focus */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
@@ -662,10 +779,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "input": { "name": "Input", "description": "Single-line input." },
-        "label": { "name": "Label", "description": "Required label linked via htmlFor." },
-        "form": { "name": "Form", "description": "Validation integration via React Hook Form." },
-        "inputOTP": { "name": "InputOTP", "description": "Segmented input for verification codes." }
+        "input": {
+          "name": "Input",
+          "description": "Single-line input."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Required label linked via htmlFor."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Validation integration via React Hook Form."
+        },
+        "inputOTP": {
+          "name": "InputOTP",
+          "description": "Segmented input for verification codes."
+        }
       }
     },
     "notes": {
@@ -693,10 +822,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Type text", "result": "Updates value and fires onChange on every character", "priority": "high" },
-        "item2": { "action": "Click Label", "result": "Focuses the Textarea (via htmlFor)", "priority": "high" },
-        "item3": { "action": "Reach maxLength", "result": "Blocks new characters; counter stays at maximum", "priority": "high" },
-        "item4": { "action": "Press Enter", "result": "Inserts new line (native behavior)", "priority": "medium" }
+        "item1": {
+          "action": "Type text",
+          "result": "Updates value and fires onChange on every character",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Click Label",
+          "result": "Focuses the Textarea (via htmlFor)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Reach maxLength",
+          "result": "Blocks new characters; counter stays at maximum",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Press Enter",
+          "result": "Inserts new line (native behavior)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -711,11 +856,26 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Default (empty with placeholder)", "priority": "high" },
-        "item2": { "story": "Filled (with content)", "priority": "high" },
-        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
-        "item4": { "story": "With counter (maxLength + aria-live)", "priority": "medium" },
-        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+        "item1": {
+          "story": "Default (empty with placeholder)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Filled (with content)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "With counter (maxLength + aria-live)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Disabled / Read-only",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -748,8 +908,7 @@
       "title": "Textarea — Formulario",
       "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres con aria-live e integración con FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength",
-      "aiIntent": "informational"
+      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
     },
     "demonstration": {
       "title": "Demostración",
@@ -792,11 +951,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Descripción de producto (hasta 500 chars)", "u": "Sí", "a": "-" },
-        "item2": { "s": "Biografía de usuario", "u": "Sí", "a": "-" },
-        "item3": { "s": "Comentario corto (1 línea)", "u": "No", "a": "Input" },
-        "item4": { "s": "Email, teléfono, DNI", "u": "No", "a": "Input con tipo específico" },
-        "item5": { "s": "Editor rico (markdown, links)", "u": "No", "a": "Editor WYSIWYG" }
+        "item1": {
+          "s": "Descripción de producto (hasta 500 chars)",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Biografía de usuario",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Comentario corto (1 línea)",
+          "u": "No",
+          "a": "Input"
+        },
+        "item4": {
+          "s": "Email, teléfono, DNI",
+          "u": "No",
+          "a": "Input con tipo específico"
+        },
+        "item5": {
+          "s": "Editor rico (markdown, links)",
+          "u": "No",
+          "a": "Editor WYSIWYG"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -986,12 +1165,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "input": { "class": "border-input", "part": "Borde del Textarea en estado por defecto" },
-        "background": { "class": "bg-transparent", "part": "Fondo transparente (hereda del contenedor)" },
-        "foreground": { "class": "text-foreground", "part": "Color del texto escrito" },
-        "mutedForeground": { "class": "text-muted-foreground", "part": "Color del placeholder y contador" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" }
+        "input": {
+          "class": "border-input",
+          "part": "Borde del Textarea en estado por defecto"
+        },
+        "background": {
+          "class": "bg-transparent",
+          "part": "Fondo transparente (hereda del contenedor)"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Color del texto escrito"
+        },
+        "mutedForeground": {
+          "class": "text-muted-foreground",
+          "part": "Color del placeholder y contador"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en estado inválido"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Altura mínima personalizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borde coloreado cuando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
@@ -1032,10 +1229,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "input": { "name": "Input", "description": "Entrada de una sola línea." },
-        "label": { "name": "Label", "description": "Etiqueta obligatoria vinculada vía htmlFor." },
-        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." },
-        "inputOTP": { "name": "InputOTP", "description": "Entrada segmentada para códigos de verificación." }
+        "input": {
+          "name": "Input",
+          "description": "Entrada de una sola línea."
+        },
+        "label": {
+          "name": "Label",
+          "description": "Etiqueta obligatoria vinculada vía htmlFor."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integración de validación vía React Hook Form."
+        },
+        "inputOTP": {
+          "name": "InputOTP",
+          "description": "Entrada segmentada para códigos de verificación."
+        }
       }
     },
     "notes": {
@@ -1063,10 +1272,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Escribir texto", "result": "Actualiza el value y dispara onChange a cada carácter", "priority": "high" },
-        "item2": { "action": "Hacer clic en el Label", "result": "Enfoca el Textarea (vía htmlFor)", "priority": "high" },
-        "item3": { "action": "Alcanzar maxLength", "result": "Bloquea nuevos caracteres; el contador permanece en el máximo", "priority": "high" },
-        "item4": { "action": "Pulsar Enter", "result": "Inserta nueva línea (comportamiento nativo)", "priority": "medium" }
+        "item1": {
+          "action": "Escribir texto",
+          "result": "Actualiza el value y dispara onChange a cada carácter",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Hacer clic en el Label",
+          "result": "Enfoca el Textarea (vía htmlFor)",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Alcanzar maxLength",
+          "result": "Bloquea nuevos caracteres; el contador permanece en el máximo",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Pulsar Enter",
+          "result": "Inserta nueva línea (comportamiento nativo)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1081,11 +1306,26 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Default (vacío con placeholder)", "priority": "high" },
-        "item2": { "story": "Filled (con contenido)", "priority": "high" },
-        "item3": { "story": "Invalid (aria-invalid)", "priority": "high" },
-        "item4": { "story": "Con contador (maxLength + aria-live)", "priority": "medium" },
-        "item5": { "story": "Disabled / Read-only", "priority": "medium" }
+        "item1": {
+          "story": "Default (vacío con placeholder)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Filled (con contenido)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Invalid (aria-invalid)",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Con contador (maxLength + aria-live)",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Disabled / Read-only",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

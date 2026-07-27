@@ -8,8 +8,7 @@
       "title": "Avatar — Display",
       "description": "Documentação do Avatar: composição com imagem e fallback, 5 tamanhos preset (sm/md/lg/xl/2xl), agrupamento e indicador de status.",
       "aiSummary": "Componente Avatar com Avatar, AvatarImage e AvatarFallback; 5 tamanhos preset (sm/md/lg/xl/2xl) via prop size, suporte a agrupamento e indicador de status.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -49,10 +48,26 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Identificar autor de um comentário", "u": "Sim, com imagem e iniciais", "a": "-" },
-        "item2": { "s": "Mostrar grupo de participantes", "u": "Sim, agrupado com <code>-space-x-2</code>", "a": "AvatarGroup padrão" },
-        "item3": { "s": "Ícone de marca ou logo", "u": "Não", "a": "Usar <code>&lt;img&gt;</code> ou SVG direto" },
-        "item4": { "s": "Foto de produto em card", "u": "Não", "a": "<code>AspectRatio</code> com <code>&lt;img&gt;</code>" }
+        "item1": {
+          "s": "Identificar autor de um comentário",
+          "u": "Sim, com imagem e iniciais",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar grupo de participantes",
+          "u": "Sim, agrupado com <code>-space-x-2</code>",
+          "a": "AvatarGroup padrão"
+        },
+        "item3": {
+          "s": "Ícone de marca ou logo",
+          "u": "Não",
+          "a": "Usar <code>&lt;img&gt;</code> ou SVG direto"
+        },
+        "item4": {
+          "s": "Foto de produto em card",
+          "u": "Não",
+          "a": "<code>AspectRatio</code> com <code>&lt;img&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -274,28 +289,80 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Avatar.",
-        "item1": { "action": "Renderizar com src válido", "result": "Imagem carregada; fallback oculto após onLoadingStatusChange='loaded'", "priority": "high" },
-        "item2": { "action": "Renderizar com src inválido ou 404", "result": "Fallback exibido permanentemente; imagem oculta", "priority": "high" },
-        "item3": { "action": "Renderizar sem AvatarImage", "result": "Fallback exibido imediatamente sem delay", "priority": "high" },
-        "item4": { "action": "Renderizar com delayMs=600", "result": "Fallback aguarda 600ms antes de aparecer em conexões rápidas", "priority": "medium" },
-        "item5": { "action": "Renderizar em grupo com -space-x-2", "result": "Avatares sobrepostos com ring-2 separando cada um", "priority": "medium" },
-        "item6": { "action": "Renderizar com diferentes valores da prop size", "result": "Presets sm/md/lg/xl/2xl aplicam diâmetros corretos (24, 32, 40, 48, 64px)", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar com src válido",
+          "result": "Imagem carregada; fallback oculto após onLoadingStatusChange='loaded'",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar com src inválido ou 404",
+          "result": "Fallback exibido permanentemente; imagem oculta",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar sem AvatarImage",
+          "result": "Fallback exibido imediatamente sem delay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar com delayMs=600",
+          "result": "Fallback aguarda 600ms antes de aparecer em conexões rápidas",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar em grupo com -space-x-2",
+          "result": "Avatares sobrepostos com ring-2 separando cada um",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar com diferentes valores da prop size",
+          "result": "Presets sm/md/lg/xl/2xl aplicam diâmetros corretos (24, 32, 40, 48, 64px)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
-        "item1": { "criterion": "AvatarImage com alt descritivo quando identifica pessoa", "level": "AA", "how": "Inspecionar atributo alt no DOM" },
-        "item2": { "criterion": "AvatarFallback com aria-hidden=\"true\" quando alt é descritivo", "level": "AA", "how": "Inspecionar atributos no DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 entre iniciais e fundo do fallback", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Sem violações axe-core no estado padrão", "level": "AA", "how": "axe-playwright no test-runner do Storybook" }
+        "item1": {
+          "criterion": "AvatarImage com alt descritivo quando identifica pessoa",
+          "level": "AA",
+          "how": "Inspecionar atributo alt no DOM"
+        },
+        "item2": {
+          "criterion": "AvatarFallback com aria-hidden=\"true\" quando alt é descritivo",
+          "level": "AA",
+          "how": "Inspecionar atributos no DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 entre iniciais e fundo do fallback",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
       },
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "item1": { "story": "Playground — com imagem válida", "priority": "high" },
-        "item2": { "story": "Fallback — iniciais e ícone", "priority": "high" },
-        "item3": { "story": "Tamanhos — sm, md, lg, xl, 2xl", "priority": "medium" },
-        "item4": { "story": "Composições — grupo e com status", "priority": "medium" }
+        "item1": {
+          "story": "Playground — com imagem válida",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Fallback — iniciais e ícone",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tamanhos — sm, md, lg, xl, 2xl",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composições — grupo e com status",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -328,8 +395,7 @@
       "title": "Avatar — Display",
       "description": "Documentation for Avatar: image and fallback composition, 5 preset sizes (sm/md/lg/xl/2xl), grouping, and status indicator.",
       "aiSummary": "Avatar component with Avatar, AvatarImage, and AvatarFallback; 5 preset sizes (sm/md/lg/xl/2xl) via the size prop, with grouping and status support.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -369,10 +435,26 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Identifying a comment author", "u": "Yes, with image and initials", "a": "-" },
-        "item2": { "s": "Showing a group of participants", "u": "Yes, grouped with <code>-space-x-2</code>", "a": "Standard AvatarGroup" },
-        "item3": { "s": "Brand or logo icon", "u": "No", "a": "Use <code>&lt;img&gt;</code> or SVG directly" },
-        "item4": { "s": "Product photo in a card", "u": "No", "a": "<code>AspectRatio</code> with <code>&lt;img&gt;</code>" }
+        "item1": {
+          "s": "Identifying a comment author",
+          "u": "Yes, with image and initials",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Showing a group of participants",
+          "u": "Yes, grouped with <code>-space-x-2</code>",
+          "a": "Standard AvatarGroup"
+        },
+        "item3": {
+          "s": "Brand or logo icon",
+          "u": "No",
+          "a": "Use <code>&lt;img&gt;</code> or SVG directly"
+        },
+        "item4": {
+          "s": "Product photo in a card",
+          "u": "No",
+          "a": "<code>AspectRatio</code> with <code>&lt;img&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -594,28 +676,80 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Avatar configuration.",
-        "item1": { "action": "Render with valid src", "result": "Image loaded; fallback hidden after onLoadingStatusChange='loaded'", "priority": "high" },
-        "item2": { "action": "Render with invalid src or 404", "result": "Fallback shown permanently; image hidden", "priority": "high" },
-        "item3": { "action": "Render without AvatarImage", "result": "Fallback shown immediately with no delay", "priority": "high" },
-        "item4": { "action": "Render with delayMs=600", "result": "Fallback waits 600ms before appearing on fast connections", "priority": "medium" },
-        "item5": { "action": "Render in a group with -space-x-2", "result": "Avatars overlap with ring-2 separating each one", "priority": "medium" },
-        "item6": { "action": "Render with different size prop values", "result": "Presets sm/md/lg/xl/2xl apply correct diameters (24, 32, 40, 48, 64px)", "priority": "medium" }
+        "item1": {
+          "action": "Render with valid src",
+          "result": "Image loaded; fallback hidden after onLoadingStatusChange='loaded'",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render with invalid src or 404",
+          "result": "Fallback shown permanently; image hidden",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Render without AvatarImage",
+          "result": "Fallback shown immediately with no delay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Render with delayMs=600",
+          "result": "Fallback waits 600ms before appearing on fast connections",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Render in a group with -space-x-2",
+          "result": "Avatars overlap with ring-2 separating each one",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Render with different size prop values",
+          "result": "Presets sm/md/lg/xl/2xl apply correct diameters (24, 32, 40, 48, 64px)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
-        "item1": { "criterion": "AvatarImage with descriptive alt when identifying a person", "level": "AA", "how": "Inspect alt attribute in DOM" },
-        "item2": { "criterion": "AvatarFallback with aria-hidden=\"true\" when alt is descriptive", "level": "AA", "how": "Inspect attributes in DOM" },
-        "item3": { "criterion": "Minimum 4.5:1 contrast between initials and fallback background", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "No axe-core violations in default state", "level": "AA", "how": "axe-playwright in Storybook test-runner" }
+        "item1": {
+          "criterion": "AvatarImage with descriptive alt when identifying a person",
+          "level": "AA",
+          "how": "Inspect alt attribute in DOM"
+        },
+        "item2": {
+          "criterion": "AvatarFallback with aria-hidden=\"true\" when alt is descriptive",
+          "level": "AA",
+          "how": "Inspect attributes in DOM"
+        },
+        "item3": {
+          "criterion": "Minimum 4.5:1 contrast between initials and fallback background",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "No axe-core violations in default state",
+          "level": "AA",
+          "how": "axe-playwright in Storybook test-runner"
+        }
       },
       "visual": {
         "title": "Visual Tests (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "item1": { "story": "Playground — with valid image", "priority": "high" },
-        "item2": { "story": "Fallback — initials and icon", "priority": "high" },
-        "item3": { "story": "Sizes — sm, md, lg, xl, 2xl", "priority": "medium" },
-        "item4": { "story": "Compositions — group and with status", "priority": "medium" }
+        "item1": {
+          "story": "Playground — with valid image",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Fallback — initials and icon",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Sizes — sm, md, lg, xl, 2xl",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Compositions — group and with status",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -648,8 +782,7 @@
       "title": "Avatar — Display",
       "description": "Documentación del Avatar: composición con imagen y fallback, 5 tamaños preset (sm/md/lg/xl/2xl), agrupación e indicador de estado.",
       "aiSummary": "Componente Avatar con Avatar, AvatarImage y AvatarFallback; 5 tamaños preset (sm/md/lg/xl/2xl) vía la prop size, con soporte para agrupación e indicador de estado.",
-      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2",
-      "aiIntent": "informational"
+      "aiEntities": "Avatar, React, Vue, Svelte, Radix UI, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",
@@ -689,10 +822,26 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Identificar autor de un comentario", "u": "Sí, con imagen e iniciales", "a": "-" },
-        "item2": { "s": "Mostrar grupo de participantes", "u": "Sí, agrupado con <code>-space-x-2</code>", "a": "AvatarGroup estándar" },
-        "item3": { "s": "Ícono de marca o logo", "u": "No", "a": "Usar <code>&lt;img&gt;</code> o SVG directo" },
-        "item4": { "s": "Foto de producto en card", "u": "No", "a": "<code>AspectRatio</code> con <code>&lt;img&gt;</code>" }
+        "item1": {
+          "s": "Identificar autor de un comentario",
+          "u": "Sí, con imagen e iniciales",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Mostrar grupo de participantes",
+          "u": "Sí, agrupado con <code>-space-x-2</code>",
+          "a": "AvatarGroup estándar"
+        },
+        "item3": {
+          "s": "Ícono de marca o logo",
+          "u": "No",
+          "a": "Usar <code>&lt;img&gt;</code> o SVG directo"
+        },
+        "item4": {
+          "s": "Foto de producto en card",
+          "u": "No",
+          "a": "<code>AspectRatio</code> con <code>&lt;img&gt;</code>"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -914,28 +1063,80 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Avatar.",
-        "item1": { "action": "Renderizar con src válido", "result": "Imagen cargada; fallback oculto tras onLoadingStatusChange='loaded'", "priority": "high" },
-        "item2": { "action": "Renderizar con src inválido o 404", "result": "Fallback mostrado permanentemente; imagen oculta", "priority": "high" },
-        "item3": { "action": "Renderizar sin AvatarImage", "result": "Fallback mostrado inmediatamente sin delay", "priority": "high" },
-        "item4": { "action": "Renderizar con delayMs=600", "result": "Fallback espera 600ms antes de aparecer en conexiones rápidas", "priority": "medium" },
-        "item5": { "action": "Renderizar en grupo con -space-x-2", "result": "Avatares superpuestos con ring-2 separando cada uno", "priority": "medium" },
-        "item6": { "action": "Renderizar con diferentes valores de la prop size", "result": "Presets sm/md/lg/xl/2xl aplican diámetros correctos (24, 32, 40, 48, 64px)", "priority": "medium" }
+        "item1": {
+          "action": "Renderizar con src válido",
+          "result": "Imagen cargada; fallback oculto tras onLoadingStatusChange='loaded'",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar con src inválido o 404",
+          "result": "Fallback mostrado permanentemente; imagen oculta",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Renderizar sin AvatarImage",
+          "result": "Fallback mostrado inmediatamente sin delay",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Renderizar con delayMs=600",
+          "result": "Fallback espera 600ms antes de aparecer en conexiones rápidas",
+          "priority": "medium"
+        },
+        "item5": {
+          "action": "Renderizar en grupo con -space-x-2",
+          "result": "Avatares superpuestos con ring-2 separando cada uno",
+          "priority": "medium"
+        },
+        "item6": {
+          "action": "Renderizar con diferentes valores de la prop size",
+          "result": "Presets sm/md/lg/xl/2xl aplican diámetros correctos (24, 32, 40, 48, 64px)",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
-        "item1": { "criterion": "AvatarImage con alt descriptivo cuando identifica persona", "level": "AA", "how": "Inspeccionar atributo alt en el DOM" },
-        "item2": { "criterion": "AvatarFallback con aria-hidden=\"true\" cuando alt es descriptivo", "level": "AA", "how": "Inspeccionar atributos en el DOM" },
-        "item3": { "criterion": "Contraste mínimo 4.5:1 entre iniciales y fondo del fallback", "level": "AA", "how": "axe-core / Lighthouse" },
-        "item4": { "criterion": "Sin violaciones axe-core en estado predeterminado", "level": "AA", "how": "axe-playwright en test-runner de Storybook" }
+        "item1": {
+          "criterion": "AvatarImage con alt descriptivo cuando identifica persona",
+          "level": "AA",
+          "how": "Inspeccionar atributo alt en el DOM"
+        },
+        "item2": {
+          "criterion": "AvatarFallback con aria-hidden=\"true\" cuando alt es descriptivo",
+          "level": "AA",
+          "how": "Inspeccionar atributos en el DOM"
+        },
+        "item3": {
+          "criterion": "Contraste mínimo 4.5:1 entre iniciales y fondo del fallback",
+          "level": "AA",
+          "how": "axe-core / Lighthouse"
+        },
+        "item4": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en test-runner de Storybook"
+        }
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",
         "description": "Cada story se captura automáticamente para regresión visual.",
-        "item1": { "story": "Playground — con imagen válida", "priority": "high" },
-        "item2": { "story": "Fallback — iniciales e ícono", "priority": "high" },
-        "item3": { "story": "Tamaños — sm, md, lg, xl, 2xl", "priority": "medium" },
-        "item4": { "story": "Composiciones — grupo y con estado", "priority": "medium" }
+        "item1": {
+          "story": "Playground — con imagen válida",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Fallback — iniciales e ícono",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Tamaños — sm, md, lg, xl, 2xl",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Composiciones — grupo y con estado",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

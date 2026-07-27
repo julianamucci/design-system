@@ -17,8 +17,7 @@
       "title": "Elevação, Bordas e Sombras",
       "description": "Cinco níveis de elevação, tokens --elevation-* e --radius-*, combinações típicas e regras de uso para borders e shadows.",
       "aiSummary": "Página de fundamentos de Elevação. Documenta cinco níveis (plano, card, dropdown, dialog, tooltip), tokens de shadow e radius, bordas e combinações típicas por componente.",
-      "aiEntities": "elevação, sombra, shadow, radius, borda, border, profundidade, surface",
-      "aiIntent": "informational"
+      "aiEntities": "elevação, sombra, shadow, radius, borda, border, profundidade, surface"
     },
     "elevation": {
       "title": "Sistema de elevação",
@@ -313,8 +312,7 @@
       "title": "Elevation, Borders & Shadows",
       "description": "Five elevation levels, --elevation-* and --radius-* tokens, typical combinations, and usage rules for borders and shadows.",
       "aiSummary": "Elevation foundations page. Documents five levels (plane, card, dropdown, dialog, tooltip), shadow and radius tokens, borders, and typical per-component combinations.",
-      "aiEntities": "elevation, shadow, radius, border, depth, surface",
-      "aiIntent": "informational"
+      "aiEntities": "elevation, shadow, radius, border, depth, surface"
     },
     "elevation": {
       "title": "Elevation system",
@@ -609,8 +607,7 @@
       "title": "Elevación, Bordes y Sombras",
       "description": "Cinco niveles de elevación, tokens --elevation-* y --radius-*, combinaciones típicas y reglas de uso para borders y shadows.",
       "aiSummary": "Página de fundamentos de Elevación. Documenta cinco niveles (plano, card, dropdown, dialog, tooltip), tokens de shadow y radius, bordes y combinaciones típicas por componente.",
-      "aiEntities": "elevación, sombra, shadow, radius, borde, border, profundidad, surface",
-      "aiIntent": "informational"
+      "aiEntities": "elevación, sombra, shadow, radius, borde, border, profundidad, surface"
     },
     "elevation": {
       "title": "Sistema de elevación",

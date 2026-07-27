@@ -8,8 +8,7 @@
       "title": "Switch — Formulário",
       "description": "Documentação do Switch: Root, Thumb e tamanhos com role=\"switch\", aria-checked automático e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Switch toggle on/off com Root e Thumb, role=\"switch\" automático, tamanhos default/sm, efeito imediato sem submissão.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch",
-      "aiIntent": "informational"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -46,11 +45,31 @@
           "use": "Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Dark mode toggle", "u": "Sim", "a": "-" },
-        "item2": { "s": "Notificações on/off", "u": "Sim", "a": "-" },
-        "item3": { "s": "Aceitar termos (form com submit)", "u": "Não", "a": "Checkbox" },
-        "item4": { "s": "Seleção entre 2 opções textuais", "u": "Não", "a": "RadioGroup" },
-        "item5": { "s": "Formatação visual (negrito/itálico)", "u": "Não", "a": "Toggle" }
+        "item1": {
+          "s": "Dark mode toggle",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Notificações on/off",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Aceitar termos (form com submit)",
+          "u": "Não",
+          "a": "Checkbox"
+        },
+        "item4": {
+          "s": "Seleção entre 2 opções textuais",
+          "u": "Não",
+          "a": "RadioGroup"
+        },
+        "item5": {
+          "s": "Formatação visual (negrito/itálico)",
+          "u": "Não",
+          "a": "Toggle"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -223,13 +242,34 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "input": { "class": "bg-input", "part": "Fundo no estado unchecked" },
-        "primary": { "class": "bg-primary", "part": "Fundo no estado checked" },
-        "background": { "class": "bg-background", "part": "Cor do Thumb (light)" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Cor do Thumb (dark + checked)" },
-        "ring": { "class": "ring-ring", "part": "Anel de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borda no estado inválido" },
-        "foreground": { "class": "text-foreground", "part": "Texto do Label associado" }
+        "input": {
+          "class": "bg-input",
+          "part": "Fundo no estado unchecked"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Fundo no estado checked"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Cor do Thumb (light)"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Cor do Thumb (dark + checked)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anel de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borda no estado inválido"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto do Label associado"
+        }
       },
       "customizationTitle": "Customização",
       "customizationCode": "/* Cor customizada do checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamanho customizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
@@ -268,10 +308,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Seleção em form com submit ou múltipla independente." },
-        "toggle": { "name": "Toggle", "description": "Botão de formatação visual (negrito, itálico)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Seleção entre 2-7 opções textuais." },
-        "form": { "name": "Form", "description": "Integração com validação via React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Seleção em form com submit ou múltipla independente."
+        },
+        "toggle": {
+          "name": "Toggle",
+          "description": "Botão de formatação visual (negrito, itálico)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Seleção entre 2-7 opções textuais."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integração com validação via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -300,10 +352,26 @@
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
-        "item1": { "action": "Clicar no Switch", "result": "Alterna entre checked/unchecked e dispara o callback de mudança", "priority": "high" },
-        "item2": { "action": "Pressionar Space com Switch focado", "result": "Alterna o estado", "priority": "high" },
-        "item3": { "action": "Clicar no Label", "result": "Alterna o estado (via htmlFor)", "priority": "high" },
-        "item4": { "action": "Clicar com disabled=true", "result": "Não muda estado; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Clicar no Switch",
+          "result": "Alterna entre checked/unchecked e dispara o callback de mudança",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pressionar Space com Switch focado",
+          "result": "Alterna o estado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Clicar no Label",
+          "result": "Alterna o estado (via htmlFor)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clicar com disabled=true",
+          "result": "Não muda estado; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
@@ -318,10 +386,22 @@
         "title": "Regressão Visual",
         "description": "Estados que o Chromatic deve capturar.",
         "required": "Obrigatório",
-        "item1": { "story": "Unchecked (default)", "priority": "high" },
-        "item2": { "story": "Checked (default)", "priority": "high" },
-        "item3": { "story": "Disabled", "priority": "high" },
-        "item4": { "story": "Size sm", "priority": "medium" }
+        "item1": {
+          "story": "Unchecked (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Checked (default)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Size sm",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -354,8 +434,7 @@
       "title": "Switch — Form",
       "description": "Switch documentation: Root, Thumb and sizes with role=\"switch\", automatic aria-checked and WCAG 2.2 AA support.",
       "aiSummary": "Switch on/off toggle component with Root and Thumb, automatic role=\"switch\", default/sm sizes, immediate effect without submission.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch",
-      "aiIntent": "informational"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -392,11 +471,31 @@
           "use": "Use this component?",
           "alternative": "Alternative"
         },
-        "item1": { "s": "Dark mode toggle", "u": "Yes", "a": "-" },
-        "item2": { "s": "Notifications on/off", "u": "Yes", "a": "-" },
-        "item3": { "s": "Accept terms (form with submit)", "u": "No", "a": "Checkbox" },
-        "item4": { "s": "Choice between 2 text options", "u": "No", "a": "RadioGroup" },
-        "item5": { "s": "Visual formatting (bold/italic)", "u": "No", "a": "Toggle" }
+        "item1": {
+          "s": "Dark mode toggle",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Notifications on/off",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Accept terms (form with submit)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item4": {
+          "s": "Choice between 2 text options",
+          "u": "No",
+          "a": "RadioGroup"
+        },
+        "item5": {
+          "s": "Visual formatting (bold/italic)",
+          "u": "No",
+          "a": "Toggle"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -569,13 +668,34 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "input": { "class": "bg-input", "part": "Background in unchecked state" },
-        "primary": { "class": "bg-primary", "part": "Background in checked state" },
-        "background": { "class": "bg-background", "part": "Thumb color (light)" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Thumb color (dark + checked)" },
-        "ring": { "class": "ring-ring", "part": "Focus ring" },
-        "destructive": { "class": "border-destructive", "part": "Border in invalid state" },
-        "foreground": { "class": "text-foreground", "part": "Associated Label text" }
+        "input": {
+          "class": "bg-input",
+          "part": "Background in unchecked state"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Background in checked state"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Thumb color (light)"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Thumb color (dark + checked)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Focus ring"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Border in invalid state"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Associated Label text"
+        }
       },
       "customizationTitle": "Customization",
       "customizationCode": "/* Custom checked color */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Custom size */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
@@ -614,10 +734,22 @@
     "related": {
       "title": "Related Components",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Selection in form with submit or independent multiple." },
-        "toggle": { "name": "Toggle", "description": "Visual formatting button (bold, italic)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selection between 2-7 text options." },
-        "form": { "name": "Form", "description": "Validation integration via React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selection in form with submit or independent multiple."
+        },
+        "toggle": {
+          "name": "Toggle",
+          "description": "Visual formatting button (bold, italic)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selection between 2-7 text options."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Validation integration via React Hook Form."
+        }
       }
     },
     "notes": {
@@ -646,10 +778,26 @@
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
-        "item1": { "action": "Click the Switch", "result": "Toggles between checked/unchecked and fires the change callback", "priority": "high" },
-        "item2": { "action": "Press Space with Switch focused", "result": "Toggles the state", "priority": "high" },
-        "item3": { "action": "Click the Label", "result": "Toggles the state (via htmlFor)", "priority": "high" },
-        "item4": { "action": "Click with disabled=true", "result": "Doesn't change state; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Click the Switch",
+          "result": "Toggles between checked/unchecked and fires the change callback",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Press Space with Switch focused",
+          "result": "Toggles the state",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Click the Label",
+          "result": "Toggles the state (via htmlFor)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Click with disabled=true",
+          "result": "Doesn't change state; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
@@ -664,10 +812,22 @@
         "title": "Visual Regression",
         "description": "States the Chromatic should capture.",
         "required": "Required",
-        "item1": { "story": "Unchecked (default)", "priority": "high" },
-        "item2": { "story": "Checked (default)", "priority": "high" },
-        "item3": { "story": "Disabled", "priority": "high" },
-        "item4": { "story": "Size sm", "priority": "medium" }
+        "item1": {
+          "story": "Unchecked (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Checked (default)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Size sm",
+          "priority": "medium"
+        }
       }
     },
     "nav": {
@@ -700,8 +860,7 @@
       "title": "Switch — Formulario",
       "description": "Documentación de Switch: Root, Thumb y tamaños con role=\"switch\", aria-checked automático y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Switch toggle on/off con Root y Thumb, role=\"switch\" automático, tamaños default/sm, efecto inmediato sin envío.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch",
-      "aiIntent": "informational"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demostración",
@@ -738,11 +897,31 @@
           "use": "¿Usar este componente?",
           "alternative": "Alternativa"
         },
-        "item1": { "s": "Toggle de modo oscuro", "u": "Sí", "a": "-" },
-        "item2": { "s": "Notificaciones on/off", "u": "Sí", "a": "-" },
-        "item3": { "s": "Aceptar términos (form con submit)", "u": "No", "a": "Checkbox" },
-        "item4": { "s": "Selección entre 2 opciones textuales", "u": "No", "a": "RadioGroup" },
-        "item5": { "s": "Formato visual (negrita/itálica)", "u": "No", "a": "Toggle" }
+        "item1": {
+          "s": "Toggle de modo oscuro",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Notificaciones on/off",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item3": {
+          "s": "Aceptar términos (form con submit)",
+          "u": "No",
+          "a": "Checkbox"
+        },
+        "item4": {
+          "s": "Selección entre 2 opciones textuales",
+          "u": "No",
+          "a": "RadioGroup"
+        },
+        "item5": {
+          "s": "Formato visual (negrita/itálica)",
+          "u": "No",
+          "a": "Toggle"
+        }
       },
       "uxWriting": {
         "title": "UX Writing",
@@ -915,13 +1094,34 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "input": { "class": "bg-input", "part": "Fondo en estado unchecked" },
-        "primary": { "class": "bg-primary", "part": "Fondo en estado checked" },
-        "background": { "class": "bg-background", "part": "Color del Thumb (light)" },
-        "primaryForeground": { "class": "bg-primary-foreground", "part": "Color del Thumb (dark + checked)" },
-        "ring": { "class": "ring-ring", "part": "Anillo de foco" },
-        "destructive": { "class": "border-destructive", "part": "Borde en estado inválido" },
-        "foreground": { "class": "text-foreground", "part": "Texto del Label asociado" }
+        "input": {
+          "class": "bg-input",
+          "part": "Fondo en estado unchecked"
+        },
+        "primary": {
+          "class": "bg-primary",
+          "part": "Fondo en estado checked"
+        },
+        "background": {
+          "class": "bg-background",
+          "part": "Color del Thumb (light)"
+        },
+        "primaryForeground": {
+          "class": "bg-primary-foreground",
+          "part": "Color del Thumb (dark + checked)"
+        },
+        "ring": {
+          "class": "ring-ring",
+          "part": "Anillo de foco"
+        },
+        "destructive": {
+          "class": "border-destructive",
+          "part": "Borde en estado inválido"
+        },
+        "foreground": {
+          "class": "text-foreground",
+          "part": "Texto del Label asociado"
+        }
       },
       "customizationTitle": "Personalización",
       "customizationCode": "/* Color personalizado del checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamaño personalizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
@@ -960,10 +1160,22 @@
     "related": {
       "title": "Componentes Relacionados",
       "items": {
-        "checkbox": { "name": "Checkbox", "description": "Selección en form con submit o múltiple independiente." },
-        "toggle": { "name": "Toggle", "description": "Botón de formato visual (negrita, itálica)." },
-        "radioGroup": { "name": "RadioGroup", "description": "Selección entre 2-7 opciones textuales." },
-        "form": { "name": "Form", "description": "Integración de validación vía React Hook Form." }
+        "checkbox": {
+          "name": "Checkbox",
+          "description": "Selección en form con submit o múltiple independiente."
+        },
+        "toggle": {
+          "name": "Toggle",
+          "description": "Botón de formato visual (negrita, itálica)."
+        },
+        "radioGroup": {
+          "name": "RadioGroup",
+          "description": "Selección entre 2-7 opciones textuales."
+        },
+        "form": {
+          "name": "Form",
+          "description": "Integración de validación vía React Hook Form."
+        }
       }
     },
     "notes": {
@@ -992,10 +1204,26 @@
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
-        "item1": { "action": "Hacer clic en el Switch", "result": "Alterna entre checked/unchecked y dispara el callback de cambio", "priority": "high" },
-        "item2": { "action": "Pulsar Space con Switch enfocado", "result": "Alterna el estado", "priority": "high" },
-        "item3": { "action": "Hacer clic en el Label", "result": "Alterna el estado (vía htmlFor)", "priority": "high" },
-        "item4": { "action": "Clic con disabled=true", "result": "No cambia el estado; aria-disabled true", "priority": "medium" }
+        "item1": {
+          "action": "Hacer clic en el Switch",
+          "result": "Alterna entre checked/unchecked y dispara el callback de cambio",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Pulsar Space con Switch enfocado",
+          "result": "Alterna el estado",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Hacer clic en el Label",
+          "result": "Alterna el estado (vía htmlFor)",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Clic con disabled=true",
+          "result": "No cambia el estado; aria-disabled true",
+          "priority": "medium"
+        }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
@@ -1010,10 +1238,22 @@
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
-        "item1": { "story": "Unchecked (default)", "priority": "high" },
-        "item2": { "story": "Checked (default)", "priority": "high" },
-        "item3": { "story": "Disabled", "priority": "high" },
-        "item4": { "story": "Size sm", "priority": "medium" }
+        "item1": {
+          "story": "Unchecked (default)",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Checked (default)",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Disabled",
+          "priority": "high"
+        },
+        "item4": {
+          "story": "Size sm",
+          "priority": "medium"
+        }
       }
     },
     "nav": {

@@ -55,7 +55,6 @@ useSeoEffect(computed(() => ({
   componentSlug: 'progress',
   aiSummary: tContent('seo.aiSummary'),
   aiEntities: tContent('seo.aiEntities'),
-  aiIntent: tContent('seo.aiIntent') as 'informational',
   breadcrumb: [
     { name: 'Components', item: '/components' },
     { name: tContent('category'), item: '/components/feedback' },

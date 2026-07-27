@@ -8,8 +8,7 @@
       "title": "InputOTP — Formulário",
       "description": "Documentação do InputOTP: campo de código de verificação via input-otp, com slots individuais, autoFocus, paste e WCAG 2.2 AA.",
       "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Vanilla) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid",
-      "aiIntent": "informational"
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -455,8 +454,7 @@
       "title": "InputOTP — Form",
       "description": "InputOTP documentation: verification code field via input-otp, with individual slots, autoFocus, paste, and WCAG 2.2 AA.",
       "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Vanilla) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid",
-      "aiIntent": "informational"
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -902,8 +900,7 @@
       "title": "InputOTP — Formulario",
       "description": "Documentación de InputOTP: campo de código de verificación vía input-otp, con slots individuales, autoFocus, paste y WCAG 2.2 AA.",
       "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Vanilla) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid",
-      "aiIntent": "informational"
+      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
     },
     "demonstration": {
       "title": "Demostración",
