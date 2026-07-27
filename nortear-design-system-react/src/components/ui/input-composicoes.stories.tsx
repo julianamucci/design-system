@@ -196,7 +196,7 @@ export const SenhaComToggle: Story = {
           <InputGroupInput
             id="comp-password-toggle"
             type={show ? "text" : "password"}
-            placeholder="Mínimo 8 caracteres"
+            placeholder="••••••••"
           />
           <InputGroupAddon align="inline-end">
             <InputGroupButton

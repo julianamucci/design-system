@@ -53,7 +53,7 @@ export const Email: Story = {
 export const Senha: Story = {
   render: () => ({
     components: { Input },
-    template: '<div class="nds-w-xs"><Input type="password" placeholder="Mínimo 8 caracteres" /></div>',
+    template: '<div class="nds-w-xs"><Input type="password" placeholder="••••••••" /></div>',
   }),
   play: async ({ canvasElement, step }) => {
     await step('Input type=password está renderizado', async () => {

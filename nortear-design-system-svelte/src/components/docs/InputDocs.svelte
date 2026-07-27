@@ -102,7 +102,7 @@ import { Label } from "@/components/ui/label";`;
 
   const codePassword = `<div class="nds-stack" data-spacing="xs">
   <Label for="senha">Senha</Label>
-  <Input id="senha" type="password" placeholder="Mínimo 8 caracteres" />
+  <Input id="senha" type="password" placeholder="••••••••" />
 </div>`;
 
   const codeDisabled = `<div class="nds-stack" data-spacing="xs">
@@ -366,7 +366,7 @@ interface InputProps extends HTMLInputAttributes {
       {#snippet variantPassword()}
         <div class="nds-stack nds-w-full" data-spacing="xs">
           <Label for="v-password">Senha</Label>
-          <Input id="v-password" type="password" placeholder="Mínimo 8 caracteres" />
+          <Input id="v-password" type="password" placeholder="••••••••" />
         </div>
       {/snippet}
       {#snippet variantDisabled()}

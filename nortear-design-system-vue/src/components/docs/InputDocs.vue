@@ -130,7 +130,7 @@ const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
 
 const codeEmail = `<Input type="email" placeholder="ex: joao@empresa.com" />`;
 
-const codePassword = `<Input type="password" placeholder="Mínimo 8 caracteres" />`;
+const codePassword = `<Input type="password" placeholder="••••••••" />`;
 
 const codeNumber = `<Input type="number" placeholder="0" />`;
 
@@ -597,7 +597,7 @@ const visualTestItems = computed(() => [
         >
           <Input
             type="password"
-            placeholder="Mínimo 8 caracteres"
+            placeholder="••••••••"
           />
         </div>
       </template>

@@ -373,7 +373,7 @@ export function createInputDocs(): HTMLElement {
       case 'variantes': {
         const codeText = `const input = createInput({ type: 'text', placeholder: 'ex: João da Silva' });`;
         const codeEmail = `const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });`;
-        const codePassword = `const input = createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' });`;
+        const codePassword = `const input = createInput({ type: 'password', placeholder: '••••••••' });`;
         const codeNumber = `const input = createInput({ type: 'number', placeholder: '0' });`;
         const codeFile = `const input = createInput({ type: 'file' });`;
 
@@ -396,7 +396,7 @@ export function createInputDocs(): HTMLElement {
               name: 'password',
               description: stripHtml(t('variants.types.password')),
               code: codePassword,
-              previewFactory: () => createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' }),
+              previewFactory: () => createInput({ type: 'password', placeholder: '••••••••' }),
             },
             {
               name: 'number',

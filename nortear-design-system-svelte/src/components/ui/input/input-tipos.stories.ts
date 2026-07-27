@@ -52,7 +52,7 @@ export const Email: Story = {
 export const Password: Story = {
   render: () => ({
     Component: InputStory,
-    props: { type: 'password', placeholder: 'Mínimo 8 caracteres' },
+    props: { type: 'password', placeholder: '••••••••' },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

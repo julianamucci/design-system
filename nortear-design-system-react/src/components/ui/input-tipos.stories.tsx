@@ -63,7 +63,7 @@ export const Password: Story = {
       <label htmlFor="tipo-password" className="nds-text-body nds-font-medium">
         Senha
       </label>
-      <Input id="tipo-password" type="password" placeholder="Mínimo 8 caracteres" />
+      <Input id="tipo-password" type="password" placeholder="••••••••" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {

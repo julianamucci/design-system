@@ -54,8 +54,8 @@
         "description": "<strong>Descrições</strong> — frase completa com ponto. Em labels curtos, sem ponto.",
         "error": "<strong>Mensagens de erro</strong> — objetivas e prescritivas: <em>o que está errado + o que fazer</em>.",
         "cta": "<strong>CTAs</strong> — verbo no infinitivo + escopo. Ex: <code>Salvar alterações</code>, não <code>Clique aqui</code>.",
-        "placeholder": "<strong>Placeholders</strong> — exemplo real do formato, não instrução. Ex: <code>ex: joao@empresa.com</code>.",
-        "empty": "<strong>Empty states</strong> — reconhece a ausência + sugere próxima ação, sem drama."
+        "placeholder": "<strong>Placeholders</strong> — em campos com formato, exemplo real prefixado com <code>ex:</code> (<code>ex: joao@empresa.com</code>); em busca, a ação com reticências (<code>Buscar componentes...</code>); em textareas abertas, pergunta-guia. Nunca a única label do campo, nunca instrução de requisito (requisitos vão em texto de apoio).",
+        "empty": "<strong>Empty states</strong> — reconhece a ausência sem drama. Em resultado de busca/filtro, a constatação basta (<code>Nenhuma fatura encontrada.</code>); em lista realmente vazia, sugira a próxima ação."
       }
     },
     "terms": {
@@ -128,14 +128,14 @@
           "avoid": "Erro de validação: email"
         },
         "r4": {
-          "context": "Empty state",
-          "correct": "Nenhum item ainda. Adicione o primeiro para começar.",
+          "context": "Empty state (busca/filtro)",
+          "correct": "Nenhuma fatura encontrada.",
           "avoid": "Ops! Parece que não há nada aqui..."
         },
         "r5": {
           "context": "Tooltip",
-          "correct": "Atalho: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "avoid": "Clique aqui para salvar o documento atual"
+          "correct": "Negrito — <kbd>Ctrl</kbd>+<kbd>B</kbd>",
+          "avoid": "Clique aqui para deixar o texto em negrito"
         },
         "r6": {
           "context": "Toast de sucesso",
@@ -154,7 +154,7 @@
       "subtitle": "O conteúdo das docs pages vive em <code>translations.json</code>. Algumas regras evitam bugs visuais e quebras de renderização.",
       "items": {
         "noEmoji": "<strong>Sem emojis</strong> em strings — ícones e símbolos vêm do código JSX/template. Emoji em string + ícone em JSX = duplicação visual.",
-        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados via <code>sanitize-html</code>.",
+        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados com sanitização <code>DOMPurify</code> direto no call site.",
         "noStack": "<strong>Sem referências de stack</strong> — não cite React/Vue/Svelte em texto descritivo. Cada stack consome o JSON standalone.",
         "stackAgnostic": "<strong>Texto descritivo neutro de API</strong> — diga 'callback de mudança', não 'onChange' ou '@update:modelValue'. Snippets de código (chaves <code>*Code</code>) são stack-specific.",
         "natural": "<strong>Cada idioma soa natural</strong> — não traduza palavra a palavra. Português pode usar 'você'; inglês prefere voz impessoal; espanhol equilibra formal/informal."
@@ -237,8 +237,8 @@
         "description": "<strong>Descriptions</strong> — full sentence with a period. On short labels, no period.",
         "error": "<strong>Error messages</strong> — objective and prescriptive: <em>what's wrong + what to do</em>.",
         "cta": "<strong>CTAs</strong> — infinitive verb + scope. Example: <code>Save changes</code>, not <code>Click here</code>.",
-        "placeholder": "<strong>Placeholders</strong> — real format example, not an instruction. Example: <code>e.g., john@company.com</code>.",
-        "empty": "<strong>Empty states</strong> — acknowledge the absence + suggest the next action, no drama."
+        "placeholder": "<strong>Placeholders</strong> — on fields with a format, a real example prefixed with <code>ex:</code> (<code>ex: joao@empresa.com</code>); on search, the action with ellipsis (<code>Buscar componentes...</code>); on open textareas, a guiding question. Never the field’s only label, never a requirement instruction (requirements go in helper text).",
+        "empty": "<strong>Empty states</strong> — acknowledge the absence without drama. For search/filter results, the statement is enough (<code>Nenhuma fatura encontrada.</code>); for a truly empty list, suggest the next action."
       }
     },
     "terms": {
@@ -311,14 +311,14 @@
           "avoid": "Validation error: email"
         },
         "r4": {
-          "context": "Empty state",
-          "correct": "No items yet. Add the first one to get started.",
-          "avoid": "Oops! Looks like there's nothing here..."
+          "context": "Empty state (search/filter)",
+          "correct": "Nenhuma fatura encontrada.",
+          "avoid": "Ops! Parece que não há nada aqui..."
         },
         "r5": {
           "context": "Tooltip",
-          "correct": "Shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "avoid": "Click here to save the current document"
+          "correct": "Negrito — <kbd>Ctrl</kbd>+<kbd>B</kbd>",
+          "avoid": "Clique aqui para deixar o texto em negrito"
         },
         "r6": {
           "context": "Success toast",
@@ -337,7 +337,7 @@
       "subtitle": "Docs page content lives in <code>translations.json</code>. A few rules prevent visual bugs and rendering issues.",
       "items": {
         "noEmoji": "<strong>No emojis</strong> in strings — icons and symbols come from JSX/template code. Emoji in string + icon in JSX = visual duplication.",
-        "html": "<strong>Allowed HTML</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Rendered via <code>sanitize-html</code>.",
+        "html": "<strong>Allowed HTML</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Rendered with <code>DOMPurify</code> sanitization directly at the call site.",
         "noStack": "<strong>No stack references</strong> — don't cite React/Vue/Svelte in descriptive text. Each stack consumes the JSON standalone.",
         "stackAgnostic": "<strong>API-neutral descriptive text</strong> — say 'change callback', not 'onChange' or '@update:modelValue'. Code snippets (keys ending in <code>*Code</code>) are stack-specific.",
         "natural": "<strong>Each language sounds natural</strong> — don't translate word for word. Portuguese can use 'você'; English prefers impersonal voice; Spanish balances formal/informal."
@@ -420,8 +420,8 @@
         "description": "<strong>Descripciones</strong> — frase completa con punto. En labels cortos, sin punto.",
         "error": "<strong>Mensajes de error</strong> — objetivos y prescriptivos: <em>qué está mal + qué hacer</em>.",
         "cta": "<strong>CTAs</strong> — verbo en infinitivo + alcance. Ej: <code>Guardar cambios</code>, no <code>Haz clic aquí</code>.",
-        "placeholder": "<strong>Placeholders</strong> — ejemplo real del formato, no una instrucción. Ej: <code>ej: juan@empresa.com</code>.",
-        "empty": "<strong>Empty states</strong> — reconoce la ausencia + sugiere la próxima acción, sin drama."
+        "placeholder": "<strong>Placeholders</strong> — en campos con formato, un ejemplo real con prefijo <code>ex:</code> (<code>ex: joao@empresa.com</code>); en búsqueda, la acción con puntos suspensivos (<code>Buscar componentes...</code>); en textareas abiertas, una pregunta guía. Nunca la única label del campo, nunca una instrucción de requisito (los requisitos van en texto de apoyo).",
+        "empty": "<strong>Empty states</strong> — reconoce la ausencia sin drama. En resultados de búsqueda/filtro, la constatación basta (<code>Nenhuma fatura encontrada.</code>); en una lista realmente vacía, sugiere la próxima acción."
       }
     },
     "terms": {
@@ -494,14 +494,14 @@
           "avoid": "Error de validación: email"
         },
         "r4": {
-          "context": "Empty state",
-          "correct": "Aún no hay elementos. Agrega el primero para comenzar.",
-          "avoid": "¡Vaya! Parece que no hay nada aquí..."
+          "context": "Empty state (búsqueda/filtro)",
+          "correct": "Nenhuma fatura encontrada.",
+          "avoid": "Ops! Parece que não há nada aqui..."
         },
         "r5": {
           "context": "Tooltip",
-          "correct": "Atajo: <kbd>Ctrl</kbd>+<kbd>S</kbd>",
-          "avoid": "Haz clic aquí para guardar el documento actual"
+          "correct": "Negrito — <kbd>Ctrl</kbd>+<kbd>B</kbd>",
+          "avoid": "Clique aqui para deixar o texto em negrito"
         },
         "r6": {
           "context": "Toast de éxito",
@@ -520,7 +520,7 @@
       "subtitle": "El contenido de las docs pages vive en <code>translations.json</code>. Algunas reglas evitan bugs visuales y problemas de renderizado.",
       "items": {
         "noEmoji": "<strong>Sin emojis</strong> en strings — los iconos y símbolos vienen del código JSX/template. Emoji en string + icono en JSX = duplicación visual.",
-        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados vía <code>sanitize-html</code>.",
+        "html": "<strong>HTML permitido</strong>: <code>&lt;strong&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;kbd&gt;</code>. Renderizados con sanitización <code>DOMPurify</code> directo en el call site.",
         "noStack": "<strong>Sin referencias de stack</strong> — no cites React/Vue/Svelte en texto descriptivo. Cada stack consume el JSON standalone.",
         "stackAgnostic": "<strong>Texto descriptivo neutro de API</strong> — di 'callback de cambio', no 'onChange' o '@update:modelValue'. Los snippets de código (claves <code>*Code</code>) son stack-specific.",
         "natural": "<strong>Cada idioma suena natural</strong> — no traduzcas palabra por palabra. El portugués usa 'você'; el inglés prefiere voz impersonal; el español equilibra formal/informal."

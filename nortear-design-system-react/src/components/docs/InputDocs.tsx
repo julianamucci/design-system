@@ -176,7 +176,7 @@ import {
 
   const codePassword = `<div className="nds-stack" data-spacing="xs">
   <label htmlFor="senha">Senha</label>
-  <Input id="senha" type="password" placeholder="Mínimo 8 caracteres" />
+  <Input id="senha" type="password" placeholder="••••••••" />
 </div>`;
 
   const codeNumber = `<div className="nds-stack" data-spacing="xs">

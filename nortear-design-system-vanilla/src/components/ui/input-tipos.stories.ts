@@ -43,7 +43,7 @@ export const Email: Story = {
 };
 
 export const Senha: Story = {
-  render: () => createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' }),
+  render: () => createInput({ type: 'password', placeholder: '••••••••' }),
   play: async ({ canvasElement, step }) => {
     await step('Input do tipo password renderizado', async () => {
       const input = canvasElement.querySelector('input[type="password"]') as HTMLInputElement;

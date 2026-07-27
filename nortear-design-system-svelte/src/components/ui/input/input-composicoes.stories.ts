@@ -114,7 +114,7 @@ export const Senha: Story = {
     props: {
       labelText: 'Senha',
       type: 'password',
-      placeholder: 'Mínimo 8 caracteres',
+      placeholder: '••••••••',
       hint: 'Use letras maiúsculas, minúsculas e números.',
       id: 'senha-campo',
     },

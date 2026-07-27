@@ -263,7 +263,7 @@ export function createFormDocs(): HTMLElement {
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => createFormField({
                 label: 'Senha',
-                input: createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' }),
+                input: createInput({ type: 'password', placeholder: '••••••••' }),
                 description: 'Use ao menos 8 caracteres com letras e números.',
               }),
               dontPreviewFactory: () => createInput({ type: 'password', placeholder: 'Senha' }),
@@ -274,7 +274,7 @@ export function createFormDocs(): HTMLElement {
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' });
+                const inp = createInput({ type: 'password', placeholder: '••••••••' });
                 inp.setAttribute('aria-invalid', 'true');
                 return createFormField({
                   label: 'Senha',
@@ -283,7 +283,7 @@ export function createFormDocs(): HTMLElement {
                 });
               },
               dontPreviewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' });
+                const inp = createInput({ type: 'password', placeholder: '••••••••' });
                 inp.setAttribute('aria-invalid', 'true');
                 return createFormField({
                   label: 'Senha',
@@ -366,7 +366,7 @@ export function createFormDocs(): HTMLElement {
           `});`;
 
         const codeWithError =
-          `const input = createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' });\n` +
+          `const input = createInput({ type: 'password', placeholder: '••••••••' });\n` +
           `input.setAttribute('aria-invalid', 'true');\n` +
           `const field = createFormField({\n` +
           `  label: 'Senha',\n` +
@@ -415,7 +415,7 @@ export function createFormDocs(): HTMLElement {
               useWhen: t('variants.compositions.withError.use'),
               code: codeWithError,
               previewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: 'Mínimo 8 caracteres' });
+                const inp = createInput({ type: 'password', placeholder: '••••••••' });
                 inp.setAttribute('aria-invalid', 'true');
                 return createFormField({
                   label: 'Senha',
