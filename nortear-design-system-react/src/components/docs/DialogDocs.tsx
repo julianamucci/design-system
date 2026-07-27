@@ -36,6 +36,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { mapCloseReason }    from "@/components/docs/shared/close-reason";
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "");
@@ -99,11 +100,11 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
   return (
     <Dialog
       defaultOpen={defaultOpen}
-      onOpenChange={(open) =>
+      onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "dialog",
           label: title,
-          ...(open ? {} : { reason: "user" }),
+          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
       }
@@ -136,11 +137,11 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
 function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProps) {
   return (
     <Dialog
-      onOpenChange={(open) =>
+      onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "dialog",
           label: title,
-          ...(open ? {} : { reason: "user" }),
+          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
       }

@@ -36,6 +36,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { mapCloseReason }    from "@/components/docs/shared/close-reason";
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "");
@@ -100,10 +101,10 @@ function SheetDemo({ trigger, title, description, cancel, apply, side = "right",
   return (
     <div style={{ contain: "layout" }}>
       <Sheet
-        onOpenChange={(open) =>
+        onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            ...(open ? { trigger_label: trigger } : { reason: "user" }),
+            ...(open ? { trigger_label: trigger } : { reason: mapCloseReason(details?.reason) }),
             location,
           })
         }
@@ -138,10 +139,10 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
   return (
     <div style={{ contain: "layout" }}>
       <Sheet
-        onOpenChange={(open) =>
+        onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            ...(open ? { trigger_label: trigger } : { reason: "user" }),
+            ...(open ? { trigger_label: trigger } : { reason: mapCloseReason(details?.reason) }),
             location,
           })
         }

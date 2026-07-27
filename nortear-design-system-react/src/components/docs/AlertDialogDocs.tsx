@@ -35,6 +35,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { mapCloseReason }    from "@/components/docs/shared/close-reason";
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "");
@@ -98,11 +99,11 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action, def
   return (
     <AlertDialog
       defaultOpen={defaultOpen}
-      onOpenChange={(open) =>
+      onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "alert_dialog",
           label: title,
-          ...(open ? {} : { reason: "user" }),
+          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
       }
@@ -148,11 +149,11 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action, default
   return (
     <AlertDialog
       defaultOpen={defaultOpen}
-      onOpenChange={(open) =>
+      onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "alert_dialog",
           label: title,
-          ...(open ? {} : { reason: "user" }),
+          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
       }

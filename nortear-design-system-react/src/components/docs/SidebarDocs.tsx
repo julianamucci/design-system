@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutDashboard,
   Blocks,
@@ -132,16 +132,22 @@ function SidebarDemoPreview({
       location: "docs_demo",
     });
 
+  // O provider não expõe a origem do toggle; o clique no SidebarTrigger marca
+  // 'button' antes de o onOpenChange disparar, e o default volta a 'keyboard'
+  // (atalho Ctrl/Cmd+B é o único outro caminho nesta demo).
+  const toggleSource = useRef<"button" | "keyboard">("keyboard");
+
   return (
     <div className="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style={{ contain: "layout", minHeight: "300px", display: "flex" }}>
       <SidebarProvider
         defaultOpen={defaultOpen}
-        onOpenChange={(open) =>
+        onOpenChange={(open) => {
           track("sidebar_toggle", {
             action: open ? "open" : "close",
-            trigger: "button",
-          })
-        }
+            trigger: toggleSource.current,
+          });
+          toggleSource.current = "keyboard";
+        }}
       >
         <nav aria-label="Navegação principal">
           <Sidebar variant={variant} collapsible={collapsible} side={side}>
@@ -211,7 +217,7 @@ function SidebarDemoPreview({
         </nav>
         <SidebarInset>
           <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-            <SidebarTrigger />
+            <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
             <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
           </header>
         </SidebarInset>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -207,8 +207,11 @@ export function CarouselDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
-  // Slide change tracking na demonstração — embla expõe a API imperativa via setApi.
+  // Slide change tracking na demonstração — embla expõe a API imperativa via
+  // setApi, mas não informa a ORIGEM do select; a modalidade é registrada em
+  // capture phase no wrapper da demo antes de o select disparar.
   const [demoApi, setDemoApi] = useState<CarouselApi>();
+  const demoNavModality = useRef<"button" | "swipe" | "keyboard">("button");
 
   useEffect(() => {
     if (!demoApi) return;
@@ -217,7 +220,7 @@ export function CarouselDocs() {
         component: "carousel",
         index: demoApi.selectedScrollSnap(),
         total: demoApi.scrollSnapList().length,
-        trigger: "button",
+        trigger: demoNavModality.current,
         location: "docs_demo",
       });
     };
@@ -352,7 +355,24 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="nds-w-full nds-cluster" data-justify="center" data-align="center">
+        {/* Listeners no wrapper (não no Carousel): o root do Carousel espalha
+            {...props} após o onKeyDownCapture interno — um listener externo o
+            sobrescreveria e quebraria a navegação por setas. */}
+        <div
+          className="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+          onPointerDownCapture={(e) => {
+            demoNavModality.current = (e.target as HTMLElement).closest(
+              '[data-slot="carousel-previous"], [data-slot="carousel-next"]',
+            )
+              ? "button"
+              : "swipe";
+          }}
+          onKeyDownCapture={() => {
+            demoNavModality.current = "keyboard";
+          }}
+        >
           <Carousel
             className="nds-w-full nds-max-w-md"
             aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
