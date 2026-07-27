@@ -102,22 +102,10 @@
       "title": "Criar um tema novo",
       "subtitle": "Tema é só CSS — nenhum código TS precisa mudar.",
       "steps": {
-        "file": {
-          "step": "1. Crie o arquivo",
-          "body": "Adicione <code>docs/shared/themes/&lt;nome&gt;.css</code> com um seletor <code>.tema-&lt;nome&gt;</code> contendo todos os tokens da paleta semântica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
-        },
-        "dark": {
-          "step": "2. Cubra dark mode",
-          "body": "Inclua um bloco <code>.tema-&lt;nome&gt;.dark</code> reescrevendo os mesmos tokens com valores escuros. Mantenha contraste WCAG AA (4.5:1 para texto)."
-        },
-        "import": {
-          "step": "3. Importe uma vez",
-          "body": "adicione o <code>@import</code> do arquivo novo em <code>docs/shared/themes/index.css</code>. Cada stack já importa esse índice via <code>globals.css</code>; uma linha alimenta os quatro."
-        },
-        "register": {
-          "step": "4. Registre na toolbar e no contrato",
-          "body": "adicione o nome em <code>globalTypes.brand.toolbar.items</code> nos <code>preview.ts</code> das 4 stacks e, se o tema muda a identidade de forma, sobrescreva <code>--radius</code> e os tokens de radius por componente (contrato em <code>default.css</code>)."
-        }
+        "file": "<strong>1. Crie o arquivo</strong> — Adicione <code>docs/shared/themes/&lt;nome&gt;.css</code> com um seletor <code>.tema-&lt;nome&gt;</code> contendo todos os tokens da paleta semântica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
+        "dark": "<strong>2. Cubra dark mode</strong> — Inclua um bloco <code>.tema-&lt;nome&gt;.dark</code> reescrevendo os mesmos tokens com valores escuros. Mantenha contraste WCAG AA (4.5:1 para texto).",
+        "import": "<strong>3. Importe uma vez</strong> — Adicione o <code>@import</code> do arquivo novo em <code>docs/shared/themes/index.css</code>. Cada stack já importa esse índice via <code>globals.css</code>; uma linha alimenta os quatro.",
+        "register": "<strong>4. Registre na toolbar e no contrato</strong> — Adicione o nome em <code>globalTypes.brand.toolbar.items</code> nos <code>preview.ts</code> das 4 stacks e, se o tema muda a identidade de forma, sobrescreva <code>--radius</code> e os tokens de radius por componente (contrato em <code>default.css</code>)."
       }
     },
     "reactive": {
@@ -248,22 +236,10 @@
       "title": "Author a new theme",
       "subtitle": "A theme is just CSS — no TS needs to change.",
       "steps": {
-        "file": {
-          "step": "1. Create the file",
-          "body": "Add <code>docs/shared/themes/&lt;name&gt;.css</code> with a <code>.tema-&lt;name&gt;</code> selector containing every token in the semantic palette (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
-        },
-        "dark": {
-          "step": "2. Cover dark mode",
-          "body": "Include a <code>.tema-&lt;name&gt;.dark</code> block rewriting the same tokens with dark values. Keep WCAG AA contrast (4.5:1 for text)."
-        },
-        "import": {
-          "step": "3. Import once",
-          "body": "add the new file’s <code>@import</code> to <code>docs/shared/themes/index.css</code>. Every stack already imports that index via <code>globals.css</code>; one line feeds all four."
-        },
-        "register": {
-          "step": "4. Register on the toolbar and in the contract",
-          "body": "add the name to <code>globalTypes.brand.toolbar.items</code> in the four stacks’ <code>preview.ts</code> and, if the theme changes shape identity, override <code>--radius</code> and the per-component radius tokens (contract in <code>default.css</code>)."
-        }
+        "file": "<strong>1. Create the file</strong> — Add <code>docs/shared/themes/&lt;name&gt;.css</code> with a <code>.tema-&lt;name&gt;</code> selector containing every token in the semantic palette (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
+        "dark": "<strong>2. Cover dark mode</strong> — Include a <code>.tema-&lt;name&gt;.dark</code> block rewriting the same tokens with dark values. Keep WCAG AA contrast (4.5:1 for text).",
+        "import": "<strong>3. Import once</strong> — Add the new file’s <code>@import</code> to <code>docs/shared/themes/index.css</code>. Every stack already imports that index via <code>globals.css</code>; one line feeds all four.",
+        "register": "<strong>4. Register on the toolbar and in the contract</strong> — Add the name to <code>globalTypes.brand.toolbar.items</code> in the four stacks’ <code>preview.ts</code> and, if the theme changes shape identity, override <code>--radius</code> and the per-component radius tokens (contract in <code>default.css</code>)."
       }
     },
     "reactive": {
@@ -394,22 +370,10 @@
       "title": "Crear un tema nuevo",
       "subtitle": "Un tema es solo CSS — ningún código TS necesita cambiar.",
       "steps": {
-        "file": {
-          "step": "1. Crea el archivo",
-          "body": "Agrega <code>docs/shared/themes/&lt;nombre&gt;.css</code> con un selector <code>.tema-&lt;nombre&gt;</code> que contenga todos los tokens de la paleta semántica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc)."
-        },
-        "dark": {
-          "step": "2. Cubre dark mode",
-          "body": "Incluye un bloque <code>.tema-&lt;nombre&gt;.dark</code> reescribiendo los mismos tokens con valores oscuros. Mantén contraste WCAG AA (4.5:1 para texto)."
-        },
-        "import": {
-          "step": "3. Importa una vez",
-          "body": "añade el <code>@import</code> del archivo nuevo en <code>docs/shared/themes/index.css</code>. Cada stack ya importa ese índice vía <code>globals.css</code>; una línea alimenta a los cuatro."
-        },
-        "register": {
-          "step": "4. Regístralo en la toolbar y en el contrato",
-          "body": "añade el nombre en <code>globalTypes.brand.toolbar.items</code> en los <code>preview.ts</code> de los 4 stacks y, si el tema cambia la identidad de forma, sobrescribe <code>--radius</code> y los tokens de radius por componente (contrato en <code>default.css</code>)."
-        }
+        "file": "<strong>1. Crea el archivo</strong> — Agrega <code>docs/shared/themes/&lt;nombre&gt;.css</code> con un selector <code>.tema-&lt;nombre&gt;</code> que contenga todos los tokens de la paleta semántica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
+        "dark": "<strong>2. Cubre dark mode</strong> — Incluye un bloque <code>.tema-&lt;nombre&gt;.dark</code> reescribiendo los mismos tokens con valores oscuros. Mantén contraste WCAG AA (4.5:1 para texto).",
+        "import": "<strong>3. Importa una vez</strong> — Añade el <code>@import</code> del archivo nuevo en <code>docs/shared/themes/index.css</code>. Cada stack ya importa ese índice vía <code>globals.css</code>; una línea alimenta a los cuatro.",
+        "register": "<strong>4. Regístralo en la toolbar y en el contrato</strong> — Añade el nombre en <code>globalTypes.brand.toolbar.items</code> en los <code>preview.ts</code> de los 4 stacks y, si el tema cambia la identidad de forma, sobrescribe <code>--radius</code> y los tokens de radius por componente (contrato en <code>default.css</code>)."
       }
     },
     "reactive": {
