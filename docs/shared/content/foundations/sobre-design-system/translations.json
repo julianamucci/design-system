@@ -1,20 +1,21 @@
 {
   "pt-BR": {
-    "title": "Sobre o Design System",
+    "title": "Sobre o Nortear Design System",
     "category": "Foundations",
     "type": "Visão Geral",
     "description": "Um sistema de design multi-stack: a mesma linguagem visual implementada em React, Vue, Svelte e Vanilla TS, compartilhando conteúdo, temas e guidelines a partir de uma fonte única de verdade.",
     "seo": {
-      "title": "Sobre",
+      "title": "Sobre o Nortear Design System",
       "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.2 AA por padrão.",
-      "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + vanilla), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
+      "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
       "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semânticos, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "O que é",
-      "body": "É um conjunto coeso de primitives, padrões e tokens que padroniza a interface de produtos digitais em quatro frameworks distintos. Cada stack mantém a API idiomática da sua biblioteca base, mas todas leem o mesmo <code>translations.json</code>, as mesmas guidelines e os mesmos tokens visuais.",
-      "audience": "Voltado para times de produto que precisam entregar consistência entre web apps em múltiplas tecnologias sem manter forks visuais paralelos."
+      "subtitle": "O Nortear reúne num só lugar tudo o que define a aparência e o comportamento dos nossos produtos digitais: cores, tipografia, espaçamentos, componentes de interface e as regras de uso de cada um. Ele existe em quatro tecnologias de front-end — e o resultado na tela é o mesmo em todas, porque tudo nasce de uma única fonte de conteúdo, temas e regras.",
+      "body": "Mais que uma biblioteca de componentes, é um <strong>template de documentação de design systems</strong> que pode ser customizado facilmente para a sua marca: troque cores, fontes e formas nos temas e toda a documentação — exemplos, demonstrações e componentes — passa a refletir a sua identidade.",
+      "audience": "Feito para times de produto e design que precisam de consistência entre aplicações web construídas em tecnologias diferentes, sem manter versões visuais paralelas."
     },
     "stacks": {
       "title": "Os quatro stacks",
@@ -45,7 +46,7 @@
           "when": "Qualquer aplicação Svelte 5 — SPA ou SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Sites estáticos, micro-frontends ou qualquer base sem framework de UI"
@@ -58,7 +59,7 @@
       "items": {
         "consistency": {
           "title": "Consistência visual entre stacks",
-          "body": "O mesmo componente renderiza o mesmo pixel em React, Vue, Svelte e Nortear. Auditores deterministas comparam markup e estilos."
+          "body": "O mesmo componente renderiza o mesmo pixel em React, Vue, Svelte e Vanilla. Auditores deterministas comparam markup e estilos."
         },
         "a11y": {
           "title": "Acessibilidade primeiro",
@@ -96,34 +97,50 @@
         "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — hooks compartilhados: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
+    "aiDocs": {
+      "title": "Guidelines e skills: documentação também para IA",
+      "subtitle": "Cada regra do sistema existe em duas camadas — uma para pessoas, outra para assistentes de IA.",
+      "items": {
+        "guidelines": "As <strong>guidelines</strong> (arquivos de texto em <code>docs/shared/guidelines/</code> e por stack) são a versão da documentação legível por IA: as mesmas regras destas páginas, no formato que agentes e assistentes conseguem consultar e seguir.",
+        "skills": "As <strong>skills</strong> (<code>.claude/commands/</code>) são roteiros prontos que orientam agentes de IA a criar componentes, escrever conteúdo nos três idiomas, auditar acessibilidade e manter as quatro implementações sincronizadas — sempre seguindo as guidelines.",
+        "benefit": "Na prática, pessoas e IA leem as mesmas regras — o que mantém as contribuições consistentes, venham de onde vierem."
+      }
+    },
     "links": {
       "title": "Como navegar",
-      "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher o Storybook correto de acordo com o framework do seu projeto."
+      "subtitle": "Cada stack tem seu próprio Storybook. Use a tabela acima para escolher o Storybook correto de acordo com o framework do seu projeto.",
+      "items": {
+        "foundations": "Leia as páginas de <strong>Foundations</strong> (Cores e Temas, Tipografia, Espaçamento, Elevação, Motion, Densidades) para entender todas as possibilidades de customização antes de mexer em tokens e temas.",
+        "search": "Use a <strong>barra de pesquisa</strong> do menu lateral (atalho <code>Ctrl K</code> / <code>⌘ K</code>) para ir direto a qualquer componente pelo nome.",
+        "start": "A página <strong>Comece por Aqui</strong> traz o passo a passo de instalação e primeiro uso na sua tecnologia."
+      }
     },
     "nav": {
       "overview": "Visão geral",
       "stacks": "Stacks",
       "principles": "Princípios",
       "architecture": "Arquitetura",
+      "aiDocs": "Guidelines e skills",
       "links": "Como navegar"
     }
   },
   "en": {
-    "title": "About the Design System",
+    "title": "About Nortear Design System",
     "category": "Foundations",
     "type": "Overview",
     "description": "A multi-stack design system: one visual language implemented in React, Vue, Svelte and Vanilla TS, sharing content, themes and guidelines from a single source of truth.",
     "seo": {
-      "title": "About",
+      "title": "About Nortear Design System",
       "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.2 AA by default.",
-      "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + vanilla), the shared content architecture and the core principles.",
+      "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), the shared content architecture and the core principles.",
       "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, semantic tokens, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "What it is",
-      "body": "A cohesive set of primitives, patterns and tokens that standardizes the interface of digital products across four distinct frameworks. Each stack keeps the idiomatic API of its underlying library, but they all read the same <code>translations.json</code>, the same guidelines and the same visual tokens.",
-      "audience": "Built for product teams shipping consistency across web apps in multiple technologies without maintaining parallel visual forks."
+      "subtitle": "Nortear gathers in one place everything that defines the look and behavior of our digital products: colors, typography, spacing, interface components and the usage rules for each one. It exists in four front-end technologies — and the on-screen result is the same in all of them, because everything comes from a single source of content, themes and rules.",
+      "body": "More than a component library, it is a <strong>design system documentation template</strong> that can be easily customized for your brand: change colors, fonts and shapes in the themes and the entire documentation — examples, demos and components — reflects your identity.",
+      "audience": "Built for product and design teams that need consistency across web applications built with different technologies, without maintaining parallel visual forks."
     },
     "stacks": {
       "title": "The four stacks",
@@ -154,7 +171,7 @@
           "when": "Any Svelte 5 app — SPA or SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Static sites, micro-frontends or any base without a UI framework"
@@ -167,7 +184,7 @@
       "items": {
         "consistency": {
           "title": "Visual consistency across stacks",
-          "body": "The same component renders the same pixels in React, Vue, Svelte and Nortear. Deterministic auditors compare markup and styles."
+          "body": "The same component renders the same pixels in React, Vue, Svelte and Vanilla. Deterministic auditors compare markup and styles."
         },
         "a11y": {
           "title": "Accessibility first",
@@ -205,34 +222,50 @@
         "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — shared hooks: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
+    "aiDocs": {
+      "title": "Guidelines and skills: documentation for AI too",
+      "subtitle": "Every system rule exists in two layers — one for people, one for AI assistants.",
+      "items": {
+        "guidelines": "The <strong>guidelines</strong> (text files in <code>docs/shared/guidelines/</code> and per stack) are the AI-readable version of this documentation: the same rules as these pages, in a format agents and assistants can consult and follow.",
+        "skills": "The <strong>skills</strong> (<code>.claude/commands/</code>) are ready-made playbooks that guide AI agents to create components, write content in the three languages, audit accessibility and keep the four implementations in sync — always following the guidelines.",
+        "benefit": "In practice, people and AI read the same rules — which keeps contributions consistent wherever they come from."
+      }
+    },
     "links": {
       "title": "How to navigate",
-      "subtitle": "Each stack has its own Storybook. Use the table above to pick the right Storybook based on your project's framework."
+      "subtitle": "Each stack has its own Storybook. Use the table above to pick the right Storybook based on your project's framework.",
+      "items": {
+        "foundations": "Read the <strong>Foundations</strong> pages (Colors & Themes, Typography, Spacing, Elevation, Motion, Densities) to understand every customization possibility before touching tokens and themes.",
+        "search": "Use the sidebar <strong>search bar</strong> (<code>Ctrl K</code> / <code>⌘ K</code> shortcut) to jump straight to any component by name.",
+        "start": "The <strong>Getting Started</strong> page has the step-by-step install and first use for your technology."
+      }
     },
     "nav": {
       "overview": "Overview",
       "stacks": "Stacks",
       "principles": "Principles",
       "architecture": "Architecture",
+      "aiDocs": "Guidelines and skills",
       "links": "How to navigate"
     }
   },
   "es": {
-    "title": "Sobre el Design System",
+    "title": "Sobre Nortear Design System",
     "category": "Foundations",
     "type": "Visión General",
     "description": "Un sistema de diseño multi-stack: el mismo lenguaje visual implementado en React, Vue, Svelte y Vanilla TS, compartiendo contenido, temas y guidelines desde una fuente única de verdad.",
     "seo": {
-      "title": "Sobre",
+      "title": "Sobre Nortear Design System",
       "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.2 AA por defecto.",
-      "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Nortear + vanilla), la arquitectura de contenido compartido y los principios fundamentales.",
+      "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), la arquitectura de contenido compartido y los principios fundamentales.",
       "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semánticos, WCAG, multi-stack",
       "aiIntent": "informational"
     },
     "intro": {
       "title": "Qué es",
-      "body": "Un conjunto cohesivo de primitives, patrones y tokens que estandariza la interfaz de productos digitales en cuatro frameworks distintos. Cada stack mantiene la API idiomática de su biblioteca base, pero todas leen el mismo <code>translations.json</code>, las mismas guidelines y los mismos tokens visuales.",
-      "audience": "Dirigido a equipos de producto que necesitan entregar consistencia entre web apps en múltiples tecnologías sin mantener forks visuales paralelos."
+      "subtitle": "Nortear reúne en un solo lugar todo lo que define la apariencia y el comportamiento de nuestros productos digitales: colores, tipografía, espaciados, componentes de interfaz y las reglas de uso de cada uno. Existe en cuatro tecnologías de front-end — y el resultado en pantalla es el mismo en todas, porque todo nace de una única fuente de contenido, temas y reglas.",
+      "body": "Más que una biblioteca de componentes, es una <strong>plantilla de documentación de design systems</strong> que puede personalizarse fácilmente para tu marca: cambia colores, fuentes y formas en los temas y toda la documentación — ejemplos, demos y componentes — refleja tu identidad.",
+      "audience": "Hecho para equipos de producto y diseño que necesitan consistencia entre aplicaciones web construidas con tecnologías distintas, sin mantener versiones visuales paralelas."
     },
     "stacks": {
       "title": "Los cuatro stacks",
@@ -263,7 +296,7 @@
           "when": "Cualquier aplicación Svelte 5 — SPA o SSR (Vite, SvelteKit)"
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
           "url": "<a href=\"https://vanilla.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">vanilla.norteardesign.com.br</a>",
           "when": "Sitios estáticos, micro-frontends o cualquier base sin framework de UI"
@@ -276,7 +309,7 @@
       "items": {
         "consistency": {
           "title": "Consistencia visual entre stacks",
-          "body": "El mismo componente renderiza el mismo pixel en React, Vue, Svelte y Nortear. Auditores deterministas comparan markup y estilos."
+          "body": "El mismo componente renderiza el mismo pixel en React, Vue, Svelte y Vanilla. Auditores deterministas comparan markup y estilos."
         },
         "a11y": {
           "title": "Accesibilidad primero",
@@ -314,15 +347,30 @@
         "lib": "<code>nortear-design-system-&lt;stack&gt;/src/lib/</code> — hooks compartidos: <code>i18n</code>, <code>use-seo</code>, <code>use-active-section</code>, <code>analytics</code>, <code>sanitize-html</code>"
       }
     },
+    "aiDocs": {
+      "title": "Guidelines y skills: documentación también para IA",
+      "subtitle": "Cada regla del sistema existe en dos capas — una para personas, otra para asistentes de IA.",
+      "items": {
+        "guidelines": "Las <strong>guidelines</strong> (archivos de texto en <code>docs/shared/guidelines/</code> y por stack) son la versión de la documentación legible por IA: las mismas reglas de estas páginas, en un formato que agentes y asistentes pueden consultar y seguir.",
+        "skills": "Las <strong>skills</strong> (<code>.claude/commands/</code>) son guiones listos que orientan a agentes de IA a crear componentes, escribir contenido en los tres idiomas, auditar accesibilidad y mantener las cuatro implementaciones sincronizadas — siempre siguiendo las guidelines.",
+        "benefit": "En la práctica, personas e IA leen las mismas reglas — lo que mantiene las contribuciones consistentes, vengan de donde vengan."
+      }
+    },
     "links": {
       "title": "Cómo navegar",
-      "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el Storybook correcto según el framework de tu proyecto."
+      "subtitle": "Cada stack tiene su propio Storybook. Usa la tabla de arriba para elegir el Storybook correcto según el framework de tu proyecto.",
+      "items": {
+        "foundations": "Lee las páginas de <strong>Foundations</strong> (Colores y Temas, Tipografía, Espaciado, Elevación, Motion, Densidades) para entender todas las posibilidades de personalización antes de tocar tokens y temas.",
+        "search": "Usa la <strong>barra de búsqueda</strong> del menú lateral (atajo <code>Ctrl K</code> / <code>⌘ K</code>) para ir directo a cualquier componente por su nombre.",
+        "start": "La página <strong>Comienza por Aquí</strong> trae el paso a paso de instalación y primer uso en tu tecnología."
+      }
     },
     "nav": {
       "overview": "Visión general",
       "stacks": "Stacks",
       "principles": "Principios",
       "architecture": "Arquitectura",
+      "aiDocs": "Guidelines y skills",
       "links": "Cómo navegar"
     }
   }
