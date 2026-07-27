@@ -6,8 +6,8 @@
     "description": "Uma especificação, quatro implementações, um resultado visual. Cada stack usa uma lib base diferente — as APIs divergem, mas o markup final, o comportamento de teclado e os tokens visuais não.",
     "seo": {
       "title": "Divergências Cross-Stack",
-      "description": "Como o sistema mantém consistência visual entre React, Vue, Svelte e Nortear apesar das APIs divergentes das libs base headless.",
-      "aiSummary": "Página técnica que documenta divergências entre stacks. Lista as libs base por stack (base-ui no React, reka-ui no Vue, bits-ui no Svelte, factories vanilla no Nortear), apresenta tabelas de divergência conhecidas (Accordion, DataTable, Checkbox), explica a estratégia de texto API-neutro em translations.json e indica onde menções literais são aceitáveis (snippets de código, props.table.name/type).",
+      "description": "Como o sistema mantém consistência visual entre React, Vue, Svelte e Vanilla apesar das APIs divergentes das libs base headless.",
+      "aiSummary": "Página técnica que documenta divergências entre stacks. Lista as libs base por stack (base-ui no React, reka-ui no Vue, bits-ui no Svelte, factories na stack vanilla), apresenta tabelas de divergência conhecidas (Accordion, DataTable, Checkbox), explica a estratégia de texto API-neutro em translations.json e indica onde menções literais são aceitáveis (snippets de código, props.table.name/type).",
       "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
@@ -41,7 +41,7 @@
           "approach": "Componentes compostos com Svelte 5 runes; props camelCase, slots nativos."
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "lib": "factories vanilla TS + CSS .nds-*",
           "approach": "Funções factory que retornam HTML + listeners; estilo via classes vanilla."
         }
@@ -51,36 +51,11 @@
       "title": "Divergências conhecidas",
       "subtitle": "Exemplos representativos. A regra geral: descrever o conceito em texto API-neutro, materializar a prop literal apenas em snippets.",
       "items": {
-        "accordion": {
-          "component": "Accordion",
-          "concept": "Modo único (um item aberto por vez) vs modo múltiplo (vários simultâneos).",
-          "divergence": "Em uma lib o modo é uma string discriminada (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); em outra é um booleano (<code>multiple</code>); em outra é inferido pelo tipo do valor (string vs array).",
-          "neutral": "\"Modo de seleção: único ou múltiplo.\""
-        },
-        "dataTable": {
-          "component": "DataTable",
-          "concept": "Hook/factory que recebe colunas + dados e devolve API para renderizar header, body, paginação.",
-          "divergence": "<code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), composição com runes em Svelte e factory direta no Nortear. APIs próximas mas com conventions distintas (refs vs reactive vs $state).",
-          "neutral": "\"Hook de tabela com columns e data; expõe instância para render.\""
-        },
-        "checkbox": {
-          "component": "Checkbox",
-          "concept": "Estado tri-state com valor indeterminado além de marcado/desmarcado.",
-          "divergence": "Em uma lib <code>indeterminate</code> é prop booleana separada; em outra o estado vive em <code>checked</code> como string <code>'indeterminate'</code>; em outra é um valor literal do union <code>CheckedState</code>.",
-          "neutral": "\"Suporta estado indeterminado para indicar seleção parcial.\""
-        },
-        "select": {
-          "component": "Select",
-          "concept": "Seleção controlada vs não controlada.",
-          "divergence": "Algumas libs expõem par <code>value</code>/<code>onValueChange</code>; outras <code>v-model</code>; Svelte usa <code>bind:value</code> sobre rune.",
-          "neutral": "\"Aceita valor controlado e callback de mudança.\""
-        },
-        "dialog": {
-          "component": "Dialog",
-          "concept": "Trigger renderizado separado do overlay via portal.",
-          "divergence": "<code>asChild</code> em base-ui transfere props para o filho; reka-ui usa slot prop; bits-ui combina os dois patterns; Nortear não tem o conceito.",
-          "neutral": "\"Trigger e overlay são montados separadamente; o trigger aceita ser substituído por um elemento filho.\""
-        }
+        "accordion": "<strong>Accordion</strong> — Modo único (um item aberto por vez) vs modo múltiplo (vários simultâneos). <em>Divergência:</em> Em uma lib o modo é uma string discriminada (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); em outra é um booleano (<code>multiple</code>); em outra é inferido pelo tipo do valor (string vs array). <em>Texto neutro:</em> \"Modo de seleção: único ou múltiplo.\"",
+        "dataTable": "<strong>DataTable</strong> — Hook/factory que recebe colunas + dados e devolve API para renderizar header, body, paginação. <em>Divergência:</em> <code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), composição com runes em Svelte e factory direta no Vanilla. APIs próximas mas com conventions distintas (refs vs reactive vs $state). <em>Texto neutro:</em> \"Hook de tabela com columns e data; expõe instância para render.\"",
+        "checkbox": "<strong>Checkbox</strong> — Estado tri-state com valor indeterminado além de marcado/desmarcado. <em>Divergência:</em> Em uma lib <code>indeterminate</code> é prop booleana separada; em outra o estado vive em <code>checked</code> como string <code>'indeterminate'</code>; em outra é um valor literal do union <code>CheckedState</code>. <em>Texto neutro:</em> \"Suporta estado indeterminado para indicar seleção parcial.\"",
+        "select": "<strong>Select</strong> — Seleção controlada vs não controlada. <em>Divergência:</em> Algumas libs expõem par <code>value</code>/<code>onValueChange</code>; outras <code>v-model</code>; Svelte usa <code>bind:value</code> sobre rune. <em>Texto neutro:</em> \"Aceita valor controlado e callback de mudança.\"",
+        "dialog": "<strong>Dialog</strong> — Trigger renderizado separado do overlay via portal. <em>Divergência:</em> base-ui usa <code>render</code> prop (o sistema expõe um <code>asChild</code> de compatibilidade); reka-ui usa <code>as-child</code> com slot; bits-ui usa <code>child</code> snippet; a stack vanilla não tem o conceito — a factory recebe parâmetros. <em>Texto neutro:</em> \"Trigger e overlay são montados separadamente; o trigger aceita ser substituído por um elemento filho.\""
       }
     },
     "writingStrategy": {
@@ -93,11 +68,11 @@
         },
         "codeKeys": {
           "title": "Chaves *Code: stack-specific",
-          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> contêm snippets literais. Cada stack lê o seu subset (JSX no React, <code>&lt;template&gt;</code> no Vue, marcação <code>.svelte</code> no Svelte, HTML+TS no Nortear)."
+          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> contêm snippets literais. Cada stack lê o seu subset (JSX no React, <code>&lt;template&gt;</code> no Vue, marcação <code>.svelte</code> no Svelte, HTML+TS no Vanilla)."
         },
         "propsTable": {
           "title": "Tabela de props: name/type literais OK",
-          "body": "Em <code>props.&lt;group&gt;.items[*].name</code> e <code>.type</code> a prop literal é o conteúdo desejado. Quando a API diverge, use override no call site (<code>useTranslation(t, overrides)</code>) ou um <code>useMemo</code> local que troque a entrada."
+          "body": "Em <code>props.&lt;group&gt;.items[*].name</code> e <code>.type</code> a prop literal é o conteúdo desejado. Quando a API diverge, use override no call site (<code>useTranslation(t, overrides)</code>) ou uma lista local no call site que troque a entrada."
         },
         "notes": {
           "title": "Notas explicativas: divergência permitida",
@@ -113,43 +88,43 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
-        "nortear": "Nortear"
+        "vanilla": "Vanilla"
       },
       "rows": {
         "accordion": {
           "component": "Accordion",
-          "react": "string",
-          "vue": "boolean",
-          "svelte": "string",
-          "nortear": "data-attr"
+          "react": "boolean (multiple)",
+          "vue": "string (type)",
+          "svelte": "string (type)",
+          "vanilla": "data-attr"
         },
         "checkbox": {
           "component": "Checkbox",
           "react": "boolean prop",
           "vue": "string em checked",
           "svelte": "union literal",
-          "nortear": "aria-checked"
+          "vanilla": "aria-checked"
         },
         "select": {
           "component": "Select",
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
-          "nortear": "event listener"
+          "vanilla": "event listener"
         },
         "dialog": {
           "component": "Dialog",
-          "react": "asChild",
+          "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
-          "nortear": "factory params"
+          "vanilla": "factory params"
         },
         "form": {
           "component": "Form",
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
-          "nortear": "FormData nativo"
+          "vanilla": "FormData nativo"
         }
       }
     },
@@ -170,8 +145,8 @@
     "description": "One spec, four implementations, one visual result. Each stack uses a different base library — APIs diverge, but the final markup, keyboard behavior and visual tokens do not.",
     "seo": {
       "title": "Cross-Stack Divergences",
-      "description": "How the system keeps visual consistency across React, Vue, Svelte and Nortear despite divergent APIs in the headless base libraries.",
-      "aiSummary": "Technical page documenting per-stack divergences. Lists the base libraries per stack (base-ui in React, reka-ui in Vue, bits-ui in Svelte, vanilla factories in Nortear), shows known divergence tables (Accordion, DataTable, Checkbox), explains the API-neutral text strategy in translations.json and points out where literal mentions are acceptable (code snippets, props.table.name/type).",
+      "description": "How the system keeps visual consistency across React, Vue, Svelte and Vanilla despite divergent APIs in the headless base libraries.",
+      "aiSummary": "Technical page documenting per-stack divergences. Lists the base libraries per stack (base-ui in React, reka-ui in Vue, bits-ui in Svelte, vanilla factories in Vanilla), shows known divergence tables (Accordion, DataTable, Checkbox), explains the API-neutral text strategy in translations.json and points out where literal mentions are acceptable (code snippets, props.table.name/type).",
       "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutral, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
@@ -205,7 +180,7 @@
           "approach": "Compound components with Svelte 5 runes; camelCase props, native slots."
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "lib": "vanilla TS factories + CSS .nds-*",
           "approach": "Factory functions returning HTML + listeners; styling via vanilla classes."
         }
@@ -215,36 +190,11 @@
       "title": "Known divergences",
       "subtitle": "Representative examples. General rule: describe the concept in API-neutral text, materialize the literal prop only in snippets.",
       "items": {
-        "accordion": {
-          "component": "Accordion",
-          "concept": "Single mode (one item open at a time) vs multiple mode (several at once).",
-          "divergence": "In one lib the mode is a discriminated string (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); in another it's a boolean (<code>multiple</code>); in another it's inferred from the value type (string vs array).",
-          "neutral": "\"Selection mode: single or multiple.\""
-        },
-        "dataTable": {
-          "component": "DataTable",
-          "concept": "Hook/factory taking columns + data and returning an API to render header, body, pagination.",
-          "divergence": "<code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), runes-based composition in Svelte and a direct factory in Nortear. Close APIs but different conventions (refs vs reactive vs $state).",
-          "neutral": "\"Table hook taking columns and data; exposes an instance to render.\""
-        },
-        "checkbox": {
-          "component": "Checkbox",
-          "concept": "Tri-state with an indeterminate value besides checked/unchecked.",
-          "divergence": "In one lib <code>indeterminate</code> is a separate boolean prop; in another it lives inside <code>checked</code> as the string <code>'indeterminate'</code>; in another it's a literal member of the <code>CheckedState</code> union.",
-          "neutral": "\"Supports an indeterminate state to signal partial selection.\""
-        },
-        "select": {
-          "component": "Select",
-          "concept": "Controlled vs uncontrolled selection.",
-          "divergence": "Some libs expose a <code>value</code>/<code>onValueChange</code> pair; others <code>v-model</code>; Svelte uses <code>bind:value</code> over a rune.",
-          "neutral": "\"Accepts a controlled value and a change callback.\""
-        },
-        "dialog": {
-          "component": "Dialog",
-          "concept": "Trigger rendered separately from the overlay via portal.",
-          "divergence": "<code>asChild</code> in base-ui forwards props to the child; reka-ui uses a slot prop; bits-ui combines both patterns; Nortear has no equivalent concept.",
-          "neutral": "\"Trigger and overlay mount separately; the trigger accepts being substituted by a child element.\""
-        }
+        "accordion": "<strong>Accordion</strong> — Single mode (one item open at a time) vs multiple mode (several at once). <em>Divergence:</em> In one lib the mode is a discriminated string (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); in another it's a boolean (<code>multiple</code>); in another it's inferred from the value type (string vs array). <em>Neutral text:</em> \"Selection mode: single or multiple.\"",
+        "dataTable": "<strong>DataTable</strong> — Hook/factory taking columns + data and returning an API to render header, body, pagination. <em>Divergence:</em> <code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), runes-based composition in Svelte and a direct factory in Vanilla. Close APIs but different conventions (refs vs reactive vs $state). <em>Neutral text:</em> \"Table hook taking columns and data; exposes an instance to render.\"",
+        "checkbox": "<strong>Checkbox</strong> — Tri-state with an indeterminate value besides checked/unchecked. <em>Divergence:</em> In one lib <code>indeterminate</code> is a separate boolean prop; in another it lives inside <code>checked</code> as the string <code>'indeterminate'</code>; in another it's a literal member of the <code>CheckedState</code> union. <em>Neutral text:</em> \"Supports an indeterminate state to signal partial selection.\"",
+        "select": "<strong>Select</strong> — Controlled vs uncontrolled selection. <em>Divergence:</em> Some libs expose a <code>value</code>/<code>onValueChange</code> pair; others <code>v-model</code>; Svelte uses <code>bind:value</code> over a rune. <em>Neutral text:</em> \"Accepts a controlled value and a change callback.\"",
+        "dialog": "<strong>Dialog</strong> — Trigger rendered separately from the overlay via portal. <em>Divergence:</em> base-ui uses a <code>render</code> prop (the system exposes a compat <code>asChild</code>); reka-ui uses <code>as-child</code> with a slot; bits-ui uses a <code>child</code> snippet; the vanilla stack has no such concept — the factory takes parameters. <em>Neutral text:</em> \"Trigger and overlay mount separately; the trigger accepts being substituted by a child element.\""
       }
     },
     "writingStrategy": {
@@ -257,11 +207,11 @@
         },
         "codeKeys": {
           "title": "*Code keys: stack-specific",
-          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> hold literal snippets. Each stack reads its own subset (JSX in React, <code>&lt;template&gt;</code> in Vue, <code>.svelte</code> markup in Svelte, HTML+TS in Nortear)."
+          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> hold literal snippets. Each stack reads its own subset (JSX in React, <code>&lt;template&gt;</code> in Vue, <code>.svelte</code> markup in Svelte, HTML+TS in Vanilla)."
         },
         "propsTable": {
           "title": "Props table: name/type literals OK",
-          "body": "In <code>props.&lt;group&gt;.items[*].name</code> and <code>.type</code>, the literal prop is the desired content. When the API diverges, use an override at the call site (<code>useTranslation(t, overrides)</code>) or a local <code>useMemo</code> swapping the entry."
+          "body": "In <code>props.&lt;group&gt;.items[*].name</code> and <code>.type</code>, the literal prop is the desired content. When the API diverges, use an override at the call site (<code>useTranslation(t, overrides)</code>) or a local list at the call site swapping the entry."
         },
         "notes": {
           "title": "Notes: divergence allowed",
@@ -277,43 +227,43 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
-        "nortear": "Nortear"
+        "vanilla": "Vanilla"
       },
       "rows": {
         "accordion": {
           "component": "Accordion",
-          "react": "string",
-          "vue": "boolean",
-          "svelte": "string",
-          "nortear": "data-attr"
+          "react": "boolean (multiple)",
+          "vue": "string (type)",
+          "svelte": "string (type)",
+          "vanilla": "data-attr"
         },
         "checkbox": {
           "component": "Checkbox",
           "react": "boolean prop",
           "vue": "string in checked",
           "svelte": "union literal",
-          "nortear": "aria-checked"
+          "vanilla": "aria-checked"
         },
         "select": {
           "component": "Select",
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
-          "nortear": "event listener"
+          "vanilla": "event listener"
         },
         "dialog": {
           "component": "Dialog",
-          "react": "asChild",
+          "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
-          "nortear": "factory params"
+          "vanilla": "factory params"
         },
         "form": {
           "component": "Form",
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
-          "nortear": "native FormData"
+          "vanilla": "native FormData"
         }
       }
     },
@@ -334,8 +284,8 @@
     "description": "Una especificación, cuatro implementaciones, un resultado visual. Cada stack usa una lib base distinta — las APIs divergen, pero el markup final, el comportamiento de teclado y los tokens visuales no.",
     "seo": {
       "title": "Divergencias Cross-Stack",
-      "description": "Cómo el sistema mantiene consistencia visual entre React, Vue, Svelte y Nortear pese a las APIs divergentes de las libs base headless.",
-      "aiSummary": "Página técnica que documenta divergencias entre stacks. Lista las libs base por stack (base-ui en React, reka-ui en Vue, bits-ui en Svelte, factories vanilla en Nortear), presenta tablas de divergencias conocidas (Accordion, DataTable, Checkbox), explica la estrategia de texto API-neutro en translations.json e indica dónde son aceptables las menciones literales (snippets de código, props.table.name/type).",
+      "description": "Cómo el sistema mantiene consistencia visual entre React, Vue, Svelte y Vanilla pese a las APIs divergentes de las libs base headless.",
+      "aiSummary": "Página técnica que documenta divergencias entre stacks. Lista las libs base por stack (base-ui en React, reka-ui en Vue, bits-ui en Svelte, factories en el stack vanilla), presenta tablas de divergencias conocidas (Accordion, DataTable, Checkbox), explica la estrategia de texto API-neutro en translations.json e indica dónde son aceptables las menciones literales (snippets de código, props.table.name/type).",
       "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode",
       "aiIntent": "informational"
     },
@@ -369,7 +319,7 @@
           "approach": "Componentes compuestos con Svelte 5 runes; props camelCase, slots nativos."
         },
         "nortear": {
-          "stack": "Nortear",
+          "stack": "Vanilla",
           "lib": "factories vanilla TS + CSS .nds-*",
           "approach": "Funciones factory que devuelven HTML + listeners; estilo vía clases vanilla."
         }
@@ -379,36 +329,11 @@
       "title": "Divergencias conocidas",
       "subtitle": "Ejemplos representativos. Regla general: describir el concepto en texto API-neutro, materializar la prop literal solo en snippets.",
       "items": {
-        "accordion": {
-          "component": "Accordion",
-          "concept": "Modo único (un ítem abierto a la vez) vs modo múltiple (varios simultáneos).",
-          "divergence": "En una lib el modo es una string discriminada (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); en otra es booleano (<code>multiple</code>); en otra se infiere del tipo del valor (string vs array).",
-          "neutral": "\"Modo de selección: único o múltiple.\""
-        },
-        "dataTable": {
-          "component": "DataTable",
-          "concept": "Hook/factory que recibe columnas + datos y devuelve API para renderizar header, body, paginación.",
-          "divergence": "<code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), composición con runes en Svelte y factory directa en Nortear. APIs cercanas pero con convenciones distintas (refs vs reactive vs $state).",
-          "neutral": "\"Hook de tabla con columns y data; expone instancia para render.\""
-        },
-        "checkbox": {
-          "component": "Checkbox",
-          "concept": "Estado tri-state con valor indeterminado además de marcado/desmarcado.",
-          "divergence": "En una lib <code>indeterminate</code> es prop booleana separada; en otra el estado vive en <code>checked</code> como string <code>'indeterminate'</code>; en otra es un valor literal del union <code>CheckedState</code>.",
-          "neutral": "\"Soporta estado indeterminado para señalar selección parcial.\""
-        },
-        "select": {
-          "component": "Select",
-          "concept": "Selección controlada vs no controlada.",
-          "divergence": "Algunas libs exponen par <code>value</code>/<code>onValueChange</code>; otras <code>v-model</code>; Svelte usa <code>bind:value</code> sobre rune.",
-          "neutral": "\"Acepta valor controlado y callback de cambio.\""
-        },
-        "dialog": {
-          "component": "Dialog",
-          "concept": "Trigger renderizado separado del overlay vía portal.",
-          "divergence": "<code>asChild</code> en base-ui transfiere props al hijo; reka-ui usa slot prop; bits-ui combina ambos patterns; Nortear no tiene el concepto.",
-          "neutral": "\"Trigger y overlay se montan separadamente; el trigger acepta ser sustituido por un elemento hijo.\""
-        }
+        "accordion": "<strong>Accordion</strong> — Modo único (un ítem abierto a la vez) vs modo múltiple (varios simultáneos). <em>Divergencia:</em> En una lib el modo es una string discriminada (<code>type=\"single\"</code> / <code>type=\"multiple\"</code>); en otra es booleano (<code>multiple</code>); en otra se infiere del tipo del valor (string vs array). <em>Texto neutral:</em> \"Modo de selección: único o múltiple.\"",
+        "dataTable": "<strong>DataTable</strong> — Hook/factory que recibe columnas + datos y devuelve API para renderizar header, body, paginación. <em>Divergencia:</em> <code>useReactTable</code> (TanStack React), <code>useVueTable</code> (TanStack Vue), composición con runes en Svelte y factory directa en Vanilla. APIs cercanas pero con convenciones distintas (refs vs reactive vs $state). <em>Texto neutral:</em> \"Hook de tabla con columns y data; expone instancia para render.\"",
+        "checkbox": "<strong>Checkbox</strong> — Estado tri-state con valor indeterminado además de marcado/desmarcado. <em>Divergencia:</em> En una lib <code>indeterminate</code> es prop booleana separada; en otra el estado vive en <code>checked</code> como string <code>'indeterminate'</code>; en otra es un valor literal del union <code>CheckedState</code>. <em>Texto neutral:</em> \"Soporta estado indeterminado para señalar selección parcial.\"",
+        "select": "<strong>Select</strong> — Selección controlada vs no controlada. <em>Divergencia:</em> Algunas libs exponen par <code>value</code>/<code>onValueChange</code>; otras <code>v-model</code>; Svelte usa <code>bind:value</code> sobre rune. <em>Texto neutral:</em> \"Acepta valor controlado y callback de cambio.\"",
+        "dialog": "<strong>Dialog</strong> — Trigger renderizado separado del overlay vía portal. <em>Divergencia:</em> base-ui usa <code>render</code> prop (el sistema expone un <code>asChild</code> de compatibilidad); reka-ui usa <code>as-child</code> con slot; bits-ui usa <code>child</code> snippet; el stack vanilla no tiene el concepto — la factory recibe parámetros. <em>Texto neutral:</em> \"Trigger y overlay se montan separadamente; el trigger acepta ser sustituido por un elemento hijo.\""
       }
     },
     "writingStrategy": {
@@ -421,11 +346,11 @@
         },
         "codeKeys": {
           "title": "Claves *Code: stack-specific",
-          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> contienen snippets literales. Cada stack lee su propio subset (JSX en React, <code>&lt;template&gt;</code> en Vue, marcado <code>.svelte</code> en Svelte, HTML+TS en Nortear)."
+          "body": "<code>structureCode</code>, <code>extensibilityCode</code>, <code>customizationCode</code>, <code>interfaceCode</code> contienen snippets literales. Cada stack lee su propio subset (JSX en React, <code>&lt;template&gt;</code> en Vue, marcado <code>.svelte</code> en Svelte, HTML+TS en Vanilla)."
         },
         "propsTable": {
           "title": "Tabla de props: name/type literales OK",
-          "body": "En <code>props.&lt;group&gt;.items[*].name</code> y <code>.type</code>, la prop literal es el contenido deseado. Cuando la API diverge, usa override en el call site (<code>useTranslation(t, overrides)</code>) o un <code>useMemo</code> local que cambie la entrada."
+          "body": "En <code>props.&lt;group&gt;.items[*].name</code> y <code>.type</code>, la prop literal es el contenido deseado. Cuando la API diverge, usa override en el call site (<code>useTranslation(t, overrides)</code>) o una lista local en el call site que cambie la entrada."
         },
         "notes": {
           "title": "Notas: divergencia permitida",
@@ -441,43 +366,43 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
-        "nortear": "Nortear"
+        "vanilla": "Vanilla"
       },
       "rows": {
         "accordion": {
           "component": "Accordion",
-          "react": "string",
-          "vue": "boolean",
-          "svelte": "string",
-          "nortear": "data-attr"
+          "react": "boolean (multiple)",
+          "vue": "string (type)",
+          "svelte": "string (type)",
+          "vanilla": "data-attr"
         },
         "checkbox": {
           "component": "Checkbox",
           "react": "boolean prop",
           "vue": "string en checked",
           "svelte": "union literal",
-          "nortear": "aria-checked"
+          "vanilla": "aria-checked"
         },
         "select": {
           "component": "Select",
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
-          "nortear": "event listener"
+          "vanilla": "event listener"
         },
         "dialog": {
           "component": "Dialog",
-          "react": "asChild",
+          "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
-          "nortear": "factory params"
+          "vanilla": "factory params"
         },
         "form": {
           "component": "Form",
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
-          "nortear": "FormData nativo"
+          "vanilla": "FormData nativo"
         }
       }
     },
