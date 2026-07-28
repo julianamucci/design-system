@@ -372,13 +372,7 @@ function GenericSection({ data }: { data: Record<string, unknown> }) {
       })}
 
       {note && (
-        <div className="nds-rounded-md nds-border-soft nds-bg-muted-30 nds-p-4">
-          <HtmlText
-            as="p"
-            html={note}
-            className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed"
-          />
-        </div>
+        <HtmlText as="p" html={note} className="nds-text-body nds-leading-relaxed" />
       )}
     </section>
   );

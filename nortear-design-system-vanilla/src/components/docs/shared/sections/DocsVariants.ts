@@ -39,7 +39,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   const sectionNote = props.note ?? props.description;
   if (sectionNote) {
     const p = document.createElement('p');
-    p.className = 'nds-text-muted-foreground nds-mb-4';
+    p.className = 'nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed';
     p.innerHTML = DOMPurify.sanitize(sectionNote);
     section.appendChild(p);
   }
