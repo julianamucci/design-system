@@ -91,7 +91,7 @@ const navGroups = computed(() => [
     label: tNav('nav.techRef'),
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
-      { id: 'modos',        label: tNav('nav.variants') },
+      { id: 'variantes',        label: tNav('nav.variants') },
       { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
@@ -555,7 +555,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
 
     <!-- ── Modos de Operação ──────────────────────────────────────── -->
     <DocsVariants
-      id="modos"
+      id="variantes"
       :title="tContent('variants.title')"
       :items="modeItems"
     >

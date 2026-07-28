@@ -123,7 +123,7 @@
       "note": "Quatro subcomponentes exportados. Todos necessários para o uso básico."
     },
     "variants": {
-      "title": "Modos de Operação",
+      "title": "Variantes",
       "single": {
         "label": "Single (padrão)",
         "description": "Apenas um item aberto por vez; permite fechar o item ativo clicando nele. Ideal para FAQ."
@@ -551,7 +551,7 @@
       "doDont": "Do & Don't",
       "techRef": "Referência Técnica",
       "import": "Importação",
-      "variants": "Modos",
+      "variants": "Variantes",
       "states": "Estados",
       "props": "Propriedades",
       "tokens": "Tokens",
@@ -688,7 +688,7 @@
       "note": "Four exported subcomponents. All required for basic use."
     },
     "variants": {
-      "title": "Operation Modes",
+      "title": "Variants",
       "single": {
         "label": "Single (default)",
         "description": "Only one item open at a time; allows closing the active item by clicking it. Ideal for FAQ."
@@ -1116,7 +1116,7 @@
       "doDont": "Do & Don't",
       "techRef": "Technical Reference",
       "import": "Import",
-      "variants": "Modes",
+      "variants": "Variants",
       "states": "States",
       "props": "Properties",
       "tokens": "Tokens",
@@ -1253,7 +1253,7 @@
       "note": "Cuatro subcomponentes exportados. Todos necesarios para el uso básico."
     },
     "variants": {
-      "title": "Modos de Operación",
+      "title": "Variantes",
       "single": {
         "label": "Single (predeterminado)",
         "description": "Solo un ítem abierto a la vez; permite cerrar el ítem activo haciendo clic en él. Ideal para FAQ."
@@ -1681,7 +1681,7 @@
       "doDont": "Do & Don't",
       "techRef": "Referencia Técnica",
       "import": "Importación",
-      "variants": "Modos",
+      "variants": "Variantes",
       "states": "Estados",
       "props": "Propiedades",
       "tokens": "Tokens",

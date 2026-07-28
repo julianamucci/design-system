@@ -143,7 +143,7 @@ export function createAccordionDocs(): HTMLElement {
     ]},
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
-      { id: 'modos',        labelKey: 'nav.variants' },
+      { id: 'variantes',        labelKey: 'nav.variants' },
       { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
@@ -194,7 +194,7 @@ export function createAccordionDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'modos', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -307,13 +307,13 @@ export function createAccordionDocs(): HTMLElement {
           code: `import { createAccordion } from '@/components/ui/accordion';`,
         });
 
-      case 'modos': {
+      case 'variantes': {
         const codeSingle = `createAccordion({\n  type: 'single',\n  collapsible: true,\n  items: [{ value: 'item-1', trigger: 'Pergunta', content: 'Resposta' }],\n});`;
         const codeMultiple = `createAccordion({\n  type: 'multiple',\n  items: [{ value: 's1', trigger: 'Especificações', content: 'CPU, RAM...' }],\n});`;
         const codeControlled = `createAccordion({\n  type: 'single',\n  collapsible: true,\n  defaultValue: 'item-1',\n  onValueChange: (val) => console.log(val),\n  items: [...],\n});`;
 
         return createDocsVariants({
-          id: 'modos',
+          id: 'variantes',
           title: t('variants.title'),
           items: [
             {

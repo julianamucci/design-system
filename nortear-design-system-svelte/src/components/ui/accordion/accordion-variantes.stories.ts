@@ -10,7 +10,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Modos',
+  title: 'UI/Accordion/Variantes',
   component: Accordion,
   tags: ['disclosure'],
 } satisfies Meta<typeof Accordion>;

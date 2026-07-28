@@ -59,7 +59,7 @@
       ]},
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
-        { id: 'modos',        label: tNav('nav.variants') },
+        { id: 'variantes',        label: tNav('nav.variants') },
         { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
@@ -344,7 +344,7 @@ type AccordionProps = Accordion.RootProps & {
 
       <!-- ── Modos de Operação ──────────────────────────────────────── -->
       <DocsVariants
-        id="modos"
+        id="variantes"
         title={$tStore('variants.title')}
         items={[
           { name: $tStore('variants.single.label'),      description: stripHtml($tStore('variants.single.description')),      code: codeSingle,      preview: modeSingle      },

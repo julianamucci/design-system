@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
+import DOMPurify from 'dompurify';
 import { createAccordion, type AccordionOptions } from './accordion';
 import { createBadge } from './badge';
 import { Info, AlertTriangle, CheckCircle2 } from 'lucide';
@@ -157,34 +158,34 @@ export const ConteudoRico: Story = {
     const accordion = createAccordion({
       type: 'multiple',
       items: [
-        { value: 'layout',   trigger: 'Layout e Espaçamento', content: '' },
-        { value: 'tipografia', trigger: 'Tipografia',         content: '' },
+        { value: 'specs',  trigger: 'Especificações técnicas', content: '' },
+        { value: 'inclui', trigger: 'O que está incluso',      content: '' },
       ],
     });
 
-    // Replace plain text content with rich HTML
-    const layoutContent = accordion.querySelector<HTMLElement>('[data-content-for="layout"] div');
-    if (layoutContent) {
-      layoutContent.innerHTML = `
-        <div class="nds-stack nds-text-body" data-spacing="sm">
-          <div class="nds-grid nds-font-medium" data-cols="2" data-spacing="sm">
-            <span class="nds-text-muted-foreground">Propriedade</span>
-            <span class="nds-text-muted-foreground">Valor</span>
-          </div>
-          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Gutter</span><code class="nds-code-inline nds-text-caption">24px</code></div>
-          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Margem mobile</span><code class="nds-code-inline nds-text-caption">16px</code></div>
-          <div class="nds-grid" data-cols="2" data-spacing="sm" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Colunas</span><code class="nds-code-inline nds-text-caption">12</code></div>
-        </div>`;
+    // Conteúdo rico substitui o texto simples. Tabela de verdade, não grid:
+    // `.nds-grid[data-cols="2"]` exige 18rem por coluna e colapsa dentro do
+    // accordion. Mesmo exemplo da docs page.
+    const specsContent = accordion.querySelector<HTMLElement>('[data-content-for="specs"] div');
+    if (specsContent) {
+      specsContent.innerHTML = DOMPurify.sanitize(`
+        <table class="nds-w-full nds-text-body nds-border-collapse">
+          <tbody>
+            <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">CPU</td><td class="nds-py-1">Intel Core i7-12700</td></tr>
+            <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">RAM</td><td class="nds-py-1">16GB DDR5</td></tr>
+            <tr><td class="nds-py-1" style="padding-right:1rem">SSD</td><td class="nds-py-1">512GB NVMe</td></tr>
+          </tbody>
+        </table>`);
     }
 
-    const tipoContent = accordion.querySelector<HTMLElement>('[data-content-for="tipografia"] div');
-    if (tipoContent) {
-      tipoContent.innerHTML = `
-        <ul class="nds-stack nds-text-body nds-list-none" data-spacing="xs" style="padding:0">
-          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-xs</code><span>12px — legendas e labels</span></li>
-          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-sm</code><span>14px — corpo principal</span></li>
-          <li class="nds-cluster" data-spacing="sm"><code class="nds-code-inline nds-text-caption">text-base</code><span>16px — títulos de seção</span></li>
-        </ul>`;
+    const incluiContent = accordion.querySelector<HTMLElement>('[data-content-for="inclui"] div');
+    if (incluiContent) {
+      incluiContent.innerHTML = DOMPurify.sanitize(`
+        <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
+          <li>Cabo de alimentação</li>
+          <li>Manual do usuário</li>
+          <li>Garantia de 24 meses</li>
+        </ul>`);
     }
 
     root.appendChild(accordion);

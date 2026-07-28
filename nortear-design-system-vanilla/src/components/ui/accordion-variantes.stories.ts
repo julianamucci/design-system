@@ -9,7 +9,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Modos',
+  title: 'UI/Accordion/Variantes',
 };
 
 export default meta;

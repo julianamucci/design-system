@@ -57,7 +57,7 @@ const getNavGroups = (t: (key: string) => string) => [
     label: t("nav.techRef"),
     sections: [
       { id: "importacao",   label: t("nav.import") },
-      { id: "modos",        label: t("nav.variants") },
+      { id: "variantes",        label: t("nav.variants") },
       { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
@@ -428,7 +428,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Modos de Operação ─────────────────────────────────────── */}
           <DocsVariants
-            id="modos"
+            id="variantes"
             title={tContent("variants.title")}
             items={[
               {
