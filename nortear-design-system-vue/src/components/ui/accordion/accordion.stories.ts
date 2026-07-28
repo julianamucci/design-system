@@ -119,5 +119,16 @@ export const Playground: Story = {
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
+    await step('Setas movem o foco entre triggers (com loop)', async () => {
+      const triggers = canvas.getAllByRole('button');
+      triggers[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(triggers[1]).toHaveFocus();
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+    });
+
   },
 };

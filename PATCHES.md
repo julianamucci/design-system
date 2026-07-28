@@ -78,6 +78,30 @@ cd nortear-design-system-react && npm update @base-ui/react
 
 <!-- ordenar alfabeticamente por stack > componente -->
 
+### react/accordion — navegação por setas no wrapper (base-ui não implementa) {#react-accordion-arrow-keys}
+
+- **Arquivo:** `nortear-design-system-react/src/components/ui/accordion.tsx`
+- **Categoria:** a11y
+- **Data:** 2026-07-28
+- **Upstream ref:** — (o `CompositeList` do `AccordionRoot` só registra refs dos itens; não há handler de teclado em nenhum arquivo do módulo `accordion`)
+
+**Antes:**
+```tsx
+<AccordionPrimitive.Root data-slot="accordion" className={cn("nds-accordion", className)} {...props} />
+```
+
+**Depois:**
+```tsx
+// PATCH: a11y — o @base-ui/react não implementa navegação por setas no Accordion …
+<AccordionPrimitive.Root … onKeyDown={handleKeyDown} {...props} />
+// handleKeyDown: ArrowDown/ArrowUp com loop + Home/End, agindo só quando o
+// foco está num [data-slot="accordion-trigger"] habilitado.
+```
+
+**Motivo:** `reka-ui`, `bits-ui` e a factory Vanilla trazem a navegação por setas, e `accessibility.keyboard` do `translations.json` documenta o comportamento nas 3 línguas. No React as setas caíam no scroll da página — divergência funcional e de acessibilidade contra as outras 3 stacks. O tipo do evento é derivado de `AccordionPrimitive.Root.Props["onKeyDown"]` para não depender do caminho interno do `BaseUIEvent`.
+
+**Verificação após bump:** conferir se o `@base-ui/react` passou a tratar ArrowDown/ArrowUp no accordion (`grep -rn "ArrowDown" node_modules/@base-ui/react/accordion/`); se sim, remover o handler e manter só o repasse de `onKeyDown`.
+
 ### svelte/hover-card — `defaultOpen` no wrapper (bits-ui LinkPreview não tem) {#svelte-hovercard-defaultopen}
 
 - **Arquivo:** `nortear-design-system-svelte/src/components/ui/hover-card/hover-card.svelte`

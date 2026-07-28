@@ -3,11 +3,57 @@ import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon } from "lucide-react"
 
-function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
+const NAV_KEYS = ["ArrowDown", "ArrowUp", "Home", "End"] as const
+
+/** O base-ui envolve o evento nativo (BaseUIEvent) — tipo derivado da API
+ *  pública para não depender de um caminho interno da lib. */
+type AccordionKeyDownEvent = Parameters<
+  NonNullable<AccordionPrimitive.Root.Props["onKeyDown"]>
+>[0]
+
+/**
+ * PATCH: a11y — o `@base-ui/react` não implementa navegação por setas no
+ * Accordion (o `CompositeList` do Root apenas registra refs; não há handler de
+ * teclado no módulo). reka-ui, bits-ui e a factory Vanilla implementam, a docs
+ * page documenta o comportamento, e sem isso as setas caem no scroll da página.
+ * Ver PATCHES.md#react-accordion-arrow-keys.
+ */
+function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.Props) {
+  function handleKeyDown(event: AccordionKeyDownEvent) {
+    onKeyDown?.(event)
+    if (event.defaultPrevented) return
+    if (!NAV_KEYS.includes(event.key as (typeof NAV_KEYS)[number])) return
+
+    // Só age quando o foco está num trigger — teclas dentro do conteúdo
+    // (links, campos) seguem o comportamento nativo.
+    const focused = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      '[data-slot="accordion-trigger"]',
+    )
+    if (!focused) return
+
+    const triggers = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>(
+        '[data-slot="accordion-trigger"]:not([disabled]):not([aria-disabled="true"])',
+      ),
+    )
+    const index = triggers.indexOf(focused)
+    if (index < 0) return
+
+    event.preventDefault()
+    const last = triggers.length - 1
+    const next =
+      event.key === "ArrowDown" ? (index + 1) % triggers.length
+      : event.key === "ArrowUp" ? (index - 1 + triggers.length) % triggers.length
+      : event.key === "Home" ? 0
+      : last
+    triggers[next]?.focus()
+  }
+
   return (
     <AccordionPrimitive.Root
       data-slot="accordion"
       className={cn("nds-accordion", className)}
+      onKeyDown={handleKeyDown}
       {...props}
     />
   )

@@ -120,6 +120,23 @@ export const Playground: Story = {
       );
     });
 
+    await step("Setas movem o foco entre triggers (com loop) e Home/End vão às pontas", async () => {
+      // O base-ui não traz navegação por setas no Accordion — o wrapper supre.
+      // Sem isso as setas caem no scroll da página, divergindo das outras stacks.
+      const triggers = canvas.getAllByRole("button");
+      triggers[0].focus();
+      await userEvent.keyboard("{ArrowDown}");
+      await expect(triggers[1]).toHaveFocus();
+      await userEvent.keyboard("{ArrowUp}");
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard("{ArrowUp}");
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+      await userEvent.keyboard("{Home}");
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard("{End}");
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+    });
+
     // Teste condicional: trocar item ativo fecha o anterior só vale em modo único.
     if (args.multiple === false) {
       await step("Abrir item fecha o anteriormente aberto (modo único)", async () => {
