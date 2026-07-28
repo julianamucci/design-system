@@ -15,7 +15,8 @@
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "chromatic": "npx chromatic",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "build-storybook:chromatic": "storybook build"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

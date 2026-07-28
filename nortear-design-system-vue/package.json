@@ -12,7 +12,8 @@
     "postinstall": "patch-package",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vue.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "build-storybook:chromatic": "storybook build"
   },
   "dependencies": {
     "@tanstack/vue-table": "^8.21.3",

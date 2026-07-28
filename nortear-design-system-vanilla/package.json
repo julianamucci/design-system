@@ -11,7 +11,8 @@
     "test": "vitest run",
     "storybook": "storybook dev -p 6009",
     "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vanilla.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "build-storybook:chromatic": "storybook build"
   },
   "dependencies": {
     "@tanstack/table-core": "^8.21.3",
