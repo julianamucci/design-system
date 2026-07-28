@@ -31,9 +31,13 @@ export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
             <div key={i} data-track="link" data-track-id={trackId}>
               <Alert variant="default">
                 {item.title && <AlertTitle>{item.title}</AlertTitle>}
-                <AlertDescription
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content) }}
-                />
+                <AlertDescription>
+                  {/* O <p> é obrigatório: `.nds-alert-description` é `display:
+                      grid`, então cada filho vira um item em sua própria linha —
+                      sem ele, os <code> inline quebram o texto. Mesma marcação
+                      nas 4 stacks. */}
+                  <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content) }} />
+                </AlertDescription>
               </Alert>
             </div>
           );

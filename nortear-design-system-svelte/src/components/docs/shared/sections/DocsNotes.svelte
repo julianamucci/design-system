@@ -33,7 +33,12 @@
           {#if item.title}
             <AlertTitle>{item.title}</AlertTitle>
           {/if}
-          <AlertDescription>{@html DOMPurify.sanitize(item.content)}</AlertDescription>
+          <AlertDescription>
+            <!-- O <p> é obrigatório: `.nds-alert-description` é `display: grid`,
+                 então cada filho vira um item em sua própria linha — sem ele, os
+                 <code> inline quebram o texto. Mesma marcação nas 4 stacks. -->
+            <p>{@html DOMPurify.sanitize(item.content)}</p>
+          </AlertDescription>
         </Alert>
       </div>
     {/each}

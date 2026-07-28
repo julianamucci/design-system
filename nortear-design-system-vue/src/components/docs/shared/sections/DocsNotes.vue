@@ -43,7 +43,12 @@ function trackId(i: number): string | undefined {
           <AlertTitle v-if="item.title">
             {{ item.title }}
           </AlertTitle>
-          <AlertDescription v-html="DOMPurify.sanitize(item.content)" />
+          <AlertDescription>
+            <!-- O <p> é obrigatório: `.nds-alert-description` é `display: grid`,
+                 então cada filho vira um item em sua própria linha — sem ele, os
+                 <code> inline quebram o texto. Mesma marcação nas 4 stacks. -->
+            <p v-html="DOMPurify.sanitize(item.content)" />
+          </AlertDescription>
         </Alert>
       </div>
     </div>
