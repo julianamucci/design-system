@@ -277,14 +277,29 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.richContent.name'),
     description: tContent('variants.compositions.richContent.description'),
     useWhen: tContent('variants.compositions.richContent.use'),
-    code: `<Accordion type="multiple" class="nds-max-w-lg">
+    code: `<Accordion type="multiple" class="nds-max-w-lg nds-text-body">
   <AccordionItem value="specs">
-    <AccordionTrigger>Especificações</AccordionTrigger>
+    <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>
-      <table class="nds-w-full nds-text-body">
-        <tr><td>CPU</td><td>Intel i7</td></tr>
-        <tr><td>RAM</td><td>16GB</td></tr>
+      <table class="nds-w-full nds-text-body nds-border-collapse">
+        <tbody>
+          <tr class="nds-border-b">
+            <td class="nds-py-1">CPU</td><td class="nds-py-1">Intel Core i7-12700</td>
+          </tr>
+          <tr class="nds-border-b">
+            <td class="nds-py-1">RAM</td><td class="nds-py-1">16GB DDR5</td>
+          </tr>
+        </tbody>
       </table>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="inclui">
+    <AccordionTrigger>O que está incluso</AccordionTrigger>
+    <AccordionContent>
+      <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
+        <li>Cabo de alimentação</li>
+        <li>Manual do usuário</li>
+      </ul>
     </AccordionContent>
   </AccordionItem>
 </Accordion>`,

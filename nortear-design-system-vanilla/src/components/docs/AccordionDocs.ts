@@ -456,12 +456,12 @@ export function createAccordionDocs(): HTMLElement {
           `const accordion = createAccordion({\n` +
           `  type: 'multiple',\n` +
           `  items: [\n` +
-          `    { value: 'layout',     trigger: 'Layout e Espaçamento', content: '' },\n` +
-          `    { value: 'tipografia', trigger: 'Tipografia',           content: '' },\n` +
+          `    { value: 'specs',  trigger: 'Especificações técnicas', content: '' },\n` +
+          `    { value: 'inclui', trigger: 'O que está incluso',      content: '' },\n` +
           `  ],\n` +
           `});\n` +
-          `const layout = accordion.querySelector('[data-content-for="layout"] div');\n` +
-          `if (layout) layout.innerHTML = DOMPurify.sanitize(richLayoutHtml);`;
+          `const specs = accordion.querySelector('[data-content-for="specs"] div');\n` +
+          `if (specs) specs.innerHTML = DOMPurify.sanitize(specsTableHtml);`;
 
         const codeFAQ =
           `const wrapper = document.createElement('div');\n` +
@@ -553,30 +553,31 @@ export function createAccordionDocs(): HTMLElement {
                 const accordion = createAccordion({
                   type: 'multiple',
                   items: [
-                    { value: 'layout',     trigger: 'Layout e Espaçamento', content: '' },
-                    { value: 'tipografia', trigger: 'Tipografia',           content: '' },
+                    { value: 'specs',  trigger: 'Especificações técnicas', content: '' },
+                    { value: 'inclui', trigger: 'O que está incluso',      content: '' },
                   ],
                 });
-                const layoutHtml = `
-                  <div class="nds-stack nds-text-body" data-spacing="xs">
-                    <div class="nds-grid nds-font-medium" data-cols="2" data-spacing="xs">
-                      <span class="nds-text-muted-foreground">Propriedade</span>
-                      <span class="nds-text-muted-foreground">Valor</span>
-                    </div>
-                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Gutter</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">24px</code></div>
-                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Margem mobile</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">16px</code></div>
-                    <div class="nds-grid" data-cols="2" data-spacing="xs" style="border-top:1px solid var(--border);padding-top:0.5rem"><span>Colunas</span><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">12</code></div>
-                  </div>`;
-                const tipoHtml = `
-                  <ul class="nds-stack nds-text-body nds-list-none" data-spacing="xs" style="padding:0">
-                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-xs</code><span>12px — legendas e labels</span></li>
-                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-sm</code><span>14px — corpo principal</span></li>
-                    <li class="nds-cluster" data-spacing="xs"><code class="nds-text-caption nds-bg-muted-soft nds-rounded" style="padding:0 0.25rem">text-base</code><span>16px — títulos de seção</span></li>
+                // Tabela de verdade, não grid: `.nds-grid[data-cols="2"]` exige
+                // 18rem por coluna e colapsa para uma dentro do accordion. Dado
+                // tabular também pede <table> semântico.
+                const specsHtml = `
+                  <table class="nds-w-full nds-text-body nds-border-collapse">
+                    <tbody>
+                      <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">CPU</td><td class="nds-py-1">Intel Core i7-12700</td></tr>
+                      <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">RAM</td><td class="nds-py-1">16GB DDR5</td></tr>
+                      <tr><td class="nds-py-1" style="padding-right:1rem">SSD</td><td class="nds-py-1">512GB NVMe</td></tr>
+                    </tbody>
+                  </table>`;
+                const incluiHtml = `
+                  <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
+                    <li>Cabo de alimentação</li>
+                    <li>Manual do usuário</li>
+                    <li>Garantia de 24 meses</li>
                   </ul>`;
-                const layoutContent = accordion.querySelector<HTMLElement>('[data-content-for="layout"] div');
-                if (layoutContent) layoutContent.innerHTML = DOMPurify.sanitize(layoutHtml);
-                const tipoContent = accordion.querySelector<HTMLElement>('[data-content-for="tipografia"] div');
-                if (tipoContent) tipoContent.innerHTML = DOMPurify.sanitize(tipoHtml);
+                const specsContent = accordion.querySelector<HTMLElement>('[data-content-for="specs"] div');
+                if (specsContent) specsContent.innerHTML = DOMPurify.sanitize(specsHtml);
+                const incluiContent = accordion.querySelector<HTMLElement>('[data-content-for="inclui"] div');
+                if (incluiContent) incluiContent.innerHTML = DOMPurify.sanitize(incluiHtml);
                 root.appendChild(accordion);
                 return root;
               },

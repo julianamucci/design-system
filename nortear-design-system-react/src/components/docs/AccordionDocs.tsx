@@ -590,51 +590,65 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.richContent.name"),
                 description: tContent("variants.compositions.richContent.description"),
                 useWhen: tContent("variants.compositions.richContent.use"),
-                code: `<Accordion type="multiple" className="nds-max-w-lg">
-  <AccordionItem value="layout">
-    <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
+                code: `<Accordion multiple className="nds-max-w-lg nds-text-body">
+  <AccordionItem value="specs">
+    <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>
-      <div className="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
-        <div className="nds-font-medium">Propriedade</div>
-        <div className="nds-font-medium">Valor</div>
-        <div>Gutter</div><div>24px</div>
-        <div>Margem mobile</div><div>16px</div>
-        <div>Colunas</div><div>12</div>
-      </div>
+      <table className="nds-w-full nds-text-body nds-border-collapse">
+        <tbody>
+          <tr className="nds-border-b">
+            <td className="nds-py-1">CPU</td><td className="nds-py-1">Intel Core i7-12700</td>
+          </tr>
+          <tr className="nds-border-b">
+            <td className="nds-py-1">RAM</td><td className="nds-py-1">16GB DDR5</td>
+          </tr>
+        </tbody>
+      </table>
     </AccordionContent>
   </AccordionItem>
-  <AccordionItem value="tipografia">
-    <AccordionTrigger>Tipografia</AccordionTrigger>
+  <AccordionItem value="inclui">
+    <AccordionTrigger>O que está incluso</AccordionTrigger>
     <AccordionContent>
       <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-        <li>text-xs — 12px</li>
-        <li>text-sm — 14px</li>
-        <li>text-base — 16px</li>
+        <li>Cabo de alimentação</li>
+        <li>Manual do usuário</li>
       </ul>
     </AccordionContent>
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion multiple className="nds-max-w-lg">
-                    <AccordionItem value="layout">
-                      <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
+                  <Accordion multiple className="nds-max-w-lg nds-text-body">
+                    <AccordionItem value="specs">
+                      <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>
-                        <div className="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
-                          <div className="nds-font-medium">Propriedade</div>
-                          <div className="nds-font-medium">Valor</div>
-                          <div>Gutter</div><div>24px</div>
-                          <div>Margem mobile</div><div>16px</div>
-                          <div>Colunas</div><div>12</div>
-                        </div>
+                        {/* Tabela de verdade, não grid: `.nds-grid[data-cols="2"]`
+                            exige 18rem por coluna e colapsa para uma dentro do
+                            accordion. Dado tabular também pede <table> semântico. */}
+                        <table className="nds-w-full nds-text-body nds-border-collapse">
+                          <tbody>
+                            <tr className="nds-border-b">
+                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>CPU</td>
+                              <td className="nds-py-1">Intel Core i7-12700</td>
+                            </tr>
+                            <tr className="nds-border-b">
+                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>RAM</td>
+                              <td className="nds-py-1">16GB DDR5</td>
+                            </tr>
+                            <tr>
+                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>SSD</td>
+                              <td className="nds-py-1">512GB NVMe</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </AccordionContent>
                     </AccordionItem>
-                    <AccordionItem value="tipografia">
-                      <AccordionTrigger>Tipografia</AccordionTrigger>
+                    <AccordionItem value="inclui">
+                      <AccordionTrigger>O que está incluso</AccordionTrigger>
                       <AccordionContent>
                         <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-                          <li>text-xs — 12px</li>
-                          <li>text-sm — 14px</li>
-                          <li>text-base — 16px</li>
+                          <li>Cabo de alimentação</li>
+                          <li>Manual do usuário</li>
+                          <li>Garantia de 24 meses</li>
                         </ul>
                       </AccordionContent>
                     </AccordionItem>

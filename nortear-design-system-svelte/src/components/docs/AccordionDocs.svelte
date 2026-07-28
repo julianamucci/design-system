@@ -464,24 +464,28 @@ type AccordionProps = Accordion.RootProps & {
             name: $tStore('variants.compositions.richContent.name'),
             description: $tStore('variants.compositions.richContent.description'),
             useWhen: $tStore('variants.compositions.richContent.use'),
-            code: `<Accordion type="multiple">
-  <AccordionItem value="layout">
-    <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
+            code: `<Accordion type="multiple" class="nds-max-w-lg nds-text-body">
+  <AccordionItem value="specs">
+    <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>
-      <div class="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
-        <div class="nds-font-medium">Token</div><div class="nds-font-medium">Valor</div>
-        <div>--spacing-sm</div><div>8px</div>
-        <div>--spacing-md</div><div>16px</div>
-      </div>
+      <table class="nds-w-full nds-text-body nds-border-collapse">
+        <tbody>
+          <tr class="nds-border-b">
+            <td class="nds-py-1">CPU</td><td class="nds-py-1">Intel Core i7-12700</td>
+          </tr>
+          <tr class="nds-border-b">
+            <td class="nds-py-1">RAM</td><td class="nds-py-1">16GB DDR5</td>
+          </tr>
+        </tbody>
+      </table>
     </AccordionContent>
   </AccordionItem>
-  <AccordionItem value="typo">
-    <AccordionTrigger>Tipografia</AccordionTrigger>
+  <AccordionItem value="inclui">
+    <AccordionTrigger>O que está incluso</AccordionTrigger>
     <AccordionContent>
       <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-        <li>text-xs · 12px</li>
-        <li>text-sm · 14px</li>
-        <li>text-base · 16px</li>
+        <li>Cabo de alimentação</li>
+        <li>Manual do usuário</li>
       </ul>
     </AccordionContent>
   </AccordionItem>
@@ -560,24 +564,38 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet compRichContent()}
-        <Accordion type="multiple" class="nds-max-w-sm nds-text-body">
-          <AccordionItem value="layout">
-            <AccordionTrigger>Layout e espaçamento</AccordionTrigger>
+        <Accordion type="multiple" class="nds-max-w-lg nds-text-body">
+          <AccordionItem value="specs">
+            <AccordionTrigger>Especificações técnicas</AccordionTrigger>
             <AccordionContent>
-              <div class="nds-grid nds-text-body" data-cols="2" data-spacing="xs">
-                <div class="nds-font-medium">Token</div><div class="nds-font-medium">Valor</div>
-                <div>--spacing-sm</div><div>8px</div>
-                <div>--spacing-md</div><div>16px</div>
-              </div>
+              <!-- Tabela de verdade, não grid: `.nds-grid[data-cols="2"]` exige
+                   18rem por coluna e colapsa para uma dentro do accordion. Dado
+                   tabular também pede <table> semântico. -->
+              <table class="nds-w-full nds-text-body nds-border-collapse">
+                <tbody>
+                  <tr class="nds-border-b">
+                    <td class="nds-py-1" style="padding-right: 1rem">CPU</td>
+                    <td class="nds-py-1">Intel Core i7-12700</td>
+                  </tr>
+                  <tr class="nds-border-b">
+                    <td class="nds-py-1" style="padding-right: 1rem">RAM</td>
+                    <td class="nds-py-1">16GB DDR5</td>
+                  </tr>
+                  <tr>
+                    <td class="nds-py-1" style="padding-right: 1rem">SSD</td>
+                    <td class="nds-py-1">512GB NVMe</td>
+                  </tr>
+                </tbody>
+              </table>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="typo">
-            <AccordionTrigger>Tipografia</AccordionTrigger>
+          <AccordionItem value="inclui">
+            <AccordionTrigger>O que está incluso</AccordionTrigger>
             <AccordionContent>
               <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
-                <li>text-xs · 12px</li>
-                <li>text-sm · 14px</li>
-                <li>text-base · 16px</li>
+                <li>Cabo de alimentação</li>
+                <li>Manual do usuário</li>
+                <li>Garantia de 24 meses</li>
               </ul>
             </AccordionContent>
           </AccordionItem>
