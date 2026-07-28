@@ -98,19 +98,35 @@
 }
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
+/*
+ * A animação de abertura vive AQUI, no elemento externo — é ele que as libs
+ * headless medem e onde publicam a altura inline (base-ui: --accordion-panel-
+ * height · reka: --reka-accordion-content-height · bits: --bits-accordion-
+ * content-height). Como este elemento não tem padding, a medida da lib bate
+ * com o conteúdo real. No Vanilla nenhuma variável é definida, o fallback
+ * `auto` vale e o open/close acontece via atributo `hidden`, sem animação.
+ *
+ * Não mova a altura para o `.nds-accordion-content-body`: lá ela é somada ao
+ * padding e, com o `overflow: hidden` daqui, o texto é cortado ao abrir.
+ */
 .nds-accordion-content {
   overflow: hidden;
   font-size: 0.875rem;                     /* 14px */
   color: hsl(var(--foreground));
+  height: var(
+    --accordion-panel-height,
+    var(--reka-accordion-content-height, var(--bits-accordion-content-height, auto))
+  );
+  transition: height var(--duration-base) ease-out;
 }
 
-/*
- * Corpo do content — só espaçamento, altura natural. Nome único nas 4 stacks.
- * As libs headless publicam custom properties de altura inline
- * (--accordion-panel-height / --reka-accordion-content-height); NÃO as consuma
- * aqui: a medida delas não inclui este padding e, com o `overflow: hidden` do
- * pai, o texto é cortado ao abrir.
- */
+/* base-ui sinaliza início/fim da transição por atributo. */
+.nds-accordion-content[data-starting-style],
+.nds-accordion-content[data-ending-style] {
+  height: 0;
+}
+
+/* Corpo do content — só espaçamento, altura natural. Nome único nas 4 stacks. */
 .nds-accordion-content-body {
   padding-top: 0;
   padding-bottom: var(--spacing-4);        /* 16px */
@@ -150,7 +166,8 @@
 /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .nds-accordion-trigger,
-  .nds-accordion-icon {
+  .nds-accordion-icon,
+  .nds-accordion-content {
     transition: none;
   }
 }
