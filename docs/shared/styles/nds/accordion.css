@@ -93,7 +93,15 @@
   transition: transform var(--duration-base);
 }
 
-.nds-accordion-trigger[data-state="open"] .nds-accordion-icon {
+/*
+ * Um único chevron que gira — mesma leitura nas 4 stacks. A convenção de
+ * estado varia por lib, então cobrimos as três: data-state (reka, bits e a
+ * factory Vanilla), aria-expanded (todas, por ARIA) e data-panel-open/data-open
+ * (base-ui). A transição de transform vive em `.nds-accordion-icon`.
+ */
+.nds-accordion-trigger[data-state="open"] .nds-accordion-icon,
+.nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon,
+.nds-accordion-trigger[data-panel-open] .nds-accordion-icon {
   transform: rotate(180deg);
 }
 
@@ -161,22 +169,6 @@
   line-height: 1.5;
 }
 
-/*
- * ─── nds-accordion composite ────────────────────────────────────────────────
- * Libs headless: dois chevrons alternados por aria-expanded.
- */
-
-.nds-accordion-icon-open {
-  display: none;
-}
-
-.nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon-closed {
-  display: none;
-}
-
-.nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon-open {
-  display: inline-block;
-}
 
 .nds-accordion-content-body a {
   text-decoration: underline;

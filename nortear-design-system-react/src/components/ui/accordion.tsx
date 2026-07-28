@@ -1,7 +1,7 @@
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
 
 import { cn } from "@/lib/utils"
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { ChevronDownIcon } from "lucide-react"
 
 function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
   return (
@@ -39,8 +39,8 @@ function AccordionTrigger({
             `.nds-accordion-trigger:hover > span:first-child` e não deve
             alcançar os ícones. Mesma marcação nas 4 stacks. */}
         <span>{children}</span>
-        <ChevronDownIcon data-slot="accordion-trigger-icon" className="nds-accordion-icon nds-accordion-icon-closed" />
-        <ChevronUpIcon data-slot="accordion-trigger-icon" className="nds-accordion-icon nds-accordion-icon-open" />
+        {/* Um único chevron que gira 180° ao abrir (ver accordion.css). */}
+        <ChevronDownIcon data-slot="accordion-trigger-icon" className="nds-accordion-icon" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

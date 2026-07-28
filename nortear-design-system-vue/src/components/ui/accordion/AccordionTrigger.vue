@@ -3,7 +3,7 @@ import type { AccordionTriggerProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-vue-next'
+import { ChevronDownIcon } from 'lucide-vue-next'
 import {
   AccordionHeader,
   AccordionTrigger,
@@ -27,13 +27,10 @@ const delegatedProps = reactiveOmit(props, 'class')
            alcançar os ícones. Mesma marcação nas 4 stacks. -->
       <span><slot /></span>
       <slot name="icon">
+        <!-- Um único chevron que gira 180° ao abrir (ver accordion.css). -->
         <ChevronDownIcon
           data-slot="accordion-trigger-icon"
-          class="nds-accordion-icon nds-accordion-icon-closed"
-        />
-        <ChevronUpIcon
-          data-slot="accordion-trigger-icon"
-          class="nds-accordion-icon nds-accordion-icon-open"
+          class="nds-accordion-icon"
         />
       </slot>
     </AccordionTrigger>

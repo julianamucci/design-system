@@ -2,7 +2,6 @@
 	import { Accordion as AccordionPrimitive } from "bits-ui";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-	import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
 
 	let {
 		ref = $bindable(null),
@@ -29,7 +28,7 @@
 		     `.nds-accordion-trigger:hover > span:first-child` e não deve
 		     alcançar os ícones. Mesma marcação nas 4 stacks. -->
 		<span>{@render children?.()}</span>
-		<ChevronDownIcon data-slot="accordion-trigger-icon" class="nds-accordion-icon nds-accordion-icon-closed" />
-		<ChevronUpIcon data-slot="accordion-trigger-icon" class="nds-accordion-icon nds-accordion-icon-open" />
+		<!-- Um único chevron que gira 180° ao abrir (ver accordion.css). -->
+		<ChevronDownIcon data-slot="accordion-trigger-icon" class="nds-accordion-icon" />
 	</AccordionPrimitive.Trigger>
 </AccordionPrimitive.Header>
