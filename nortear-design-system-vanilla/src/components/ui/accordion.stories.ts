@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 import { createAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -71,6 +71,21 @@ export const Playground: Story = {
       await userEvent.click(triggers[1]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('Conteúdo aberto fica de fato visível, com altura real', async () => {
+      // aria-expanded sozinho não prova que o painel apareceu: já houve
+      // regressão em que o trigger reportava aberto e o conteúdo ficava
+      // colapsado (altura vinda de custom property defasada da lib).
+      const panel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>(
+          '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
+        );
+        if (!el) throw new Error('painel aberto não encontrado');
+        return el;
+      });
+      await expect(panel).toBeVisible();
+      await expect(panel.getBoundingClientRect().height).toBeGreaterThan(0);
     });
 
     await step('Enter expande um item fechado', async () => {

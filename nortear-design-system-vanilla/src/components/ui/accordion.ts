@@ -28,8 +28,14 @@ export type AccordionOptions = {
 
 // ─── createAccordion ─────────────────────────────────────────────────────────
 
+/** Espelha `--duration-base` (200ms) com folga, para reesconder após a animação. */
+const CLOSE_HIDE_DELAY = 250;
+
 export function createAccordion(options: AccordionOptions): HTMLElement {
   const { type = 'single', collapsible = true, defaultValue, items, onValueChange } = options;
+
+  /** Timers de reesconder pendentes, por elemento de conteúdo. */
+  const closeTimers = new Map<HTMLElement, number>();
 
   const openValues: Set<string> =
     defaultValue !== undefined
@@ -79,11 +85,51 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     }
   }
 
-  function updateItemState(triggerEl: HTMLButtonElement, contentEl: HTMLElement, open: boolean): void {
+  /**
+   * `hidden` mantém o conteúdo fechado fora da árvore de acessibilidade, mas
+   * `display: none` cancela transições. Então ele sai ANTES de abrir (em dois
+   * frames, para o browser registrar o estado inicial e animar) e só volta
+   * DEPOIS da animação de fechamento — que é justamente o contrato que o CSS
+   * `grid-template-rows` espera.
+   */
+  function updateItemState(
+    triggerEl: HTMLButtonElement,
+    contentEl: HTMLElement,
+    open: boolean,
+    immediate = false,
+  ): void {
     triggerEl.setAttribute('aria-expanded', String(open));
-    contentEl.hidden = !open;
     triggerEl.dataset.state = open ? 'open' : 'closed';
-    contentEl.dataset.state = open ? 'open' : 'closed';
+
+    const pending = closeTimers.get(contentEl);
+    if (pending !== undefined) {
+      clearTimeout(pending);
+      closeTimers.delete(contentEl);
+    }
+
+    // Estado inicial (defaultValue): aplica direto, sem animar na montagem.
+    if (immediate) {
+      contentEl.hidden = !open;
+      contentEl.dataset.state = open ? 'open' : 'closed';
+      return;
+    }
+
+    if (open) {
+      contentEl.hidden = false;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { contentEl.dataset.state = 'open'; });
+      });
+      return;
+    }
+
+    contentEl.dataset.state = 'closed';
+    // Timer em vez de transitionend: com prefers-reduced-motion (ou display
+    // none herdado) o evento pode não disparar e o conteúdo ficaria acessível.
+    const timer = window.setTimeout(() => {
+      if (contentEl.dataset.state === 'closed') contentEl.hidden = true;
+      closeTimers.delete(contentEl);
+    }, CLOSE_HIDE_DELAY);
+    closeTimers.set(contentEl, timer);
   }
 
   items.forEach(item => {
@@ -129,7 +175,7 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     contentEl.appendChild(innerEl);
 
     if (isOpen(item.value)) {
-      updateItemState(triggerEl, contentEl, true);
+      updateItemState(triggerEl, contentEl, true, true);
     }
 
     if (!item.disabled) {

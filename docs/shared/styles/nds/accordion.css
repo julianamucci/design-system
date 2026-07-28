@@ -99,35 +99,39 @@
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
 /*
- * A animação de abertura vive AQUI, no elemento externo — é ele que as libs
- * headless medem e onde publicam a altura inline (base-ui: --accordion-panel-
- * height · reka: --reka-accordion-content-height · bits: --bits-accordion-
- * content-height). Como este elemento não tem padding, a medida da lib bate
- * com o conteúdo real. No Vanilla nenhuma variável é definida, o fallback
- * `auto` vale e o open/close acontece via atributo `hidden`, sem animação.
+ * Animação por `grid-template-rows: 0fr → 1fr`, NÃO por altura medida.
+ * As custom properties de altura das libs (--accordion-panel-height,
+ * --reka-accordion-content-height, --bits-*) são inconsistentes entre elas e
+ * chegam a ficar defasadas — consumi-las já causou conteúdo cortado e painel
+ * que não abria. O grid deriva a altura do próprio conteúdo, então funciona
+ * igual nas 4 stacks e nunca corta.
  *
- * Não mova a altura para o `.nds-accordion-content-body`: lá ela é somada ao
- * padding e, com o `overflow: hidden` daqui, o texto é cortado ao abrir.
+ * O padrão é ABERTO: só colapsa com um atributo explícito de fechado. Se uma
+ * lib mudar de convenção, o pior caso é não animar — nunca sumir o conteúdo.
  */
 .nds-accordion-content {
   overflow: hidden;
   font-size: 0.875rem;                     /* 14px */
   color: hsl(var(--foreground));
-  height: var(
-    --accordion-panel-height,
-    var(--reka-accordion-content-height, var(--bits-accordion-content-height, auto))
-  );
-  transition: height var(--duration-base) ease-out;
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--duration-base) ease-out;
 }
 
-/* base-ui sinaliza início/fim da transição por atributo. */
-.nds-accordion-content[data-starting-style],
-.nds-accordion-content[data-ending-style] {
-  height: 0;
+/* `hidden` precisa vencer o `display: grid` acima (UA style perde em specificity). */
+.nds-accordion-content[hidden] {
+  display: none;
 }
 
-/* Corpo do content — só espaçamento, altura natural. Nome único nas 4 stacks. */
+/* base-ui marca `data-closed`; reka, bits e a factory Vanilla usam data-state. */
+.nds-accordion-content[data-closed],
+.nds-accordion-content[data-state="closed"] {
+  grid-template-rows: 0fr;
+}
+
+/* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
 .nds-accordion-content-body {
+  min-height: 0;
   padding-top: 0;
   padding-bottom: var(--spacing-4);        /* 16px */
   line-height: 1.5;

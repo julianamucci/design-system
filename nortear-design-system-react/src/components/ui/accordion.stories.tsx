@@ -80,6 +80,18 @@ export const Playground: Story = {
       );
     });
 
+    await step("Conteúdo aberto fica de fato visível, com altura real", async () => {
+      // aria-expanded sozinho não prova que o painel apareceu: já houve
+      // regressão em que o trigger reportava aberto e o conteúdo ficava
+      // colapsado (altura vinda de custom property defasada da lib).
+      const panel = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
+      );
+      await expect(panel).not.toBeNull();
+      await expect(panel!).toBeVisible();
+      await expect(panel!.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
     await step("Enter expande item focado", async () => {
       const triggers = canvas.getAllByRole("button");
       triggers[2].focus();

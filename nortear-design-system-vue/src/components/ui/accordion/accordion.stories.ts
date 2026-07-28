@@ -81,6 +81,18 @@ export const Playground: Story = {
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
 
+    await step('Conteúdo aberto fica de fato visível, com altura real', async () => {
+      // aria-expanded sozinho não prova que o painel apareceu: já houve
+      // regressão em que o trigger reportava aberto e o conteúdo ficava
+      // colapsado (altura vinda de custom property defasada da lib).
+      const panel = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"])',
+      );
+      await expect(panel).not.toBeNull();
+      await expect(panel!).toBeVisible();
+      await expect(panel!.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
     await step('Modo single: item anterior fecha ao abrir novo', async () => {
       const triggers = canvas.getAllByRole('button');
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
