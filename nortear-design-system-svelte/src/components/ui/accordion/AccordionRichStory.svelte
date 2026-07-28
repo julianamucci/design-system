@@ -7,7 +7,7 @@
   } from './index';
 </script>
 
-<Accordion type="multiple" class="nds-w-full nds-max-w-lg">
+<Accordion type="multiple" class="nds-max-w-lg">
   <AccordionItem value="especificacoes">
     <AccordionTrigger>Especificações técnicas</AccordionTrigger>
     <AccordionContent>

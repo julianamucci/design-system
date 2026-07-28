@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   render: (args) => (
-    <Accordion {...args} defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
+    <Accordion {...args} defaultValue={["item-1"]} className="nds-max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>

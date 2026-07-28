@@ -128,18 +128,18 @@
   display: inline-block;
 }
 
+/*
+ * Mesmo contrato do `.nds-accordion-content-inner` do Vanilla: só espaçamento,
+ * altura natural. Antes a altura vinha das custom properties da lib
+ * (--accordion-panel-height / --reka-accordion-content-height) NO MESMO
+ * elemento que carrega o padding — a medida da lib não inclui esse padding, e
+ * com o `overflow: hidden` do pai o texto era cortado ao abrir (visível no Vue).
+ * As libs seguem publicando essas variáveis inline; nada as consome.
+ */
 .nds-accordion-content-body {
-  /* base-ui expõe --accordion-panel-height; reka --reka-accordion-content-height */
-  height: var(--accordion-panel-height, var(--reka-accordion-content-height, auto));
   padding-top: 0;
   padding-bottom: var(--spacing-4);
   line-height: 1.5;
-  transition: height var(--duration-base) ease-out;
-}
-
-.nds-accordion-content-body[data-starting-style],
-.nds-accordion-content-body[data-ending-style] {
-  height: 0;
 }
 
 .nds-accordion-content-body a {
@@ -158,8 +158,7 @@
 /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .nds-accordion-trigger,
-  .nds-accordion-icon,
-  .nds-accordion-content-body {
+  .nds-accordion-icon {
     transition: none;
   }
 }

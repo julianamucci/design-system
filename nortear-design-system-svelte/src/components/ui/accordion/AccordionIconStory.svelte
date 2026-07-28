@@ -10,7 +10,7 @@
   import CheckCircle from '@lucide/svelte/icons/circle-check';
 </script>
 
-<Accordion type="single" class="nds-w-full nds-max-w-lg">
+<Accordion type="single" class="nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">

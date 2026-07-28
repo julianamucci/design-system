@@ -243,7 +243,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
-            <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
+            <Accordion defaultValue={["item-1"]} className="nds-max-w-lg">
               {([1, 2, 3, 4] as const).map((i) => {
                 const label = tContent(`demonstration.labels.q${i}`);
                 return (
@@ -342,7 +342,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
+                  <Accordion className="nds-max-w-xs nds-text-body">
                     <AccordionItem value="do-1">
                       <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
                       <AccordionContent>Clique em "Esqueci minha senha" na tela de login.</AccordionContent>
@@ -350,7 +350,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
+                  <Accordion className="nds-max-w-xs nds-text-body">
                     <AccordionItem value="dont-1">
                       <AccordionTrigger>Senha</AccordionTrigger>
                       <AccordionContent>Ver mais informações.</AccordionContent>
@@ -364,7 +364,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <Accordion multiple className="nds-w-full nds-max-w-xs nds-text-body">
+                  <Accordion multiple className="nds-max-w-xs nds-text-body">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB</AccordionContent>
@@ -376,7 +376,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   </Accordion>
                 ),
                 dontPreview: (
-                  <Accordion className="nds-w-full nds-max-w-xs nds-text-body">
+                  <Accordion className="nds-max-w-xs nds-text-body">
                     <AccordionItem value="single-only">
                       <AccordionTrigger>Mostrar informações</AccordionTrigger>
                       <AccordionContent>Use Collapsible para uma única seção.</AccordionContent>
@@ -406,7 +406,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.single.description")),
                 code: codeSingle,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
+                  <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>{tContent("demonstration.labels.q1")}</AccordionTrigger>
                       <AccordionContent>{tContent("demonstration.labels.a1")}</AccordionContent>
@@ -423,7 +423,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.multiple.description")),
                 code: codeMultiple,
                 preview: (
-                  <Accordion multiple className="nds-w-full nds-max-w-sm nds-text-body">
+                  <Accordion multiple className="nds-max-w-sm nds-text-body">
                     <AccordionItem value="spec">
                       <AccordionTrigger>Especificações técnicas</AccordionTrigger>
                       <AccordionContent>CPU: Intel i7, RAM: 16GB, SSD: 512GB</AccordionContent>
@@ -440,7 +440,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.controlled.description")),
                 code: codeControlled,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
+                  <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item controlado</AccordionTrigger>
                       <AccordionContent>Estado gerenciado via value + onValueChange.</AccordionContent>
@@ -453,7 +453,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
-                  <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-sm nds-text-body">
+                  <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
                       <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
@@ -478,7 +478,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.iconTrigger.name"),
                 description: tContent("variants.compositions.iconTrigger.description"),
                 useWhen: tContent("variants.compositions.iconTrigger.use"),
-                code: `<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
+                code: `<Accordion type="single" collapsible className="nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
@@ -508,7 +508,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion className="nds-w-full nds-max-w-lg">
+                  <Accordion className="nds-max-w-lg">
                     <AccordionItem value="info">
                       <AccordionTrigger>
                         <span className="nds-cluster" data-spacing="xs">
@@ -543,7 +543,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.badgeTrigger.name"),
                 description: tContent("variants.compositions.badgeTrigger.description"),
                 useWhen: tContent("variants.compositions.badgeTrigger.use"),
-                code: `<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
+                code: `<Accordion type="single" collapsible className="nds-max-w-lg">
   <AccordionItem value="novo">
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
@@ -564,7 +564,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion className="nds-w-full nds-max-w-lg">
+                  <Accordion className="nds-max-w-lg">
                     <AccordionItem value="novo">
                       <AccordionTrigger>
                         <span className="nds-cluster" data-spacing="xs">
@@ -590,7 +590,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.richContent.name"),
                 description: tContent("variants.compositions.richContent.description"),
                 useWhen: tContent("variants.compositions.richContent.use"),
-                code: `<Accordion type="multiple" className="nds-w-full nds-max-w-lg">
+                code: `<Accordion type="multiple" className="nds-max-w-lg">
   <AccordionItem value="layout">
     <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
     <AccordionContent>
@@ -615,7 +615,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
   </AccordionItem>
 </Accordion>`,
                 preview: (
-                  <Accordion multiple className="nds-w-full nds-max-w-lg">
+                  <Accordion multiple className="nds-max-w-lg">
                     <AccordionItem value="layout">
                       <AccordionTrigger>Layout e Espaçamento</AccordionTrigger>
                       <AccordionContent>
@@ -646,7 +646,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: tContent("variants.compositions.faq.description"),
                 useWhen: tContent("variants.compositions.faq.use"),
                 code: `<h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
-<Accordion type="single" collapsible className="nds-w-full nds-max-w-lg">
+<Accordion type="single" collapsible className="nds-max-w-lg">
   <AccordionItem value="senha">
     <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
     <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
@@ -667,7 +667,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 preview: (
                   <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="xs">
                     <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
-                    <Accordion className="nds-w-full nds-max-w-lg">
+                    <Accordion className="nds-max-w-lg">
                       <AccordionItem value="senha">
                         <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
                         <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>

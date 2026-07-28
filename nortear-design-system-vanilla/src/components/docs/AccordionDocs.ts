@@ -54,7 +54,7 @@ function buildDemoAccordion(): HTMLElement {
     type: 'single',
     collapsible: true,
     defaultValue: 'q1',
-    class: 'nds-w-full nds-max-w-lg',
+    class: 'nds-max-w-lg',
     items: [
       {
         value: 'q1',
@@ -272,11 +272,11 @@ export function createAccordionDocs(): HTMLElement {
               doCaption: t('doDont.pair1.do'),
               dontCaption: t('doDont.pair1.dont'),
               doPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
+                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha".' }],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
+                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Senha', content: 'Informações sobre redefinição.' }],
               }),
             },
@@ -286,14 +286,14 @@ export function createAccordionDocs(): HTMLElement {
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
               doPreviewFactory: () => createAccordion({
-                type: 'multiple', class: 'nds-w-full nds-max-w-xs nds-text-body',
+                type: 'multiple', class: 'nds-max-w-xs nds-text-body',
                 items: [
                   { value: 's1', trigger: 'Especificações técnicas', content: 'CPU, RAM, SSD.' },
                   { value: 's2', trigger: 'Compatibilidade', content: 'Windows 11, macOS, Linux.' },
                 ],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-w-full nds-max-w-xs nds-text-body',
+                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 's1', trigger: 'Expandir', content: 'Conteúdo único.' }],
               }),
             },
@@ -321,7 +321,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.single.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Pergunta 1', content: 'Resposta objetiva em 1–2 linhas.' },
                   { value: 'item-2', trigger: 'Pergunta 2', content: 'Outro conteúdo aqui.' },
@@ -333,7 +333,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.multiple.description')),
               code: codeMultiple,
               previewFactory: () => createAccordion({
-                type: 'multiple', class: 'nds-w-full nds-max-w-sm nds-text-body',
+                type: 'multiple', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 's1', trigger: 'Especificações técnicas', content: 'CPU, RAM, SSD.' },
                   { value: 's2', trigger: 'Compatibilidade', content: 'Windows 11, macOS, Linux.' },
@@ -345,7 +345,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.controlled.description')),
               code: codeControlled,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item 1 — controlado', content: 'Estado gerenciado externamente.' },
                   { value: 'item-2', trigger: 'Item 2 — controlado', content: 'Útil para sincronizar com URL.' },
@@ -357,7 +357,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.defaultOpen.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-w-full nds-max-w-sm nds-text-body',
+                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item aberto por padrão', content: 'Este item inicia expandido via defaultValue.' },
                   { value: 'item-2', trigger: 'Item fechado por padrão', content: 'Este item inicia colapsado.' },

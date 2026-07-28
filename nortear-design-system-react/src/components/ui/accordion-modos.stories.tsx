@@ -22,7 +22,7 @@ type Story = StoryObj;
 
 export const Single: Story = {
   render: () => (
-    <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="nds-max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>
@@ -86,7 +86,7 @@ export const Single: Story = {
 
 export const Multiple: Story = {
   render: () => (
-    <Accordion multiple className="nds-w-full nds-max-w-lg">
+    <Accordion multiple className="nds-max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
@@ -155,7 +155,7 @@ function ControlledAccordion() {
       <Accordion
         value={value}
         onValueChange={setValue}
-        className="nds-w-full"
+       
       >
         <AccordionItem value="item-1">
           <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
@@ -205,7 +205,7 @@ export const Controlled: Story = {
 
 export const DefaultOpen: Story = {
   render: () => (
-    <Accordion defaultValue={["item-1"]} className="nds-w-full nds-max-w-lg">
+    <Accordion defaultValue={["item-1"]} className="nds-max-w-lg">
       <AccordionItem value="item-1">
         <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
         <AccordionContent>

@@ -23,7 +23,7 @@ type Story = StoryObj;
 
 export const ComIconeNoTrigger: Story = {
   render: () => (
-    <Accordion className="nds-w-full nds-max-w-lg">
+    <Accordion className="nds-max-w-lg">
       <AccordionItem value="info">
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
@@ -88,7 +88,7 @@ export const ComIconeNoTrigger: Story = {
 
 export const ComBadgeNoTrigger: Story = {
   render: () => (
-    <Accordion className="nds-w-full nds-max-w-lg">
+    <Accordion className="nds-max-w-lg">
       <AccordionItem value="novo">
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
@@ -143,7 +143,7 @@ export const ComBadgeNoTrigger: Story = {
 
 export const ConteudoRico: Story = {
   render: () => (
-    <Accordion multiple className="nds-w-full nds-max-w-lg">
+    <Accordion multiple className="nds-max-w-lg">
       <AccordionItem value="especificacoes">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>

@@ -25,7 +25,7 @@ export const ComIconeNoTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Info, AlertTriangle, CheckCircle },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-w-full nds-max-w-lg">
+      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
         <AccordionItem value="info">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
@@ -78,7 +78,7 @@ export const ComBadgeNoTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Badge },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-w-full nds-max-w-lg">
+      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
         <AccordionItem value="novo">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
@@ -120,7 +120,7 @@ export const ConteudoRico: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="multiple" class="nds-w-full nds-max-w-lg">
+      <Accordion type="multiple" class="nds-max-w-lg">
         <AccordionItem value="especificacoes">
           <AccordionTrigger>Especificações técnicas</AccordionTrigger>
           <AccordionContent>

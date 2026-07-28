@@ -24,7 +24,7 @@ export const Single: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-w-full nds-max-w-lg">
+      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
           <AccordionContent>
@@ -80,7 +80,7 @@ export const Multiple: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="multiple" class="nds-w-full nds-max-w-lg">
+      <Accordion type="multiple" class="nds-max-w-lg">
         <AccordionItem value="especificacoes">
           <AccordionTrigger>Especificações técnicas</AccordionTrigger>
           <AccordionContent>
@@ -186,7 +186,7 @@ export const DefaultOpen: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-w-full nds-max-w-lg">
+      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
           <AccordionContent>
