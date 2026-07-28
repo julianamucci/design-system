@@ -39,10 +39,11 @@ type Story = StoryObj<AccordionArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
+// Mesmas perguntas da seção Demonstração da docs page e das demais stacks.
 const DEMO_ITEMS: AccordionOptions['items'] = [
-  { value: 'item-1', trigger: 'O que é um Design System?', content: 'Um Design System é um conjunto de padrões, componentes e diretrizes que garantem consistência visual e de experiência em produtos digitais.' },
-  { value: 'item-2', trigger: 'Quais são as vantagens?', content: 'Velocidade de desenvolvimento, consistência entre equipes, reutilização de componentes e documentação centralizada.' },
-  { value: 'item-3', trigger: 'Como começar a usar?', content: 'Instale o pacote via npm, importe os componentes necessários e siga as guidelines de uso disponíveis na documentação.' },
+  { value: 'item-1', trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
+  { value: 'item-2', trigger: 'Quais formas de pagamento são aceitas?', content: 'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.' },
+  { value: 'item-3', trigger: 'Como cancelo minha assinatura?', content: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
 ];
 
 export const Playground: Story = {

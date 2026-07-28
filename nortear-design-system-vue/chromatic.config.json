@@ -1,6 +1,7 @@
 {
   "buildScriptName": "build-storybook:chromatic",
   "onlyChanged": true,
+  "projectId": "Project:69e65c1ce4ec0f289b6bdcb5",
   "storybookBaseDir": "nortear-design-system-vue",
   "zip": true
 }

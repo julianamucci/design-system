@@ -143,37 +143,38 @@ export const ComBadgeNoTrigger: Story = {
 
 export const ConteudoRico: Story = {
   render: () => (
-    <Accordion multiple className="nds-max-w-lg">
-      <AccordionItem value="especificacoes">
+    <Accordion multiple className="nds-max-w-lg nds-text-body">
+      <AccordionItem value="specs">
         <AccordionTrigger>Especificações técnicas</AccordionTrigger>
         <AccordionContent>
-          <div className="nds-text-body" data-spacing="sm">
-            <div className="nds-grid" data-cols="2">
-              <span className="nds-text-muted-foreground">Processador</span>
-              <span>Intel Core i7-12700</span>
-              <span className="nds-text-muted-foreground">Memória RAM</span>
-              <span>16 GB DDR5</span>
-              <span className="nds-text-muted-foreground">Armazenamento</span>
-              <span>512 GB NVMe SSD</span>
-              <span className="nds-text-muted-foreground">Sistema</span>
-              <span>Windows 11 Pro</span>
-            </div>
-          </div>
+          {/* Tabela de verdade, não grid: `.nds-grid[data-cols="2"]` exige 18rem
+              por coluna e colapsa dentro do accordion. Mesmo exemplo da docs page. */}
+          <table className="nds-w-full nds-text-body nds-border-collapse">
+            <tbody>
+              <tr className="nds-border-b">
+                <td className="nds-py-1" style={{ paddingRight: "1rem" }}>CPU</td>
+                <td className="nds-py-1">Intel Core i7-12700</td>
+              </tr>
+              <tr className="nds-border-b">
+                <td className="nds-py-1" style={{ paddingRight: "1rem" }}>RAM</td>
+                <td className="nds-py-1">16GB DDR5</td>
+              </tr>
+              <tr>
+                <td className="nds-py-1" style={{ paddingRight: "1rem" }}>SSD</td>
+                <td className="nds-py-1">512GB NVMe</td>
+              </tr>
+            </tbody>
+          </table>
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="descricao">
-        <AccordionTrigger>Descrição detalhada</AccordionTrigger>
+      <AccordionItem value="inclui">
+        <AccordionTrigger>O que está incluso</AccordionTrigger>
         <AccordionContent>
-          <div className="nds-text-body nds-text-muted-foreground" data-spacing="sm">
-            <p>
-              Computador de alto desempenho voltado para profissionais criativos e
-              desenvolvedores que necessitam de processamento intensivo.
-            </p>
-            <p>
-              O design compacto permite uso em qualquer ambiente sem comprometer
-              a capacidade de processamento.
-            </p>
-          </div>
+          <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="xs">
+            <li>Cabo de alimentação</li>
+            <li>Manual do usuário</li>
+            <li>Garantia de 24 meses</li>
+          </ul>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

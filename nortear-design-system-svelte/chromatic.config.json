@@ -1,6 +1,7 @@
 {
   "buildScriptName": "build-storybook:chromatic",
   "onlyChanged": true,
+  "projectId": "Project:69e65c3ab0a870636a67eb35",
   "storybookBaseDir": "nortear-design-system-svelte",
   "zip": true
 }

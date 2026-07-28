@@ -30,7 +30,7 @@
       { value: 'item-3', q: 'Como cancelo minha assinatura?', a: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
     ],
     disabledItem,
-    class: className = 'w-full max-w-lg',
+    class: className = 'nds-max-w-lg',
   }: Props = $props();
 
   // bits-ui não expõe defaultValue — usamos `value` bindable inicializado com

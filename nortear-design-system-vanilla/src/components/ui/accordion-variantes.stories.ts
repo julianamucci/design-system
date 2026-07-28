@@ -101,7 +101,7 @@ export const Controlled: Story = {
 
     const setIndicator = (val: string | string[]) => {
       const display = Array.isArray(val) ? val.join(', ') : val || '(nenhum)';
-      indicator.innerHTML = DOMPurify.sanitize(`Item ativo: <code class="font-mono">${display}</code>`);
+      indicator.innerHTML = DOMPurify.sanitize(`Item ativo: <code class="nds-font-mono">${display}</code>`);
     };
     setIndicator('item-1');
 
