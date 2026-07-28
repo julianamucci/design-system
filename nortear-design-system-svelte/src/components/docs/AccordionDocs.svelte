@@ -798,7 +798,7 @@ type AccordionProps = Accordion.RootProps & {
             level: 'WCAG',
             how: $tNavStore('common.howToVerify'),
           },
-          items: [1, 2, 3, 4, 5].map(i => ({
+          items: [1, 2, 3, 4, 5, 6].map(i => ({
             criterion: stripHtml($tStore(`testes.accessibility.item${i}.criterion`)),
             level:     $tStore(`testes.accessibility.item${i}.level`),
             how:       $tStore(`testes.accessibility.item${i}.how`),

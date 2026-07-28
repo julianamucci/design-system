@@ -7,8 +7,8 @@
     "seo": {
       "title": "Accordion — Disclosure",
       "description": "Documentação do Accordion: tipos single e multiple, modo controlado, acessibilidade WCAG com ARIA automático e animação.",
-      "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI e suporte a keyboard navigation.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
+      "aiSummary": "Componente Accordion com tipos single e multiple, modo controlado, chevron animado, ARIA automático via biblioteca headless e suporte a keyboard navigation.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -339,24 +339,24 @@
           "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — ícone de indicação"
         },
-        "background": {
-          "token": "--background",
-          "class": "background-color: hsl(var(--background))",
-          "part": "AccordionContent — fundo do conteúdo"
-        },
         "ring": {
           "token": "--ring",
           "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
-        "animateDown": {
-          "token": "--animate-accordion-down",
-          "class": "animation: accordion-down",
+        "spacing": {
+          "token": "--spacing-4",
+          "class": "padding-block · gap · padding-bottom",
+          "part": "AccordionTrigger e corpo do conteúdo — espaçamento"
+        },
+        "animateExpand": {
+          "token": "--duration-moderate · --ease-entrance",
+          "class": "animation: nds-accordion-expand",
           "part": "AccordionContent — animação de abertura"
         },
-        "animateUp": {
-          "token": "--animate-accordion-up",
-          "class": "animation: accordion-up",
+        "animateCollapse": {
+          "token": "--duration-base · --ease-exit",
+          "class": "animation: nds-accordion-collapse",
           "part": "AccordionContent — animação de fechamento"
         }
       },
@@ -382,8 +382,8 @@
         "shiftTab": "Move o foco para o AccordionTrigger anterior.",
         "enter": "Expande ou colapsa o item focado.",
         "space": "Expande ou colapsa o item focado.",
-        "arrowDown": "Move o foco para o próximo trigger (comportamento nativo Radix/Reka/Bits).",
-        "arrowUp": "Move o foco para o trigger anterior."
+        "arrowDown": "Move o foco para o próximo trigger, com loop no final da lista.",
+        "arrowUp": "Move o foco para o trigger anterior, com loop no início da lista."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> no trigger — aplicado automaticamente.",
@@ -419,8 +419,8 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "O chevron rotaciona automaticamente via seletor CSS <code>[data-state=\"open\"] svg</code> no AccordionTrigger — não aplicar a rotação manualmente.",
-      "item2": "Animações de abertura/fechamento usam CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas em CSS standalone.",
+      "item1": "O chevron rotaciona automaticamente via CSS quando o item abre — não aplicar a rotação manualmente. O seletor cobre as convenções das libs (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
+      "item2": "A abertura e o fechamento animam <code>grid-template-rows</code> junto com a opacidade, via keyframes <code>nds-accordion-expand</code> e <code>nds-accordion-collapse</code> no CSS standalone. A altura vem do próprio conteúdo — não use as custom properties de altura das libs, que não incluem o padding e cortam o texto.",
       "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
       "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, fechar o item ativo depende da configuração do componente — consulte a tabela de propriedades."
@@ -440,7 +440,7 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Use <code>data-state=\"closed\"</code> no trigger para detectar se o clique vai abrir — o Radix atualiza o estado após o evento.",
+      "note": "No clique, o estado ainda é o ANTERIOR — leia-o para saber se o item vai abrir ou fechar. O atributo que marca o estado varia conforme a biblioteca headless da stack; siga o snippet desta página.",
       "table": {
         "event": "Evento",
         "trigger": "Gatilho",
@@ -510,6 +510,11 @@
           "criterion": "Item desabilitado tem aria-disabled ou disabled nativo",
           "level": "AA",
           "how": "expect(trigger).toBeDisabled()"
+        },
+        "item6": {
+          "criterion": "Setas movem o foco entre triggers, com loop nas pontas",
+          "level": "AA",
+          "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
         }
       },
       "visual": {
@@ -567,8 +572,8 @@
     "seo": {
       "title": "Accordion — Disclosure",
       "description": "Documentation for Accordion: single and multiple types, controlled mode, WCAG accessibility with automatic ARIA and animation.",
-      "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via Radix/Reka/Bits UI and keyboard navigation support.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
+      "aiSummary": "Accordion component with single and multiple types, controlled mode, animated chevron, automatic ARIA via the headless library and keyboard navigation support.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -899,25 +904,25 @@
           "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — indicator icon"
         },
-        "background": {
-          "token": "--background",
-          "class": "background-color: hsl(var(--background))",
-          "part": "AccordionContent — content background"
-        },
         "ring": {
           "token": "--ring",
           "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
-        "animateDown": {
-          "token": "--animate-accordion-down",
-          "class": "animation: accordion-down",
-          "part": "AccordionContent — open animation"
+        "spacing": {
+          "token": "--spacing-4",
+          "class": "padding-block · gap · padding-bottom",
+          "part": "AccordionTrigger and content body — spacing"
         },
-        "animateUp": {
-          "token": "--animate-accordion-up",
-          "class": "animation: accordion-up",
-          "part": "AccordionContent — close animation"
+        "animateExpand": {
+          "token": "--duration-moderate · --ease-entrance",
+          "class": "animation: nds-accordion-expand",
+          "part": "AccordionContent — expand animation"
+        },
+        "animateCollapse": {
+          "token": "--duration-base · --ease-exit",
+          "class": "animation: nds-accordion-collapse",
+          "part": "AccordionContent — collapse animation"
         }
       },
       "customizationTitle": "Customization via tokens",
@@ -942,8 +947,8 @@
         "shiftTab": "Moves focus to the previous AccordionTrigger.",
         "enter": "Expands or collapses the focused item.",
         "space": "Expands or collapses the focused item.",
-        "arrowDown": "Moves focus to the next trigger (native Radix/Reka/Bits behavior).",
-        "arrowUp": "Moves focus to the previous trigger."
+        "arrowDown": "Moves focus to the next trigger, looping at the end of the list.",
+        "arrowUp": "Moves focus to the previous trigger, looping at the start of the list."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> on trigger — applied automatically.",
@@ -979,8 +984,8 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "The chevron rotates automatically via a CSS selector <code>[data-state=\"open\"] svg</code> in AccordionTrigger — don't apply the rotation manually.",
-      "item2": "Open/close animations use CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) defined in standalone CSS.",
+      "item1": "The chevron rotates automatically via CSS when the item opens — do not apply the rotation manually. The selector covers each library convention (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
+      "item2": "Opening and closing animate <code>grid-template-rows</code> together with opacity, via the <code>nds-accordion-expand</code> and <code>nds-accordion-collapse</code> keyframes in the standalone CSS. Height comes from the content itself — do not use the libraries’ height custom properties, which exclude the padding and clip the text.",
       "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
       "item5": "In multiple mode all items are individually closable. In single mode, closing the active item depends on the component configuration — see the properties table."
@@ -1000,7 +1005,7 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Use <code>data-state=\"closed\"</code> on the trigger to detect if the click will open — Radix updates the state after the event.",
+      "note": "On click the state is still the PREVIOUS one — read it to know whether the item will open or close. Which attribute carries the state depends on the stack’s headless library; follow the snippet on this page.",
       "table": {
         "event": "Event",
         "trigger": "Trigger",
@@ -1070,6 +1075,11 @@
           "criterion": "Disabled item has aria-disabled or native disabled",
           "level": "AA",
           "how": "expect(trigger).toBeDisabled()"
+        },
+        "item6": {
+          "criterion": "Arrow keys move focus between triggers, looping at both ends",
+          "level": "AA",
+          "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
         }
       },
       "visual": {
@@ -1127,8 +1137,8 @@
     "seo": {
       "title": "Accordion — Disclosure",
       "description": "Documentación del Accordion: tipos single y multiple, modo controlado, accesibilidad WCAG con ARIA automático y animación.",
-      "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático via Radix/Reka/Bits UI y soporte de navegación por teclado.",
-      "aiEntities": "Accordion, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
+      "aiSummary": "Componente Accordion con tipos single y multiple, modo controlado, chevron animado, ARIA automático vía biblioteca headless y soporte de navegación por teclado.",
+      "aiEntities": "Accordion, React, Vue, Svelte, Reka UI, Bits UI, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1459,24 +1469,24 @@
           "class": "color: hsl(var(--muted-foreground))",
           "part": "Chevron — icono indicador"
         },
-        "background": {
-          "token": "--background",
-          "class": "background-color: hsl(var(--background))",
-          "part": "AccordionContent — fondo del contenido"
-        },
         "ring": {
           "token": "--ring",
           "class": "box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5)",
           "part": "AccordionTrigger — focus ring"
         },
-        "animateDown": {
-          "token": "--animate-accordion-down",
-          "class": "animation: accordion-down",
+        "spacing": {
+          "token": "--spacing-4",
+          "class": "padding-block · gap · padding-bottom",
+          "part": "AccordionTrigger y cuerpo del contenido — espaciado"
+        },
+        "animateExpand": {
+          "token": "--duration-moderate · --ease-entrance",
+          "class": "animation: nds-accordion-expand",
           "part": "AccordionContent — animación de apertura"
         },
-        "animateUp": {
-          "token": "--animate-accordion-up",
-          "class": "animation: accordion-up",
+        "animateCollapse": {
+          "token": "--duration-base · --ease-exit",
+          "class": "animation: nds-accordion-collapse",
           "part": "AccordionContent — animación de cierre"
         }
       },
@@ -1502,8 +1512,8 @@
         "shiftTab": "Mueve el foco al AccordionTrigger anterior.",
         "enter": "Expande o colapsa el ítem enfocado.",
         "space": "Expande o colapsa el ítem enfocado.",
-        "arrowDown": "Mueve el foco al siguiente trigger (comportamiento nativo Radix/Reka/Bits).",
-        "arrowUp": "Mueve el foco al trigger anterior."
+        "arrowDown": "Mueve el foco al siguiente trigger, con bucle al final de la lista.",
+        "arrowUp": "Mueve el foco al trigger anterior, con bucle al inicio de la lista."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> en el trigger — aplicado automáticamente.",
@@ -1539,8 +1549,8 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "El chevron rota automáticamente vía un selector CSS <code>[data-state=\"open\"] svg</code> en AccordionTrigger — no aplicar la rotación manualmente.",
-      "item2": "Las animaciones de apertura/cierre usan CSS (<code>animate-accordion-down</code> / <code>animate-accordion-up</code>) definidas en CSS standalone.",
+      "item1": "El chevron rota automáticamente vía CSS cuando el ítem abre — no apliques la rotación manualmente. El selector cubre las convenciones de las librerías (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
+      "item2": "La apertura y el cierre animan <code>grid-template-rows</code> junto con la opacidad, vía los keyframes <code>nds-accordion-expand</code> y <code>nds-accordion-collapse</code> en el CSS standalone. La altura viene del propio contenido — no uses las custom properties de altura de las librerías, que no incluyen el padding y cortan el texto.",
       "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
       "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, cerrar el ítem activo depende de la configuración del componente — consulta la tabla de propiedades."
@@ -1560,7 +1570,7 @@
           "payload": "{ component: \"accordion\", label: string, location: string }"
         }
       },
-      "note": "Usa <code>data-state=\"closed\"</code> en el trigger para detectar si el clic va a abrir — Radix actualiza el estado después del evento.",
+      "note": "En el clic el estado sigue siendo el ANTERIOR — léelo para saber si el ítem va a abrir o cerrar. El atributo que marca el estado varía según la biblioteca headless de la stack; sigue el snippet de esta página.",
       "table": {
         "event": "Evento",
         "trigger": "Disparador",
@@ -1630,6 +1640,11 @@
           "criterion": "Ítem deshabilitado tiene aria-disabled o disabled nativo",
           "level": "AA",
           "how": "expect(trigger).toBeDisabled()"
+        },
+        "item6": {
+          "criterion": "Las flechas mueven el foco entre triggers, con bucle en los extremos",
+          "level": "AA",
+          "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
         }
       },
       "visual": {

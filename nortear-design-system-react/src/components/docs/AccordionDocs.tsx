@@ -115,6 +115,32 @@ export function AccordionDocs() {
     }).filter((row) => row.name !== "collapsible");
   }, [locale]);
 
+  // Override stack-específico: o @base-ui não tem `asChild` (composição vai
+  // pela prop `render`) nem `forceMount` (o equivalente é `keepMounted`).
+  // Ambas são API do Radix/shadcn, que o projeto não usa mais nesta stack.
+  const renamedProps: Record<string, { name: string; type: string }> = useMemo(
+    () => ({
+      asChild: { name: "render", type: "ReactElement" },
+      forceMount: { name: "keepMounted", type: "boolean" },
+    }),
+    [],
+  );
+
+  const mapPropItems = useCallback(
+    (table: Record<string, Record<string, string>>) =>
+      Object.values(table).map((v) => {
+        const renamed = renamedProps[v.name];
+        return {
+          name: renamed?.name ?? v.name,
+          type: renamed?.type ?? v.type,
+          defaultValue: renamed ? "—" : v.default,
+          required: v.required,
+          description: stripHtml(v.description),
+        };
+      }),
+    [renamedProps],
+  );
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -151,7 +177,11 @@ export function AccordionDocs() {
 
   const handleDemoTriggerClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>, label: string) => {
-      const isOpening = e.currentTarget.getAttribute("data-state") === "closed";
+      // base-ui marca o trigger com `data-panel-open` quando aberto e não põe
+      // atributo algum quando fechado — não existe `data-state` aqui (reka e
+      // bits usam data-state; a factory Vanilla também). Ler data-state daria
+      // sempre null e todo clique viraria accordion_collapse.
+      const isOpening = !e.currentTarget.hasAttribute("data-panel-open");
       track(isOpening ? "accordion_expand" : "accordion_collapse", {
         component: "accordion",
         label,
@@ -780,15 +810,9 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   required: tContent("props.accordion.required"),
                   description: tContent("props.accordion.description"),
                 },
-                items: Object.entries(
+                items: mapPropItems(
                   (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.trigger?.items ?? {}
-                ).map(([, v]) => ({
-                  name: v.name,
-                  type: v.type,
-                  defaultValue: v.default,
-                  required: v.required,
-                  description: stripHtml(v.description),
-                })),
+                ),
               },
               {
                 title: tContent("props.content.title"),
@@ -799,15 +823,9 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                   required: tContent("props.accordion.required"),
                   description: tContent("props.accordion.description"),
                 },
-                items: Object.entries(
+                items: mapPropItems(
                   (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.content?.items ?? {}
-                ).map(([, v]) => ({
-                  name: v.name,
-                  type: v.type,
-                  defaultValue: v.default,
-                  required: v.required,
-                  description: stripHtml(v.description),
-                })),
+                ),
               },
             ]}
             interfaceCode={interfaceCode}
@@ -934,7 +952,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 level: "WCAG",
                 how: tNav("common.howToVerify"),
               },
-              items: [1, 2, 3, 4, 5].map((i) => ({
+              items: [1, 2, 3, 4, 5, 6].map((i) => ({
                 criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),
