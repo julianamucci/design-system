@@ -56,7 +56,7 @@
     },
     "payload": {
       "title": "Payload base",
-      "subtitle": "Toda chamada de <code>track()</code> deve incluir as três propriedades globais. Propriedades específicas vêm conforme o componente.",
+      "subtitle": "Toda chamada de <code>track()</code> inclui as propriedades globais abaixo; as específicas vêm conforme o componente. <strong>Os valores são sempre estáveis</strong>: chave do item, lado, variante — nunca texto traduzido, que faria o mesmo evento virar um valor diferente por idioma.",
       "cols": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -86,13 +86,13 @@
           "prop": "label",
           "type": "string",
           "required": "não",
-          "desc": "Texto visível do elemento, quando relevante."
+          "desc": "Identificador estável do elemento — a chave do item (<code>dashboard</code>, <code>action-edit</code>), o lado (<code>right</code>) ou a variante. Nunca o texto que aparece na tela."
         },
         "value": {
           "prop": "value",
           "type": "string",
           "required": "não",
-          "desc": "Valor selecionado ou inserido (sanitizado)."
+          "desc": "Valor selecionado, em forma estável (chave da opção, número, <code>true</code>/<code>false</code>) — nunca conteúdo digitado pela pessoa."
         }
       }
     },
@@ -124,7 +124,7 @@
     },
     "autoEvents": {
       "title": "Instrumentação automática (data-track)",
-      "subtitle": "Elementos com <code>data-track=\"{tipo}\"</code> + <code>data-track-id</code> são rastreados por um observer global (<code>docs-tracking</code>) — é o mecanismo que a skill <code>/analytics</code> usa para instrumentar páginas sem chamadas manuais.",
+      "subtitle": "Um observer global (<code>docs-tracking</code>) escuta os cliques de cada docs page e traduz em evento. Ele monta sozinho em toda página — o slug do componente vem da própria URL da story — e a área de demonstração é instrumentada automaticamente: qualquer botão, link ou controle acionado ali dentro vira <code>docs_demo_click</code> sem marcação manual. Para rotular algo com mais precisão, aplique <code>data-track</code> e <code>data-track-id</code> no elemento; a marcação manual tem precedência.",
       "items": {
         "nav": {
           "name": "docs_nav_click",
@@ -160,7 +160,7 @@
     },
     "componentEvents": {
       "title": "Catálogo por componente",
-      "subtitle": "Eventos esperados nos componentes mais comuns. A docs page (ou o produto consumidor) chama <code>track()</code> — o primitive nunca.",
+      "subtitle": "Eventos previstos por componente. Quem chama <code>track()</code> é a docs page ou o produto que usa o componente — o primitive nunca. A lista completa, com os tipos de cada payload, vive em <code>src/lib/analytics.ts</code>.",
       "cols": {
         "event": "Evento",
         "component": "Componente",
@@ -171,50 +171,236 @@
         "buttonClick": {
           "event": "button_click",
           "component": "Button",
-          "when": "No <code>onClick</code>.",
+          "when": "No clique do botão.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "badgeClick": {
+          "event": "badge_click",
+          "component": "Badge",
+          "when": "Badge clicável acionado como filtro ou atalho.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "cardClick": {
+          "event": "card_click",
+          "component": "Card",
+          "when": "Card inteiro navegável é acionado.",
+          "extras": "<code>label</code>, <code>destination</code>"
+        },
+        "profileClick": {
+          "event": "profile_click",
+          "component": "Avatar",
+          "when": "Avatar leva a um perfil.",
+          "extras": "<code>user_id</code> anônimo"
+        },
+        "alertDismiss": {
+          "event": "alert_dismiss",
+          "component": "Alert",
+          "when": "Pessoa descarta um alerta.",
           "extras": "<code>label</code>"
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb, Sidebar",
-          "when": "Ao clicar em um item de navegação.",
-          "extras": "<code>label, destination</code>"
+          "component": "Breadcrumb, NavigationMenu, Sidebar",
+          "when": "Clique em um item de navegação.",
+          "extras": "<code>label</code>, <code>destination</code>"
         },
-        "fieldChange": {
-          "event": "field_change",
-          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
-          "when": "Quando o valor do campo muda.",
-          "extras": "<code>field_name, value</code> (sanitizado)"
+        "sidebarToggle": {
+          "event": "sidebar_toggle",
+          "component": "Sidebar",
+          "when": "Sidebar abre ou fecha.",
+          "extras": "<code>action</code>, <code>trigger</code> (button · rail · keyboard)"
         },
-        "dialogOpen": {
-          "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Drawer",
-          "when": "Quando o overlay abre.",
-          "extras": "<code>label, trigger_label</code>"
+        "breadcrumbEllipsis": {
+          "event": "breadcrumb_ellipsis_open",
+          "component": "Breadcrumb",
+          "when": "Menu dos itens ocultos é aberto.",
+          "extras": "<code>hidden_count</code>"
         },
-        "dialogClose": {
-          "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
-          "when": "Ao fechar por qualquer caminho.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
-        },
-        "slideChange": {
-          "event": "slide_change",
-          "component": "Carousel",
-          "when": "Ao avançar/retroceder slide.",
-          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
+        "pageChange": {
+          "event": "page_change",
+          "component": "Pagination",
+          "when": "Troca de página.",
+          "extras": "<code>page</code>, <code>total_pages</code>"
         },
         "tabChange": {
           "event": "tab_change",
           "component": "Tabs",
-          "when": "Ao trocar de aba.",
-          "extras": "<code>value</code>"
+          "when": "Troca de aba.",
+          "extras": "<code>value</code>, <code>index</code>, <code>total</code>"
+        },
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Toggle, ToggleGroup, Calendar",
+          "when": "Valor do campo muda.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "optionSelect": {
+          "event": "option_select",
+          "component": "Select, Combobox",
+          "when": "Opção é escolhida.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "radioChange": {
+          "event": "radio_change",
+          "component": "RadioGroup",
+          "when": "Opção do grupo muda.",
+          "extras": "<code>name</code>, <code>value</code>, <code>previous_value</code>"
+        },
+        "sliderChange": {
+          "event": "slider_change",
+          "component": "Slider",
+          "when": "Valor é confirmado (fim do arrasto ou teclado).",
+          "extras": "<code>field_name</code>, <code>value</code>, <code>min</code>, <code>max</code>"
+        },
+        "fieldFocus": {
+          "event": "field_focus",
+          "component": "Input, Textarea, Form",
+          "when": "Campo recebe foco — só em funis críticos.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldBlur": {
+          "event": "field_blur",
+          "component": "Input, Textarea, Form",
+          "when": "Pessoa sai do campo com conteúdo preenchido.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldError": {
+          "event": "field_error",
+          "component": "Input, Form",
+          "when": "Mensagem de erro é exibida.",
+          "extras": "<code>field_name</code>, <code>error_message</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Overlay abre.",
+          "extras": "<code>label</code>, <code>trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Overlay fecha por qualquer caminho.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+        },
+        "dialogConfirm": {
+          "event": "dialog_confirm",
+          "component": "AlertDialog, Sheet",
+          "when": "Ação primária é confirmada.",
+          "extras": "<code>action</code>, <code>trigger_label</code>"
+        },
+        "dialogAction": {
+          "event": "dialog_action",
+          "component": "Dialog",
+          "when": "Clique na ação primária do rodapé.",
+          "extras": "<code>action_label</code>"
+        },
+        "popoverOpen": {
+          "event": "popover_open",
+          "component": "Popover",
+          "when": "Popover abre.",
+          "extras": "<code>trigger_label</code>"
+        },
+        "popoverClose": {
+          "event": "popover_close",
+          "component": "Popover",
+          "when": "Popover fecha.",
+          "extras": "<code>reason</code>"
+        },
+        "tooltipView": {
+          "event": "tooltip_view",
+          "component": "Tooltip",
+          "when": "Tooltip fica visível tempo suficiente para leitura.",
+          "extras": "<code>trigger_id</code>"
+        },
+        "menuOpen": {
+          "event": "menu_open",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "Menu é aberto.",
+          "extras": "<code>menu</code>"
+        },
+        "menuItemClick": {
+          "event": "menu_item_click",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "Item do menu é escolhido.",
+          "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "accordionExpand": {
+          "event": "accordion_expand",
+          "component": "Accordion",
+          "when": "Item é aberto.",
+          "extras": "<code>label</code>"
+        },
+        "accordionCollapse": {
+          "event": "accordion_collapse",
+          "component": "Accordion",
+          "when": "Item é fechado.",
+          "extras": "<code>label</code>"
+        },
+        "collapsibleToggle": {
+          "event": "collapsible_toggle",
+          "component": "Collapsible",
+          "when": "Bloco abre ou fecha.",
+          "extras": "<code>label</code>, <code>value</code>"
         },
         "commandSelect": {
           "event": "command_item_select",
           "component": "Command",
-          "when": "Ao selecionar um item da lista.",
-          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
+          "when": "Item da lista é selecionado.",
+          "extras": "<code>label</code>, <code>group</code>, <code>pattern</code>"
+        },
+        "commandOpen": {
+          "event": "command_palette_open",
+          "component": "Command",
+          "when": "Command palette é aberto.",
+          "extras": "<code>trigger</code> (keyboard · button)"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "Troca de slide.",
+          "extras": "<code>index</code>, <code>total</code>, <code>trigger</code> (button · swipe · keyboard)"
+        },
+        "autoplayPaused": {
+          "event": "autoplay_paused",
+          "component": "Carousel",
+          "when": "Autoplay pausa por interação.",
+          "extras": "<code>index</code>"
+        },
+        "toastAction": {
+          "event": "toast_action_click",
+          "component": "Sonner",
+          "when": "Clique na ação do toast (ex.: Desfazer).",
+          "extras": "<code>label</code>"
+        },
+        "taskProgress": {
+          "event": "task_progress",
+          "component": "Progress",
+          "when": "Tarefa acompanhada atinge um marco.",
+          "extras": "<code>task</code>, <code>percent</code>"
+        },
+        "taskComplete": {
+          "event": "task_complete",
+          "component": "Progress",
+          "when": "Tarefa acompanhada conclui.",
+          "extras": "<code>task</code>, <code>duration_ms</code>"
+        },
+        "panelResize": {
+          "event": "panel_resize",
+          "component": "Resizable",
+          "when": "Redimensionamento de painéis termina.",
+          "extras": "<code>group_id</code>, <code>sizes</code>"
+        },
+        "contentScroll": {
+          "event": "content_scroll",
+          "component": "ScrollArea",
+          "when": "Rolagem atinge um marco relevante.",
+          "extras": "<code>target_id</code>, <code>percent_visible</code>"
+        },
+        "toastDemo": {
+          "event": "toast_demo_triggered",
+          "component": "Sonner",
+          "when": "Botão da demonstração dispara um toast (evento próprio da docs page).",
+          "extras": "<code>toast_type</code>, <code>locale</code>"
         }
       }
     },
@@ -224,7 +410,8 @@
         "inPrimitive": "<strong>Nunca</strong> chamar <code>track()</code> dentro de um UI primitive. Tracking é responsabilidade da camada de produto (docs page ou feature).",
         "sensitive": "Não rastreie dados sensíveis: e-mail, CPF, telefone, ID interno, query crua de busca. Use <code>query_length</code> ou <code>has_value</code>.",
         "nonEnglish": "Sem nomes em português ou em camelCase. Auditor falha em <code>botaoClicado</code>.",
-        "directGtag": "Nunca chame <code>gtag()</code> diretamente. Sempre via <code>track()</code> — garante <code>window.top</code> e sanitização."
+        "directGtag": "Nunca chame <code>gtag()</code> diretamente. Sempre via <code>track()</code> — garante <code>window.top</code> e sanitização.",
+        "translatedLabel": "<strong>Nunca</strong> envie texto traduzido no payload (<code>label: t(\"...\")</code>). Use a chave estável do item — texto localizado fragmenta o mesmo evento em um valor por idioma e inutiliza a soma. Única exceção: <code>page_title</code>, que é campo padrão do GA4 e vem acompanhado de <code>locale</code>."
       }
     },
     "privacy": {
@@ -294,7 +481,7 @@
     },
     "payload": {
       "title": "Base payload",
-      "subtitle": "Every <code>track()</code> call must include the three global properties. Component-specific properties are added as needed.",
+      "subtitle": "Every <code>track()</code> call includes the global properties below; component-specific ones come as needed. <strong>Values are always stable</strong>: item key, side, variant — never translated text, which would turn the same event into a different value per language.",
       "cols": {
         "prop": "Property",
         "type": "Type",
@@ -324,13 +511,13 @@
           "prop": "label",
           "type": "string",
           "required": "no",
-          "desc": "Visible element text, when relevant."
+          "desc": "Stable identifier for the element — the item key (<code>dashboard</code>, <code>action-edit</code>), the side (<code>right</code>) or the variant. Never the text shown on screen."
         },
         "value": {
           "prop": "value",
           "type": "string",
           "required": "no",
-          "desc": "Selected or entered value (sanitized)."
+          "desc": "Selected value in stable form (option key, number, <code>true</code>/<code>false</code>) — never content typed by the person."
         }
       }
     },
@@ -362,7 +549,7 @@
     },
     "autoEvents": {
       "title": "Automatic instrumentation (data-track)",
-      "subtitle": "Elements with <code>data-track=\"{type}\"</code> + <code>data-track-id</code> are tracked by a global observer (<code>docs-tracking</code>) — the mechanism the <code>/analytics</code> skill uses to instrument pages without manual calls.",
+      "subtitle": "A global observer (<code>docs-tracking</code>) listens to clicks on every docs page and turns them into events. It mounts by itself on every page — the component slug comes from the story URL — and the demonstration area is instrumented automatically: any button, link or control used inside it becomes <code>docs_demo_click</code> with no manual markup. To label something more precisely, apply <code>data-track</code> and <code>data-track-id</code> to the element; manual markup takes precedence.",
       "items": {
         "nav": {
           "name": "docs_nav_click",
@@ -398,7 +585,7 @@
     },
     "componentEvents": {
       "title": "Per-component catalog",
-      "subtitle": "Expected events for the most common components. The docs page (or consuming product) calls <code>track()</code> — the primitive never does.",
+      "subtitle": "Events expected per component. <code>track()</code> is called by the docs page or by the product using the component — never by the primitive. The full list, with each payload type, lives in <code>src/lib/analytics.ts</code>.",
       "cols": {
         "event": "Event",
         "component": "Component",
@@ -409,50 +596,236 @@
         "buttonClick": {
           "event": "button_click",
           "component": "Button",
-          "when": "On <code>onClick</code>.",
+          "when": "On button click.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "badgeClick": {
+          "event": "badge_click",
+          "component": "Badge",
+          "when": "Clickable badge used as filter or shortcut.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "cardClick": {
+          "event": "card_click",
+          "component": "Card",
+          "when": "The whole card is navigable and gets activated.",
+          "extras": "<code>label</code>, <code>destination</code>"
+        },
+        "profileClick": {
+          "event": "profile_click",
+          "component": "Avatar",
+          "when": "Avatar leads to a profile.",
+          "extras": "<code>user_id</code> anônimo"
+        },
+        "alertDismiss": {
+          "event": "alert_dismiss",
+          "component": "Alert",
+          "when": "Person dismisses an alert.",
           "extras": "<code>label</code>"
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb, Sidebar",
-          "when": "When a nav item is clicked.",
-          "extras": "<code>label, destination</code>"
+          "component": "Breadcrumb, NavigationMenu, Sidebar",
+          "when": "Click on a navigation item.",
+          "extras": "<code>label</code>, <code>destination</code>"
         },
-        "fieldChange": {
-          "event": "field_change",
-          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
-          "when": "When the field value changes.",
-          "extras": "<code>field_name, value</code> (sanitized)"
+        "sidebarToggle": {
+          "event": "sidebar_toggle",
+          "component": "Sidebar",
+          "when": "Sidebar opens or closes.",
+          "extras": "<code>action</code>, <code>trigger</code> (button · rail · keyboard)"
         },
-        "dialogOpen": {
-          "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Drawer",
-          "when": "When the overlay opens.",
-          "extras": "<code>label, trigger_label</code>"
+        "breadcrumbEllipsis": {
+          "event": "breadcrumb_ellipsis_open",
+          "component": "Breadcrumb",
+          "when": "Hidden-items menu is opened.",
+          "extras": "<code>hidden_count</code>"
         },
-        "dialogClose": {
-          "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
-          "when": "On close through any path.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
-        },
-        "slideChange": {
-          "event": "slide_change",
-          "component": "Carousel",
-          "when": "On slide forward/back.",
-          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
+        "pageChange": {
+          "event": "page_change",
+          "component": "Pagination",
+          "when": "Page changes.",
+          "extras": "<code>page</code>, <code>total_pages</code>"
         },
         "tabChange": {
           "event": "tab_change",
           "component": "Tabs",
-          "when": "On tab switch.",
-          "extras": "<code>value</code>"
+          "when": "Tab changes.",
+          "extras": "<code>value</code>, <code>index</code>, <code>total</code>"
+        },
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Toggle, ToggleGroup, Calendar",
+          "when": "Field value changes.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "optionSelect": {
+          "event": "option_select",
+          "component": "Select, Combobox",
+          "when": "An option is picked.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "radioChange": {
+          "event": "radio_change",
+          "component": "RadioGroup",
+          "when": "Group option changes.",
+          "extras": "<code>name</code>, <code>value</code>, <code>previous_value</code>"
+        },
+        "sliderChange": {
+          "event": "slider_change",
+          "component": "Slider",
+          "when": "Value is committed (drag end or keyboard).",
+          "extras": "<code>field_name</code>, <code>value</code>, <code>min</code>, <code>max</code>"
+        },
+        "fieldFocus": {
+          "event": "field_focus",
+          "component": "Input, Textarea, Form",
+          "when": "Field receives focus — critical funnels only.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldBlur": {
+          "event": "field_blur",
+          "component": "Input, Textarea, Form",
+          "when": "Person leaves the field with content filled in.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldError": {
+          "event": "field_error",
+          "component": "Input, Form",
+          "when": "An error message is shown.",
+          "extras": "<code>field_name</code>, <code>error_message</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Overlay opens.",
+          "extras": "<code>label</code>, <code>trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "Overlay closes through any path.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+        },
+        "dialogConfirm": {
+          "event": "dialog_confirm",
+          "component": "AlertDialog, Sheet",
+          "when": "Primary action is confirmed.",
+          "extras": "<code>action</code>, <code>trigger_label</code>"
+        },
+        "dialogAction": {
+          "event": "dialog_action",
+          "component": "Dialog",
+          "when": "Click on the footer primary action.",
+          "extras": "<code>action_label</code>"
+        },
+        "popoverOpen": {
+          "event": "popover_open",
+          "component": "Popover",
+          "when": "Popover opens.",
+          "extras": "<code>trigger_label</code>"
+        },
+        "popoverClose": {
+          "event": "popover_close",
+          "component": "Popover",
+          "when": "Popover closes.",
+          "extras": "<code>reason</code>"
+        },
+        "tooltipView": {
+          "event": "tooltip_view",
+          "component": "Tooltip",
+          "when": "Tooltip stays visible long enough to be read.",
+          "extras": "<code>trigger_id</code>"
+        },
+        "menuOpen": {
+          "event": "menu_open",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "Menu is opened.",
+          "extras": "<code>menu</code>"
+        },
+        "menuItemClick": {
+          "event": "menu_item_click",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "A menu item is picked.",
+          "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "accordionExpand": {
+          "event": "accordion_expand",
+          "component": "Accordion",
+          "when": "An item is expanded.",
+          "extras": "<code>label</code>"
+        },
+        "accordionCollapse": {
+          "event": "accordion_collapse",
+          "component": "Accordion",
+          "when": "An item is collapsed.",
+          "extras": "<code>label</code>"
+        },
+        "collapsibleToggle": {
+          "event": "collapsible_toggle",
+          "component": "Collapsible",
+          "when": "Block opens or closes.",
+          "extras": "<code>label</code>, <code>value</code>"
         },
         "commandSelect": {
           "event": "command_item_select",
           "component": "Command",
-          "when": "When a list item is selected.",
-          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
+          "when": "A list item is selected.",
+          "extras": "<code>label</code>, <code>group</code>, <code>pattern</code>"
+        },
+        "commandOpen": {
+          "event": "command_palette_open",
+          "component": "Command",
+          "when": "Command palette is opened.",
+          "extras": "<code>trigger</code> (keyboard · button)"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "Slide changes.",
+          "extras": "<code>index</code>, <code>total</code>, <code>trigger</code> (button · swipe · keyboard)"
+        },
+        "autoplayPaused": {
+          "event": "autoplay_paused",
+          "component": "Carousel",
+          "when": "Autoplay pauses due to interaction.",
+          "extras": "<code>index</code>"
+        },
+        "toastAction": {
+          "event": "toast_action_click",
+          "component": "Sonner",
+          "when": "Click on the toast action (e.g. Undo).",
+          "extras": "<code>label</code>"
+        },
+        "taskProgress": {
+          "event": "task_progress",
+          "component": "Progress",
+          "when": "Tracked task reaches a milestone.",
+          "extras": "<code>task</code>, <code>percent</code>"
+        },
+        "taskComplete": {
+          "event": "task_complete",
+          "component": "Progress",
+          "when": "Tracked task completes.",
+          "extras": "<code>task</code>, <code>duration_ms</code>"
+        },
+        "panelResize": {
+          "event": "panel_resize",
+          "component": "Resizable",
+          "when": "Panel resizing ends.",
+          "extras": "<code>group_id</code>, <code>sizes</code>"
+        },
+        "contentScroll": {
+          "event": "content_scroll",
+          "component": "ScrollArea",
+          "when": "Scrolling reaches a relevant milestone.",
+          "extras": "<code>target_id</code>, <code>percent_visible</code>"
+        },
+        "toastDemo": {
+          "event": "toast_demo_triggered",
+          "component": "Sonner",
+          "when": "A demo button fires a toast (event specific to the docs page).",
+          "extras": "<code>toast_type</code>, <code>locale</code>"
         }
       }
     },
@@ -462,7 +835,8 @@
         "inPrimitive": "<strong>Never</strong> call <code>track()</code> inside a UI primitive. Tracking is the product layer's job (docs page or feature).",
         "sensitive": "Don't track sensitive data: email, national ID, phone, internal IDs, raw search query. Use <code>query_length</code> or <code>has_value</code>.",
         "nonEnglish": "No Portuguese names or camelCase. The auditor fails on <code>botaoClicado</code>.",
-        "directGtag": "Never call <code>gtag()</code> directly. Always via <code>track()</code> — it guarantees <code>window.top</code> and sanitization."
+        "directGtag": "Never call <code>gtag()</code> directly. Always via <code>track()</code> — it guarantees <code>window.top</code> and sanitization.",
+        "translatedLabel": "<strong>Never</strong> send translated text in the payload (<code>label: t(\"...\")</code>). Use the stable item key — localized text splits the same event into one value per language and makes totals useless. Only exception: <code>page_title</code>, a standard GA4 field that always travels with <code>locale</code>."
       }
     },
     "privacy": {
@@ -532,7 +906,7 @@
     },
     "payload": {
       "title": "Payload base",
-      "subtitle": "Toda llamada de <code>track()</code> debe incluir las tres propiedades globales. Las propiedades específicas se agregan según el componente.",
+      "subtitle": "Cada llamada a <code>track()</code> incluye las propiedades globales de abajo; las específicas vienen según el componente. <strong>Los valores son siempre estables</strong>: clave del ítem, lado, variante — nunca texto traducido, que convertiría el mismo evento en un valor distinto por idioma.",
       "cols": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -562,13 +936,13 @@
           "prop": "label",
           "type": "string",
           "required": "no",
-          "desc": "Texto visible del elemento, cuando sea relevante."
+          "desc": "Identificador estable del elemento — la clave del ítem (<code>dashboard</code>, <code>action-edit</code>), el lado (<code>right</code>) o la variante. Nunca el texto que aparece en pantalla."
         },
         "value": {
           "prop": "value",
           "type": "string",
           "required": "no",
-          "desc": "Valor seleccionado o ingresado (sanitizado)."
+          "desc": "Valor seleccionado en forma estable (clave de la opción, número, <code>true</code>/<code>false</code>) — nunca contenido escrito por la persona."
         }
       }
     },
@@ -600,7 +974,7 @@
     },
     "autoEvents": {
       "title": "Instrumentación automática (data-track)",
-      "subtitle": "Los elementos con <code>data-track=\"{tipo}\"</code> + <code>data-track-id</code> son rastreados por un observer global (<code>docs-tracking</code>) — el mecanismo que la skill <code>/analytics</code> usa para instrumentar páginas sin llamadas manuales.",
+      "subtitle": "Un observer global (<code>docs-tracking</code>) escucha los clics de cada docs page y los convierte en eventos. Se monta solo en todas las páginas — el slug del componente viene de la URL de la story — y el área de demostración se instrumenta automáticamente: cualquier botón, enlace o control accionado allí se convierte en <code>docs_demo_click</code> sin marcado manual. Para etiquetar algo con más precisión, aplica <code>data-track</code> y <code>data-track-id</code> al elemento; el marcado manual tiene precedencia.",
       "items": {
         "nav": {
           "name": "docs_nav_click",
@@ -636,7 +1010,7 @@
     },
     "componentEvents": {
       "title": "Catálogo por componente",
-      "subtitle": "Eventos esperados en los componentes más comunes. La docs page (o el producto consumidor) llama a <code>track()</code> — el primitive nunca lo hace.",
+      "subtitle": "Eventos previstos por componente. Quien llama a <code>track()</code> es la docs page o el producto que usa el componente — el primitive nunca. La lista completa, con los tipos de cada payload, vive en <code>src/lib/analytics.ts</code>.",
       "cols": {
         "event": "Evento",
         "component": "Componente",
@@ -647,50 +1021,236 @@
         "buttonClick": {
           "event": "button_click",
           "component": "Button",
-          "when": "En <code>onClick</code>.",
+          "when": "Al hacer clic en el botón.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "badgeClick": {
+          "event": "badge_click",
+          "component": "Badge",
+          "when": "Badge clicable accionado como filtro o atajo.",
+          "extras": "<code>label</code>, <code>variant</code>"
+        },
+        "cardClick": {
+          "event": "card_click",
+          "component": "Card",
+          "when": "La tarjeta entera es navegable y se activa.",
+          "extras": "<code>label</code>, <code>destination</code>"
+        },
+        "profileClick": {
+          "event": "profile_click",
+          "component": "Avatar",
+          "when": "El avatar lleva a un perfil.",
+          "extras": "<code>user_id</code> anônimo"
+        },
+        "alertDismiss": {
+          "event": "alert_dismiss",
+          "component": "Alert",
+          "when": "La persona descarta una alerta.",
           "extras": "<code>label</code>"
         },
         "navClick": {
           "event": "navigation_click",
-          "component": "NavigationMenu, Breadcrumb, Sidebar",
-          "when": "Al hacer clic en un ítem de navegación.",
-          "extras": "<code>label, destination</code>"
+          "component": "Breadcrumb, NavigationMenu, Sidebar",
+          "when": "Clic en un ítem de navegación.",
+          "extras": "<code>label</code>, <code>destination</code>"
         },
-        "fieldChange": {
-          "event": "field_change",
-          "component": "Checkbox, Switch, Select, RadioGroup, Slider, Calendar, Toggle",
-          "when": "Cuando cambia el valor del campo.",
-          "extras": "<code>field_name, value</code> (sanitizado)"
+        "sidebarToggle": {
+          "event": "sidebar_toggle",
+          "component": "Sidebar",
+          "when": "La sidebar se abre o cierra.",
+          "extras": "<code>action</code>, <code>trigger</code> (button · rail · keyboard)"
         },
-        "dialogOpen": {
-          "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Drawer",
-          "when": "Cuando el overlay abre.",
-          "extras": "<code>label, trigger_label</code>"
+        "breadcrumbEllipsis": {
+          "event": "breadcrumb_ellipsis_open",
+          "component": "Breadcrumb",
+          "when": "Se abre el menú de ítems ocultos.",
+          "extras": "<code>hidden_count</code>"
         },
-        "dialogClose": {
-          "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
-          "when": "Al cerrar por cualquier vía.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
-        },
-        "slideChange": {
-          "event": "slide_change",
-          "component": "Carousel",
-          "when": "Al avanzar/retroceder slide.",
-          "extras": "<code>index, total, trigger</code> (button · swipe · keyboard)"
+        "pageChange": {
+          "event": "page_change",
+          "component": "Pagination",
+          "when": "Cambio de página.",
+          "extras": "<code>page</code>, <code>total_pages</code>"
         },
         "tabChange": {
           "event": "tab_change",
           "component": "Tabs",
-          "when": "Al cambiar de pestaña.",
-          "extras": "<code>value</code>"
+          "when": "Cambio de pestaña.",
+          "extras": "<code>value</code>, <code>index</code>, <code>total</code>"
+        },
+        "fieldChange": {
+          "event": "field_change",
+          "component": "Checkbox, Switch, Toggle, ToggleGroup, Calendar",
+          "when": "El valor del campo cambia.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "optionSelect": {
+          "event": "option_select",
+          "component": "Select, Combobox",
+          "when": "Se elige una opción.",
+          "extras": "<code>field_name</code>, <code>value</code>"
+        },
+        "radioChange": {
+          "event": "radio_change",
+          "component": "RadioGroup",
+          "when": "Cambia la opción del grupo.",
+          "extras": "<code>name</code>, <code>value</code>, <code>previous_value</code>"
+        },
+        "sliderChange": {
+          "event": "slider_change",
+          "component": "Slider",
+          "when": "El valor se confirma (fin del arrastre o teclado).",
+          "extras": "<code>field_name</code>, <code>value</code>, <code>min</code>, <code>max</code>"
+        },
+        "fieldFocus": {
+          "event": "field_focus",
+          "component": "Input, Textarea, Form",
+          "when": "El campo recibe foco — solo en embudos críticos.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldBlur": {
+          "event": "field_blur",
+          "component": "Input, Textarea, Form",
+          "when": "La persona sale del campo con contenido.",
+          "extras": "<code>field_name</code>"
+        },
+        "fieldError": {
+          "event": "field_error",
+          "component": "Input, Form",
+          "when": "Se muestra un mensaje de error.",
+          "extras": "<code>field_name</code>, <code>error_message</code>"
+        },
+        "dialogOpen": {
+          "event": "dialog_open",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "El overlay se abre.",
+          "extras": "<code>label</code>, <code>trigger_label</code>"
+        },
+        "dialogClose": {
+          "event": "dialog_close",
+          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "when": "El overlay se cierra por cualquier camino.",
+          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+        },
+        "dialogConfirm": {
+          "event": "dialog_confirm",
+          "component": "AlertDialog, Sheet",
+          "when": "Se confirma la acción primaria.",
+          "extras": "<code>action</code>, <code>trigger_label</code>"
+        },
+        "dialogAction": {
+          "event": "dialog_action",
+          "component": "Dialog",
+          "when": "Clic en la acción primaria del pie.",
+          "extras": "<code>action_label</code>"
+        },
+        "popoverOpen": {
+          "event": "popover_open",
+          "component": "Popover",
+          "when": "El popover se abre.",
+          "extras": "<code>trigger_label</code>"
+        },
+        "popoverClose": {
+          "event": "popover_close",
+          "component": "Popover",
+          "when": "El popover se cierra.",
+          "extras": "<code>reason</code>"
+        },
+        "tooltipView": {
+          "event": "tooltip_view",
+          "component": "Tooltip",
+          "when": "El tooltip permanece visible el tiempo suficiente para leerse.",
+          "extras": "<code>trigger_id</code>"
+        },
+        "menuOpen": {
+          "event": "menu_open",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "Se abre el menú.",
+          "extras": "<code>menu</code>"
+        },
+        "menuItemClick": {
+          "event": "menu_item_click",
+          "component": "ContextMenu, DropdownMenu, Menubar",
+          "when": "Se elige un ítem del menú.",
+          "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "accordionExpand": {
+          "event": "accordion_expand",
+          "component": "Accordion",
+          "when": "Se abre un ítem.",
+          "extras": "<code>label</code>"
+        },
+        "accordionCollapse": {
+          "event": "accordion_collapse",
+          "component": "Accordion",
+          "when": "Se cierra un ítem.",
+          "extras": "<code>label</code>"
+        },
+        "collapsibleToggle": {
+          "event": "collapsible_toggle",
+          "component": "Collapsible",
+          "when": "El bloque se abre o cierra.",
+          "extras": "<code>label</code>, <code>value</code>"
         },
         "commandSelect": {
           "event": "command_item_select",
           "component": "Command",
-          "when": "Al seleccionar un ítem de la lista.",
-          "extras": "<code>label, group, pattern</code> (inline · combobox · palette)"
+          "when": "Se selecciona un ítem de la lista.",
+          "extras": "<code>label</code>, <code>group</code>, <code>pattern</code>"
+        },
+        "commandOpen": {
+          "event": "command_palette_open",
+          "component": "Command",
+          "when": "Se abre el command palette.",
+          "extras": "<code>trigger</code> (keyboard · button)"
+        },
+        "slideChange": {
+          "event": "slide_change",
+          "component": "Carousel",
+          "when": "Cambio de slide.",
+          "extras": "<code>index</code>, <code>total</code>, <code>trigger</code> (button · swipe · keyboard)"
+        },
+        "autoplayPaused": {
+          "event": "autoplay_paused",
+          "component": "Carousel",
+          "when": "El autoplay se pausa por interacción.",
+          "extras": "<code>index</code>"
+        },
+        "toastAction": {
+          "event": "toast_action_click",
+          "component": "Sonner",
+          "when": "Clic en la acción del toast (ej.: Deshacer).",
+          "extras": "<code>label</code>"
+        },
+        "taskProgress": {
+          "event": "task_progress",
+          "component": "Progress",
+          "when": "La tarea seguida alcanza un hito.",
+          "extras": "<code>task</code>, <code>percent</code>"
+        },
+        "taskComplete": {
+          "event": "task_complete",
+          "component": "Progress",
+          "when": "La tarea seguida se completa.",
+          "extras": "<code>task</code>, <code>duration_ms</code>"
+        },
+        "panelResize": {
+          "event": "panel_resize",
+          "component": "Resizable",
+          "when": "Termina el redimensionado de paneles.",
+          "extras": "<code>group_id</code>, <code>sizes</code>"
+        },
+        "contentScroll": {
+          "event": "content_scroll",
+          "component": "ScrollArea",
+          "when": "El desplazamiento alcanza un hito relevante.",
+          "extras": "<code>target_id</code>, <code>percent_visible</code>"
+        },
+        "toastDemo": {
+          "event": "toast_demo_triggered",
+          "component": "Sonner",
+          "when": "Un botón de la demostración dispara un toast (evento propio de la docs page).",
+          "extras": "<code>toast_type</code>, <code>locale</code>"
         }
       }
     },
@@ -700,7 +1260,8 @@
         "inPrimitive": "<strong>Nunca</strong> llames a <code>track()</code> dentro de un UI primitive. El tracking es responsabilidad de la capa de producto (docs page o feature).",
         "sensitive": "No rastrees datos sensibles: e-mail, DNI, teléfono, ID interno, query cruda de búsqueda. Usa <code>query_length</code> o <code>has_value</code>.",
         "nonEnglish": "Sin nombres en portugués ni camelCase. El auditor falla en <code>botaoClicado</code>.",
-        "directGtag": "Nunca llames a <code>gtag()</code> directamente. Siempre vía <code>track()</code> — garantiza <code>window.top</code> y sanitización."
+        "directGtag": "Nunca llames a <code>gtag()</code> directamente. Siempre vía <code>track()</code> — garantiza <code>window.top</code> y sanitización.",
+        "translatedLabel": "<strong>Nunca</strong> envíes texto traducido en el payload (<code>label: t(\"...\")</code>). Usa la clave estable del ítem — el texto localizado fragmenta el mismo evento en un valor por idioma e inutiliza la suma. Única excepción: <code>page_title</code>, campo estándar de GA4 que siempre viaja con <code>locale</code>."
       }
     },
     "privacy": {
