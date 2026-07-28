@@ -53,6 +53,7 @@ function buildDemoAccordion(): HTMLElement {
   return createAccordion({
     type: 'single',
     collapsible: true,
+    defaultValue: 'q1',
     class: 'nds-w-full nds-max-w-lg',
     items: [
       {

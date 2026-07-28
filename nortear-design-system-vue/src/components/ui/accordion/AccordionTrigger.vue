@@ -22,7 +22,10 @@ const delegatedProps = reactiveOmit(props, 'class')
       v-bind="delegatedProps"
       :class="cn( 'nds-accordion-trigger', props.class, )"
     >
-      <slot />
+      <!-- O rótulo vive num <span> próprio: o sublinhado de hover é
+           `.nds-accordion-trigger:hover > span:first-child` e não deve
+           alcançar os ícones. Mesma marcação nas 4 stacks. -->
+      <span><slot /></span>
       <slot name="icon">
         <ChevronDownIcon
           data-slot="accordion-trigger-icon"

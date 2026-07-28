@@ -35,7 +35,10 @@ function AccordionTrigger({
         className={cn("nds-accordion-trigger", className)}
         {...props}
       >
-        {children}
+        {/* O rótulo vive num <span> próprio: o sublinhado de hover é
+            `.nds-accordion-trigger:hover > span:first-child` e não deve
+            alcançar os ícones. Mesma marcação nas 4 stacks. */}
+        <span>{children}</span>
         <ChevronDownIcon data-slot="accordion-trigger-icon" className="nds-accordion-icon nds-accordion-icon-closed" />
         <ChevronUpIcon data-slot="accordion-trigger-icon" className="nds-accordion-icon nds-accordion-icon-open" />
       </AccordionPrimitive.Trigger>

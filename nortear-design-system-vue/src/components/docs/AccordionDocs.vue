@@ -400,6 +400,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <Accordion
         type="single"
         :collapsible="true"
+        default-value="q1"
         class="nds-w-full nds-max-w-lg"
       >
         <AccordionItem

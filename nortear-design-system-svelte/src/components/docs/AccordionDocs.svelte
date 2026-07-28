@@ -116,7 +116,7 @@
   AccordionTrigger,
 } from "@/components/ui/accordion";`;
 
-  const codeSingle = `<Accordion type="single" defaultValue="item-1" class="nds-w-full">
+  const codeSingle = `<Accordion type="single" value="item-1" class="nds-w-full">
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
@@ -155,11 +155,11 @@
 }`;
 
   const interfaceCode = `// Accordion (Svelte 5 + Bits UI)
-// Divergência: bits-ui não expõe \`collapsible\` como prop separada.
-// type="single" é sempre collapsible por design.
+// Divergências: bits-ui não expõe \`collapsible\` como prop separada
+// (type="single" é sempre collapsible por design) nem \`defaultValue\` —
+// o valor inicial vai em \`value\`, que segue bindable.
 type AccordionProps = Accordion.RootProps & {
   type: 'single' | 'multiple';
-  defaultValue?: string | string[];
   value?: string | string[];
   class?: string;
 };`;
@@ -185,7 +185,9 @@ type AccordionProps = Accordion.RootProps & {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <Accordion type="single" class="nds-w-full nds-max-w-lg">
+          <!-- bits-ui não tem `defaultValue`: o valor inicial vai em `value`
+               (bindable), que o componente segue atualizando internamente. -->
+          <Accordion type="single" value="q1" class="nds-w-full nds-max-w-lg">
             {#each demoItems as item (item.value)}
               <AccordionItem value={item.value}>
                 <AccordionTrigger onclick={(e) => handleDemoTriggerClick(e, item.q)}>
@@ -353,7 +355,7 @@ type AccordionProps = Accordion.RootProps & {
       />
 
       {#snippet modeSingle()}
-        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
+        <Accordion type="single" value="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Pergunta 1</AccordionTrigger>
             <AccordionContent>Resposta objetiva em 1–2 linhas.</AccordionContent>
@@ -377,7 +379,7 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeControlled()}
-        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
+        <Accordion type="single" value="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
             <AccordionContent>Estado gerenciado externamente via bind:value.</AccordionContent>
@@ -389,10 +391,10 @@ type AccordionProps = Accordion.RootProps & {
         </Accordion>
       {/snippet}
       {#snippet modeDefaultOpen()}
-        <Accordion type="single" defaultValue="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
+        <Accordion type="single" value="item-1" class="nds-w-full nds-max-w-sm nds-text-body">
           <AccordionItem value="item-1">
             <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
-            <AccordionContent>Este item inicia expandido via defaultValue.</AccordionContent>
+            <AccordionContent>Este item inicia expandido.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger>Item fechado por padrão</AccordionTrigger>
