@@ -99,7 +99,9 @@
   // Marcos de task_progress/task_complete: apenas no primeiro ciclo da animação,
   // para não inundar o GA4 com o loop infinito da demo.
   const uploadStart = Date.now();
-  const uploadMilestonesFired = new Set<number>();
+  // Array simples em vez de Set: guard não-reativo, e o lint do Svelte exige
+  // SvelteSet para qualquer Set mutável dentro de componente.
+  const uploadMilestonesFired: number[] = [];
   let uploadCompleted = false;
 
   $effect(() => {
@@ -107,8 +109,8 @@
       uploadValue = uploadValue >= 100 ? 0 : uploadValue + 5;
       if (!uploadCompleted) {
         for (const milestone of [25, 50, 75, 100]) {
-          if (uploadValue >= milestone && !uploadMilestonesFired.has(milestone)) {
-            uploadMilestonesFired.add(milestone);
+          if (uploadValue >= milestone && !uploadMilestonesFired.includes(milestone)) {
+            uploadMilestonesFired.push(milestone);
             track('task_progress', { component: 'progress', task: 'upload', percent: milestone, location: 'docs_demo' });
           }
         }

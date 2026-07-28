@@ -335,7 +335,6 @@ interface CarouselNavProps extends ButtonProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     {#snippet children()}
-      <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
         class="nds-w-full nds-max-w-sm"
         style="margin-inline: auto"

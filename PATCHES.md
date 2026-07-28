@@ -442,8 +442,8 @@ A partir de 2026-06-06, patches diretamente em bibliotecas upstream `node_module
 
 **Localização**:
 - `nortear-design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`)
-- `nortear-design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+1.3.2.patch`)
-- `nortear-design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.0.patch`)
+- `nortear-design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+2.0.9.patch`)
+- `nortear-design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.1.patch`)
 
 **Como atualizar**:
 ```bash
@@ -457,9 +457,9 @@ npx patch-package <pkg>       # regenera o .patch
 
 ### vue/vue-sonner — Toast `<li>` tabindex 0 → -1 {#vue-sonner-toast-tabindex}
 
-- **Patch:** `nortear-design-system-vue/patches/vue-sonner+1.3.2.patch`
+- **Patch:** `nortear-design-system-vue/patches/vue-sonner+2.0.9.patch`
 - **Arquivos patcheados:** `node_modules/vue-sonner/lib/vue-sonner.js` (linha 326) + `vue-sonner.cjs`
-- **Versão upstream:** `vue-sonner@1.3.2`
+- **Versão upstream:** `vue-sonner@2.0.9`
 - **Categoria:** a11y
 - **Data:** 2026-06-06
 - **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)
@@ -488,9 +488,9 @@ tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab
 
 ### svelte/svelte-sonner — Toast `<li>` tabindex 0 → -1 {#svelte-sonner-toast-tabindex}
 
-- **Patch:** `nortear-design-system-svelte/patches/svelte-sonner+1.1.0.patch`
+- **Patch:** `nortear-design-system-svelte/patches/svelte-sonner+1.1.1.patch`
 - **Arquivos patcheados:** `node_modules/svelte-sonner/dist/Toast.svelte` (linha 334)
-- **Versão upstream:** `svelte-sonner@1.1.0`
+- **Versão upstream:** `svelte-sonner@1.1.1`
 - **Categoria:** a11y
 - **Data:** 2026-06-06
 - **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)

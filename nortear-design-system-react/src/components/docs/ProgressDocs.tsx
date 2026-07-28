@@ -148,11 +148,13 @@ export function ProgressDocs() {
 
   // Marcos de task_progress/task_complete apenas no primeiro ciclo da
   // animação — a demo reinicia em loop e re-emitir marcos geraria spam.
-  const uploadStartRef = useRef(Date.now());
+  // Date.now() só dentro do efeito: chamá-lo no render é impuro (react-hooks/purity).
+  const uploadStartRef = useRef<number | null>(null);
   const uploadMilestonesRef = useRef(new Set<number>());
   const uploadCompletedRef = useRef(false);
 
   useEffect(() => {
+    uploadStartRef.current ??= Date.now();
     if (uploadCompletedRef.current) return;
     for (const milestone of [25, 50, 75, 100]) {
       if (uploadValue >= milestone && !uploadMilestonesRef.current.has(milestone)) {
@@ -162,7 +164,7 @@ export function ProgressDocs() {
     }
     if (uploadValue >= 100) {
       uploadCompletedRef.current = true;
-      track("task_complete", { component: "progress", task: "upload", duration_ms: Date.now() - uploadStartRef.current, location: "docs_demo" });
+      track("task_complete", { component: "progress", task: "upload", duration_ms: Date.now() - (uploadStartRef.current ?? Date.now()), location: "docs_demo" });
     }
   }, [uploadValue]);
 

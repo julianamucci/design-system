@@ -34,8 +34,8 @@ function positionTooltip(
   const ph = panel.offsetHeight;
   panel.style.visibility = '';
 
-  let top = 0;
-  let left = 0;
+  let top: number;
+  let left: number;
 
   if (side === 'top') {
     top = rect.top + scrollY - ph - gap;

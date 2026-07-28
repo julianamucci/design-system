@@ -1,0 +1,13 @@
+diff --git a/node_modules/vue-sonner/lib/index.js b/node_modules/vue-sonner/lib/index.js
+index cd01bb1..2d527ba 100644
+--- a/node_modules/vue-sonner/lib/index.js
++++ b/node_modules/vue-sonner/lib/index.js
+@@ -645,7 +645,7 @@ var Toast_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineCo
+ 		}
+ 		return (_ctx, _cache) => {
+ 			return openBlock(), createElementBlock("li", {
+-				tabindex: "0",
++				tabindex: "-1",
+ 				ref_key: "toastRef",
+ 				ref: toastRef,
+ 				class: normalizeClass(unref(cn)(props.class, toastClass.value, _ctx.classes?.toast, _ctx.toast.classes?.toast, _ctx.classes?.[toastType.value], _ctx.toast?.classes?.[toastType.value])),
