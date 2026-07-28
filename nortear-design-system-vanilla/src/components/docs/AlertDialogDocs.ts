@@ -422,6 +422,7 @@ createAlertDialog({ trigger, title: 'Sair da conta', description: '...', cancelB
 
         return createDocsVariants({
           title: t('variants.title'),
+          note: stripHtml(t('variants.note')),
           items: [
             {
               name: 'destructive',

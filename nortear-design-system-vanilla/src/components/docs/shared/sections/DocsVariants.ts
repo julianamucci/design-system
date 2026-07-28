@@ -11,6 +11,10 @@ export interface DocsVariantItem {
 
 export interface DocsVariantsProps {
   title: string;
+  /** Nota introdutória da seção (HTML inline permitido). Nome canônico
+   *  cross-stack; consome a chave `variants.note` do translations.json. */
+  note?: string;
+  /** @deprecated alias histórico de `note` — mantido para call sites antigos. */
   description?: string;
   items: DocsVariantItem[];
   id?: string;
@@ -32,10 +36,11 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
   h2.textContent = props.title;
   section.appendChild(h2);
 
-  if (props.description) {
+  const sectionNote = props.note ?? props.description;
+  if (sectionNote) {
     const p = document.createElement('p');
     p.className = 'nds-text-muted-foreground nds-mb-4';
-    p.innerHTML = DOMPurify.sanitize(props.description);
+    p.innerHTML = DOMPurify.sanitize(sectionNote);
     section.appendChild(p);
   }
 

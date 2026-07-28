@@ -423,7 +423,7 @@ toast.promise(promise, {
   <DocsImport
     title={$tStore('import.title')}
     code={codeImport}
-    secondaryDescription={null}
+    secondaryDescription={undefined}
     secondaryCode={codeSetup}
   />
 

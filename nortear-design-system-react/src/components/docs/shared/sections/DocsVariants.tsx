@@ -65,10 +65,16 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
   );
 }
 
-export function DocsVariants({ title, items, id = "variantes", componentSlug }: DocsVariantsProps) {
+export function DocsVariants({ title, items, id = "variantes", note, componentSlug }: DocsVariantsProps) {
   return (
     <section id={id}>
       <h2 className="nds-section-title">{title}</h2>
+      {note && (
+        <p
+          className="nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note) }}
+        />
+      )}
       <div className="nds-stack" data-spacing="md">
         {items.map((item, i) => (
           <VariantCard key={i} item={item} componentSlug={componentSlug} />

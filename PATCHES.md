@@ -78,6 +78,32 @@ cd nortear-design-system-react && npm update @base-ui/react
 
 <!-- ordenar alfabeticamente por stack > componente -->
 
+### svelte/hover-card — `defaultOpen` no wrapper (bits-ui LinkPreview não tem) {#svelte-hovercard-defaultopen}
+
+- **Arquivo:** `nortear-design-system-svelte/src/components/ui/hover-card/hover-card.svelte`
+- **Categoria:** api
+- **Data:** 2026-07-27
+- **Upstream ref:** — (`bits-ui` expõe HoverCard como `LinkPreview`, cuja `RootProps` tem `open`/`onOpenChange`, sem `defaultOpen`)
+
+**Antes:**
+```svelte
+let { open = $bindable(false), openDelay = 0, closeDelay = 0, ...restProps }: HoverCardPrimitive.RootProps = $props();
+```
+
+**Depois:**
+```svelte
+// PATCH: api — `defaultOpen` não existe no LinkPreview do bits-ui …
+let {
+  defaultOpen = false,
+  open = $bindable(defaultOpen),
+  openDelay = 0, closeDelay = 0, ...restProps
+}: HoverCardPrimitive.RootProps & { defaultOpen?: boolean } = $props();
+```
+
+**Motivo:** `defaultOpen` é a API documentada do HoverCard nas 4 stacks (tabela de props e de estados do `HoverCardDocs`) e funciona no React (base-ui). Na Svelte as 8 demos que deveriam nascer abertas passavam `defaultOpen={true}` para uma prop inexistente — não abriam e o svelte-check acusava. O default do destructuring alimenta o valor inicial de `open`, preservando `bind:open` no consumidor (usado em `HoverCardStory.svelte`).
+
+**Verificação após bump:** conferir se o `bits-ui` passou a expor `defaultOpen` no `LinkPreview.RootProps`; se sim, remover o patch e repassar direto.
+
 ### vanilla/carousel — `onIndexChange` expõe a origem da navegação {#vanilla-carousel-nav-source}
 
 - **Arquivo:** `nortear-design-system-vanilla/src/components/ui/carousel.ts`

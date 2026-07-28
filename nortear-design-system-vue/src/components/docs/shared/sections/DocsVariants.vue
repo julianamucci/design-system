@@ -23,6 +23,8 @@ const props = withDefaults(defineProps<{
   title: string;
   items: DocsVariantItem[];
   id?: string;
+  /** Nota introdutória da seção (HTML inline permitido). */
+  note?: string;
   componentSlug?: string;
 }>(), {
   id: 'variantes',
@@ -43,6 +45,11 @@ function trackId(name: string): string | undefined {
     <h2 class="nds-section-title">
       {{ title }}
     </h2>
+    <p
+      v-if="props.note"
+      class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed"
+      v-html="DOMPurify.sanitize(props.note)"
+    />
     <div
       class="nds-stack"
       data-spacing="md"

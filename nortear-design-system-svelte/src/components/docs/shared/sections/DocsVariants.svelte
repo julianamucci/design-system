@@ -19,10 +19,12 @@
    * `data-track-id="{slug}:code:{variant.name}"` +
    * `data-track-label="Copiar código"`.
    */
-  const { title, items, id = 'variantes', componentSlug }: {
+  const { title, items, id = 'variantes', note, componentSlug }: {
     title: string;
     items: DocsVariantItem[];
     id?: string;
+    /** Nota introdutória da seção (HTML inline permitido). */
+    note?: string;
     componentSlug?: string;
   } = $props();
 
@@ -38,6 +40,9 @@
 
 <section {id}>
   <h2 class="nds-section-title">{title}</h2>
+  {#if note}
+    <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed">{@html DOMPurify.sanitize(note)}</p>
+  {/if}
   <div class="nds-stack" data-spacing="md">
     {#each items as item, i}
       <Card class="nds-p-4">

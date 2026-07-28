@@ -399,6 +399,7 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
 
         return createDocsVariants({
           title: t('variants.title'),
+          note: stripHtml(t('variants.note')),
           items: [
             {
               name: 'default',
