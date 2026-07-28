@@ -115,7 +115,6 @@
   color: hsl(var(--foreground));
   display: grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows var(--duration-base) ease-out;
 }
 
 /* `hidden` precisa vencer o `display: grid` acima (UA style perde em specificity). */
@@ -123,10 +122,35 @@
   display: none;
 }
 
-/* base-ui marca `data-closed`; reka, bits e a factory Vanilla usam data-state. */
+/*
+ * Keyframes, não transition: as três libs headless DESMONTAM o conteúdo ao
+ * fechar, então na abertura não existe estado anterior de onde transicionar —
+ * era por isso que Vue e Svelte não animavam e o React só animava ao fechar.
+ * Animação roda na inserção do elemento, e reka/bits/base-ui adiam a remoção
+ * até a animação de saída terminar (usePresence e equivalentes).
+ */
+@keyframes nds-accordion-expand {
+  from { grid-template-rows: 0fr; }
+  to   { grid-template-rows: 1fr; }
+}
+
+@keyframes nds-accordion-collapse {
+  from { grid-template-rows: 1fr; }
+  to   { grid-template-rows: 0fr; }
+}
+
+.nds-accordion-content[data-open],
+.nds-accordion-content[data-state="open"] {
+  animation: nds-accordion-expand var(--duration-base) ease-out;
+}
+
+/* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
+   Vanilla usam data-state. O estado final fica 0fr para quem permanece montado. */
 .nds-accordion-content[data-closed],
+.nds-accordion-content[data-ending-style],
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
+  animation: nds-accordion-collapse var(--duration-base) ease-out;
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
@@ -170,8 +194,16 @@
 /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .nds-accordion-trigger,
-  .nds-accordion-icon,
-  .nds-accordion-content {
+  .nds-accordion-icon {
     transition: none;
+  }
+
+  .nds-accordion-content,
+  .nds-accordion-content[data-open],
+  .nds-accordion-content[data-state="open"],
+  .nds-accordion-content[data-closed],
+  .nds-accordion-content[data-ending-style],
+  .nds-accordion-content[data-state="closed"] {
+    animation: none;
   }
 }

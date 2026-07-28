@@ -87,10 +87,9 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
   /**
    * `hidden` mantém o conteúdo fechado fora da árvore de acessibilidade, mas
-   * `display: none` cancela transições. Então ele sai ANTES de abrir (em dois
-   * frames, para o browser registrar o estado inicial e animar) e só volta
-   * DEPOIS da animação de fechamento — que é justamente o contrato que o CSS
-   * `grid-template-rows` espera.
+   * `display: none` impede a animação. Ele sai junto com a mudança para
+   * `open` (a animação de keyframes dispara quando o elemento passa a ser
+   * renderizado) e só volta DEPOIS da animação de fechamento.
    */
   function updateItemState(
     triggerEl: HTMLButtonElement,
@@ -107,18 +106,19 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
       closeTimers.delete(contentEl);
     }
 
-    // Estado inicial (defaultValue): aplica direto, sem animar na montagem.
+    // Estado inicial (defaultValue): aplica direto e suprime a animação por um
+    // frame, para o item já aberto não "expandir" durante o carregamento.
     if (immediate) {
       contentEl.hidden = !open;
       contentEl.dataset.state = open ? 'open' : 'closed';
+      contentEl.style.animation = 'none';
+      requestAnimationFrame(() => { contentEl.style.animation = ''; });
       return;
     }
 
     if (open) {
       contentEl.hidden = false;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => { contentEl.dataset.state = 'open'; });
-      });
+      contentEl.dataset.state = 'open';
       return;
     }
 
