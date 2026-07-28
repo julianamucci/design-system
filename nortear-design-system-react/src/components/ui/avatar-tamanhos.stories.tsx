@@ -35,8 +35,7 @@ export const Size6: Story = {
   ),
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveClass("h-6");
-    await expect(root).toHaveClass("w-6");
+    await expect(root).toHaveStyle({ height: "24px", width: "24px" });
   },
 };
 
@@ -50,8 +49,7 @@ export const Size8: Story = {
   ),
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveClass("h-8");
-    await expect(root).toHaveClass("w-8");
+    await expect(root).toHaveStyle({ height: "32px", width: "32px" });
   },
 };
 
@@ -83,7 +81,6 @@ export const Size12: Story = {
   ),
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveClass("h-12");
-    await expect(root).toHaveClass("w-12");
+    await expect(root).toHaveStyle({ height: "48px", width: "48px" });
   },
 };

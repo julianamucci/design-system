@@ -41,8 +41,8 @@ export const Retangulo: Story = {
     ) as HTMLElement | null;
     await step("Aplica classes de retângulo (h-20 w-full + radius do componente)", async () => {
       await expect(skeleton).toBeInTheDocument();
-      await expect(skeleton).toHaveClass("h-20");
-      await expect(skeleton).toHaveClass("w-full");
+      await expect(skeleton).toHaveStyle({ height: "80px" });
+      await expect(skeleton).toHaveClass("nds-w-full");
       await expect(skeleton).toHaveClass("nds-skeleton");
     });
   },
@@ -68,9 +68,8 @@ export const Circulo: Story = {
     ) as HTMLElement | null;
     await step("Aplica classes de círculo (h-12 w-12 rounded-full)", async () => {
       await expect(skeleton).toBeInTheDocument();
-      await expect(skeleton).toHaveClass("h-12");
-      await expect(skeleton).toHaveClass("w-12");
-      await expect(skeleton).toHaveClass("rounded-full");
+      await expect(skeleton).toHaveStyle({ height: "48px", width: "48px" });
+      await expect(skeleton).toHaveClass("nds-rounded-full");
     });
   },
 };
@@ -95,8 +94,7 @@ export const LinhaDeTexto: Story = {
     ) as HTMLElement | null;
     await step("Aplica classes de linha (h-4 w-[200px])", async () => {
       await expect(skeleton).toBeInTheDocument();
-      await expect(skeleton).toHaveClass("h-4");
-      await expect(skeleton).toHaveClass("w-[200px]");
+      await expect(skeleton).toHaveStyle({ height: "16px", width: "200px" });
     });
   },
 };

@@ -46,9 +46,9 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText("Biografia");
 
-    await step("Textarea tem classes resize-y e min-h-[120px]", async () => {
-      await expect(textarea).toHaveClass("resize-y");
-      await expect(textarea).toHaveClass("min-h-[120px]");
+    await step("Textarea tem classes nds-resize-y e nds-min-h-30", async () => {
+      await expect(textarea).toHaveClass("nds-resize-y");
+      await expect(textarea).toHaveClass("nds-min-h-30");
     });
   },
 };
@@ -130,7 +130,7 @@ export const NoResize: Story = {
     const textarea = canvas.getByLabelText("Feedback");
 
     await step("Textarea tem classe resize-none", async () => {
-      await expect(textarea).toHaveClass("resize-none");
+      await expect(textarea).toHaveClass("nds-resize-none");
     });
   },
 };

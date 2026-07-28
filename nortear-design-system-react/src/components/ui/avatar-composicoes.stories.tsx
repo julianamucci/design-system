@@ -129,7 +129,7 @@ export const WithStatus: Story = {
     const canvas = within(canvasElement);
     const status = canvas.getByLabelText(/online/i);
     await expect(status).toBeVisible();
-    await expect(status).toHaveClass("bg-primary");
-    await expect(status).toHaveClass("ring-background");
+    await expect(status).toHaveClass("nds-bg-primary");
+    await expect(status).toHaveClass("nds-ring-background");
   },
 };

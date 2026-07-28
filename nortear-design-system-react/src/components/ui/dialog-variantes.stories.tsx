@@ -250,7 +250,7 @@ export const WithDestructiveAction: Story = {
   },
   play: async () => {
     const action = await waitForPortal("button", { name: /^Remover item$/i });
-    await expect(action).toHaveClass("bg-destructive");
+    await expect(action).toHaveClass("nds-button-destructive");
   },
 };
 

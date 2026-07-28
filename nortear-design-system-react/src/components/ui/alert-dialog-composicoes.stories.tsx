@@ -68,7 +68,7 @@ export const Destrutiva: Story = {
     const dialog = await waitForPortal("alertdialog");
     await expect(dialog).toBeVisible();
     const action = await waitForPortal("button", { name: /Excluir conta/i });
-    await expect(action).toHaveClass("bg-destructive");
+    await expect(action).toHaveClass("nds-bg-destructive");
   },
 };
 

@@ -38,7 +38,7 @@ async function assertSkeletonsAccessible(canvasElement: HTMLElement, step: (labe
     await expect(skeletons.length).toBeGreaterThan(0);
     for (const sk of skeletons) {
       await expect(sk).toHaveAttribute("aria-hidden", "true");
-      await expect(sk).toHaveClass("motion-reduce:animate-none");
+      await expect(sk).toHaveClass("nds-motion-reduce-none");
     }
   });
 }

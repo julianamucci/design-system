@@ -92,7 +92,7 @@ export const Horizontal: Story = {
     const canvas = within(canvasElement);
     await step("Grupo usa flex (sem orientation explícita)", async () => {
       const group = canvasElement.querySelector('[role="radiogroup"]');
-      await expect(group).toHaveClass("flex");
+      await expect(group).toHaveClass("nds-cluster");
     });
     await step("Possui 3 itens com Labels associados", async () => {
       const radios = canvas.getAllByRole("radio");

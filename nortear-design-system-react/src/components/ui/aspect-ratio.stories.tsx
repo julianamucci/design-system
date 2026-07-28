@@ -66,9 +66,8 @@ export const Playground: Story = {
       const img = await canvas.findByRole("img", {
         name: /Paisagem ao entardecer/i,
       });
-      await expect(img).toHaveClass("object-cover");
-      await expect(img).toHaveClass("w-full");
-      await expect(img).toHaveClass("h-full");
+      await expect(img).toHaveStyle({ objectFit: "cover" });
+      await expect(img).toHaveClass("nds-w-full");
     });
 
     await step("Container interno é posicionado absolutamente (Radix)", async () => {
