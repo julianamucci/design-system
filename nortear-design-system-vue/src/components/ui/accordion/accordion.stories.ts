@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect , waitFor } from 'storybook/test';
 import {
   Accordion,
   AccordionContent,
@@ -85,12 +85,19 @@ export const Playground: Story = {
       // aria-expanded sozinho não prova que o painel apareceu: já houve
       // regressão em que o trigger reportava aberto e o conteúdo ficava
       // colapsado (altura vinda de custom property defasada da lib).
-      const panel = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"])',
-      );
-      await expect(panel).not.toBeNull();
-      await expect(panel!).toBeVisible();
-      await expect(panel!.getBoundingClientRect().height).toBeGreaterThan(0);
+      // waitFor: a entrada tem fade (opacity 0 → 1), então a asserção precisa
+      // esperar a animação assentar em vez de medir no meio dela.
+      const panel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>(
+          '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
+        );
+        if (!el || getComputedStyle(el).opacity !== '1') {
+          throw new Error('painel aberto ainda não assentou');
+        }
+        return el;
+      });
+      await expect(panel).toBeVisible();
+      await expect(panel.getBoundingClientRect().height).toBeGreaterThan(0);
     });
 
     await step('Modo single: item anterior fecha ao abrir novo', async () => {

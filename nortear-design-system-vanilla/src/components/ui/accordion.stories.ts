@@ -81,7 +81,9 @@ export const Playground: Story = {
         const el = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
         );
-        if (!el) throw new Error('painel aberto não encontrado');
+        if (!el || getComputedStyle(el).opacity !== '1') {
+          throw new Error('painel aberto ainda não assentou');
+        }
         return el;
       });
       await expect(panel).toBeVisible();

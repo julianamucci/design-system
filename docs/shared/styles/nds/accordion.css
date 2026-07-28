@@ -65,7 +65,7 @@
   cursor: pointer;
   outline: 0;
 
-  transition: color var(--duration-fast);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 .nds-accordion-trigger:hover > span:first-child {
@@ -90,7 +90,7 @@
   flex-shrink: 0;
   color: hsl(var(--muted-foreground));
   pointer-events: none;
-  transition: transform var(--duration-base);
+  transition: transform var(--duration-base) var(--ease-standard);
 }
 
 /*
@@ -136,29 +136,37 @@
  * era por isso que Vue e Svelte não animavam e o React só animava ao fechar.
  * Animação roda na inserção do elemento, e reka/bits/base-ui adiam a remoção
  * até a animação de saída terminar (usePresence e equivalentes).
+ *
+ * A opacidade acompanha a altura de propósito. Sem ela, o `overflow: hidden`
+ * revela o texto por uma borda dura e cada linha "salta" para dentro assim que
+ * há espaço — a animação parece pular degraus. Com o fade, as linhas em
+ * revelação parcial também estão translúcidas e a leitura fica contínua.
  */
 @keyframes nds-accordion-expand {
-  from { grid-template-rows: 0fr; }
-  to   { grid-template-rows: 1fr; }
+  from { grid-template-rows: 0fr; opacity: 0; }
+  to   { grid-template-rows: 1fr; opacity: 1; }
 }
 
 @keyframes nds-accordion-collapse {
-  from { grid-template-rows: 1fr; }
-  to   { grid-template-rows: 0fr; }
+  from { grid-template-rows: 1fr; opacity: 1; }
+  to   { grid-template-rows: 0fr; opacity: 0; }
 }
 
+/* Entrada usa a duração de painel (320ms): 200ms é curto demais para uma
+   mudança de altura com texto, e é aí que o "degrau" fica perceptível. */
 .nds-accordion-content[data-open],
 .nds-accordion-content[data-state="open"] {
-  animation: nds-accordion-expand var(--duration-base) ease-out;
+  animation: nds-accordion-expand var(--duration-moderate) var(--ease-entrance);
 }
 
 /* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
-   Vanilla usam data-state. O estado final fica 0fr para quem permanece montado. */
+   Vanilla usam data-state. O estado final fica 0fr para quem permanece montado.
+   Saída mais curta que a entrada — fechar não precisa de tanta cerimônia. */
 .nds-accordion-content[data-closed],
 .nds-accordion-content[data-ending-style],
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
-  animation: nds-accordion-collapse var(--duration-base) ease-out;
+  animation: nds-accordion-collapse var(--duration-base) var(--ease-exit);
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
