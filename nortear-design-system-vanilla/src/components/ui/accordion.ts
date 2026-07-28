@@ -124,7 +124,7 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     contentEl.dataset.state = 'closed';
 
     const innerEl = document.createElement('div');
-    innerEl.className = 'nds-accordion-content-inner';
+    innerEl.className = 'nds-accordion-content-body';
     innerEl.textContent = item.content;
     contentEl.appendChild(innerEl);
 

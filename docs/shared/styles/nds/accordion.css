@@ -14,7 +14,7 @@
  *       </h3>
  *       <div class="nds-accordion-content" data-slot="accordion-content"
  *            role="region" aria-labelledby="..." hidden>
- *         <div class="nds-accordion-content-inner">Resposta</div>
+ *         <div class="nds-accordion-content-body">Resposta</div>
  *       </div>
  *     </div>
  *   </div>
@@ -104,7 +104,14 @@
   color: hsl(var(--foreground));
 }
 
-.nds-accordion-content-inner {
+/*
+ * Corpo do content — só espaçamento, altura natural. Nome único nas 4 stacks.
+ * As libs headless publicam custom properties de altura inline
+ * (--accordion-panel-height / --reka-accordion-content-height); NÃO as consuma
+ * aqui: a medida delas não inclui este padding e, com o `overflow: hidden` do
+ * pai, o texto é cortado ao abrir.
+ */
+.nds-accordion-content-body {
   padding-top: 0;
   padding-bottom: var(--spacing-4);        /* 16px */
   line-height: 1.5;
@@ -112,8 +119,7 @@
 
 /*
  * ─── nds-accordion composite ────────────────────────────────────────────────
- * Libs headless: dois chevrons alternados por aria-expanded e animação de
- * altura via --accordion-panel-height + data-starting/ending-style.
+ * Libs headless: dois chevrons alternados por aria-expanded.
  */
 
 .nds-accordion-icon-open {
@@ -126,20 +132,6 @@
 
 .nds-accordion-trigger[aria-expanded="true"] .nds-accordion-icon-open {
   display: inline-block;
-}
-
-/*
- * Mesmo contrato do `.nds-accordion-content-inner` do Vanilla: só espaçamento,
- * altura natural. Antes a altura vinha das custom properties da lib
- * (--accordion-panel-height / --reka-accordion-content-height) NO MESMO
- * elemento que carrega o padding — a medida da lib não inclui esse padding, e
- * com o `overflow: hidden` do pai o texto era cortado ao abrir (visível no Vue).
- * As libs seguem publicando essas variáveis inline; nada as consome.
- */
-.nds-accordion-content-body {
-  padding-top: 0;
-  padding-bottom: var(--spacing-4);
-  line-height: 1.5;
 }
 
 .nds-accordion-content-body a {
