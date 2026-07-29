@@ -483,7 +483,18 @@ function auditStoryQuality(slug) {
       storyRx.test(basename(f).toLowerCase()),
     );
 
-    for (const file of storyFiles) {
+    // Svelte não escreve markup no .stories.ts — ele delega para componentes
+    // `<Slug><Caso>Story.svelte` no mesmo diretório. Sem varrer esses arquivos,
+    // toda classe morta da stack Svelte fica invisível (foi assim que os
+    // text-blue-500 do Accordion sobreviveram à regra). Só entram no check de
+    // CLASSE: play/expect continuam morando no .stories.ts.
+    const markupOnlyFiles = stack !== 'svelte' ? [] :
+      globStack(stack, 'components/ui', ['.svelte']).filter((f) => {
+        const n = basename(f).toLowerCase();
+        return n.endsWith('story.svelte') && n.startsWith(slug.toLowerCase().replace(/-/g, ''));
+      });
+
+    for (const file of [...storyFiles, ...markupOnlyFiles]) {
       const content = readFile(file);
       if (!content) continue;
       const rel = relative(ROOT, file);

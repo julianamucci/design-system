@@ -21,7 +21,7 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
+function createIcon(nodes: LucideIconNode[], tone: string): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
@@ -30,7 +30,9 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'nds-icon-sm nds-shrink-0');
+  // nds-icon (16px) e não nds-icon-sm (14px): fica na mesma linha do chevron,
+  // que é 16px — ver .nds-accordion-icon.
+  svg.setAttribute('class', `nds-icon ${tone} nds-shrink-0`);
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -39,11 +41,11 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
   return svg;
 }
 
-function makeIconTrigger(nodes: LucideIconNode[], text: string): HTMLElement {
+function makeIconTrigger(nodes: LucideIconNode[], text: string, tone: string): HTMLElement {
   const span = document.createElement('span');
   span.className = 'nds-cluster';
   span.dataset.spacing = 'sm';
-  span.appendChild(createIcon(nodes));
+  span.appendChild(createIcon(nodes, tone));
   const label = document.createElement('span');
   label.textContent = text;
   span.appendChild(label);
@@ -58,9 +60,9 @@ export const ComIconeNoTrigger: Story = {
     root.className = 'nds-w-full nds-max-w-lg';
 
     const iconItems = [
-      { value: 'info',    nodes: Info as unknown as LucideIconNode[],          label: 'Informação',   content: 'Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.' },
-      { value: 'warning', nodes: AlertTriangle as unknown as LucideIconNode[],  label: 'Aviso',        content: 'Sinalize categorias distintas com ícones semânticos. O texto do trigger já descreve para leitores de tela.' },
-      { value: 'success', nodes: CheckCircle2 as unknown as LucideIconNode[],   label: 'Confirmação',  content: 'Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.' },
+      { value: 'info',    nodes: Info as unknown as LucideIconNode[],          tone: 'nds-text-info',    label: 'Informação',   content: 'Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.' },
+      { value: 'warning', nodes: AlertTriangle as unknown as LucideIconNode[],  tone: 'nds-text-warning', label: 'Aviso',        content: 'Sinalize categorias distintas com ícones semânticos. O texto do trigger já descreve para leitores de tela.' },
+      { value: 'success', nodes: CheckCircle2 as unknown as LucideIconNode[],   tone: 'nds-text-success', label: 'Confirmação',  content: 'Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.' },
     ];
 
     const accordion = createAccordion({
@@ -70,12 +72,12 @@ export const ComIconeNoTrigger: Story = {
     });
 
     // Replace plain trigger text with icon+text
-    iconItems.forEach(({ value, nodes, label }) => {
+    iconItems.forEach(({ value, nodes, label, tone }) => {
       const trigger = accordion.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
       if (!trigger) return;
       const span = trigger.querySelector('span');
       if (!span) return;
-      const wrapper = makeIconTrigger(nodes, label);
+      const wrapper = makeIconTrigger(nodes, label, tone);
       span.replaceWith(wrapper);
     });
 

@@ -29,7 +29,7 @@ export const ComIconeNoTrigger: Story = {
         <AccordionItem value="info">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
-              <Info class="text-blue-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
+              <Info class="nds-icon nds-text-info nds-shrink-0" aria-hidden="true" />
               Informações gerais
             </span>
           </AccordionTrigger>
@@ -40,7 +40,7 @@ export const ComIconeNoTrigger: Story = {
         <AccordionItem value="aviso">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
-              <AlertTriangle class="text-amber-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
+              <AlertTriangle class="nds-icon nds-text-warning nds-shrink-0" aria-hidden="true" />
               Atenção — leia antes de continuar
             </span>
           </AccordionTrigger>
@@ -51,7 +51,7 @@ export const ComIconeNoTrigger: Story = {
         <AccordionItem value="sucesso">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
-              <CheckCircle class="text-green-500 nds-shrink-0" style="height: 1rem; width: 1rem" aria-hidden="true" />
+              <CheckCircle class="nds-icon nds-text-success nds-shrink-0" aria-hidden="true" />
               Configuração concluída
             </span>
           </AccordionTrigger>
