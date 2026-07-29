@@ -44,21 +44,23 @@ Modo `--from-content` NÃO altera padrões visuais (classes/tipografia/cores) �
 
 ### Modo `--from-content`
 1. `docs/shared/content/{slug}/translations.json` — fonte primária
-2. `nortear-design-system-react/src/components/ui/{slug}.tsx` — extrair variantes/props/sizes
+2. `nortear-design-system-vanilla/src/components/ui/{slug}.ts` — extrair variantes/props/sizes
 3. **Guideline de categoria** (obrigatório)
 4. `docs/shared/guidelines/08-docs-pages-foundations.md` — referência estrutural
 
 ### Tabela de categorias
 
+As 4 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** para decisões de contrato (variantes, estados, regras de API, a11y) — ela não tem lib headless mascarando o que o design system define. Leia a da stack específica só quando a questão for de sintaxe do framework.
+
 | Categoria | Arquivo |
 |---|---|
-| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` |
-| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` |
-| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` |
-| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` |
-| Display | `nortear-design-system-react/guidelines/08-display-components.md` |
-| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` |
-| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` |
+| Layout | `nortear-design-system-vanilla/guidelines/04-layout-components.md` |
+| Navegação | `nortear-design-system-vanilla/guidelines/05-navigation-components.md` |
+| Formulário | `nortear-design-system-vanilla/guidelines/06-form-components.md` |
+| Feedback | `nortear-design-system-vanilla/guidelines/07-feedback-components.md` |
+| Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
+| Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
+| Overlay | `nortear-design-system-vanilla/guidelines/10-overlay-components.md` |
 
 ### Guidelines a atualizar
 

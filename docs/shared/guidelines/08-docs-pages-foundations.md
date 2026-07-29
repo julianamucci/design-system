@@ -413,25 +413,29 @@ Regras de `structureCode`:
 - Quebras de linha com `\n` (JSON string)
 - Localizar os comentários (`{/* Texto */}` → `{/* Text */}` em inglês)
 
-### 7.3 Renderização de referência (React)
+### 7.3 Renderização — consuma o container, não reimplemente
 
-```tsx
-<div className="space-y-4">
-  <ol className="space-y-3 text-sm list-none p-0 m-0">
-    {[1, 2, 3].map(i => (
-      <li key={i} className="flex gap-3 list-none">
-        <span className="...badge...">{i}</span>
-        <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(tContent(`anatomy.item${i}`)) }} />
-      </li>
-    ))}
-  </ol>
-  <div className="rounded-lg bg-muted/50 border border-border/40 px-4 pt-3 pb-4">
-    <p className="text-xs text-muted-foreground mb-2">{tContent("anatomy.structureLabel")}</p>
-    <pre className="text-xs font-mono leading-relaxed"
-      dangerouslySetInnerHTML={{ __html: sanitizeHtml(tContent("anatomy.structureCode")) }} />
-  </div>
-</div>
+A docs page **não escreve esse markup**. Ela passa o conteúdo para o container genérico `DocsAnatomy` da própria stack (`src/components/docs/shared/sections/`), que recebe `title`, `items`, `structureCode` e `structureLabel`.
+
+Reimplementar a seção inline é o que faz as 4 stacks divergirem: cada uma acaba com uma árvore de elementos e um conjunto de classes diferente para o mesmo conteúdo.
+
+**Referência de markup: a stack Vanilla** (`DocsAnatomy.ts`) — ela não tem lib headless nem templating escondendo a estrutura, então é onde se lê o que o design system realmente define:
+
 ```
+section#anatomia
+└── h2.nds-section-title
+└── ComponentDemo
+    └── div.nds-stack[data-spacing="md"].nds-w-full
+        ├── ol.nds-stack[data-spacing="sm"].nds-text-body.nds-list-none
+        │   └── li.nds-row[data-spacing="sm"][data-align="start"].nds-list-none
+        │       ├── span.nds-pill[data-tone="primary"]  → número
+        │       └── span                                 → item sanitizado
+        └── Card.nds-p-4.nds-bg-muted-soft.nds-border-soft.nds-shadow-none.nds-overflow-x
+            ├── p.nds-text-caption.nds-text-muted-foreground.nds-mb-2  → structureLabel
+            └── pre.nds-font-mono.nds-text-body.nds-whitespace-pre     → structureCode
+```
+
+As outras stacks reproduzem essa árvore e essas classes; só a sintaxe de templating muda.
 
 ---
 
@@ -493,7 +497,7 @@ Itere sobre `item1`…`itemN` dinamicamente (não hardcode o array). Exemplo em 
 })}
 ```
 
-Consulte `AlertDocs.tsx` como implementação de referência completa.
+Consulte o `AlertDocs` da **stack Vanilla** (`nortear-design-system-vanilla/src/components/docs/AlertDocs.ts`) como implementação de referência completa — nele a estrutura e as classes `.nds-*` aparecem sem templating de framework no meio. O `AlertDocs` da sua própria stack serve de referência para a sintaxe.
 
 ---
 
@@ -557,20 +561,14 @@ Para cada tamanho, duas chaves: `{key}` (dimensão) e `{key}Use` (contexto de us
 }
 ```
 
-### Renderização de referência (React)
-
-```tsx
-<div className="p-3 border-t border-border/40 bg-muted/10 space-y-1">
-  <p className="text-[11px] uppercase font-mono text-primary font-bold block">{label}</p>
-  <p className="text-xs text-muted-foreground">{desc}</p>
-  <p className="text-xs text-muted-foreground/70 italic">{use}</p>
-</div>
-```
-
-Adaptar para cada stack:
-- **Vue**: `{{ item.use }}` a partir do `computed` `sizeItems`
-- **Svelte**: `{$tStore(`variants.sizes.${label}Use`)}`
-- **Vanilla**: `${t(`variants.sizes.${key}Use`)}`
+> **Seção desatualizada — não implementar como está.** A terceira linha (`{key}Use`)
+> não existe: nenhum `translations.json` do repo define `smUse`/`defaultUse`/etc., e
+> nenhuma docs page consome essas chaves. Os cards de tamanho hoje passam por
+> `DocsVariants` com `{ name, description, preview }` — duas linhas, não três.
+>
+> Decidir na revisão do Button se a "referência de uso" volta (aí como campo do
+> container, nas 4 stacks) ou se esta seção sai da guideline. Até lá, a fonte de
+> verdade é o container `DocsVariants` da stack Vanilla.
 
 ### 11.3 Cards de tipo (componentes sem cva)
 

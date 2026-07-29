@@ -26,7 +26,9 @@ Hierarquia de decisão:
 
 ### 1. Classes CSS do `cva()`
 
-As classes de cada variante, tamanho e estado DEVEM ser copiadas letra por letra do React. A função `cva()` (ou equivalente) deve produzir as mesmas strings em todas as stacks.
+As classes de cada variante, tamanho e estado DEVEM ser idênticas nas 4 stacks. A função `cva()` (ou equivalente) deve produzir as mesmas strings em todas.
+
+**A referência é a stack Vanilla.** Ela não usa lib headless — não há base-ui, reka-ui nem bits-ui injetando markup ou atributo por conta própria. O que está no Vanilla é o que o design system realmente define; nas outras três, o que sobra costuma ser resíduo do shadcn. Toda divergência de markup ou de comportamento investigada até hoje terminou com o Vanilla certo.
 
 ```typescript
 // Esta composição de classes DEVE ser idêntica em React, Vue, Svelte e Vanilla.
@@ -43,11 +45,11 @@ const variants = {
 **Como verificar:**
 
 ```bash
-# Extrair a composição de classes de cada stack e comparar
+# Vanilla primeiro — é a referência
+grep -A 5 "nds-button" nortear-design-system-vanilla/src/components/ui/button.ts
 grep -A 5 "nds-button" nortear-design-system-react/src/components/ui/button/index.ts
 grep -A 5 "nds-button" nortear-design-system-vue/src/components/ui/button/index.ts
 grep -A 5 "nds-button" nortear-design-system-svelte/src/components/ui/Button.svelte
-# Vanilla: verificar constantes no arquivo de stories
 ```
 
 ### 2. Tokens CSS (variáveis custom properties)
@@ -90,7 +92,7 @@ Cada stack usa suas próprias convenções:
 | Slots | `children` | `<slot />` | `<slot />` / `{@render}` | `innerHTML` |
 | Events | `onClick` | `@click` / `v-on` | `on:click` / `onclick` | `addEventListener` |
 | Refs | `useRef` | `ref()` | `bind:this` | `querySelector` |
-| asChild | Radix `asChild` | Reka UI `as-child` | Bits UI equivalent | `role="button"` em `<a>` |
+| Composição no filho | base-ui `render` | Reka UI `as-child` | Bits UI `child` (snippet) | elemento passado à factory |
 
 ### Primitivos de Acessibilidade
 
@@ -121,14 +123,14 @@ Quando um pacote npm não existe para vanilla TS (ex: `sonner` só tem bindings 
 Para cada componente, extraia as classes `.nds-*` de cada stack e compare:
 
 ```bash
-# Script de comparação rápida
-for stack in react vue svelte; do
+# Script de comparação rápida — vanilla primeiro, é a referência
+for stack in vanilla react vue svelte; do
   echo "=== $stack ==="
-  grep -oP "(?<=')\S+(?=')" nortear-design-system-$stack/src/components/ui/<slug>/*.{ts,vue,svelte} 2>/dev/null | sort
+  grep -oP "(?<=')\S+(?=')" nortear-design-system-$stack/src/components/ui/<slug>*.{ts,tsx,vue,svelte} 2>/dev/null | sort
 done
 ```
 
-Diferenças nas classes = bug. A stack React é a referência.
+Diferenças nas classes = bug. **A stack Vanilla é a referência**; alinhe as outras três a ela.
 
 ### 2. Comparar variantes
 

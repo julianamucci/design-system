@@ -20,8 +20,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência — Leia ANTES de qualquer ação
 
 1. `docs/shared/guidelines/09-seguranca-xss.md` — regras completas de segurança
-2. `nortear-design-system-react/src/lib/sanitize-html.ts` — implementação de referência
-3. `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — uso correto de sanitizeHtml
+2. `nortear-design-system-vanilla/src/components/docs/shared/sections/DocsAnatomy.ts` — uso correto: `DOMPurify.sanitize()` no call site
+
+**Não existe `src/lib/sanitize-html.ts` em nenhuma stack, e isso é deliberado.** O projeto chama `DOMPurify.sanitize()` **direto no call site**, importando `dompurify` no próprio arquivo, sem wrapper local — um wrapper esconde o sanitizador das ferramentas de SAST, que passam a reportar o `innerHTML` como não sanitizado. Ver guideline 09. **Nunca crie esse wrapper**, mesmo que uma varredura acuse ausência.
 
 ---
 
@@ -46,7 +47,7 @@ grep -rn "innerHTML" nortear-design-system-vanilla/src/
 ```
 
 Para CADA ocorrência, verifique:
-- [ ] O conteúdo passa por `sanitizeHtml()` antes da renderização?
+- [ ] O conteúdo passa por `DOMPurify.sanitize()` no próprio call site antes da renderização?
 - [ ] Se não passa — é literal no código-fonte (seguro) ou dinâmico (vulnerável)?
 
 ### 2. URLs dinâmicos
@@ -61,13 +62,13 @@ Para cada URL dinâmico:
 - [ ] O protocolo é validado? (apenas `http:`, `https:`, `mailto:`, `tel:`, `#`, `/`)
 - [ ] Protocolos `javascript:`, `data:`, `vbscript:` são bloqueados?
 
-### 3. sanitizeHtml existe em cada stack
+### 3. Import do DOMPurify no arquivo que sanitiza
+
+O sanitizador tem que estar visível no mesmo arquivo do sink. Arquivo que renderiza HTML dinâmico sem importar `dompurify` é violação:
 
 ```bash
-for stack in react vue svelte vanilla; do
-  echo "=== $stack ==="
-  ls nortear-design-system-$stack/src/lib/sanitize-html.ts 2>/dev/null || echo "AUSENTE!"
-done
+grep -rln "dangerouslySetInnerHTML\|v-html\|{@html\|innerHTML" nortear-design-system-*/src/ \
+  | xargs grep -L "from 'dompurify'"
 ```
 
 ### 4. Event handlers dinâmicos
@@ -86,24 +87,20 @@ grep -rn "style.*{.*}" nortear-design-system-*/src/ --include="*.tsx" --include=
 
 ## Correções Comuns
 
-### Adicionar sanitizeHtml onde falta
+### Adicionar sanitização onde falta
 
 ```tsx
 // ANTES (vulnerável)
 <p dangerouslySetInnerHTML={{ __html: t('content') }} />
 
-// DEPOIS (seguro)
-import { sanitizeHtml } from '@/lib/sanitize-html';
-<p dangerouslySetInnerHTML={{ __html: sanitizeHtml(t('content')) }} />
+// DEPOIS (seguro) — import e chamada no mesmo arquivo do sink
+import DOMPurify from 'dompurify';
+<p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t('content')) }} />
 ```
 
-### Criar sanitizeHtml.ts quando ausente
+Nas outras stacks, mesma forma: `v-html="DOMPurify.sanitize(x)"`, `{@html DOMPurify.sanitize(x)}`, `el.innerHTML = DOMPurify.sanitize(x)`.
 
-Se uma stack não tem `src/lib/sanitize-html.ts`, crie seguindo o guideline `09-seguranca-xss.md`:
-
-- Allowlist de tags: `strong, em, code, pre, kbd, br, p, span, ul, ol, li, a, h1-h6, table, thead, tbody, tr, th, td, blockquote, sub, sup, small`
-- Allowlist de atributos: `class, id, href (validado), title, target, rel, colspan, rowspan, scope, lang, dir`
-- Remoção: `<script>`, `<iframe>`, `<svg>`, `<form>`, `<input>`, event handlers (`on*`), `style`, `javascript:` URLs
+**Não envolva em helper local.** A allowlist é a default do DOMPurify; se um dia precisar de configuração custom, use `DOMPurify.setConfig()` uma única vez no bootstrap da stack — os call sites seguem chamando `DOMPurify.sanitize()` direto (guideline 09).
 
 ### Validar URLs
 
@@ -147,8 +144,8 @@ Após corrigir, teste com estes payloads (devem ser TODOS neutralizados):
 ### URLs Dinâmicos
 | Arquivo | Linha | Validado? | Ação |
 
-### sanitizeHtml.ts
-| Stack | Existe? | Completo? | Ação |
+### Import do DOMPurify no arquivo do sink
+| Stack | Arquivos com sink | Sem import de `dompurify` | Ação |
 
 ### Vulnerabilidades Encontradas: X
 ### Vulnerabilidades Corrigidas: Y

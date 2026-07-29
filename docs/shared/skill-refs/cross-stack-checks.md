@@ -10,21 +10,21 @@ Referência usada por `/cross-stack`. **Leia apenas se precisar do detalhe de um
 
 ---
 
-## Check 1 — Classes `cva()` / Tailwind
+## Check 1 — Classes `cva()` / `.nds-*`
 
-4 `Grep` paralelos, pattern `"cva("`, um por stack. React é referência. Diferença = bug. Copie classes do React para a stack divergente.
+4 `Grep` paralelos, pattern `"cva("`, um por stack. **Vanilla é referência** (sem lib headless, expõe o contrato real). Diferença = bug: alinhe as outras três ao Vanilla.
 
 Paths:
+- `nortear-design-system-vanilla/src/components/ui/` ← referência
 - `nortear-design-system-react/src/components/ui/<slug>/`
 - `nortear-design-system-vue/src/components/ui/<slug>/`
 - `nortear-design-system-svelte/src/components/ui/<slug>/`
-- `nortear-design-system-vanilla/src/components/ui/`
 
 ---
 
 ## Check 2 — Variantes e tamanhos
 
-4 `Grep` paralelos, pattern `"variant|size"` nos arquivos `.ts`. Variante presente no React e ausente em outra stack = bug.
+4 `Grep` paralelos, pattern `"variant|size"` nos arquivos `.ts`. Variante presente no Vanilla e ausente em outra stack = bug.
 
 ---
 
@@ -156,7 +156,7 @@ Categorias: `a11y`, `i18n`, `theme`, `security`, `bugfix`.
 - Alteração via `patch-package` em `node_modules/`
 
 **Sinais de cross-stack (não é patch):**
-- Copiou classes do React para Vue/Svelte/Vanilla (React é referência)
+- Alinhou classes das demais stacks ao Vanilla (Vanilla é referência)
 - Alinhou nome de variante/tamanho entre stacks
 - Adicionou story ou preencheu docs
 

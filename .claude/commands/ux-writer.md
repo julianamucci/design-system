@@ -20,18 +20,18 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Fontes de Referência
 
 Em paralelo:
-1. **Componente fonte React** — `nortear-design-system-react/src/components/ui/<slug>.tsx` (ou `<slug>/index.tsx`) — variantes, props, estados
+1. **Componente fonte: stack Vanilla** — `nortear-design-system-vanilla/src/components/ui/<slug>.ts` — variantes, props, estados. Vanilla é a referência porque não tem lib headless: o que está lá é o contrato do design system, não a API do base-ui/reka-ui/bits-ui. Ler a partir dele evita que o texto descritivo nasça amarrado à nomenclatura de uma lib.
 2. **Guideline de categoria** (obrigatório):
 
 | Categoria | Arquivo |
 |---|---|
-| Layout | `nortear-design-system-react/guidelines/04-layout-components.md` |
-| Navegação | `nortear-design-system-react/guidelines/05-navigation-components.md` |
-| Formulário | `nortear-design-system-react/guidelines/06-form-components.md` |
-| Feedback | `nortear-design-system-react/guidelines/07-feedback-components.md` |
-| Display | `nortear-design-system-react/guidelines/08-display-components.md` |
-| Disclosure | `nortear-design-system-react/guidelines/09-disclosure-components.md` |
-| Overlay | `nortear-design-system-react/guidelines/10-overlay-components.md` |
+| Layout | `nortear-design-system-vanilla/guidelines/04-layout-components.md` |
+| Navegação | `nortear-design-system-vanilla/guidelines/05-navigation-components.md` |
+| Formulário | `nortear-design-system-vanilla/guidelines/06-form-components.md` |
+| Feedback | `nortear-design-system-vanilla/guidelines/07-feedback-components.md` |
+| Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
+| Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
+| Overlay | `nortear-design-system-vanilla/guidelines/10-overlay-components.md` |
 
 A guideline é fonte de verdade para variantes, estados, props, regras de API e padrões de a11y.
 
@@ -51,7 +51,7 @@ Gerar `docs/shared/content/<slug>/translations.json` com a estrutura completa no
 
 **Nunca** inclua emojis (✅, ❌, ✓, ✗, ⚠️, 🎉, 💡, etc.) ou caracteres decorativos em strings do JSON. Vale para `title`, `description`, `summary`, `aiSummary`, items, labels, mensagens.
 
-**Motivo**: ícones de certo/errado/alerta/info são renderizados pelo **código da docs page** (pills com classes Tailwind, lucide icons). Se incluir emojis no texto, eles aparecem duplicados ao lado dos ícones do projeto.
+**Motivo**: ícones de certo/errado/alerta/info são renderizados pelo **código da docs page** (pills `.nds-pill` + ícones lucide). Se incluir emojis no texto, eles aparecem duplicados ao lado dos ícones do projeto.
 
 **Exceção**: só use emojis se o usuário pedir explicitamente.
 
@@ -74,7 +74,9 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 - Snippets de código (`structureCode`, `codeSingle`, `codeMultiple`, `extensibilityCode`, `interfaceCode`, `customizationCode`) — sintaxe real da stack (Vue/Svelte frequentemente coincidem)
 - `props.table.<prop>.name` — nomeia a prop documentada
 - `props.table.<prop>.type` — literal TypeScript
-- `notes.itemN` quando explicita divergência: "No React (base-ui), a API expõe `multiple` (boolean). Em Vue/Svelte, use `type=\"multiple\"`."
+- `notes.itemN` para nomear a prop **da própria stack**: "A API expõe `multiple` (boolean) para o modo múltiplo."
+
+**Nunca** compare stacks dentro do texto ("No React…, em Vue…"). Cada docs page é consumida isoladamente — o leitor do Storybook do Vue não tem contexto do React, e a comparação vaza. Divergência de API entre libs vai para `patches.md`, não para o `translations.json`. Se a diferença precisa aparecer na página, use overrides de `useTranslation` por stack.
 
 **Auditoria**: `node scripts/audit.mjs <slug> --category quality --json` reporta violações com rule `translation_literal_prop`. Ver guideline `docs/shared/guidelines/11-consistencia-cross-stack.md` §"Textos de instrução API-neutros".
 
@@ -98,7 +100,7 @@ O `translations.json` é compartilhado entre React, Vue, Svelte e Vanilla. Cada 
 
 ## Processo
 
-1. **Ler em paralelo**: componente React + guideline de categoria
+1. **Ler em paralelo**: componente Vanilla + guideline de categoria
 2. **Identificar** variantes, props, estados reais — sem inventar
 3. **Gerar** JSON completo nos 3 idiomas seguindo schema
 4. **Validar** chaves existem em todos os idiomas + limites de caracteres (ver schema)

@@ -19,7 +19,11 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Princípio
 
-**Uma especificação, quatro implementações, um resultado visual.** O usuário final não deve perceber em qual framework o componente foi renderizado. **React é a fonte de verdade** — quando há divergência, React está correto.
+**Uma especificação, quatro implementações, um resultado visual.** O usuário final não deve perceber em qual framework o componente foi renderizado.
+
+**A stack Vanilla é a fonte de verdade** — comece toda comparação por ela. Vanilla não usa lib headless: não há base-ui, reka-ui nem bits-ui injetando markup, atributo de estado ou comportamento por conta própria. O que está no Vanilla é o que o design system define; o que sobra nas outras três costuma ser resíduo do shadcn. Toda divergência de markup ou comportamento investigada até hoje terminou com o Vanilla certo.
+
+Exceção: quando a divergência for de **API de framework** (nome de prop, forma de composição, sintaxe de evento), não há fonte de verdade — cada lib tem a sua. Registre em `patches.md` em vez de "alinhar".
 
 ---
 

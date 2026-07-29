@@ -24,7 +24,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 `docs/shared/skill-refs/analytics-arch.md` — arquitetura completa, catálogo de eventos, padrão de `data-track-id`, severidades, output JSON. **Consulte se precisar do detalhe**.
 
 Templates:
-- `nortear-design-system-react/src/components/docs/AlertDocs.tsx` — implementação modelo
+- `nortear-design-system-vanilla/src/components/docs/AlertDocs.ts` — implementação modelo (referência de contrato; para sintaxe, veja o `AlertDocs` da própria stack)
 - `nortear-design-system-react/src/lib/docs-tracking.ts` — observer global
 - `nortear-design-system-react/src/lib/analytics.ts` — catálogo tipado
 

@@ -1,6 +1,6 @@
 # Analytics — Arquitetura e Catálogo
 
-Referência usada por `/analytics`. Documenta o sistema de tracking automático via `data-track*` e o catálogo completo de eventos GA4. **Leia apenas se precisar do detalhe completo** — para casos típicos de instrumentação, basta seguir `AlertDocs.tsx` como template.
+Referência usada por `/analytics`. Documenta o sistema de tracking automático via `data-track*` e o catálogo completo de eventos GA4. **Leia apenas se precisar do detalhe completo** — para casos típicos de instrumentação, basta seguir o `AlertDocs` da sua stack como template (o da stack Vanilla é a referência quando houver divergência entre elas).
 
 ---
 

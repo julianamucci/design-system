@@ -24,10 +24,12 @@ O vetor mais perigoso. Renderiza strings como HTML, executando qualquer `<script
 
 | Stack | Sintaxe perigosa | Uso seguro |
 |-------|------------------|------------|
-| React | `dangerouslySetInnerHTML={{ __html: content }}` | Sempre via `sanitizeHtml(content)` |
-| Vue | `v-html="content"` | Sempre via `sanitizeHtml(content)` |
-| Svelte | `{@html content}` | Sempre via `sanitizeHtml(content)` |
-| Vanilla | `el.innerHTML = content` | Sempre via `sanitizeHtml(content)` |
+| React | `dangerouslySetInnerHTML={{ __html: content }}` | `DOMPurify.sanitize(content)` |
+| Vue | `v-html="content"` | `DOMPurify.sanitize(content)` |
+| Svelte | `{@html content}` | `DOMPurify.sanitize(content)` |
+| Vanilla | `el.innerHTML = content` | `DOMPurify.sanitize(content)` |
+
+A chamada vai **no próprio call site**, nunca atrás de um wrapper — o motivo está na seção "Sanitização" abaixo.
 
 ### 2. URLs dinâmicos
 
