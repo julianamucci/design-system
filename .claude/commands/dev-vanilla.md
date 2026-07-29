@@ -65,23 +65,41 @@ render: (args) => {
 Se factory ainda não existe, criar `src/components/ui/<slug>.ts`:
 
 ```ts
-const ROOT = 'rounded-xl border bg-card text-card-foreground shadow';
-
 export type CardOptions = { class?: string };
 
 export function createCard(options: CardOptions = {}): HTMLDivElement {
   const el = document.createElement('div');
-  el.className = options.class ? `${ROOT} ${options.class}` : ROOT;
+  el.dataset.slot = 'card';
+  el.className = 'nds-card';
+  if (options.class) el.classList.add(...options.class.split(' ').filter(Boolean));
   return el;
 }
 ```
 
 **Regras:**
-1. Prefira as classes semânticas do CSS compartilhado (`.nds-button`, `.nds-badge`, `.nds-alert`, `.nds-card`, `.nds-input`) como base.
-2. Sem classe semântica → extraia do `cva()` React equivalente.
-3. ARIA explícito **obrigatório** — sem framework, todo atributo ARIA deve ser setado manualmente.
-4. Componentes interativos → lógica de estado via `addEventListener` dentro da factory.
-5. Para padrão complexo, consulte `accordion.ts` como referência.
+1. Use as classes semânticas de `docs/shared/styles/nds/` (`.nds-button`, `.nds-badge`, `.nds-alert`, `.nds-card`, `.nds-input`). Classe sem prefixo `nds-` é resíduo do Tailwind, que saiu do projeto — não tem efeito em runtime e o audit acusa (`legacy_class_in_story`).
+2. Falta uma classe para o caso → crie a regra no CSS compartilhado. Não copie de outra stack: **esta stack é a referência cross-stack**, as outras três se alinham a ela.
+3. **Registre a configuração na raiz** como `data-*` (ex.: `data-type`, `data-collapsible`). Opção que vive só no closure é invisível para CSS, teste, devtools — e congela o snippet da aba API Reference (ver abaixo).
+4. ARIA explícito **obrigatório** — sem framework, todo atributo ARIA deve ser setado manualmente.
+5. Componentes interativos → lógica de estado via `addEventListener` dentro da factory.
+6. Para padrão complexo, consulte `accordion.ts` como referência.
+
+### API Reference: nesta stack a fonte do snippet é o DOM
+
+O renderer `html` monta a caixa de código a partir do `outerHTML` do elemento
+devolvido pelo `render`, e **só reemite quando esse HTML muda**. Duas
+consequências:
+
+1. Configuração que vive só no closure da factory não aparece no DOM. O HTML sai
+   byte a byte idêntico entre um modo e outro, o snippet congela e mexer nos
+   controls não altera nada. É o motivo da regra 3 acima.
+2. Um dump de DOM não é o que o consumidor escreve — ele chama a factory. Declare
+   `docs.source.transform` na Playground devolvendo a chamada real
+   (`createX({ … })`), montada a partir de `storyContext.args`.
+
+Como não há componente de framework para introspectar, a aba API Reference sai
+**só** do `argTypes` — inclusive as opções sem control precisam estar declaradas.
+Ver as regras gerais em `_dev-shared.md`.
 
 ### `createElement` + `textContent` (NUNCA innerHTML com dinâmico)
 

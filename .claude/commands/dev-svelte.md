@@ -77,6 +77,25 @@ const variantsMeta = {
 } satisfies Meta<typeof ComponentStory>;
 ```
 
+### API Reference: o docgen está desligado nesta stack
+
+`.storybook/main.ts` traz `framework.options.docgen: false` — analisar os ~447
+arquivos `.svelte` a cada build custava ~4,6 min. Duas consequências que só
+aparecem nesta stack:
+
+1. **A aba API Reference sai só do `argTypes`.** Não há extração automática:
+   prop que você não declarar não aparece na tabela. Transcreva a `RootProps`
+   da lib (`node_modules/bits-ui/dist/bits/<slug>/types.d.ts`) — ver as regras
+   gerais em `_dev-shared.md`.
+
+2. **O snippet "Show code" sai errado sem intervenção.** O gerador do
+   `@storybook/svelte` monta a tag a partir de `component.__docgen.name`; sem
+   docgen ele cai em `component.name`, que é o nome interno da função compilada.
+   O resultado exibido é `<wrapper type="single" …/>` — uma tag que ninguém
+   consegue importar, com os args da raiz serializados sobre o componente-wrapper
+   da story. **Toda Playground precisa de `docs.source.transform`** devolvendo o
+   uso real do componente, montado a partir de `storyContext.args`.
+
 ---
 
 ## Bits UI Specifics

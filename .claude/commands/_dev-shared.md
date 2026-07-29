@@ -134,16 +134,51 @@ Toda docs page renderiza TODAS estas seções com conteúdo real de `translation
 
 ---
 
-## Controls da Story Playground
+## Controls e aba "API Reference" da Playground
 
-A story `Playground` deve ter controls funcionais visíveis no painel.
+As duas superfícies saem do mesmo `argTypes` do `meta`. O painel **Controls**
+mostra o que tem control; a aba **API Reference** mostra a tabela inteira, com
+Type e Default. Declarar duas ou três props deixa a aba praticamente vazia — foi
+assim que o Accordion do Svelte ficou com **uma linha só**.
+
+**Declare a API real da lib desta stack, não a tabela compartilhada.** O
+`translations.json` descreve props em nomenclatura Radix/shadcn (`asChild`,
+`forceMount`, `className`) que nenhuma das libs atuais usa. Leia a interface da
+lib (`node_modules/<lib>/**/types.d.ts` ou o `.d.ts` do componente) e transcreva
+o que ela expõe de verdade.
 
 **Regras:**
-- `meta` com `argTypes` para ao menos 1 control por prop relevante
-- Componentes sem props visuais: expor props de comportamento (`loop`, `shouldFilter`, `filter`)
-- **Props de montagem** (`defaultOpen`, `initialValue`): usar `key` derivado do arg para forçar re-mount quando control muda
-- **`disabled`**: passar explicitamente ao filho interativo (Trigger/Button), não só ao root — root frequentemente não propaga visual de disabled
-- Sem props controláveis: `parameters.controls: { disable: true }` com justificativa
+- Uma entrada em `argTypes` para **cada** prop pública da raiz — inclusive as que
+  não têm control.
+- `table: { type: { summary }, defaultValue: { summary } }` em todas: sem isso as
+  colunas Type e Default da aba saem vazias.
+- Control só nas props que o `render` de fato encaminha. Prop que o render fixa
+  depois do spread (`defaultValue`, `className`) ou que o wrapper da story não
+  recebe vai com `control: false` — documentação, não controle morto.
+- `args` com valor inicial para **toda** prop que tem control; sem isso o control
+  aparece vazio.
+- Nada em `args` sem entrada correspondente em `argTypes` — a prop fica fora da
+  tabela (foi o caso do `onValueChange: fn()` no React).
+- **Props de montagem** (`defaultOpen`, `initialValue`): `key` derivado do arg
+  para forçar re-mount quando o control muda.
+- **`disabled`**: passar explicitamente ao filho interativo (Trigger/Button), não
+  só ao root — root frequentemente não propaga visual de disabled.
+- Componentes sem props visuais: expor props de comportamento (`loop`,
+  `shouldFilter`, `filter`).
+- Sem props controláveis: `parameters.controls: { disable: true }` com justificativa.
+
+### Snippet "Show code" — tem que acompanhar os controls
+
+Trocar um control precisa mudar a caixa de código. Quando a stack não gera isso
+sozinha, declare `parameters.docs.source.transform` na Playground — ele recebe
+`(codeGerado, storyContext)` e monta o snippet a partir de `storyContext.args`.
+
+**Nunca use `docs.source.code` com string fixa.** Além de não reagir aos
+controls, um `code` definido faz o `skipSourceRender` do renderer devolver `true`
+e o gerador dinâmico nem chega a rodar.
+
+Antes de fechar a Playground, troque um control e confirme que o snippet mudou.
+Se não mudou, o snippet está mentindo sobre o que a story renderiza.
 
 ---
 

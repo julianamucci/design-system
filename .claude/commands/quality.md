@@ -60,6 +60,9 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `legacy_class_in_story` | classe sem prefixo `nds-` em story — resíduo inerte da migração |
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
+| `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |
+| `static_source_code` | `docs.source.code` fixo — snippet não acompanha os controls |
 | `missing_section` · `substory_no_play` · `a11y_disabled` · `translation_literal_prop` | estrutura e conteúdo |
 
 O script julga forma; esta skill julga **conteúdo**: se a asserção verifica o comportamento certo, se a story demonstra o mesmo caso da docs page, se o texto está correto. Passos abaixo assumem o scan já rodado — não re-detecte o que ele já achou.
@@ -94,10 +97,19 @@ Após coletar, **não releia** nada nos passos seguintes.
 
 **2b. Controls do Playground**:
 - `meta` tem `argTypes` (painel não vazio)
-- `meta.args` declara valores iniciais para TODAS as props listadas em `argTypes` (sem isso, controls aparecem vazios)
+- `meta.args` declara valores iniciais para TODAS as props com control (sem isso, controls aparecem vazios) — rule `argtype_without_arg`
 - `render` consome `(args)` e espalha via `{...args}` ou `v-bind="args"` (não `render: () => ` sem args)
 - Props de montagem têm re-mount: React `key={String(args.x)}`, Vue `:key="String(args.x)"`, Svelte `{#key args.x}`, Vanilla re-execução natural
 - `disabled` propagado ao filho interativo (não só root)
+
+**2b2. Aba "API Reference"** — sai do MESMO `argTypes`, e é onde a maioria dos gaps some sem ninguém notar: a página renderiza, os testes passam, e só quem abre a aba vê a tabela quase vazia. O script cobre a forma; **esta skill julga se a API declarada é a real**.
+
+- **Cobertura**: cada prop pública da raiz tem entrada em `argTypes`? Compare com a interface da lib da stack (`node_modules/<lib>/**/types.d.ts`), não com o `translations.json` — o JSON compartilhado ainda descreve props em nomenclatura Radix/shadcn (`asChild`, `forceMount`, `className`) que nenhuma lib atual expõe. Tabela com 1–2 linhas num componente de 6+ props é bug.
+- **Type e Default**: `table: { type: { summary }, defaultValue: { summary } }` presente? Sem isso as colunas da aba saem vazias.
+- **Controle morto**: prop com control ativo que o `render` não encaminha (ou que ele fixa depois do spread, como `defaultValue`/`className`) deve ser `control: false` — documentação, não controle que não faz nada.
+- **Fora da tabela**: nada em `args` sem entrada em `argTypes` — rule `arg_without_argtype`. Foi assim que `onValueChange: fn()` ficou invisível na aba.
+- **Snippet acompanha os controls**: trocar um control tem que mudar a caixa de código. `docs.source.code` com string fixa congela o snippet E faz o `skipSourceRender` pular o gerador dinâmico — rule `static_source_code`. O correto é `docs.source.transform`, que recebe `(code, storyContext)`.
+- **Por stack**: em **Svelte** o docgen está desligado (`main.ts`) — o `argTypes` é a única fonte da aba, e sem `docs.source.transform` o snippet sai como `<wrapper …/>`, o nome interno da função compilada. Em **Vanilla** não há componente para introspectar (mesma situação) e o snippet vem do `outerHTML`: configuração que só existe no closure da factory não muda o HTML, então a caixa de código congela — a factory precisa registrar a config na raiz como `data-*`.
 
 **2c. Actions do Playground**: componentes interativos DEVEM ter handlers populando a aba Actions. Verifique:
 - Todo callback documentado nos props (onValueChange, onCheckedChange, onOpenChange, onPressedChange, onChange, onClick, onSelect, etc.) está em `meta.args` com `fn()` de `storybook/test`
@@ -242,6 +254,16 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | Playground tem callbacks com fn() | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A | ✅/❌/N/A |
 | Variações com controls.disable | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Variações com actions.disable | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+
+### API Reference
+| Check | React | Vue | Svelte | Vanilla |
+|---|---|---|---|---|
+| argTypes cobre a API real da lib | ✅ N/N | ✅ N/N | ✅ N/N | ✅ N/N |
+| table.type + table.defaultValue preenchidos | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Sem control morto (control:false onde não encaminha) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| Snippet acompanha os controls | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+
+> Use ratio `declaradas/props reais da lib` na primeira linha.
 
 ### Cobertura Documentada vs Implementada
 | Categoria | React | Vue | Svelte | Vanilla |

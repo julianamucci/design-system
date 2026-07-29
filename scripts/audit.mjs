@@ -467,6 +467,119 @@ function splitStories(content) {
   return out;
 }
 
+/**
+ * Corpo do primeiro bloco `<nome>: {` do conteúdo, casando chaves. Usado para
+ * isolar `argTypes` e `args` do meta sem depender de indentação.
+ */
+function blockBody(content, name) {
+  const start = content.search(new RegExp(`(^|[\\s,{])${name}\\s*:\\s*\\{`, 'm'));
+  if (start < 0) return null;
+  const open = content.indexOf('{', start);
+  let depth = 0;
+  for (let i = open; i < content.length; i++) {
+    const c = content[i];
+    if (c === '{') depth++;
+    else if (c === '}' && --depth === 0) return content.slice(open + 1, i);
+  }
+  return null;
+}
+
+/**
+ * Pares [chave, valor] de primeiro nível de um corpo de objeto literal.
+ * Precisa varrer em profundidade: uma busca textual por `<chave>:` acharia a
+ * ocorrência aninhada (`table: { defaultValue: … }`) antes da de primeiro nível.
+ */
+function topLevelEntries(body) {
+  if (!body) return [];
+  const entries = [];
+  let depth = 0, inStr = null, pendingKey = null, valueStart = 0;
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i];
+    if (inStr) { if (c === inStr && body[i - 1] !== '\\') inStr = null; continue; }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; continue; }
+    if ('{(['.includes(c)) depth++;
+    else if ('})]'.includes(c)) depth--;
+    else if (c === ':' && depth === 0) {
+      const before = body.slice(0, i).match(/([A-Za-z_$][\w$]*|"[^"]+"|'[^']+')\s*$/);
+      if (before) {
+        if (pendingKey) entries.push([pendingKey, body.slice(valueStart, i - before[0].length)]);
+        pendingKey = before[1].replace(/['"]/g, '');
+        valueStart = i + 1;
+      }
+    }
+  }
+  if (pendingKey) entries.push([pendingKey, body.slice(valueStart)]);
+  return entries;
+}
+
+const topLevelKeys = (body) => topLevelEntries(body).map(([k]) => k);
+
+/**
+ * Aba "API Reference" e painel Controls saem do mesmo `argTypes` do meta.
+ * Estas regras pegam as três formas de quebrá-los que apareceram na revisão do
+ * Accordion — todas silenciosas: a página renderiza, o teste passa, e só quem
+ * abre a aba percebe.
+ */
+function auditStoryApiReference(slug) {
+  const violations = [];
+  const CONTROLLESS_RX = /control\s*:\s*(false|\{\s*type\s*:\s*(false|null)\s*\})/;
+
+  for (const stack of STACKS) {
+    const metaRx = new RegExp(`^${slug.toLowerCase()}\\.stories\\.(ts|tsx)$`);
+    const files = globStack(stack, 'components/ui', ['.ts', '.tsx']).filter((f) =>
+      metaRx.test(basename(f).toLowerCase()),
+    );
+
+    for (const file of files) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+      const meta = content.slice(0, content.search(/^export const /m) >>> 0 || content.length);
+
+      const argTypesBody = blockBody(meta, 'argTypes');
+      const argsBody = blockBody(meta, 'args');
+      if (!argTypesBody && !argsBody) continue;
+
+      const argTypeEntries = topLevelEntries(argTypesBody);
+      const argTypes = argTypeEntries.map(([k]) => k);
+      const args = topLevelKeys(argsBody);
+
+      // 1. Em args mas não em argTypes → prop fora da tabela da API Reference.
+      for (const key of args) {
+        if (argTypes.includes(key)) continue;
+        violations.push({
+          category: 'quality', severity: 'low', slug, stack, file: rel,
+          rule: 'arg_without_argtype',
+          message: `"${key}" está em args sem entrada em argTypes — não aparece na aba API Reference`,
+        });
+      }
+
+      // 2. argType com control mas sem valor inicial → control vazio no painel.
+      for (const [key, entry] of argTypeEntries) {
+        if (args.includes(key)) continue;
+        if (CONTROLLESS_RX.test(entry)) continue; // control: false é documentação
+        violations.push({
+          category: 'quality', severity: 'low', slug, stack, file: rel,
+          rule: 'argtype_without_arg',
+          message: `argType "${key}" tem control mas nenhum valor inicial em args — o control aparece vazio`,
+        });
+      }
+
+      // 3. Snippet estático: `docs.source.code` congela a caixa de código e ainda
+      //    faz o skipSourceRender do renderer pular o gerador dinâmico.
+      if (/source\s*:\s*\{[^}]*\bcode\s*:/.test(content)) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack, file: rel,
+          rule: 'static_source_code',
+          message: 'docs.source.code é string fixa — o snippet não acompanha os controls; usar docs.source.transform',
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
 function auditStoryQuality(slug) {
   const violations = [];
   /** story → { stack → nº de expects } — base da comparação cross-stack. */
@@ -716,6 +829,7 @@ function auditQuality(slug) {
   }
 
   violations.push(...auditStoryQuality(slug));
+  violations.push(...auditStoryApiReference(slug));
 
   return violations;
 }
