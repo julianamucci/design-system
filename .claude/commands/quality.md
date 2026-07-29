@@ -40,6 +40,24 @@ Critérios por categoria de componente: ver `docs/shared/skill-refs/test-criteri
 
 ## Processo de Auditoria
 
+### Passo 0 — Audit determinístico (sempre)
+
+```bash
+node scripts/audit.mjs <slug> --category quality --json
+```
+
+Cobre em ms o que é grep+regex, e é o que o pipeline usa para decidir se dispara esta skill:
+
+| Regra | O que pega |
+|---|---|
+| `play_without_assertion` | bloco `play` sem nenhum `expect()` |
+| `noop_assertion` | asserção que não pode falhar (`length >= 0`, `toBeTruthy` no container) |
+| `coverage_divergence` | mesma story com cobertura desproporcional entre stacks |
+| `legacy_class_in_story` | classe sem prefixo `nds-` em story — resíduo inerte da migração |
+| `missing_section` · `substory_no_play` · `a11y_disabled` · `translation_literal_prop` | estrutura e conteúdo |
+
+O script julga forma; esta skill julga **conteúdo**: se a asserção verifica o comportamento certo, se a story demonstra o mesmo caso da docs page, se o texto está correto. Passos abaixo assumem o scan já rodado — não re-detecte o que ele já achou.
+
 ### Passo 1 — Coletar arquivos em paralelo (1 turno)
 
 **Glob** (4 paralelos): stories de cada stack — `<slug>*.stories.*`
@@ -88,11 +106,25 @@ Após coletar, **não releia** nada nos passos seguintes.
 **2e. Play functions — cobertura por story**:
 - **Toda story exportada deve ter `play`**. Sem play: a aba Interactions fica vazia E o test-runner pula a story
 - Verifique para CADA arquivo: `grep -c "^export const " <story>` deve igualar `grep -c "  play:" <story>`
+- **Contar `play` NÃO basta — a asserção precisa poder falhar.** Presença de bloco `play` é o que este check media antes, e por isso 267 asserções vazias sobreviveram no repo. Rejeite:
+  - `expect(algo.length).toBeGreaterThanOrEqual(0)` — comprimento nunca é negativo, passa com a tela vazia
+  - `expect(canvasElement).toBeTruthy()` / `expect(canvasElement.firstElementChild).toBeTruthy()` — só prova que algo renderizou
+  - `play` sem nenhum `expect(`
+  - Substitua por verificação do comportamento que a story demonstra: atributo ARIA após interação, texto do conteúdo, foco, estado do irmão.
 - Playground: presença, clique, disabled, focus, Enter/Space. Disabled verifica `toBeDisabled()` (ou `aria-disabled` em base-ui)
 - Sub-stories (estados, modos, composições): no mínimo um teste de "renderiza e responde a interação básica"
 - Composições com ícones/badges: testar acessibilidade via `getByRole("button", { name: /text/ })` (validando que o texto, não o ícone, é a label acessível)
 
-**2f. a11y.disable**: nenhuma story sem comentário de justificativa.
+**2f. Cobertura equivalente entre as 4 stacks**:
+Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:
+
+| Story | react | vue | svelte | vanilla |
+|---|---|---|---|---|
+| ConteudoRico | 5 | 1 | 1 | 1 | ← divergência: as 3 são placeholder |
+
+Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 4 — a verificação também deve ser.
+
+**2g. a11y.disable**: nenhuma story sem comentário de justificativa.
 
 ---
 
@@ -120,7 +152,7 @@ Cada item DEVE ser verificável. Categorias:
 - "Contraste mínimo 4.5:1" → coberto pelo axe-core
 - "Focus ring visível" → coberto pelo axe-core + visual (Chromatic)
 - "ARIA correto" (aria-expanded, aria-checked, aria-selected, etc.) → DEVE ter `expect(el).toHaveAttribute("aria-...", "...")` em ao menos uma play function
-- "Navegação por teclado" → DEVE ter `userEvent.keyboard("{Enter}" / "{Space}" / "{ArrowDown}" / "{Escape}")` em play function
+- "Navegação por teclado" → verifique **CADA tecla documentada**, uma a uma. Não aceite a lista como alternativa: se `accessibility.keyboard` descreve Enter, Space, ArrowDown e ArrowUp, encontrar só `{Enter}` não cobre as setas. Foi assim que o Accordion documentou navegação por setas que nenhuma stack implementava.
 
 Ausência de ARIA/teclado verificável em play = bug (mesmo que axe-core cubra parcialmente).
 
@@ -160,6 +192,13 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 **3g. Tipografia + tabelas** (do Grep do Passo 1): zero `text-[9px]`/`text-[10px]` em corpo, zero tabelas dentro de `<ComponentDemo>`, zero wrappers com `overflow-hidden` (correto: `border rounded-xl overflow-x-auto p-4 shadow-sm`).
 
 **3h. Higiene `.nds-*`** (dos Greps do Passo 1): zero peso/tracking redundante sobre `nds-text-h1..h4`, zero `nds-text-foreground` junto de `nds-text-body`, zero `nds-text-muted-foreground` em `<p class="nds-text-body">` de corpo, zero `style` inline em docs pages, `<h2>` sempre com `nds-text-h2`, `<Table>` sem wrapper de borda. Regras em `_dev-shared.md` §Higiene.
+
+**3i. Stories ↔ docs page — mesmo exemplo, mesmas classes**:
+Nenhum check anterior ligava os dois artefatos, e eles divergiram em silêncio: a mesma composição tinha 4 exemplos diferentes entre stacks e continha markup que já havia sido corrigido só na docs page. Verifique:
+- **Mesmo exemplo**: a story de cada variante/estado/composição demonstra o MESMO caso da seção correspondente da docs page (mesmos rótulos, mesmos dados). A story é o que o Chromatic fotografa; se divergir, a regressão visual protege outra coisa.
+- **Mesmas classes**: o markup da story usa as mesmas classes `nds-*` do exemplo da docs page.
+- **Vocabulário `nds-*`**: zero classe sem o prefixo em `*.stories.*`. Classes do Tailwind (`w-full`, `rounded-md`, `text-blue-500`, `min-h-[120px]`) não existem mais e são inertes — a story renderiza diferente do documentado sem nenhum erro.
+- **Consome o componente**: a story importa de `components/ui/<slug>`; nenhuma reimplementa markup próprio.
 
 ---
 

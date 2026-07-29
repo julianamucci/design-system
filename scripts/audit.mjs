@@ -413,6 +413,112 @@ function auditAnalyticsInfra() {
   return violations;
 }
 
+// ─── Qualidade: substância das play functions e das stories ─────────────────
+// A skill /quality verificava PRESENÇA de play function (contando `export const`
+// contra `play:`). Um play que asserta algo sempre-verdadeiro passava nesse
+// check — foi assim que 267 asserções no-op e 76 plays sem nenhum expect
+// sobreviveram no repo. Estas regras olham o CONTEÚDO.
+
+/** Asserções que não podem falhar — testam nada. */
+const NOOP_ASSERTION_RX =
+  /\.length\s*\)\s*\.toBeGreaterThanOrEqual\(\s*0\s*\)|(?:canvasElement|firstElementChild|container)\s*\)\s*\.(?:toBeTruthy|toBeDefined)\(\)/;
+
+/** Prefixos de classe legítimos fora do vocabulário `nds-`. */
+const ALLOWED_CLASS_RX = /^(nds-|sb-|storybook|dark$|light$)/;
+
+/** Sufixos de arquivo de story que denotam VARIAÇÃO do mesmo componente. */
+const STORY_VARIANT_SUFFIXES = [
+  'variantes', 'estados', 'composicoes', 'modos', 'tamanhos',
+  'layouts', 'configuracoes', 'tipos',
+];
+
+/** Divide o arquivo por `export const <Nome>` e devolve [nome, corpo]. */
+function splitStories(content) {
+  const out = [];
+  const parts = content.split(/^export const (\w+)/m);
+  for (let i = 1; i < parts.length; i += 2) out.push([parts[i], parts[i + 1] ?? '']);
+  return out;
+}
+
+function auditStoryQuality(slug) {
+  const violations = [];
+  /** story → { stack → nº de expects } — base da comparação cross-stack. */
+  const coverage = {};
+
+  for (const stack of STACKS) {
+    // Casa o slug EXATO seguido só de um sufixo de VARIAÇÃO conhecido. Um
+    // `startsWith` (ou `-[a-z]+` genérico) atribuiria alert-dialog-estados ao
+    // slug `alert`, reportando o mesmo arquivo sob dois componentes.
+    const storyRx = new RegExp(
+      `^${slug.toLowerCase()}(-(${STORY_VARIANT_SUFFIXES.join('|')}))?\\.stories\\.(ts|tsx)$`,
+    );
+    const storyFiles = globStack(stack, 'components/ui', ['.ts', '.tsx']).filter((f) =>
+      storyRx.test(basename(f).toLowerCase()),
+    );
+
+    for (const file of storyFiles) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      for (const [name, body] of splitStories(content)) {
+        if (!/\bplay:/.test(body)) continue;
+        const expects = (body.match(/\bexpect\(/g) || []).length;
+        (coverage[name] ??= {})[stack] = expects;
+
+        if (expects === 0) {
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: rel, rule: 'play_without_assertion',
+            message: `story ${name}: play function sem nenhum expect() — não verifica nada`,
+          });
+        } else if (NOOP_ASSERTION_RX.test(body) && expects <= 2) {
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: rel, rule: 'noop_assertion',
+            message: `story ${name}: asserção que nunca falha (length>=0 / toBeTruthy no container) — substituir por verificação real`,
+          });
+        }
+      }
+
+      // Classes fora do vocabulário nds-* — resíduo da migração do Tailwind,
+      // inertes em runtime. Ignora interpolação (`${...}`), que não é literal.
+      const seen = new Set();
+      for (const m of content.matchAll(/class(?:Name)?[:=]\s*["'`]([^"'`]+)["'`]/g)) {
+        if (m[1].includes('${')) continue;
+        for (const cls of m[1].split(/\s+/)) {
+          if (!cls || ALLOWED_CLASS_RX.test(cls) || seen.has(cls)) continue;
+          seen.add(cls);
+          violations.push({
+            category: 'quality', severity: 'low', slug, stack,
+            file: rel, rule: 'legacy_class_in_story',
+            message: `classe "${cls}" não existe no CSS nds-* — resíduo da migração, sem efeito em runtime`,
+          });
+        }
+      }
+    }
+  }
+
+  // Mesma story com cobertura desproporcional entre stacks: uma testa de
+  // verdade, outra tem placeholder. Foi o sintoma visível das no-op.
+  for (const [name, byStack] of Object.entries(coverage)) {
+    const counts = Object.values(byStack);
+    if (counts.length < 2) continue;
+    const min = Math.min(...counts);
+    const max = Math.max(...counts);
+    if (min <= 1 && max >= 3) {
+      const detail = Object.entries(byStack).map(([s, n]) => `${s}:${n}`).join(' ');
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack: 'cross-stack',
+        file: `stories/${slug}`, rule: 'coverage_divergence',
+        message: `story ${name} tem cobertura desproporcional entre stacks (${detail}) — a de menor contagem provavelmente é placeholder`,
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
   const REQUIRED_SECTIONS = [
@@ -518,6 +624,8 @@ function auditQuality(slug) {
 
     visit(json, []);
   }
+
+  violations.push(...auditStoryQuality(slug));
 
   return violations;
 }
