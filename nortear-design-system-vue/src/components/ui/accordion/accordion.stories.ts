@@ -16,20 +16,60 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
+  // A aba "API Reference" combina o docgen com estes argTypes. Declarar a API
+  // real evita que a tabela saia com duas linhas. Props sem control são
+  // documentação: o template do Playground as fixa depois do v-bind, então
+  // control ativo aqui viraria controle morto.
   argTypes: {
     type: {
       control: 'select',
       options: ['single', 'multiple'],
       description: 'Define se um ou múltiplos itens podem estar abertos.',
+      table: { type: { summary: "'single' | 'multiple'" }, defaultValue: { summary: '—' } },
     },
     collapsible: {
       control: 'boolean',
-      description: 'Permite fechar o item ativo (apenas com type=single).',
+      description: 'Permite fechar o item ativo (apenas com modo único).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Desabilita todos os itens de uma vez.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    orientation: {
+      control: 'select',
+      options: ['vertical', 'horizontal'],
+      description: 'Eixo de navegação por teclado.',
+      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
+    },
+    unmountOnHide: {
+      control: 'boolean',
+      description: 'Desmonta o conteúdo ao fechar. Desligue para manter o painel no DOM.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    modelValue: {
+      control: false,
+      description: 'Item(ns) aberto(s) no modo controlado, via v-model.',
+      table: { type: { summary: 'string | string[]' } },
+    },
+    defaultValue: {
+      control: false,
+      description: 'Item(ns) aberto(s) inicialmente. O Playground fixa "item-1".',
+      table: { type: { summary: 'string | string[]' } },
+    },
+    asChild: {
+      control: false,
+      description: 'Compõe no elemento filho em vez de renderizar o container próprio.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
   },
   args: {
     type: 'single',
     collapsible: true,
+    disabled: false,
+    orientation: 'vertical',
+    unmountOnHide: true,
   },
 } satisfies Meta<typeof Accordion>;
 

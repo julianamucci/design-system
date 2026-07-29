@@ -164,6 +164,103 @@ type AccordionProps = Accordion.RootProps & {
   class?: string;
 };`;
 
+  // ─── Props: override stack-específico (bits-ui) ─────────────────────────────
+  // A tabela compartilhada em translations.json descreve a API do Radix/shadcn.
+  // O bits-ui diverge em quatro pontos, e a tabela precisa refletir o que esta
+  // stack realmente aceita — o `interfaceCode` acima já documentava a
+  // divergência, mas a tabela continuava listando props inexistentes:
+  //   - não há `collapsible` nem `defaultValue`; o valor inicial vai em `value`,
+  //     que é bindable (`bind:value`);
+  //   - composição no filho é o snippet `child`, não `asChild` — e os wrappers de
+  //     Trigger e Content usam `WithoutChild`, então nem `child` expõem;
+  //   - a prop de classe é `class`, não `className`;
+  //   - `forceMount` existe no Content, mas com default `true`.
+
+  type PropRow = { name: string; type: string; defaultValue: string; required: string; description: string };
+  type Loc = Record<string, string>;
+
+  /** Props da tabela compartilhada que o bits-ui não tem. */
+  const ABSENT_PROPS = new Set(['collapsible', 'defaultValue', 'asChild']);
+
+  const pick = (m: Loc) => m[$locale] ?? m['pt-BR'];
+  const no = () => pick({ 'pt-BR': 'Não', en: 'No', es: 'No' });
+
+  /** Props que existem no bits-ui e faltam na tabela compartilhada. */
+  const EXTRA_PROPS: Record<string, Array<{ name: string; type: string; defaultValue: string; description: Loc }>> = {
+    accordion: [
+      { name: 'disabled', type: 'boolean', defaultValue: 'false', description: {
+        'pt-BR': 'Desabilita todos os itens de uma vez.',
+        en: 'Disables every item at once.',
+        es: 'Deshabilita todos los ítems a la vez.' } },
+      { name: 'loop', type: 'boolean', defaultValue: 'true', description: {
+        'pt-BR': 'Faz a navegação por setas voltar ao primeiro item após o último.',
+        en: 'Wraps arrow-key navigation from the last item back to the first.',
+        es: 'Hace que la navegación por flechas vuelva al primer ítem tras el último.' } },
+      { name: 'orientation', type: "'vertical' | 'horizontal'", defaultValue: "'vertical'", description: {
+        'pt-BR': 'Eixo de navegação por teclado.',
+        en: 'Keyboard navigation axis.',
+        es: 'Eje de navegación por teclado.' } },
+    ],
+    trigger: [
+      { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', defaultValue: '3', description: {
+        'pt-BR': 'Nível do cabeçalho que envolve o gatilho, aplicado em aria-level.',
+        en: 'Heading level wrapping the trigger, applied to aria-level.',
+        es: 'Nivel del encabezado que envuelve el disparador, aplicado en aria-level.' } },
+    ],
+    content: [
+      { name: 'hiddenUntilFound', type: 'boolean', defaultValue: 'false', description: {
+        'pt-BR': 'Permite que a busca nativa do navegador expanda o conteúdo fechado. Tem precedência sobre forceMount.',
+        en: "Lets the browser's native find-in-page expand collapsed content. Takes precedence over forceMount.",
+        es: 'Permite que la búsqueda nativa del navegador expanda el contenido cerrado. Tiene precedencia sobre forceMount.' } },
+    ],
+  };
+
+  /** Ajustes de nome/tipo/default sobre linhas que existem nas duas APIs. */
+  const ADJUSTED: Record<string, { name?: string; type?: string; defaultValue?: string; description?: Loc }> = {
+    className: { name: 'class' },
+    value: {
+      type: 'string | string[]',
+      defaultValue: "'' | []",
+      description: {
+        'pt-BR': 'Item(ns) aberto(s). Bindable com <code>bind:value</code> — também define o estado inicial.',
+        en: 'Open item(s). Bindable via <code>bind:value</code> — also sets the initial state.',
+        es: 'Ítem(s) abierto(s). Bindable con <code>bind:value</code> — también define el estado inicial.',
+      },
+    },
+    forceMount: { defaultValue: 'true' },
+  };
+
+  function buildPropRows(group: string): PropRow[] {
+    const raw = (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[$locale]?.props?.[group]?.items ?? {};
+    const rows = Object.values(raw)
+      .filter((v) => !ABSENT_PROPS.has(v.name))
+      .map((v) => {
+        const adj = ADJUSTED[v.name];
+        return {
+          name: adj?.name ?? v.name,
+          type: adj?.type ?? v.type,
+          defaultValue: adj?.defaultValue ?? v.default,
+          required: v.required,
+          description: stripHtml(adj?.description ? pick(adj.description) : v.description),
+        };
+      });
+    const extra = (EXTRA_PROPS[group] ?? []).map((e) => ({
+      name: e.name,
+      type: e.type,
+      defaultValue: e.defaultValue,
+      required: no(),
+      description: pick(e.description),
+    }));
+    return [...rows, ...extra];
+  }
+
+  const propRows = $derived({
+    accordion: buildPropRows('accordion'),
+    item: buildPropRows('item'),
+    trigger: buildPropRows('trigger'),
+    content: buildPropRows('content'),
+  });
+
   const demoItems = $derived([
     { value: 'q1', q: $tStore('demonstration.labels.q1'), a: $tStore('demonstration.labels.a1') },
     { value: 'q2', q: $tStore('demonstration.labels.q2'), a: $tStore('demonstration.labels.a2') },
@@ -190,7 +287,7 @@ type AccordionProps = Accordion.RootProps & {
           <Accordion type="single" value="q1" class="nds-max-w-lg">
             {#each demoItems as item (item.value)}
               <AccordionItem value={item.value}>
-                <AccordionTrigger onclick={(e) => handleDemoTriggerClick(e, item.q)}>
+                <AccordionTrigger onclick={(e: MouseEvent) => handleDemoTriggerClick(e, item.q)}>
                   {item.q}
                 </AccordionTrigger>
                 <AccordionContent>{item.a}</AccordionContent>
@@ -654,9 +751,7 @@ type AccordionProps = Accordion.RootProps & {
               required: $tStore('props.accordion.required'),
               description: $tStore('props.accordion.description'),
             },
-            items: Object.values(
-              (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.props?.accordion?.items ?? {}
-            ).map(v => ({ name: v.name, type: v.type, defaultValue: v.default, required: v.required, description: stripHtml(v.description) })),
+            items: propRows.accordion,
           },
           {
             title: $tStore('props.item.title'),
@@ -667,9 +762,7 @@ type AccordionProps = Accordion.RootProps & {
               required: $tStore('props.accordion.required'),
               description: $tStore('props.accordion.description'),
             },
-            items: Object.values(
-              (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.props?.item?.items ?? {}
-            ).map(v => ({ name: v.name, type: v.type, defaultValue: v.default, required: v.required, description: stripHtml(v.description) })),
+            items: propRows.item,
           },
           {
             title: $tStore('props.trigger.title'),
@@ -680,9 +773,7 @@ type AccordionProps = Accordion.RootProps & {
               required: $tStore('props.accordion.required'),
               description: $tStore('props.accordion.description'),
             },
-            items: Object.values(
-              (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.props?.trigger?.items ?? {}
-            ).map(v => ({ name: v.name, type: v.type, defaultValue: v.default, required: v.required, description: stripHtml(v.description) })),
+            items: propRows.trigger,
           },
           {
             title: $tStore('props.content.title'),
@@ -693,9 +784,7 @@ type AccordionProps = Accordion.RootProps & {
               required: $tStore('props.accordion.required'),
               description: $tStore('props.accordion.description'),
             },
-            items: Object.values(
-              (accordionTranslations as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.props?.content?.items ?? {}
-            ).map(v => ({ name: v.name, type: v.type, defaultValue: v.default, required: v.required, description: stripHtml(v.description) })),
+            items: propRows.content,
           },
         ]}
         interfaceCode={interfaceCode}
@@ -712,7 +801,7 @@ type AccordionProps = Accordion.RootProps & {
           description: $tStore('tokens.table.part'),
         }}
         items={Object.values(
-          (accordionTranslations as Record<string, Record<string, Record<string, Record<string, string>>>>)[$locale]?.tokens?.items ?? {}
+          (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.tokens?.items ?? {}
         ).map(v => ({ token: v.token, value: v.class, description: v.part }))}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeCustomization}

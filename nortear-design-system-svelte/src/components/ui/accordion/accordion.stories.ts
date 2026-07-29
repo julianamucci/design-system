@@ -13,15 +13,54 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
+  // A aba "API Reference" é montada só a partir destes argTypes: o docgen do
+  // Svelte está desligado no .storybook/main.ts (analisar ~447 .svelte custava
+  // ~4,6 min de build). Sem declarar a API aqui, a tabela sai com uma linha só.
+  // Props sem control são documentação: o wrapper da story não as encaminha,
+  // e control ativo sem fiação vira controle morto.
   argTypes: {
     type: {
       control: 'select',
       options: ['single', 'multiple'],
       description: 'Define se um ou múltiplos itens podem estar abertos.',
+      table: { type: { summary: "'single' | 'multiple'" }, defaultValue: { summary: '—' } },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Desabilita todos os itens de uma vez.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    loop: {
+      control: 'boolean',
+      description: 'Faz a navegação por setas voltar ao primeiro item após o último.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    value: {
+      control: false,
+      description:
+        'Item(ns) aberto(s). Bindable com bind:value — também define o estado inicial, já que não existe defaultValue.',
+      table: { type: { summary: 'string | string[]' }, defaultValue: { summary: "'' | []" } },
+    },
+    onValueChange: {
+      control: false,
+      description: 'Callback disparado quando o valor muda.',
+      table: { type: { summary: '(value: string | string[]) => void' } },
+    },
+    orientation: {
+      control: false,
+      description: 'Eixo de navegação por teclado.',
+      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
+      table: { type: { summary: 'string' } },
     },
   },
   args: {
     type: 'single',
+    disabled: false,
+    loop: true,
   },
 } satisfies Meta<typeof Accordion>;
 
@@ -33,6 +72,8 @@ export const Playground: Story = {
     Component: AccordionStory,
     props: {
       type: args.type,
+      disabled: args.disabled,
+      loop: args.loop,
       defaultValue: 'item-1',
     },
   }),

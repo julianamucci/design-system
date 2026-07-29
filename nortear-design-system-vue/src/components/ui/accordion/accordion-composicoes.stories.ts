@@ -30,33 +30,33 @@ export const ComIconeNoTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               <Info class="nds-icon nds-text-info nds-shrink-0" aria-hidden="true" />
-              Informações gerais
+              Informação
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            Ícone à esquerda do label. Use aria-hidden no ícone para não poluir leitores de tela.
+            Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="aviso">
+        <AccordionItem value="warning">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               <AlertTriangle class="nds-icon nds-text-warning nds-shrink-0" aria-hidden="true" />
-              Atenção — leia antes de continuar
+              Aviso
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            Ícones contextuais reforçam a semântica do item sem depender apenas de cor.
+            Sinalize categorias distintas com ícones semânticos. O texto do trigger já descreve para leitores de tela.
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="sucesso">
+        <AccordionItem value="success">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               <CheckCircle class="nds-icon nds-text-success nds-shrink-0" aria-hidden="true" />
-              Configuração concluída
+              Confirmação
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            Use ícones semânticos (info, warning, success) para reforçar o estado.
+            Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -72,14 +72,16 @@ export const ComIconeNoTrigger: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Trigger é acessível pelo texto (não pelo ícone)', async () => {
-      const trigger = canvas.getAllByRole('button')[0];
+    await step('Trigger é acessível pelo texto, não pelo ícone', async () => {
+      // Busca pelo nome acessível: se o ícone vazasse para a árvore de
+      // acessibilidade, o nome não seria exatamente o rótulo e isto falharia.
+      const trigger = canvas.getByRole('button', { name: /^informação$/i });
       await expect(trigger).toBeInTheDocument();
-      await expect(trigger.textContent?.trim()).not.toBe('');
+      await expect(trigger.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('Clicar no trigger abre o item correspondente', async () => {
-      const trigger = canvas.getAllByRole('button')[0];
+      const trigger = canvas.getByRole('button', { name: /^informação$/i });
       await userEvent.click(trigger);
       await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
     });

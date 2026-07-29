@@ -16,14 +16,64 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
+  // A aba "API Reference" combina o docgen com estes argTypes. Declarar a API
+  // real evita que a tabela saia com uma linha só. Props sem control são
+  // documentação: o `render` do Playground as fixa depois do spread, então
+  // control ativo aqui viraria controle morto.
   argTypes: {
     multiple: {
       control: "boolean",
-      description: "Permite múltiplos itens abertos ao mesmo tempo (base-ui).",
+      description: "Permite múltiplos itens abertos ao mesmo tempo.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita todos os itens de uma vez.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
+    },
+    orientation: {
+      control: "select",
+      options: ["vertical", "horizontal"],
+      description: "Eixo de navegação por teclado.",
+      table: { type: { summary: "'vertical' | 'horizontal'" }, defaultValue: { summary: "'vertical'" } },
+    },
+    keepMounted: {
+      control: "boolean",
+      description: "Mantém os painéis montados quando fechados.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
+    },
+    value: {
+      control: false,
+      description: "Item(ns) aberto(s) no modo controlado.",
+      table: { type: { summary: "string | string[]" } },
+    },
+    defaultValue: {
+      control: false,
+      description: "Item(ns) aberto(s) inicialmente. O Playground fixa ['item-1'].",
+      table: { type: { summary: "string | string[]" } },
+    },
+    onValueChange: {
+      control: false,
+      description: "Callback disparado quando o valor muda.",
+      table: { type: { summary: "(value, eventDetails) => void" } },
+    },
+    render: {
+      control: false,
+      description:
+        "Elemento que substitui o container. Nesta stack a composição no filho é render — não existe asChild.",
+      table: { type: { summary: "ReactElement" } },
+    },
+    className: {
+      control: false,
+      description: "Classes adicionais no elemento raiz.",
+      table: { type: { summary: "string" } },
     },
   },
   args: {
     multiple: false,
+    disabled: false,
+    orientation: "vertical",
+    keepMounted: false,
     onValueChange: fn(),
   },
 } satisfies Meta<typeof Accordion>;

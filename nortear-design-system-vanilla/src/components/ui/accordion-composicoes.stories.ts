@@ -94,14 +94,16 @@ export const ComIconeNoTrigger: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Trigger é acessível pelo texto (não pelo ícone)', async () => {
-      const trigger = canvas.getAllByRole('button')[0];
+    await step('Trigger é acessível pelo texto, não pelo ícone', async () => {
+      // Busca pelo nome acessível: se o ícone vazasse para a árvore de
+      // acessibilidade, o nome não seria exatamente o rótulo e isto falharia.
+      const trigger = canvas.getByRole('button', { name: /^informação$/i });
       await expect(trigger).toBeInTheDocument();
-      await expect(trigger.textContent?.trim()).not.toBe('');
+      await expect(trigger.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('Clicar no trigger abre o item correspondente', async () => {
-      const trigger = canvas.getAllByRole('button')[0];
+      const trigger = canvas.getByRole('button', { name: /^informação$/i });
       await userEvent.click(trigger);
       await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
     });

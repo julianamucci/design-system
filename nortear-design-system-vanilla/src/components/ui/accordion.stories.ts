@@ -9,6 +9,12 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 type AccordionArgs = {
   type: 'single' | 'multiple';
   collapsible: boolean;
+  // Documentadas na aba "API Reference" sem control — o Playground não as
+  // encaminha para a factory, mas fazem parte de AccordionOptions.
+  defaultValue?: AccordionOptions['defaultValue'];
+  onValueChange?: AccordionOptions['onValueChange'];
+  items?: AccordionOptions['items'];
+  class?: string;
 };
 
 const meta: Meta<AccordionArgs> = {
@@ -17,15 +23,41 @@ const meta: Meta<AccordionArgs> = {
   parameters: {
     docs: { page: withAutoDocsTab(createAccordionDocs) },
   },
+  // Esta stack não tem docgen (não há componente de framework para introspectar):
+  // a aba "API Reference" é montada só a partir destes argTypes. Props sem
+  // control são documentação — o Playground não as encaminha para a factory,
+  // e control ativo sem fiação viraria controle morto.
   argTypes: {
     type: {
       control: 'select',
       options: ['single', 'multiple'],
-      description: 'Modo de expansão: um item ou múltiplos simultaneamente',
+      description: 'Modo de expansão: um item ou múltiplos simultaneamente.',
+      table: { type: { summary: "'single' | 'multiple'" }, defaultValue: { summary: "'single'" } },
     },
     collapsible: {
       control: 'boolean',
-      description: 'Permite fechar o item aberto (apenas type="single")',
+      description: 'Permite fechar o item aberto (apenas no modo único).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    defaultValue: {
+      control: false,
+      description: 'Item(ns) aberto(s) inicialmente. O Playground começa com todos fechados.',
+      table: { type: { summary: 'string | string[]' } },
+    },
+    onValueChange: {
+      control: false,
+      description: 'Callback disparado quando o valor muda.',
+      table: { type: { summary: '(value: string | string[]) => void' } },
+    },
+    items: {
+      control: false,
+      description: 'Itens do accordion. Cada um com value, trigger, content e disabled opcional.',
+      table: { type: { summary: 'Array<{ value; trigger; content; disabled? }>' } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais no elemento raiz.',
+      table: { type: { summary: 'string' } },
     },
   },
   args: {

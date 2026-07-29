@@ -15,33 +15,33 @@
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
         <Info class="nds-icon nds-text-info nds-shrink-0" aria-hidden="true" />
-        Informações gerais
+        Informação
       </span>
     </AccordionTrigger>
     <AccordionContent>
-      Ícone à esquerda do label. Use aria-hidden no ícone para não poluir leitores de tela.
+      Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.
     </AccordionContent>
   </AccordionItem>
-  <AccordionItem value="aviso">
+  <AccordionItem value="warning">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
         <AlertTriangle class="nds-icon nds-text-warning nds-shrink-0" aria-hidden="true" />
-        Atenção — leia antes de continuar
+        Aviso
       </span>
     </AccordionTrigger>
     <AccordionContent>
-      Ícones contextuais reforçam a semântica do item sem depender apenas de cor.
+      Sinalize categorias distintas com ícones semânticos. O texto do trigger já descreve para leitores de tela.
     </AccordionContent>
   </AccordionItem>
-  <AccordionItem value="sucesso">
+  <AccordionItem value="success">
     <AccordionTrigger>
       <span class="nds-cluster" data-spacing="sm">
         <CheckCircle class="nds-icon nds-text-success nds-shrink-0" aria-hidden="true" />
-        Configuração concluída
+        Confirmação
       </span>
     </AccordionTrigger>
     <AccordionContent>
-      Use ícones semânticos (info, warning, success) para reforçar o estado.
+      Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.
     </AccordionContent>
   </AccordionItem>
 </Accordion>
