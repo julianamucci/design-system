@@ -3,6 +3,7 @@
  * Consome apenas custom properties de tokens.css + themes/*.css.
  * Ordem de import preservada da stack vanilla (cascade-sensível). */
 
+@import "./reset.css";
 @import "./layout.css";
 @import "./typography.css";
 @import "./colors.css";

@@ -18,13 +18,6 @@
  */
 
 .nds-alert {
-  /* O projeto não tem reset global de box-sizing, então vale o content-box
-     padrão do navegador: `width: 100%` mede só a caixa de conteúdo e os 32px de
-     padding-inline mais os 2px de borda saem POR FORA. O card ficava 34px mais
-     largo que o container e produzia rolagem horizontal — visível na seção
-     "Notas de implementação" das docs pages, onde o alert ocupa a largura toda.
-     Ver a story TokenIndivisivel em alert-composicoes. */
-  box-sizing: border-box;
   --alert-bg: hsl(var(--card));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));

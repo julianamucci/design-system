@@ -1,0 +1,24 @@
+/*
+ * ─── Reset ───────────────────────────────────────────────────────────────────
+ * Primeiro import do index.css: qualquer componente pode sobrescrever depois.
+ *
+ * box-sizing: o CSS `.nds-*` foi escrito assumindo border-box — há 28 regras
+ * que combinam `width: 100%` com padding, e todas contavam com o padding
+ * cabendo DENTRO da largura declarada. Sem este reset valia o content-box
+ * padrão do navegador, e cada uma delas estourava o container pelo tamanho do
+ * próprio padding mais a borda. O caso que apareceu primeiro foi o .nds-alert
+ * na seção "Notas de implementação" das docs pages: 34px de sobra e rolagem
+ * horizontal nas telas estreitas (ver a story TokenIndivisivel em
+ * alert-composicoes).
+ *
+ * Seletor universal, especificidade 0 — perde para qualquer regra de
+ * componente. O Storybook se defende onde precisa declarando box-sizing
+ * explicitamente nos próprios elementos (ex.: o tooltip do painel de docs),
+ * e declaração explícita ganha do reset.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
