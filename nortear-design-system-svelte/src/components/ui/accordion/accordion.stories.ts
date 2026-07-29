@@ -37,8 +37,9 @@ const meta = {
     },
     value: {
       control: false,
-      description:
-        'Item(ns) aberto(s). Bindable com bind:value — também define o estado inicial, já que não existe defaultValue.',
+      // Não repete aqui por que não existe defaultValue: a tabela de props da
+      // docs page é o único lugar que explica as ausências desta stack.
+      description: 'Item(ns) aberto(s), bindable com bind:value. Define também o estado inicial.',
       table: { type: { summary: 'string | string[]' }, defaultValue: { summary: "'' | []" } },
     },
     onValueChange: {
@@ -85,7 +86,6 @@ export const Playground: Story = {
     AccordionTrigger,
   } from "@/components/ui/accordion";
 
-  // bits-ui não tem defaultValue: o valor inicial vai no \`value\` bindable.
   let value = $state("item-1");
 </script>
 
@@ -112,7 +112,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Item 1 começa aberto (defaultValue)', async () => {
+    await step('Item 1 começa aberto', async () => {
       const triggers = canvas.getAllByRole('button');
       await waitFor(
         () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'),
@@ -159,7 +159,7 @@ export const Playground: Story = {
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
     });
 
-    await step('Space colapsa item aberto (type=single é sempre collapsible)', async () => {
+    await step('Space colapsa item aberto', async () => {
       const triggers = canvas.getAllByRole('button');
       triggers[2].focus();
       await userEvent.keyboard(' ');

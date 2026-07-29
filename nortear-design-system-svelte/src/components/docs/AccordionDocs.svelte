@@ -154,27 +154,25 @@
   border-color: hsl(var(--border) / 60%);
 }`;
 
-  const interfaceCode = `// Accordion (Svelte 5 + Bits UI)
-// Divergências: bits-ui não expõe \`collapsible\` como prop separada
-// (type="single" é sempre collapsible por design) nem \`defaultValue\` —
-// o valor inicial vai em \`value\`, que segue bindable.
-type AccordionProps = Accordion.RootProps & {
-  type: 'single' | 'multiple';
-  value?: string | string[];
+  // Bloco de tipo, não de argumentação: a divergência em relação a outras
+  // stacks (ausência de collapsible/defaultValue) é explicada uma única vez,
+  // na linha correspondente da tabela de props — ver ADJUSTED abaixo.
+  const interfaceCode = `// Accordion (raiz) — bits-ui
+type AccordionProps = {
+  type: 'single' | 'multiple';               // obrigatório
+  value?: string | string[];                 // bindable
+  onValueChange?: (value: string | string[]) => void;
+  disabled?: boolean;                        // default: false
+  loop?: boolean;                            // default: true
+  orientation?: 'vertical' | 'horizontal';   // default: 'vertical'
   class?: string;
 };`;
 
   // ─── Props: override stack-específico (bits-ui) ─────────────────────────────
-  // A tabela compartilhada em translations.json descreve a API do Radix/shadcn.
-  // O bits-ui diverge em quatro pontos, e a tabela precisa refletir o que esta
-  // stack realmente aceita — o `interfaceCode` acima já documentava a
-  // divergência, mas a tabela continuava listando props inexistentes:
-  //   - não há `collapsible` nem `defaultValue`; o valor inicial vai em `value`,
-  //     que é bindable (`bind:value`);
-  //   - composição no filho é o snippet `child`, não `asChild` — e os wrappers de
-  //     Trigger e Content usam `WithoutChild`, então nem `child` expõem;
-  //   - a prop de classe é `class`, não `className`;
-  //   - `forceMount` existe no Content, mas com default `true`.
+  // A tabela compartilhada em translations.json descreve a API do Radix/shadcn,
+  // então listava props que esta stack não tem. O que sai e o que entra está em
+  // ABSENT_PROPS / EXTRA_PROPS / ADJUSTED abaixo; o texto exibido ao leitor vive
+  // só em ADJUSTED, para a explicação não se espalhar por vários lugares.
 
   type PropRow = { name: string; type: string; defaultValue: string; required: string; description: string };
   type Loc = Record<string, string>;
@@ -215,16 +213,32 @@ type AccordionProps = Accordion.RootProps & {
     ],
   };
 
-  /** Ajustes de nome/tipo/default sobre linhas que existem nas duas APIs. */
+  /**
+   * Ajustes de nome/tipo/default sobre linhas que existem nas duas APIs.
+   *
+   * Esta tabela é o ÚNICO lugar que explica as duas ausências desta stack:
+   * `collapsible` (na linha `type`) e `defaultValue` (na linha `value`). Cada
+   * fato aparece na linha onde o leitor vai procurá-lo — quem quer estado
+   * inicial olha `value`, quem quer fechar o item ativo olha `type`. O
+   * `interfaceCode` acima não repete, e a API Reference (argTypes na story)
+   * também não.
+   */
   const ADJUSTED: Record<string, { name?: string; type?: string; defaultValue?: string; description?: Loc }> = {
     className: { name: 'class' },
+    type: {
+      description: {
+        'pt-BR': 'Define se um ou múltiplos itens podem ser abertos simultaneamente. No modo único, fechar o item ativo é sempre permitido — não existe prop separada para isso.',
+        en: 'Defines whether one or multiple items can be open simultaneously. In single mode, closing the active item is always allowed — there is no separate prop for it.',
+        es: 'Define si uno o múltiples ítems pueden estar abiertos simultáneamente. En modo único, cerrar el ítem activo siempre está permitido — no existe una prop separada para eso.',
+      },
+    },
     value: {
       type: 'string | string[]',
       defaultValue: "'' | []",
       description: {
-        'pt-BR': 'Item(ns) aberto(s). Bindable com <code>bind:value</code> — também define o estado inicial.',
-        en: 'Open item(s). Bindable via <code>bind:value</code> — also sets the initial state.',
-        es: 'Ítem(s) abierto(s). Bindable con <code>bind:value</code> — también define el estado inicial.',
+        'pt-BR': 'Item(ns) aberto(s), bindable com <code>bind:value</code>. É também onde se define o estado inicial: não existe uma prop de valor padrão separada.',
+        en: 'Open item(s), bindable via <code>bind:value</code>. It is also where the initial state is set: there is no separate default-value prop.',
+        es: 'Ítem(s) abierto(s), bindable con <code>bind:value</code>. Es también donde se define el estado inicial: no existe una prop de valor predeterminado separada.',
       },
     },
     forceMount: { defaultValue: 'true' },
@@ -282,8 +296,6 @@ type AccordionProps = Accordion.RootProps & {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         {#snippet children()}
-          <!-- bits-ui não tem `defaultValue`: o valor inicial vai em `value`
-               (bindable), que o componente segue atualizando internamente. -->
           <Accordion type="single" value="q1" class="nds-max-w-lg">
             {#each demoItems as item (item.value)}
               <AccordionItem value={item.value}>
