@@ -6,6 +6,12 @@ import AccordionStory from './AccordionStory.svelte';
 import AccordionDocs from '@/components/docs/AccordionDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+type AccordionArgs = {
+  type: 'single' | 'multiple';
+  disabled: boolean;
+  loop: boolean;
+};
+
 const meta = {
   title: 'UI/Accordion',
   component: Accordion,
@@ -75,10 +81,22 @@ export const Playground: Story = {
   // é um componente que alguém possa importar. Além disso ele serializa os
   // `args` da raiz sobre o componente-wrapper da story, misturando duas coisas.
   // Enquanto o docgen estiver desligado, o snippet vai explícito.
+  // `transform` e não `code`: um snippet fixo deixaria de acompanhar os
+  // controls (trocar type para multiple não mudaria nada na caixa de código).
   parameters: {
     docs: {
       source: {
-        code: `<script lang="ts">
+        transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
+          const { type = 'single', disabled = false, loop = true } = ctx.args ?? {};
+          const multiple = type === 'multiple';
+          const attrs = [
+            `type="${type}"`,
+            'bind:value',
+            disabled ? 'disabled' : '',
+            loop ? '' : 'loop={false}',
+            'class="nds-max-w-lg"',
+          ].filter(Boolean).join(' ');
+          return `<script lang="ts">
   import {
     Accordion,
     AccordionContent,
@@ -86,17 +104,18 @@ export const Playground: Story = {
     AccordionTrigger,
   } from "@/components/ui/accordion";
 
-  let value = $state("item-1");
+  let value = $state(${multiple ? '["item-1"]' : '"item-1"'});
 </script>
 
-<Accordion type="single" bind:value class="nds-max-w-lg">
+<Accordion ${attrs}>
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
       Acesse a tela de login e clique em "Esqueci minha senha".
     </AccordionContent>
   </AccordionItem>
-</Accordion>`,
+</Accordion>`;
+        },
       },
     },
   },

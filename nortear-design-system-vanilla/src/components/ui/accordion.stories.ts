@@ -79,6 +79,35 @@ const DEMO_ITEMS: AccordionOptions['items'] = [
 ];
 
 export const Playground: Story = {
+  // O renderer html monta o snippet a partir do `outerHTML` do elemento
+  // devolvido pelo render. `type` e `collapsible` só existem no closure da
+  // factory — não viram atributo — então o HTML sai idêntico nos dois modos e a
+  // caixa de código nunca mudava ao mexer nos controls. Além disso, um dump de
+  // DOM não é o que o consumidor escreve: ele chama a factory. O snippet passa
+  // a ser a chamada real, montada a partir dos args.
+  parameters: {
+    docs: {
+      source: {
+        transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
+          const { type = 'single', collapsible = true } = ctx.args ?? {};
+          const items = DEMO_ITEMS.map(
+            (i) => `    { value: '${i.value}', trigger: '${i.trigger}', content: '…' },`,
+          ).join('\n');
+          return `import { createAccordion } from '@/components/ui/accordion';
+
+const accordion = createAccordion({
+  type: '${type}',
+  collapsible: ${collapsible},
+  items: [
+${items}
+  ],
+});
+
+document.querySelector('#app')?.append(accordion);`;
+        },
+      },
+    },
+  },
   render: (args) =>
     createAccordion({
       type: args.type,
