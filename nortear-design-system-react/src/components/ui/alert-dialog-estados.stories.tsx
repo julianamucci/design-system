@@ -58,7 +58,7 @@ export const Closed: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction className="nds-bg-destructive">
+          <AlertDialogAction variant="destructive">
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -100,7 +100,7 @@ export const Open: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction className="nds-bg-destructive">
+          <AlertDialogAction variant="destructive">
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -141,7 +141,7 @@ export const Confirmed: Story = {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               data-testid="confirm-action"
-              className="nds-bg-destructive"
+              variant="destructive"
               onClick={onConfirm}
             >
               Excluir
@@ -190,7 +190,7 @@ export const Cancelled: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction className="nds-bg-destructive">
+            <AlertDialogAction variant="destructive">
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -204,12 +204,10 @@ export const Cancelled: Story = {
       const cancel = await waitForPortal("button", { name: /Cancelar/i });
       await userEvent.click(cancel);
       await waitFor(
-        () => {
-          const dialog = within(document.body).queryByRole("alertdialog");
-          if (dialog && dialog.getAttribute("data-state") !== "closed") {
-            throw new Error("dialog still open");
-          }
-        },
+        () =>
+          expect(
+            within(document.body).queryByRole("alertdialog", { hidden: false }),
+          ).not.toBeInTheDocument(),
         { timeout: 500 }
       );
     });
@@ -245,7 +243,7 @@ export const Controlled: Story = {
               <AlertDialogFooter>
                 <AlertDialogCancel>Fechar</AlertDialogCancel>
                 <AlertDialogAction
-                  className="nds-bg-destructive"
+                  variant="destructive"
                   onClick={() => setOpen(false)}
                 >
                   Confirmar

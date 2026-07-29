@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 
@@ -48,14 +48,12 @@ function buildDemo(opts: DemoOptions): HTMLElement {
     label: opts.cancelLabel,
     onClick: opts.onCancel,
   });
+  // Variante do Button, não classe de fundo crua: bg-destructive e
+  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
   const actionButton = createButton({
-    variant: 'default',
+    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
     label: opts.actionLabel,
     onClick: opts.onConfirm,
-    class:
-      opts.tone === 'destructive'
-        ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
-        : '',
   });
   const dialog = createAlertDialog({
     trigger,
@@ -176,6 +174,60 @@ export const Cancelled: Story = {
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
       await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+    });
+  },
+};
+
+// ─── Controlled ───────────────────────────────────────────────────────────────
+
+export const Controlled: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Abertura comandada por estado externo — o trigger fica fora do diálogo e o callback de mudança reporta cada transição.',
+      },
+    },
+  },
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+
+    const externalTrigger = createButton({
+      variant: 'destructive',
+      label: 'Abrir via estado externo',
+    });
+
+    // Trigger vazio: quem comanda a abertura é o botão externo acima.
+    const dialog = createAlertDialog({
+      trigger: externalTrigger,
+      title: 'Controlado pelo pai',
+      description: 'Este diálogo é comandado por estado externo.',
+      cancelButton: createButton({ variant: 'outline', label: 'Fechar' }),
+      actionButton: createButton({ variant: 'destructive', label: 'Confirmar' }),
+      onOpenChange: fn(),
+    });
+
+    wrapper.append(dialog);
+    return wrapper;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await step('Clique no trigger externo abre o diálogo', async () => {
+      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
+      await userEvent.click(trigger);
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).toBeVisible();
+    });
+
+    await step('Escape fecha o diálogo controlado', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
     });
   },
 };

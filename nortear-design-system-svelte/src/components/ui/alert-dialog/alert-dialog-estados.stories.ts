@@ -124,14 +124,8 @@ export const Cancelled: Story = {
     await step('Clique em Cancelar fecha o diálogo', async () => {
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('alertdialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('dialog still open');
-          }
-        },
-        { timeout: 500 }
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
     });
   },

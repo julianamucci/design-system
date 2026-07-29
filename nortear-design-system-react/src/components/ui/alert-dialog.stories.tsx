@@ -23,11 +23,37 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AlertDialogDocs) },
   },
+  // A aba "API Reference" combina o docgen com estes argTypes. Props que o
+  // render não encaminha ficam como documentação (control: false).
   argTypes: {
     defaultOpen: {
       control: "boolean",
-      description: "Se o diálogo inicia aberto (útil para capturas visuais).",
+      description: "Estado inicial em modo não controlado. Útil para capturas visuais.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
+    open: {
+      control: false,
+      description: "Estado controlado de abertura. Use com onOpenChange.",
+      table: { type: { summary: "boolean" } },
+    },
+    onOpenChange: {
+      control: false,
+      description: "Disparado ao abrir ou fechar. Recebe o novo estado e os detalhes do evento.",
+      table: { type: { summary: "(open, eventDetails) => void" } },
+    },
+    onOpenChangeComplete: {
+      control: false,
+      description: "Disparado quando a animação de abertura ou fechamento termina.",
+      table: { type: { summary: "(open: boolean) => void" } },
+    },
+    children: {
+      control: false,
+      description: "Composição: Trigger, Content, Header, Footer, Cancel e Action.",
+      table: { type: { summary: "ReactNode" } },
+    },
+  },
+  args: {
+    defaultOpen: false,
   },
 } satisfies Meta<typeof AlertDialog>;
 
@@ -35,9 +61,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  args: {
-    defaultOpen: false,
-  },
   render: (args) => {
     const onConfirm = fn();
     const onCancel = fn();
@@ -56,7 +79,7 @@ export const Playground: Story = {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              className="nds-bg-destructive"
+              variant="destructive"
               onClick={onConfirm}
             >
               Excluir conta

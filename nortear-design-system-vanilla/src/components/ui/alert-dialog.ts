@@ -2,7 +2,7 @@
 //
 // Visual: classes .nds-alert-dialog-* (standalone .nds-*).
 // Comportamentos preservados:
-//   - Sem overlay-click-to-close e sem Escape-to-close (canônico para alert dialog).
+//   - Sem overlay-click-to-close (canônico para alert dialog); Escape fecha.
 //   - Focus trap (Tab/Shift+Tab) entre cancel e action.
 //   - Restaura foco no elemento anterior ao fechar.
 //   - MutationObserver fecha o dialog quando o wrapper é removido do DOM
@@ -114,7 +114,16 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   }
 
   function handleKeydown(e: KeyboardEvent): void {
-    // No Escape-to-close for alert-dialog (decisão deliberada — exige escolha explícita).
+    // Escape fecha sem executar a ação. É o que a docs page documenta em
+    // accessibility.keyboard.escape, o que as outras três stacks fazem (as libs
+    // implementam) e o que o padrão alertdialog do WAI-ARIA APG especifica.
+    // Havia aqui um comentário chamando a ausência de "decisão deliberada" —
+    // era divergência silenciosa: nada além deste arquivo a sustentava.
+    if (e.key === 'Escape' && panelEl) {
+      e.preventDefault();
+      close();
+      return;
+    }
     if (e.key === 'Tab' && panelEl) {
       const focusable = getFocusable(panelEl);
       if (!focusable.length) { e.preventDefault(); return; }

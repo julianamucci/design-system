@@ -38,13 +38,11 @@ type Options = {
 function buildDemo(opts: Options): HTMLElement {
   const trigger = createButton({ variant: opts.triggerVariant, label: opts.triggerLabel });
   const cancelButton = createButton({ variant: 'outline', label: opts.cancelLabel });
+  // Variante do Button, não classe de fundo crua: bg-destructive e
+  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
   const actionButton = createButton({
-    variant: 'default',
+    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
     label: opts.actionLabel,
-    class:
-      opts.tone === 'destructive'
-        ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
-        : '',
   });
   const dialog = createAlertDialog({
     trigger,
@@ -64,7 +62,7 @@ export const Destrutiva: Story = {
     docs: {
       description: {
         story:
-          'Action com tokens bg-destructive + text-destructive-foreground e trigger variant=destructive. Use para ações irreversíveis.',
+          'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
       },
     },
   },
@@ -85,7 +83,7 @@ export const Destrutiva: Story = {
     await expect(dialog).toBeVisible();
     // Trigger e action têm o mesmo rótulo — o action fica dentro do dialog.
     const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
-    await expect(action).toHaveClass('bg-destructive');
+    await expect(action).toHaveClass('nds-button-destructive');
   },
 };
 

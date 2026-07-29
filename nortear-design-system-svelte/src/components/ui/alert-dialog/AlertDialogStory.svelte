@@ -40,11 +40,9 @@
     onCancel,
   }: Props = $props();
 
-  const actionClass = $derived(
-    tone === 'destructive'
-      ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
-      : ''
-  );
+  // Variante do Button, não classe de fundo crua: bg-destructive e
+  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
+  const actionVariant = $derived(tone === 'destructive' ? 'destructive' : 'default');
 </script>
 
 <AlertDialog bind:open>
@@ -60,7 +58,7 @@
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel onclick={onCancel}>{cancelLabel}</AlertDialogCancel>
-      <AlertDialogAction class={actionClass} onclick={onConfirm}>{actionLabel}</AlertDialogAction>
+      <AlertDialogAction variant={actionVariant} onclick={onConfirm}>{actionLabel}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>

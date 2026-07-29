@@ -50,7 +50,7 @@ export const Destrutiva: Story = {
     docs: {
       description: {
         story:
-          'Action com tokens bg-destructive + text-destructive-foreground e trigger variant=destructive. Use para ações irreversíveis.',
+          'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
       },
     },
   },
@@ -70,7 +70,7 @@ export const Destrutiva: Story = {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction class="nds-bg-destructive">
+            <AlertDialogAction variant="destructive">
               Excluir conta
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -83,7 +83,7 @@ export const Destrutiva: Story = {
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /Excluir conta/i });
-    await expect(action).toHaveClass('bg-destructive');
+    await expect(action).toHaveClass('nds-button-destructive');
   },
 };
 

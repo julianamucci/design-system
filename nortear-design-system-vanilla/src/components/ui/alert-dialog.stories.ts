@@ -14,6 +14,8 @@ type AlertDialogArgs = {
   cancelLabel: string;
   actionLabel: string;
   tone: 'destructive' | 'default';
+  /** Documentada na aba API Reference; o Playground não a encaminha. */
+  onOpenChange?: (open: boolean) => void;
 };
 
 const meta: Meta<AlertDialogArgs> = {
@@ -22,11 +24,44 @@ const meta: Meta<AlertDialogArgs> = {
   parameters: {
     docs: { page: withAutoDocsTab(createAlertDialogDocs) },
   },
+  // Esta stack não tem docgen (não há componente de framework para
+  // introspectar): a aba "API Reference" sai só destes argTypes.
   argTypes: {
     tone: {
       control: 'select',
       options: ['destructive', 'default'],
-      description: 'Severidade do action (aplica tokens destructive ou padrão).',
+      description: 'Severidade do action — escolhe a variante do Button de confirmação.',
+      table: { type: { summary: "'destructive' | 'default'" }, defaultValue: { summary: "'destructive'" } },
+    },
+    triggerLabel: {
+      control: 'text',
+      description: 'Rótulo do botão que abre o diálogo.',
+      table: { type: { summary: 'string' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Título do diálogo, associado por aria-labelledby.',
+      table: { type: { summary: 'string' } },
+    },
+    description: {
+      control: 'text',
+      description: 'Descrição do diálogo, associada por aria-describedby.',
+      table: { type: { summary: 'string' } },
+    },
+    cancelLabel: {
+      control: 'text',
+      description: 'Rótulo do botão que fecha sem executar a ação.',
+      table: { type: { summary: 'string' } },
+    },
+    actionLabel: {
+      control: 'text',
+      description: 'Rótulo do botão que confirma a ação.',
+      table: { type: { summary: 'string' } },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Callback disparado quando o diálogo abre ou fecha.',
+      table: { type: { summary: '(open: boolean) => void' } },
     },
   },
   args: {
@@ -55,14 +90,12 @@ function buildDemo(args: AlertDialogArgs, onConfirm?: () => void, onCancel?: () 
     label: args.cancelLabel,
     onClick: onCancel,
   });
+  // Variante do Button, não classe de fundo crua: bg-destructive e
+  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
   const actionButton = createButton({
-    variant: 'default',
+    variant: args.tone === 'destructive' ? 'destructive' : 'default',
     label: args.actionLabel,
     onClick: onConfirm,
-    class:
-      args.tone === 'destructive'
-        ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
-        : '',
   });
   return createAlertDialog({
     trigger,
