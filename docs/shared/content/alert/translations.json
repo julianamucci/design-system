@@ -135,12 +135,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
-      "note": "O Alert tem 2 variantes nativas (<code>default</code> e <code>destructive</code>). As variantes <code>success</code> e <code>warning</code> são aplicadas via classe de variante do tema, definida no CSS do projeto a partir dos tokens semânticos <code>--success</code> e <code>--warning</code>.",
+      "note": "As cinco variantes são expostas pela própria API do componente. Cada uma consome o par de tokens semânticos correspondente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); o texto corrido permanece em <code>--foreground</code> para garantir contraste.",
       "items": {
         "default": "Mensagens informativas e neutras. Fundo e borda do tema padrão.",
         "destructive": "Erros críticos ou ações irreversíveis. Texto e borda na cor <code>--destructive</code>.",
         "success": "Confirmações de ações bem-sucedidas. Aplica a variante <code>success</code> do tema, baseada no token <code>--success</code>.",
-        "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>."
+        "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>.",
+        "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -206,7 +207,7 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para erro.",
+        "variant": "Variante semântica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> ou <code>info</code>.",
         "className": "Classes CSS adicionais — use para aplicar variantes do tema (ex: <code>success</code>, <code>warning</code>) ou customizações pontuais.",
         "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription."
       },
@@ -530,12 +531,13 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Available Variants",
-      "note": "Alert has 2 native variants (<code>default</code> and <code>destructive</code>). The <code>success</code> and <code>warning</code> variants are applied via the theme's variant class, defined in the project's CSS using the semantic tokens <code>--success</code> and <code>--warning</code>.",
+      "note": "All five variants are exposed by the component API itself. Each consumes the matching pair of semantic tokens (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); body text stays on <code>--foreground</code> to preserve contrast.",
       "items": {
         "default": "Informational and neutral messages. Default theme background and border.",
         "destructive": "Critical errors or irreversible actions. Text and border in <code>--destructive</code>.",
         "success": "Successful action confirmations. Applies the theme's <code>success</code> variant, based on the <code>--success</code> token.",
-        "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token."
+        "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token.",
+        "info": "Neutral informational emphasis for tips and extra context that do not block the flow."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -601,7 +603,7 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "variant": "Visual variant: <code>\"default\"</code> for informational, <code>\"destructive\"</code> for error.",
+        "variant": "Semantic variant: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> or <code>info</code>.",
         "className": "Additional CSS classes — use to apply theme variants (e.g., <code>success</code>, <code>warning</code>) or local customizations.",
         "children": "Alert content: icon, AlertTitle, and AlertDescription."
       },
@@ -925,12 +927,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponibles",
-      "note": "Alert tiene 2 variantes nativas (<code>default</code> y <code>destructive</code>). Las variantes <code>success</code> y <code>warning</code> se aplican vía la clase de variante del tema, definida en el CSS del proyecto usando los tokens semánticos <code>--success</code> y <code>--warning</code>.",
+      "note": "Las cinco variantes son expuestas por la propia API del componente. Cada una consume el par de tokens semánticos correspondiente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); el texto corrido permanece en <code>--foreground</code> para garantizar el contraste.",
       "items": {
         "default": "Mensajes informativos y neutros. Fondo y borde del tema predeterminado.",
         "destructive": "Errores críticos o acciones irreversibles. Texto y borde en color <code>--destructive</code>.",
         "success": "Confirmaciones de acciones exitosas. Aplica la variante <code>success</code> del tema, basada en el token <code>--success</code>.",
-        "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>."
+        "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>.",
+        "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -996,7 +999,7 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "variant": "Variante visual: <code>\"default\"</code> para informativo, <code>\"destructive\"</code> para error.",
+        "variant": "Variante semántica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> o <code>info</code>.",
         "className": "Clases CSS adicionales — usar para aplicar variantes del tema (ej: <code>success</code>, <code>warning</code>) o personalizaciones puntuales.",
         "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription."
       },

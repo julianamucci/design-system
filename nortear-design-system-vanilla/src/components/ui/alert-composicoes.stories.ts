@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { createAlert, createAlertAction, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { createButton } from './button';
 import { within, expect } from 'storybook/test';
 
 const meta: Meta = {
@@ -48,6 +49,39 @@ export const SemTituloCompacto: Story = {
   },
 };
 
+// ─── Com Ação ────────────────────────────────────────────────────────────────
+
+export const ComAcao: Story = {
+  render: () => {
+    const alert = createAlert();
+    alert.appendChild(createAlertIcon('info'));
+    alert.appendChild(createAlertTitle({ text: 'Atualização disponível' }));
+    alert.appendChild(createAlertDescription({ text: 'Uma nova versão está pronta para instalação.' }));
+
+    const action = createAlertAction();
+    action.appendChild(createButton({ label: 'Atualizar', variant: 'outline', size: 'sm' }));
+    alert.appendChild(action);
+
+    return alert;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A ação fica acessível como botão dentro do alert', async () => {
+      const alert = canvas.getByRole('alert');
+      await expect(within(alert).getByRole('button', { name: 'Atualizar' })).toBeVisible();
+    });
+
+    await step('O slot de ação usa a classe do componente', async () => {
+      const action = canvasElement.querySelector('[data-slot="alert-action"]');
+      await expect(action).toHaveClass('nds-alert-action');
+    });
+  },
+};
+
+// ─── Múltiplos Tipos ─────────────────────────────────────────────────────────
+
 export const MultiplosTipos: Story = {
   render: () => {
     const wrapper = document.createElement('div');
@@ -64,12 +98,12 @@ export const MultiplosTipos: Story = {
     a2.appendChild(createAlertTitle({ text: 'Erro' }));
     a2.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
 
-    const a3 = createAlert({ className: 'nds-alert-success' });
+    const a3 = createAlert({ variant: 'success' });
     a3.appendChild(createAlertIcon('success'));
     a3.appendChild(createAlertTitle({ text: 'Sucesso' }));
     a3.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
 
-    const a4 = createAlert({ className: 'nds-alert-warning' });
+    const a4 = createAlert({ variant: 'warning' });
     a4.appendChild(createAlertIcon('warning'));
     a4.appendChild(createAlertTitle({ text: 'Aviso' }));
     a4.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));

@@ -197,6 +197,32 @@ onShow?: () => void; // chamado dentro de show(), após o delay interno
 
 **Verificação após bump:** n/a (sem upstream). Se o factory ganhar animação/portal assíncrono, garantir que `onShow` continue sendo chamado no momento em que o painel fica visível.
 
+### todas/alert — `variant` expõe as 5 variantes semânticas {#alert-five-variants}
+
+- **Arquivos:** `alert.tsx` (react), `alert/index.ts` (vue), `alert.svelte` (svelte), `alert.ts` (vanilla)
+- **Categoria:** api
+- **Data:** 2026-07-29
+- **Upstream ref:** — (o Alert não vem de lib primitiva em nenhuma stack; é markup próprio sobre o CSS `.nds-*`)
+
+**Motivo:** o `alert.css` define cinco variantes — `default`, `destructive`, `success`, `warning` e `info` — mas o `cva` das quatro stacks mapeava só as duas primeiras. `success` e `warning` existiam no CSS e eram alcançáveis apenas passando a classe na mão (`className="nds-alert-success"`), e `info` não era alcançável nem documentado. Capacidade do CSS que a API não expunha: o consumidor precisava conhecer o nome interno da classe.
+
+Além de escondida, a forma manual saiu errada em duas stacks: Vue e Svelte montavam Success e Warning com classes do Tailwind (`bg-success/10`, `border-success/30`), que saíram do projeto e não existem mais. As duas stories renderizavam um alert `default`, e o Chromatic fotografava isso como baseline.
+
+**Depois:** `variant` aceita as cinco em todas as stacks; `className`/`class` volta a ser só override pontual. As docs pages e as stories passaram a usar a prop.
+
+**Verificação após bump:** se o `alert.css` ganhar uma variante nova, adicioná-la ao `cva` das 4 stacks e ao `AlertVariant` do Vanilla no mesmo commit — o descompasso entre CSS e API foi o que criou este caso.
+
+### todas/alert — `<h5>` e `<section>` no título e na descrição {#alert-title-desc-semantics}
+
+- **Arquivos:** `alert.tsx` (react), `AlertTitle.vue` / `AlertDescription.vue` (vue), `alert-title.svelte` / `alert-description.svelte` (svelte)
+- **Categoria:** api
+- **Data:** 2026-07-29
+- **Upstream ref:** — (marcação própria)
+
+**Motivo:** o cabeçalho do `alert.css` documenta a estrutura com `<h5 class="nds-alert-title">` e `<section class="nds-alert-description">`, e o CSS traz seletores `.nds-alert > h1..h6` e `.nds-alert > section` justamente para isso. O Vanilla seguia; React, Vue e Svelte renderizavam `<div>` nos dois, perdendo a semântica de cabeçalho e o landmark da descrição. Alinhadas ao Vanilla, que é a referência cross-stack.
+
+**Verificação após bump:** n/a.
+
 ### todas/accordion — `data-type` e `data-collapsible` na raiz {#accordion-config-data-attrs}
 
 - **Arquivos:** `accordion.tsx` (react), `Accordion.vue` (vue), `accordion.svelte` (svelte), `accordion.ts` (vanilla)

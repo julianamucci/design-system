@@ -7,6 +7,9 @@
 			variant: {
 				default: "",
 				destructive: "nds-alert-destructive",
+				success: "nds-alert-success",
+				warning: "nds-alert-warning",
+				info: "nds-alert-info",
 			},
 		},
 		defaultVariants: {

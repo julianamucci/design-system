@@ -13,11 +13,24 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
+  // O docgen do Svelte está desligado no .storybook/main.ts: a aba
+  // "API Reference" sai só destes argTypes.
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive'],
-      description: 'Variante visual nativa do Alert',
+      options: ['default', 'destructive', 'success', 'warning', 'info'],
+      description: 'Variante semântica do alert.',
+      table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
+      table: { type: { summary: 'string' } },
+    },
+    children: {
+      control: false,
+      description: 'Snippet de composição: ícone opcional, AlertTitle, AlertDescription e AlertAction.',
+      table: { type: { summary: 'Snippet' } },
     },
   },
   args: {
@@ -29,6 +42,29 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  // Sem docgen, o gerador de source monta a tag a partir do nome interno da
+  // função compilada (`<wrapper …/>`). O snippet vai explícito, montado a
+  // partir dos args para acompanhar os controls.
+  parameters: {
+    docs: {
+      source: {
+        transform: (_generated: string, ctx: { args?: { variant?: string } }) => {
+          const variant = ctx.args?.variant ?? 'default';
+          const variantAttr = variant === 'default' ? '' : ` variant="${variant}"`;
+          return `<script lang="ts">
+  import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+  import Info from "@lucide/svelte/icons/info";
+<\/script>
+
+<Alert${variantAttr}>
+  <Info class="nds-icon" aria-hidden="true" />
+  <AlertTitle>Atenção</AlertTitle>
+  <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
+</Alert>`;
+        },
+      },
+    },
+  },
   render: (args) => ({
     Component: AlertStory,
     props: {

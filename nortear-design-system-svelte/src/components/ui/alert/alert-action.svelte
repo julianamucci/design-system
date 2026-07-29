@@ -13,7 +13,7 @@
 <div
 	bind:this={ref}
 	data-slot="alert-action"
-	class={cn("absolute top-2 right-2", className)}
+	class={cn("nds-alert-action", className)}
 	{...restProps}
 >
 	{@render children?.()}

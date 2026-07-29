@@ -143,7 +143,7 @@ const codeDestructive = `<Alert variant="destructive">
   </AlertDescription>
 </Alert>`;
 
-const codeSuccess = `<Alert class="nds-alert-success">
+const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
@@ -151,7 +151,7 @@ const codeSuccess = `<Alert class="nds-alert-success">
   </AlertDescription>
 </Alert>`;
 
-const codeWarning = `<Alert class="nds-alert-warning">
+const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
@@ -225,7 +225,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.multipleTypes.name'),
     description: tContent('variants.compositions.multipleTypes.description'),
     useWhen: tContent('variants.compositions.multipleTypes.use'),
-    code: `<div class="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert class="nds-alert-success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert class="nds-alert-warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+    code: `<div class="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert variant="success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert variant="warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
   },
 ]);
 
@@ -353,12 +353,12 @@ const visualTestItems = computed(() => [
           <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
-        <Alert class="nds-alert-success">
+        <Alert variant="success">
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
-        <Alert class="nds-alert-warning">
+        <Alert variant="warning">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -470,14 +470,14 @@ const visualTestItems = computed(() => [
         </Alert>
       </template>
       <template #variant-preview-2>
-        <Alert class="nds-w-full nds-alert-success">
+        <Alert variant="success" class="nds-w-full">
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
-        <Alert class="nds-w-full nds-alert-warning">
+        <Alert variant="warning" class="nds-w-full">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -549,12 +549,12 @@ const visualTestItems = computed(() => [
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
           </Alert>
-          <Alert class="nds-alert-success">
+          <Alert variant="success">
             <CheckCircle2 aria-hidden="true" />
             <AlertTitle>Sucesso</AlertTitle>
             <AlertDescription>Ação concluída com sucesso.</AlertDescription>
           </Alert>
-          <Alert class="nds-alert-warning">
+          <Alert variant="warning">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>Aviso que requer atenção.</AlertDescription>

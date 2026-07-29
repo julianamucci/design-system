@@ -147,7 +147,7 @@ import { Info } from "lucide-react";`;
   </AlertDescription>
 </Alert>`;
 
-  const codeSuccess = `<Alert className="nds-alert-success">
+  const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
@@ -155,7 +155,7 @@ import { Info } from "lucide-react";`;
   </AlertDescription>
 </Alert>`;
 
-  const codeWarning = `<Alert className="nds-alert-warning">
+  const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
@@ -217,12 +217,12 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
               </Alert>
-              <Alert className="nds-alert-success">
+              <Alert variant="success">
                 <CheckCircle2 aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
               </Alert>
-              <Alert className="nds-alert-warning">
+              <Alert variant="warning">
                 <TriangleAlert aria-hidden="true" />
                 <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
@@ -409,7 +409,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: stripHtml(tContent("variants.items.success")),
                 code: codeSuccess,
                 preview: (
-                  <Alert className="nds-w-full nds-alert-success">
+                  <Alert variant="success" className="nds-w-full">
                     <CheckCircle2 aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
@@ -421,7 +421,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 description: stripHtml(tContent("variants.items.warning")),
                 code: codeWarning,
                 preview: (
-                  <Alert className="nds-w-full nds-alert-warning">
+                  <Alert variant="warning" className="nds-w-full">
                     <TriangleAlert aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
@@ -493,7 +493,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.multipleTypes.name"),
                 description: tContent("variants.compositions.multipleTypes.description"),
                 useWhen: tContent("variants.compositions.multipleTypes.use"),
-                code: `<div className="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert className="nds-alert-success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert className="nds-alert-warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
+                code: `<div className="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert variant="success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert variant="warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
                 preview: (
                   <div className="nds-stack nds-w-full" data-spacing="sm">
                     <Alert>
@@ -506,12 +506,12 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                       <AlertTitle>Erro</AlertTitle>
                       <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
                     </Alert>
-                    <Alert className="nds-alert-success">
+                    <Alert variant="success">
                       <CheckCircle2 aria-hidden="true" />
                       <AlertTitle>Sucesso</AlertTitle>
                       <AlertDescription>Ação concluída com sucesso.</AlertDescription>
                     </Alert>
-                    <Alert className="nds-alert-warning">
+                    <Alert variant="warning">
                       <TriangleAlert aria-hidden="true" />
                       <AlertTitle>Aviso</AlertTitle>
                       <AlertDescription>Aviso que requer atenção.</AlertDescription>

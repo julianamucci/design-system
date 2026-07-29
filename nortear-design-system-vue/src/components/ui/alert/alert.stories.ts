@@ -12,11 +12,24 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
+  // A aba "API Reference" combina o docgen com estes argTypes. O slot default
+  // fica sem control porque o template da story fixa a composição.
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive'],
-      description: 'Variante visual nativa do Alert',
+      options: ['default', 'destructive', 'success', 'warning', 'info'],
+      description: 'Variante semântica do alert.',
+      table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
+      table: { type: { summary: 'string' } },
+    },
+    default: {
+      control: false,
+      description: 'Slot de composição: ícone opcional, AlertTitle, AlertDescription e AlertAction.',
+      table: { type: { summary: 'slot' } },
     },
   },
   args: {

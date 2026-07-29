@@ -117,7 +117,7 @@ import Info from '@lucide/svelte/icons/info';`;
   </AlertDescription>
 </Alert>`;
 
-  const codeSuccess = `<Alert class="nds-alert-success">
+  const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
   <AlertDescription>
@@ -125,7 +125,7 @@ import Info from '@lucide/svelte/icons/info';`;
   </AlertDescription>
 </Alert>`;
 
-  const codeWarning = `<Alert class="nds-alert-warning">
+  const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
   <AlertTitle>Assinatura expirando</AlertTitle>
   <AlertDescription>
@@ -185,12 +185,12 @@ interface AlertProps {
               <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
             </Alert>
-            <Alert class="nds-alert-success">
+            <Alert variant="success">
               <CheckCircle2 aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
             </Alert>
-            <Alert class="nds-alert-warning">
+            <Alert variant="warning">
               <TriangleAlert aria-hidden="true" />
               <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
               <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
@@ -355,14 +355,14 @@ interface AlertProps {
         </Alert>
       {/snippet}
       {#snippet variantSuccess()}
-        <Alert class="nds-w-full nds-alert-success">
+        <Alert variant="success" class="nds-w-full">
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWarning()}
-        <Alert class="nds-w-full nds-alert-warning">
+        <Alert variant="warning" class="nds-w-full">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
@@ -406,7 +406,7 @@ interface AlertProps {
             name: $tStore('variants.compositions.multipleTypes.name'),
             description: $tStore('variants.compositions.multipleTypes.description'),
             useWhen: $tStore('variants.compositions.multipleTypes.use'),
-            code: `<div class="nds-stack" data-spacing="sm">\n  <Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert class="nds-alert-success"><CheckCircle2 aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert class="nds-alert-warning"><TriangleAlert aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
+            code: `<div class="nds-stack" data-spacing="sm">\n  <Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert variant="success"><CheckCircle2 aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert variant="warning"><TriangleAlert aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
             preview: compMultipleTypes,
           },
         ]}
@@ -447,12 +447,12 @@ interface AlertProps {
             <AlertTitle>Erro</AlertTitle>
             <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
           </Alert>
-          <Alert class="nds-alert-success">
+          <Alert variant="success">
             <CheckCircle2 aria-hidden="true" />
             <AlertTitle>Sucesso</AlertTitle>
             <AlertDescription>Ação concluída com sucesso.</AlertDescription>
           </Alert>
-          <Alert class="nds-alert-warning">
+          <Alert variant="warning">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>Aviso que requer atenção.</AlertDescription>

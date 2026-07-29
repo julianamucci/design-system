@@ -1,6 +1,6 @@
 // ─── Alert ───────────────────────────────────────────────────────────────────
 
-export type AlertVariant = 'default' | 'destructive';
+export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
 export interface AlertOptions {
   variant?: AlertVariant;
@@ -23,7 +23,7 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('role', 'alert');
-  el.className = variant === 'destructive' ? 'nds-alert nds-alert-destructive' : 'nds-alert';
+  el.className = variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`;
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
@@ -49,6 +49,26 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
   el.className = 'nds-alert-description';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
   if (text) el.textContent = text;
+
+  return el;
+}
+
+export interface AlertActionOptions {
+  className?: string;
+}
+
+/**
+ * Slot de ação no canto superior direito do alert (`.nds-alert-action`).
+ * Devolve o container vazio — o consumidor injeta o botão via `createButton`.
+ * O CSS já reserva o padding-inline-end quando o alert tem `.nds-alert-action`.
+ */
+export function createAlertAction(options: AlertActionOptions = {}): HTMLElement {
+  const { className } = options;
+
+  const el = document.createElement('div');
+  el.dataset.slot = 'alert-action';
+  el.className = 'nds-alert-action';
+  if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
 }

@@ -8,6 +8,9 @@ const alertVariants = cva("nds-alert", {
     variant: {
       default: "",
       destructive: "nds-alert-destructive",
+      success: "nds-alert-success",
+      warning: "nds-alert-warning",
+      info: "nds-alert-info",
     },
   },
   defaultVariants: {
@@ -30,9 +33,12 @@ function Alert({
   )
 }
 
-function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+function AlertTitle({ className, ...props }: React.ComponentProps<"h5">) {
   return (
-    <div
+    // <h5>/<section>: mesma marcação nas 4 stacks e a que o alert.css documenta
+    // (seletores .nds-alert > h1..h6 e .nds-alert > section). <div> perdia a
+    // semântica de cabeçalho e de landmark da descrição.
+    <h5
       data-slot="alert-title"
       className={cn("nds-alert-title", className)}
       {...props}
@@ -43,9 +49,9 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
 function AlertDescription({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"section">) {
   return (
-    <div
+    <section
       data-slot="alert-description"
       className={cn("nds-alert-description", className)}
       {...props}

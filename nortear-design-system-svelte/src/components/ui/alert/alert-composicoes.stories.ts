@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
+import AlertAcaoStory from './AlertAcaoStory.svelte';
+import AlertTiposStory from './AlertTiposStory.svelte';
 
 const meta = {
   parameters: {
@@ -22,7 +24,7 @@ export const ComIcone: Story = {
     Component: AlertStory,
     props: {
       title: 'Informação',
-      description: 'Ícone posicionado automaticamente via CSS grid.',
+      description: 'Ícone SVG posicionado automaticamente.',
       showIcon: true,
       icon: 'info',
     },
@@ -32,7 +34,7 @@ export const ComIcone: Story = {
     const canvas = within(canvasElement);
     const alert = await canvas.findByRole('alert');
     await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-    await expect(canvas.getByText(/Ícone SVG|Informação/)).toBeVisible();
+    await expect(canvas.getByText('Informação')).toBeVisible();
   },
 };
 
@@ -52,46 +54,57 @@ export const SemTituloCompacto: Story = {
     const canvas = within(canvasElement);
     const alert = await canvas.findByRole('alert');
     await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
     await expect(canvas.getByText(/Formulário incompleto/)).toBeVisible();
   },
 };
 
-export const DestructiveComIcone: Story = {
-  render: () => ({
-    Component: AlertStory,
-    props: {
-      variant: 'destructive',
-      title: 'Erro ao salvar',
-      description: 'Não foi possível salvar. Verifique sua conexão e tente novamente.',
-      showIcon: true,
-      icon: 'error',
-    },
-  }),
+export const ComAcao: Story = {
+  render: () => ({ Component: AlertAcaoStory }),
 
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alert = await canvas.findByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-destructive');
-    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+
+    await step('A ação fica acessível como botão dentro do alert', async () => {
+      const alert = await canvas.findByRole('alert');
+      await expect(within(alert).getByRole('button', { name: 'Atualizar' })).toBeVisible();
+    });
+
+    await step('O slot de ação usa a classe do componente', async () => {
+      const action = canvasElement.querySelector('[data-slot="alert-action"]');
+      await expect(action).toHaveClass('nds-alert-action');
+    });
   },
 };
 
-export const MultiplasCores: Story = {
+export const MultiplosTipos: Story = {
+  render: () => ({ Component: AlertTiposStory }),
+
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('alert');
+    const alerts = canvas.getAllByRole('alert');
+    await expect(alerts).toHaveLength(4);
+    await expect(alerts[1]).toHaveClass('nds-alert-destructive');
+    await expect(alerts[2]).toHaveClass('nds-alert-success');
+    await expect(alerts[3]).toHaveClass('nds-alert-warning');
+  },
+};
+
+export const SemIcone: Story = {
   render: () => ({
     Component: AlertStory,
     props: {
-      title: 'Perfil atualizado',
-      description: 'Suas informações foram salvas com sucesso.',
-      showIcon: true,
-      icon: 'success',
-      class: 'nds-alert-success',
-      descriptionClass: 'text-success/90',
+      title: 'Sem ícone',
+      description: 'Alert sem ícone mantém layout de coluna única.',
+      showIcon: false,
     },
   }),
 
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const alert = await canvas.findByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-success');
+    await expect(alert.querySelector('svg')).toBeNull();
+    await expect(canvas.getByText('Sem ícone')).toBeVisible();
   },
 };

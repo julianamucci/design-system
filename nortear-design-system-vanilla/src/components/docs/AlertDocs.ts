@@ -166,8 +166,8 @@ export function createAlertDocs(): HTMLElement {
             wrap.append(
               buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
               buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
-              buildAlert('default', 'nds-alert-success', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
-              buildAlert('default', 'nds-alert-warning', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              buildAlert('success', '', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              buildAlert('warning', '', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             );
             return wrap;
           },
@@ -296,8 +296,8 @@ export function createAlertDocs(): HTMLElement {
       case 'variantes': {
         const codeDefault = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
-        const codeSuccess = `const alert = createAlert({ variant: 'default', className: 'nds-alert-success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
-        const codeWarning = `const alert = createAlert({ variant: 'default', className: 'nds-alert-warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
+        const codeSuccess = `const alert = createAlert({ variant: 'success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
+        const codeWarning = `const alert = createAlert({ variant: 'warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
 
         return createDocsVariants({
@@ -319,13 +319,13 @@ export function createAlertDocs(): HTMLElement {
               name: 'success',
               description: stripHtml(t('variants.items.success')),
               code: codeSuccess,
-              previewFactory: () => buildAlert('default', 'nds-w-full nds-alert-success', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
+              previewFactory: () => buildAlert('success', 'nds-w-full', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
             },
             {
               name: 'warning',
               description: stripHtml(t('variants.items.warning')),
               code: codeWarning,
-              previewFactory: () => buildAlert('default', 'nds-w-full nds-alert-warning', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              previewFactory: () => buildAlert('warning', 'nds-w-full', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
             },
             {
               name: t('states.withoutTitle.label'),
@@ -415,12 +415,12 @@ export function createAlertDocs(): HTMLElement {
                 `err.appendChild(createAlertTitle({ text: 'Erro' }));\n` +
                 `err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));\n` +
                 `\n` +
-                `const ok = createAlert({ className: 'nds-alert-success' });\n` +
+                `const ok = createAlert({ variant: 'success' });\n` +
                 `ok.appendChild(createAlertIcon('success'));\n` +
                 `ok.appendChild(createAlertTitle({ text: 'Sucesso' }));\n` +
                 `ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));\n` +
                 `\n` +
-                `const warn = createAlert({ className: 'nds-alert-warning' });\n` +
+                `const warn = createAlert({ variant: 'warning' });\n` +
                 `warn.appendChild(createAlertIcon('warning'));\n` +
                 `warn.appendChild(createAlertTitle({ text: 'Aviso' }));\n` +
                 `warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));\n` +
@@ -437,11 +437,11 @@ export function createAlertDocs(): HTMLElement {
                 err.appendChild(createAlertIcon('error'));
                 err.appendChild(createAlertTitle({ text: 'Erro' }));
                 err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
-                const ok = createAlert({ className: 'nds-alert-success' });
+                const ok = createAlert({ variant: 'success' });
                 ok.appendChild(createAlertIcon('success'));
                 ok.appendChild(createAlertTitle({ text: 'Sucesso' }));
                 ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
-                const warn = createAlert({ className: 'nds-alert-warning' });
+                const warn = createAlert({ variant: 'warning' });
                 warn.appendChild(createAlertIcon('warning'));
                 warn.appendChild(createAlertTitle({ text: 'Aviso' }));
                 warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));

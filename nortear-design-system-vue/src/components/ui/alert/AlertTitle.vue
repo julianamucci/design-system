@@ -8,10 +8,10 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
+  <h5
     data-slot="alert-title"
     :class="cn('nds-alert-title', props.class)"
   >
     <slot />
-  </div>
+  </h5>
 </template>
