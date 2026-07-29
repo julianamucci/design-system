@@ -92,3 +92,54 @@ export const SemIcone: Story = {
     await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
   },
 };
+
+// ─── Token indivisível ────────────────────────────────────────────────────────
+
+/**
+ * Regressão: sem reset global de box-sizing, o `width: 100%` do .nds-alert
+ * media só a caixa de conteúdo e os 32px de padding-inline mais os 2px de
+ * borda saíam por fora. O card ficava 34px mais largo que o container e gerava
+ * rolagem horizontal — visível na seção "Notas de implementação" das docs
+ * pages, onde o alert ocupa a largura toda.
+ *
+ * Só nesta stack: o CSS é compartilhado (docs/shared/styles/nds/alert.css),
+ * então uma story guarda as quatro. Vanilla é a referência cross-stack.
+ */
+export const TokenIndivisivel: Story = {
+  render: () => {
+    const frame = document.createElement('div');
+    // Estreito de propósito: reproduz a largura útil de uma tela pequena.
+    frame.style.width = '240px';
+    frame.dataset.testid = 'alert-frame';
+
+    const alert = createAlert();
+    alert.appendChild(createAlertTitle({ text: 'Animação por keyframes' }));
+
+    const desc = createAlertDescription();
+    const p = document.createElement('p');
+    p.innerHTML =
+      'A entrada usa <code>nds-accordion-expand</code> e a saída ' +
+      '<code>nds-accordion-collapse</code>, ambas animando ' +
+      '<code>grid-template-rows</code>.';
+    desc.appendChild(p);
+    alert.appendChild(desc);
+
+    frame.appendChild(alert);
+    return frame;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const frame = canvasElement.querySelector<HTMLElement>('[data-testid="alert-frame"]')!;
+    const alert = frame.querySelector<HTMLElement>('.nds-alert')!;
+
+    await step('O card não ultrapassa a largura do container', async () => {
+      await expect(alert.getBoundingClientRect().width).toBeLessThanOrEqual(
+        frame.getBoundingClientRect().width,
+      );
+    });
+
+    await step('O container não ganha rolagem horizontal', async () => {
+      await expect(frame.scrollWidth).toBeLessThanOrEqual(frame.clientWidth);
+    });
+  },
+};
