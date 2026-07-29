@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 
@@ -30,7 +30,10 @@ export const Default: Story = {
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert');
+    await expect(alert).not.toHaveClass('nds-alert-destructive');
+    await expect(within(canvasElement).getByText('Atenção')).toBeVisible();
   },
 };
 
@@ -47,7 +50,9 @@ export const Destructive: Story = {
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(within(canvasElement).getByText('Erro ao salvar')).toBeVisible();
   },
 };
 
@@ -60,12 +65,14 @@ export const Success: Story = {
       description: 'Suas informações foram salvas com sucesso.',
       showIcon: true,
       icon: 'success',
-      class: 'bg-success/10 text-foreground border-success/30 [&_svg]:text-success',
+      class: 'nds-alert-success',
     },
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-success');
+    await expect(within(canvasElement).getByText('Perfil atualizado')).toBeVisible();
   },
 };
 
@@ -78,11 +85,13 @@ export const Warning: Story = {
       description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
       showIcon: true,
       icon: 'warning',
-      class: 'bg-warning/10 text-foreground border-warning/30 [&_svg]:text-warning',
+      class: 'nds-alert-warning',
     },
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-warning');
+    await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
   },
 };

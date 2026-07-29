@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const ComIconeLucide: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Informação</AlertTitle>
       <AlertDescription>
         Ícone Lucide posicionado automaticamente via seletor CSS{" "}
@@ -37,7 +37,7 @@ export const ComIconeLucide: Story = {
 export const ComAcao: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
       <AlertDescription className="nds-cluster nds-mt-1" data-align="center" data-justify="between" data-spacing="md">
         <span>Salve seu trabalho para não perder as alterações.</span>
@@ -57,22 +57,22 @@ export const MultiplosTipos: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       <Alert>
-        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <Info aria-hidden="true" className="nds-icon" />
         <AlertTitle>Informação</AlertTitle>
         <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
-        <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <AlertCircle aria-hidden="true" className="nds-icon" />
         <AlertTitle>Erro</AlertTitle>
         <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
       </Alert>
-      <Alert className="nds-bg-success-10 nds-text-success nds-border-success-30">
-        <CheckCircle2 aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Alert className="nds-alert-success">
+        <CheckCircle2 aria-hidden="true" className="nds-icon" />
         <AlertTitle>Sucesso</AlertTitle>
         <AlertDescription>Ação concluída com sucesso.</AlertDescription>
       </Alert>
-      <Alert className="nds-bg-warning-10 nds-border-warning-30 nds-text-foreground [&_svg]:text-warning">
-        <TriangleAlert aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Alert className="nds-alert-warning">
+        <TriangleAlert aria-hidden="true" className="nds-icon" />
         <AlertTitle className="nds-text-foreground">Aviso</AlertTitle>
         <AlertDescription className="nds-text-muted-foreground">Aviso que requer atenção.</AlertDescription>
       </Alert>
@@ -80,14 +80,18 @@ export const MultiplosTipos: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getAllByRole("alert").length).toBeGreaterThanOrEqual(4);
+    const alerts = canvas.getAllByRole("alert");
+    await expect(alerts).toHaveLength(4);
+    await expect(alerts[1]).toHaveClass("nds-alert-destructive");
+    await expect(alerts[2]).toHaveClass("nds-alert-success");
+    await expect(alerts[3]).toHaveClass("nds-alert-warning");
   },
 };
 
 export const SemTituloCompacto: Story = {
   render: () => (
-    <Alert>
-      <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+    <Alert variant="destructive">
+      <AlertCircle aria-hidden="true" className="nds-icon" />
       <AlertDescription>
         Formulário incompleto — preencha todos os campos obrigatórios.
       </AlertDescription>
@@ -95,6 +99,9 @@ export const SemTituloCompacto: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-destructive");
+    await expect(alert.querySelector('[data-slot="alert-title"]')).toBeNull();
+    await expect(canvas.getByText(/Formulário incompleto/)).toBeVisible();
   },
 };

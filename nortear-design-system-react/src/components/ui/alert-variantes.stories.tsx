@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
@@ -28,15 +28,17 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("alert")).toBeInTheDocument();
-    await expect(canvas.getByText("Atenção")).toBeInTheDocument();
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert");
+    await expect(alert).not.toHaveClass("nds-alert-destructive");
+    await expect(canvas.getByText("Atenção")).toBeVisible();
   },
 };
 
 export const Destructive: Story = {
   render: () => (
     <Alert variant="destructive">
-      <AlertCircle aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <AlertCircle aria-hidden="true" className="nds-icon" />
       <AlertTitle>Erro ao salvar</AlertTitle>
       <AlertDescription>
         Não foi possível salvar. Verifique sua conexão e tente novamente.
@@ -45,15 +47,16 @@ export const Destructive: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("alert")).toBeInTheDocument();
-    await expect(canvas.getByText("Erro ao salvar")).toBeInTheDocument();
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-destructive");
+    await expect(canvas.getByText("Erro ao salvar")).toBeVisible();
   },
 };
 
 export const Success: Story = {
   render: () => (
-    <Alert className="nds-bg-success-10 nds-text-success nds-border-success-30">
-      <CheckCircle2 aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+    <Alert className="nds-alert-success">
+      <CheckCircle2 aria-hidden="true" className="nds-icon" />
       <AlertTitle>Perfil atualizado</AlertTitle>
       <AlertDescription>
         Suas informações foram salvas com sucesso.
@@ -62,22 +65,26 @@ export const Success: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText("Perfil atualizado")).toBeInTheDocument();
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-success");
+    await expect(canvas.getByText("Perfil atualizado")).toBeVisible();
   },
 };
 
 export const Warning: Story = {
   render: () => (
-    <Alert className="nds-bg-warning-10 nds-border-warning-30 nds-text-foreground [&_svg]:text-warning">
-      <TriangleAlert aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
-      <AlertTitle className="nds-text-foreground">Assinatura expirando</AlertTitle>
-      <AlertDescription className="nds-text-muted-foreground">
+    <Alert className="nds-alert-warning">
+      <TriangleAlert aria-hidden="true" className="nds-icon" />
+      <AlertTitle>Assinatura expirando</AlertTitle>
+      <AlertDescription>
         Sua assinatura expira em 3 dias. Renove para evitar interrupções.
       </AlertDescription>
     </Alert>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText("Assinatura expirando")).toBeInTheDocument();
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-warning");
+    await expect(canvas.getByText("Assinatura expirando")).toBeVisible();
   },
 };

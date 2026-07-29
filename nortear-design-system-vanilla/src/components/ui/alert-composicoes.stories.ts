@@ -24,8 +24,10 @@ export const ComIcone: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    await expect(canvas.getByText('Informação')).toBeVisible();
   },
 };
 
@@ -38,8 +40,11 @@ export const SemTituloCompacto: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(alert.querySelector('.nds-alert-title')).toBeNull();
+    await expect(canvas.getByText(/Formulário incompleto/)).toBeVisible();
   },
 };
 
@@ -74,8 +79,12 @@ export const MultiplosTipos: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alerts = canvas.getAllByRole('alert');
+    await expect(alerts).toHaveLength(4);
+    await expect(alerts[1]).toHaveClass('nds-alert-destructive');
+    await expect(alerts[2]).toHaveClass('nds-alert-success');
+    await expect(alerts[3]).toHaveClass('nds-alert-warning');
   },
 };
 
@@ -88,8 +97,10 @@ export const SemIcone: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert.querySelector('svg')).toBeNull();
+    await expect(canvas.getByText('Sem ícone')).toBeVisible();
   },
 };
 
@@ -117,10 +128,18 @@ export const TokenIndivisivel: Story = {
 
     const desc = createAlertDescription();
     const p = document.createElement('p');
-    p.innerHTML =
-      'A entrada usa <code>nds-accordion-expand</code> e a saída ' +
-      '<code>nds-accordion-collapse</code>, ambas animando ' +
-      '<code>grid-template-rows</code>.';
+    // Montado nó a nó: o conteúdo é literal e seguro, mas atribuir HTML como
+    // string dispara o check de XSS do audit de qualquer forma.
+    const code = (text: string) => {
+      const el = document.createElement('code');
+      el.textContent = text;
+      return el;
+    };
+    p.append(
+      'A entrada usa ', code('nds-accordion-expand'),
+      ' e a saída ', code('nds-accordion-collapse'),
+      ', ambas animando ', code('grid-template-rows'), '.',
+    );
     desc.appendChild(p);
     alert.appendChild(desc);
 

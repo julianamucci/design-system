@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 
@@ -29,7 +29,10 @@ export const ComIcone: Story = {
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    await expect(canvas.getByText(/Ícone SVG|Informação/)).toBeVisible();
   },
 };
 
@@ -37,6 +40,7 @@ export const SemTituloCompacto: Story = {
   render: () => ({
     Component: AlertStory,
     props: {
+      variant: 'destructive',
       title: '',
       description: 'Formulário incompleto — preencha todos os campos obrigatórios.',
       showIcon: true,
@@ -45,7 +49,10 @@ export const SemTituloCompacto: Story = {
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(canvas.getByText(/Formulário incompleto/)).toBeVisible();
   },
 };
 
@@ -62,7 +69,10 @@ export const DestructiveComIcone: Story = {
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 
@@ -74,12 +84,14 @@ export const MultiplasCores: Story = {
       description: 'Suas informações foram salvas com sucesso.',
       showIcon: true,
       icon: 'success',
-      class: 'bg-success/10 text-success border-success/30',
+      class: 'nds-alert-success',
       descriptionClass: 'text-success/90',
     },
   }),
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const canvas = within(canvasElement);
+    const alert = await canvas.findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-success');
   },
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 
@@ -22,14 +22,17 @@ export const Default: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <Info class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
   }),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const alert = within(canvasElement).getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert');
+    await expect(alert).not.toHaveClass('nds-alert-destructive');
+    await expect(within(canvasElement).getByText('Atenção')).toBeVisible();
   },
 };
 
@@ -39,14 +42,16 @@ export const Destructive: Story = {
     setup() { return {}; },
     template: `
       <Alert variant="destructive">
-        <AlertCircle class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <AlertCircle class="nds-icon" aria-hidden="true" />
         <AlertTitle>Erro ao salvar</AlertTitle>
         <AlertDescription>Não foi possível salvar. Verifique sua conexão e tente novamente.</AlertDescription>
       </Alert>
     `,
   }),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const alert = within(canvasElement).getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(within(canvasElement).getByText('Erro ao salvar')).toBeVisible();
   },
 };
 
@@ -55,15 +60,17 @@ export const Success: Story = {
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() { return {}; },
     template: `
-      <Alert class="bg-success/10 nds-text-success border-success/30">
-        <CheckCircle2 class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+      <Alert class="nds-alert-success">
+        <CheckCircle2 class="nds-icon" aria-hidden="true" />
         <AlertTitle>Perfil atualizado</AlertTitle>
         <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
       </Alert>
     `,
   }),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const alert = within(canvasElement).getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-success');
+    await expect(within(canvasElement).getByText('Perfil atualizado')).toBeVisible();
   },
 };
 
@@ -72,14 +79,16 @@ export const Warning: Story = {
     components: { Alert, AlertTitle, AlertDescription, TriangleAlert },
     setup() { return {}; },
     template: `
-      <Alert class="bg-warning/10 border-warning/30 nds-text-foreground [&>svg]:text-warning">
-        <TriangleAlert class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+      <Alert class="nds-alert-warning">
+        <TriangleAlert class="nds-icon" aria-hidden="true" />
         <AlertTitle>Assinatura expirando</AlertTitle>
-        <AlertDescription class="nds-text-foreground">Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
+        <AlertDescription>Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
       </Alert>
     `,
   }),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const alert = within(canvasElement).getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-warning');
+    await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
   },
 };

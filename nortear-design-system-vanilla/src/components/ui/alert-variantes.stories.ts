@@ -24,8 +24,11 @@ export const Default: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert');
+    await expect(alert).not.toHaveClass('nds-alert-destructive');
+    await expect(canvas.getByText('Atenção')).toBeVisible();
   },
 };
 
@@ -39,8 +42,10 @@ export const Destructive: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-destructive');
+    await expect(canvas.getByText('Erro ao salvar')).toBeVisible();
   },
 };
 
@@ -54,8 +59,10 @@ export const Success: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-success');
+    await expect(canvas.getByText('Perfil atualizado')).toBeVisible();
   },
 };
 
@@ -69,7 +76,9 @@ export const Warning: Story = {
   },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-warning');
+    await expect(canvas.getByText('Assinatura expirando')).toBeVisible();
   },
 };
