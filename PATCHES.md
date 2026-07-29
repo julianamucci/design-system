@@ -197,6 +197,19 @@ onShow?: () => void; // chamado dentro de show(), após o delay interno
 
 **Verificação após bump:** n/a (sem upstream). Se o factory ganhar animação/portal assíncrono, garantir que `onShow` continue sendo chamado no momento em que o painel fica visível.
 
+### todas/accordion — `data-type` e `data-collapsible` na raiz {#accordion-config-data-attrs}
+
+- **Arquivos:** `accordion.tsx` (react), `Accordion.vue` (vue), `accordion.svelte` (svelte), `accordion.ts` (vanilla)
+- **Categoria:** api
+- **Data:** 2026-07-29
+- **Upstream ref:** — (nenhuma das libs — base-ui, reka-ui, bits-ui — escreve a configuração na raiz)
+
+**Motivo:** a configuração do accordion vivia só na prop/closure. Depois de montado, nada no DOM distinguia um `single` de um `multiple`: CSS, teste, devtools e o gerador de snippet do Storybook viam exatamente o mesmo HTML. No Vanilla isso tinha efeito visível — o renderer `html` do Storybook monta a caixa de código a partir do `outerHTML` e só reemite quando ele muda, então trocar o modo nos Controls não alterava o snippet.
+
+**Assimetria conhecida e aceita:** `data-type` sai nas 4 stacks. `data-collapsible` sai só em Vue e Vanilla — base-ui e bits-ui não expõem `collapsible` (no modo único, fechar o item ativo é sempre permitido nessas libs). Emitir o atributo onde a prop não existe seria inventar uma configuração.
+
+**Verificação após bump:** se alguma lib passar a escrever um atributo equivalente na raiz, remover o nosso para não duplicar.
+
 ### react/chart — `role="img"` no ChartContainer para satisfazer aria-prohibited-attr {#chart-aria-img-role}
 
 - **Arquivo:** `nortear-design-system-react/src/components/ui/chart.tsx` (ChartContainer)

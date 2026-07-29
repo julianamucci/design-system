@@ -114,9 +114,15 @@ document.querySelector('#app')?.append(accordion);`;
       collapsible: args.collapsible,
       items: DEMO_ITEMS,
     }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
+
+    await step('A raiz registra a configuração recebida', async () => {
+      const root = canvasElement.querySelector('[data-slot="accordion"]');
+      await expect(root).toHaveAttribute('data-type', args.type);
+      await expect(root).toHaveAttribute('data-collapsible', String(args.collapsible));
+    });
 
     await step('Todos os triggers estão fechados por padrão', async () => {
       for (const trigger of triggers) {

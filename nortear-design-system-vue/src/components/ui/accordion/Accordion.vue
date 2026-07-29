@@ -19,6 +19,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <AccordionRoot
     v-slot="slotProps"
     data-slot="accordion"
+    :data-type="props.type"
+    :data-collapsible="String(props.collapsible ?? false)"
     v-bind="forwarded"
     :class="cn('nds-accordion', props.class)"
   >

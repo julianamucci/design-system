@@ -44,6 +44,11 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'accordion';
+  // A configuração fica registrada no DOM, não só no closure. Sem isto nada
+  // distingue um accordion single de um multiple depois de montado: CSS, teste,
+  // devtools e o gerador de snippet do Storybook viam exatamente o mesmo HTML.
+  root.dataset.type = type;
+  root.dataset.collapsible = String(collapsible);
   root.className = 'nds-accordion';
   if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 

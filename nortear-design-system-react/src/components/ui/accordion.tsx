@@ -19,6 +19,9 @@ type AccordionKeyDownEvent = Parameters<
  * Ver PATCHES.md#react-accordion-arrow-keys.
  */
 function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.Props) {
+  // O modo fica registrado no DOM, e não só na prop: sem isso nada distingue um
+  // accordion single de um multiple depois de montado. Mesmo atributo nas 4 stacks.
+  const mode = props.multiple ? "multiple" : "single"
   function handleKeyDown(event: AccordionKeyDownEvent) {
     onKeyDown?.(event)
     if (event.defaultPrevented) return
@@ -52,6 +55,7 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
   return (
     <AccordionPrimitive.Root
       data-slot="accordion"
+      data-type={mode}
       className={cn("nds-accordion", className)}
       onKeyDown={handleKeyDown}
       {...props}

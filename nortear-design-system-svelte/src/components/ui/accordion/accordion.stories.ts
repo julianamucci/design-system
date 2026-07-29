@@ -128,8 +128,13 @@ export const Playground: Story = {
       defaultValue: 'item-1',
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+
+    await step('A raiz registra o modo recebido', async () => {
+      const root = canvasElement.querySelector('[data-slot="accordion"]');
+      await expect(root).toHaveAttribute('data-type', args.type);
+    });
 
     await step('Item 1 começa aberto', async () => {
       const triggers = canvas.getAllByRole('button');
