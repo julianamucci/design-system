@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect , waitFor } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 import DOMPurify from 'dompurify';
 
@@ -127,10 +127,19 @@ export const Controlled: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('Item 1 começa aberto (valor inicial controlado)', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+    });
+
+    await step('Clicar em item 2 atualiza o estado externo', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[1]);
+      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+    });
   },
 };
 

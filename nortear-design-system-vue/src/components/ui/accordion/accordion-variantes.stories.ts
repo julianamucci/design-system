@@ -65,11 +65,18 @@ export const Single: Story = {
       );
     });
 
+    await step('Abrir o item 2 fecha automaticamente o item 1 (modo single)', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[1]);
+      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+    });
+
     await step('Clicar no trigger ativo fecha o item (collapsible)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
+      await userEvent.click(triggers[1]);
       await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'false'),
+        () => expect(triggers[1]).toHaveAttribute('aria-expanded', 'false'),
         { timeout: 500 }
       );
     });
@@ -177,8 +184,19 @@ export const Controlled: Story = {
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Item 1 começa aberto (valor inicial controlado)', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+    });
+
+    await step('Clicar em item 2 atualiza o estado externo', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[1]);
+      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+    });
   },
 };
 
@@ -208,7 +226,13 @@ export const DefaultOpen: Story = {
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Item 1 inicia expandido via valor inicial', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+    });
   },
 };

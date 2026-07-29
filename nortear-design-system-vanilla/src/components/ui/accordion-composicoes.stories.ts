@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect , waitFor } from 'storybook/test';
 import DOMPurify from 'dompurify';
 import { createAccordion, type AccordionOptions } from './accordion';
 import { createBadge } from './badge';
@@ -89,10 +89,20 @@ export const ComIconeNoTrigger: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('Trigger é acessível pelo texto (não pelo ícone)', async () => {
+      const trigger = canvas.getAllByRole('button')[0];
+      await expect(trigger).toBeInTheDocument();
+      await expect(trigger.textContent?.trim()).not.toBe('');
+    });
+
+    await step('Clicar no trigger abre o item correspondente', async () => {
+      const trigger = canvas.getAllByRole('button')[0];
+      await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+    });
   },
 };
 
@@ -141,10 +151,20 @@ export const ComBadgeNoTrigger: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('Trigger contém label e badge visíveis', async () => {
+      const trigger = canvas.getAllByRole('button')[0];
+      await expect(trigger).toBeInTheDocument();
+      await expect(trigger.textContent).toContain('Novo');
+    });
+
+    await step('Clicar abre o item correspondente', async () => {
+      const trigger = canvas.getAllByRole('button')[0];
+      await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+    });
   },
 };
 
@@ -198,10 +218,22 @@ export const ConteudoRico: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('Abrir o item renderiza o conteúdo rico (especificações)', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[0]);
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+      await expect(canvasElement.textContent).toContain('Intel Core i7-12700');
+    });
+
+    await step('Modo múltiplo: segundo item abre sem fechar o primeiro', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await userEvent.click(triggers[1]);
+      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+    });
   },
 };
 

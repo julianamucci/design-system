@@ -113,19 +113,16 @@ export const FocusVisible: Story = {
     const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
 
-    await step('Trigger recebe foco via teclado', async () => {
+    // Navegação por setas é coberta no Playground das 4 stacks; aqui a story
+    // é sobre o foco em si, com o mesmo roteiro das demais.
+    await step('Trigger recebe foco via Tab', async () => {
       triggers[0].focus();
       await expect(triggers[0]).toHaveFocus();
     });
 
-    await step('ArrowDown move foco para o próximo trigger', async () => {
-      await userEvent.keyboard('{ArrowDown}');
+    await step('Tab move foco para próximo trigger', async () => {
+      await userEvent.tab();
       await expect(triggers[1]).toHaveFocus();
-    });
-
-    await step('ArrowUp retorna foco ao trigger anterior', async () => {
-      await userEvent.keyboard('{ArrowUp}');
-      await expect(triggers[0]).toHaveFocus();
     });
   },
 };
