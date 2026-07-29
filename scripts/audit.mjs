@@ -52,8 +52,7 @@ function grepFile(path, pattern, flags = 'g') {
   return results;
 }
 
-function globStack(stack, subpath, ext) {
-  const dir = join(ROOT, stackDir(stack), 'src', subpath);
+function walkDir(dir, ext) {
   if (!existsSync(dir)) return [];
   const out = [];
   const walk = (d) => {
@@ -67,6 +66,34 @@ function globStack(stack, subpath, ext) {
   };
   walk(dir);
   return out;
+}
+
+function globStack(stack, subpath, ext) {
+  return walkDir(join(ROOT, stackDir(stack), 'src', subpath), ext);
+}
+
+/**
+ * Custom properties realmente definidas — temas compartilhados, CSS `.nds-*` e
+ * os styles de cada stack. Documentar um token que não existe manda o consumidor
+ * sobrescrever uma variável inerte, e nada no runtime avisa.
+ */
+let _definedTokens = null;
+function definedTokens() {
+  if (_definedTokens) return _definedTokens;
+  const files = [
+    // docs/shared inteiro: tokens/, themes/, styles/nds/ e primitives/ — um
+    // subconjunto aqui produz falso positivo em token que existe (foi o caso
+    // de --spacing-4, definido em tokens/ e ausente em themes/).
+    ...walkDir(join(ROOT, 'docs', 'shared'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ];
+  _definedTokens = new Set();
+  for (const f of files) {
+    for (const m of (readFile(f) || '').matchAll(/(--[a-z0-9-]+)\s*:/gi)) {
+      _definedTokens.add(m[1].toLowerCase());
+    }
+  }
+  return _definedTokens;
 }
 
 // Arquivos relevantes para um slug (UI primitive + docs page + stories).
@@ -623,6 +650,58 @@ function auditQuality(slug) {
     }
 
     visit(json, []);
+
+    // 5. Tokens documentados que não existem no CSS. A tabela de tokens é a
+    // parte da doc que o consumidor copia para customizar — token inventado
+    // vira sobrescrita silenciosamente inerte.
+    const known = definedTokens();
+    const seenToken = new Set();
+    for (const m of (readFile(translationFile) || '').matchAll(/"(--[a-z0-9-]+)"/gi)) {
+      const token = m[1].toLowerCase();
+      if (known.has(token) || seenToken.has(token)) continue;
+      seenToken.add(token);
+      violations.push({
+        category: 'quality', severity: 'medium', slug,
+        stack: 'shared', file: relative(ROOT, translationFile),
+        rule: 'unknown_token_reference',
+        message: `token "${token}" documentado mas não definido em nenhum CSS do projeto — customização seria inerte`,
+      });
+    }
+  }
+
+  // 6. Vocabulário de lib que saiu do projeto. Radix, shadcn e Tailwind foram
+  // substituídos pelo CSS `.nds-*`; menção sobrevivente ensina o consumidor a
+  // usar uma API que o design system não expõe mais. Vale para texto e snippet.
+  const DEAD_LIB_RX = [
+    { rx: /@radix-ui|\bradix\b/i, label: 'Radix' },
+    { rx: /\bshadcn\b/i, label: 'shadcn' },
+    { rx: /\bbasecoat\b/i, label: 'Basecoat' },
+    { rx: /\btailwind\b/i, label: 'Tailwind' },
+  ];
+  const deadLibTargets = [
+    join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'),
+    ...STACKS.flatMap((s) => filesForSlug(slug, s).docs),
+  ];
+  for (const file of deadLibTargets) {
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    const isJson = rel.endsWith('.json');
+    for (const { rx, label } of DEAD_LIB_RX) {
+      // Em código, comentário que nomeia a lib costuma ser justamente o registro
+      // de que ela saiu ("API do Radix, que o projeto não usa mais"). O que
+      // importa é o que o consumidor lê renderizado — comentário não renderiza.
+      const hit = content.split('\n').findIndex(
+        (l) => rx.test(l) && (isJson || !/^\s*(\/\/|\/\*|\*|<!--)/.test(l)),
+      );
+      if (hit === -1) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug,
+        stack: rel.startsWith('docs') ? 'shared' : rel.split(/[\\/]/)[0].replace('nortear-design-system-', ''),
+        file: rel, line: hit + 1, rule: 'dead_lib_reference',
+        message: `menciona "${label}" — lib removida do projeto na migração para .nds-*`,
+      });
+    }
   }
 
   violations.push(...auditStoryQuality(slug));

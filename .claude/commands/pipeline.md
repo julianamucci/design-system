@@ -23,16 +23,19 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Princípios (ordem de impacto)
 
-1. **Scripts antes de agents.** `scripts/audit.mjs` roda em <1s e cobre tudo que é grep+regex determinístico. Dispare um `Agent` apenas quando o check exige julgamento (contexto visual, UX writing, divergência de API).
+1. **Scripts antes de agents — mas o gate depende do TIPO de check.** `scripts/audit.mjs` roda em <1s e cobre o que é grep+regex. Dispare um `Agent` quando o check exige julgamento. Atenção ao que o scan consegue ver:
+   - **Checks negativos** (código errado *presente*: XSS, wildcard import, evento não tipado) → scan limpo significa OK. Pode pular o agent.
+   - **Checks de presença** (instrumentação, asserção real, paridade entre stacks) → **scan limpo não significa nada**: grep não encontra o que nunca foi escrito. Componente novo sem tracking e com asserção vazia gera scan limpo. Estes agents rodam SEMPRE em modo `new` (ver Fase D).
 2. **Inline checks nos dev-skills.** Cada `/dev-<stack>` roda `audit.mjs --category security,performance,analytics,quality` antes de commitar — elimina ~1 rodada inteira de auditoria em modo `new`.
 3. **Cross-stack por último.** Compara as 4 implementações pós-fix; rodá-lo antes gera cascata redundante.
 4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 4 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits.
-5. **Context-cache por componente.** `.pipeline-context/<slug>.md` ≤120 linhas com variantes, props, tokens, lista de arquivos. Reuse se for do mesmo dia.
+5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes. Reuse se for do mesmo dia.
 6. **Audit-mode é report-only.** Agents chamados pela pipeline em `audit` reportam; fixes vão para `FIXES-NEEDED.md`. Skills isoladas (`/quality` fora de pipeline) continuam em fix-mode.
 7. **Glob e Grep nativos, não loops bash.** No Windows loops são lentos; tools do Claude já varrem em paralelo.
 8. **Prompts auto-contidos.** Passe slug, modo, caminho do context-cache, lista exata de arquivos. Nunca delegue "descubra o que fazer".
 9. **Nunca pule uma skill sem registrar.** Script limpo → registre `script-clean, agent skipped`. Erro em uma skill não bloqueia as próximas da mesma fase.
 10. **Mostre progresso fase a fase.** `✓ Fase B concluída (4 stacks paralelas, 3 min)`.
+11. **Vanilla é o teste de fumaça do contrato.** Toda divergência de comportamento encontrada até hoje tinha o Vanilla certo e as outras três com markup herdado do shadcn. Ele não tem lib headless para esconder o contrato: o que está lá é o que o design system realmente define. Ao comparar stacks, comece por ele.
 
 ---
 
@@ -108,12 +111,14 @@ node scripts/audit.mjs --all --json > .pipeline-context/scans.json
 Categorias cobertas:
 - **security**: HTML dinâmico sem sanitize, href sem validação
 - **performance**: wildcard lucide imports, dimensões hardcoded em cva, top-level Date em stories
-- **quality**: seções obrigatórias faltando, a11y.disable, sub-stories sem play
-- **analytics**: eventos não tipados em AnalyticsEvents, `@/lib/analytics` importado em UI primitive
+- **quality**: seções obrigatórias faltando, a11y.disable, sub-stories sem play, `play_without_assertion`, `noop_assertion`, `coverage_divergence`, `legacy_class_in_story`, vocabulário de lib removida (`dead_lib_reference`), token/classe inexistente (`unknown_token_reference`)
+- **analytics**: eventos não tipados em AnalyticsEvents, `@/lib/analytics` importado em UI primitive, `_infra` (mount ausente/condicional, demo sem container), `i18n_text_in_payload`
 
 Exit codes: 0 = limpo, 1 = high, 2 = medium/low.
 
-**Regra de ouro**: categoria vazia no scan → NÃO dispare o agent dessa categoria. Reporte `script-clean, agent skipped`.
+**Regra de ouro (só para checks negativos)**: categoria vazia no scan → NÃO dispare o agent dessa categoria. Reporte `script-clean, agent skipped`.
+
+**Exceção (checks de presença)**: em modo `new`, `/quality` e `/analytics` rodam mesmo com scan limpo. Componente recém-criado sem instrumentação e com asserção vazia produz scan limpo — o grep não acha o que nunca foi escrito. Ver Princípio 1.
 
 ---
 
@@ -124,7 +129,7 @@ Exit codes: 0 = limpo, 1 = high, 2 = medium/low.
 ```
 Fase A (serial):
   1. /ux-writer <slug>
-  2. Escrever .pipeline-context/<slug>.md (slug, categoria, variantes, props, tokens, lista de arquivos das 4 stacks)
+  2. Escrever .pipeline-context/<slug>.md — ver "Contrato do context-cache" abaixo
   3. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
 
 Fase B (4 agents em PARALELO — dev-skills):
@@ -136,19 +141,37 @@ Fase B (4 agents em PARALELO — dev-skills):
 Fase C (serial):
   node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json  (re-scan pós-dev)
 
-Fase D (até 5 agents em PARALELO — só se scan reportou violações na categoria):
+Fase C2 (serial — PORTÃO, bloqueia o avanço):
+  npm test -- <slug>   em cada uma das 4 stacks
+  Falha em qualquer stack → não avance. Corrija (dev-skill da stack) e repita.
+
+Fase D (até 5 agents em PARALELO):
+  /quality <slug>      (SEMPRE em modo `new` — check de presença)
+  /analytics <slug>    (SEMPRE em modo `new` — check de presença)
+  /seo-geo <slug>      (sempre)
   /security <slug>     (só se scan.security.length > 0)
   /performance <slug>  (só se scan.performance.length > 0)
-  /quality <slug>      (só se scan.quality.length > 0)
-  /seo-geo <slug>      (sempre)
-  /analytics <slug>    (só se scan.analytics.length > 0)
 
 Fase E (1 agent — último):
   /cross-stack <slug>  (sempre — compara estado pós-fix)
 
 Fase F (serial):
-  Consolidar FIXES-NEEDED.md
+  Consolidar FIXES-NEEDED.md e APLICAR (ver Passo 6)
 ```
+
+### Contrato do context-cache (Fase A.2)
+
+`.pipeline-context/<slug>.md` deve conter, além do inventário técnico (categoria, variantes, tamanhos, props, tokens, lista de arquivos das 4 stacks):
+
+**Spec de exemplos — obrigatória.** Uma lista fechada de qual conteúdo cada demo, story e composição renderiza, derivada de `demonstration.*` e `variants.*` do `translations.json`:
+
+- para cada story a criar: nome exportado, chave de tradução dos rótulos, e estado inicial (aberto/fechado, selecionado, disabled)
+- para cada composição: quais elementos compõem (ícone? badge? qual?) e a chave do rótulo
+- classes `.nds-*` do wrapper de cada exemplo
+
+Os dev-skills consomem essa spec **literalmente**. É proibido inventar rótulo, valor ou estado inicial de exemplo — se faltar na spec, pare e reporte, não improvise. As 4 stacks precisam renderizar o mesmo exemplo com as mesmas classes; divergência aqui só é detectável tarde, na Fase E.
+
+**Vocabulário proibido.** Nomeie explicitamente as libs que NÃO existem mais no projeto (Radix, shadcn, Tailwind utilitário fora do prefixo `nds-`) — elas não podem aparecer em `translations.json`, docs page nem story. Ver Princípio 11.
 
 ### Sequência `full`
 
@@ -165,7 +188,9 @@ Fase A (serial):
 
 Fase B (serial entre componentes, paralelo entre skills):
   Para cada <slug>:
-    /security | /performance | /quality | /analytics (só se scan reportou)
+    /security | /performance (só se scan reportou)
+    /quality | /analytics    (só se scan reportou OU se o componente nunca passou
+                              por auditoria de presença — registre qual dos dois)
     /seo-geo  (sempre)
 
 Fase C:
@@ -190,7 +215,7 @@ Fase B (paralelo): /seo-geo <slug>, /analytics <slug>
 Cada dev-agent recebe prompt auto-contido com:
 
 1. Skill a invocar (`/dev-react <slug>`)
-2. `Leia .pipeline-context/<slug>.md PRIMEIRO` — contém variantes, props, tokens e lista de arquivos
+2. `Leia .pipeline-context/<slug>.md PRIMEIRO` — contém variantes, props, tokens, lista de arquivos e a **spec de exemplos**. A spec é contrato: renderize exatamente os exemplos, rótulos, estados iniciais e classes `.nds-*` descritos ali. Se algo que você precisa não estiver na spec, **pare e reporte** — não invente, porque as outras 3 stacks estão sendo construídas em paralelo a partir do mesmo arquivo.
 3. **Inline audit check antes de commit:**
 
 ```
@@ -235,9 +260,23 @@ NÃO edite, NÃO commite. Reporte em ≤150 palavras:
 
 ```
 O script já verificou: classes cva(), variantes disponíveis, tokens CSS.
-Foque em: comportamento interativo cross-stack, atributos ARIA que diferem entre
-libs (base-ui vs reka-ui vs bits-ui), divergências de docs page (seções presentes
-num stack e ausentes em outro), play functions com comportamentos diferentes.
+Foque em:
+- Comportamento interativo cross-stack e atributos ARIA que diferem entre libs
+  (base-ui vs reka-ui vs bits-ui vs factory).
+- Divergências de docs page (seção presente numa stack e ausente em outra).
+- PARIDADE DE EXEMPLO: cada story e cada demo da docs page renderiza o MESMO
+  conteúdo nas 4 stacks — mesmos rótulos, mesmo estado inicial, mesma composição.
+  Compare também story <-> docs page dentro da mesma stack: a story deve mostrar
+  o exemplo da docs page, consumindo components/ui, com as mesmas classes .nds-*.
+- PARIDADE DE MARKUP dos wrappers de UI: mesma árvore de elementos e mesmas
+  classes. Diferença de markup entre stacks é bug até prova em contrário —
+  costuma ser resíduo de shadcn numa stack e não nas outras.
+- MATRIZ DE COBERTURA DE TESTE: para cada story, quantos expect() em cada stack.
+  Contagem desproporcional (1 numa stack, 5 em outra) significa placeholder na
+  de menor contagem, não teste enxuto.
+
+Comece a comparação pelo Vanilla — ele não tem lib headless escondendo o
+contrato, então é o que expõe o que o design system realmente define.
 
 Reporte divergências aceitáveis (diferenças idiomáticas entre libs) separadas
 de divergências reais que exigem alinhamento.
@@ -254,9 +293,9 @@ de divergências reais que exigem alinhamento.
 
 ### Componentes Processados: X
 
-| Componente | Script scan | Fase B dev | Fase D audits | Fase E cross-stack |
-|------------|-------------|------------|---------------|--------------------|
-| calendar   | 4 high, 3 low | ✓ 4 stacks | 2 agents disparados | 1 divergência |
+| Componente | Script scan | Fase B dev | Fase C2 testes | Fase D audits | Fase E cross-stack |
+|------------|-------------|------------|----------------|---------------|--------------------|
+| calendar   | 4 high, 3 low | ✓ 4 stacks | ✓ 4/4 verdes | 2 agents disparados | 1 divergência |
 ```
 
 ### FIXES-NEEDED.md
@@ -277,5 +316,17 @@ Agrupa apenas violações reportadas por agents (as determinísticas já foram c
 ```
 
 Ao fim: **"N violações em X componentes. Aplicar: [1] críticos / [2] críticos+médios / [3] todos / [4] nenhum?"**
+
+### Quem aplica os fixes
+
+Aprovado o batch, a aplicação é do **orquestrador**, não fica pendente esperando outra invocação:
+
+| Tipo de fix | Quem aplica |
+|---|---|
+| Mecânico e localizado (classe errada, `controls.disable`, import) | Orquestrador, direto |
+| Exige julgamento de conteúdo (texto, exemplo, cobertura de teste) | Re-invoca a skill de origem em **fix-mode**, passando o item do FIXES-NEEDED |
+| Toca as 4 stacks (markup, classe compartilhada, `.nds-*` CSS) | Orquestrador, num único commit — nunca 4 agents paralelos no mesmo arquivo |
+
+Depois de aplicar: re-rode `audit.mjs <slug>` e a Fase C2. Item aplicado sem re-verificação não conta como resolvido.
 
 **Commits**: fase A/B geram commits próprios (`skill(ux-writer): <slug>`, `skill(dev-react): <slug>`); fase F agrupa fixes em batches (`fix(<slug>): <resumo do batch>`).

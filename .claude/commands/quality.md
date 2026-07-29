@@ -58,6 +58,8 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `noop_assertion` | asserção que não pode falhar (`length >= 0`, `toBeTruthy` no container) |
 | `coverage_divergence` | mesma story com cobertura desproporcional entre stacks |
 | `legacy_class_in_story` | classe sem prefixo `nds-` em story — resíduo inerte da migração |
+| `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
+| `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
 | `missing_section` · `substory_no_play` · `a11y_disabled` · `translation_literal_prop` | estrutura e conteúdo |
 
 O script julga forma; esta skill julga **conteúdo**: se a asserção verifica o comportamento certo, se a story demonstra o mesmo caso da docs page, se o texto está correto. Passos abaixo assumem o scan já rodado — não re-detecte o que ele já achou.
