@@ -40,13 +40,17 @@ Critérios por categoria de componente: ver `docs/shared/skill-refs/test-criteri
 
 ## Processo de Auditoria
 
-### Passo 0 — Audit determinístico (sempre)
+### Passo 0 — Audit determinístico (só em invocação direta)
+
+**Se o prompt já trouxe o conteúdo de `.pipeline-context/scan-<slug>.json`** — é o pipeline chamando, o script já rodou no Passo 4 dele. Filtre as entradas com `category: "quality"` e **não rode de novo** (o scan do pipeline é de todas as categorias).
+
+**Se não trouxe** — foi invocação direta (`/quality <slug>`). Rode:
 
 ```bash
 node scripts/audit.mjs <slug> --category quality --json
 ```
 
-Cobre em ms o que é grep+regex, e é o que o pipeline usa para decidir se dispara esta skill:
+Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pipeline, e ele cobre em ms o que é grep+regex:
 
 | Regra | O que pega |
 |---|---|

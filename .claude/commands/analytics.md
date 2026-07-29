@@ -32,7 +32,11 @@ Templates:
 
 ## Processo
 
-### Passo 0 — Audit determinístico (sempre)
+### Passo 0 — Audit determinístico (só em invocação direta)
+
+**Se o prompt já trouxe o conteúdo de `.pipeline-context/scan-<slug>.json`** — é o pipeline chamando, o script já rodou no Passo 4 dele. Filtre as entradas com `category: "analytics"` e **não rode de novo** (o scan do pipeline é de todas as categorias).
+
+**Se não trouxe** — foi invocação direta (`/analytics <slug>`). Rode:
 
 ```bash
 node scripts/audit.mjs <slug> --category analytics --json
