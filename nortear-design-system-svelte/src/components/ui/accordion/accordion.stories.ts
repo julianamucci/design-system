@@ -68,6 +68,38 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  // O gerador de source do @storybook/svelte monta a tag a partir de
+  // `component.__docgen.name` e, sem docgen, cai em `component.name` — o nome
+  // interno da função compilada. Daí saía `<wrapper type="single" …/>`, que não
+  // é um componente que alguém possa importar. Além disso ele serializa os
+  // `args` da raiz sobre o componente-wrapper da story, misturando duas coisas.
+  // Enquanto o docgen estiver desligado, o snippet vai explícito.
+  parameters: {
+    docs: {
+      source: {
+        code: `<script lang="ts">
+  import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+  } from "@/components/ui/accordion";
+
+  // bits-ui não tem defaultValue: o valor inicial vai no \`value\` bindable.
+  let value = $state("item-1");
+</script>
+
+<Accordion type="single" bind:value class="nds-max-w-lg">
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+    <AccordionContent>
+      Acesse a tela de login e clique em "Esqueci minha senha".
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+      },
+    },
+  },
   render: (args) => ({
     Component: AccordionStory,
     props: {
