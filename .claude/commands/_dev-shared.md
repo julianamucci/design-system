@@ -155,14 +155,6 @@ o que ela expõe de verdade.
 - Control só nas props que o `render` de fato encaminha. Prop que o render fixa
   depois do spread (`defaultValue`, `className`) ou que o wrapper da story não
   recebe vai com `control: false` — documentação, não controle morto.
-- **`control: false` não tira a prop do painel Controls** — ela só perde o editor
-  e vira uma linha com `-`, que é ruído. As duas superfícies filtram por
-  parâmetros independentes: o painel usa `parameters.controls.{include,exclude}`;
-  a aba de docs usa `parameters.docs.argTypes.{include,exclude}`. Some com as
-  props documentais do painel via `parameters.controls: { exclude: [...] }` e
-  elas continuam na API Reference.
-  Não use `table: { disable: true }` para isso: esse esconde da tabela de docs
-  também, que é justamente onde a prop precisa aparecer.
 - `args` com valor inicial para **toda** prop que tem control; sem isso o control
   aparece vazio.
 - Nada em `args` sem entrada correspondente em `argTypes` — a prop fica fora da

@@ -28,14 +28,6 @@ const meta = {
   title: 'UI/CodeBlock',
   component: CodeBlock,
   tags: ['autodocs', 'display'],
-  // Controls e API Reference filtram por parâmetros INDEPENDENTES:
-  // o painel usa parameters.controls.{include,exclude}; a aba de docs usa
-  // parameters.docs.argTypes.{include,exclude}. Estas props existem no argTypes
-  // para serem DOCUMENTADAS — sem control, porque o render não as encaminha —
-  // e sairiam no painel como linha morta com "-". Excluídas só de lá.
-  parameters: {
-    controls: { exclude: ['copyLabel', 'copiedLabel', 'class'] },
-  },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba
   // "API Reference" sai só destes argTypes.
   argTypes: {
