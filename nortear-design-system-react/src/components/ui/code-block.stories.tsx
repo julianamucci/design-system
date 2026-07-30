@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor, fn } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import { CodeBlockDocs } from "@/components/docs/CodeBlockDocs";
+import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 /** Snippet canônico das stories e da docs page nas 4 stacks. */
 const DEMO_CODE = `import { CodeBlock } from "@/components/ui/code-block";
@@ -18,6 +20,9 @@ const meta = {
   title: "UI/CodeBlock",
   component: CodeBlock,
   tags: ["autodocs", "display"],
+  parameters: {
+    docs: { page: withAutoDocsTab(CodeBlockDocs) },
+  },
   // A aba "API Reference" combina o docgen com estes argTypes.
   argTypes: {
     code: {

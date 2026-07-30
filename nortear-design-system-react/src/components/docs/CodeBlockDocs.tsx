@@ -1,0 +1,835 @@
+import { useCallback, useEffect, useMemo } from "react";
+import { CodeBlock } from "@/components/ui/code-block";
+import { useTranslation, type TranslationOverrides } from "@/lib/i18n";
+import { useSeoEffect } from "@/lib/use-seo";
+import { track } from "@/lib/analytics";
+import { useActiveSection } from "@/lib/use-active-section";
+import uiTranslations from "@/i18n/ui.json";
+import codeBlockTranslations from "@shared/content/code-block/translations.json";
+
+import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
+import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
+import { DocsDemonstration } from "@/components/docs/shared/sections/DocsDemonstration";
+import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy";
+import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
+import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
+import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
+import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
+import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
+import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
+import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
+import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
+import { DocsAccessibility } from "@/components/docs/shared/sections/DocsAccessibility";
+import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated";
+import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
+import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
+import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+
+const SLUG = "code-block";
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const priorityKeyMap: Record<string, string> = {
+  high: "common.high",
+  medium: "common.medium",
+  low: "common.low",
+};
+
+/**
+ * A tabela de tokens do JSON compartilhado tem duas colunas (`token` e `part`) e
+ * três grupos com título próprio (`surfaceTitle`, `syntaxTitle`,
+ * `inheritedTitle`). `DocsTokens` renderiza uma única tabela de três colunas e
+ * um único `id="tokens"` — três seções gerariam id duplicado. O grupo vira,
+ * então, a coluna do meio; só o cabeçalho dela não existe no JSON e entra por
+ * override.
+ */
+const overrides: TranslationOverrides = {
+  "pt-BR": { "tokens.table.group": "Grupo" },
+  en: { "tokens.table.group": "Group" },
+  es: { "tokens.table.group": "Grupo" },
+};
+
+// ─── Nav ─────────────────────────────────────────────────────────────────────
+
+const getNavGroups = (t: (key: string) => string) => [
+  {
+    label: t("nav.overview"),
+    sections: [
+      { id: "demonstracao", label: t("nav.demonstration") },
+      { id: "anatomia",     label: t("nav.anatomy") },
+      { id: "quando-usar",  label: t("nav.usage") },
+      { id: "do-dont",      label: t("nav.doDont") },
+    ],
+  },
+  {
+    label: t("nav.techRef"),
+    sections: [
+      { id: "importacao",   label: t("nav.import") },
+      { id: "variantes",    label: t("nav.variants") },
+      { id: "composicoes",  label: t("nav.compositions") },
+      { id: "estados",      label: t("nav.states") },
+      { id: "propriedades", label: t("nav.props") },
+      { id: "tokens",       label: t("nav.tokens") },
+    ],
+  },
+  {
+    label: t("nav.context"),
+    sections: [
+      { id: "acessibilidade", label: t("nav.accessibility") },
+      { id: "relacionados",   label: t("nav.related") },
+      { id: "notas",          label: t("nav.notes") },
+    ],
+  },
+  {
+    label: t("nav.quality"),
+    sections: [
+      { id: "analytics", label: t("nav.analytics") },
+      { id: "testes",    label: t("nav.testes") },
+    ],
+  },
+];
+
+// ─── Snippets exibidos pelos CodeBlocks da página ────────────────────────────
+// Strings literais idênticas nas 4 stacks (ver .pipeline-context/code-block.md).
+
+const demoTsx = `import { CodeBlock } from "@/components/ui/code-block";
+
+const snippet = \`npm install\`;
+
+export function Exemplo() {
+  return <CodeBlock code={snippet} language="bash" />;
+}`;
+
+const demoBash = `# instala e sobe o Storybook
+npm install
+npm run storybook`;
+
+const demoCss = `.nds-code-block-root {
+  --code-block-bg: var(--muted);
+  --code-token-keyword: var(--primary);
+}`;
+
+const demoJson = `{
+  "name": "nortear-design-system",
+  "private": true,
+  "version": "1.0.0"
+}`;
+
+const demoTxt = `Valor não reconhecido cai em texto simples.
+O bloco continua rolando e copiando normalmente.`;
+
+const langScript = `const total = items.length; // soma`;
+const langMarkup = `<button class="nds-btn" :disabled="loading">Salvar</button>`;
+const langStyles = `.nds-card { padding: var(--spacing-4); }`;
+const langData = `{ "port": 6006, "open": true }`;
+const langShell = `npm run build -- --mode production`;
+const langText = `Sem classificação: monoespaçado e sem cor.`;
+
+const compositionCode = `const items = await load();
+const total = items.length;
+render(items, total);`;
+
+/** Snippet JSX exibido no toggle "Ver código" de cada linguagem suportada. */
+const variantSnippet = (language: string) =>
+  `<CodeBlock\n  code={source}\n  language="${language}"\n  showLineNumbers={false}\n/>`;
+
+// ─── Componente principal ────────────────────────────────────────────────────
+
+export function CodeBlockDocs() {
+  const { t: tNav } = useTranslation(uiTranslations);
+  const { t: tContent, locale } = useTranslation(codeBlockTranslations, overrides);
+
+  const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
+  const allIds = useMemo(
+    () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
+    [navGroups]
+  );
+
+  useSeoEffect({
+    title: tContent("seo.title"),
+    description: tContent("seo.description"),
+    locale,
+    componentSlug: SLUG,
+    aiSummary: tContent("seo.aiSummary"),
+    aiEntities: tContent("seo.aiEntities"),
+    breadcrumb: [
+      { name: "Components", item: "/components" },
+      { name: tContent("category"), item: "/components/display" },
+      { name: tContent("title") },
+    ],
+  });
+
+  useEffect(() => {
+    track("docs_page_view", {
+      component_name: SLUG,
+      locale,
+      page_title: `${tContent("title")} · Design System`,
+    });
+  }, [locale, tContent]);
+
+  const handleSectionChange = useCallback(
+    (id: string) => {
+      track("docs_section_viewed", {
+        section_id: id,
+        component_name: SLUG,
+        locale,
+      });
+    },
+    [locale]
+  );
+
+  const activeId = useActiveSection(allIds, handleSectionChange);
+
+  // Rótulos acessíveis do botão copiar, traduzidos junto com a página.
+  const copyLabel = tContent("demonstration.labels.copy");
+  const copiedLabel = tContent("demonstration.labels.copied");
+  const footerNote = tContent("demonstration.labels.footer");
+
+  // ─── Code strings da seção Importação ─────────────────────────────────────
+
+  const codeImportBasic = `import { CodeBlock } from "@/components/ui/code-block";`;
+
+  const interfaceCode = `interface CodeBlockProps
+  extends Omit<React.ComponentProps<"div">, "children"> {
+  code: string;
+  language?: string;
+  title?: string;
+  showLineNumbers?: boolean;
+  highlightLines?: string | number | Array<string | number>;
+  footer?: React.ReactNode;
+  copyLabel?: string;
+  copiedLabel?: string;
+}`;
+
+  return (
+    <DocsPageLayout
+      navGroups={navGroups}
+      activeSection={activeId}
+      componentSlug={SLUG}
+      header={
+        <DocsHeader
+          title={tContent("title")}
+          description={tContent("description")}
+          category={tContent("category")}
+          type={tContent("type")}
+        />
+      }
+    >
+      {/* ── Demonstração ──────────────────────────────────────────────── */}
+      <DocsDemonstration title={tContent("demonstration.title")} componentSlug={SLUG}>
+        <div className="nds-w-full nds-stack" data-spacing="md">
+          <CodeBlock
+            code={demoTsx}
+            language="tsx"
+            title={tContent("demonstration.labels.fileName")}
+            showLineNumbers
+            highlightLines="3, 5-7"
+            footer={footerNote}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:exemplo-tsx"
+          />
+          <CodeBlock
+            code={demoBash}
+            language="bash"
+            title={tContent("demonstration.labels.terminalTitle")}
+            showLineNumbers={false}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:terminal"
+          />
+          <CodeBlock
+            code={demoCss}
+            language="css"
+            title={tContent("demonstration.labels.themeTitle")}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:tema-css"
+          />
+          <CodeBlock
+            code={demoJson}
+            language="json"
+            title={tContent("demonstration.labels.dataTitle")}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:package-json"
+          />
+          <CodeBlock
+            code={demoTxt}
+            language="txt"
+            title={tContent("demonstration.labels.plainTitle")}
+            showLineNumbers={false}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:notas-txt"
+          />
+        </div>
+      </DocsDemonstration>
+
+      {/* ── Anatomia ──────────────────────────────────────────────────── */}
+      <DocsAnatomy
+        title={tContent("anatomy.title")}
+        items={[
+          tContent("anatomy.item1"),
+          tContent("anatomy.item2"),
+          tContent("anatomy.item3"),
+          tContent("anatomy.item4"),
+          tContent("anatomy.item5"),
+          tContent("anatomy.item6"),
+          tContent("anatomy.item7"),
+          tContent("anatomy.item8"),
+        ]}
+        structureLabel={tContent("anatomy.structureLabel")}
+        structureCode={tContent("anatomy.structureCode")}
+      />
+
+      {/* ── Quando Usar ───────────────────────────────────────────────── */}
+      <DocsWhenToUse
+        title={tContent("usage.title")}
+        guidelines={{
+          title: tContent("usage.guidelines.title"),
+          items: [
+            tContent("usage.guidelines.item1"),
+            tContent("usage.guidelines.item2"),
+            tContent("usage.guidelines.item3"),
+            tContent("usage.guidelines.item4"),
+          ],
+        }}
+        scenarios={{
+          title: tContent("usage.scenarios.title"),
+          cols: {
+            scenario: tContent("usage.scenarios.cols.scenario"),
+            use: tContent("usage.scenarios.cols.use"),
+            alternative: tContent("usage.scenarios.cols.alternative"),
+          },
+          items: [
+            { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
+            { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
+            { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
+            { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
+          ],
+        }}
+        uxWriting={{
+          title: tContent("usage.uxWriting.title"),
+          cols: {
+            element: tContent("usage.uxWriting.table.element"),
+            rules: tContent("usage.uxWriting.table.rules"),
+            do: tContent("usage.uxWriting.table.correct"),
+            dont: tContent("usage.uxWriting.table.avoid"),
+          },
+          items: [
+            {
+              element: tContent("usage.uxWriting.table.headerTitle.name"),
+              rules: tContent("usage.uxWriting.table.headerTitle.format"),
+              do: tContent("usage.uxWriting.table.headerTitle.good"),
+              dont: tContent("usage.uxWriting.table.headerTitle.bad"),
+            },
+            {
+              element: tContent("usage.uxWriting.table.footer.name"),
+              rules: tContent("usage.uxWriting.table.footer.format"),
+              do: tContent("usage.uxWriting.table.footer.good"),
+              dont: tContent("usage.uxWriting.table.footer.bad"),
+            },
+            {
+              element: tContent("usage.uxWriting.table.copy.name"),
+              rules: tContent("usage.uxWriting.table.copy.format"),
+              do: tContent("usage.uxWriting.table.copy.good"),
+              dont: tContent("usage.uxWriting.table.copy.bad"),
+            },
+            {
+              element: tContent("usage.uxWriting.table.comments.name"),
+              rules: tContent("usage.uxWriting.table.comments.format"),
+              do: tContent("usage.uxWriting.table.comments.good"),
+              dont: tContent("usage.uxWriting.table.comments.bad"),
+            },
+          ],
+        }}
+        do={{
+          title: tContent("usage.do.title"),
+          items: [
+            tContent("usage.do.item1"),
+            tContent("usage.do.item2"),
+            tContent("usage.do.item3"),
+            tContent("usage.do.item4"),
+          ],
+        }}
+        dont={{
+          title: tContent("usage.dont.title"),
+          items: [
+            tContent("usage.dont.item1"),
+            tContent("usage.dont.item2"),
+            tContent("usage.dont.item3"),
+          ],
+        }}
+      />
+
+      {/* ── Do & Don't ────────────────────────────────────────────────── */}
+      <DocsDoDont
+        title={tContent("doDont.title")}
+        pairs={[
+          {
+            doLabel: tNav("common.do"),
+            dontLabel: tNav("common.dont"),
+            doPreview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                language="ts"
+                title="lista.ts"
+                highlightLines={[2]}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:do-dont:do-1"
+              />
+            ),
+            dontPreview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                highlightLines="1-2"
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:do-dont:dont-1"
+              />
+            ),
+            doCaption: tContent("doDont.pair1.do"),
+            dontCaption: tContent("doDont.pair1.dont"),
+          },
+          {
+            doLabel: tNav("common.do"),
+            dontLabel: tNav("common.dont"),
+            doPreview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={demoBash}
+                language="bash"
+                title={tContent("demonstration.labels.terminalTitle")}
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:do-dont:do-2"
+              />
+            ),
+            dontPreview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={demoBash}
+                language="bash"
+                title={tContent("demonstration.labels.terminalTitle")}
+                showLineNumbers
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:do-dont:dont-2"
+              />
+            ),
+            doCaption: tContent("doDont.pair2.do"),
+            dontCaption: tContent("doDont.pair2.dont"),
+          },
+        ]}
+      />
+
+      {/* ── Importação ────────────────────────────────────────────────── */}
+      <DocsImport
+        title={tContent("import.title")}
+        description={tContent("import.basic")}
+        code={codeImportBasic}
+        secondaryDescription={tContent("import.withFooter")}
+        secondaryCode={tContent("props.extensibilityCode")}
+        componentSlug={SLUG}
+      />
+
+      {/* ── Variantes (linguagens suportadas) ─────────────────────────── */}
+      <DocsVariants
+        title={tContent("variants.title")}
+        note={tContent("variants.note")}
+        componentSlug={SLUG}
+        items={[
+          {
+            name: "script",
+            description: tContent("variants.items.script"),
+            code: variantSnippet("tsx"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langScript}
+                language="tsx"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:script"
+              />
+            ),
+          },
+          {
+            name: "markup",
+            description: tContent("variants.items.markup"),
+            code: variantSnippet("vue"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langMarkup}
+                language="vue"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:markup"
+              />
+            ),
+          },
+          {
+            name: "styles",
+            description: tContent("variants.items.styles"),
+            code: variantSnippet("css"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langStyles}
+                language="css"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:styles"
+              />
+            ),
+          },
+          {
+            name: "data",
+            description: tContent("variants.items.data"),
+            code: variantSnippet("json"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langData}
+                language="json"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:data"
+              />
+            ),
+          },
+          {
+            name: "shell",
+            description: tContent("variants.items.shell"),
+            code: variantSnippet("bash"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langShell}
+                language="bash"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:shell"
+              />
+            ),
+          },
+          {
+            name: "text",
+            description: tContent("variants.items.text"),
+            code: variantSnippet("txt"),
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={langText}
+                language="txt"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:variantes:text"
+              />
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug={SLUG}
+        items={[
+          {
+            name: tContent("variants.compositions.withTitle.name"),
+            description: tContent("variants.compositions.withTitle.description"),
+            useWhen: tContent("variants.compositions.withTitle.use"),
+            code: `<CodeBlock\n  code={source}\n  language="ts"\n  title="lista.ts"\n/>`,
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                language="ts"
+                title="lista.ts"
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:composicoes:with-title"
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withoutNumbers.name"),
+            description: tContent("variants.compositions.withoutNumbers.description"),
+            useWhen: tContent("variants.compositions.withoutNumbers.use"),
+            code: `<CodeBlock\n  code={source}\n  language="ts"\n  showLineNumbers={false}\n/>`,
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                language="ts"
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:composicoes:without-numbers"
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.highlighted.name"),
+            description: tContent("variants.compositions.highlighted.description"),
+            useWhen: tContent("variants.compositions.highlighted.use"),
+            code: `<CodeBlock\n  code={source}\n  language="ts"\n  highlightLines={[2]}\n/>`,
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                language="ts"
+                highlightLines={[2]}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:composicoes:highlighted"
+              />
+            ),
+          },
+          {
+            name: tContent("variants.compositions.withFooter.name"),
+            description: tContent("variants.compositions.withFooter.description"),
+            useWhen: tContent("variants.compositions.withFooter.use"),
+            code: `<CodeBlock\n  code={source}\n  language="ts"\n  footer="A ação de copiar leva apenas o código."\n/>`,
+            preview: (
+              <CodeBlock
+                className="nds-w-full"
+                code={compositionCode}
+                language="ts"
+                footer={footerNote}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+                data-track="code"
+                data-track-id="code-block:composicoes:with-footer"
+              />
+            ),
+          },
+        ]}
+      />
+
+      {/* ── Configurações (States) ────────────────────────────────────── */}
+      <DocsStates
+        title={tContent("states.title")}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
+        items={[
+          { label: tContent("states.idle.label"),            trigger: tContent("states.idle.trigger"),            behavior: tContent("states.idle.behavior") },
+          { label: tContent("states.copied.label"),          trigger: tContent("states.copied.trigger"),          behavior: tContent("states.copied.behavior") },
+          { label: tContent("states.numbered.label"),        trigger: tContent("states.numbered.trigger"),        behavior: tContent("states.numbered.behavior") },
+          { label: tContent("states.unnumbered.label"),      trigger: tContent("states.unnumbered.trigger"),      behavior: tContent("states.unnumbered.behavior") },
+          { label: tContent("states.highlighted.label"),     trigger: tContent("states.highlighted.trigger"),     behavior: tContent("states.highlighted.behavior") },
+          { label: tContent("states.scrolling.label"),       trigger: tContent("states.scrolling.trigger"),       behavior: tContent("states.scrolling.behavior") },
+          { label: tContent("states.unknownLanguage.label"), trigger: tContent("states.unknownLanguage.trigger"), behavior: tContent("states.unknownLanguage.behavior") },
+        ]}
+      />
+
+      {/* ── Propriedades ──────────────────────────────────────────────── */}
+      <DocsProps
+        title={tContent("props.title")}
+        tables={[
+          {
+            cols: {
+              prop: tContent("props.table.prop"),
+              type: tContent("props.table.type"),
+              default: tContent("props.table.default"),
+              required: tContent("props.table.required"),
+              description: tContent("props.table.description"),
+            },
+            items: [
+              "code",
+              "language",
+              "title",
+              "showLineNumbers",
+              "highlightLines",
+              "footer",
+              "copyLabel",
+              "copiedLabel",
+              "className",
+            ].map((key) => ({
+              name: tContent(`props.table.${key}.name`),
+              type: tContent(`props.table.${key}.type`),
+              defaultValue: tContent(`props.table.${key}.default`),
+              required: tContent(`props.table.${key}.required`),
+              description: tContent(`props.table.${key}.description`),
+            })),
+          },
+        ]}
+        interfaceCode={interfaceCode}
+        extensibilityTitle={tContent("props.extensibilityTitle")}
+        extensibilityNotes={tContent("props.extensibility")}
+      />
+
+      {/* ── Tokens ────────────────────────────────────────────────────── */}
+      <DocsTokens
+        title={tContent("tokens.title")}
+        cols={{
+          token: tContent("tokens.table.token"),
+          value: tContent("tokens.table.group"),
+          description: tContent("tokens.table.part"),
+        }}
+        items={[
+          ...["bg", "border", "headerBg", "highlightBg", "highlightAccent", "maxBlockSize"].map((key) => ({
+            token: tContent(`tokens.table.${key}.token`),
+            value: tContent("tokens.surfaceTitle"),
+            description: tContent(`tokens.table.${key}.part`),
+          })),
+          ...[
+            "comment", "string", "number", "keyword", "builtin", "function",
+            "tag", "attr", "property", "operator", "punctuation", "plain",
+          ].map((key) => ({
+            token: tContent(`tokens.table.${key}.token`),
+            value: tContent("tokens.syntaxTitle"),
+            description: tContent(`tokens.table.${key}.part`),
+          })),
+          ...["radius", "mutedForeground", "foreground", "borderBase"].map((key) => ({
+            token: tContent(`tokens.table.${key}.token`),
+            value: tContent("tokens.inheritedTitle"),
+            description: tContent(`tokens.table.${key}.part`),
+          })),
+        ]}
+        customizationTitle={tContent("tokens.customizationTitle")}
+        customizationCode={tContent("tokens.customizationCode")}
+      />
+
+      {/* ── Acessibilidade ────────────────────────────────────────────── */}
+      <DocsAccessibility
+        title={tContent("accessibility.title")}
+        summary={tContent("accessibility.summary")}
+        items={[
+          tContent("accessibility.item1"),
+          tContent("accessibility.item2"),
+          tContent("accessibility.item3"),
+          tContent("accessibility.item4"),
+          tContent("accessibility.item5"),
+          tContent("accessibility.item6"),
+        ]}
+        keyboardTitle={tContent("accessibility.keyboardTitle")}
+        keyboardItems={[
+          { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
+          { key: "Enter",       description: tContent("accessibility.keyboard.enter") },
+          { key: "Space",       description: tContent("accessibility.keyboard.space") },
+          { key: "↑ ↓ ← →",     description: tContent("accessibility.keyboard.arrows") },
+          { key: "Home / End",  description: tContent("accessibility.keyboard.homeEnd") },
+        ]}
+      />
+
+      {/* ── Relacionados ──────────────────────────────────────────────── */}
+      <DocsRelated
+        title={tContent("related.title")}
+        componentSlug={SLUG}
+        items={[
+          { name: "Table", description: tContent("related.table"), path: "?path=/docs/ui-table--docs" },
+          { name: "Alert", description: tContent("related.alert"), path: "?path=/docs/ui-alert--docs" },
+          { name: "Tabs",  description: tContent("related.tabs"),  path: "?path=/docs/ui-tabs--docs" },
+          { name: "Card",  description: tContent("related.card"),  path: "?path=/docs/ui-card--docs" },
+        ]}
+      />
+
+      {/* ── Notas ─────────────────────────────────────────────────────── */}
+      <DocsNotes
+        title={tContent("notes.title")}
+        componentSlug={SLUG}
+        items={[
+          { title: "", content: tContent("notes.tip1") },
+          { title: "", content: tContent("notes.tip2") },
+          { title: "", content: tContent("notes.tip3") },
+          { title: "", content: tContent("notes.tip4") },
+          { title: "", content: tContent("notes.tip5") },
+        ]}
+      />
+
+      {/* ── Analytics ─────────────────────────────────────────────────── */}
+      <DocsAnalytics
+        title={tContent("analytics.title")}
+        cols={{
+          event: tContent("analytics.table.event"),
+          trigger: tContent("analytics.table.trigger"),
+          payload: tContent("analytics.table.payload"),
+        }}
+        items={[
+          { event: tContent("analytics.table.copy"),          trigger: tContent("analytics.table.copyTrigger"),          payload: tContent("analytics.table.copyPayload") },
+          { event: tContent("analytics.table.pageView"),      trigger: tContent("analytics.table.pageViewTrigger"),      payload: tContent("analytics.table.pageViewPayload") },
+          { event: tContent("analytics.table.sectionViewed"), trigger: tContent("analytics.table.sectionViewedTrigger"), payload: tContent("analytics.table.sectionViewedPayload") },
+          { event: tContent("analytics.table.langSwitch"),    trigger: tContent("analytics.table.langSwitchTrigger"),    payload: tContent("analytics.table.langSwitchPayload") },
+        ]}
+      />
+
+      {/* ── Testes ────────────────────────────────────────────────────── */}
+      <DocsTestes
+        title={tContent("testes.title")}
+        functional={{
+          title: tContent("testes.functional.title"),
+          cols: {
+            action: tNav("common.userAction"),
+            result: tNav("common.expectedResult"),
+            priority: tNav("common.priority"),
+          },
+          items: ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"].map((key) => ({
+            action: tContent(`testes.functional.${key}.action`),
+            result: tContent(`testes.functional.${key}.result`),
+            priority: tNav(priorityKeyMap[tContent(`testes.functional.${key}.priority`)] ?? "common.high"),
+          })),
+        }}
+        accessibility={{
+          title: tContent("testes.accessibility.title"),
+          cols: {
+            criterion: tNav("common.criterion"),
+            level: "WCAG",
+            how: tNav("common.howToVerify"),
+          },
+          items: ["item1", "item2", "item3", "item4", "item5"].map((key) => ({
+            criterion: tContent(`testes.accessibility.${key}.criterion`),
+            level: tContent(`testes.accessibility.${key}.level`),
+            how: tContent(`testes.accessibility.${key}.how`),
+          })),
+        }}
+        visual={{
+          title: tContent("testes.visual.title"),
+          cols: {
+            story: tNav("common.storyState"),
+            priority: tNav("common.priority"),
+          },
+          items: ["item1", "item2", "item3", "item4", "item5"].map((key) => ({
+            story: tContent(`testes.visual.${key}.story`),
+            priority: tNav(priorityKeyMap[tContent(`testes.visual.${key}.priority`)] ?? "common.high"),
+          })),
+        }}
+      />
+    </DocsPageLayout>
+  );
+}
