@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { CodeBlock } from './index';
+import CodeBlockDocs from '@/components/docs/CodeBlockDocs.svelte';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 /** Snippet canônico das stories e da docs page nas 4 stacks. */
 const DEMO_CODE = `<script lang="ts">
@@ -28,6 +30,9 @@ const meta = {
   title: 'UI/CodeBlock',
   component: CodeBlock,
   tags: ['autodocs', 'display'],
+  parameters: {
+    docs: { page: withAutoDocsTab(CodeBlockDocs) },
+  },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba
   // "API Reference" sai só destes argTypes.
   argTypes: {
