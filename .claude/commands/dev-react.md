@@ -107,7 +107,7 @@ export const Playground: Story = {
 </CollapsibleTrigger>
 ```
 
-### `dangerouslySetInnerHTML` em compostos base-ui/Radix
+### `dangerouslySetInnerHTML` em compostos base-ui
 
 Componentes que renderizam `{children}` internamente não aceitam `dangerouslySetInnerHTML` direto — use `<span>` wrapper:
 

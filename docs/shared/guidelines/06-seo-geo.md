@@ -153,7 +153,7 @@ Representa a intenção de busca mais direta que a página atende. Extraída do 
 | Página | Palavra-chave principal |
 |--------|------------------------|
 | AlertDocs | "alert componente design system" |
-| DialogDocs | "dialog radix ui react" |
+| DialogDocs | "dialog acessivel react focus trap" |
 | ThemingDocs | "temas css variables design system" |
 
 ---

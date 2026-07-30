@@ -1,5 +1,11 @@
 # Token Mapping — Tailwind CSS → Vue Tokens (Figma Variables)
 
+<!-- audit-ignore: dead-lib — mapeamento Tailwind → variáveis do Figma. A skill
+     inteira precede a migração para .nds-* (fala de "Vue Tokens" e de um arquivo
+     "Vue-components", de quando o projeto era só Vue) e precisa de revisão junto
+     com quem mantém o lado do Figma. Ignorado aqui para o exit code do audit não
+     ficar permanentemente vermelho por causa de dívida já mapeada. -->
+
 Referência para o comando `/figma-sync-component`.  
 Converta as classes do `cva` nos nomes exatos das variáveis da coleção **Vue library** da biblioteca **Vue Tokens**.
 

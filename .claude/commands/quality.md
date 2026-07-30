@@ -59,6 +59,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `coverage_divergence` | mesma story com cobertura desproporcional entre stacks |
 | `legacy_class_in_story` | classe sem prefixo `nds-` em story — resíduo inerte da migração |
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
+| `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
 | `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |

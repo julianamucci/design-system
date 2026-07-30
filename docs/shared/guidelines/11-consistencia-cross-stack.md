@@ -98,7 +98,7 @@ Cada stack usa suas próprias convenções:
 
 | Stack | Biblioteca |
 |-------|-----------|
-| React | Radix UI |
+| React | Base UI (`@base-ui/react`) |
 | Vue | Reka UI |
 | Svelte | Bits UI |
 | Vanilla | HTML nativo + ARIA manual |

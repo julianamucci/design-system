@@ -225,7 +225,7 @@
 .nds-grid[data-spacing="xl"]  { --grid-gap: var(--spacing-8); }
 
 /* data-cols="2" — duas colunas balanceadas; quebra para 1 quando o conteúdo
- * fica apertado. Equivalente a grid-cols-1 md:grid-cols-2 do Tailwind. */
+ * fica apertado: uma coluna quando estreito, duas quando couber. */
 .nds-grid[data-cols="2"] {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--grid-min), 18rem)), 1fr));
 }

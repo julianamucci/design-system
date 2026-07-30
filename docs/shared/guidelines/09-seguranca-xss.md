@@ -86,7 +86,7 @@ import DOMPurify from 'dompurify';
 el.innerHTML = DOMPurify.sanitize(t('anatomy.item1'));
 ```
 
-**Por que direto, sem wrapper local**: ferramentas de análise estática (Qwiet, CodeQL) reconhecem `DOMPurify.sanitize` como sanitizador de taint **apenas quando a chamada aparece no próprio call site**. Um wrapper (`sanitizeHtml()`) esconde o sanitizador da análise — o fluxo `dado → wrapper desconhecido → innerHTML` continua sendo reportado como XSS, gerando dezenas de falsos positivos permanentes. Já existiu um wrapper neste projeto; foi removido por esse motivo.
+**Por que direto, sem wrapper local**: ferramentas de análise estática (Qwiet, CodeQL) reconhecem `DOMPurify.sanitize` como sanitizador de taint **apenas quando a chamada aparece no próprio call site**. Um wrapper local (um `sanitize-html.ts` com a chamada dentro) esconde o sanitizador da análise — o fluxo `dado → wrapper desconhecido → innerHTML` continua sendo reportado como XSS, gerando dezenas de falsos positivos permanentes. Já existiu um wrapper neste projeto; foi removido por esse motivo.
 
 Se um dia for necessária configuração custom (allowlist própria), use `DOMPurify.setConfig()` uma única vez no bootstrap da stack — os call sites continuam chamando `DOMPurify.sanitize()` direto.
 
@@ -112,7 +112,7 @@ O conteúdo de translations é controlado pelo time de desenvolvimento — não 
 
 ```tsx
 // React — CORRETO
-<p dangerouslySetInnerHTML={{ __html: sanitizeHtml(t('anatomy.item1')) }} />
+<p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t('anatomy.item1')) }} />
 
 // React — INCORRETO (sem sanitização)
 <p dangerouslySetInnerHTML={{ __html: t('anatomy.item1') }} />
@@ -120,12 +120,12 @@ O conteúdo de translations é controlado pelo time de desenvolvimento — não 
 
 ```vue
 <!-- Vue — CORRETO -->
-<p v-html="sanitizeHtml(t('anatomy.item1'))" />
+<p v-html="DOMPurify.sanitize(t('anatomy.item1'))" />
 ```
 
 ```svelte
 <!-- Svelte — CORRETO -->
-<p>{@html sanitizeHtml(t('anatomy.item1'))}</p>
+<p>{@html DOMPurify.sanitize(t('anatomy.item1'))}</p>
 ```
 
 ### Props de componentes
@@ -177,17 +177,17 @@ Referrer-Policy: strict-origin-when-cross-origin
 
 ### Antes de publicar qualquer componente:
 
-- [ ] Nenhum uso de `innerHTML` / `dangerouslySetInnerHTML` / `v-html` / `{@html}` sem `sanitizeHtml()`
+- [ ] Nenhum uso de `innerHTML` / `dangerouslySetInnerHTML` / `v-html` / `{@html}` sem `DOMPurify.sanitize()`
 - [ ] Nenhum `href` dinâmico sem validação de protocolo
 - [ ] Nenhum event handler construído a partir de strings
 - [ ] Nenhum `style` dinâmico com conteúdo externo
 - [ ] SVGs inline são hardcoded (não dinâmicos de fontes externas)
-- [ ] `sanitizeHtml.ts` existe e está atualizado em cada stack
+- [ ] `import DOMPurify from 'dompurify'` no próprio arquivo que sanitiza (sem wrapper local)
 - [ ] Payloads de analytics não contêm HTML ou dados sensíveis
 
 ### Antes de publicar qualquer docs page:
 
-- [ ] Todo conteúdo de translations renderizado como HTML passa por `sanitizeHtml()`
+- [ ] Todo conteúdo de translations renderizado como HTML passa por `DOMPurify.sanitize()`
 - [ ] Links externos usam `rel="noopener noreferrer"` e `target="_blank"`
 - [ ] Nenhum dado de query params renderizado sem escaping
 
@@ -212,4 +212,4 @@ Se algum payload executar JavaScript, há uma vulnerabilidade.
 
 ### Teste automatizado
 
-O sanitizeHtml deve ter testes unitários cobrindo todos os payloads acima.
+O DOMPurify é testado upstream pelo Cure53 — não replicamos a suíte dele aqui. O que cabe testar é a nossa parte: que cada sink (`innerHTML`, `dangerouslySetInnerHTML`, `v-html`, `{@html}`) de fato passa pela sanitização. O check `html_dynamic_unsanitized` do `audit.mjs` cobre isso de forma determinística.

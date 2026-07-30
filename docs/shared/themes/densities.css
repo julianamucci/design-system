@@ -1,7 +1,7 @@
 /*
  * ─── Densidades ───────────────────────────────────────────────────────────────
- * Ajusta o tamanho base de spacing do projeto, afetando proporcionalmente
- * TODAS as classes Tailwind p-*, m-*, gap-*, space-* (via @theme --spacing).
+ * Ajusta o tamanho base de spacing do projeto, afetando proporcionalmente todo
+ * token --spacing-* (e portanto toda classe .nds-* que os consome).
  *
  * Também ajusta as alturas tokenizadas (--height-*, --size-*) para que
  * botões/inputs/selects acompanhem a densidade.

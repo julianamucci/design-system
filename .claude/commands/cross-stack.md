@@ -50,7 +50,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 
 | # | Check | Tool | Severidade |
 |---|---|---|---|
-| 1 | Classes `cva()` / Tailwind | Grep × 4 | Bug |
+| 1 | Classes `cva()` / `.nds-*` | Grep × 4 | Bug |
 | 2 | Variantes e tamanhos | Grep × 4 | Bug |
 | 3 | Data attributes (`data-slot`) | Grep × 4 | Bug |
 | 4 | Acessibilidade (ARIA) | Grep × 4 | Bug |

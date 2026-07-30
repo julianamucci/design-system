@@ -409,7 +409,7 @@ Imediatamente abaixo da lista, um `<pre>` mostrando a estrutura pseudocode do co
 
 Regras de `structureCode`:
 - Usar `&lt;` / `&gt;` para os delimitadores JSX (nunca `<` / `>` crus)
-- Comentários em `<span class="text-muted-foreground">` — passam pelo `sanitizeHtml`
+- Comentários em `<span class="text-muted-foreground">` — passam pelo `DOMPurify.sanitize`
 - Quebras de linha com `\n` (JSON string)
 - Localizar os comentários (`{/* Texto */}` → `{/* Text */}` em inglês)
 
@@ -624,7 +624,7 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 
 ### Bloco de extensibilidade obrigatório
 
-Após a tabela, adicionar bloco com notas sobre `className`/`class` e `asChild` (quando suportado), usando `dangerouslySetInnerHTML`/`v-html`/`{@html}`/`.innerHTML` + `sanitizeHtml`. Chaves: `props.extensibilityTitle`, `props.extensibility.classNameNote`, `props.extensibility.asChildNote`.
+Após a tabela, adicionar bloco com notas sobre `className`/`class` e `asChild` (quando suportado), usando `dangerouslySetInnerHTML`/`v-html`/`{@html}`/`.innerHTML` + `DOMPurify.sanitize`. Chaves: `props.extensibilityTitle`, `props.extensibility.classNameNote`, `props.extensibility.asChildNote`.
 
 ### Componentes com múltiplas superfícies de API
 

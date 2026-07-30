@@ -670,6 +670,77 @@ function auditStoryQuality(slug) {
   return violations;
 }
 
+/**
+ * Frases que marcam a menção como REGISTRO da remoção, não instrução de uso:
+ * "não recriar Tailwind aqui", "resíduo do shadcn", "props em nomenclatura
+ * Radix que nenhuma lib atual expõe". Sem esta lista o check acusaria justamente
+ * a documentação que existe para impedir o vocabulário de voltar.
+ */
+const NEGATED_MENTION_RX =
+  /\bnunca\b|\bnão\s+(crie|recriar|recrie|usa|existe|use|confie)\b|\bnenhum[ao]?\b|proib|removid|saí?ram|saiu|deprecat|resíduo|herdad|inerte|em vez de|no lugar de/i;
+
+/** Libs e helpers que saíram do projeto e não devem mais ser ensinados. */
+const DEAD_LIB_RX = [
+  { rx: /@radix-ui|\bradix\b/i, label: 'Radix' },
+  { rx: /\bshadcn\b/i, label: 'shadcn' },
+  { rx: /\bbasecoat\b/i, label: 'Basecoat' },
+  { rx: /\btailwind\b/i, label: 'Tailwind' },
+  { rx: /sanitize-html|\bsanitizeHtml\b/, label: 'wrapper sanitizeHtml (usar DOMPurify.sanitize no call site)' },
+];
+
+/**
+ * Vocabulário morto na INFRA que gera código: skills, guidelines, refs de skill
+ * e o CSS/tokens compartilhado.
+ *
+ * O `dead_lib_reference` por slug varre só `translations.json` e docs pages, e
+ * por isso o vocabulário sumia do código e sobrevivia nas instruções que o
+ * recriam: as 4 dev-skills ensinavam `import { sanitizeHtml } from
+ * '@/lib/sanitize-html'`, um wrapper que não existe em nenhuma stack e que a
+ * guideline 09 proíbe. Todo componente novo nasceria com ele.
+ */
+function auditDeadLibInfra() {
+  const violations = [];
+  const targets = [
+    ...walkDir(join(ROOT, '.claude', 'commands'), ['.md']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'guidelines'), ['.md']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'skill-refs'), ['.md']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'tokens'), ['.css']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'themes'), ['.css']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css']),
+  ];
+
+  for (const file of targets) {
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    // `tw-compat.css` é a ponte declarada de compatibilidade: nomear o
+    // vocabulário antigo é a razão de ela existir.
+    if (/tw-compat\.css$/.test(rel)) continue;
+    // Escape hatch explícito, para a dívida ficar visível NO arquivo em vez de
+    // numa exceção escondida aqui. Exige motivo na mesma linha.
+    if (/audit-ignore:\s*dead-lib\b/.test(content)) continue;
+    const lines = content.split('\n');
+
+    for (const { rx, label } of DEAD_LIB_RX) {
+      // Janela de 3 linhas: a menção e a ressalva costumam estar em linhas
+      // diferentes, porque o texto quebra ("...nomenclatura Radix/shadcn\n(`asChild`,
+      // `forceMount`) que nenhuma lib atual expõe"). Testar só a linha do match
+      // acusava exatamente a frase escrita para proibir o vocabulário.
+      const hit = lines.findIndex((l, i) =>
+        rx.test(l) && !NEGATED_MENTION_RX.test(lines.slice(Math.max(0, i - 1), i + 2).join(' ')),
+      );
+      if (hit === -1) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: rel, line: hit + 1, rule: 'dead_lib_in_infra',
+        message: `menciona "${label}" — a infra que gera código não deve ensinar o que saiu do projeto`,
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
   const REQUIRED_SECTIONS = [
@@ -796,12 +867,7 @@ function auditQuality(slug) {
   // 6. Vocabulário de lib que saiu do projeto. Radix, shadcn e Tailwind foram
   // substituídos pelo CSS `.nds-*`; menção sobrevivente ensina o consumidor a
   // usar uma API que o design system não expõe mais. Vale para texto e snippet.
-  const DEAD_LIB_RX = [
-    { rx: /@radix-ui|\bradix\b/i, label: 'Radix' },
-    { rx: /\bshadcn\b/i, label: 'shadcn' },
-    { rx: /\bbasecoat\b/i, label: 'Basecoat' },
-    { rx: /\btailwind\b/i, label: 'Tailwind' },
-  ];
+  // A lista vive no módulo (DEAD_LIB_RX) e é compartilhada com o check de infra.
   const deadLibTargets = [
     join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'),
     ...STACKS.flatMap((s) => filesForSlug(slug, s).docs),
@@ -903,10 +969,14 @@ for (const s of slugs) {
   allViolations[s] = runAudit(s, category);
 }
 
-// Infra de analytics é slug-independente: roda 1x por processo, sob "_infra".
+// Infra é slug-independente: roda 1x por processo, sob "_infra".
 if (!category || category === 'analytics') {
   const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads()];
-  if (infra.length > 0) allViolations['_infra'] = infra;
+  if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
+}
+if (!category || category === 'quality') {
+  const infra = auditDeadLibInfra();
+  if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
 if (json) {

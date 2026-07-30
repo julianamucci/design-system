@@ -99,7 +99,7 @@ Placeholder = bug bloqueante. Reescrever antes de qualquer outra correção.
 
 **7f. Tokens table**: referencia tokens completos e `customizationTitle`.
 
-**7g. sanitizeHtml**: importado se renderiza HTML de translations.
+**7g. DOMPurify**: importado no próprio arquivo (`import DOMPurify from 'dompurify'`) se renderiza HTML de translations, com `.sanitize()` no call site.
 
 **7h. structureCode lê de translations**: `t('anatomy.structureCode')` — não hardcoded por stack.
 
@@ -248,7 +248,7 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | SEO/GEO completo | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Props 5 cols + extensibilidade | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Tokens + customizationTitle | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
-| sanitizeHtml | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| DOMPurify no call site | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Do & Don't layout correto | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 | Section containers (não inline) | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 

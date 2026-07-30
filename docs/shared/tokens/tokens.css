@@ -1,8 +1,15 @@
 /*
  * ─── Design Tokens — Source of Truth ─────────────────────────────────────────
- * Gerado a partir de docs/shared/tokens/tokens.json
- * Todos os projetos importam este arquivo via @import "@shared/tokens/tokens.css"
- * NÃO edite diretamente — edite tokens.json e regenere.
+ * ESTE arquivo é a fonte de verdade. Edite aqui.
+ *
+ * As 4 stacks importam via @import "@shared/tokens/tokens.css"; o registry
+ * (registry/v1/init.json) embute uma cópia do conteúdo para consumo externo.
+ *
+ * tokens.json, ao lado, é um espelho PARCIAL em formato DTCG para interop com
+ * ferramentas de design — cobre só color, typography, radius, elevation e
+ * z-index, e nada o lê para gerar este CSS. Não existe passo de build entre os
+ * dois: editar o JSON não muda nada aqui. Ao alterar um token que exista nos
+ * dois, atualize ambos.
  */
 
 /* Google Fonts: cada stack faz o hoist em seu próprio globals.css (React/Vue/Svelte)
@@ -93,20 +100,19 @@
   --ring-offset-width: 2px;
   --ring-offset-color: 0 0% 100%;
 
-  /* Spacing base — consumido pelo Tailwind v4 via @theme inline (--spacing).
-     Tailwind calcula p-{n}, gap-{n}, m-{n}, space-{n}, etc. como n × --spacing-base.
-     Densidades em themes/densities.css override este valor (condensado/confortável),
+  /* Spacing base — unidade da escala abaixo: cada --spacing-{n} é n × este valor.
+     Densidades em themes/densities.css sobrescrevem (condensado/confortável),
      afetando TODOS os espaçamentos proporcionalmente. */
-  --spacing-base: 0.25rem; /* 4px — padrão Tailwind */
+  --spacing-base: 0.25rem; /* 4px */
 
-  /* Spacing scale — grid de 8 (múltiplos ou divisores de 8 apenas).
-     Use estes tokens em CSS standalone (.nds-*, vanilla-overrides) quando
-     precisar de um valor de spacing nomeado.
-     Acompanham a densidade automaticamente porque referenciam --spacing-base.
+  /* Spacing scale — use estes tokens nas classes .nds-* sempre que precisar de
+     um valor de spacing nomeado. Acompanham a densidade automaticamente porque
+     referenciam --spacing-base.
 
-     Regra do projeto: spacing deve ser múltiplo OU divisor de 8.
-     Valores fora do grid (10, 12, 14, 20, 28, 36, 44, 56...) NÃO devem existir
-     como tokens — se aparecerem em CSS, são bug a ser corrigido. */
+     Regra do projeto: o valor RESOLVIDO em px deve ser múltiplo ou divisor de 8.
+     O sufixo do token é o multiplicador, não o px — --spacing-10 resolve 40px
+     (8×5) e é válido; o que não pode existir é um px fora do grid, como 12px,
+     20px, 28px ou 36px. Valor assim em CSS é bug a corrigir. */
   --spacing-0:   0;
   --spacing-px:  1px;                               /* hairline / border */
   --spacing-0-5: calc(var(--spacing-base) * 0.5);   /* 2px  — divisor de 8 (8÷4) */
@@ -161,22 +167,24 @@
   --radius-card: var(--radius-xl);   /* 14px */
   --radius-badge: var(--radius-full); /* pill */
 
-  /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...) */
-  /* Nota: Tailwind v4 consome via h-(--height-*) / size-(--size-*) / px-(--spacing-*) */
-  --height-badge: 1.25rem;    /* 20px — h-5 (compacto, só para Badge) */
-  --height-xs: 1.5rem;        /* 24px — h-6 default */
-  --height-sm: 1.75rem;       /* 28px — h-7 */
-  --height-default: 2rem;     /* 32px — h-8 */
-  --height-lg: 2.25rem;       /* 36px — h-9 */
-  --height-xl: 2.5rem;        /* 40px — h-10 */
+  /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...)
+     Consumidos pelas classes .nds-* em height/min-height; nunca hardcode o px
+     no componente. --height-* para caixas retangulares, --size-* para quadradas
+     (icon-only). Ver guideline 12-tokenizacao-dimensoes. */
+  --height-badge: 1.25rem;    /* 20px — compacto, só para Badge */
+  --height-xs: 1.5rem;        /* 24px */
+  --height-sm: 1.75rem;       /* 28px */
+  --height-default: 2rem;     /* 32px */
+  --height-lg: 2.25rem;       /* 36px */
+  --height-xl: 2.5rem;        /* 40px */
 
-  --size-xs: 1.5rem;          /* 24px — size-6 */
-  --size-sm: 1.75rem;         /* 28px — size-7 */
-  --size-default: 2rem;       /* 32px — size-8 */
-  --size-lg: 2.25rem;         /* 36px — size-9 */
-  --size-xl: 2.5rem;          /* 40px — size-10 */
+  --size-xs: 1.5rem;          /* 24px */
+  --size-sm: 1.75rem;         /* 28px */
+  --size-default: 2rem;       /* 32px */
+  --size-lg: 2.25rem;         /* 36px */
+  --size-xl: 2.5rem;          /* 40px */
 
-  --spacing-btn-x: 0.625rem;  /* 10px — px-2.5 default */
+  --spacing-btn-x: 0.625rem;  /* 10px */
   --spacing-btn-x-sm: 0.625rem;
   --spacing-btn-x-lg: 0.625rem;
 

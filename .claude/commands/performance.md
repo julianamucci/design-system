@@ -37,22 +37,28 @@ Use `Grep` nativo em paralelo nas 4 stacks:
 **Vue — `cn()` chamado diretamente no template** (recalcula a cada render, deveria ser `computed`):
 - `Grep` padrão `:class="cn\(` em `nortear-design-system-vue/src/components/ui/`
 
-### 3. Classes Tailwind Dinâmicas (quebram purge/tree-shaking CSS)
+### 3. Classes montadas por interpolação
 
 Use `Grep` em paralelo nas 4 stacks para template literals construindo classes:
-- Padrão `` `text-\${ `` em `nortear-design-system-<stack>/src/`
-- Padrão `` `bg-\${ `` em `nortear-design-system-<stack>/src/`
-- Padrão `` `border-\${ `` em `nortear-design-system-<stack>/src/`
+- Padrão `` `nds-\${ `` em `nortear-design-system-<stack>/src/`
+- Padrão `` `nds-text-\${ `` / `` `nds-bg-\${ `` em `nortear-design-system-<stack>/src/`
 
-Cada ocorrência deve usar um mapa de classes completas:
+Classe montada em runtime não é rastreável: nada garante que a regra exista no
+CSS `.nds-*`, e a única forma de descobrir é olhando a tela. Use um mapa de
+classes completas, que quebra no typecheck quando um valor não é previsto:
+
 ```tsx
-// ERRADO — Tailwind não detecta a classe em build time
-<div className={`bg-${color}`}>
+// ERRADO — `nds-bg-fancy` pode simplesmente não existir
+<div className={`nds-bg-${color}`}>
 
-// CERTO — detectável pelo scanner de Tailwind
-const bgColors = { primary: 'bg-primary', secondary: 'bg-secondary' } as const;
-<div className={bgColors[color]}>
+// CERTO — o mapa é o contrato
+const bg = { primary: 'nds-bg-primary', secondary: 'nds-bg-secondary' } as const;
+<div className={bg[color]}>
 ```
+
+O contraponto é o `data-*`: quando o CSS já resolve a variante por atributo
+(`.nds-button[data-variant="destructive"]`), passe o valor no atributo em vez de
+concatenar nome de classe.
 
 ### 4. IntersectionObserver
 
@@ -98,10 +104,10 @@ import { Mail, X, ChevronRight } from 'lucide-react';
 ### Eliminar classes dinâmicas
 
 ```tsx
-// ANTES (Tailwind não detecta em build time)
+// ANTES (nada garante que a regra exista no CSS)
 <div className={`bg-${color}`}>
 
-// DEPOIS (detectável)
+// DEPOIS (o mapa é o contrato)
 const bgColors = {
   primary: 'bg-primary',
   secondary: 'bg-secondary',
