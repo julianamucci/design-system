@@ -1,0 +1,1751 @@
+{
+  "pt-BR": {
+    "title": "CodeBlock",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Bloco de código com destaque de sintaxe pelo tema, numeração de linha, marcação de trechos e ação de copiar que leva apenas o código.",
+    "seo": {
+      "title": "CodeBlock — Display",
+      "description": "Documentação do CodeBlock: destaque de sintaxe pelo tema, numeração de linha, linhas em destaque, copiar código e acessibilidade WCAG 2.2 AA.",
+      "aiSummary": "Componente CodeBlock com destaque de sintaxe próprio em TypeScript, numeração de linha opcional, marcação de intervalos de linha, scroll nos dois eixos e ação de copiar com confirmação anunciada por região de status.",
+      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+    },
+    "demonstration": {
+      "title": "Demonstração",
+      "labels": {
+        "fileName": "exemplo.tsx",
+        "terminalTitle": "terminal",
+        "themeTitle": "tema.css",
+        "dataTitle": "package.json",
+        "plainTitle": "notas.txt",
+        "footer": "A ação de copiar leva apenas o código, sem os números de linha.",
+        "copy": "Copiar código",
+        "copied": "Copiado!"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomia",
+      "item1": "<strong>Raiz</strong> — container com borda, superfície própria e recorte do conteúdo.",
+      "item2": "<strong>Header</strong> — faixa superior com rótulo opcional à esquerda e ação de copiar à direita.",
+      "item3": "<strong>Ação copiar</strong> — botão de ícone que troca para o ícone de confirmação por 2 segundos.",
+      "item4": "<strong>Região de status</strong> — <code>role=\"status\"</code> fora do botão, anuncia a confirmação.",
+      "item5": "<strong>Região de scroll</strong> — área rolável nos dois eixos, focável por teclado.",
+      "item6": "<strong>Numeração</strong> — coluna fixa na lateral, ignorada pelo leitor de tela e não selecionável.",
+      "item7": "<strong>Linha</strong> — uma por quebra do código; pode receber fundo e barra de acento de destaque.",
+      "item8": "<strong>Footer (opcional)</strong> — faixa inferior para observações sobre o trecho.",
+      "structureLabel": "Estrutura básica:",
+      "structureCode": "<CodeBlock                       {/* Raiz: borda, superfície e recorte */}\n  title=\"exemplo.tsx\"            {/* Rótulo do header (opcional) */}\n  language=\"tsx\"                 {/* Classificação de sintaxe */}\n  code={source}                  {/* Conteúdo exibido e copiado */}\n  showLineNumbers                {/* Coluna de numeração */}\n  highlightLines={[3, \"5-7\"]}    {/* Linhas em destaque */}\n  footer=\"Requer Node 20+\"       {/* Observação abaixo do código */}\n/>"
+    },
+    "usage": {
+      "title": "Quando e Como Usar",
+      "guidelines": {
+        "title": "Guidelines Obrigatórias",
+        "item1": "Informe sempre a linguagem do trecho — sem ela o código aparece monoespaçado e sem cor.",
+        "item2": "Use o rótulo do header para o nome do arquivo real; o leitor precisa saber onde colar.",
+        "item3": "Destaque no máximo os trechos que o texto ao redor explica — destacar tudo é não destacar nada.",
+        "item4": "Desative a numeração em comandos de terminal e trechos de uma linha, onde ela é ruído."
+      },
+      "scenarios": {
+        "title": "Tabela de Cenários",
+        "cols": {
+          "scenario": "Cenário",
+          "use": "Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Trecho que o leitor vai copiar",
+          "u": "Sim",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Nome de método dentro de uma frase",
+          "u": "Não",
+          "a": "Código inline"
+        },
+        "item3": {
+          "s": "Saída de terminal, sem cor",
+          "u": "Sim, em texto simples",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mesmo trecho em várias linguagens",
+          "u": "Sim, um por aba",
+          "a": "Tabs"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Regras de formato",
+          "correct": "Correto",
+          "avoid": "Evitar",
+          "headerTitle": {
+            "name": "Rótulo do header",
+            "format": "Nome de arquivo ou caminho curto · sem frase",
+            "good": "\"exemplo.tsx\", \"src/tema.css\", \"terminal\"",
+            "bad": "\"Veja o código abaixo\", \"Exemplo 1 de uso do componente\""
+          },
+          "footer": {
+            "name": "Rodapé",
+            "format": "Frase completa · ponto final · máx. 2 linhas",
+            "good": "\"Requer Node 20 ou superior.\"",
+            "bad": "Parágrafo de explicação que deveria estar no corpo da página"
+          },
+          "copy": {
+            "name": "Ação copiar",
+            "format": "Verbo no infinitivo · rótulo acessível sempre presente",
+            "good": "\"Copiar código\", \"Copiado!\"",
+            "bad": "\"Clique aqui\", \"OK\""
+          },
+          "comments": {
+            "name": "Comentários no trecho",
+            "format": "Explicam a intenção · não repetem a sintaxe",
+            "good": "\"A ação de copiar leva só o código.\"",
+            "bad": "\"Aqui declaramos uma constante.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use quando",
+        "item1": "O leitor precisa copiar o trecho para colar em um arquivo",
+        "item2": "A leitura depende de identificar palavras-chave, strings e comentários",
+        "item3": "Algumas linhas do trecho merecem atenção maior que o resto",
+        "item4": "O trecho é longo e precisa de scroll próprio, sem esticar a página"
+      },
+      "dont": {
+        "title": "Não use quando",
+        "item1": "O trecho é um nome curto dentro de uma frase — use código inline",
+        "item2": "O conteúdo é tabular e pede cabeçalho — use <code>Table</code>",
+        "item3": "A mensagem é uma observação em texto, não código — use <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Linguagem informada, rótulo com o nome do arquivo e destaque só nas linhas que o texto explica.",
+        "dont": "Bloco sem linguagem, sem rótulo e com metade das linhas destacadas."
+      },
+      "pair2": {
+        "do": "Numeração ativa em trechos de arquivo; desativada em comandos de terminal.",
+        "dont": "Numeração em um comando de uma linha, que vira ruído e sugere um arquivo que não existe."
+      }
+    },
+    "import": {
+      "title": "Importação",
+      "basic": "Import básico:",
+      "withFooter": "Com observação no rodapé:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Linguagens Suportadas",
+      "note": "A classificação aceita o nome da linguagem ou a extensão do arquivo, com ou sem ponto. Valor não reconhecido cai em texto simples, sem cor — nunca quebra o bloco. As cores saem de CSS custom properties, então cada tema claro ou escuro tem a própria paleta.",
+      "items": {
+        "script": "TypeScript e JavaScript, com ou sem sintaxe de componente. Palavras-chave, tipos, strings, números e comentários recebem cor própria.",
+        "markup": "Marcação e templates de componente. Nomes de tag, atributos, diretivas e valores entre aspas.",
+        "styles": "Folhas de estilo. Regras de arroba, seletores, propriedades, custom properties e unidades.",
+        "data": "Dados estruturados. Chaves separadas dos valores, com números e literais em cores distintas.",
+        "shell": "Linhas de comando. Comandos conhecidos, flags, strings e comentários.",
+        "text": "Sem classificação. Destino de qualquer valor não reconhecido: o trecho aparece monoespaçado e sem cor."
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "withTitle": {
+          "name": "Com rótulo no header",
+          "description": "Header com o nome do arquivo à esquerda e a ação de copiar à direita. Rótulo longo trunca em vez de empurrar o botão para fora.",
+          "use": "Sempre que o trecho pertence a um arquivo real — o rótulo diz ao leitor onde colar o que copiou."
+        },
+        "withoutNumbers": {
+          "name": "Sem numeração",
+          "description": "A coluna lateral some e o código recebe o recuo que ela ocupava, mantendo o respiro à esquerda.",
+          "use": "Comandos de terminal e trechos de uma linha, onde numerar sugere um arquivo que não existe."
+        },
+        "highlighted": {
+          "name": "Com linhas em destaque",
+          "description": "Fundo próprio e barra de acento na lateral marcam uma linha ou um intervalo. A marcação cobre a largura toda e acompanha o scroll horizontal.",
+          "use": "Tutoriais passo a passo e explicações em que só algumas linhas do trecho importam."
+        },
+        "withFooter": {
+          "name": "Com rodapé",
+          "description": "Faixa inferior separada por borda, em texto menor e cor secundária, para observações sobre o trecho.",
+          "use": "Pré-requisitos, versão mínima ou avisos que não cabem como comentário dentro do código."
+        }
+      }
+    },
+    "states": {
+      "title": "Configurações",
+      "cols": {
+        "state": "Configuração",
+        "trigger": "Como ativar",
+        "behavior": "Comportamento"
+      },
+      "idle": {
+        "label": "Pronto para copiar",
+        "trigger": "Estado inicial",
+        "behavior": "Ícone de cópia com rótulo acessível de ação. A ação fica visível mesmo quando o header não tem rótulo"
+      },
+      "copied": {
+        "label": "Copiado",
+        "trigger": "Acionar a ação de copiar",
+        "behavior": "Ícone de confirmação, rótulo de confirmação ao lado e anúncio pela região de status; volta ao inicial em 2 segundos"
+      },
+      "numbered": {
+        "label": "Com numeração",
+        "trigger": "Padrão do componente",
+        "behavior": "Coluna fixa na lateral esquerda, numerada a partir de 1, que permanece visível no scroll horizontal"
+      },
+      "unnumbered": {
+        "label": "Sem numeração",
+        "trigger": "Desativar a numeração de linha",
+        "behavior": "A coluna some e o código ganha o recuo equivalente, sem colar na borda"
+      },
+      "highlighted": {
+        "label": "Com destaque",
+        "trigger": "Informar linhas ou intervalos, começando em 1",
+        "behavior": "As linhas indicadas recebem fundo e barra de acento; as demais seguem no fundo padrão"
+      },
+      "scrolling": {
+        "label": "Com scroll",
+        "trigger": "Código mais alto ou mais largo que a caixa",
+        "behavior": "Scroll nos dois eixos no mesmo container, com a região focável por teclado e a numeração fixa na lateral"
+      },
+      "unknownLanguage": {
+        "label": "Linguagem não reconhecida",
+        "trigger": "Informar um valor fora da lista suportada",
+        "behavior": "O trecho é exibido monoespaçado e sem cor, com header, numeração, destaque e scroll intactos"
+      }
+    },
+    "props": {
+      "title": "Propriedades",
+      "interface": "Interface TypeScript",
+      "table": {
+        "prop": "Propriedade",
+        "type": "Tipo",
+        "default": "Padrão",
+        "required": "Obrigatório",
+        "description": "Descrição",
+        "code": {
+          "name": "code",
+          "type": "string",
+          "default": "—",
+          "required": "Sim",
+          "description": "Conteúdo exibido no bloco. É exatamente o texto que a ação de copiar coloca na área de transferência."
+        },
+        "language": {
+          "name": "language",
+          "type": "string",
+          "default": "'text'",
+          "required": "Não",
+          "description": "Linguagem ou extensão do trecho, com ou sem ponto inicial. Valor não reconhecido cai em texto simples, sem cor."
+        },
+        "title": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Rótulo do header, normalmente o nome do arquivo. Sem rótulo, a ação de copiar continua visível à direita."
+        },
+        "showLineNumbers": {
+          "name": "showLineNumbers",
+          "type": "boolean",
+          "default": "true",
+          "required": "Não",
+          "description": "Exibe a coluna de numeração. A numeração nunca entra no texto copiado nem na seleção feita com o mouse."
+        },
+        "highlightLines": {
+          "name": "highlightLines",
+          "type": "string | number | Array<string | number>",
+          "default": "—",
+          "required": "Não",
+          "description": "Linhas em destaque, contadas a partir de 1. Aceita números avulsos, intervalos ou a combinação dos dois."
+        },
+        "footer": {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "Não",
+          "description": "Observação abaixo do código, separada por borda. Aceita texto simples ou conteúdo próprio."
+        },
+        "copyLabel": {
+          "name": "copyLabel",
+          "type": "string",
+          "default": "'Copiar código'",
+          "required": "Não",
+          "description": "Rótulo acessível da ação de copiar no estado inicial. Traduza junto com o resto da página."
+        },
+        "copiedLabel": {
+          "name": "copiedLabel",
+          "type": "string",
+          "default": "'Copiado!'",
+          "required": "Não",
+          "description": "Texto de confirmação, exibido ao lado do ícone e anunciado pela região de status."
+        },
+        "className": {
+          "name": "className",
+          "type": "string",
+          "default": "—",
+          "required": "Não",
+          "description": "Classes adicionais na raiz. Use para sobrescrever as custom properties do bloco em uma instância."
+        }
+      },
+      "extensibilityTitle": "Extensibilidade",
+      "extensibility": "A raiz repassa os atributos HTML do elemento e aceita classes adicionais. Toda a aparência é controlada por custom properties declaradas na raiz — sobrescreva-as em uma classe própria em vez de redefinir cor ou espaçamento com seletor de descendente.",
+      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacao\"\n  footer={<span>Requer Node 20 ou superior.</span>}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "surfaceTitle": "Superfície e estrutura",
+      "syntaxTitle": "Paleta de sintaxe",
+      "inheritedTitle": "Herdados do tema",
+      "table": {
+        "token": "Token CSS",
+        "part": "Aplicação",
+        "bg": {
+          "token": "--code-block-bg",
+          "part": "Fundo da área de código e da coluna de numeração"
+        },
+        "border": {
+          "token": "--code-block-border",
+          "part": "Borda da raiz e divisórias do header e do rodapé"
+        },
+        "headerBg": {
+          "token": "--code-block-header-bg",
+          "part": "Fundo do header e do rodapé"
+        },
+        "highlightBg": {
+          "token": "--code-block-highlight-bg",
+          "part": "Fundo da linha em destaque, semitransparente sobre a superfície"
+        },
+        "highlightAccent": {
+          "token": "--code-block-highlight-accent",
+          "part": "Barra de acento na lateral da linha em destaque"
+        },
+        "maxBlockSize": {
+          "token": "--code-block-max-block-size",
+          "part": "Altura máxima antes de o scroll vertical entrar"
+        },
+        "comment": {
+          "token": "--code-token-comment",
+          "part": "Comentários, em itálico"
+        },
+        "string": {
+          "token": "--code-token-string",
+          "part": "Strings e valores entre aspas"
+        },
+        "number": {
+          "token": "--code-token-number",
+          "part": "Números, unidades e cores em hexadecimal"
+        },
+        "keyword": {
+          "token": "--code-token-keyword",
+          "part": "Palavras reservadas da linguagem"
+        },
+        "builtin": {
+          "token": "--code-token-builtin",
+          "part": "Tipos primitivos, literais e objetos globais"
+        },
+        "function": {
+          "token": "--code-token-function",
+          "part": "Nomes de função em chamadas e declarações"
+        },
+        "tag": {
+          "token": "--code-token-tag",
+          "part": "Nomes de tag, componentes e seletores de classe"
+        },
+        "attr": {
+          "token": "--code-token-attr",
+          "part": "Atributos, diretivas e flags de terminal"
+        },
+        "property": {
+          "token": "--code-token-property",
+          "part": "Propriedades de estilo, custom properties e chaves de dados"
+        },
+        "operator": {
+          "token": "--code-token-operator",
+          "part": "Operadores e sinais de atribuição"
+        },
+        "punctuation": {
+          "token": "--code-token-punctuation",
+          "part": "Chaves, parênteses, vírgulas e dois-pontos"
+        },
+        "plain": {
+          "token": "--code-token-plain",
+          "part": "Texto sem classificação e identificadores comuns"
+        },
+        "radius": {
+          "token": "--radius-lg",
+          "part": "Border radius da raiz"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "part": "Rótulo do header, números de linha e texto do rodapé"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "part": "Base do texto de código e da numeração na linha em destaque"
+        },
+        "borderBase": {
+          "token": "--border",
+          "part": "Origem da cor de borda do componente no tema"
+        }
+      },
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": ".nds-code-block-root {\n  /* Altura máxima antes do scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de linha em outra cor semântica */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxe: sobrescreva só o que precisar */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+    },
+    "accessibility": {
+      "title": "Acessibilidade",
+      "keyboardTitle": "Navegação por Teclado",
+      "summary": "O bloco é operável só com teclado: a ação de copiar e a região de scroll entram na ordem de tabulação, e a confirmação de cópia é anunciada por uma região de status fora do botão. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 1.4.3 (contraste), 2.1.1 (teclado) e 4.1.3 (mensagens de status).",
+      "item1": "<strong>Confirmação anunciada</strong> — a confirmação vive em uma região <code>role=\"status\"</code> com <code>aria-live=\"polite\"</code> fora do botão, então o leitor de tela anuncia sem que o rótulo mude no meio da interação.",
+      "item2": "<strong>Região de scroll focável</strong> — a área rolável recebe <code>tabindex=\"0\"</code>. Sem isso, quem navega sem mouse não alcança o código que passa da altura máxima (WCAG 2.1.1).",
+      "item3": "<strong>Numeração fora da leitura</strong> — a coluna é <code>aria-hidden=\"true\"</code> e não selecionável: o leitor de tela lê o código, não os números.",
+      "item4": "<strong>Contraste medido</strong> — a paleta de sintaxe foi medida contra os dois fundos possíveis, o da superfície e o da linha em destaque, com mínimo de 4.5:1 nos temas claro e escuro.",
+      "item5": "<strong>Destaque não é só cor</strong> — a linha marcada recebe barra de acento na lateral além do fundo, então a marcação sobrevive à visão monocromática (WCAG 1.4.1).",
+      "item6": "<strong>Ícones decorativos</strong> — os ícones da ação de copiar são <code>aria-hidden=\"true\"</code>; o rótulo acessível do botão descreve a ação e a confirmação.",
+      "keyboard": {
+        "tab": "Move o foco para a ação de copiar e para a região de scroll do código.",
+        "enter": "Aciona a ação de copiar quando o botão está com o foco.",
+        "space": "Também aciona a ação de copiar quando o botão está com o foco.",
+        "arrows": "Com o foco na região de scroll, rolam o código na vertical e na horizontal.",
+        "homeEnd": "Com o foco na região de scroll, levam ao início e ao fim do conteúdo rolável."
+      },
+      "aria": {
+        "role": "<code>role=\"status\"</code> — região fora do botão que recebe o texto de confirmação da cópia.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — anuncia a confirmação sem interromper a leitura em curso.",
+        "ariaLabel": "<code>aria-label</code> — rótulo acessível da ação de copiar; passa a ser o texto de confirmação enquanto o feedback está ativo.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — na coluna de numeração e nos ícones do botão.",
+        "tabindex": "<code>tabindex=\"0\"</code> — na região de scroll, para alcance por teclado."
+      },
+      "screenReader": {
+        "onCopy": "Ao copiar: o leitor anuncia o texto de confirmação uma vez, e a região volta a ficar vazia em 2 segundos.",
+        "codeContent": "O conteúdo é lido como texto pré-formatado, linha a linha, sem os números da coluna lateral.",
+        "button": "A ação de copiar é anunciada pelo rótulo acessível, nunca pelo ícone.",
+        "scrollRegion": "A região de scroll é anunciada como área focável — quem navega por teclado percebe que há conteúdo para rolar."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Costuma ser usado com",
+      "table": "Para conteúdo em linhas e colunas — código não é dado tabular e perde a leitura em colunas.",
+      "alert": "Para uma observação em texto que não é código, acima ou abaixo do bloco.",
+      "tabs": "Para alternar entre variações do mesmo trecho sem empilhar blocos na página.",
+      "card": "Para agrupar o bloco com título, descrição e ações em uma superfície própria."
+    },
+    "notes": {
+      "title": "Notas de Implementação",
+      "tip1": "O destaque de sintaxe é próprio e devolve dados estruturados, não HTML: cada trecho vira um nó do template. Não há conteúdo injetado como markup e, portanto, nada a sanitizar.",
+      "tip2": "O escopo é snippet de documentação, não parser completo de linguagem. Trecho ambíguo fica sem cor — o pior resultado é perder a cor, nunca quebrar a marcação.",
+      "tip3": "A paleta de sintaxe não deriva dos tokens semânticos do tema: aqueles são cores de acento, com mínimo de 3:1, e texto de código é corpo e precisa de 4.5:1.",
+      "tip4": "A numeração é gerada por um elemento próprio e não selecionável — copiar pelo botão e selecionar com o mouse trazem o mesmo texto, só o código.",
+      "tip5": "A altura máxima é uma custom property da raiz: para um trecho longo em destaque na página, sobrescreva-a na instância em vez de remover o scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "O bloco emite um evento próprio ao copiar. Os demais são os eventos padrão de qualquer docs page.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "copy": "docs_code_copy",
+        "copyTrigger": "Usuário aciona a ação de copiar no bloco",
+        "copyPayload": "{ component, snippet_id }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Critérios de Teste",
+      "functional": {
+        "title": "Comportamento Funcional",
+        "description": "O que deve acontecer para cada configuração do bloco.",
+        "item1": {
+          "action": "Renderizar com uma linguagem suportada",
+          "result": "Cada trecho recebe a classificação correspondente e a cor do tema ativo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar com numeração ativa",
+          "result": "Uma linha por quebra do código, numeradas a partir de 1",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Acionar a ação de copiar",
+          "result": "A área de transferência recebe exatamente o código, sem os números de linha",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Observar o feedback após copiar",
+          "result": "Ícone de confirmação único no botão, rótulo visível e região de status preenchida; tudo volta ao inicial em 2 segundos",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Informar linhas e intervalos em destaque",
+          "result": "Só as linhas indicadas ficam marcadas, contando a partir de 1",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Desativar a numeração de linha",
+          "result": "A coluna some e o código recebe o recuo equivalente, sem colar na borda",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Informar uma linguagem não reconhecida",
+          "result": "O trecho aparece sem cor, sem erro no console e sem perda de layout",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Remover o bloco da tela antes dos 2 segundos",
+          "result": "O timer de confirmação é cancelado, sem escrita em componente já removido",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Acessibilidade Verificável",
+        "description": "Critérios verificáveis por axe-core e testes manuais.",
+        "item1": {
+          "criterion": "Confirmação anunciada por região de status fora do botão",
+          "level": "AA",
+          "how": "Inspecionar role=\"status\" e aria-live=\"polite\" após copiar"
+        },
+        "item2": {
+          "criterion": "Região de scroll alcançável por teclado",
+          "level": "A",
+          "how": "Tabular até a região e rolar com as setas"
+        },
+        "item3": {
+          "criterion": "Numeração ignorada pelo leitor de tela e pela seleção",
+          "level": "A",
+          "how": "Inspecionar aria-hidden na coluna e o texto realmente copiado"
+        },
+        "item4": {
+          "criterion": "Contraste mínimo 4.5:1 na paleta de sintaxe",
+          "level": "AA",
+          "how": "axe-core nos temas claro e escuro, também sobre a linha em destaque"
+        },
+        "item5": {
+          "criterion": "Sem violações axe-core no estado padrão",
+          "level": "AA",
+          "how": "axe-playwright no test-runner do Storybook"
+        }
+      },
+      "visual": {
+        "title": "Testes Visuais (Chromatic)",
+        "description": "Cada story é capturada automaticamente para visual regression.",
+        "item1": {
+          "story": "Playground — rótulo, numeração e linhas em destaque",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Linguagens — marcação, estilos, dados e terminal",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurações — com e sem numeração",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Destaque — linha única e intervalo",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Scroll — código mais alto e mais largo que a caixa",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visão Geral",
+      "demonstration": "Demonstração",
+      "anatomy": "Anatomia",
+      "usage": "Quando Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referência Técnica",
+      "import": "Importação",
+      "variants": "Variantes",
+      "states": "Configurações",
+      "props": "Propriedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Acessibilidade",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Qualidade",
+      "analytics": "Analytics",
+      "testes": "Testes"
+    }
+  },
+  "en": {
+    "title": "CodeBlock",
+    "category": "Display",
+    "type": "Component",
+    "description": "Code block with theme-driven syntax highlighting, line numbers, line emphasis, and a copy action that carries only the code.",
+    "seo": {
+      "title": "CodeBlock — Display",
+      "description": "Documentation for CodeBlock: theme-driven syntax highlighting, line numbers, highlighted lines, copy to clipboard, and WCAG 2.2 AA accessibility.",
+      "aiSummary": "CodeBlock component with in-house TypeScript syntax highlighting, optional line numbers, line-range emphasis, scrolling on both axes, and a copy action whose confirmation is announced through a status region.",
+      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+    },
+    "demonstration": {
+      "title": "Demonstration",
+      "labels": {
+        "fileName": "example.tsx",
+        "terminalTitle": "terminal",
+        "themeTitle": "theme.css",
+        "dataTitle": "package.json",
+        "plainTitle": "notes.txt",
+        "footer": "The copy action carries only the code, without the line numbers.",
+        "copy": "Copy code",
+        "copied": "Copied!"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomy",
+      "item1": "<strong>Root</strong> — container with border, its own surface, and content clipping.",
+      "item2": "<strong>Header</strong> — top bar with the optional label on the left and the copy action on the right.",
+      "item3": "<strong>Copy action</strong> — icon button that swaps to the confirmation icon for 2 seconds.",
+      "item4": "<strong>Status region</strong> — <code>role=\"status\"</code> outside the button, announcing the confirmation.",
+      "item5": "<strong>Scroll region</strong> — area scrollable on both axes, focusable by keyboard.",
+      "item6": "<strong>Line numbers</strong> — pinned side column, ignored by screen readers and not selectable.",
+      "item7": "<strong>Line</strong> — one per code break; can take the highlight background and accent bar.",
+      "item8": "<strong>Footer (optional)</strong> — bottom bar for notes about the snippet.",
+      "structureLabel": "Basic structure:",
+      "structureCode": "<CodeBlock                       {/* Root: border, surface, clipping */}\n  title=\"example.tsx\"            {/* Header label (optional) */}\n  language=\"tsx\"                 {/* Syntax classification */}\n  code={source}                  {/* Content shown and copied */}\n  showLineNumbers                {/* Line number column */}\n  highlightLines={[3, \"5-7\"]}    {/* Highlighted lines */}\n  footer=\"Requires Node 20+\"     {/* Note below the code */}\n/>"
+    },
+    "usage": {
+      "title": "When and How to Use",
+      "guidelines": {
+        "title": "Required Guidelines",
+        "item1": "Always declare the snippet language — without it the code renders monospaced and colorless.",
+        "item2": "Use the header label for the real file name; readers need to know where to paste.",
+        "item3": "Highlight only the lines the surrounding text explains — highlighting everything highlights nothing.",
+        "item4": "Turn line numbers off for terminal commands and one-liners, where they are noise."
+      },
+      "scenarios": {
+        "title": "Scenario Table",
+        "cols": {
+          "scenario": "Scenario",
+          "use": "Use this component?",
+          "alternative": "Alternative"
+        },
+        "item1": {
+          "s": "Snippet the reader will copy",
+          "u": "Yes",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Method name inside a sentence",
+          "u": "No",
+          "a": "Inline code"
+        },
+        "item3": {
+          "s": "Terminal output, no coloring",
+          "u": "Yes, as plain text",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Same snippet in several languages",
+          "u": "Yes, one per tab",
+          "a": "Tabs"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Element",
+          "rules": "Format rules",
+          "correct": "Correct",
+          "avoid": "Avoid",
+          "headerTitle": {
+            "name": "Header label",
+            "format": "File name or short path · not a sentence",
+            "good": "\"example.tsx\", \"src/theme.css\", \"terminal\"",
+            "bad": "\"See the code below\", \"Usage example 1 of the component\""
+          },
+          "footer": {
+            "name": "Footer",
+            "format": "Complete sentence · period · max. 2 lines",
+            "good": "\"Requires Node 20 or later.\"",
+            "bad": "An explanation paragraph that belongs in the page body"
+          },
+          "copy": {
+            "name": "Copy action",
+            "format": "Imperative verb · accessible label always present",
+            "good": "\"Copy code\", \"Copied!\"",
+            "bad": "\"Click here\", \"OK\""
+          },
+          "comments": {
+            "name": "Comments in the snippet",
+            "format": "Explain intent · never restate the syntax",
+            "good": "\"The copy action carries only the code.\"",
+            "bad": "\"Here we declare a constant.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Use when",
+        "item1": "The reader needs to copy the snippet into a file",
+        "item2": "Reading depends on spotting keywords, strings, and comments",
+        "item3": "Some lines of the snippet deserve more attention than the rest",
+        "item4": "The snippet is long and needs its own scroll instead of stretching the page"
+      },
+      "dont": {
+        "title": "Don't use when",
+        "item1": "The snippet is a short name inside a sentence — use inline code",
+        "item2": "The content is tabular and needs headers — use <code>Table</code>",
+        "item3": "The message is a prose note, not code — use <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Language declared, label with the file name, and highlighting only on the lines the text explains.",
+        "dont": "Block with no language, no label, and half the lines highlighted."
+      },
+      "pair2": {
+        "do": "Line numbers on for file snippets; off for terminal commands.",
+        "dont": "Line numbers on a one-line command, adding noise and implying a file that does not exist."
+      }
+    },
+    "import": {
+      "title": "Import",
+      "basic": "Basic import:",
+      "withFooter": "With a footer note:"
+    },
+    "variants": {
+      "title": "Variants",
+      "visualTitle": "Supported Languages",
+      "note": "The classification accepts the language name or the file extension, with or without the leading dot. An unrecognized value falls back to plain text with no coloring — it never breaks the block. Colors come from CSS custom properties, so every light or dark theme carries its own palette.",
+      "items": {
+        "script": "TypeScript and JavaScript, with or without component syntax. Keywords, types, strings, numbers, and comments each get their own color.",
+        "markup": "Markup and component templates. Tag names, attributes, directives, and quoted values.",
+        "styles": "Stylesheets. At-rules, selectors, properties, custom properties, and units.",
+        "data": "Structured data. Keys separated from values, with numbers and literals in distinct colors.",
+        "shell": "Command lines. Known commands, flags, strings, and comments.",
+        "text": "No classification. Destination of any unrecognized value: the snippet renders monospaced and colorless."
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "withTitle": {
+          "name": "With header label",
+          "description": "Header with the file name on the left and the copy action on the right. A long label truncates instead of pushing the button out.",
+          "use": "Whenever the snippet belongs to a real file — the label tells the reader where to paste it."
+        },
+        "withoutNumbers": {
+          "name": "Without line numbers",
+          "description": "The side column disappears and the code takes the indent it used to occupy, keeping the left breathing room.",
+          "use": "Terminal commands and one-liners, where numbering implies a file that does not exist."
+        },
+        "highlighted": {
+          "name": "With highlighted lines",
+          "description": "A dedicated background and a side accent bar mark a line or a range. The mark spans the full width and follows horizontal scrolling.",
+          "use": "Step-by-step tutorials and explanations where only a few lines of the snippet matter."
+        },
+        "withFooter": {
+          "name": "With footer",
+          "description": "Bottom bar separated by a border, in smaller text and secondary color, for notes about the snippet.",
+          "use": "Prerequisites, minimum versions, or warnings that don't fit as a comment inside the code."
+        }
+      }
+    },
+    "states": {
+      "title": "Configurations",
+      "cols": {
+        "state": "Configuration",
+        "trigger": "How to activate",
+        "behavior": "Behavior"
+      },
+      "idle": {
+        "label": "Ready to copy",
+        "trigger": "Initial state",
+        "behavior": "Copy icon with an accessible action label. The action stays visible even when the header has no label"
+      },
+      "copied": {
+        "label": "Copied",
+        "trigger": "Trigger the copy action",
+        "behavior": "Confirmation icon, confirmation label beside it, and an announcement from the status region; returns to the initial state after 2 seconds"
+      },
+      "numbered": {
+        "label": "With line numbers",
+        "trigger": "Component default",
+        "behavior": "Column pinned to the left edge, numbered from 1, that stays visible while scrolling horizontally"
+      },
+      "unnumbered": {
+        "label": "Without line numbers",
+        "trigger": "Turn line numbering off",
+        "behavior": "The column disappears and the code gains an equivalent indent instead of hugging the border"
+      },
+      "highlighted": {
+        "label": "With highlighting",
+        "trigger": "Declare lines or ranges, starting at 1",
+        "behavior": "The listed lines get a background and an accent bar; the rest keep the default surface"
+      },
+      "scrolling": {
+        "label": "With scrolling",
+        "trigger": "Code taller or wider than the box",
+        "behavior": "Scrolling on both axes in the same container, with the region focusable by keyboard and the numbering pinned to the side"
+      },
+      "unknownLanguage": {
+        "label": "Unrecognized language",
+        "trigger": "Pass a value outside the supported list",
+        "behavior": "The snippet renders monospaced and colorless, with header, numbering, highlighting, and scrolling intact"
+      }
+    },
+    "props": {
+      "title": "Properties",
+      "interface": "TypeScript Interface",
+      "table": {
+        "prop": "Property",
+        "type": "Type",
+        "default": "Default",
+        "required": "Required",
+        "description": "Description",
+        "code": {
+          "name": "code",
+          "type": "string",
+          "default": "—",
+          "required": "Yes",
+          "description": "Content displayed in the block. It is exactly the text the copy action places on the clipboard."
+        },
+        "language": {
+          "name": "language",
+          "type": "string",
+          "default": "'text'",
+          "required": "No",
+          "description": "Language or extension of the snippet, with or without the leading dot. An unrecognized value falls back to plain text with no coloring."
+        },
+        "title": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Header label, usually the file name. Without a label, the copy action still shows on the right."
+        },
+        "showLineNumbers": {
+          "name": "showLineNumbers",
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Shows the line number column. Numbering never reaches the copied text nor a mouse selection."
+        },
+        "highlightLines": {
+          "name": "highlightLines",
+          "type": "string | number | Array<string | number>",
+          "default": "—",
+          "required": "No",
+          "description": "Highlighted lines, counted from 1. Accepts single numbers, ranges, or a mix of both."
+        },
+        "footer": {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Note below the code, separated by a border. Accepts plain text or custom content."
+        },
+        "copyLabel": {
+          "name": "copyLabel",
+          "type": "string",
+          "default": "'Copiar código'",
+          "required": "No",
+          "description": "Accessible label of the copy action in its initial state. Translate it along with the rest of the page."
+        },
+        "copiedLabel": {
+          "name": "copiedLabel",
+          "type": "string",
+          "default": "'Copiado!'",
+          "required": "No",
+          "description": "Confirmation text, shown beside the icon and announced by the status region."
+        },
+        "className": {
+          "name": "className",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Extra classes on the root. Use it to override the block's custom properties on a single instance."
+        }
+      },
+      "extensibilityTitle": "Extensibility",
+      "extensibility": "The root forwards the element's HTML attributes and accepts extra classes. The whole appearance is driven by custom properties declared on the root — override them in your own class instead of redefining color or spacing through descendant selectors.",
+      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"install-snippet\"\n  footer={<span>Requires Node 20 or later.</span>}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "surfaceTitle": "Surface and structure",
+      "syntaxTitle": "Syntax palette",
+      "inheritedTitle": "Inherited from the theme",
+      "table": {
+        "token": "CSS Token",
+        "part": "Application",
+        "bg": {
+          "token": "--code-block-bg",
+          "part": "Background of the code area and of the number column"
+        },
+        "border": {
+          "token": "--code-block-border",
+          "part": "Root border plus the header and footer dividers"
+        },
+        "headerBg": {
+          "token": "--code-block-header-bg",
+          "part": "Header and footer background"
+        },
+        "highlightBg": {
+          "token": "--code-block-highlight-bg",
+          "part": "Highlighted line background, semi-transparent over the surface"
+        },
+        "highlightAccent": {
+          "token": "--code-block-highlight-accent",
+          "part": "Accent bar on the side of the highlighted line"
+        },
+        "maxBlockSize": {
+          "token": "--code-block-max-block-size",
+          "part": "Maximum height before vertical scrolling kicks in"
+        },
+        "comment": {
+          "token": "--code-token-comment",
+          "part": "Comments, in italics"
+        },
+        "string": {
+          "token": "--code-token-string",
+          "part": "Strings and quoted values"
+        },
+        "number": {
+          "token": "--code-token-number",
+          "part": "Numbers, units, and hex colors"
+        },
+        "keyword": {
+          "token": "--code-token-keyword",
+          "part": "Reserved words of the language"
+        },
+        "builtin": {
+          "token": "--code-token-builtin",
+          "part": "Primitive types, literals, and global objects"
+        },
+        "function": {
+          "token": "--code-token-function",
+          "part": "Function names in calls and declarations"
+        },
+        "tag": {
+          "token": "--code-token-tag",
+          "part": "Tag names, components, and class selectors"
+        },
+        "attr": {
+          "token": "--code-token-attr",
+          "part": "Attributes, directives, and terminal flags"
+        },
+        "property": {
+          "token": "--code-token-property",
+          "part": "Style properties, custom properties, and data keys"
+        },
+        "operator": {
+          "token": "--code-token-operator",
+          "part": "Operators and assignment signs"
+        },
+        "punctuation": {
+          "token": "--code-token-punctuation",
+          "part": "Braces, parentheses, commas, and colons"
+        },
+        "plain": {
+          "token": "--code-token-plain",
+          "part": "Unclassified text and ordinary identifiers"
+        },
+        "radius": {
+          "token": "--radius-lg",
+          "part": "Root border radius"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "part": "Header label, line numbers, and footer text"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "part": "Base of the code text and of the numbering on a highlighted line"
+        },
+        "borderBase": {
+          "token": "--border",
+          "part": "Source of the component's border color in the theme"
+        }
+      },
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": ".nds-code-block-root {\n  /* Maximum height before vertical scrolling */\n  --code-block-max-block-size: 32rem;\n\n  /* Line highlight in another semantic color */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Syntax palette: override only what you need */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "keyboardTitle": "Keyboard Navigation",
+      "summary": "The block is fully operable by keyboard: the copy action and the scroll region are both in the tab order, and the copy confirmation is announced by a status region outside the button. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 1.4.3 (contrast), 2.1.1 (keyboard), and 4.1.3 (status messages).",
+      "item1": "<strong>Announced confirmation</strong> — the confirmation lives in a <code>role=\"status\"</code> region with <code>aria-live=\"polite\"</code> outside the button, so screen readers announce it without the button label changing mid-interaction.",
+      "item2": "<strong>Focusable scroll region</strong> — the scrollable area carries <code>tabindex=\"0\"</code>. Without it, keyboard-only users cannot reach code beyond the maximum height (WCAG 2.1.1).",
+      "item3": "<strong>Numbering out of the reading flow</strong> — the column is <code>aria-hidden=\"true\"</code> and not selectable: the screen reader reads the code, not the numbers.",
+      "item4": "<strong>Measured contrast</strong> — the syntax palette was measured against both possible backgrounds, the surface and the highlighted line, at a minimum of 4.5:1 in light and dark themes.",
+      "item5": "<strong>Highlighting is not color alone</strong> — the marked line also gets a side accent bar, so the mark survives monochrome vision (WCAG 1.4.1).",
+      "item6": "<strong>Decorative icons</strong> — the copy action icons are <code>aria-hidden=\"true\"</code>; the button's accessible label describes the action and the confirmation.",
+      "keyboard": {
+        "tab": "Moves focus to the copy action and to the code scroll region.",
+        "enter": "Triggers the copy action while the button has focus.",
+        "space": "Also triggers the copy action while the button has focus.",
+        "arrows": "With focus on the scroll region, scroll the code vertically and horizontally.",
+        "homeEnd": "With focus on the scroll region, jump to the start and the end of the scrollable content."
+      },
+      "aria": {
+        "role": "<code>role=\"status\"</code> — region outside the button that receives the copy confirmation text.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — announces the confirmation without interrupting ongoing reading.",
+        "ariaLabel": "<code>aria-label</code> — accessible label of the copy action; becomes the confirmation text while the feedback is active.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — on the number column and on the button icons.",
+        "tabindex": "<code>tabindex=\"0\"</code> — on the scroll region, for keyboard reach."
+      },
+      "screenReader": {
+        "onCopy": "On copy: the reader announces the confirmation text once, and the region empties again after 2 seconds.",
+        "codeContent": "The content is read as preformatted text, line by line, without the numbers in the side column.",
+        "button": "The copy action is announced by its accessible label, never by the icon.",
+        "scrollRegion": "The scroll region is announced as a focusable area — keyboard users learn there is content to scroll."
+      }
+    },
+    "related": {
+      "title": "Related Components",
+      "alternatives": "Alternatives",
+      "usedWith": "Often used with",
+      "table": "For content in rows and columns — code is not tabular data and loses readability in columns.",
+      "alert": "For a prose note that is not code, above or below the block.",
+      "tabs": "To switch between variations of the same snippet without stacking blocks on the page.",
+      "card": "To group the block with a title, description, and actions on its own surface."
+    },
+    "notes": {
+      "title": "Implementation Notes",
+      "tip1": "Syntax highlighting is in-house and returns structured data, not HTML: each fragment becomes a template node. No content is injected as markup, so there is nothing to sanitize.",
+      "tip2": "The scope is documentation snippets, not a full language parser. An ambiguous fragment simply loses its color — the worst outcome is missing color, never broken markup.",
+      "tip3": "The syntax palette does not derive from the theme's semantic tokens: those are accent colors with a 3:1 minimum, while code text is body copy and needs 4.5:1.",
+      "tip4": "Numbering is rendered by its own non-selectable element — copying with the button and selecting with the mouse yield the same text, the code alone.",
+      "tip5": "Maximum height is a custom property on the root: for a long featured snippet, override it on that instance instead of removing the scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "The block emits one event of its own on copy. The rest are the standard docs page events.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "copy": "docs_code_copy",
+        "copyTrigger": "User triggers the copy action in the block",
+        "copyPayload": "{ component, snippet_id }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Test Criteria",
+      "functional": {
+        "title": "Functional Behavior",
+        "description": "What should happen for each configuration of the block.",
+        "item1": {
+          "action": "Render with a supported language",
+          "result": "Each fragment gets its matching classification and the active theme color",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Render with line numbers on",
+          "result": "One line per code break, numbered from 1",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Trigger the copy action",
+          "result": "The clipboard receives exactly the code, without the line numbers",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Observe the feedback after copying",
+          "result": "A single confirmation icon in the button, a visible label, and a filled status region; everything returns to the initial state after 2 seconds",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Declare highlighted lines and ranges",
+          "result": "Only the listed lines are marked, counting from 1",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Turn line numbering off",
+          "result": "The column disappears and the code gains an equivalent indent instead of hugging the border",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Pass an unrecognized language",
+          "result": "The snippet renders colorless, with no console error and no layout loss",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Remove the block from the screen within the 2 seconds",
+          "result": "The confirmation timer is cleared, with no write to an already removed component",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Verifiable Accessibility",
+        "description": "Criteria verifiable by axe-core and manual testing.",
+        "item1": {
+          "criterion": "Confirmation announced by a status region outside the button",
+          "level": "AA",
+          "how": "Inspect role=\"status\" and aria-live=\"polite\" after copying"
+        },
+        "item2": {
+          "criterion": "Scroll region reachable by keyboard",
+          "level": "A",
+          "how": "Tab to the region and scroll with the arrow keys"
+        },
+        "item3": {
+          "criterion": "Numbering ignored by screen readers and by selection",
+          "level": "A",
+          "how": "Inspect aria-hidden on the column and the text actually copied"
+        },
+        "item4": {
+          "criterion": "Minimum contrast 4.5:1 across the syntax palette",
+          "level": "AA",
+          "how": "axe-core in light and dark themes, including over a highlighted line"
+        },
+        "item5": {
+          "criterion": "No axe-core violations in the default state",
+          "level": "AA",
+          "how": "axe-playwright in the Storybook test-runner"
+        }
+      },
+      "visual": {
+        "title": "Visual Tests (Chromatic)",
+        "description": "Each story is automatically captured for visual regression.",
+        "item1": {
+          "story": "Playground — label, numbering, and highlighted lines",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Languages — markup, styles, data, and terminal",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configurations — with and without line numbers",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Highlighting — single line and range",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Scrolling — code taller and wider than the box",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "demonstration": "Demonstration",
+      "anatomy": "Anatomy",
+      "usage": "When to Use",
+      "doDont": "Do & Don't",
+      "techRef": "Technical Reference",
+      "import": "Import",
+      "variants": "Variants",
+      "states": "Configurations",
+      "props": "Properties",
+      "tokens": "Tokens",
+      "context": "Context",
+      "accessibility": "Accessibility",
+      "related": "Related",
+      "notes": "Notes",
+      "quality": "Quality",
+      "analytics": "Analytics",
+      "testes": "Tests"
+    }
+  },
+  "es": {
+    "title": "CodeBlock",
+    "category": "Display",
+    "type": "Componente",
+    "description": "Bloque de código con resaltado de sintaxis según el tema, numeración de línea, marcado de tramos y acción de copiar que lleva solo el código.",
+    "seo": {
+      "title": "CodeBlock — Display",
+      "description": "Documentación del CodeBlock: resaltado de sintaxis según el tema, numeración de línea, líneas destacadas, copiar código y accesibilidad WCAG 2.2 AA.",
+      "aiSummary": "Componente CodeBlock con resaltado de sintaxis propio en TypeScript, numeración de línea opcional, marcado de intervalos de línea, scroll en los dos ejes y acción de copiar con confirmación anunciada por una región de estado.",
+      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+    },
+    "demonstration": {
+      "title": "Demostración",
+      "labels": {
+        "fileName": "ejemplo.tsx",
+        "terminalTitle": "terminal",
+        "themeTitle": "tema.css",
+        "dataTitle": "package.json",
+        "plainTitle": "notas.txt",
+        "footer": "La acción de copiar lleva solo el código, sin los números de línea.",
+        "copy": "Copiar código",
+        "copied": "¡Copiado!"
+      }
+    },
+    "anatomy": {
+      "title": "Anatomía",
+      "item1": "<strong>Raíz</strong> — contenedor con borde, superficie propia y recorte del contenido.",
+      "item2": "<strong>Header</strong> — franja superior con etiqueta opcional a la izquierda y acción de copiar a la derecha.",
+      "item3": "<strong>Acción copiar</strong> — botón de ícono que cambia al ícono de confirmación por 2 segundos.",
+      "item4": "<strong>Región de estado</strong> — <code>role=\"status\"</code> fuera del botón, anuncia la confirmación.",
+      "item5": "<strong>Región de scroll</strong> — área desplazable en los dos ejes, enfocable por teclado.",
+      "item6": "<strong>Numeración</strong> — columna fija al lateral, ignorada por el lector de pantalla y no seleccionable.",
+      "item7": "<strong>Línea</strong> — una por salto del código; puede recibir fondo y barra de acento de destaque.",
+      "item8": "<strong>Footer (opcional)</strong> — franja inferior para observaciones sobre el fragmento.",
+      "structureLabel": "Estructura básica:",
+      "structureCode": "<CodeBlock                       {/* Raíz: borde, superficie y recorte */}\n  title=\"ejemplo.tsx\"            {/* Etiqueta del header (opcional) */}\n  language=\"tsx\"                 {/* Clasificación de sintaxis */}\n  code={source}                  {/* Contenido mostrado y copiado */}\n  showLineNumbers                {/* Columna de numeración */}\n  highlightLines={[3, \"5-7\"]}    {/* Líneas destacadas */}\n  footer=\"Requiere Node 20+\"     {/* Observación bajo el código */}\n/>"
+    },
+    "usage": {
+      "title": "Cuándo y Cómo Usar",
+      "guidelines": {
+        "title": "Guías Obligatorias",
+        "item1": "Indica siempre el lenguaje del fragmento — sin él el código se muestra monoespaciado y sin color.",
+        "item2": "Usa la etiqueta del header para el nombre real del archivo; el lector necesita saber dónde pegar.",
+        "item3": "Destaca solo las líneas que el texto alrededor explica — destacar todo equivale a no destacar nada.",
+        "item4": "Desactiva la numeración en comandos de terminal y fragmentos de una línea, donde es ruido."
+      },
+      "scenarios": {
+        "title": "Tabla de Escenarios",
+        "cols": {
+          "scenario": "Escenario",
+          "use": "¿Usar este componente?",
+          "alternative": "Alternativa"
+        },
+        "item1": {
+          "s": "Fragmento que el lector va a copiar",
+          "u": "Sí",
+          "a": "-"
+        },
+        "item2": {
+          "s": "Nombre de método dentro de una frase",
+          "u": "No",
+          "a": "Código inline"
+        },
+        "item3": {
+          "s": "Salida de terminal, sin color",
+          "u": "Sí, en texto simple",
+          "a": "-"
+        },
+        "item4": {
+          "s": "Mismo fragmento en varios lenguajes",
+          "u": "Sí, uno por pestaña",
+          "a": "Tabs"
+        }
+      },
+      "uxWriting": {
+        "title": "UX Writing",
+        "table": {
+          "element": "Elemento",
+          "rules": "Reglas de formato",
+          "correct": "Correcto",
+          "avoid": "Evitar",
+          "headerTitle": {
+            "name": "Etiqueta del header",
+            "format": "Nombre de archivo o ruta corta · sin frase",
+            "good": "\"ejemplo.tsx\", \"src/tema.css\", \"terminal\"",
+            "bad": "\"Mira el código abajo\", \"Ejemplo 1 de uso del componente\""
+          },
+          "footer": {
+            "name": "Pie",
+            "format": "Frase completa · punto final · máx. 2 líneas",
+            "good": "\"Requiere Node 20 o superior.\"",
+            "bad": "Párrafo de explicación que debería estar en el cuerpo de la página"
+          },
+          "copy": {
+            "name": "Acción copiar",
+            "format": "Verbo en infinitivo · etiqueta accesible siempre presente",
+            "good": "\"Copiar código\", \"¡Copiado!\"",
+            "bad": "\"Haz clic aquí\", \"OK\""
+          },
+          "comments": {
+            "name": "Comentarios en el fragmento",
+            "format": "Explican la intención · no repiten la sintaxis",
+            "good": "\"La acción de copiar lleva solo el código.\"",
+            "bad": "\"Aquí declaramos una constante.\""
+          }
+        }
+      },
+      "do": {
+        "title": "Úsalo cuando",
+        "item1": "El lector necesita copiar el fragmento para pegarlo en un archivo",
+        "item2": "La lectura depende de identificar palabras clave, strings y comentarios",
+        "item3": "Algunas líneas del fragmento merecen más atención que el resto",
+        "item4": "El fragmento es largo y necesita scroll propio, sin estirar la página"
+      },
+      "dont": {
+        "title": "No uses cuando",
+        "item1": "El fragmento es un nombre corto dentro de una frase — usa código inline",
+        "item2": "El contenido es tabular y necesita encabezado — usa <code>Table</code>",
+        "item3": "El mensaje es una observación en prosa, no código — usa <code>Alert</code>"
+      }
+    },
+    "doDont": {
+      "title": "Do & Don't",
+      "pair1": {
+        "do": "Lenguaje indicado, etiqueta con el nombre del archivo y destaque solo en las líneas que el texto explica.",
+        "dont": "Bloque sin lenguaje, sin etiqueta y con la mitad de las líneas destacadas."
+      },
+      "pair2": {
+        "do": "Numeración activa en fragmentos de archivo; desactivada en comandos de terminal.",
+        "dont": "Numeración en un comando de una línea, que agrega ruido y sugiere un archivo inexistente."
+      }
+    },
+    "import": {
+      "title": "Importación",
+      "basic": "Import básico:",
+      "withFooter": "Con observación en el pie:"
+    },
+    "variants": {
+      "title": "Variantes",
+      "visualTitle": "Lenguajes Soportados",
+      "note": "La clasificación acepta el nombre del lenguaje o la extensión del archivo, con o sin punto inicial. Un valor no reconocido cae en texto simple, sin color — nunca rompe el bloque. Los colores salen de CSS custom properties, así que cada tema claro u oscuro tiene su propia paleta.",
+      "items": {
+        "script": "TypeScript y JavaScript, con o sin sintaxis de componente. Palabras clave, tipos, strings, números y comentarios reciben color propio.",
+        "markup": "Marcado y templates de componente. Nombres de tag, atributos, directivas y valores entre comillas.",
+        "styles": "Hojas de estilo. Reglas de arroba, selectores, propiedades, custom properties y unidades.",
+        "data": "Datos estructurados. Claves separadas de los valores, con números y literales en colores distintos.",
+        "shell": "Líneas de comando. Comandos conocidos, flags, strings y comentarios.",
+        "text": "Sin clasificación. Destino de cualquier valor no reconocido: el fragmento aparece monoespaciado y sin color."
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "withTitle": {
+          "name": "Con etiqueta en el header",
+          "description": "Header con el nombre del archivo a la izquierda y la acción de copiar a la derecha. Una etiqueta larga se trunca en vez de empujar el botón fuera.",
+          "use": "Siempre que el fragmento pertenece a un archivo real — la etiqueta le dice al lector dónde pegar lo que copió."
+        },
+        "withoutNumbers": {
+          "name": "Sin numeración",
+          "description": "La columna lateral desaparece y el código recibe la sangría que ella ocupaba, manteniendo el aire a la izquierda.",
+          "use": "Comandos de terminal y fragmentos de una línea, donde numerar sugiere un archivo que no existe."
+        },
+        "highlighted": {
+          "name": "Con líneas destacadas",
+          "description": "Un fondo propio y una barra de acento lateral marcan una línea o un intervalo. La marca cubre todo el ancho y acompaña el scroll horizontal.",
+          "use": "Tutoriales paso a paso y explicaciones donde solo importan algunas líneas del fragmento."
+        },
+        "withFooter": {
+          "name": "Con pie",
+          "description": "Franja inferior separada por borde, en texto menor y color secundario, para observaciones sobre el fragmento.",
+          "use": "Requisitos previos, versión mínima o avisos que no caben como comentario dentro del código."
+        }
+      }
+    },
+    "states": {
+      "title": "Configuraciones",
+      "cols": {
+        "state": "Configuración",
+        "trigger": "Cómo activar",
+        "behavior": "Comportamiento"
+      },
+      "idle": {
+        "label": "Listo para copiar",
+        "trigger": "Estado inicial",
+        "behavior": "Ícono de copia con etiqueta accesible de acción. La acción queda visible incluso cuando el header no tiene etiqueta"
+      },
+      "copied": {
+        "label": "Copiado",
+        "trigger": "Accionar la acción de copiar",
+        "behavior": "Ícono de confirmación, etiqueta de confirmación al lado y anuncio por la región de estado; vuelve al inicial en 2 segundos"
+      },
+      "numbered": {
+        "label": "Con numeración",
+        "trigger": "Predeterminado del componente",
+        "behavior": "Columna fija al borde izquierdo, numerada desde 1, que permanece visible durante el scroll horizontal"
+      },
+      "unnumbered": {
+        "label": "Sin numeración",
+        "trigger": "Desactivar la numeración de línea",
+        "behavior": "La columna desaparece y el código gana la sangría equivalente, sin pegarse al borde"
+      },
+      "highlighted": {
+        "label": "Con destaque",
+        "trigger": "Indicar líneas o intervalos, empezando en 1",
+        "behavior": "Las líneas indicadas reciben fondo y barra de acento; las demás siguen con la superficie predeterminada"
+      },
+      "scrolling": {
+        "label": "Con scroll",
+        "trigger": "Código más alto o más ancho que la caja",
+        "behavior": "Scroll en los dos ejes en el mismo contenedor, con la región enfocable por teclado y la numeración fija al lateral"
+      },
+      "unknownLanguage": {
+        "label": "Lenguaje no reconocido",
+        "trigger": "Indicar un valor fuera de la lista soportada",
+        "behavior": "El fragmento se muestra monoespaciado y sin color, con header, numeración, destaque y scroll intactos"
+      }
+    },
+    "props": {
+      "title": "Propiedades",
+      "interface": "Interfaz TypeScript",
+      "table": {
+        "prop": "Propiedad",
+        "type": "Tipo",
+        "default": "Por defecto",
+        "required": "Obligatorio",
+        "description": "Descripción",
+        "code": {
+          "name": "code",
+          "type": "string",
+          "default": "—",
+          "required": "Sí",
+          "description": "Contenido mostrado en el bloque. Es exactamente el texto que la acción de copiar coloca en el portapapeles."
+        },
+        "language": {
+          "name": "language",
+          "type": "string",
+          "default": "'text'",
+          "required": "No",
+          "description": "Lenguaje o extensión del fragmento, con o sin punto inicial. Un valor no reconocido cae en texto simple, sin color."
+        },
+        "title": {
+          "name": "title",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Etiqueta del header, normalmente el nombre del archivo. Sin etiqueta, la acción de copiar sigue visible a la derecha."
+        },
+        "showLineNumbers": {
+          "name": "showLineNumbers",
+          "type": "boolean",
+          "default": "true",
+          "required": "No",
+          "description": "Muestra la columna de numeración. La numeración nunca entra en el texto copiado ni en la selección hecha con el mouse."
+        },
+        "highlightLines": {
+          "name": "highlightLines",
+          "type": "string | number | Array<string | number>",
+          "default": "—",
+          "required": "No",
+          "description": "Líneas destacadas, contadas desde 1. Acepta números sueltos, intervalos o la combinación de ambos."
+        },
+        "footer": {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "—",
+          "required": "No",
+          "description": "Observación bajo el código, separada por borde. Acepta texto simple o contenido propio."
+        },
+        "copyLabel": {
+          "name": "copyLabel",
+          "type": "string",
+          "default": "'Copiar código'",
+          "required": "No",
+          "description": "Etiqueta accesible de la acción de copiar en el estado inicial. Tradúcela junto con el resto de la página."
+        },
+        "copiedLabel": {
+          "name": "copiedLabel",
+          "type": "string",
+          "default": "'Copiado!'",
+          "required": "No",
+          "description": "Texto de confirmación, mostrado al lado del ícono y anunciado por la región de estado."
+        },
+        "className": {
+          "name": "className",
+          "type": "string",
+          "default": "—",
+          "required": "No",
+          "description": "Clases adicionales en la raíz. Úsalas para sobrescribir las custom properties del bloque en una instancia."
+        }
+      },
+      "extensibilityTitle": "Extensibilidad",
+      "extensibility": "La raíz reenvía los atributos HTML del elemento y acepta clases adicionales. Toda la apariencia se controla con custom properties declaradas en la raíz — sobrescríbelas en una clase propia en vez de redefinir color o espaciado con selectores de descendiente.",
+      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacion\"\n  footer={<span>Requiere Node 20 o superior.</span>}\n/>"
+    },
+    "tokens": {
+      "title": "Design Tokens",
+      "surfaceTitle": "Superficie y estructura",
+      "syntaxTitle": "Paleta de sintaxis",
+      "inheritedTitle": "Heredados del tema",
+      "table": {
+        "token": "Token CSS",
+        "part": "Aplicación",
+        "bg": {
+          "token": "--code-block-bg",
+          "part": "Fondo del área de código y de la columna de numeración"
+        },
+        "border": {
+          "token": "--code-block-border",
+          "part": "Borde de la raíz y divisorias del header y del pie"
+        },
+        "headerBg": {
+          "token": "--code-block-header-bg",
+          "part": "Fondo del header y del pie"
+        },
+        "highlightBg": {
+          "token": "--code-block-highlight-bg",
+          "part": "Fondo de la línea destacada, semitransparente sobre la superficie"
+        },
+        "highlightAccent": {
+          "token": "--code-block-highlight-accent",
+          "part": "Barra de acento al lateral de la línea destacada"
+        },
+        "maxBlockSize": {
+          "token": "--code-block-max-block-size",
+          "part": "Altura máxima antes de que entre el scroll vertical"
+        },
+        "comment": {
+          "token": "--code-token-comment",
+          "part": "Comentarios, en cursiva"
+        },
+        "string": {
+          "token": "--code-token-string",
+          "part": "Strings y valores entre comillas"
+        },
+        "number": {
+          "token": "--code-token-number",
+          "part": "Números, unidades y colores en hexadecimal"
+        },
+        "keyword": {
+          "token": "--code-token-keyword",
+          "part": "Palabras reservadas del lenguaje"
+        },
+        "builtin": {
+          "token": "--code-token-builtin",
+          "part": "Tipos primitivos, literales y objetos globales"
+        },
+        "function": {
+          "token": "--code-token-function",
+          "part": "Nombres de función en llamadas y declaraciones"
+        },
+        "tag": {
+          "token": "--code-token-tag",
+          "part": "Nombres de tag, componentes y selectores de clase"
+        },
+        "attr": {
+          "token": "--code-token-attr",
+          "part": "Atributos, directivas y flags de terminal"
+        },
+        "property": {
+          "token": "--code-token-property",
+          "part": "Propiedades de estilo, custom properties y claves de datos"
+        },
+        "operator": {
+          "token": "--code-token-operator",
+          "part": "Operadores y signos de asignación"
+        },
+        "punctuation": {
+          "token": "--code-token-punctuation",
+          "part": "Llaves, paréntesis, comas y dos puntos"
+        },
+        "plain": {
+          "token": "--code-token-plain",
+          "part": "Texto sin clasificación e identificadores comunes"
+        },
+        "radius": {
+          "token": "--radius-lg",
+          "part": "Border radius de la raíz"
+        },
+        "mutedForeground": {
+          "token": "--muted-foreground",
+          "part": "Etiqueta del header, números de línea y texto del pie"
+        },
+        "foreground": {
+          "token": "--foreground",
+          "part": "Base del texto de código y de la numeración en la línea destacada"
+        },
+        "borderBase": {
+          "token": "--border",
+          "part": "Origen del color de borde del componente en el tema"
+        }
+      },
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": ".nds-code-block-root {\n  /* Altura máxima antes del scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de línea en otro color semántico */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxis: sobrescribe solo lo necesario */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+    },
+    "accessibility": {
+      "title": "Accesibilidad",
+      "keyboardTitle": "Navegación por Teclado",
+      "summary": "El bloque es operable solo con teclado: la acción de copiar y la región de scroll entran en el orden de tabulación, y la confirmación de copia se anuncia por una región de estado fuera del botón. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 1.4.3 (contraste), 2.1.1 (teclado) y 4.1.3 (mensajes de estado).",
+      "item1": "<strong>Confirmación anunciada</strong> — la confirmación vive en una región <code>role=\"status\"</code> con <code>aria-live=\"polite\"</code> fuera del botón, así el lector de pantalla la anuncia sin que la etiqueta cambie en medio de la interacción.",
+      "item2": "<strong>Región de scroll enfocable</strong> — el área desplazable recibe <code>tabindex=\"0\"</code>. Sin eso, quien navega sin mouse no alcanza el código que pasa de la altura máxima (WCAG 2.1.1).",
+      "item3": "<strong>Numeración fuera de la lectura</strong> — la columna es <code>aria-hidden=\"true\"</code> y no seleccionable: el lector de pantalla lee el código, no los números.",
+      "item4": "<strong>Contraste medido</strong> — la paleta de sintaxis fue medida contra los dos fondos posibles, el de la superficie y el de la línea destacada, con mínimo de 4.5:1 en los temas claro y oscuro.",
+      "item5": "<strong>El destaque no es solo color</strong> — la línea marcada recibe barra de acento lateral además del fondo, así la marca sobrevive a la visión monocromática (WCAG 1.4.1).",
+      "item6": "<strong>Íconos decorativos</strong> — los íconos de la acción de copiar son <code>aria-hidden=\"true\"</code>; la etiqueta accesible del botón describe la acción y la confirmación.",
+      "keyboard": {
+        "tab": "Mueve el foco a la acción de copiar y a la región de scroll del código.",
+        "enter": "Acciona la acción de copiar cuando el botón tiene el foco.",
+        "space": "También acciona la acción de copiar cuando el botón tiene el foco.",
+        "arrows": "Con el foco en la región de scroll, desplazan el código en vertical y en horizontal.",
+        "homeEnd": "Con el foco en la región de scroll, llevan al inicio y al final del contenido desplazable."
+      },
+      "aria": {
+        "role": "<code>role=\"status\"</code> — región fuera del botón que recibe el texto de confirmación de la copia.",
+        "ariaLive": "<code>aria-live=\"polite\"</code> — anuncia la confirmación sin interrumpir la lectura en curso.",
+        "ariaLabel": "<code>aria-label</code> — etiqueta accesible de la acción de copiar; pasa a ser el texto de confirmación mientras el feedback está activo.",
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> — en la columna de numeración y en los íconos del botón.",
+        "tabindex": "<code>tabindex=\"0\"</code> — en la región de scroll, para alcance por teclado."
+      },
+      "screenReader": {
+        "onCopy": "Al copiar: el lector anuncia el texto de confirmación una vez, y la región vuelve a quedar vacía en 2 segundos.",
+        "codeContent": "El contenido se lee como texto preformateado, línea a línea, sin los números de la columna lateral.",
+        "button": "La acción de copiar se anuncia por la etiqueta accesible, nunca por el ícono.",
+        "scrollRegion": "La región de scroll se anuncia como área enfocable — quien navega por teclado percibe que hay contenido para desplazar."
+      }
+    },
+    "related": {
+      "title": "Componentes Relacionados",
+      "alternatives": "Alternativas",
+      "usedWith": "Se usa frecuentemente con",
+      "table": "Para contenido en filas y columnas — el código no es dato tabular y pierde legibilidad en columnas.",
+      "alert": "Para una observación en prosa que no es código, arriba o abajo del bloque.",
+      "tabs": "Para alternar entre variaciones del mismo fragmento sin apilar bloques en la página.",
+      "card": "Para agrupar el bloque con título, descripción y acciones en una superficie propia."
+    },
+    "notes": {
+      "title": "Notas de Implementación",
+      "tip1": "El resaltado de sintaxis es propio y devuelve datos estructurados, no HTML: cada fragmento se convierte en un nodo del template. No hay contenido inyectado como markup y, por lo tanto, nada que sanitizar.",
+      "tip2": "El alcance son fragmentos de documentación, no un parser completo de lenguaje. Un fragmento ambiguo queda sin color — el peor resultado es perder el color, nunca romper el marcado.",
+      "tip3": "La paleta de sintaxis no deriva de los tokens semánticos del tema: aquellos son colores de acento, con mínimo de 3:1, y el texto de código es cuerpo y necesita 4.5:1.",
+      "tip4": "La numeración se genera con un elemento propio y no seleccionable — copiar con el botón y seleccionar con el mouse traen el mismo texto, solo el código.",
+      "tip5": "La altura máxima es una custom property de la raíz: para un fragmento largo destacado en la página, sobrescríbela en esa instancia en vez de quitar el scroll."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "El bloque emite un evento propio al copiar. Los demás son los eventos estándar de cualquier docs page.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "copy": "docs_code_copy",
+        "copyTrigger": "El usuario acciona la acción de copiar en el bloque",
+        "copyPayload": "{ component, snippet_id }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
+    },
+    "testes": {
+      "title": "Criterios de Prueba",
+      "functional": {
+        "title": "Comportamiento Funcional",
+        "description": "Lo que debe ocurrir para cada configuración del bloque.",
+        "item1": {
+          "action": "Renderizar con un lenguaje soportado",
+          "result": "Cada fragmento recibe la clasificación correspondiente y el color del tema activo",
+          "priority": "high"
+        },
+        "item2": {
+          "action": "Renderizar con numeración activa",
+          "result": "Una línea por salto del código, numeradas desde 1",
+          "priority": "high"
+        },
+        "item3": {
+          "action": "Accionar la acción de copiar",
+          "result": "El portapapeles recibe exactamente el código, sin los números de línea",
+          "priority": "high"
+        },
+        "item4": {
+          "action": "Observar el feedback después de copiar",
+          "result": "Un único ícono de confirmación en el botón, etiqueta visible y región de estado con texto; todo vuelve al inicial en 2 segundos",
+          "priority": "high"
+        },
+        "item5": {
+          "action": "Indicar líneas e intervalos destacados",
+          "result": "Solo las líneas indicadas quedan marcadas, contando desde 1",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Desactivar la numeración de línea",
+          "result": "La columna desaparece y el código recibe la sangría equivalente, sin pegarse al borde",
+          "priority": "medium"
+        },
+        "item7": {
+          "action": "Indicar un lenguaje no reconocido",
+          "result": "El fragmento aparece sin color, sin error en la consola y sin pérdida de layout",
+          "priority": "medium"
+        },
+        "item8": {
+          "action": "Quitar el bloque de la pantalla antes de los 2 segundos",
+          "result": "El timer de confirmación se cancela, sin escritura en un componente ya removido",
+          "priority": "medium"
+        }
+      },
+      "accessibility": {
+        "title": "Accesibilidad Verificable",
+        "description": "Criterios verificables por axe-core y pruebas manuales.",
+        "item1": {
+          "criterion": "Confirmación anunciada por región de estado fuera del botón",
+          "level": "AA",
+          "how": "Inspeccionar role=\"status\" y aria-live=\"polite\" después de copiar"
+        },
+        "item2": {
+          "criterion": "Región de scroll alcanzable por teclado",
+          "level": "A",
+          "how": "Tabular hasta la región y desplazar con las flechas"
+        },
+        "item3": {
+          "criterion": "Numeración ignorada por el lector de pantalla y por la selección",
+          "level": "A",
+          "how": "Inspeccionar aria-hidden en la columna y el texto realmente copiado"
+        },
+        "item4": {
+          "criterion": "Contraste mínimo 4.5:1 en la paleta de sintaxis",
+          "level": "AA",
+          "how": "axe-core en los temas claro y oscuro, también sobre la línea destacada"
+        },
+        "item5": {
+          "criterion": "Sin violaciones axe-core en estado predeterminado",
+          "level": "AA",
+          "how": "axe-playwright en el test-runner de Storybook"
+        }
+      },
+      "visual": {
+        "title": "Pruebas Visuales (Chromatic)",
+        "description": "Cada story se captura automáticamente para regresión visual.",
+        "item1": {
+          "story": "Playground — etiqueta, numeración y líneas destacadas",
+          "priority": "high"
+        },
+        "item2": {
+          "story": "Lenguajes — marcado, estilos, datos y terminal",
+          "priority": "high"
+        },
+        "item3": {
+          "story": "Configuraciones — con y sin numeración",
+          "priority": "medium"
+        },
+        "item4": {
+          "story": "Destaque — línea única e intervalo",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Scroll — código más alto y más ancho que la caja",
+          "priority": "medium"
+        }
+      }
+    },
+    "nav": {
+      "overview": "Visión General",
+      "demonstration": "Demostración",
+      "anatomy": "Anatomía",
+      "usage": "Cuándo Usar",
+      "doDont": "Do & Don't",
+      "techRef": "Referencia Técnica",
+      "import": "Importación",
+      "variants": "Variantes",
+      "states": "Configuraciones",
+      "props": "Propiedades",
+      "tokens": "Tokens",
+      "context": "Contexto",
+      "accessibility": "Accesibilidad",
+      "related": "Relacionados",
+      "notes": "Notas",
+      "quality": "Calidad",
+      "analytics": "Analytics",
+      "testes": "Pruebas"
+    }
+  }
+}
