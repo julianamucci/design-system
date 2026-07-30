@@ -1,0 +1,242 @@
+/*
+ * ─── nds-code-block ──────────────────────────────────────────────────────────
+ * Bloco de código com header (título + copiar), conteúdo com scroll duplo,
+ * numeração de linha e destaque de linhas, e footer opcional.
+ *
+ * Estrutura:
+ *   <div class="nds-code-block-root" data-numbered="true">
+ *     <div class="nds-code-block-header">
+ *       <span class="nds-code-block-title">index.vue</span>
+ *       <button class="nds-button nds-button-ghost nds-button-icon-sm">…</button>
+ *     </div>
+ *     <div class="nds-code-block-scroll">
+ *       <pre class="nds-code-block-pre"><code class="nds-code-block-code">
+ *         <span class="nds-code-block-line" data-highlighted="true">
+ *           <span class="nds-code-block-gutter" aria-hidden="true">1</span>
+ *           <span class="nds-code-block-text"><span data-token="keyword">const</span></span>
+ *         </span>
+ *       </code></pre>
+ *     </div>
+ *     <div class="nds-code-block-footer">Observação</div>
+ *   </div>
+ *
+ * NÃO confundir com `.nds-code-block` (sem sufixo), em code.css: aquela é a
+ * utilitária simples de bloco monoespaçado, sem header/gutter. Esta é o
+ * componente. As duas coexistem — a utilitária segue em uso nas docs pages.
+ *
+ * Tokens: --card, --muted, --border, --foreground, --muted-foreground,
+ *         --primary, --info, --success, --warning, --destructive, --spacing-*
+ */
+
+.nds-code-block-root {
+  /* ── Superfície ─────────────────────────────────────────────────────────── */
+  --code-block-bg: hsl(var(--muted));
+  --code-block-header-bg: hsl(var(--card));
+  --code-block-border: hsl(var(--border));
+  --code-block-max-block-size: 24rem;
+
+  /* ── Destaque de linha — sobrescreva por instância ────────────────────────
+   * Semitransparente de propósito: assenta sobre --code-block-bg e sobre o
+   * fundo do gutter sem precisar de um segundo valor. */
+  --code-block-highlight-bg: hsl(var(--primary) / 0.12);
+  --code-block-highlight-accent: hsl(var(--primary));
+
+  /* ── Cores de sintaxe ─────────────────────────────────────────────────────
+   * Paleta própria, não derivada dos tokens semânticos. A primeira versão usava
+   * --warning, --info etc., e a medição reprovou: sobre --muted, --warning dá
+   * 3.00:1 no claro e --info 2.90:1 no escuro. São cores de ACENTO (mínimo 3:1
+   * para ícone/borda); texto de código é corpo e precisa de 4.5:1. Ver a regra
+   * em guidelines/01-acessibilidade.
+   *
+   * Cada valor foi medido contra os DOIS fundos possíveis: --muted e a linha
+   * destacada, que é mais escura no claro (o overlay de --primary a 12% leva
+   * #f5f5f5 para #dadada). Medir só contra --muted deixava string em 4.48:1 na
+   * linha destacada. Pior caso agora: 5.20:1 no claro, 4.63:1 no escuro.
+   * Um tema que queira outra paleta
+   * sobrescreve qualquer --code-token-*; o resto do componente não muda. */
+  --code-token-plain: hsl(var(--foreground));
+  --code-token-comment: hsl(0 0% 34%);
+  --code-token-string: hsl(145 62% 23%);
+  --code-token-number: hsl(25 88% 28%);
+  --code-token-keyword: hsl(265 64% 41%);
+  --code-token-builtin: hsl(200 85% 26%);
+  --code-token-function: hsl(215 72% 34%);
+  --code-token-tag: hsl(350 72% 36%);
+  --code-token-attr: hsl(288 52% 36%);
+  --code-token-property: hsl(190 88% 23%);
+  --code-token-operator: hsl(0 0% 26%);
+  --code-token-punctuation: hsl(0 0% 34%);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--code-block-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--code-block-bg);
+  color: var(--code-token-plain);
+}
+
+
+/* Modo escuro — mesmo seletor .dark que os temas de cor usam. */
+.dark .nds-code-block-root {
+  --code-token-comment: hsl(0 0% 70%);
+  --code-token-string: hsl(145 52% 70%);
+  --code-token-number: hsl(25 88% 72%);
+  --code-token-keyword: hsl(265 82% 82%);
+  --code-token-builtin: hsl(200 80% 72%);
+  --code-token-function: hsl(215 88% 78%);
+  --code-token-tag: hsl(350 82% 76%);
+  --code-token-attr: hsl(288 68% 82%);
+  --code-token-property: hsl(190 72% 68%);
+  --code-token-operator: hsl(0 0% 82%);
+  --code-token-punctuation: hsl(0 0% 70%);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────
+ * Sempre presente: o botão copiar precisa estar visível no canto superior
+ * direito mesmo sem título. */
+.nds-code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  min-height: var(--height-default);
+  padding-inline: var(--spacing-2) var(--spacing-1);
+  padding-block: var(--spacing-1);
+  border-bottom: 1px solid var(--code-block-border);
+  background-color: var(--code-block-header-bg);
+}
+
+.nds-code-block-title {
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.8125rem;              /* 13px */
+  color: hsl(var(--muted-foreground));
+  /* Título longo (caminho de arquivo) trunca em vez de empurrar o botão. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sem título, o botão vai para a direita mesmo sendo filho único. */
+.nds-code-block-header > .nds-code-block-actions {
+  margin-inline-start: auto;
+}
+
+.nds-code-block-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  flex-shrink: 0;
+}
+
+/* Rótulo "Copiado!" ao lado do ícone, quando a stack opta por feedback inline. */
+.nds-code-block-copy-label {
+  font-size: 0.75rem;
+  color: hsl(var(--success));
+}
+
+/* ── Conteúdo ───────────────────────────────────────────────────────────────
+ * Scroll nos dois eixos no MESMO container: é o que mantém o gutter alinhado
+ * verticalmente com o código e permite o sticky horizontal abaixo. */
+.nds-code-block-scroll {
+  overflow: auto;
+  max-block-size: var(--code-block-max-block-size);
+  /* Evita que o scroll horizontal seja capturado pela página em telas curtas. */
+  overscroll-behavior-inline: contain;
+}
+
+.nds-code-block-pre {
+  /* O Storybook injeta margin em <pre> nas docs; zerar aqui evita depender do
+   * reset da página que consome o componente. */
+  margin: 0;
+  padding-block: var(--spacing-2);
+  font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
+  font-size: 0.8125rem;              /* 13px */
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.nds-code-block-code {
+  display: block;
+  /* max-content dá a largura real do código (habilita o scroll horizontal);
+   * min-width 100% garante que o destaque de linha cubra a viewport inteira. */
+  inline-size: max-content;
+  min-inline-size: 100%;
+}
+
+.nds-code-block-line {
+  display: flex;
+  min-inline-size: 100%;
+}
+
+/* ── Numeração ──────────────────────────────────────────────────────────────
+ * user-select: none é o que faz "copiar apenas o código" valer também para
+ * seleção manual do usuário, não só para o botão. */
+.nds-code-block-gutter {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  flex-shrink: 0;
+  min-inline-size: 2.75rem;
+  padding-inline: var(--spacing-2) var(--spacing-3);
+  background-color: var(--code-block-bg);
+  /* Sem alpha: com 0.7 o contraste caía para 2.89:1 e o axe reprovava. Número
+   * de linha é informação visual, não decoração — vale o mínimo de 4.5:1. */
+  color: hsl(var(--muted-foreground));
+  text-align: end;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nds-code-block-root[data-numbered="false"] .nds-code-block-gutter {
+  display: none;
+}
+
+/* Sem numeração o código precisa do respiro que o gutter dava. */
+.nds-code-block-root[data-numbered="false"] .nds-code-block-text {
+  padding-inline-start: var(--spacing-4);
+}
+
+.nds-code-block-text {
+  /* Preserva indentação; o wrapper flex ignora o espaço entre os elementos. */
+  white-space: pre;
+  padding-inline-end: var(--spacing-4);
+}
+
+/* ── Destaque de linha ──────────────────────────────────────────────────────
+ * O gutter tem fundo próprio (é sticky) e por isso precisa receber o destaque
+ * também, senão aparece uma emenda visível ao rolar na horizontal. */
+.nds-code-block-line[data-highlighted="true"] {
+  background-color: var(--code-block-highlight-bg);
+  box-shadow: inset 2px 0 0 0 var(--code-block-highlight-accent);
+}
+
+.nds-code-block-line[data-highlighted="true"] .nds-code-block-gutter {
+  background-color: var(--code-block-highlight-bg);
+  color: hsl(var(--foreground) / 0.8);
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+.nds-code-block-footer {
+  padding-inline: var(--spacing-3);
+  padding-block: var(--spacing-2);
+  border-top: 1px solid var(--code-block-border);
+  background-color: var(--code-block-header-bg);
+  font-size: 0.75rem;                /* 12px */
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ── Tokens de sintaxe ──────────────────────────────────────────────────────── */
+.nds-code-block-text [data-token="comment"]     { color: var(--code-token-comment); font-style: italic; }
+.nds-code-block-text [data-token="string"]      { color: var(--code-token-string); }
+.nds-code-block-text [data-token="number"]      { color: var(--code-token-number); }
+.nds-code-block-text [data-token="keyword"]     { color: var(--code-token-keyword); font-weight: var(--font-weight-medium, 500); }
+.nds-code-block-text [data-token="builtin"]     { color: var(--code-token-builtin); }
+.nds-code-block-text [data-token="function"]    { color: var(--code-token-function); }
+.nds-code-block-text [data-token="tag"]         { color: var(--code-token-tag); }
+.nds-code-block-text [data-token="attr"]        { color: var(--code-token-attr); }
+.nds-code-block-text [data-token="property"]    { color: var(--code-token-property); }
+.nds-code-block-text [data-token="operator"]    { color: var(--code-token-operator); }
+.nds-code-block-text [data-token="punctuation"] { color: var(--code-token-punctuation); }
