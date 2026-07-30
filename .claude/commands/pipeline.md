@@ -29,7 +29,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
 2. **Inline checks nos dev-skills.** Cada `/dev-<stack>` roda `audit.mjs --category security,performance,analytics,quality` antes de commitar — elimina ~1 rodada inteira de auditoria em modo `new`.
 3. **Cross-stack por último.** Compara as 4 implementações pós-fix; rodá-lo antes gera cascata redundante.
 4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 4 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits.
-5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes. Reuse se for do mesmo dia.
+5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes.
+
+   **A pasta é apagada no início de toda execução** (Fase A.0) e regenerada. Não existe reaproveitamento entre execuções: cache é contrato, e contrato velho é pior que contrato nenhum — descreve uma API que mudou, cita classe que não existe mais, e os dev-agents seguem literalmente. Caches de maio deste projeto ainda diziam "Basecoat" e mandavam alinhar overlays com `bg-black/80`. Como a pasta nasce vazia a cada rodada, ela também não precisa entrar nas varreduras de vocabulário morto do `audit.mjs`.
 6. **Audit-mode é report-only.** Agents chamados pela pipeline em `audit` reportam; fixes vão para `FIXES-NEEDED.md`. Skills isoladas (`/quality` fora de pipeline) continuam em fix-mode.
 7. **Glob e Grep nativos, não loops bash.** No Windows loops são lentos; tools do Claude já varrem em paralelo.
 8. **Prompts auto-contidos.** Passe slug, modo, caminho do context-cache, lista exata de arquivos. Nunca delegue "descubra o que fazer".
@@ -128,6 +130,8 @@ Exit codes: 0 = limpo, 1 = high, 2 = medium/low.
 
 ```
 Fase A (serial):
+  0. Apagar .pipeline-context/ inteira e recriar vazia — o cache não sobrevive
+     entre execuções (ver Princípio 5)
   1. /ux-writer <slug>
   2. Escrever .pipeline-context/<slug>.md — ver "Contrato do context-cache" abaixo
   3. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
@@ -183,8 +187,9 @@ Igual a `new`, com duas diferenças:
 
 ```
 Fase A (serial):
+  0. Apagar .pipeline-context/ inteira e recriar vazia (ver Princípio 5)
   1. node scripts/audit.mjs --all --json > .pipeline-context/scans.json
-  2. Gerar/reusar .pipeline-context/<slug>.md para cada componente
+  2. Gerar .pipeline-context/<slug>.md para cada componente
 
 Fase B (serial entre componentes, paralelo entre skills):
   Para cada <slug>:
