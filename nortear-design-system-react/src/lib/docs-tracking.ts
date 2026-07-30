@@ -111,12 +111,19 @@ export function mountDocsTracking(
         });
         break;
 
-      case 'code':
+      case 'code': {
+        // Exige que o clique tenha caído num controle, não em qualquer lugar do
+        // trigger. Enquanto `data-track="code"` vivia sempre num <Button>, a
+        // distinção não importava; o CodeBlock marca a RAIZ do bloco, e sem esta
+        // guarda selecionar o código ou clicar no título emitia "copiou".
+        const control = target.closest<HTMLElement>(INTERACTIVE_SELECTOR);
+        if (!control || !trigger.contains(control)) return;
         track('docs_code_copy', {
           component: componentSlug,
           snippet_id: element || id,
         });
         break;
+      }
 
       case 'related': {
         const href = trigger.getAttribute('href') ?? '';
