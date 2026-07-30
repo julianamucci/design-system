@@ -29,7 +29,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 - **Svelte 5** + TypeScript (runes API: `$props`, `$state`, `$derived`, `$effect`)
 - **Storybook 10** (`@storybook/svelte-vite`)
-- **Tailwind CSS 4** + **bits-ui** (primitivos a11y)
+- **CSS standalone `.nds-*`** (compartilhado em `docs/shared/styles/nds/`) + **bits-ui** (primitivos a11y)
 - **class-variance-authority** + **lucide-svelte**
 
 ---
@@ -139,7 +139,7 @@ aparecem nesta stack:
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
-  import { sanitizeHtml } from '@/lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   import uiTranslations from '@/i18n/ui.json';
   import componentTranslations from '@shared/content/<slug>/translations.json';
 
@@ -194,11 +194,11 @@ aparecem nesta stack:
 
 ```svelte
 <!-- Texto com HTML (anatomy, guidelines) -->
-<span>{@html sanitizeHtml($tStore('anatomy.item1'))}</span>
+<span>{@html DOMPurify.sanitize($tStore('anatomy.item1'))}</span>
 
 <!-- Loops com #each -->
 {#each [1, 2, 3] as i}
-  <li>{@html sanitizeHtml($tStore(`usage.guidelines.item${i}`))}</li>
+  <li>{@html DOMPurify.sanitize($tStore(`usage.guidelines.item${i}`))}</li>
 {/each}
 
 <!-- Links internos Storybook -->

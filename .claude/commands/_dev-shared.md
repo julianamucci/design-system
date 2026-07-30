@@ -210,35 +210,35 @@ play: async ({ canvasElement, step, args }) => {
 ### Blocos de código — nunca `<pre>`
 
 ```tsx
-// ✅ CORRETO
-<div className="bg-muted p-4 rounded-lg font-mono text-sm border overflow-x-auto">
-  <code className="whitespace-pre">{`...`}</code>
-</div>
+// ✅ CORRETO — .nds-code-block já traz fundo, borda, mono e overflow-x
+<div className="nds-code-block">{`...`}</div>
 
 // ❌ ERRADO
 <pre><code>...</code></pre>
 ```
 
-Exceção: diagramas ASCII em `anatomy.structureCode` podem usar `<pre>` dentro de `<div className="overflow-x-auto">`.
+Dentro de um card que já tem fundo próprio, use `.nds-code-block-embedded` (mesma tipografia, sem bg/borda). Exceção: diagramas ASCII em `anatomy.structureCode` podem usar `<pre>` com `.nds-whitespace-pre`.
 
 ### Tabelas — wrapper obrigatório
 
 ```tsx
-// ✅ card com p-4 e overflow-x-auto
-<div className="rounded-lg border p-4 shadow-sm overflow-x-auto">
-  <table className="w-full text-sm">...</table>
+// ✅ wrapper do próprio componente — ver o cabeçalho de nds/table.css
+<div className="nds-table-wrapper">
+  <table className="nds-table">...</table>
 </div>
 ```
 
-Primeira coluna da tabela de estados: `font-medium` simples, nunca badge/pill.
+Primeira coluna da tabela de estados: peso semibold simples, nunca badge/pill.
 
 ### HTML dinâmico — sempre sanitizar
 
-Sempre passar conteúdo de `translations.json` por `sanitizeHtml()` antes de renderizar como HTML:
-- React: `dangerouslySetInnerHTML={{ __html: sanitizeHtml(t(...)) }}`
-- Vue: `v-html="sanitizeHtml(t(...))"`
-- Svelte: `{@html sanitizeHtml(t(...))}`
-- Vanilla: `el.innerHTML = sanitizeHtml(t(...))` (apenas com sanitizeHtml; ou createElement + textContent quando possível)
+Todo conteúdo de `translations.json` renderizado como HTML passa por `DOMPurify.sanitize()` **no próprio call site**, com `import DOMPurify from 'dompurify'` no mesmo arquivo:
+- React: `dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t(...)) }}`
+- Vue: `v-html="DOMPurify.sanitize(t(...))"`
+- Svelte: `{@html DOMPurify.sanitize(t(...))}`
+- Vanilla: `el.innerHTML = DOMPurify.sanitize(t(...))` — ou `createElement` + `textContent` quando não houver HTML a preservar
+
+**Nunca crie um wrapper local** (`sanitize-html.ts`): ele esconde o sanitizador do SAST, que passa a reportar o fluxo inteiro como XSS. Já existiu neste projeto e foi removido por isso — ver guideline `09-seguranca-xss.md`.
 
 **Vanilla: NUNCA `innerHTML` com string interpolada de fonte dinâmica sem sanitize. Preferir `createElement` + `textContent`.**
 
@@ -302,7 +302,7 @@ ciência: <rule> em <file> — <motivo>
 ## Checklist Final
 
 - [ ] `min-w-0` no container de conteúdo (sem ele tabelas e code blocks transbordam)
-- [ ] `sanitizeHtml()` em todo HTML dinâmico
+- [ ] `DOMPurify.sanitize()` no call site de todo HTML dinâmico
 - [ ] Blocos de código usam `<div><code>`, nunca `<pre><code>` (exceto ASCII diagrams)
 - [ ] `useSeoEffect`/`applySeo` COMPLETO com aiSummary/aiEntities/breadcrumb
 - [ ] `breadcrumb` usa `tContent('category')` — NUNCA hardcode

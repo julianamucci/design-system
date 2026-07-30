@@ -29,7 +29,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 - **Vue 3** + TypeScript (Composition API)
 - **Storybook 10** (`@storybook/vue3-vite`)
-- **Tailwind CSS 4** + **Reka UI** (primitivos a11y)
+- **CSS standalone `.nds-*`** (compartilhado em `docs/shared/styles/nds/`) + **Reka UI** (primitivos a11y)
 - **class-variance-authority** + **lucide-vue-next**
 - **i18n via `useTranslation`** — **NUNCA** `useLocaleStore` ou Pinia para locale
 
@@ -100,7 +100,7 @@ import { computed, watch, ref } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/<slug>/translations.json';
@@ -155,10 +155,10 @@ const navGroups = computed(() => /* 4 grupos com IDs das 14 seções, ver AlertD
 
 ```vue
 <!-- Texto com HTML (anatomy, guidelines) -->
-<span v-html="sanitizeHtml(tContent('anatomy.item1'))" />
+<span v-html="DOMPurify.sanitize(tContent('anatomy.item1'))" />
 
 <!-- Loops -->
-<li v-for="i in [1, 2, 3]" :key="i" v-html="sanitizeHtml(tContent(`usage.guidelines.item${i}`))" />
+<li v-for="i in [1, 2, 3]" :key="i" v-html="DOMPurify.sanitize(tContent(`usage.guidelines.item${i}`))" />
 
 <!-- Links internos Storybook -->
 @click="(window.top ?? window).location.href = item.path"

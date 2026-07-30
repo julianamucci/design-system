@@ -87,15 +87,28 @@ export function createCard(options: CardOptions = {}): HTMLDivElement {
 ### API Reference: nesta stack a fonte do snippet é o DOM
 
 O renderer `html` monta a caixa de código a partir do `outerHTML` do elemento
-devolvido pelo `render`, e **só reemite quando esse HTML muda**. Duas
-consequências:
+devolvido pelo `render`, e **só reemite quando esse HTML muda**. Daí duas regras.
 
-1. Configuração que vive só no closure da factory não aparece no DOM. O HTML sai
-   byte a byte idêntico entre um modo e outro, o snippet congela e mexer nos
-   controls não altera nada. É o motivo da regra 3 acima.
-2. Um dump de DOM não é o que o consumidor escreve — ele chama a factory. Declare
-   `docs.source.transform` na Playground devolvendo a chamada real
-   (`createX({ … })`), montada a partir de `storyContext.args`.
+**1. Declare `docs.source.transform` na Playground.** Um dump de DOM não é o que
+o consumidor escreve — ele chama a factory. O transform devolve a chamada real
+(`createX({ … })`), montada a partir de `storyContext.args`.
+
+**2. Garanta que o elemento devolvido reflita os args.** O `transform` só
+re-executa quando o `outerHTML` muda; se ele sai idêntico, o snippet congela e
+mexer nos controls não altera nada. **Nenhum erro é emitido** — a caixa de código
+simplesmente mente sobre o que a story renderiza. Há dois jeitos de cair nisso:
+
+- **Configuração no closure.** `type`, `collapsible` e afins ficam só na variável
+  da factory e não viram atributo. Resolve-se com a regra 3 acima: registre na
+  raiz como `data-*`. Foi o caso do Accordion.
+- **Conteúdo portalado para fora do wrapper.** Overlays devolvem um wrapper que
+  contém só o trigger — painel, título e botões nascem no `open()` e vão para o
+  `document.body`. Metade dos controls não toca o wrapper. Resolve-se dando à
+  raiz um atributo que identifique a instância (`data-<slug>-id`), que também é o
+  que liga o trigger ao painel que ele comanda. Foi o caso do AlertDialog.
+
+Antes de fechar a Playground, troque **cada** control e confirme que o snippet
+mudou. Dois de seis reagindo parece funcionando.
 
 Como não há componente de framework para introspectar, a aba API Reference sai
 **só** do `argTypes` — inclusive as opções sem control precisam estar declaradas.
@@ -122,22 +135,29 @@ chevronWrapper.innerHTML = CHEVRON_SVG;
 trigger.appendChild(chevronWrapper.firstElementChild!);
 ```
 
-### sanitizeHtml para conteúdo de translations
+### DOMPurify para conteúdo de translations
 
 ```ts
-anatomyContent.innerHTML = sanitizeHtml(`
-  <ol class="space-y-3 list-none p-0 m-0">
+import DOMPurify from 'dompurify';
+
+anatomyContent.innerHTML = DOMPurify.sanitize(`
+  <ol class="nds-stack nds-list-none" data-spacing="sm">
     ${[1, 2, 3].map(i => `<li>${t(`anatomy.item${i}`)}</li>`).join('')}
   </ol>
 `);
 ```
+
+`DOMPurify.sanitize` vai **direto no call site**, com o import no próprio arquivo.
+Não existe `src/lib/sanitize-html.ts` em nenhuma stack e não crie um: wrapper
+esconde o sanitizador do SAST, que passa a reportar o fluxo inteiro como XSS.
+Ver guideline `09-seguranca-xss.md`.
 
 ---
 
 ## Imports da Docs Page
 
 ```ts
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import { t, getLocale, subscribe, onLocaleChange } from '@/lib/i18n';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';

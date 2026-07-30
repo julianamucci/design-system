@@ -56,7 +56,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 4 | Acessibilidade (ARIA) | Grep × 4 | Bug |
 | 5 | Tokens CSS + tokenização de dimensões | Grep × 3 (sem Vanilla) | Bug |
 | 6 | Section containers (15 obrigatórios) | Glob × 4 | Bloqueante |
-| 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, sanitizeHtml, structureCode, breadcrumb, SEO completo) | Read × 4 | Variável |
+| 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, DOMPurify no call site, structureCode, breadcrumb, SEO completo) | Read × 4 | Variável |
 | 8 | Cobertura de stories | Glob × 4 | Bug |
 | 9 | Do & Don't layout (bug recorrente) | inspeção visual após Read | Bloqueante |
 | 10 | Patches sobre libs primitivas/externas (markers + PATCHES.md) | Grep × 1 + leitura | Crítico |

@@ -29,7 +29,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 - **React 19** + TypeScript
 - **Storybook 10** (`@storybook/react-vite`)
-- **Tailwind CSS 4** + **class-variance-authority**
+- **CSS standalone `.nds-*`** (compartilhado em `docs/shared/styles/nds/`) + **class-variance-authority**
 - **base-ui/react** (primitivos a11y) + **lucide-react** (ícones)
 - **Zustand** (i18n store)
 
@@ -42,7 +42,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/<slug>/translations.json';
 
@@ -114,7 +114,7 @@ Componentes que renderizam `{children}` internamente não aceitam `dangerouslySe
 ```tsx
 // ✅ CORRETO
 <AccordionContent>
-  <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t('content')) }} />
+  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t('content')) }} />
 </AccordionContent>
 ```
 
