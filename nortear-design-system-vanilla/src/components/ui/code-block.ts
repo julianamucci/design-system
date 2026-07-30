@@ -112,24 +112,30 @@ export function createCodeBlock(options: CodeBlockOptions): HTMLElement {
   live.setAttribute('role', 'status');
   live.setAttribute('aria-live', 'polite');
 
-  const copyIcon = createIcon(Copy as unknown as LucideIconNode[]);
-  const checkIcon = createIcon(Check as unknown as LucideIconNode[]);
-  checkIcon.setAttribute('hidden', '');
-
   const copyButton = createButton({
     variant: 'ghost',
     size: 'icon-sm',
     ariaLabel: copyLabel,
   });
   copyButton.dataset.slot = 'code-block-copy';
-  copyButton.append(copyIcon, checkIcon);
+  copyButton.appendChild(createIcon(Copy as unknown as LucideIconNode[]));
 
   let timer: ReturnType<typeof setTimeout> | undefined;
 
+  /**
+   * Troca o ícone em vez de esconder um dos dois.
+   *
+   * A primeira versão mantinha os dois no DOM e alternava o atributo `hidden` —
+   * e os dois apareciam ao mesmo tempo. O `hidden` NÃO esconde SVG: a regra
+   * `[hidden] { display: none }` da folha do navegador vem sob
+   * `@namespace url(…xhtml)`, então equivale a `html|*[hidden]` e não casa com
+   * elemento de outro namespace. Trocar o nó também alinha com React, Vue e
+   * Svelte, onde a renderização condicional deixa só um ícone no DOM.
+   */
   function setCopied(value: boolean): void {
     feedback.hidden = !value;
-    copyIcon.toggleAttribute('hidden', value);
-    checkIcon.toggleAttribute('hidden', !value);
+    const icon = createIcon((value ? Check : Copy) as unknown as LucideIconNode[]);
+    copyButton.replaceChild(icon, copyButton.querySelector('svg')!);
     copyButton.setAttribute('aria-label', value ? copiedLabel : copyLabel);
     live.textContent = value ? copiedLabel : '';
   }

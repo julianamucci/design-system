@@ -128,6 +128,10 @@ export const Playground: Story = {
     });
 
     await step("O feedback aparece e é anunciado por aria-live", async () => {
+      // Um ícone por vez. A primeira versão do Vanilla mantinha os dois no DOM
+      // alternando o atributo hidden, que não esconde SVG — e os dois apareciam.
+      const button = canvasElement.querySelector("[data-slot='code-block-copy']");
+      await expect(button?.querySelectorAll("svg")).toHaveLength(1);
       await waitFor(() =>
         expect(canvas.getByRole("button", { name: /copiado/i })).toBeInTheDocument(),
       );
