@@ -47,6 +47,15 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'alert-dialog';
+  // Identifica a instância: o painel é portalado para o body no open(), então
+  // sem isto não há como ligar um trigger ao painel que ele comanda. Efeito
+  // colateral útil: o renderer html do Storybook monta a caixa de código a
+  // partir do outerHTML deste wrapper e só reemite quando ele muda — e o
+  // wrapper só contém o trigger, então title/description/cancelLabel/actionLabel
+  // não o alteravam e o snippet congelava nesses controls.
+  wrapper.dataset.dialogId = String(id);
+  // O trigger abre um diálogo: anuncia isso antes do clique.
+  trigger.setAttribute('aria-haspopup', 'dialog');
   wrapper.appendChild(trigger);
 
   function open(): void {

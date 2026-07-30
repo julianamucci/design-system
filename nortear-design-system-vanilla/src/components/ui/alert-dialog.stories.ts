@@ -145,9 +145,15 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
-    await step('Trigger está presente no DOM', async () => {
+    await step('Trigger está presente e anuncia que abre um diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await expect(trigger).toBeInTheDocument();
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
+    await step('A raiz identifica a instância do diálogo', async () => {
+      const root = canvasElement.querySelector('[data-slot="alert-dialog"]');
+      await expect(root).toHaveAttribute('data-dialog-id');
     });
 
     await step('Diálogo abre ao clicar no trigger', async () => {
