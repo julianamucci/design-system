@@ -214,6 +214,7 @@ export function CodeBlockDocs() {
       <DocsDemonstration title={tContent("demonstration.title")} componentSlug={SLUG}>
         <div className="nds-w-full nds-stack" data-spacing="md">
           <CodeBlock
+            className="nds-w-full"
             code={demoTsx}
             language="tsx"
             title={tContent("demonstration.labels.fileName")}
@@ -226,6 +227,7 @@ export function CodeBlockDocs() {
             data-track-id="code-block:demonstracao:exemplo-tsx"
           />
           <CodeBlock
+            className="nds-w-full"
             code={demoBash}
             language="bash"
             title={tContent("demonstration.labels.terminalTitle")}
@@ -236,6 +238,7 @@ export function CodeBlockDocs() {
             data-track-id="code-block:demonstracao:terminal"
           />
           <CodeBlock
+            className="nds-w-full"
             code={demoCss}
             language="css"
             title={tContent("demonstration.labels.themeTitle")}
@@ -245,6 +248,7 @@ export function CodeBlockDocs() {
             data-track-id="code-block:demonstracao:tema-css"
           />
           <CodeBlock
+            className="nds-w-full"
             code={demoJson}
             language="json"
             title={tContent("demonstration.labels.dataTitle")}
@@ -254,6 +258,7 @@ export function CodeBlockDocs() {
             data-track-id="code-block:demonstracao:package-json"
           />
           <CodeBlock
+            className="nds-w-full"
             code={demoTxt}
             language="txt"
             title={tContent("demonstration.labels.plainTitle")}
@@ -401,11 +406,12 @@ export function CodeBlockDocs() {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
+              // A legenda fala de "um comando de uma linha": o par precisa ser
+              // esse comando, sem rótulo de arquivo — não um script de 3 linhas.
               <CodeBlock
                 className="nds-w-full"
-                code={demoBash}
+                code={langShell}
                 language="bash"
-                title={tContent("demonstration.labels.terminalTitle")}
                 showLineNumbers={false}
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
@@ -416,9 +422,8 @@ export function CodeBlockDocs() {
             dontPreview: (
               <CodeBlock
                 className="nds-w-full"
-                code={demoBash}
+                code={langShell}
                 language="bash"
-                title={tContent("demonstration.labels.terminalTitle")}
                 showLineNumbers
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
@@ -437,8 +442,6 @@ export function CodeBlockDocs() {
         title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
-        secondaryDescription={tContent("import.withFooter")}
-        secondaryCode={tContent("props.extensibilityCode")}
         componentSlug={SLUG}
       />
 
@@ -560,6 +563,9 @@ export function CodeBlockDocs() {
         componentSlug={SLUG}
         items={[
           {
+            // trackId, e não `name`: o nome vem traduzido e o mesmo evento sairia
+            // com um valor por idioma.
+            trackId: "with-title",
             name: tContent("variants.compositions.withTitle.name"),
             description: tContent("variants.compositions.withTitle.description"),
             useWhen: tContent("variants.compositions.withTitle.use"),
@@ -578,6 +584,7 @@ export function CodeBlockDocs() {
             ),
           },
           {
+            trackId: "without-numbers",
             name: tContent("variants.compositions.withoutNumbers.name"),
             description: tContent("variants.compositions.withoutNumbers.description"),
             useWhen: tContent("variants.compositions.withoutNumbers.use"),
@@ -596,6 +603,7 @@ export function CodeBlockDocs() {
             ),
           },
           {
+            trackId: "highlighted",
             name: tContent("variants.compositions.highlighted.name"),
             description: tContent("variants.compositions.highlighted.description"),
             useWhen: tContent("variants.compositions.highlighted.use"),
@@ -614,6 +622,7 @@ export function CodeBlockDocs() {
             ),
           },
           {
+            trackId: "with-footer",
             name: tContent("variants.compositions.withFooter.name"),
             description: tContent("variants.compositions.withFooter.description"),
             useWhen: tContent("variants.compositions.withFooter.use"),
@@ -687,6 +696,7 @@ export function CodeBlockDocs() {
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
         extensibilityNotes={tContent("props.extensibility")}
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       {/* ── Tokens ────────────────────────────────────────────────────── */}
@@ -789,6 +799,7 @@ export function CodeBlockDocs() {
         title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
+          description: tContent("testes.functional.description"),
           cols: {
             action: tNav("common.userAction"),
             result: tNav("common.expectedResult"),
@@ -802,6 +813,7 @@ export function CodeBlockDocs() {
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
+          description: tContent("testes.accessibility.description"),
           cols: {
             criterion: tNav("common.criterion"),
             level: "WCAG",
@@ -815,6 +827,7 @@ export function CodeBlockDocs() {
         }}
         visual={{
           title: tContent("testes.visual.title"),
+          description: tContent("testes.visual.description"),
           cols: {
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),

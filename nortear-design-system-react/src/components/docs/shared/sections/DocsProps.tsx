@@ -29,6 +29,8 @@ export interface DocsPropsProps {
   interfaceCode?: string;
   extensibilityTitle?: string;
   extensibilityNotes?: string;
+  /** Snippet de extensibilidade, renderizado abaixo das observações. */
+  extensibilityCode?: string;
 }
 
 function PropsTable({ def }: { def: DocsPropsTableDef }) {
@@ -63,7 +65,7 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
   );
 }
 
-export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes }: DocsPropsProps) {
+export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode }: DocsPropsProps) {
   return (
     <section id="propriedades">
       <h2 className="nds-section-title">{title}</h2>
@@ -84,6 +86,11 @@ export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, ex
                 className="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(extensibilityNotes) }}
               />
+            )}
+            {extensibilityCode && (
+              <Card className="nds-code-block nds-shadow-none">
+                <code className="nds-whitespace-pre">{extensibilityCode}</code>
+              </Card>
             )}
           </div>
         )}

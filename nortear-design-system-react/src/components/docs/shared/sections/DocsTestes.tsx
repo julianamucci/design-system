@@ -30,16 +30,22 @@ export interface DocsTestesProps {
   title: string;
   functional: {
     title: string;
+    /** Linha de contexto abaixo do título da sub-seção. */
+    description?: string;
     cols: { action: string; result: string; priority: string };
     items: DocsTestItem[];
   };
   accessibility: {
     title: string;
+    /** Linha de contexto abaixo do título da sub-seção. */
+    description?: string;
     cols: { criterion: string; level: string; how: string };
     items: DocsA11yTestItem[];
   };
   visual: {
     title: string;
+    /** Linha de contexto abaixo do título da sub-seção. */
+    description?: string;
     cols: { story: string; priority: string };
     items: DocsVisualTestItem[];
   };
@@ -67,6 +73,9 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Functional */}
         <div className="nds-stack" data-spacing="sm">
           <h3 className="nds-text-base nds-font-semibold">{functional.title}</h3>
+          {functional.description && (
+            <p className="nds-text-body nds-text-muted-foreground">{functional.description}</p>
+          )}
           <Card className="nds-p-4 nds-overflow-x">
               <Table className="nds-w-full nds-text-body">
                 <TableHeader>
@@ -92,6 +101,9 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Accessibility */}
         <div className="nds-stack" data-spacing="sm">
           <h3 className="nds-text-base nds-font-semibold">{accessibility.title}</h3>
+          {accessibility.description && (
+            <p className="nds-text-body nds-text-muted-foreground">{accessibility.description}</p>
+          )}
           <div className="nds-grid" data-cols="2" data-spacing="sm">
             {accessibility.items.map((item, i) => (
               <Card key={i} className="nds-bg-muted-soft nds-border-none nds-shadow-none nds-p-2 nds-stack" data-spacing="xs">
@@ -110,6 +122,9 @@ export function DocsTestes({ title, functional, accessibility, visual }: DocsTes
         {/* Visual */}
         <div className="nds-stack" data-spacing="sm">
           <h3 className="nds-text-base nds-font-semibold">{visual.title}</h3>
+          {visual.description && (
+            <p className="nds-text-body nds-text-muted-foreground">{visual.description}</p>
+          )}
           <Card className="nds-p-4 nds-overflow-x">
               <Table className="nds-w-full nds-text-body">
                 <TableHeader>

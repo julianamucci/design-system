@@ -8,6 +8,11 @@ export interface DocsVariantItem {
   description: string;
   code?: string;
   preview: React.ReactNode;
+  /**
+   * Chave estável de tracking. Sem ela o id cai em `name`, que pode vir
+   * traduzido — e aí o mesmo evento sai com um valor por idioma.
+   */
+  trackId?: string;
 }
 
 export interface DocsVariantsProps {
@@ -18,7 +23,7 @@ export interface DocsVariantsProps {
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, o
    * botão "Ver código / Ocultar código" de cada variant recebe
-   * `data-track="code"` + `data-track-id="{slug}:code:{variant.name}"`
+   * `data-track="code"` + `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"`
    * + `data-track-label="Copiar código"`.
    * Se ausente, `data-track-id` é omitido e o observer ignora o click.
    */
@@ -27,7 +32,7 @@ export interface DocsVariantsProps {
 
 function VariantCard({ item, componentSlug }: { item: DocsVariantItem; componentSlug?: string }) {
   const [open, setOpen] = useState(false);
-  const trackId = componentSlug ? `${componentSlug}:code:${item.name}` : undefined;
+  const trackId = componentSlug ? `${componentSlug}:code:${item.trackId ?? item.name}` : undefined;
   return (
     <Card className="nds-p-4">
       <div>
