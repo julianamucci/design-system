@@ -155,6 +155,14 @@ o que ela expõe de verdade.
 - Control só nas props que o `render` de fato encaminha. Prop que o render fixa
   depois do spread (`defaultValue`, `className`) ou que o wrapper da story não
   recebe vai com `control: false` — documentação, não controle morto.
+- **Prop documental aparece no painel Controls como linha com `-`, e isso é o
+  esperado.** Não tente escondê-la: o `withAutoDocsTab` monta `<Controls />`, que
+  é o **mesmo bloco** do painel — as duas superfícies leem
+  `parameters.controls.{include,exclude}`, então excluir do painel apaga da aba
+  API Reference junto. `table: { disable: true }` tem o mesmo efeito.
+  (`parameters.docs.argTypes.{include,exclude}` só vale para o bloco
+  `<ArgTypes />`, que não é o que a aba usa.) Em Svelte e Vanilla, onde o
+  `argTypes` é a única fonte da aba, apagar é perda de documentação real.
 - `args` com valor inicial para **toda** prop que tem control; sem isso o control
   aparece vazio.
 - Nada em `args` sem entrada correspondente em `argTypes` — a prop fica fora da
