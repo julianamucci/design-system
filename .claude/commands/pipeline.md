@@ -173,6 +173,23 @@ Fase F (serial):
 - para cada composição: quais elementos compõem (ícone? badge? qual?) e a chave do rótulo
 - classes `.nds-*` do wrapper de cada exemplo
 
+**Cubra TODAS as seções que renderizam exemplo — não só Demonstração, Variantes e
+Composições.** O buraco recorrente é o **Do & Don't**: a seção é obrigatória, os
+previews são código como qualquer outro, e o `translations.json` só traz a legenda.
+Sem spec, cada stack inventa o próprio par e as 4 divergem. No code-block saíram
+três exemplos diferentes para o mesmo par, e um deles contradizia a legenda que
+ilustrava ("metade das linhas destacadas" com todas destacadas).
+
+Também fixe o que **vira dado**, não só o que vira pixel: o `name` de cada card de
+Variantes/Composições é o que o `DocsVariants` transforma em `snippet_id` do
+`docs_code_copy`. Nome traduzido ou diferente por stack = mesmo evento com valores
+distintos. Especifique a chave estável.
+
+Quando o `translations.json` tiver formato que o container não comporta (ex.: tabela
+em N grupos contra um container de tabela única), **decida no contrato** e escreva a
+decisão. As 4 stacks batem na mesma parede ao mesmo tempo e, sem decisão, cada uma
+inventa a sua — inclusive traduções, que passam a viver em 4 arquivos.
+
 Os dev-skills consomem essa spec **literalmente**. É proibido inventar rótulo, valor ou estado inicial de exemplo — se faltar na spec, pare e reporte, não improvise. As 4 stacks precisam renderizar o mesmo exemplo com as mesmas classes; divergência aqui só é detectável tarde, na Fase E.
 
 **Vocabulário proibido.** Nomeie explicitamente as libs que NÃO existem mais no projeto (Radix, shadcn, Tailwind utilitário fora do prefixo `nds-`) — elas não podem aparecer em `translations.json`, docs page nem story. Ver Princípio 11.
