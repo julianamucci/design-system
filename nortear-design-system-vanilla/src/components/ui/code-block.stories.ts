@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { createCodeBlockDocs } from '@/components/docs/CodeBlockDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -32,6 +34,9 @@ document.querySelector('#app')?.append(block);`;
 const meta: Meta<CodeBlockArgs> = {
   title: 'UI/CodeBlock',
   tags: ['autodocs', 'display'],
+  parameters: {
+    docs: { page: withAutoDocsTab(createCodeBlockDocs) },
+  },
   // Esta stack não tem docgen (não há componente de framework para
   // introspectar): a aba "API Reference" sai só destes argTypes.
   argTypes: {
