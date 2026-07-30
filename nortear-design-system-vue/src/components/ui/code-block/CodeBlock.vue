@@ -9,6 +9,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { copyText } from '@shared/primitives/clipboard'
 import {
   highlightCode,
   parseLineRanges,
@@ -49,13 +50,10 @@ let timer: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(timer))
 
 async function handleCopy() {
-  try {
-    await navigator.clipboard.writeText(props.code)
-  } catch {
-    // Clipboard indisponível (http sem localhost, permissão negada): não quebra
-    // a página, só não confirma.
-    return
-  }
+  // copyText já cobre o fallback fora de contexto seguro; false = não copiou,
+  // e nesse caso não confirmamos nada. Chamar navigator.clipboard direto deixa
+  // o botão inerte em http sem localhost, onde as outras stacks ainda copiam.
+  if (!(await copyText(props.code))) return
   copied.value = true
   clearTimeout(timer)
   timer = setTimeout(() => { copied.value = false }, 2000)
