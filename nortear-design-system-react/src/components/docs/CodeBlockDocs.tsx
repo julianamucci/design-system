@@ -442,6 +442,8 @@ export function CodeBlockDocs() {
         title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
+        secondaryDescription={tContent("import.withFooter")}
+        secondaryCode={tContent("props.extensibilityCode")}
         componentSlug={SLUG}
       />
 
