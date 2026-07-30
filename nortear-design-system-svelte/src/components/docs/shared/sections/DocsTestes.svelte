@@ -9,9 +9,9 @@
 
   const { title, functional, accessibility, visual }: {
     title: string;
-    functional: { title: string; cols: { action: string; result: string; priority: string }; items: DocsTestItem[] };
-    accessibility: { title: string; cols: { criterion: string; level: string; how: string }; items: DocsA11yTestItem[] };
-    visual: { title: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
+    functional: { title: string; description?: string; cols: { action: string; result: string; priority: string }; items: DocsTestItem[] };
+    accessibility: { title: string; description?: string; cols: { criterion: string; level: string; how: string }; items: DocsA11yTestItem[] };
+    visual: { title: string; description?: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
   } = $props();
 
   const priorityClass = (p: string) =>
@@ -25,6 +25,9 @@
     <!-- Functional -->
     <div class="nds-stack" data-spacing="sm">
       <h3 class="nds-text-base nds-font-semibold">{functional.title}</h3>
+      {#if functional.description}
+        <p class="nds-text-body nds-text-muted-foreground">{functional.description}</p>
+      {/if}
       <Card class="nds-p-4 nds-overflow-x">
           <Table class="nds-w-full nds-text-body">
             <TableHeader>
@@ -52,6 +55,9 @@
     <!-- Accessibility -->
     <div class="nds-stack" data-spacing="sm">
       <h3 class="nds-text-base nds-font-semibold">{accessibility.title}</h3>
+      {#if accessibility.description}
+        <p class="nds-text-body nds-text-muted-foreground">{accessibility.description}</p>
+      {/if}
       <div class="nds-grid" data-cols="2" data-spacing="sm">
         {#each accessibility.items as item}
           <Card class="nds-bg-muted-soft nds-border-none nds-shadow-none nds-p-2 nds-stack" data-spacing="xs">
@@ -68,6 +74,9 @@
     <!-- Visual -->
     <div class="nds-stack" data-spacing="sm">
       <h3 class="nds-text-base nds-font-semibold">{visual.title}</h3>
+      {#if visual.description}
+        <p class="nds-text-body nds-text-muted-foreground">{visual.description}</p>
+      {/if}
       <Card class="nds-p-4 nds-overflow-x">
           <Table class="nds-w-full nds-text-body">
             <TableHeader>

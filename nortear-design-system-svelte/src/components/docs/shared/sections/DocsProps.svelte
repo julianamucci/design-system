@@ -12,12 +12,14 @@
     items: DocsPropItem[];
   }
 
-  const { title, tables, interfaceCode, extensibilityTitle, extensibilityNotes }: {
+  const { title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode }: {
     title: string;
     tables: DocsPropsTableDef[];
     interfaceCode?: string;
     extensibilityTitle?: string;
     extensibilityNotes?: string;
+    /** Exemplo de extensão, renderizado depois das notas. */
+    extensibilityCode?: string;
   } = $props();
 </script>
 
@@ -65,6 +67,11 @@
         <h3 class="nds-text-base nds-font-semibold">{extensibilityTitle}</h3>
         {#if extensibilityNotes}
           <div class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{@html DOMPurify.sanitize(extensibilityNotes)}</div>
+        {/if}
+        {#if extensibilityCode}
+          <Card class="nds-code-block nds-shadow-none">
+            <code class="nds-whitespace-pre">{extensibilityCode}</code>
+          </Card>
         {/if}
       </div>
     {/if}

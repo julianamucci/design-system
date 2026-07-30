@@ -8,6 +8,12 @@
     name: string;
     description: string;
     code?: string;
+    /**
+     * Chave estável do evento de tracking. Sem ela o id cai em `name`, que em
+     * seções traduzidas muda de idioma para idioma e quebraria o mesmo evento
+     * em três valores.
+     */
+    trackId?: string;
     preview: Snippet;
   }
 
@@ -16,7 +22,7 @@
    *
    * Quando `componentSlug` é informado, o botão "Ver código / Ocultar código"
    * de cada variant recebe `data-track="code"` +
-   * `data-track-id="{slug}:code:{variant.name}"` +
+   * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
    * `data-track-label="Copiar código"`.
    */
   const { title, items, id = 'variantes', note, componentSlug }: {
@@ -33,8 +39,8 @@
     openStates[i] = !openStates[i];
   }
 
-  function trackId(name: string): string | undefined {
-    return componentSlug ? `${componentSlug}:code:${name}` : undefined;
+  function codeTrackId(item: DocsVariantItem): string | undefined {
+    return componentSlug ? `${componentSlug}:code:${item.trackId ?? item.name}` : undefined;
   }
 </script>
 
@@ -60,7 +66,7 @@
               size="sm"
               class="nds-px-0"
               data-track="code"
-              data-track-id={trackId(item.name)}
+              data-track-id={codeTrackId(item)}
               data-track-label="Copiar código"
               onclick={() => toggleCode(i)}
             >

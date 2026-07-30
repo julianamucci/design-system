@@ -105,14 +105,17 @@
 	     rótulo do botão mude no meio da interação. -->
 	<span class="nds-sr-only" role="status" aria-live="polite">{copied ? copiedLabel : ""}</span>
 
+	<!-- tabindex="0" é intencional: a região rola e precisa ser alcançável por
+	     teclado (WCAG 2.1.1), o que a play function do Playground verifica. O
+	     compilador ainda avisa a11y_no_noninteractive_tabindex porque a regra
+	     só aceita roles de widget — nem region nem group a dispensam. -->
 	<div class="nds-code-block-scroll" tabindex="0">
 		<pre class="nds-code-block-pre"><code class="nds-code-block-code">{#each lines as spans, i (i)}<span
 			class="nds-code-block-line"
 			data-highlighted={highlighted.has(i + 1) ? "true" : undefined}
 		><span class="nds-code-block-gutter" aria-hidden="true">{i + 1}</span><span
 			class="nds-code-block-text"
-		>{#each spans as span, j (j)}{#if span.token !== "plain"}<span data-token={span.token}>{span.text}</span>{:else}{span.text}{/if}{/each}{#if spans.length === 0}
-{/if}</span></span>{/each}</code></pre>
+		>{#each spans as span, j (j)}{#if span.token !== "plain"}<span data-token={span.token}>{span.text}</span>{:else}{span.text}{/if}{/each}{spans.length === 0 ? "\n" : ""}</span></span>{/each}</code></pre>
 	</div>
 
 	{#if footer}

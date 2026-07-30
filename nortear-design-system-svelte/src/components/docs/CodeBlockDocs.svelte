@@ -171,8 +171,9 @@
   // ─── Active section ──────────────────────────────────────────────────────────
 
   const NAV_GROUPS = $derived.by(() => {
+    // Todos os rótulos do nav vêm do ui.json: o heading da seção continua
+    // sendo "Configurações" (states.title do componente), mas o nav é global.
     const tNav = $tNavStore;
-    const t = $tStore;
     return [
       { label: tNav('nav.overview'), sections: [
         { id: 'demonstracao', label: tNav('nav.demonstration') },
@@ -184,7 +185,7 @@
         { id: 'importacao',   label: tNav('nav.import')       },
         { id: 'variantes',    label: tNav('nav.variants')     },
         { id: 'composicoes',  label: tNav('nav.compositions') },
-        { id: 'estados',      label: t('nav.states')          },
+        { id: 'estados',      label: tNav('nav.states')       },
         { id: 'propriedades', label: tNav('nav.props')        },
         { id: 'tokens',       label: tNav('nav.tokens')       },
       ]},
@@ -337,9 +338,8 @@ render(items, total);`;
 {#snippet doPair2()}
   <CodeBlock
     class="nds-w-full"
-    title={$tStore("demonstration.labels.terminalTitle")}
     language="bash"
-    code={demoBash}
+    code={langShell}
     showLineNumbers={false}
     {copyLabel}
     {copiedLabel}
@@ -350,9 +350,8 @@ render(items, total);`;
 {#snippet dontPair2()}
   <CodeBlock
     class="nds-w-full"
-    title={$tStore("demonstration.labels.terminalTitle")}
     language="bash"
-    code={demoBash}
+    code={langShell}
     showLineNumbers
     {copyLabel}
     {copiedLabel}
@@ -602,6 +601,7 @@ render(items, total);`;
             name: $tStore('variants.compositions.withTitle.name'),
             description: $tStore('variants.compositions.withTitle.description'),
             useWhen: $tStore('variants.compositions.withTitle.use'),
+            trackId: 'with-title',
             code: '<CodeBlock code={source} language="ts" title="lista.ts" />',
             preview: asSnippet(compWithTitle),
           },
@@ -609,6 +609,7 @@ render(items, total);`;
             name: $tStore('variants.compositions.withoutNumbers.name'),
             description: $tStore('variants.compositions.withoutNumbers.description'),
             useWhen: $tStore('variants.compositions.withoutNumbers.use'),
+            trackId: 'without-numbers',
             code: '<CodeBlock code={source} language="ts" showLineNumbers={false} />',
             preview: asSnippet(compWithoutNumbers),
           },
@@ -616,6 +617,7 @@ render(items, total);`;
             name: $tStore('variants.compositions.highlighted.name'),
             description: $tStore('variants.compositions.highlighted.description'),
             useWhen: $tStore('variants.compositions.highlighted.use'),
+            trackId: 'highlighted',
             code: '<CodeBlock code={source} language="ts" highlightLines={[2]} />',
             preview: asSnippet(compHighlighted),
           },
@@ -623,6 +625,7 @@ render(items, total);`;
             name: $tStore('variants.compositions.withFooter.name'),
             description: $tStore('variants.compositions.withFooter.description'),
             useWhen: $tStore('variants.compositions.withFooter.use'),
+            trackId: 'with-footer',
             code: '<CodeBlock code={source} language="ts" footer="A ação de copiar leva apenas o código." />',
             preview: asSnippet(compWithFooter),
           },
@@ -666,6 +669,7 @@ render(items, total);`;
         interfaceCode={INTERFACE_CODE}
         extensibilityTitle={$tStore('props.extensibilityTitle')}
         extensibilityNotes={$tStore('props.extensibility')}
+        extensibilityCode={$tStore('props.extensibilityCode')}
       />
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
@@ -749,6 +753,7 @@ render(items, total);`;
         title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
+          description: $tStore('testes.functional.description'),
           cols: {
             action: $tNavStore('common.userAction'),
             result: $tNavStore('common.expectedResult'),
@@ -767,6 +772,7 @@ render(items, total);`;
         }}
         accessibility={{
           title: $tStore('testes.accessibility.title'),
+          description: $tStore('testes.accessibility.description'),
           cols: {
             criterion: $tNavStore('common.criterion'),
             level: 'WCAG',
@@ -782,6 +788,7 @@ render(items, total);`;
         }}
         visual={{
           title: $tStore('testes.visual.title'),
+          description: $tStore('testes.visual.description'),
           cols: {
             story: $tNavStore('common.storyState'),
             priority: $tNavStore('common.priority'),

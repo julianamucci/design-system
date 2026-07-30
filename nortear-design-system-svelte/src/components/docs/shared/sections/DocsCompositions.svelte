@@ -8,6 +8,8 @@
     /** Situação de uso recomendada — renderizada após "Quando usar:" abaixo da descrição. */
     useWhen?: string;
     code?: string;
+    /** Chave estável do evento de tracking — o `name` daqui é traduzido. */
+    trackId?: string;
     preview: Snippet;
   }
 

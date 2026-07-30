@@ -24,6 +24,7 @@ type CodeBlockArgs = {
   title: string;
   showLineNumbers: boolean;
   highlightLines: string;
+  footer: string;
 };
 
 const meta = {
@@ -110,6 +111,7 @@ export const Playground: Story = {
             a.title ? `title="${a.title}"` : '',
             a.showLineNumbers === false ? 'showLineNumbers={false}' : '',
             a.highlightLines ? `highlightLines="${a.highlightLines}"` : '',
+            a.footer ? `footer="${a.footer}"` : '',
           ].filter(Boolean).join('\n  ');
           return `<script lang="ts">
   import { CodeBlock } from "@/components/ui/code-block";
@@ -149,6 +151,24 @@ export const Playground: Story = {
       await expect(getComputedStyle(gutter).userSelect).toBe('none');
     });
 
+    await step('Numeração e ícone ficam fora da árvore de acessibilidade', async () => {
+      // Ambos são decorativos: o número duplicaria a leitura de cada linha e o
+      // ícone repetiria o rótulo do botão.
+      const gutter = root.querySelector<HTMLElement>('.nds-code-block-gutter')!;
+      await expect(gutter).toHaveAttribute('aria-hidden', 'true');
+      const icon = root.querySelector<SVGElement>('[data-slot="code-block-copy"] svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('A região de status é um live region discreto', async () => {
+      // Selecionar por role, não por classe: trocar o role quebraria o anúncio
+      // sem quebrar um seletor de classe.
+      const status = root.querySelector<HTMLElement>('[role="status"]')!;
+      await expect(status).toBeInTheDocument();
+      await expect(status).toHaveAttribute('aria-live', 'polite');
+      await expect(status.textContent).toBe('');
+    });
+
     await step('Copiar coloca no clipboard só o código, sem os números de linha', async () => {
       // Stub do writeText: o clipboard real não funciona no browser de teste
       // (rejeita por permissão, e o fallback via execCommand exige user
@@ -178,6 +198,46 @@ export const Playground: Story = {
         expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
       );
       await expect(root.querySelector('.nds-sr-only')).toHaveTextContent('Copiado!');
+      await expect(root.querySelector('[role="status"]')).toHaveTextContent('Copiado!');
+    });
+
+    await step('Depois de 2s o botão volta ao rótulo inicial', async () => {
+      await waitFor(
+        () => expect(canvas.getByRole('button', { name: /copiar código/i })).toBeInTheDocument(),
+        { timeout: 4000 },
+      );
+      await expect(root.querySelector('[role="status"]')!.textContent).toBe('');
+    });
+
+    await step('Tab alcança o botão copiar e Enter aciona a cópia', async () => {
+      // Teclado de verdade: click não prova que a ação é acionável sem mouse.
+      const button = root.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!;
+      (document.activeElement as HTMLElement | null)?.blur();
+      for (let i = 0; i < 5 && document.activeElement !== button; i++) {
+        await userEvent.tab();
+      }
+      await expect(button).toHaveFocus();
+
+      const writeText = fn((text: string) => Promise.resolve(text));
+      const original = navigator.clipboard;
+      Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+      try {
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
+        await waitFor(() =>
+          expect(root.querySelector('[role="status"]')).toHaveTextContent('Copiado!'),
+        );
+      } finally {
+        Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
+      }
+    });
+
+    await step('A região rolável entra na ordem de tabulação (WCAG 2.1.1)', async () => {
+      // Sem isso, quem navega por teclado não consegue rolar o código.
+      const scroll = root.querySelector<HTMLElement>('.nds-code-block-scroll')!;
+      await expect(scroll).toHaveAttribute('tabindex', '0');
+      await userEvent.tab();
+      await expect(scroll).toHaveFocus();
     });
   },
 };
