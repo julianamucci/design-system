@@ -448,7 +448,7 @@ export function createCodeBlockDocs(): HTMLElement {
               }),
               dontPreviewFactory: () => block('do-dont', 'dont-1', {
                 code: COMPOSITION_CODE,
-                highlightLines: '1-3',
+                highlightLines: '1-2',
               }),
             },
             {

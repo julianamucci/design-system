@@ -14,6 +14,21 @@
   import uiTranslations from '@/i18n/ui.json';
   import codeBlockTranslations from '@shared/content/code-block/translations.json';
 
+  /** Interface real desta stack — a seção de props documenta o contrato de tipos,
+      não um exemplo de uso. */
+  const INTERFACE_CODE = `export interface CodeBlockProps
+  extends HTMLAttributes<HTMLDivElement> {
+  code: string;
+  language?: string;
+  title?: string;
+  showLineNumbers?: boolean;
+  highlightLines?: string | number | Array<string | number>;
+  footer?: string | Snippet;
+  copyLabel?: string;
+  copiedLabel?: string;
+  class?: string;
+}`;
+
   // ─── Overrides desta stack ───────────────────────────────────────────────────
   // O translations.json é compartilhado e descreve a API em React: `className` e
   // `ReactNode`, com os snippets de estrutura/extensibilidade em JSX. Aqui a prop
@@ -392,7 +407,7 @@ render(items, total);`;
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="code-block">
         {#snippet children()}
-          <div class="nds-w-full nds-stack" data-spacing="sm">
+          <div class="nds-w-full nds-stack" data-spacing="md">
             <CodeBlock
               class="nds-w-full"
               title={$tStore('demonstration.labels.fileName')}
@@ -648,7 +663,7 @@ render(items, total);`;
             items: propItems,
           },
         ]}
-        interfaceCode={$tStore('props.extensibilityCode')}
+        interfaceCode={INTERFACE_CODE}
         extensibilityTitle={$tStore('props.extensibilityTitle')}
         extensibilityNotes={$tStore('props.extensibility')}
       />

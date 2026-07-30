@@ -126,6 +126,21 @@ const overrides: TranslationOverrides = {
   },
 };
 
+const INTERFACE_CODE = `export interface CodeBlockProps
+  extends /* @vue-ignore */ HTMLAttributes<HTMLDivElement> {
+  code: string;
+  language?: string;
+  title?: string;
+  showLineNumbers?: boolean;
+  highlightLines?: string | number | Array<string | number>;
+  copyLabel?: string;
+  copiedLabel?: string;
+  class?: HTMLAttributes['class'];
+}
+
+// O rodapé é um slot nomeado, não uma prop:
+// <CodeBlock ...><template #footer>Observação</template></CodeBlock>`;
+
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // locale vem SEMPRE de useTranslation — nunca de Pinia/useLocaleStore.
 
@@ -172,7 +187,7 @@ watch(locale, (newLocale) => {
   track('docs_page_view', {
     component_name: 'code-block',
     locale: newLocale,
-    page_title: tContent('seo.title'),
+    page_title: `${tContent('title')} · Design System`,
   });
 }, { immediate: true });
 
@@ -293,12 +308,12 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'tsx',  description: tContent('variants.items.script') },
-  { name: 'vue',  description: tContent('variants.items.markup') },
-  { name: 'css',  description: tContent('variants.items.styles') },
-  { name: 'json', description: tContent('variants.items.data')   },
-  { name: 'bash', description: tContent('variants.items.shell')  },
-  { name: 'txt',  description: tContent('variants.items.text')   },
+  { name: 'script',  description: tContent('variants.items.script') },
+  { name: 'markup',  description: tContent('variants.items.markup') },
+  { name: 'styles',  description: tContent('variants.items.styles') },
+  { name: 'data', description: tContent('variants.items.data')   },
+  { name: 'shell', description: tContent('variants.items.shell')  },
+  { name: 'text',  description: tContent('variants.items.text')   },
 ]);
 
 const compositionItems = computed(() => [
@@ -756,7 +771,7 @@ const a11yCritCols = computed(() => ({
     <DocsProps
       :title="tContent('props.title')"
       :tables="[{ cols: propCols, items: propItems }]"
-      :interface-code="tContent('props.extensibilityCode')"
+      :interface-code="INTERFACE_CODE"
       :extensibility-title="tContent('props.extensibilityTitle')"
       :extensibility-notes="tContent('props.extensibility')"
     />
