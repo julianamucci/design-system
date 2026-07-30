@@ -6,11 +6,11 @@ node_modules/
 # Sandbox de teste da CLI Nortear (gerado por mão, transitório)
 .nortear-cli-test/
 
-# Pipeline context cache (gerado por /pipeline, transitório)
-# Mas templates de audit-prompts são versionados (não-transitórios)
-.pipeline-context/*
-!.pipeline-context/audit-prompts/
-!.pipeline-context/audit-prompts/**
+# Scratch do /pipeline (context-cache e scans) — inteiramente transitório.
+# Nada aqui é versionado: a exceção que mantinha audit-prompts/ no git guardava
+# templates de auditoria que ninguém invocava e cujo early-exit dava 10/10 para
+# todo componente, porque esperavam um formato de scan que o audit.mjs não produz.
+.pipeline-context/
 
 # Testing
 coverage/
