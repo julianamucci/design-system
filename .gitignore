@@ -19,6 +19,7 @@ coverage/
 dist/
 build/
 storybook-static/
+build-storybook.log
 
 # TypeScript build artifacts
 *.tsbuildinfo

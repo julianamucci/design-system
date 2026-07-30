@@ -61,7 +61,6 @@ jobs:
               - "**/node_modules"
               - "**/storybook-static"
               - "**/dist"
-              - ".backstage/skeleton/**"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
