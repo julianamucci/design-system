@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { CodeBlock } from "@/components/ui/code-block";
-import { useTranslation, type TranslationOverrides } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
 import { useActiveSection } from "@/lib/use-active-section";
@@ -40,14 +40,9 @@ const priorityKeyMap: Record<string, string> = {
  * três grupos com título próprio (`surfaceTitle`, `syntaxTitle`,
  * `inheritedTitle`). `DocsTokens` renderiza uma única tabela de três colunas e
  * um único `id="tokens"` — três seções gerariam id duplicado. O grupo vira,
- * então, a coluna do meio; só o cabeçalho dela não existe no JSON e entra por
- * override.
+ * então, a coluna do meio, e o cabeçalho dela sai de `tokens.table.group` no
+ * conteúdo compartilhado, como as outras três stacks.
  */
-const overrides: TranslationOverrides = {
-  "pt-BR": { "tokens.table.group": "Grupo" },
-  en: { "tokens.table.group": "Group" },
-  es: { "tokens.table.group": "Grupo" },
-};
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -137,7 +132,7 @@ const variantSnippet = (language: string) =>
 
 export function CodeBlockDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
-  const { t: tContent, locale } = useTranslation(codeBlockTranslations, overrides);
+  const { t: tContent, locale } = useTranslation(codeBlockTranslations);
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(

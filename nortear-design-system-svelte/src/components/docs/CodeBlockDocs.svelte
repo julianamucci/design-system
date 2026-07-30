@@ -106,10 +106,6 @@
   footer={nota}
 />`;
 
-  // `tokens.table.group` não existe no JSON compartilhado: a tabela de tokens do
-  // container tem 3 colunas e o conteúdo traz 2 (token + aplicação) repartidos em
-  // 3 grupos. A coluna do meio carrega o grupo; o cabeçalho entra por override.
-  const groupCol: Record<string, string> = { 'pt-BR': 'Grupo', en: 'Group', es: 'Grupo' };
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(codeBlockTranslations, {
@@ -120,17 +116,14 @@
     'pt-BR': {
       'anatomy.structureCode': structureCodePtBr,
       'props.extensibilityCode': extensibilityCodePtBr,
-      'tokens.table.group': groupCol['pt-BR'],
     },
     en: {
       'anatomy.structureCode': structureCodeEn,
       'props.extensibilityCode': extensibilityCodeEn,
-      'tokens.table.group': groupCol.en,
     },
     es: {
       'anatomy.structureCode': structureCodeEs,
       'props.extensibilityCode': extensibilityCodeEs,
-      'tokens.table.group': groupCol.es,
     },
   });
 

@@ -216,19 +216,6 @@ const TOKEN_GROUPS: Array<{ titleKey: string; keys: string[] }> = [
   { titleKey: 'tokens.inheritedTitle', keys: ['radius', 'mutedForeground', 'foreground', 'borderBase'] },
 ];
 
-/**
- * O container de tokens é fixo em três colunas e o conteúdo compartilhado só
- * traz dois cabeçalhos (token e aplicação). A coluna do meio carrega o grupo
- * — `surfaceTitle`, `syntaxTitle` e `inheritedTitle` — que é a terceira
- * dimensão que o conteúdo descreve, e o rótulo dela vive aqui por não existir
- * chave correspondente no JSON compartilhado.
- */
-const TOKEN_GROUP_COL: Record<Locale, string> = {
-  'pt-BR': 'Grupo',
-  en: 'Group',
-  es: 'Grupo',
-};
-
 const PROP_KEYS = [
   'code', 'language', 'title', 'showLineNumbers', 'highlightLines',
   'footer', 'copyLabel', 'copiedLabel', 'className',
@@ -629,7 +616,7 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
-            value: TOKEN_GROUP_COL[getLocale()],
+            value: t('tokens.table.group'),
             description: t('tokens.table.part'),
           },
           items: TOKEN_GROUPS.flatMap(group =>

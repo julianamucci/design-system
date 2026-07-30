@@ -106,10 +106,6 @@ const EXTENSIBILITY_CODE: Record<string, string> = {
 </template>`,
 };
 
-// `tokens.table.group` não existe no JSON compartilhado: a tabela de tokens do
-// container tem 3 colunas e o conteúdo traz 2 (token + aplicação) repartidos em
-// 3 grupos. A coluna do meio carrega o grupo; o cabeçalho entra por override.
-const GROUP_COL: Record<string, string> = { 'pt-BR': 'Grupo', en: 'Group', es: 'Grupo' };
 
 const overrides: TranslationOverrides = {
   '*': {
@@ -119,17 +115,14 @@ const overrides: TranslationOverrides = {
   'pt-BR': {
     'anatomy.structureCode': STRUCTURE_CODE['pt-BR'],
     'props.extensibilityCode': EXTENSIBILITY_CODE['pt-BR'],
-    'tokens.table.group': GROUP_COL['pt-BR'],
   },
   en: {
     'anatomy.structureCode': STRUCTURE_CODE.en,
     'props.extensibilityCode': EXTENSIBILITY_CODE.en,
-    'tokens.table.group': GROUP_COL.en,
   },
   es: {
     'anatomy.structureCode': STRUCTURE_CODE.es,
     'props.extensibilityCode': EXTENSIBILITY_CODE.es,
-    'tokens.table.group': GROUP_COL.es,
   },
 };
 
@@ -577,7 +570,7 @@ const a11yCritCols = computed(() => ({
           :code="compositionCode"
           :highlight-lines="[2]"
           data-track="code"
-          data-track-id="code-block:do-dont:do-linguagem"
+          data-track-id="code-block:do-dont:do-1"
         />
       </template>
       <template #dont-preview-0>
@@ -587,7 +580,7 @@ const a11yCritCols = computed(() => ({
           :code="compositionCode"
           highlight-lines="1-2"
           data-track="code"
-          data-track-id="code-block:do-dont:dont-linguagem"
+          data-track-id="code-block:do-dont:dont-1"
         />
       </template>
       <template #do-preview-1>
@@ -599,7 +592,7 @@ const a11yCritCols = computed(() => ({
           :code="doDontCommandCode"
           :show-line-numbers="false"
           data-track="code"
-          data-track-id="code-block:do-dont:do-numeracao"
+          data-track-id="code-block:do-dont:do-2"
         />
       </template>
       <template #dont-preview-1>
@@ -610,7 +603,7 @@ const a11yCritCols = computed(() => ({
           language="bash"
           :code="doDontCommandCode"
           data-track="code"
-          data-track-id="code-block:do-dont:dont-numeracao"
+          data-track-id="code-block:do-dont:dont-2"
         />
       </template>
     </DocsDoDont>

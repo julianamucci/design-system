@@ -299,6 +299,7 @@
       "inheritedTitle": "Herdados do tema",
       "table": {
         "token": "Token CSS",
+        "group": "Grupo",
         "part": "Aplicação",
         "bg": {
           "token": "--code-block-bg",
@@ -882,6 +883,7 @@
       "inheritedTitle": "Inherited from the theme",
       "table": {
         "token": "CSS Token",
+        "group": "Group",
         "part": "Application",
         "bg": {
           "token": "--code-block-bg",
@@ -1465,6 +1467,7 @@
       "inheritedTitle": "Heredados del tema",
       "table": {
         "token": "Token CSS",
+        "group": "Grupo",
         "part": "Aplicación",
         "bg": {
           "token": "--code-block-bg",
