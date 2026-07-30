@@ -8,7 +8,7 @@
       "title": "CodeBlock — Display",
       "description": "Documentação do CodeBlock: destaque de sintaxe pelo tema, numeração de linha, linhas em destaque, copiar código e acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente CodeBlock com destaque de sintaxe próprio em TypeScript, numeração de linha opcional, marcação de intervalos de linha, scroll nos dois eixos e ação de copiar com confirmação anunciada por região de status.",
-      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+      "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -592,7 +592,7 @@
       "title": "CodeBlock — Display",
       "description": "Documentation for CodeBlock: theme-driven syntax highlighting, line numbers, highlighted lines, copy to clipboard, and WCAG 2.2 AA accessibility.",
       "aiSummary": "CodeBlock component with in-house TypeScript syntax highlighting, optional line numbers, line-range emphasis, scrolling on both axes, and a copy action whose confirmation is announced through a status region.",
-      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+      "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -1176,7 +1176,7 @@
       "title": "CodeBlock — Display",
       "description": "Documentación del CodeBlock: resaltado de sintaxis según el tema, numeración de línea, líneas destacadas, copiar código y accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente CodeBlock con resaltado de sintaxis propio en TypeScript, numeración de línea opcional, marcado de intervalos de línea, scroll en los dos ejes y acción de copiar con confirmación anunciada por una región de estado.",
-      "aiEntities": "CodeBlock, React, Vue, Svelte, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
+      "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
       "title": "Demostración",

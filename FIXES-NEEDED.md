@@ -1,96 +1,79 @@
 # Fixes Pendentes — Pipeline `new` code-block — 2026-07-30
 
-Só o que **sobrou** depois dos 4 commits de correção desta execução
-(`5ecbe53b`, `755c59fc`, `241ef9c5`, `55980259`). Cada item foi conferido na
-fonte, não aceito do relato do agent.
+O lote completo (opção 3) foi aplicado. Sobrou **um** item, e ele precisa de
+decisão sua — não é trabalho parado por falta de tempo.
 
 ---
 
-## Críticos
+## Aberto — precisa de decisão
 
-Nenhum. Os dois ALTO da auditoria já foram corrigidos e verificados:
-`docs_code_copy` contando clique em qualquer lugar do bloco (`755c59fc`, com
-harness em `scripts/verify-docs-tracking.mjs`) e Vue/Svelte sem o fallback de
-clipboard (`55980259`).
+- [ ] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**
+  A região de scroll do CodeBlock tem `tabindex="0"` de propósito: é o que
+  permite rolar o bloco sem mouse (WCAG 2.1.1), e está documentado na própria
+  docs page.
 
----
+  Minha instrução era resolver com `role="region"`. **Não resolve** — conferi na
+  fonte do compilador (`svelte/src/compiler/phases/2-analyze/visitors/shared/a11y/index.js:315`):
+  a regra só aceita roles **interativos** (descendentes de `widget`), e `region`
+  e `group` são não-interativos por definição.
 
-## Médios
+  As saídas são três, todas com custo:
+  1. **Aceitar o warning** (estado atual) — 1 warning por build na stack Svelte.
+  2. `role="textbox"` ou `tabpanel` — silencia, mas é semanticamente errado, e
+     repetido nos ~20 blocos da docs page ainda arriscaria o `landmark-unique`
+     do axe.
+  3. `svelte-ignore` documentado — a política do projeto proíbe.
 
-- [ ] **Nenhuma seção da docs page tem story equivalente** — 4 stacks.
-  Existe só o `Playground`. Faltam `code-block-variantes` (6 linguagens),
-  `code-block-estados` (com/sem numeração, copiado, scroll nos 2 eixos,
-  linguagem desconhecida) e `code-block-composicoes` (4 arranjos).
-  Custo real: a paleta de sintaxe — a razão de o componente existir — nunca
-  entra em regressão visual, e o axe-core só roda no Playground.
-  12 arquivos. Skill: `/quality code-block` em fix-mode.
-
-- [ ] **Play function não verifica ARIA nem teclado** — 4 stacks.
-  `testes.accessibility` documenta 5 teclas e 4 atributos; a play cobre 0 e 0.
-  Os primitivos **implementam** tudo certo (`role="status"`, `aria-live`,
-  `aria-hidden` no gutter, `tabindex="0"`) — o buraco é de teste. Hoje a
-  asserção alcança a região de status por classe (`.nds-sr-only`), então trocar
-  o `role` passa verde.
-  Também sem cobertura: retorno ao estado inicial em 2s e cancelamento do timer
-  no unmount, ambos implementados nos 4.
-
-- [ ] **`snippet_id` das Composições é o nome traduzido** — infra, 4 stacks.
-  `DocsVariants` monta `${slug}:code:${item.name}` e as Composições passam
-  `name` traduzido: o mesmo evento sai como "Com rótulo no header" / "With
-  header label" / "Con etiqueta en la cabecera". Afeta todo componente que
-  passa `name` traduzido, não só o code-block.
-  Correção aditiva e retrocompatível: campo opcional `trackId` em
-  `DocsVariantItem`, com fallback para `item.name`.
-
-- [ ] **`DocsProps` não aceita `extensibilityCode`** em React, Vue e Svelte —
-  só o Vanilla aceita (`DocsProps.ts:19`). Consequência imediata: os overrides
-  `props.extensibilityCode` em `CodeBlockDocs.vue` e `.svelte` são **código
-  morto**, nunca renderizado. O React contorna jogando no `DocsImport`.
-  Vanilla é a referência: alinhar os outros 3 containers.
-
-## Baixos
-
-- [ ] **Do & Don't par 2 ainda diverge** — 3 literais diferentes. Vanilla
-  `npm run build -- --mode production` sem título (coerente com a legenda "um
-  comando de uma linha"), React/Svelte `demoBash` de 3 linhas, Vue
-  `npm run storybook`. Vanilla é a referência.
-
-- [ ] **Toggle "Ver código" nas 6 linguagens** — presente em React e Svelte,
-  ausente em Vue e Vanilla. Aqui alinhar por cima (os 4 containers suportam).
-
-- [ ] **Vue: `DocsVariants` sem `component-slug`** (`CodeBlockDocs.vue:637`) —
-  o toggle perde o `data-track-id`.
-
-- [ ] **`DocsTestes` só aceita `description` no container Vue** — as 3 chaves
-  existem nos 3 locales; React, Svelte e Vanilla perdem 3 parágrafos.
-
-- [ ] **Rótulos de nav de fontes diferentes** — Vue lê o `nav` do
-  `translations.json` do componente, React/Vanilla leem `ui.json`, Svelte
-  mistura. Efeito visível: `states` sai "Estados" (React/Vanilla) contra
-  "Configurações" (Vue/Svelte) — e o heading da seção é "Configurações" nas 4,
-  então React e Vanilla ficam com nav ≠ título.
-
-- [ ] **Svelte: `docs.source.transform` não inclui `footer`** — mexer nesse
-  control não muda o snippet. O Vanilla inclui.
-
-- [ ] **`nds-w-full` nos blocos da Demonstração** — Svelte e Vanilla aplicam por
-  bloco, React e Vue só no wrapper.
-
-- [ ] **Warnings de compilação no primitivo Svelte** —
-  `a11y_no_noninteractive_tabindex` (o `tabindex="0"` da região de scroll é
-  intencional e documentado; falta `role="region"` + `aria-label` ou o ignore
-  explícito) e `block_empty`. Poluem a saída de toda story da stack.
+  Aplicar qualquer role só no Svelte criaria divergência de árvore de
+  acessibilidade contra as outras 3, que usam `<div tabindex="0">` sem role. Por
+  isso ficou como está.
 
 ---
 
-## Fora do escopo deste componente (achados de passagem)
+## Aplicado nesta rodada
 
-- [ ] `ComponentDemo.tsx` (React) ainda tem classes utilitárias mortas:
-  `flex items-center justify-center p-4 mt-2 bg-background`. O audit não pega
-  porque `legacy_class_in_story` só varre stories.
-- [ ] 3 dos 48 `translations.json` ainda têm emoji em título de seção
-  (`alert`, e outros 2) — os outros 45 já estão limpos.
-- [ ] `aiEntities` do code-block não menciona Vanilla, embora a stack publique a
-  mesma docs page. `alert-dialog` e `checkbox` já mencionam.
-- [ ] Breadcrumb com `item: '/components/display'` fixo ao lado de um `name`
-  dinâmico, em 20+ docs pages.
+Containers (nas 4 stacks): `trackId` estável no `DocsVariants` (o `snippet_id`
+deixou de ser o nome traduzido), `extensibilityCode` no `DocsProps` (React, Vue
+e Svelte — o Vanilla já tinha, e os overrides do Vue e do Svelte eram código
+morto), `description` das 3 sub-seções no `DocsTestes` (o Vue declarava e nunca
+renderizava; as outras nem declaravam).
+
+Stories: 15 novas por stack — `code-block-variantes` (6), `-estados` (5),
+`-composicoes` (4). Nomes idênticos nas 4. **16/16 verdes em cada.**
+
+Play do Playground: `[role="status"]` em vez de seletor por classe,
+`aria-live="polite"`, `aria-hidden` no gutter e no ícone, `Tab` + `{Enter}`
+(não `click`), foco na região de scroll, reset em 2s.
+
+Locais: Do & Don't par 2 alinhado ao Vanilla nas 4, `component-slug` no Vue,
+toggle "Ver código" no Vue e no Vanilla, `footer` no transform do Svelte,
+`nds-w-full` por bloco, nav lendo de `ui.json`, `block_empty` do Svelte
+resolvido, segundo bloco de Importação restaurado no React.
+
+Fora do componente: emoji removido de `accordion`, `alert` e `button` (os 3
+últimos dos 48 fora da regra), `Vanilla` acrescentado ao `aiEntities`, e o
+`ComponentDemo` do React trocando Tailwind inerte por `.nds-*`.
+
+---
+
+## Precisa de validação visual sua
+
+Duas mudanças alteram pixels e não têm cobertura de regressão até o próximo
+Chromatic:
+
+- **`ComponentDemo` (React)** — as classes eram Tailwind inertes desde a
+  migração: o container renderizava **sem** padding, centralização ou superfície.
+  Agora renderiza com. Afeta 3 arquivos que o usam.
+- **Reset global de `box-sizing`** (pendência anterior) — 34 regras com dimensão
+  fixa + padding.
+
+---
+
+## Backlog anterior, não tocado aqui
+
+- `button`: 53 violações de audit (39 `noop_assertion`), pré-existentes.
+- Breadcrumb com `item: '/components/<categoria>'` fixo ao lado de `name`
+  dinâmico, em 20+ docs pages — refatoração ampla, não cabia neste lote.
+- Nav "Estados" (`ui.json`) × heading "Configurações" (`states.title`) no
+  code-block: decisão de conteúdo, não de código. O `ui.json` é global (48
+  componentes), então mudá-lo por causa de um componente seria pior.

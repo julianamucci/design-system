@@ -35,7 +35,7 @@
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
-        "title": "📋 Guidelines Obrigatórias",
+        "title": "Guidelines Obrigatórias",
         "item1": "Use o modo único para FAQ — apenas um item aberto por vez e permite fechar o item ativo clicando nele novamente.",
         "item2": "Use o modo múltiplo para especificações ou configurações onde o usuário compara seções simultâneas.",
         "item3": "Cada <code>AccordionItem</code> exige prop <code>value</code> única — é o identificador interno para estado controlado.",
@@ -76,7 +76,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Regras de formato",
@@ -520,7 +520,7 @@
       "visual": {
         "title": "Testes Visuais (Chromatic)",
         "description": "Cada story é capturada automaticamente para visual regression.",
-        "required": "✓ Obrigatório",
+        "required": "Obrigatório",
         "item1": {
           "story": "Playground — type single, item 1 aberto",
           "priority": "high"
@@ -600,7 +600,7 @@
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
-        "title": "📋 Required Guidelines",
+        "title": "Required Guidelines",
         "item1": "Use single mode for FAQ — only one item open at a time and allows closing the active item by clicking it again.",
         "item2": "Use multiple mode for specs or settings where users compare simultaneous sections.",
         "item3": "Each <code>AccordionItem</code> requires a unique <code>value</code> prop — it's the internal identifier for controlled state.",
@@ -641,7 +641,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Element",
           "rules": "Format rules",
@@ -1085,7 +1085,7 @@
       "visual": {
         "title": "Visual Regression (Chromatic)",
         "description": "Each story is automatically captured for visual regression.",
-        "required": "✓ Required",
+        "required": "Required",
         "item1": {
           "story": "Playground — single type, item 1 open",
           "priority": "high"
@@ -1165,7 +1165,7 @@
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
-        "title": "📋 Guías Obligatorias",
+        "title": "Guías Obligatorias",
         "item1": "Usa el modo único para FAQ — solo un ítem abierto a la vez y permite cerrar el ítem activo haciendo clic en él nuevamente.",
         "item2": "Usa el modo múltiple para especificaciones o configuraciones donde el usuario compara secciones simultáneas.",
         "item3": "Cada <code>AccordionItem</code> requiere prop <code>value</code> única — es el identificador interno para el estado controlado.",
@@ -1206,7 +1206,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Reglas de formato",
@@ -1650,7 +1650,7 @@
       "visual": {
         "title": "Regresión Visual (Chromatic)",
         "description": "Cada story es capturada automáticamente para regresión visual.",
-        "required": "✓ Obligatorio",
+        "required": "Obligatorio",
         "item1": {
           "story": "Playground — tipo single, ítem 1 abierto",
           "priority": "high"

@@ -35,7 +35,7 @@
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
-        "title": "📋 Guidelines Obrigatórias",
+        "title": "Guidelines Obrigatórias",
         "item1": "Use apenas para mensagens que precisam permanecer visíveis enquanto o usuário lê ou age.",
         "item2": "Escolha a variante correta para a severidade: <code>destructive</code> para erros, <code>default</code> para informativo.",
         "item3": "Inclua sempre ícone + texto — nunca dependa de cor como único indicador de estado.",
@@ -70,7 +70,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Regras de formato",
@@ -431,7 +431,7 @@
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
-        "title": "📋 Required Guidelines",
+        "title": "Required Guidelines",
         "item1": "Use only for messages that need to remain visible while the user reads or acts.",
         "item2": "Choose the variant that matches the severity: <code>destructive</code> for errors, <code>default</code> for informational.",
         "item3": "Always include icon + text — never rely on color as the only state indicator.",
@@ -466,7 +466,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Element",
           "rules": "Format rules",
@@ -827,7 +827,7 @@
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
-        "title": "📋 Guías Obligatorias",
+        "title": "Guías Obligatorias",
         "item1": "Úsalo solo para mensajes que necesiten permanecer visibles mientras el usuario lee o actúa.",
         "item2": "Elige la variante según la severidad: <code>destructive</code> para errores, <code>default</code> para informativo.",
         "item3": "Incluye siempre ícono + texto — nunca dependas del color como único indicador de estado.",
@@ -862,7 +862,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Reglas de formato",

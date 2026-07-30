@@ -35,7 +35,7 @@
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
-        "title": "📋 Guidelines Obrigatórias",
+        "title": "Guidelines Obrigatórias",
         "item1": "Use <code>variant=\"default\"</code> apenas uma vez por seção — a ação primária deve ser única.",
         "item2": "Ações destrutivas (excluir, remover) sempre usam <code>variant=\"destructive\"</code> e exigem confirmação via AlertDialog.",
         "item3": "Para navegação (links), componha o Button com o elemento filho de link do framework (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
@@ -75,7 +75,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Regras de formato",
@@ -482,7 +482,7 @@
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
-        "title": "📋 Required Guidelines",
+        "title": "Required Guidelines",
         "item1": "Use <code>variant=\"default\"</code> only once per section — the primary action must be unique.",
         "item2": "Destructive actions (delete, remove) always use <code>variant=\"destructive\"</code> and require AlertDialog confirmation.",
         "item3": "For navigation (links), compose the Button with your framework's link element as a child (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
@@ -522,7 +522,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Element",
           "rules": "Format rules",
@@ -929,7 +929,7 @@
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
-        "title": "📋 Guías Obligatorias",
+        "title": "Guías Obligatorias",
         "item1": "Usa <code>variant=\"default\"</code> solo una vez por sección — la acción primaria debe ser única.",
         "item2": "Acciones destructivas (eliminar, remover) siempre usan <code>variant=\"destructive\"</code> y requieren confirmación vía AlertDialog.",
         "item3": "Para navegación (enlaces), compón el Button con el elemento de enlace del framework como hijo (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
@@ -969,7 +969,7 @@
         }
       },
       "uxWriting": {
-        "title": "✍️ UX Writing",
+        "title": "UX Writing",
         "table": {
           "element": "Elemento",
           "rules": "Reglas de formato",
