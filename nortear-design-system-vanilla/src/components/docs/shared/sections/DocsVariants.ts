@@ -6,6 +6,12 @@ export interface DocsVariantItem {
   name: string;
   description: string;
   code?: string;
+  /**
+   * Chave estável para o `data-track-id` do toggle de código. Sem ela cai em
+   * `name` (retrocompatível) — o que faz o mesmo evento sair com um valor por
+   * idioma quando `name` vem traduzido.
+   */
+  trackId?: string;
   previewFactory: () => HTMLElement;
 }
 
@@ -21,7 +27,7 @@ export interface DocsVariantsProps {
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, o
    * botão "Ver código / Ocultar código" de cada variant recebe
-   * `data-track="code"` + `data-track-id="{slug}:code:{variant.name}"` +
+   * `data-track="code"` + `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
    * `data-track-label="Copiar código"`. Se ausente, `data-track-id` é omitido.
    */
   componentSlug?: string;
@@ -79,7 +85,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
       });
       toggle.setAttribute('data-track', 'code');
       if (props.componentSlug) {
-        toggle.setAttribute('data-track-id', `${props.componentSlug}:code:${item.name}`);
+        toggle.setAttribute('data-track-id', `${props.componentSlug}:code:${item.trackId ?? item.name}`);
       }
       toggle.setAttribute('data-track-label', 'Copiar código');
 

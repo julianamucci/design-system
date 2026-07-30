@@ -31,6 +31,27 @@ const block = createCodeBlock({
 
 document.querySelector('#app')?.append(block);`;
 
+/**
+ * Roda `run` com `navigator.clipboard.writeText` substituído.
+ *
+ * O clipboard real não funciona no browser de teste: a Clipboard API rejeita por
+ * permissão e o fallback via `execCommand` exige user activation, que evento
+ * sintético não tem. Sem o stub, `copyText` devolve `false` e o componente —
+ * corretamente — não confirma nada.
+ */
+async function withClipboardStub(run: () => Promise<void>): Promise<void> {
+  const original = navigator.clipboard;
+  Object.defineProperty(navigator, 'clipboard', {
+    value: { writeText: () => Promise.resolve() },
+    configurable: true,
+  });
+  try {
+    await run();
+  } finally {
+    Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
+  }
+}
+
 const meta: Meta<CodeBlockArgs> = {
   title: 'UI/CodeBlock',
   tags: ['autodocs', 'display'],
@@ -197,7 +218,48 @@ export const Playground: Story = {
       await waitFor(() =>
         expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
       );
-      await expect(root.querySelector('.nds-sr-only')).toHaveTextContent('Copiado!');
+      // Selecionado pelo papel, não pela classe: `.nds-sr-only` é só o jeito de
+      // esconder visualmente — trocar o `role` passaria despercebido.
+      const live = root.querySelector('[role="status"]')!;
+      await expect(live).toHaveAttribute('aria-live', 'polite');
+      await expect(live).toHaveTextContent('Copiado!');
+    });
+
+    await step('O que é decorativo não é anunciado', async () => {
+      await expect(root.querySelector('.nds-code-block-gutter')).toHaveAttribute('aria-hidden', 'true');
+      const icon = root.querySelector('[data-slot="code-block-copy"] svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Depois de 2s o botão volta ao rótulo inicial', async () => {
+      await waitFor(
+        () => expect(canvas.getByRole('button', { name: /copiar código/i })).toBeInTheDocument(),
+        { timeout: 4000 },
+      );
+      await expect(root.querySelector('[role="status"]')).toHaveTextContent('');
+    });
+
+    await step('Tab alcança o botão copiar e Enter aciona a cópia', async () => {
+      // Enter, não click: teclado é o caminho que a documentação promete e que
+      // um click sintético não exercita.
+      (document.activeElement as HTMLElement | null)?.blur();
+      await withClipboardStub(async () => {
+        await userEvent.tab();
+        await expect(canvas.getByRole('button', { name: /copiar código/i })).toHaveFocus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() =>
+          expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
+        );
+      });
+    });
+
+    await step('A região de scroll é alcançável pelo teclado', async () => {
+      // tabindex=0 existe para quem rola o código sem mouse; se o foco não
+      // chegar nela, o trecho longo fica inacessível.
+      const scroll = root.querySelector<HTMLElement>('.nds-code-block-scroll')!;
+      await expect(scroll).toHaveAttribute('tabindex', '0');
+      await userEvent.tab();
+      await expect(scroll).toHaveFocus();
     });
   },
 };

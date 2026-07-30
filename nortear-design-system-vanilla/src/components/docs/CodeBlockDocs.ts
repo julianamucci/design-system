@@ -193,7 +193,12 @@ const DEMO_PLAIN = [
   'O bloco continua rolando e copiando normalmente.',
 ].join('\n');
 
-const LANGUAGE_ITEMS: Array<{ key: string; language: string; code: string }> = [
+/**
+ * Linguagens da seção Variantes. Exportado porque as stories de variantes
+ * mostram exatamente os mesmos trechos — duplicar o literal seria abrir espaço
+ * para os dois lados divergirem sem ninguém perceber.
+ */
+export const LANGUAGE_ITEMS: Array<{ key: string; language: string; code: string }> = [
   { key: 'script', language: 'tsx',  code: 'const total = items.length; // soma' },
   { key: 'markup', language: 'vue',  code: '<button class="nds-btn" :disabled="loading">Salvar</button>' },
   { key: 'styles', language: 'css',  code: '.nds-card { padding: var(--spacing-4); }' },
@@ -202,11 +207,23 @@ const LANGUAGE_ITEMS: Array<{ key: string; language: string; code: string }> = [
   { key: 'text',   language: 'txt',  code: 'Sem classificação: monoespaçado e sem cor.' },
 ];
 
-const COMPOSITION_CODE = [
+/** Trecho base das Composições — também usado pelas stories de composição. */
+export const COMPOSITION_CODE = [
   'const items = await load();',
   'const total = items.length;',
   'render(items, total);',
 ].join('\n');
+
+/** Chamada da factory mostrada no toggle "Ver código" de cada linguagem. */
+function languageSnippet(language: string): string {
+  return [
+    'const bloco = createCodeBlock({',
+    '  code: source,',
+    `  language: '${language}',`,
+    '  showLineNumbers: false,',
+    '});',
+  ].join('\n');
+}
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 
@@ -488,6 +505,7 @@ export function createCodeBlockDocs(): HTMLElement {
           items: LANGUAGE_ITEMS.map(item => ({
             name: item.key,
             description: t(`variants.items.${item.key}`),
+            code: languageSnippet(item.language),
             previewFactory: () => block('variantes', item.key, {
               code: item.code,
               language: item.language,
@@ -504,6 +522,9 @@ export function createCodeBlockDocs(): HTMLElement {
           items: [
             {
               name: t('variants.compositions.withTitle.name'),
+              // O nome é traduzido; sem trackId o mesmo evento sairia com um
+              // valor por idioma. A chave é a mesma do data-track-id do preview.
+              trackId: 'with-title',
               description: t('variants.compositions.withTitle.description'),
               useWhen: t('variants.compositions.withTitle.use'),
               code:
@@ -520,6 +541,7 @@ export function createCodeBlockDocs(): HTMLElement {
             },
             {
               name: t('variants.compositions.withoutNumbers.name'),
+              trackId: 'without-numbers',
               description: t('variants.compositions.withoutNumbers.description'),
               useWhen: t('variants.compositions.withoutNumbers.use'),
               code:
@@ -536,6 +558,7 @@ export function createCodeBlockDocs(): HTMLElement {
             },
             {
               name: t('variants.compositions.highlighted.name'),
+              trackId: 'highlighted',
               description: t('variants.compositions.highlighted.description'),
               useWhen: t('variants.compositions.highlighted.use'),
               code:
@@ -552,6 +575,7 @@ export function createCodeBlockDocs(): HTMLElement {
             },
             {
               name: t('variants.compositions.withFooter.name'),
+              trackId: 'with-footer',
               description: t('variants.compositions.withFooter.description'),
               useWhen: t('variants.compositions.withFooter.use'),
               code:
@@ -684,6 +708,7 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
+            description: t('testes.functional.description'),
             cols: {
               action: tNav('common.userAction'),
               result: tNav('common.expectedResult'),
@@ -697,6 +722,7 @@ export function createCodeBlockDocs(): HTMLElement {
           },
           accessibility: {
             title: t('testes.accessibility.title'),
+            description: t('testes.accessibility.description'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
@@ -706,6 +732,7 @@ export function createCodeBlockDocs(): HTMLElement {
           },
           visual: {
             title: t('testes.visual.title'),
+            description: t('testes.visual.description'),
             cols: {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),

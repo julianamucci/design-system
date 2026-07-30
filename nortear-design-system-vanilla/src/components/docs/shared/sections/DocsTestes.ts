@@ -9,9 +9,19 @@ export interface DocsVisualTestItem { story: string; priority: string }
 
 export interface DocsTestesProps {
   title: string;
-  functional: { title: string; cols: { action: string; result: string; priority: string }; items: DocsTestItem[] };
-  accessibility: { title: string; cols: { criterion: string; level: string; how: string }; items: DocsA11yTestItem[] };
-  visual: { title: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
+  /** `description` é opcional em cada sub-seção; quando presente é renderizada
+   *  logo abaixo do `<h3>` correspondente. */
+  functional: { title: string; description?: string; cols: { action: string; result: string; priority: string }; items: DocsTestItem[] };
+  accessibility: { title: string; description?: string; cols: { criterion: string; level: string; how: string }; items: DocsA11yTestItem[] };
+  visual: { title: string; description?: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
+}
+
+/** `<p>` de apoio de cada sub-seção. Texto puro: nada de HTML a preservar. */
+function createSubsectionDescription(text: string): HTMLParagraphElement {
+  const p = document.createElement('p');
+  p.className = 'nds-text-body nds-text-muted-foreground';
+  p.textContent = text;
+  return p;
 }
 
 const priorityBadgeClass = (p: string): string =>
@@ -39,6 +49,9 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   funcTitle.className = 'nds-text-base nds-font-semibold';
   funcTitle.textContent = props.functional.title;
   funcBlock.appendChild(funcTitle);
+  if (props.functional.description) {
+    funcBlock.appendChild(createSubsectionDescription(props.functional.description));
+  }
 
   const funcWrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
   const { wrapper: funcTableWrapper, table: funcTable } = createTable('nds-w-full nds-text-body');
@@ -74,6 +87,9 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   a11yTitle.className = 'nds-text-base nds-font-semibold';
   a11yTitle.textContent = props.accessibility.title;
   a11yBlock.appendChild(a11yTitle);
+  if (props.accessibility.description) {
+    a11yBlock.appendChild(createSubsectionDescription(props.accessibility.description));
+  }
 
   const a11yGrid = document.createElement('div');
   a11yGrid.className = 'nds-grid';
@@ -108,6 +124,9 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   visualTitle.className = 'nds-text-base nds-font-semibold';
   visualTitle.textContent = props.visual.title;
   visualBlock.appendChild(visualTitle);
+  if (props.visual.description) {
+    visualBlock.appendChild(createSubsectionDescription(props.visual.description));
+  }
 
   const visualWrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
   const { wrapper: visualTableWrapper, table: visualTable } = createTable('nds-w-full nds-text-body');
