@@ -51,6 +51,12 @@ const priorityClass = (p: string) =>
         <h3 class="nds-text-base nds-font-semibold">
           {{ functional.title }}
         </h3>
+        <p
+          v-if="functional.description"
+          class="nds-text-body nds-text-muted-foreground"
+        >
+          {{ functional.description }}
+        </p>
         <Card class="nds-p-4 nds-overflow-x">
           <Table class="nds-w-full nds-text-body">
             <TableHeader>
@@ -97,6 +103,12 @@ const priorityClass = (p: string) =>
         <h3 class="nds-text-base nds-font-semibold">
           {{ accessibility.title }}
         </h3>
+        <p
+          v-if="accessibility.description"
+          class="nds-text-body nds-text-muted-foreground"
+        >
+          {{ accessibility.description }}
+        </p>
         <div
           class="nds-grid"
           data-cols="2"
@@ -131,6 +143,12 @@ const priorityClass = (p: string) =>
         <h3 class="nds-text-base nds-font-semibold">
           {{ visual.title }}
         </h3>
+        <p
+          v-if="visual.description"
+          class="nds-text-body nds-text-muted-foreground"
+        >
+          {{ visual.description }}
+        </p>
         <Card class="nds-p-4 nds-overflow-x">
           <Table class="nds-w-full nds-text-body">
             <TableHeader>

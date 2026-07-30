@@ -23,6 +23,7 @@ defineProps<{
   interfaceCode?: string;
   extensibilityTitle?: string;
   extensibilityNotes?: string;
+  extensibilityCode?: string;
 }>();
 </script>
 
@@ -111,6 +112,10 @@ defineProps<{
           class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
           v-html="DOMPurify.sanitize(extensibilityNotes)"
         />
+        <pre
+          v-if="extensibilityCode"
+          class="nds-code-block"
+        ><code>{{ extensibilityCode }}</code></pre>
       </div>
     </div>
   </section>

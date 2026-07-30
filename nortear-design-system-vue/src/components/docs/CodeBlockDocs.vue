@@ -193,40 +193,43 @@ watch(locale, (newLocale) => {
 
 // ─── Navegação ────────────────────────────────────────────────────────────────
 
+// Os rótulos do nav são globais (ui.json), não do conteúdo do componente — é o
+// mesmo menu em 48 páginas. Onde o nav e o heading da seção divergem
+// ("Estados" no menu, "Configurações" no título), o heading é que manda.
 const navGroups = computed(() => [
   {
-    label: tContent('nav.overview'),
+    label: tNav('nav.overview'),
     sections: [
-      { id: 'demonstracao', label: tContent('nav.demonstration') },
-      { id: 'anatomia',     label: tContent('nav.anatomy')       },
-      { id: 'quando-usar',  label: tContent('nav.usage')         },
-      { id: 'do-dont',      label: tContent('nav.doDont')        },
+      { id: 'demonstracao', label: tNav('nav.demonstration') },
+      { id: 'anatomia',     label: tNav('nav.anatomy')       },
+      { id: 'quando-usar',  label: tNav('nav.usage')         },
+      { id: 'do-dont',      label: tNav('nav.doDont')        },
     ],
   },
   {
-    label: tContent('nav.techRef'),
+    label: tNav('nav.techRef'),
     sections: [
-      { id: 'importacao',   label: tContent('nav.import')      },
-      { id: 'variantes',    label: tContent('nav.variants')    },
-      { id: 'composicoes',  label: tNav('nav.compositions')    },
-      { id: 'estados',      label: tContent('nav.states')      },
-      { id: 'propriedades', label: tContent('nav.props')       },
-      { id: 'tokens',       label: tContent('nav.tokens')      },
+      { id: 'importacao',   label: tNav('nav.import')       },
+      { id: 'variantes',    label: tNav('nav.variants')     },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
+      { id: 'estados',      label: tNav('nav.states')       },
+      { id: 'propriedades', label: tNav('nav.props')        },
+      { id: 'tokens',       label: tNav('nav.tokens')       },
     ],
   },
   {
-    label: tContent('nav.context'),
+    label: tNav('nav.context'),
     sections: [
-      { id: 'acessibilidade', label: tContent('nav.accessibility') },
-      { id: 'relacionados',   label: tContent('nav.related')       },
-      { id: 'notas',          label: tContent('nav.notes')         },
+      { id: 'acessibilidade', label: tNav('nav.accessibility') },
+      { id: 'relacionados',   label: tNav('nav.related')       },
+      { id: 'notas',          label: tNav('nav.notes')         },
     ],
   },
   {
-    label: tContent('nav.quality'),
+    label: tNav('nav.quality'),
     sections: [
-      { id: 'analytics', label: tContent('nav.analytics') },
-      { id: 'testes',    label: tContent('nav.testes')    },
+      { id: 'analytics', label: tNav('nav.analytics') },
+      { id: 'testes',    label: tNav('nav.testes')    },
     ],
   },
 ]);
@@ -277,11 +280,17 @@ const variantDataCode = '{ "port": 6006, "open": true }';
 const variantShellCode = 'npm run build -- --mode production';
 const variantTextCode = 'Sem classificação: monoespaçado e sem cor.';
 
+/** Snippet exibido no toggle "Ver código" de cada linguagem suportada. */
+const variantSnippet = (language: string) =>
+  `<CodeBlock\n  :code="source"\n  language="${language}"\n  :show-line-numbers="false"\n/>`;
+
 const compositionCode = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
-const doDontCommandCode = 'npm run storybook';
+// O par 2 do Do & Don't contrasta numeração ligada e desligada no MESMO comando
+// de uma linha — que é o que a legenda descreve.
+const doDontCommandCode = 'npm run build -- --mode production';
 
 const codeImportBasic = 'import { CodeBlock } from "@/components/ui/code-block";';
 
@@ -308,34 +317,44 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'script',  description: tContent('variants.items.script') },
-  { name: 'markup',  description: tContent('variants.items.markup') },
-  { name: 'styles',  description: tContent('variants.items.styles') },
-  { name: 'data', description: tContent('variants.items.data')   },
-  { name: 'shell', description: tContent('variants.items.shell')  },
-  { name: 'text',  description: tContent('variants.items.text')   },
+  { name: 'script', description: tContent('variants.items.script'), code: variantSnippet('tsx')  },
+  { name: 'markup', description: tContent('variants.items.markup'), code: variantSnippet('vue')  },
+  { name: 'styles', description: tContent('variants.items.styles'), code: variantSnippet('css')  },
+  { name: 'data',   description: tContent('variants.items.data'),   code: variantSnippet('json') },
+  { name: 'shell',  description: tContent('variants.items.shell'),  code: variantSnippet('bash') },
+  { name: 'text',   description: tContent('variants.items.text'),   code: variantSnippet('txt')  },
 ]);
 
+// `trackId` é a chave estável do evento — `name` aqui é texto traduzido, e sem
+// ela o mesmo toggle sairia com um id por idioma.
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.withTitle.name'),
     description: tContent('variants.compositions.withTitle.description'),
     useWhen: tContent('variants.compositions.withTitle.use'),
+    trackId: 'with-title',
+    code: `<CodeBlock\n  :code="source"\n  language="ts"\n  title="lista.ts"\n/>`,
   },
   {
     name: tContent('variants.compositions.withoutNumbers.name'),
     description: tContent('variants.compositions.withoutNumbers.description'),
     useWhen: tContent('variants.compositions.withoutNumbers.use'),
+    trackId: 'without-numbers',
+    code: `<CodeBlock\n  :code="source"\n  language="ts"\n  :show-line-numbers="false"\n/>`,
   },
   {
     name: tContent('variants.compositions.highlighted.name'),
     description: tContent('variants.compositions.highlighted.description'),
     useWhen: tContent('variants.compositions.highlighted.use'),
+    trackId: 'highlighted',
+    code: `<CodeBlock\n  :code="source"\n  language="ts"\n  :highlight-lines="[2]"\n/>`,
   },
   {
     name: tContent('variants.compositions.withFooter.name'),
     description: tContent('variants.compositions.withFooter.description'),
     useWhen: tContent('variants.compositions.withFooter.use'),
+    trackId: 'with-footer',
+    code: `<CodeBlock\n  :code="source"\n  language="ts"\n  footer="A ação de copiar leva apenas o código."\n/>`,
   },
 ]);
 
@@ -484,6 +503,7 @@ const a11yCritCols = computed(() => ({
       >
         <CodeBlock
           v-bind="copyLabels"
+          class="nds-w-full"
           :title="tContent('demonstration.labels.fileName')"
           language="tsx"
           :code="demoTsxCode"
@@ -494,6 +514,7 @@ const a11yCritCols = computed(() => ({
         />
         <CodeBlock
           v-bind="copyLabels"
+          class="nds-w-full"
           :title="tContent('demonstration.labels.terminalTitle')"
           language="bash"
           :code="demoBashCode"
@@ -503,6 +524,7 @@ const a11yCritCols = computed(() => ({
         />
         <CodeBlock
           v-bind="copyLabels"
+          class="nds-w-full"
           :title="tContent('demonstration.labels.themeTitle')"
           language="css"
           :code="demoCssCode"
@@ -511,6 +533,7 @@ const a11yCritCols = computed(() => ({
         />
         <CodeBlock
           v-bind="copyLabels"
+          class="nds-w-full"
           :title="tContent('demonstration.labels.dataTitle')"
           language="json"
           :code="demoJsonCode"
@@ -519,6 +542,7 @@ const a11yCritCols = computed(() => ({
         />
         <CodeBlock
           v-bind="copyLabels"
+          class="nds-w-full"
           :title="tContent('demonstration.labels.plainTitle')"
           language="txt"
           :code="demoTxtCode"
@@ -602,7 +626,6 @@ const a11yCritCols = computed(() => ({
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
-          :title="tContent('demonstration.labels.terminalTitle')"
           language="bash"
           :code="doDontCommandCode"
           :show-line-numbers="false"
@@ -614,9 +637,9 @@ const a11yCritCols = computed(() => ({
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
-          :title="tContent('demonstration.labels.terminalTitle')"
           language="bash"
           :code="doDontCommandCode"
+          :show-line-numbers="true"
           data-track="code"
           data-track-id="code-block:do-dont:dont-2"
         />
@@ -637,6 +660,7 @@ const a11yCritCols = computed(() => ({
     <DocsVariants
       :title="tContent('variants.title')"
       :note="tContent('variants.note')"
+      component-slug="code-block"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -774,6 +798,7 @@ const a11yCritCols = computed(() => ({
       :interface-code="INTERFACE_CODE"
       :extensibility-title="tContent('props.extensibilityTitle')"
       :extensibility-notes="tContent('props.extensibility')"
+      :extensibility-code="tContent('props.extensibilityCode')"
     />
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->

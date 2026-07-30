@@ -142,5 +142,55 @@ export const Playground: Story = {
       );
       await expect(root.querySelector('.nds-sr-only')).toHaveTextContent('Copiado!');
     });
+
+    await step('A confirmação é uma região de status polida, não só texto escondido', async () => {
+      // Alcançar por `.nds-sr-only` passaria verde mesmo se o role sumisse — é
+      // o role + aria-live que fazem o leitor de tela anunciar.
+      const status = root.querySelector('[role="status"]');
+      await expect(status).toHaveAttribute('aria-live', 'polite');
+      await expect(status).toHaveTextContent('Copiado!');
+    });
+
+    await step('Numeração e ícone ficam fora da árvore de acessibilidade', async () => {
+      // O número de linha é ruído para quem ouve, e o ícone já é descrito pelo
+      // aria-label do botão.
+      await expect(root.querySelector('.nds-code-block-gutter')).toHaveAttribute('aria-hidden', 'true');
+      await expect(root.querySelector('[data-slot="code-block-copy"] svg')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Depois de 2s o botão volta ao rótulo inicial', async () => {
+      await waitFor(
+        () => expect(canvas.getByRole('button', { name: /copiar código/i })).toBeInTheDocument(),
+        { timeout: 4000 },
+      );
+      await expect(root.querySelector('[role="status"]')?.textContent).toBe('');
+    });
+
+    await step('Tab a partir do botão copiar alcança a região de scroll', async () => {
+      // A região tem tabindex="0" justamente para quem navega sem mouse
+      // conseguir rolar o código.
+      const button = canvas.getByRole('button', { name: /copiar código/i });
+      button.focus();
+      await userEvent.tab();
+      await expect(root.querySelector('.nds-code-block-scroll')).toHaveFocus();
+    });
+
+    await step('Enter no botão copiar aciona a cópia — teclado, não clique', async () => {
+      const writeText = fn((text: string) => Promise.resolve(text));
+      const original = navigator.clipboard;
+      Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+
+      try {
+        await userEvent.tab({ shift: true });
+        await expect(canvas.getByRole('button', { name: /copiar código/i })).toHaveFocus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(writeText).toHaveBeenCalledWith(args.code));
+        await waitFor(() =>
+          expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
+        );
+      } finally {
+        Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
+      }
+    });
   },
 };

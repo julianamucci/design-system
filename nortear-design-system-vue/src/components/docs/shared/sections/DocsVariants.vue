@@ -8,6 +8,12 @@ interface DocsVariantItem {
   name: string;
   description: string;
   code?: string;
+  /**
+   * Chave estável do evento de tracking. Sem ela, cai em `name` — que em seções
+   * como Composições é texto traduzido, e faria o mesmo evento sair com um id
+   * por idioma.
+   */
+  trackId?: string;
 }
 
 /**
@@ -15,7 +21,7 @@ interface DocsVariantItem {
  *
  * Quando `componentSlug` é informado, o botão "Ver código / Ocultar código" de
  * cada variant recebe `data-track="code"` +
- * `data-track-id="{slug}:code:{variant.name}"` +
+ * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
  * `data-track-label="Copiar código"`. Se ausente, `data-track-id` é omitido e
  * o observer ignora o click.
  */
@@ -35,8 +41,10 @@ function toggleCode(i: number) {
   openStates.value[i] = !openStates.value[i];
 }
 
-function trackId(name: string): string | undefined {
-  return props.componentSlug ? `${props.componentSlug}:code:${name}` : undefined;
+function trackId(item: DocsVariantItem): string | undefined {
+  return props.componentSlug
+    ? `${props.componentSlug}:code:${item.trackId ?? item.name}`
+    : undefined;
 }
 </script>
 
@@ -80,7 +88,7 @@ function trackId(name: string): string | undefined {
             size="sm"
             class="nds-px-0"
             data-track="code"
-            :data-track-id="trackId(item.name)"
+            :data-track-id="trackId(item)"
             data-track-label="Copiar código"
             @click="toggleCode(i)"
           >
