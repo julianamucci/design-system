@@ -249,7 +249,7 @@
 /* ── Shortcut (atalho à direita) ─────────────────────────────────────────── */
 .nds-dropdown-menu-shortcut {
   margin-left: auto;
-  padding-left: var(--spacing-3);
+  padding-left: var(--spacing-2);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   color: hsl(var(--muted-foreground));

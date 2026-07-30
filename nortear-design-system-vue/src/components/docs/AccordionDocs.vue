@@ -167,11 +167,6 @@ const openItem = ref('item-1');
   </AccordionItem>
 </Accordion>`;
 
-const codeCustomization = `/* Aumentar separador entre itens */
-.my-accordion .accordion-item {
-  border-bottom-width: 2px;
-  border-color: hsl(var(--border) / 60%);
-}`;
 
 const interfaceCode = `interface AccordionProps {
   type: 'single' | 'multiple';
@@ -840,7 +835,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomization"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

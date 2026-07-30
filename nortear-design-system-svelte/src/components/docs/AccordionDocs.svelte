@@ -148,11 +148,6 @@
   </AccordionItem>
 </Accordion>`;
 
-  const codeCustomization = `/* Aumentar separador entre itens */
-.my-accordion .accordion-item {
-  border-bottom-width: 2px;
-  border-color: hsl(var(--border) / 60%);
-}`;
 
   // Bloco de tipo, não de argumentação: a divergência em relação a outras
   // stacks (ausência de collapsible/defaultValue) é explicada uma única vez,
@@ -816,7 +811,7 @@ type AccordionProps = {
           (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)[$locale]?.tokens?.items ?? {}
         ).map(v => ({ token: v.token, value: v.class, description: v.part }))}
         customizationTitle={$tStore('tokens.customizationTitle')}
-        customizationCode={codeCustomization}
+        customizationCode={$tStore('tokens.customizationCode')}
       />
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->

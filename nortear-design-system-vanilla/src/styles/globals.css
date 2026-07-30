@@ -9,14 +9,6 @@
 @import "./storybook-docs.css";
 
 /* ── Keyframes globais (antes em @theme inline) ──────────────────────────── */
-@keyframes accordion-down {
-  from { height: 0; }
-  to   { height: var(--radix-accordion-content-height); }
-}
-@keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to   { height: 0; }
-}
 @keyframes progress-indeterminate {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }

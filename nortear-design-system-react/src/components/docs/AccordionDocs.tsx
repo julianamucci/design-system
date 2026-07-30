@@ -235,12 +235,6 @@ export function AccordionDocs() {
   </AccordionItem>
 </Accordion>`;
 
-  const codeCustomization = `/* Em globals.css — customizações do Accordion */
-:root {
-  --border: 214 32% 91%;
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-}`;
 
   const interfaceCode = `// Accordion (root) — base-ui
 interface AccordionRootProps {
@@ -849,7 +843,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               description: v.part,
             }))}
             customizationTitle={tContent("tokens.customizationTitle")}
-            customizationCode={codeCustomization}
+            customizationCode={tContent("tokens.customizationCode")}
           />
 
           {/* ── Acessibilidade ────────────────────────────────────────── */}

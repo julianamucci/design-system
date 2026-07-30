@@ -698,6 +698,95 @@ const DEAD_LIB_RX = [
  * '@/lib/sanitize-html'`, um wrapper que não existe em nenhuma stack e que a
  * guideline 09 proíbe. Todo componente novo nasceria com ele.
  */
+/**
+ * `var(--token)` sem fallback apontando para custom property que não existe.
+ *
+ * A regra `unknown_token_reference` cobre só o que está DOCUMENTADO na tabela de
+ * tokens do translations.json. O consumo no CSS ficava de fora, e é onde o erro
+ * realmente aparece: `padding-inline: var(--spacing-3)` compila, não avisa nada e
+ * simplesmente não aplica padding — a declaração inteira é descartada. Foi como o
+ * footer e o gutter do CodeBlock nasceram sem respiro (`--spacing-3` não existe:
+ * são 12px, e a escala é grid de 8).
+ *
+ * `var(--x, fallback)` não conta: o fallback é a intenção declarada.
+ */
+/**
+ * Custom properties que NÃO nascem em CSS: as libs primitivas as escrevem inline
+ * no elemento (posicionamento de popover, altura de viewport) e os nossos
+ * componentes fazem o mesmo via style.setProperty. Sem isto o check acusaria o
+ * contrato público das libs como token inexistente.
+ */
+// --radix- de propósito FORA: o Radix saiu do projeto, então ninguém escreve
+// essas variáveis e um var(--radix-*) sobrevivente é keyframe morto.
+const RUNTIME_TOKEN_PREFIXES = ['--reka-', '--bits-'];
+
+/** Contrato de CSS vars do base-ui, que não usa prefixo. */
+const BASE_UI_TOKENS = new Set([
+  '--positioner-width', '--positioner-height',
+  '--popup-width', '--popup-height',
+  '--available-width', '--available-height',
+  '--transform-origin', '--anchor-width', '--anchor-height',
+]);
+
+/** Tokens que o nosso próprio código define em runtime (style.setProperty). */
+let _runtimeTokens = null;
+function runtimeTokens() {
+  if (_runtimeTokens) return _runtimeTokens;
+  _runtimeTokens = new Set();
+  const files = STACKS.flatMap((st) =>
+    walkDir(join(ROOT, stackDir(st), 'src'), ['.ts', '.tsx', '.vue', '.svelte']),
+  );
+  for (const f of files) {
+    const c = readFile(f) || '';
+    for (const m of c.matchAll(/setProperty\(\s*['"`](--[a-z0-9-]+)/gi)) {
+      _runtimeTokens.add(m[1].toLowerCase());
+    }
+    // style={{ '--x': ... }} / style="--x: ..."
+    for (const m of c.matchAll(/['"`]?(--[a-z0-9-]+)['"`]?\s*:\s*[^;}]/gi)) {
+      _runtimeTokens.add(m[1].toLowerCase());
+    }
+  }
+  return _runtimeTokens;
+}
+
+function auditCssTokenUsage() {
+  const violations = [];
+  const known = definedTokens();
+  const runtime = runtimeTokens();
+  const files = [
+    ...walkDir(join(ROOT, 'docs', 'shared'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ];
+
+  for (const file of files) {
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    // Remove comentários antes de varrer: a menção dentro de /* */ costuma ser o
+    // aviso de que o token NÃO existe ("--spacing-3 (12px) NÃO existe — não usar").
+    const lines = content.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')).split('\n');
+    const seen = new Set();
+
+    lines.forEach((line, i) => {
+      // Sem vírgula dentro do var(): com fallback, a ausência é intencional.
+      for (const m of line.matchAll(/var\(\s*(--[a-z0-9-]+)\s*\)/gi)) {
+        const token = m[1].toLowerCase();
+        if (known.has(token) || seen.has(token)) continue;
+        if (runtime.has(token) || BASE_UI_TOKENS.has(token)) continue;
+        if (RUNTIME_TOKEN_PREFIXES.some((pre) => token.startsWith(pre))) continue;
+        seen.add(token);
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'undefined_token_in_css',
+          message: `var(${token}) sem fallback, e ${token} não é definido em nenhum CSS — a declaração é descartada em silêncio`,
+        });
+      }
+    });
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -975,7 +1064,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = auditDeadLibInfra();
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

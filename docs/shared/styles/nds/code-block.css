@@ -179,7 +179,7 @@
   z-index: 1;
   flex-shrink: 0;
   min-inline-size: 2.75rem;
-  padding-inline: var(--spacing-2) var(--spacing-3);
+  padding-inline: var(--spacing-2);
   background-color: var(--code-block-bg);
   /* Sem alpha: com 0.7 o contraste caía para 2.89:1 e o axe reprovava. Número
    * de linha é informação visual, não decoração — vale o mínimo de 4.5:1. */
@@ -219,7 +219,7 @@
 
 /* ── Footer ─────────────────────────────────────────────────────────────────── */
 .nds-code-block-footer {
-  padding-inline: var(--spacing-3);
+  padding-inline: var(--spacing-4);
   padding-block: var(--spacing-2);
   border-top: 1px solid var(--code-block-border);
   background-color: var(--code-block-header-bg);
