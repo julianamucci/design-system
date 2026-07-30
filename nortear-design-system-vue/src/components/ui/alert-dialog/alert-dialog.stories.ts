@@ -22,14 +22,38 @@ const meta = {
   parameters: {
     docs: { page: withAutoDocsTab(AlertDialogDocs) },
   },
+  // A aba "API Reference" combina o docgen com estes argTypes. Props que o
+  // template não encaminha ficam como documentação (control: false).
   argTypes: {
     defaultOpen: {
       control: 'boolean',
-      description: 'Se o diálogo inicia aberto (útil para capturas visuais).',
+      description: 'Estado inicial em modo não controlado. Útil para capturas visuais.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    unmountOnHide: {
+      control: 'boolean',
+      description: 'Desmonta o conteúdo ao fechar. Desligue para manter o painel no DOM.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    open: {
+      control: false,
+      description: 'Estado controlado de abertura, via v-model:open.',
+      table: { type: { summary: 'boolean' } },
+    },
+    'onUpdate:open': {
+      control: false,
+      description: 'Emitido ao abrir ou fechar. Recebe o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
+    default: {
+      control: false,
+      description: 'Slot de composição: Trigger, Content, Header, Footer, Cancel e Action.',
+      table: { type: { summary: 'slot' } },
     },
   },
   args: {
     defaultOpen: false,
+    unmountOnHide: true,
   },
 } satisfies Meta<typeof AlertDialog>;
 

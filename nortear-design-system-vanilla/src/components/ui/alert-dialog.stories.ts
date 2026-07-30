@@ -109,6 +109,37 @@ function buildDemo(args: AlertDialogArgs, onConfirm?: () => void, onCancel?: () 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  // O renderer html monta o snippet a partir do outerHTML, que é um dump de DOM
+  // e não o que o consumidor escreve. Aqui vai a composição real das factories,
+  // montada a partir dos args para acompanhar os controls.
+  parameters: {
+    docs: {
+      source: {
+        transform: (_generated: string, ctx: { args?: Partial<AlertDialogArgs> }) => {
+          const a = ctx.args ?? {};
+          const actionVariant = a.tone === 'destructive' ? 'destructive' : 'default';
+          return [
+            "import { createAlertDialog } from '@/components/ui/alert-dialog';",
+            "import { createButton } from '@/components/ui/button';",
+            '',
+            `const trigger = createButton({ variant: '${actionVariant}', label: '${a.triggerLabel ?? ''}' });`,
+            `const cancelButton = createButton({ variant: 'outline', label: '${a.cancelLabel ?? ''}' });`,
+            `const actionButton = createButton({ variant: '${actionVariant}', label: '${a.actionLabel ?? ''}' });`,
+            '',
+            'const dialog = createAlertDialog({',
+            '  trigger,',
+            `  title: '${a.title ?? ''}',`,
+            `  description: '${a.description ?? ''}',`,
+            '  cancelButton,',
+            '  actionButton,',
+            '});',
+            '',
+            "document.querySelector('#app')?.append(dialog);",
+          ].join('\n');
+        },
+      },
+    },
+  },
   render: (args) => buildDemo(args, fn(), fn()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
