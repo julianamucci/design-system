@@ -253,12 +253,12 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.off'),      trigger: '—', behavior: tContent('states.descriptions.off')      },
-  { label: tContent('states.items.on'),       trigger: '—', behavior: tContent('states.descriptions.on')       },
-  { label: tContent('states.items.hover'),    trigger: '—', behavior: tContent('states.descriptions.hover')    },
-  { label: tContent('states.items.focus'),    trigger: '—', behavior: tContent('states.descriptions.focus')    },
-  { label: tContent('states.items.disabled'), trigger: '—', behavior: tContent('states.descriptions.disabled') },
-  { label: tContent('states.items.invalid'),  trigger: '—', behavior: tContent('states.descriptions.invalid')  },
+  { label: tContent('states.off.label'),      trigger: tContent('states.off.trigger'),      behavior: tContent('states.off.behavior') },
+  { label: tContent('states.on.label'),       trigger: tContent('states.on.trigger'),       behavior: tContent('states.on.behavior') },
+  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: tContent('states.hover.behavior') },
+  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: tContent('states.focus.behavior') },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: tContent('states.disabled.behavior') },
+  { label: tContent('states.invalid.label'),  trigger: tContent('states.invalid.trigger'),  behavior: tContent('states.invalid.behavior') },
 ]);
 
 const propCols = computed(() => ({
@@ -723,9 +723,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tNav('common.stateName'),
-        trigger: tNav('common.stateTrigger'),
-        behavior: tNav('common.stateBehavior'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

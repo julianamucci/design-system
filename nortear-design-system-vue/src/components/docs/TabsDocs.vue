@@ -273,17 +273,17 @@ const compositionItems = computed(() => [
 ]);
 
 const stateCols = computed(() => ({
-  state: tNav('common.stateName'),
-  trigger: tNav('common.stateTrigger'),
-  behavior: tNav('common.stateBehavior'),
+  state: tContent('states.cols.state'),
+  trigger: tContent('states.cols.trigger'),
+  behavior: tContent('states.cols.behavior'),
 }));
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.default'),  trigger: '—',                       behavior: stripHtml(tContent('states.descriptions.default'))  },
-  { label: tContent('states.items.active'),   trigger: 'Click / Arrow / Home/End', behavior: stripHtml(tContent('states.descriptions.active'))   },
-  { label: tContent('states.items.hover'),    trigger: 'Mouse',                   behavior: stripHtml(tContent('states.descriptions.hover'))    },
-  { label: tContent('states.items.focus'),    trigger: 'Tab',                     behavior: stripHtml(tContent('states.descriptions.focus'))    },
-  { label: tContent('states.items.disabled'), trigger: '—',                       behavior: stripHtml(tContent('states.descriptions.disabled')) },
+  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: stripHtml(tContent('states.default.behavior')) },
+  { label: tContent('states.active.label'),   trigger: tContent('states.active.trigger'),   behavior: stripHtml(tContent('states.active.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -310,7 +310,7 @@ const listPropItems = computed(() => [
 
 const triggerPropItems = computed(() => [
   { name: 'value',    type: 'string',  defaultValue: '—', required: tNav('common.yes') as string, description: stripHtml(tContent('anatomy.item3')) },
-  { name: 'disabled', type: 'boolean', defaultValue: 'false', required: tContent('props.table.value.required'), description: tContent('states.descriptions.disabled').replace(/<[^>]*>/g, '') },
+  { name: 'disabled', type: 'boolean', defaultValue: 'false', required: tContent('props.table.value.required'), description: tContent('states.disabled.behavior').replace(/<[^>]*>/g, '') },
 ]);
 
 const contentPropItems = computed(() => [

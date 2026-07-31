@@ -157,16 +157,8 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  {
-    label: tContent('states.items.decorative'),
-    trigger: 'decorative={true}',
-    behavior: stripHtml(tContent('states.descriptions.decorative')),
-  },
-  {
-    label: tContent('states.items.semantic'),
-    trigger: 'decorative={false}',
-    behavior: stripHtml(tContent('states.descriptions.semantic')),
-  },
+  { label: tContent('states.decorative.label'), trigger: tContent('states.decorative.trigger'), behavior: stripHtml(tContent('states.decorative.behavior')) },
+  { label: tContent('states.semantic.label'),   trigger: tContent('states.semantic.trigger'),   behavior: stripHtml(tContent('states.semantic.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -519,9 +511,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

@@ -205,10 +205,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.idle'),      trigger: '—',                          behavior: stripHtml(tContent('states.descriptions.idle'))      },
-  { label: tContent('states.items.scrolling'), trigger: 'scroll',                     behavior: stripHtml(tContent('states.descriptions.scrolling')) },
-  { label: tContent('states.items.hover'),     trigger: 'mouseover',                  behavior: stripHtml(tContent('states.descriptions.hover'))     },
-  { label: tContent('states.items.focus'),     trigger: 'Tab',                        behavior: stripHtml(tContent('states.descriptions.focus'))     },
+  { label: tContent('states.idle.label'),      trigger: tContent('states.idle.trigger'),      behavior: stripHtml(tContent('states.idle.behavior')) },
+  { label: tContent('states.scrolling.label'), trigger: tContent('states.scrolling.trigger'), behavior: stripHtml(tContent('states.scrolling.behavior')) },
+  { label: tContent('states.hover.label'),     trigger: tContent('states.hover.trigger'),     behavior: stripHtml(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),     trigger: tContent('states.focus.trigger'),     behavior: stripHtml(tContent('states.focus.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -732,9 +732,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('states.title'),
-        trigger: tNav('common.stateTrigger'),
-        behavior: tContent('props.table.description'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

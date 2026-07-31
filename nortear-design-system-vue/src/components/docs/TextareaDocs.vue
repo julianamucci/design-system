@@ -265,18 +265,18 @@ const compositionItems = computed(() => [
 ]);
 
 const stateCols = computed(() => ({
-  state: tNav('common.stateName'),
-  trigger: tNav('common.stateTrigger'),
-  behavior: tNav('common.stateBehavior'),
+  state: tContent('states.cols.state'),
+  trigger: tContent('states.cols.trigger'),
+  behavior: tContent('states.cols.behavior'),
 }));
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.default'),  trigger: '—', behavior: tContent('states.descriptions.default')  },
-  { label: tContent('states.items.focus'),    trigger: '—', behavior: tContent('states.descriptions.focus')    },
-  { label: tContent('states.items.filled'),   trigger: '—', behavior: tContent('states.descriptions.filled')   },
-  { label: tContent('states.items.disabled'), trigger: '—', behavior: tContent('states.descriptions.disabled') },
-  { label: tContent('states.items.invalid'),  trigger: '—', behavior: tContent('states.descriptions.invalid')  },
-  { label: tContent('states.items.readonly'), trigger: '—', behavior: tContent('states.descriptions.readonly') },
+  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: tContent('states.default.behavior') },
+  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: tContent('states.focus.behavior') },
+  { label: tContent('states.filled.label'),   trigger: tContent('states.filled.trigger'),   behavior: tContent('states.filled.behavior') },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: tContent('states.disabled.behavior') },
+  { label: tContent('states.invalid.label'),  trigger: tContent('states.invalid.trigger'),  behavior: tContent('states.invalid.behavior') },
+  { label: tContent('states.readonly.label'), trigger: tContent('states.readonly.trigger'), behavior: tContent('states.readonly.behavior') },
 ]);
 
 const propCols = computed(() => ({

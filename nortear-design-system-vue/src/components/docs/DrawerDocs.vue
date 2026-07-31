@@ -316,9 +316,9 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.closed'),     trigger: '—',          behavior: stripHtml(tContent('states.descriptions.closed'))     },
-  { label: tContent('states.items.open'),       trigger: 'defaultOpen', behavior: stripHtml(tContent('states.descriptions.open'))       },
-  { label: tContent('states.items.controlled'), trigger: 'open + onUpdate:open', behavior: stripHtml(tContent('states.descriptions.controlled')) },
+  { label: tContent('states.closed.label'),     trigger: tContent('states.closed.trigger'),     behavior: stripHtml(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),       trigger: tContent('states.open.trigger'),       behavior: stripHtml(tContent('states.open.behavior')) },
+  { label: tContent('states.controlled.label'), trigger: tContent('states.controlled.trigger'), behavior: stripHtml(tContent('states.controlled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -879,9 +879,9 @@ const a11yCritCols = computed(() => ({
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

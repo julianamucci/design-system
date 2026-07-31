@@ -310,17 +310,17 @@ const compositionItems = computed(() => [
 ]);
 
 const stateCols = computed(() => ({
-  state: tNav('nav.states'),
-  trigger: '—',
-  behavior: tNav('common.expectedResult'),
+  state: tContent('states.cols.state'),
+  trigger: tContent('states.cols.trigger'),
+  behavior: tContent('states.cols.behavior'),
 }));
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.default'),  trigger: '—', behavior: tContent('states.descriptions.default')  },
-  { label: tContent('states.items.selected'), trigger: '—', behavior: tContent('states.descriptions.selected') },
-  { label: tContent('states.items.hover'),    trigger: '—', behavior: tContent('states.descriptions.hover')    },
-  { label: tContent('states.items.focus'),    trigger: '—', behavior: tContent('states.descriptions.focus')    },
-  { label: tContent('states.items.disabled'), trigger: '—', behavior: tContent('states.descriptions.disabled') },
+  { label: tContent('states.default.label'),      trigger: tContent('states.default.trigger'),      behavior: tContent('states.default.behavior') },
+  { label: tContent('states.selected.label'),     trigger: tContent('states.selected.trigger'),     behavior: tContent('states.selected.behavior') },
+  { label: tContent('states.hover.label'),        trigger: tContent('states.hover.trigger'),        behavior: tContent('states.hover.behavior') },
+  { label: tContent('states.focus.label'),        trigger: tContent('states.focus.trigger'),        behavior: tContent('states.focus.behavior') },
+  { label: tContent('states.disabled.label'),     trigger: tContent('states.disabled.trigger'),     behavior: tContent('states.disabled.behavior') },
   { label: tContent('states.disabledItem.label'), trigger: tContent('states.disabledItem.trigger'), behavior: stripHtml(tContent('states.disabledItem.behavior')) },
 ]);
 

@@ -196,10 +196,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.default'),       trigger: 'value=0',          behavior: stripHtml(tContent('states.descriptions.default'))       },
-  { label: tContent('states.items.loading'),       trigger: '0 < value < 100',  behavior: stripHtml(tContent('states.descriptions.loading'))       },
-  { label: tContent('states.items.complete'),      trigger: 'value=100',        behavior: stripHtml(tContent('states.descriptions.complete'))      },
-  { label: tContent('states.items.indeterminate'), trigger: 'value=null',       behavior: stripHtml(tContent('states.descriptions.indeterminate')) },
+  { label: tContent('states.default.label'),       trigger: tContent('states.default.trigger'),       behavior: stripHtml(tContent('states.default.behavior')) },
+  { label: tContent('states.loading.label'),       trigger: tContent('states.loading.trigger'),       behavior: stripHtml(tContent('states.loading.behavior')) },
+  { label: tContent('states.complete.label'),      trigger: tContent('states.complete.trigger'),      behavior: stripHtml(tContent('states.complete.behavior')) },
+  { label: tContent('states.indeterminate.label'), trigger: tContent('states.indeterminate.trigger'), behavior: stripHtml(tContent('states.indeterminate.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -622,9 +622,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

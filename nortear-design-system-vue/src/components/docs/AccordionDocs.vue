@@ -226,10 +226,10 @@ const tokenRows = computed(() => {
 });
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),    trigger: '—',                      behavior: tContent('states.closed.description')              },
-  { label: tContent('states.open.label'),      trigger: 'Click / Enter / Space',  behavior: tContent('states.open.description')                },
-  { label: tContent('states.disabled.label'),  trigger: '—',                      behavior: stripHtml(tContent('states.disabled.description')) },
-  { label: tContent('states.focused.label'),   trigger: 'Tab',                    behavior: tContent('states.focused.description')             },
+  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: tContent('states.closed.behavior') },
+  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: tContent('states.open.behavior') },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
+  { label: tContent('states.focused.label'),  trigger: tContent('states.focused.trigger'),  behavior: tContent('states.focused.behavior') },
 ]);
 
 const modeItems = computed(() => [

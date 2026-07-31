@@ -40,9 +40,9 @@ const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Locale-aware column labels ───────────────────────────────────────────────
 const stateCols = computed(() => ({
-  state: tNav('common.stateName'),
-  trigger: tNav('common.stateTrigger'),
-  behavior: tNav('common.stateBehavior'),
+  state: tContent('states.cols.state'),
+  trigger: tContent('states.cols.trigger'),
+  behavior: tContent('states.cols.behavior'),
 }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -316,11 +316,11 @@ const codeCompInteractive = `const current = ref(3);
 
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.default'),  trigger: '—',                 behavior: stripHtml(tContent('states.descriptions.default'))  },
-  { label: tContent('states.items.hover'),    trigger: 'pointer hover',     behavior: stripHtml(tContent('states.descriptions.hover'))    },
-  { label: tContent('states.items.active'),   trigger: 'isActive',          behavior: stripHtml(tContent('states.descriptions.active'))   },
-  { label: tContent('states.items.disabled'), trigger: 'first/last page',   behavior: stripHtml(tContent('states.descriptions.disabled')) },
-  { label: tContent('states.items.focus'),    trigger: 'Tab',               behavior: stripHtml(tContent('states.descriptions.focus'))    },
+  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: stripHtml(tContent('states.default.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
+  { label: tContent('states.active.label'),   trigger: tContent('states.active.trigger'),   behavior: stripHtml(tContent('states.active.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
   { label: tContent('states.lastPage.label'), trigger: stripHtml(tContent('states.lastPage.trigger')), behavior: stripHtml(tContent('states.lastPage.behavior')) },
 ]);
 

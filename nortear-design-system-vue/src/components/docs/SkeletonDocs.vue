@@ -151,16 +151,8 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  {
-    label: tContent('states.items.default'),
-    trigger: 'animate-pulse',
-    behavior: stripHtml(tContent('states.descriptions.default')),
-  },
-  {
-    label: tContent('states.items.motionReduced'),
-    trigger: 'motion-reduce:animate-none',
-    behavior: stripHtml(tContent('states.descriptions.motionReduced')),
-  },
+  { label: tContent('states.default.label'),       trigger: tContent('states.default.trigger'),       behavior: stripHtml(tContent('states.default.behavior')) },
+  { label: tContent('states.motionReduced.label'), trigger: tContent('states.motionReduced.trigger'), behavior: stripHtml(tContent('states.motionReduced.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -593,9 +585,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

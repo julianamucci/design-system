@@ -304,11 +304,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.closed'),  trigger: 'defaultOpen={false}', behavior: stripHtml(tContent('states.descriptions.closed'))  },
-  { label: tContent('states.items.open'),    trigger: 'defaultOpen={true}',  behavior: stripHtml(tContent('states.descriptions.open'))    },
-  { label: tContent('states.items.hover'),   trigger: 'mouseenter',          behavior: stripHtml(tContent('states.descriptions.hover'))   },
-  { label: tContent('states.items.focus'),   trigger: 'Tab',                 behavior: stripHtml(tContent('states.descriptions.focus'))   },
-  { label: tContent('states.items.delayed'), trigger: 'delayDuration > 0',   behavior: stripHtml(tContent('states.descriptions.delayed')) },
+  { label: tContent('states.closed.label'),  trigger: tContent('states.closed.trigger'),  behavior: stripHtml(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),    trigger: tContent('states.open.trigger'),    behavior: stripHtml(tContent('states.open.behavior')) },
+  { label: tContent('states.hover.label'),   trigger: tContent('states.hover.trigger'),   behavior: stripHtml(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),   trigger: tContent('states.focus.trigger'),   behavior: stripHtml(tContent('states.focus.behavior')) },
+  { label: tContent('states.delayed.label'), trigger: tContent('states.delayed.trigger'), behavior: stripHtml(tContent('states.delayed.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -911,9 +911,9 @@ const a11yCritCols = computed(() => ({
       <DocsStates
         :title="tContent('states.title')"
         :cols="{
-          state: tContent('props.table.prop'),
-          trigger: tContent('usage.scenarios.cols.scenario'),
-          behavior: tContent('usage.scenarios.cols.use'),
+          state: tContent('states.cols.state'),
+          trigger: tContent('states.cols.trigger'),
+          behavior: tContent('states.cols.behavior'),
         }"
         :items="stateItems"
       />

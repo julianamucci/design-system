@@ -244,11 +244,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.idle'),     trigger: '—',                                                       behavior: stripHtml(tContent('states.descriptions.idle'))     },
-  { label: tContent('states.items.hover'),    trigger: 'mouseover',                                               behavior: stripHtml(tContent('states.descriptions.hover'))    },
-  { label: tContent('states.items.dragging'), trigger: 'mousedown + mousemove',                                   behavior: stripHtml(tContent('states.descriptions.dragging')) },
-  { label: tContent('states.items.focus'),    trigger: 'Tab',                                                     behavior: stripHtml(tContent('states.descriptions.focus'))    },
-  { label: tContent('states.items.disabled'), trigger: 'disabled',                                                behavior: stripHtml(tContent('states.descriptions.disabled')) },
+  { label: tContent('states.idle.label'),     trigger: tContent('states.idle.trigger'),     behavior: stripHtml(tContent('states.idle.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
+  { label: tContent('states.dragging.label'), trigger: tContent('states.dragging.trigger'), behavior: stripHtml(tContent('states.dragging.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -926,9 +926,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('states.title'),
-        trigger: tNav('common.stateTrigger'),
-        behavior: tContent('props.table.description'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />

@@ -321,10 +321,10 @@ const compTheme = ref('system');
 
 
 const stateItems = computed(() => [
-  { label: tContent('states.items.closed'),   trigger: '—',              behavior: stripHtml(tContent('states.descriptions.closed'))   },
-  { label: tContent('states.items.open'),     trigger: 'defaultValue',   behavior: stripHtml(tContent('states.descriptions.open'))     },
-  { label: tContent('states.items.disabled'), trigger: 'disabled',       behavior: stripHtml(tContent('states.descriptions.disabled')) },
-  { label: tContent('states.items.checked'),  trigger: 'checked',        behavior: stripHtml(tContent('states.descriptions.checked'))  },
+  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: stripHtml(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: stripHtml(tContent('states.open.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
+  { label: tContent('states.checked.label'),  trigger: tContent('states.checked.trigger'),  behavior: stripHtml(tContent('states.checked.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -821,9 +821,9 @@ const a11yCritCols = computed(() => ({
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
       }"
       :items="stateItems"
     />
