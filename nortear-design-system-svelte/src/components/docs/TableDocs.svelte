@@ -512,11 +512,11 @@ interface TableRowProps {
       <DocsVariants
         title={$tStore('variants.title')}
         items={[
-          { name: $tStore('variants.basic.label'),            description: stripHtml($tStore('variants.basic.description')),            code: codeBasic,          preview: variantBasic          },
-          { name: $tStore('variants.withFooter.label'),       description: stripHtml($tStore('variants.withFooter.description')),       code: codeWithFooter,     preview: variantWithFooter     },
-          { name: $tStore('variants.withSrOnlyCaption.label'),description: stripHtml($tStore('variants.withSrOnlyCaption.description')),code: codeSrOnlyCaption,  preview: variantSrOnlyCaption  },
-          { name: $tStore('variants.withInlineActions.label'),description: stripHtml($tStore('variants.withInlineActions.description')),code: codeInlineActions,  preview: variantInlineActions  },
-          { name: $tStore('variants.withEmptyState.label'),   description: stripHtml($tStore('variants.withEmptyState.description')),   code: codeEmptyState,     preview: variantEmptyState     },
+          { name: $tStore('variants.items.basic.label'),            description: stripHtml($tStore('variants.items.basic.description')),            code: codeBasic,          preview: variantBasic          },
+          { name: $tStore('variants.items.withFooter.label'),       description: stripHtml($tStore('variants.items.withFooter.description')),       code: codeWithFooter,     preview: variantWithFooter     },
+          { name: $tStore('variants.items.withSrOnlyCaption.label'),description: stripHtml($tStore('variants.items.withSrOnlyCaption.description')),code: codeSrOnlyCaption,  preview: variantSrOnlyCaption  },
+          { name: $tStore('variants.items.withInlineActions.label'),description: stripHtml($tStore('variants.items.withInlineActions.description')),code: codeInlineActions,  preview: variantInlineActions  },
+          { name: $tStore('variants.items.withEmptyState.label'),   description: stripHtml($tStore('variants.items.withEmptyState.description')),   code: codeEmptyState,     preview: variantEmptyState     },
         ]}
       />
 

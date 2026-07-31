@@ -142,7 +142,6 @@
 </Pagination>`;
 
   const codeDefault = `<PaginationLink page={pageObj}>2</PaginationLink>`;
-  const codeActive = `<PaginationLink page={pageObj} isActive>3</PaginationLink>`;
   const codeDirectional = `<PaginationPrevious aria-label="Anterior" />
 <PaginationNext aria-label="Próxima" />`;
 
@@ -436,7 +435,6 @@ interface PaginationDirectionalProps {
     componentSlug="pagination"
     items={[
       { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
-      { name: $tStore('variants.items.active'),      description: stripHtml($tStore('variants.styles.active')),      code: codeActive,      preview: variantActive      },
       { name: $tStore('variants.items.directional'), description: stripHtml($tStore('variants.styles.directional')), code: codeDirectional, preview: variantDirectional },
       {
         name: $tStore('variants.items.simple.name'),
@@ -517,23 +515,6 @@ interface PaginationDirectionalProps {
             <PaginationItem>
               {#if p.type !== 'ellipsis'}
                 <PaginationLink page={p} isActive={false} aria-label={`Ir para página ${p.value}`}>
-                  {p.value}
-                </PaginationLink>
-              {/if}
-            </PaginationItem>
-          {/each}
-        </PaginationContent>
-      {/snippet}
-    </Pagination>
-  {/snippet}
-  {#snippet variantActive()}
-    <Pagination count={50} perPage={10} page={3} siblingCount={2}>
-      {#snippet children({ pages, currentPage })}
-        <PaginationContent>
-          {#each pages as p (p.key)}
-            <PaginationItem>
-              {#if p.type !== 'ellipsis'}
-                <PaginationLink page={p} isActive={currentPage === p.value} aria-label={currentPage === p.value ? `Página atual, ${p.value}` : `Ir para página ${p.value}`}>
                   {p.value}
                 </PaginationLink>
               {/if}

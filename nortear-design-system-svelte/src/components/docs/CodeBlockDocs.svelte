@@ -637,7 +637,6 @@ render(items, total);`;
           { label: $tStore('states.copied.label'),          trigger: $tStore('states.copied.trigger'),          behavior: $tStore('states.copied.behavior')          },
           { label: $tStore('states.numbered.label'),        trigger: $tStore('states.numbered.trigger'),        behavior: $tStore('states.numbered.behavior')        },
           { label: $tStore('states.unnumbered.label'),      trigger: $tStore('states.unnumbered.trigger'),      behavior: $tStore('states.unnumbered.behavior')      },
-          { label: $tStore('states.highlighted.label'),     trigger: $tStore('states.highlighted.trigger'),     behavior: $tStore('states.highlighted.behavior')     },
           { label: $tStore('states.scrolling.label'),       trigger: $tStore('states.scrolling.trigger'),       behavior: $tStore('states.scrolling.behavior')       },
           { label: $tStore('states.unknownLanguage.label'), trigger: $tStore('states.unknownLanguage.trigger'), behavior: $tStore('states.unknownLanguage.behavior') },
         ]}

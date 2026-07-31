@@ -596,8 +596,6 @@ interface BreadcrumbEllipsisProps {
     }}
     items={[
       { label: $tStore('states.simple.label'),          trigger: stripHtml($tStore('states.simple.trigger')),          behavior: stripHtml($tStore('states.simple.behavior'))          },
-      { label: $tStore('states.withEllipsis.label'),    trigger: stripHtml($tStore('states.withEllipsis.trigger')),    behavior: stripHtml($tStore('states.withEllipsis.behavior'))    },
-      { label: $tStore('states.customSeparator.label'), trigger: stripHtml($tStore('states.customSeparator.trigger')), behavior: stripHtml($tStore('states.customSeparator.behavior')) },
       { label: $tStore('states.asChildLink.label'),     trigger: stripHtml($tStore('states.asChildLink.trigger')),     behavior: stripHtml($tStore('states.asChildLink.behavior'))     },
     ]}
   />

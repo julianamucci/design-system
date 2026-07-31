@@ -391,10 +391,7 @@ interface BadgeProps extends HTMLAnchorAttributes {
       behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.withIcon.label'),    trigger: stripHtml($tStore('states.withIcon.trigger')),    behavior: stripHtml($tStore('states.withIcon.behavior'))    },
       { label: $tStore('states.countBadge.label'),  trigger: stripHtml($tStore('states.countBadge.trigger')),  behavior: stripHtml($tStore('states.countBadge.behavior'))  },
-      { label: $tStore('states.asLink.label'),      trigger: stripHtml($tStore('states.asLink.trigger')),      behavior: stripHtml($tStore('states.asLink.behavior'))      },
-      { label: $tStore('states.asTrigger.label'),   trigger: stripHtml($tStore('states.asTrigger.trigger')),   behavior: stripHtml($tStore('states.asTrigger.behavior'))   },
     ]}
   />
 

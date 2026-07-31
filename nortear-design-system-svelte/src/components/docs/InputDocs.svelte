@@ -354,12 +354,12 @@ interface InputProps extends HTMLInputAttributes {
         title={$tStore('variants.title')}
         componentSlug="input"
         items={[
-          { name: 'text',     description: $tStore('variants.types.text'),     code: codeDefault,   preview: variantText     },
-          { name: 'email',    description: $tStore('variants.types.email'),    code: codeEmail,     preview: variantEmail    },
-          { name: 'password', description: $tStore('variants.types.password'), code: codePassword,  preview: variantPassword },
+          { name: 'text',     description: $tStore('variants.items.types.text'),     code: codeDefault,   preview: variantText     },
+          { name: 'email',    description: $tStore('variants.items.types.email'),    code: codeEmail,     preview: variantEmail    },
+          { name: 'password', description: $tStore('variants.items.types.password'), code: codePassword,  preview: variantPassword },
           { name: 'disabled', description: $tStore('states.disabled.behavior'), code: codeDisabled, preview: variantDisabled },
           { name: 'error',    description: $tStore('states.error.behavior'),   code: codeError,     preview: variantError    },
-          { name: 'file',     description: $tStore('variants.types.file'),     code: codeFile,      preview: variantFile     },
+          { name: 'file',     description: $tStore('variants.items.types.file'),     code: codeFile,      preview: variantFile     },
         ]}
       />
 

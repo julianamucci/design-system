@@ -744,7 +744,6 @@ interface CommandLoadingProps {
       { label: $tStore('states.selected.label'), trigger: stripHtml($tStore('states.selected.trigger')), behavior: $tStore('states.selected.behavior') },
       { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.trigger')), behavior: $tStore('states.disabled.behavior') },
       { label: $tStore('states.loading.label'),  trigger: stripHtml($tStore('states.loading.trigger')),  behavior: $tStore('states.loading.behavior')  },
-      { label: $tStore('states.withDisabled.label'), trigger: stripHtml($tStore('states.withDisabled.trigger')), behavior: stripHtml($tStore('states.withDisabled.behavior')) },
       { label: $tStore('states.longList.label'),     trigger: stripHtml($tStore('states.longList.trigger')),     behavior: stripHtml($tStore('states.longList.behavior'))     },
     ]}
   />

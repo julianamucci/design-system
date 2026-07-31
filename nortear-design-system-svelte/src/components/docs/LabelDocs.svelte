@@ -283,7 +283,7 @@ interface LabelProps {
     items={[
       {
         name: 'default',
-        description: stripHtml($tStore('variants.default.description')),
+        description: stripHtml($tStore('variants.items.default.description')),
         code: codeDefault,
         preview: variantDefault,
       },

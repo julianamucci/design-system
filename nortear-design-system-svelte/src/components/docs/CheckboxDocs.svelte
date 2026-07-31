@@ -94,16 +94,6 @@ import { Label } from "@/components/ui/label";`;
 
   const codeDefault = `<Checkbox id="termos" />`;
 
-  const codeChecked = `<script lang="ts">
-  let checked = $state(true);
-<\/script>
-<Checkbox id="termos" bind:checked />`;
-
-  const codeIndeterminate = `<script lang="ts">
-  let indeterminate = $state(true);
-<\/script>
-<Checkbox id="selecionar-todos" bind:indeterminate />`;
-
   const codeWithLabel = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="termos" />
   <Label for="termos">Aceito os termos e condições</Label>
@@ -148,9 +138,6 @@ import { Label } from "@/components/ui/label";`;
 
   // variant previews
   let varDefaultChecked = $state(false);
-  let varCheckedVal = $state(true);
-  let varIndeterminateVal = $state(false);
-  let varIndeterminateFlag = $state(true);
   let varWithLabelChecked = $state(false);
   let varWithDescChecked = $state(false);
 
@@ -433,18 +420,6 @@ import { Label } from "@/components/ui/label";`;
         preview: variantDefault,
       },
       {
-        name: 'checked',
-        description: stripHtml($tStore('variants.items.checked')),
-        code: codeChecked,
-        preview: variantChecked,
-      },
-      {
-        name: 'indeterminate',
-        description: stripHtml($tStore('variants.items.indeterminate')),
-        code: codeIndeterminate,
-        preview: variantIndeterminate,
-      },
-      {
         name: 'withLabel',
         description: stripHtml($tStore('variants.items.withLabel')),
         code: codeWithLabel,
@@ -461,14 +436,6 @@ import { Label } from "@/components/ui/label";`;
 
   {#snippet variantDefault()}
     <Checkbox id="var-default" bind:checked={varDefaultChecked} />
-  {/snippet}
-
-  {#snippet variantChecked()}
-    <Checkbox id="var-checked" bind:checked={varCheckedVal} />
-  {/snippet}
-
-  {#snippet variantIndeterminate()}
-    <Checkbox id="var-indeterminate" bind:checked={varIndeterminateVal} bind:indeterminate={varIndeterminateFlag} />
   {/snippet}
 
   {#snippet variantWithLabel()}

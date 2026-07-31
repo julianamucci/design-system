@@ -534,8 +534,6 @@ interface CardPartProps {
       { label: $tStore('states.default.label'),     trigger: $tStore('states.default.trigger'),                behavior: stripHtml($tStore('states.default.behavior'))     },
       { label: $tStore('states.small.label'),       trigger: stripHtml($tStore('states.small.trigger')),       behavior: stripHtml($tStore('states.small.behavior'))       },
       { label: $tStore('states.interactive.label'), trigger: stripHtml($tStore('states.interactive.trigger')), behavior: stripHtml($tStore('states.interactive.behavior')) },
-      { label: $tStore('states.withImage.label'),   trigger: stripHtml($tStore('states.withImage.trigger')),   behavior: stripHtml($tStore('states.withImage.behavior'))   },
-      { label: $tStore('states.withFooter.label'),  trigger: stripHtml($tStore('states.withFooter.trigger')),  behavior: stripHtml($tStore('states.withFooter.behavior'))  },
     ]}
   />
 

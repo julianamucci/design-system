@@ -771,10 +771,6 @@ interface CarouselNavProps extends ButtonProps {
       behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.single.label'),   trigger: stripHtml($tStore('states.single.trigger')),   behavior: $tStore('states.single.behavior')   },
-      { label: $tStore('states.multi.label'),    trigger: stripHtml($tStore('states.multi.trigger')),    behavior: stripHtml($tStore('states.multi.behavior')) },
-      { label: $tStore('states.autoplay.label'), trigger: stripHtml($tStore('states.autoplay.trigger')), behavior: stripHtml($tStore('states.autoplay.behavior')) },
-      { label: $tStore('states.vertical.label'), trigger: stripHtml($tStore('states.vertical.trigger')), behavior: $tStore('states.vertical.behavior') },
       { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.trigger')), behavior: stripHtml($tStore('states.disabled.behavior')) },
     ]}
   />

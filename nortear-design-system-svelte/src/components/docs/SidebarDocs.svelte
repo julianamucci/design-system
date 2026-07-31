@@ -146,6 +146,9 @@ import uiTranslations from '@/i18n/ui.json';
     { icon: User,            label: 'demonstration.labels.profile',   isActive: false },
   ];
 
+  /** Último segmento de uma chave de i18n — usado como rótulo curto em analytics. */
+  const leafKey = (key: string) => key.slice(key.lastIndexOf('.') + 1);
+
   // ─── Code strings ─────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import * as Sidebar from '@/components/ui/sidebar';`;
@@ -288,7 +291,7 @@ interface SidebarMenuButtonProps {
                             isActive={item.isActive}
                             tooltip={$tStore(item.label)}
                             aria-current={item.isActive ? 'page' : undefined}
-                            onclick={() => track('navigation_click', { component: 'sidebar', label: item.label.split('.').pop() ?? item.label, destination: `#${item.label.split('.').pop()}`, location: 'docs_demo' })}
+                            onclick={() => track('navigation_click', { component: 'sidebar', label: leafKey(item.label), destination: `#${leafKey(item.label)}`, location: 'docs_demo' })}
                           >
                             <item.icon aria-hidden="true" />
                             <span>{$tStore(item.label)}</span>
@@ -589,12 +592,12 @@ interface SidebarMenuButtonProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="sidebar"
     items={[
-      { name: 'sidebar',    description: $tStore('variants.sidebar'),    code: codeVariantSidebar,   preview: variantSidebar   },
-      { name: 'floating',   description: $tStore('variants.floating'),   code: codeVariantFloating,  preview: variantFloating  },
-      { name: 'inset',      description: $tStore('variants.inset'),      code: codeVariantInset,     preview: variantInset     },
-      { name: 'icon',       description: $tStore('variants.icon'),       code: codeCollapsibleIcon,  preview: variantIcon      },
-      { name: 'none',       description: $tStore('variants.none'),       code: codeCollapsibleNone,  preview: variantNone      },
-      { name: 'right',      description: $tStore('variants.right'),      code: codeSideRight,        preview: variantRight     },
+      { name: 'sidebar',    description: $tStore('variants.items.sidebar'),    code: codeVariantSidebar,   preview: variantSidebar   },
+      { name: 'floating',   description: $tStore('variants.items.floating'),   code: codeVariantFloating,  preview: variantFloating  },
+      { name: 'inset',      description: $tStore('variants.items.inset'),      code: codeVariantInset,     preview: variantInset     },
+      { name: 'icon',       description: $tStore('variants.items.icon'),       code: codeCollapsibleIcon,  preview: variantIcon      },
+      { name: 'none',       description: $tStore('variants.items.none'),       code: codeCollapsibleNone,  preview: variantNone      },
+      { name: 'right',      description: $tStore('variants.items.right'),      code: codeSideRight,        preview: variantRight     },
       {
         name: $tStore('variants.items.withSubMenu.name'),
         description: $tStore('variants.items.withSubMenu.description'),

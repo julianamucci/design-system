@@ -451,10 +451,10 @@ type AccordionProps = {
         id="variantes"
         title={$tStore('variants.title')}
         items={[
-          { name: $tStore('variants.single.label'),      description: stripHtml($tStore('variants.single.description')),      code: codeSingle,      preview: modeSingle      },
-          { name: $tStore('variants.multiple.label'),    description: stripHtml($tStore('variants.multiple.description')),    code: codeMultiple,    preview: modeMultiple    },
-          { name: $tStore('variants.controlled.label'),  description: stripHtml($tStore('variants.controlled.description')),  code: codeControlled,  preview: modeControlled  },
-          { name: $tStore('variants.defaultOpen.label'), description: stripHtml($tStore('variants.defaultOpen.description')), code: codeSingle,      preview: modeDefaultOpen },
+          { name: $tStore('variants.items.single.label'),      description: stripHtml($tStore('variants.items.single.description')),      code: codeSingle,      preview: modeSingle      },
+          { name: $tStore('variants.items.multiple.label'),    description: stripHtml($tStore('variants.items.multiple.description')),    code: codeMultiple,    preview: modeMultiple    },
+          { name: $tStore('variants.items.controlled.label'),  description: stripHtml($tStore('variants.items.controlled.description')),  code: codeControlled,  preview: modeControlled  },
+          { name: $tStore('variants.items.defaultOpen.label'), description: stripHtml($tStore('variants.items.defaultOpen.description')), code: codeSingle,      preview: modeDefaultOpen },
         ]}
       />
 

@@ -136,12 +136,6 @@
 
   const codeDeterminate = `<Progress value={42} aria-label="Progresso do upload" />`;
 
-  const codeIndeterminate = `<Progress
-  value={null}
-  aria-label="Processando dados"
-  class="nds-progress-indeterminate-wrap"
-/>`;
-
   const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster nds-text-body" data-justify="between">
     <span class="nds-text-foreground">Enviando arquivo</span>
@@ -350,7 +344,6 @@ interface ProgressProps {
     title={$tStore('variants.title')}
     items={[
       { name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
-      { name: $tStore('variants.items.indeterminate'), description: stripHtml($tStore('variants.styles.indeterminate')), code: codeIndeterminate, preview: variantIndeterminate },
       { name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
     ]}
   />
@@ -358,11 +351,6 @@ interface ProgressProps {
   {#snippet variantDeterminate()}
     <div class="nds-w-full">
       <Progress value={42} aria-label="Progresso do upload" />
-    </div>
-  {/snippet}
-  {#snippet variantIndeterminate()}
-    <div class="nds-w-full">
-      <Progress value={null} aria-label="Processando dados" class="nds-progress-indeterminate-wrap" />
     </div>
   {/snippet}
   {#snippet variantWithLabel()}
