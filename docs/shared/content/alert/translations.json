@@ -326,7 +326,7 @@
           "priority": "medium"
         },
         "item5": {
-          "action": "Aplicar variante success via className",
+          "action": "Renderizar variante success",
           "result": "Fundo, borda e ícone em --success; texto corrido em --foreground",
           "priority": "medium"
         },
@@ -373,7 +373,7 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variantes — default, destructive, success, warning",
+          "story": "Variantes — default, destructive, success, warning, info",
           "priority": "high"
         },
         "item3": {
@@ -738,7 +738,7 @@
           "priority": "medium"
         },
         "item5": {
-          "action": "Apply success variant via className",
+          "action": "Render success variant",
           "result": "Background, border, and icon in --success; body text in --foreground",
           "priority": "medium"
         },
@@ -785,7 +785,7 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variants — default, destructive, success, warning",
+          "story": "Variants — default, destructive, success, warning, info",
           "priority": "high"
         },
         "item3": {
@@ -1150,7 +1150,7 @@
           "priority": "medium"
         },
         "item5": {
-          "action": "Aplicar variante success vía className",
+          "action": "Renderizar variante success",
           "result": "Fondo, borde e ícono en --success; texto corrido en --foreground",
           "priority": "medium"
         },
@@ -1197,7 +1197,7 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Variantes — default, destructive, success, warning",
+          "story": "Variantes — default, destructive, success, warning, info",
           "priority": "high"
         },
         "item3": {
