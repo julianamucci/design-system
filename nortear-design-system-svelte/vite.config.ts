@@ -31,6 +31,9 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          // Docs pages inteiras sob axe (suíte QA/Docs Smoke) estouram os
+          // 15s default do vitest.
+          testTimeout: 120_000,
           browser: {
             enabled: true,
             headless: true,

@@ -220,14 +220,13 @@ interface InputOTPProps {
           bind:value={sixValue}
           aria-label={stripHtml($tStore('demonstration.labels.sixDigits'))}
         >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
+          {#snippet children({ cells })}
+            <InputOTPGroup>
+              {#each cells as cell, i (i)}
+                <InputOTPSlot {cell} />
+              {/each}
+            </InputOTPGroup>
+          {/snippet}
         </InputOTP>
       </div>
 
@@ -241,12 +240,13 @@ interface InputOTPProps {
           bind:value={fourValue}
           aria-label={stripHtml($tStore('demonstration.labels.fourDigits'))}
         >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-          </InputOTPGroup>
+          {#snippet children({ cells })}
+            <InputOTPGroup>
+              {#each cells as cell, i (i)}
+                <InputOTPSlot {cell} />
+              {/each}
+            </InputOTPGroup>
+          {/snippet}
         </InputOTP>
       </div>
 
@@ -260,17 +260,19 @@ interface InputOTPProps {
           bind:value={sepValue}
           aria-label={stripHtml($tStore('demonstration.labels.withSeparator'))}
         >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
+          {#snippet children({ cells })}
+            <InputOTPGroup>
+              {#each cells.slice(0, 3) as cell, i (i)}
+                <InputOTPSlot {cell} />
+              {/each}
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              {#each cells.slice(3) as cell, i (i)}
+                <InputOTPSlot {cell} />
+              {/each}
+            </InputOTPGroup>
+          {/snippet}
         </InputOTP>
       </div>
 
@@ -285,14 +287,13 @@ interface InputOTPProps {
           pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
           aria-label={stripHtml($tStore('demonstration.labels.alphanumeric'))}
         >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
+          {#snippet children({ cells })}
+            <InputOTPGroup>
+              {#each cells as cell, i (i)}
+                <InputOTPSlot {cell} />
+              {/each}
+            </InputOTPGroup>
+          {/snippet}
         </InputOTP>
       </div>
     </div>
@@ -532,14 +533,13 @@ interface InputOTPProps {
     <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-label-otp">Código de verificação</Label>
       <InputOTP id="comp-label-otp" maxlength={6} bind:value={compLabelValue} aria-label="Código de verificação">
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
+        {#snippet children({ cells })}
+          <InputOTPGroup>
+            {#each cells as cell, i (i)}
+              <InputOTPSlot {cell} />
+            {/each}
+          </InputOTPGroup>
+        {/snippet}
       </InputOTP>
     </div>
   {/snippet}
@@ -548,14 +548,13 @@ interface InputOTPProps {
     <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-help-otp">Código de verificação</Label>
       <InputOTP id="comp-help-otp" maxlength={6} bind:value={compHelpValue} aria-describedby="comp-help-otp-text" aria-label="Código de verificação">
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
+        {#snippet children({ cells })}
+          <InputOTPGroup>
+            {#each cells as cell, i (i)}
+              <InputOTPSlot {cell} />
+            {/each}
+          </InputOTPGroup>
+        {/snippet}
       </InputOTP>
       <p id="comp-help-otp-text" class="nds-text-caption nds-text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>
     </div>
@@ -565,14 +564,13 @@ interface InputOTPProps {
     <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-err-otp">Código de verificação</Label>
       <InputOTP id="comp-err-otp" maxlength={6} bind:value={compErrorValue} aria-invalid="true" aria-describedby="comp-err-otp-text" aria-label="Código de verificação">
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
+        {#snippet children({ cells })}
+          <InputOTPGroup>
+            {#each cells as cell, i (i)}
+              <InputOTPSlot {cell} />
+            {/each}
+          </InputOTPGroup>
+        {/snippet}
       </InputOTP>
       <p id="comp-err-otp-text" class="nds-text-caption nds-text-destructive">Código incorreto. Verifique e tente novamente.</p>
     </div>
@@ -582,14 +580,13 @@ interface InputOTPProps {
     <div class="nds-stack" data-spacing="sm" style="contain: layout">
       <Label for="comp-resend-otp">Código de verificação</Label>
       <InputOTP id="comp-resend-otp" maxlength={6} bind:value={compResendValue} aria-label="Código de verificação">
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
+        {#snippet children({ cells })}
+          <InputOTPGroup>
+            {#each cells as cell, i (i)}
+              <InputOTPSlot {cell} />
+            {/each}
+          </InputOTPGroup>
+        {/snippet}
       </InputOTP>
       <div class="nds-cluster" data-spacing="sm" data-align="center" data-justify="between">
         <p class="nds-text-caption nds-text-muted-foreground">Não recebeu?</p>
