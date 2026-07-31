@@ -93,10 +93,10 @@ não de lint.
 
 ## Skills órfãs pré-históricas — decisão de remoção pendente
 
- tem 4 arquivos
+`nortear-design-system-react/guidelines/.claude/skills/` tem 4 arquivos
 (skill-document-component, skill-implement-component, skill-create-showcase,
 skill-implement-docs-page) que NADA referencia — são o sistema de skills
-anterior ao , e ensinam a API de duas gerações atrás
-('variantes customizadas sempre via className'). Foi deles + RULES.md que as
+anterior ao `.claude/commands/`, e ensinam a API de duas gerações atrás
+("variantes customizadas sempre via className"). Foi deles + RULES.md que as
 stories erradas de Success/Warning se regeneravam. Apagar é decisão da dona do
 repo; enquanto existirem, são reservatório de padrão morto.

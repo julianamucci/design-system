@@ -62,12 +62,11 @@ canvas.style.color = `hsl(var(--chart-1))`;
 Aplicar via `className` — não via atributo especial:
 
 ```ts
-// ✅ CORRETO — via className com tokens
-const alert = createAlert({ message: 'Atenção' });
-alert.className = cn(alert.className, 'bg-warning/10 text-warning border-warning/30');
+// ✅ CORRETO — variante é opção da factory (desde PATCHES.md#alert-five-variants)
+createAlert({ variant: 'warning' });
 
-// ❌ ERRADO — atributo inexistente
-createAlert({ variant: 'warning', message: 'Atenção' });
+// ❌ ERRADO — classes soltas (bg-warning/10 etc. nem existem mais no CSS)
+alert.className = cn(alert.className, 'bg-warning/10 text-warning border-warning/30');
 ```
 
 ## Temas

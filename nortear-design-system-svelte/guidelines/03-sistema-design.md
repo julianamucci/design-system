@@ -59,15 +59,16 @@
 
 ## Tokens de cor de estado
 
-Aplicar via `class` — nunca via prop inexistente:
+Variantes semânticas são valores da prop `variant` (desde
+PATCHES.md#alert-five-variants) — nunca classes soltas:
 
 ```svelte
-<!-- ✅ CORRETO — via class com tokens -->
-<Alert class="bg-warning/10 text-warning border-warning/30">
+<!-- ✅ CORRETO — prop de variante -->
+<Alert variant="warning">
   Atenção
 </Alert>
 
-<!-- ❌ ERRADO — prop inexistente -->
+<!-- ❌ ERRADO — classes soltas (bg-warning/10 etc. nem existem mais no CSS) -->
 <Alert variant="warning">Atenção</Alert>
 ```
 
