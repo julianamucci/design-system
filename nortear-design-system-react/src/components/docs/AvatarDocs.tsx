@@ -177,22 +177,6 @@ import { User } from "lucide-react";`;
   />
 </div>`;
 
-  const codeCustomizationTokens = `/* globals.css — tokens semânticos que o Avatar consome */
-:root {
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --background: 0 0% 100%;
-  --primary: 221 83% 53%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --background: 222 47% 11%;
-  --primary: 217 91% 60%;
-}`;
-
   const interfaceCode = `// Avatar
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
   className?: string;
@@ -709,11 +693,12 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           { token: "--background",        value: "ring-background",          description: stripHtml(tContent("tokens.table.background")) },
           { token: "--border",            value: "border",                   description: tContent("tokens.table.border") },
           { token: "--primary",           value: "bg-primary",               description: tContent("tokens.table.primary") },
+          { token: "--avatar-size",       value: "var(--spacing-8)",         description: tContent("tokens.table.avatarSize") },
           { token: "--radius",            value: "rounded-full",             description: stripHtml(tContent("tokens.table.radius")) },
           { token: "--ring",              value: "nds-focus-ring",  description: tContent("tokens.table.ring") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}

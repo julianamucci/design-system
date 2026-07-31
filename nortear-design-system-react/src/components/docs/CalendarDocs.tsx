@@ -191,22 +191,6 @@ import { ptBR } from "react-day-picker/locale";
   locale={ptBR}
 />`;
 
-  const codeCustomizationTokens = `/* Em globals.css — tokens utilizados */
-:root {
-  --primary: 222 47% 11%;
-  --primary-foreground: 210 40% 98%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --primary: 210 40% 98%;
-  --primary-foreground: 222 47% 11%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-}`;
-
   const interfaceCode = `// Calendar
 interface CalendarProps extends React.ComponentProps<typeof DayPicker> {
   buttonVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
@@ -649,11 +633,11 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           { token: "--muted-foreground",   value: "nds-text-muted-foreground",              description: tContent("tokens.table.mutedForeground") },
           { token: "--foreground",         value: "text-foreground",                    description: tContent("tokens.table.foreground") },
           { token: "--ring",               value: "ring-ring",                          description: tContent("tokens.table.ring") },
-          { token: "--cell-radius",        value: "rounded-(--cell-radius)",            description: stripHtml(tContent("tokens.table.cellRadius")) },
-          { token: "--cell-size",          value: "size-(--cell-size)",                 description: stripHtml(tContent("tokens.table.cellSize")) },
+          { token: "--nds-cell-size",      value: "2rem",                               description: stripHtml(tContent("tokens.table.cellSize")) },
+          { token: "--nds-cell-radius",    value: "var(--radius-md)",                   description: stripHtml(tContent("tokens.table.cellRadius")) },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}

@@ -169,17 +169,6 @@ import { Info } from "lucide-react";`;
   </AlertDescription>
 </Alert>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — definir tokens semânticos */
-:root {
-  --success: 142 76% 36%;
-  --warning: 38 92% 50%;
-}
-
-.dark {
-  --success: 142 69% 58%;
-  --warning: 48 96% 53%;
-}`;
-
   const interfaceCode = `// Alert
 interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof alertVariants> {}
@@ -637,10 +626,13 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               { token: "--destructive", value: "hsl(var(--destructive))", description: tContent("tokens.table.destructiveText") },
               { token: "--success", value: ".nds-alert-success", description: tContent("tokens.table.success") },
               { token: "--warning", value: ".nds-alert-warning", description: tContent("tokens.table.warning") },
+              { token: "--alert-bg", value: "hsl(var(--card))", description: tContent("tokens.table.alertBg") },
+              { token: "--alert-fg", value: "hsl(var(--card-foreground))", description: tContent("tokens.table.alertFg") },
+              { token: "--alert-border", value: "hsl(var(--border))", description: tContent("tokens.table.alertBorder") },
               { token: "--radius", value: "var(--radius-alert, 0.625rem)", description: tContent("tokens.table.radius") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
-            customizationCode={codeCustomizationTokens}
+            customizationCode={tContent("tokens.customizationCode")}
           />
 
           {/* ── Acessibilidade ────────────────────────────────────────── */}

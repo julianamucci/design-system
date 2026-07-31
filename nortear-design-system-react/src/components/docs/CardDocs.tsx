@@ -234,22 +234,6 @@ export function CardDocs() {
   </CardContent>
 </Card>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — tokens do Card */
-:root {
-  --radius-card: 0.75rem;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-}
-
-.dark {
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-}`;
-
   const interfaceCode = `// Card
 interface CardProps extends React.ComponentProps<"div"> {
   size?: "default" | "sm";
@@ -814,9 +798,12 @@ interface CardProps extends React.ComponentProps<"div"> {
           { token: "--muted-foreground",  value: "nds-text-muted-foreground",     description: tContent("tokens.table.mutedForeground") },
           { token: "--foreground",        value: "ring-foreground/10",        description: stripHtml(tContent("tokens.table.foreground")) },
           { token: "--border",            value: "border-t",                  description: tContent("tokens.table.border") },
+          { token: "--card-bg",           value: "hsl(var(--card))",          description: tContent("tokens.table.cardBg") },
+          { token: "--card-fg",           value: "hsl(var(--card-foreground))", description: tContent("tokens.table.cardFg") },
+          { token: "--card-ring",         value: "hsl(var(--foreground) / 0.1)", description: tContent("tokens.table.cardRing") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}

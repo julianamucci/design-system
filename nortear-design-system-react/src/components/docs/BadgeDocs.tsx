@@ -130,19 +130,6 @@ import { CheckCircle2 } from "lucide-react";`;
   const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
   const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — ajustar tokens semânticos */
-:root {
-  --primary: 222 47% 11%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --destructive: 0 84% 60%;
-}
-
-.dark {
-  --primary: 210 40% 98%;
-  --primary-foreground: 222 47% 11%;
-}`;
-
   const interfaceCode = `// Badge
 interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -509,9 +496,12 @@ const badgeVariants = cva(
           { token: "--foreground", value: "text-foreground", description: tContent("tokens.table.foreground") },
           { token: "--ring", value: "focus:ring-ring", description: tContent("tokens.table.ring") },
           { token: "--background", value: "focus:ring-offset-background", description: tContent("tokens.table.background") },
+          { token: "--badge-bg", value: "hsl(var(--primary))", description: tContent("tokens.table.badgeBg") },
+          { token: "--badge-fg", value: "hsl(var(--primary-foreground))", description: tContent("tokens.table.badgeFg") },
+          { token: "--badge-border", value: "transparent", description: tContent("tokens.table.badgeBorder") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
