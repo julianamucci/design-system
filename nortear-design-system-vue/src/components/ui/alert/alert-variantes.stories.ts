@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 
@@ -90,5 +90,66 @@ export const Warning: Story = {
     const alert = within(canvasElement).getByRole('alert');
     await expect(alert).toHaveClass('nds-alert-warning');
     await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
+  },
+};
+
+const dismissSpy = fn();
+
+export const Dismissible: Story = {
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
+    setup() { return { onDismiss: dismissSpy }; },
+    template: `
+      <Alert variant="success" dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
+        <CheckCircle2 class="nds-icon" aria-hidden="true" />
+        <AlertTitle>Perfil atualizado</AlertTitle>
+        <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
+      </Alert>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    dismissSpy.mockClear();
+    const canvas = within(canvasElement);
+
+    await step('Botão de fechar é visível e acessível por rótulo', async () => {
+      const closeButton = canvas.getByRole('button', { name: 'Fechar alerta' });
+      await expect(closeButton).toBeVisible();
+    });
+
+    await step('Clique remove o alert e dispara o emit uma única vez', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+      await expect(canvas.queryByRole('alert')).toBeNull();
+      await expect(dismissSpy).toHaveBeenCalledTimes(1);
+    });
+  },
+};
+
+const dismissKeyboardSpy = fn();
+
+export const DismissibleTeclado: Story = {
+  name: 'Dismissible (teclado)',
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, Info },
+    setup() { return { onDismiss: dismissKeyboardSpy }; },
+    template: `
+      <Alert dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
+        <Info class="nds-icon" aria-hidden="true" />
+        <AlertTitle>Atenção</AlertTitle>
+        <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
+      </Alert>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    dismissKeyboardSpy.mockClear();
+    const canvas = within(canvasElement);
+
+    await step('Enter no botão focado remove o alert e dispara o emit uma única vez', async () => {
+      const closeButton = canvas.getByRole('button', { name: 'Fechar alerta' });
+      closeButton.focus();
+      await expect(closeButton).toHaveFocus();
+      await userEvent.keyboard('{Enter}');
+      await expect(canvas.queryByRole('alert')).toBeNull();
+      await expect(dismissKeyboardSpy).toHaveBeenCalledTimes(1);
+    });
   },
 };

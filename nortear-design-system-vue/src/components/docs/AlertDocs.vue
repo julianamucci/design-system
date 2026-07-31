@@ -165,11 +165,24 @@ const codeWithoutTitle = `<Alert>
   </AlertDescription>
 </Alert>`;
 
+const codeDismissible = `<Alert dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
+  <Info aria-hidden="true" />
+  <AlertTitle>Atenção</AlertTitle>
+  <AlertDescription>
+    Suas alterações serão aplicadas na próxima sessão.
+  </AlertDescription>
+</Alert>`;
+
 const interfaceCode = `// Alert
 interface AlertProps {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   class?: string;
+  dismissible?: boolean;   // exibe o botão de fechar
+  dismissLabel?: string;   // rótulo acessível do botão — padrão: 'Fechar alerta'
 }
+
+// Emits
+// @dismiss — disparado uma única vez ao acionar o botão de fechar
 
 // AlertTitle / AlertDescription aceitam atributos HTML nativos`;
 
@@ -188,7 +201,18 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
+  { name: tContent('variants.items.dismissible.name'), description: tContent('variants.items.dismissible.description'), useWhen: tContent('variants.items.dismissible.use'), code: codeDismissible },
 ]);
+
+// Primeira emissão real do evento alert_dismiss — o primitivo não importa
+// analytics; o tracking é responsabilidade do consumidor via emit @dismiss.
+function onDemoDismiss() {
+  track('alert_dismiss', {
+    component: 'alert',
+    label: 'dismissible',
+    location: 'docs_demo',
+  });
+}
 
 const compositionItems = computed(() => [
   {
@@ -210,6 +234,7 @@ const stateItems = computed(() => [
   { label: tContent('states.withoutTitle.label'),  trigger: stripHtml(tContent('states.withoutTitle.trigger')),  behavior: tContent('states.withoutTitle.behavior')                 },
   { label: tContent('states.withoutIcon.label'),   trigger: tContent('states.withoutIcon.trigger'),              behavior: tContent('states.withoutIcon.behavior')                  },
   { label: tContent('states.dynamicInsert.label'), trigger: tContent('states.dynamicInsert.trigger'),            behavior: stripHtml(tContent('states.dynamicInsert.behavior'))    },
+  { label: tContent('states.dismissed.label'),     trigger: tContent('states.dismissed.trigger'),                behavior: tContent('states.dismissed.behavior')                    },
 ]);
 
 const propCols = computed(() => ({
@@ -221,6 +246,9 @@ const propCols = computed(() => ({
 const alertPropItems = computed(() => [
   { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
   { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className'))             },
+  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: stripHtml(tContent('props.table.dismissible'))  },
+  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: stripHtml(tContent('props.table.onDismiss'))    },
+  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: stripHtml(tContent('props.table.dismissLabel')) },
 ]);
 
 const slotPropItems = computed(() => [
@@ -452,14 +480,20 @@ const visualTestItems = computed(() => [
         </Alert>
       </template>
       <template #variant-preview-2>
-        <Alert variant="success" class="nds-w-full">
+        <Alert
+          variant="success"
+          class="nds-w-full"
+        >
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-3>
-        <Alert variant="warning" class="nds-w-full">
+        <Alert
+          variant="warning"
+          class="nds-w-full"
+        >
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
@@ -473,11 +507,13 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-5>
         <Alert
-          variant="destructive"
+          dismissible
           class="nds-w-full"
+          @dismiss="onDemoDismiss"
         >
-          <AlertCircle aria-hidden="true" />
-          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+          <Info aria-hidden="true" />
+          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
     </DocsCompositions>

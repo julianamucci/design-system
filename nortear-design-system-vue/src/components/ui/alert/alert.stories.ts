@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import AlertDocs from '@/components/docs/AlertDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -26,6 +26,21 @@ const meta = {
       description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
       table: { type: { summary: 'string' } },
     },
+    dismissible: {
+      control: 'boolean',
+      description: 'Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    dismissLabel: {
+      control: false,
+      description: 'Rótulo acessível do botão de fechar.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: "'Fechar alerta'" } },
+    },
+    onDismiss: {
+      control: false,
+      description: 'Emit dismiss — disparado uma única vez quando o usuário aciona o botão de fechar.',
+      table: { category: 'events', type: { summary: '@dismiss' } },
+    },
     default: {
       control: false,
       description: 'Slot de composição: ícone opcional, AlertTitle, AlertDescription e AlertAction.',
@@ -34,6 +49,8 @@ const meta = {
   },
   args: {
     variant: 'default',
+    dismissible: false,
+    onDismiss: fn(),
   },
 } satisfies Meta<typeof Alert>;
 
