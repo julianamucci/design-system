@@ -35,7 +35,9 @@ export default defineConfig({
       })],
       test: {
         name: 'storybook',
-        testTimeout: 30000,
+        // 120s: a fumaça das docs pages (QA/Docs Smoke) monta páginas inteiras
+        // e o axe varre tudo — IconsDocs (grid completo do lucide) leva ~75s.
+        testTimeout: 120000,
         hookTimeout: 30000,
         browser: {
           enabled: true,
