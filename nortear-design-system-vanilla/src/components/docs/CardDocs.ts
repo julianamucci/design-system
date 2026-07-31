@@ -684,21 +684,6 @@ export interface CardFooterOptions      { className?: string; }`;
       }
 
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — tokens padrão do Card */
-:root {
-  --radius-card: 0.75rem; /* rounded-(--radius-card) no Card + Header + Footer */
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --border: 214 32% 91%;
-}
-
-.dark {
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -714,9 +699,12 @@ export interface CardFooterOptions      { className?: string; }`;
             { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
             { token: '--foreground', value: 'ring-foreground/10', description: stripHtml(t('tokens.table.foreground')) },
             { token: '--border', value: 'border-t', description: t('tokens.table.border') },
+            { token: '--card-bg', value: 'hsl(var(--card))', description: t('tokens.table.cardBg') },
+            { token: '--card-fg', value: 'hsl(var(--card-foreground))', description: t('tokens.table.cardFg') },
+            { token: '--card-ring', value: 'hsl(var(--foreground) / 0.1)', description: t('tokens.table.cardRing') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 

@@ -506,16 +506,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
       }
 
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — customize os tokens usados pelo Calendar */
-:root {
-  --primary: 221 83% 53%;            /* fundo da data selecionada */
-  --primary-foreground: 210 40% 98%;
-  --accent: 210 40% 96%;             /* fundo de hoje e hover */
-  --accent-foreground: 222 47% 11%;
-  --muted-foreground: 215 16% 47%;   /* dias da semana */
-  --ring: 221 83% 53%;               /* focus ring */
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -529,11 +519,11 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
             { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
             { token: '--foreground', value: 'text-foreground', description: t('tokens.table.foreground') },
             { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
-            { token: '--radius', value: 'rounded-md', description: stripHtml(t('tokens.table.cellRadius')) },
-            { token: 'h-8 w-8', value: 'h-8 w-8', description: stripHtml(t('tokens.table.cellSize')) },
+            { token: '--nds-cell-size', value: '2rem', description: stripHtml(t('tokens.table.cellSize')) },
+            { token: '--nds-cell-radius', value: 'var(--radius-md)', description: stripHtml(t('tokens.table.cellRadius')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 

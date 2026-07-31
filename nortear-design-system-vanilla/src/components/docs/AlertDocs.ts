@@ -475,17 +475,6 @@ export interface AlertTitleOptions {
       }
 
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — definir tokens semânticos */
-:root {
-  --success: 142 76% 36%;
-  --warning: 38 92% 50%;
-}
-
-.dark {
-  --success: 142 69% 58%;
-  --warning: 48 96% 53%;
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -501,10 +490,13 @@ export interface AlertTitleOptions {
             { token: '--destructive', value: 'hsl(var(--destructive))',        description: t('tokens.table.destructiveText') },
             { token: '--success',     value: '.nds-alert-success',             description: t('tokens.table.success') },
             { token: '--warning',     value: '.nds-alert-warning',             description: t('tokens.table.warning') },
+            { token: '--alert-bg',     value: 'hsl(var(--card))',              description: t('tokens.table.alertBg') },
+            { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: t('tokens.table.alertFg') },
+            { token: '--alert-border', value: 'hsl(var(--border))',            description: t('tokens.table.alertBorder') },
             { token: '--radius',      value: 'var(--radius-alert, 0.625rem)',  description: t('tokens.table.radius') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 

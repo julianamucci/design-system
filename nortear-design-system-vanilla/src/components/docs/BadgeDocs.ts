@@ -543,16 +543,6 @@ export interface BadgeOptions {
       }
 
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — tokens semânticos */
-:root {
-  --primary: 222 47% 11%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -570,9 +560,12 @@ export interface BadgeOptions {
             { token: '--foreground',            value: 'text-foreground',          description: t('tokens.table.foreground')            },
             { token: '--ring',                  value: 'focus:ring-ring',          description: t('tokens.table.ring')                  },
             { token: '--background',            value: 'focus:ring-offset-2',      description: t('tokens.table.background')            },
+            { token: '--badge-bg',              value: 'hsl(var(--primary))',      description: t('tokens.table.badgeBg')               },
+            { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: t('tokens.table.badgeFg')         },
+            { token: '--badge-border',          value: 'transparent',              description: t('tokens.table.badgeBorder')           },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 

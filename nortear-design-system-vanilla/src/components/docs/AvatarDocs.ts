@@ -569,15 +569,6 @@ export interface AvatarFallbackOptions {
       }
 
       case 'tokens': {
-        const customizationCode = `/* globals.css */
-:root {
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --background: 0 0% 100%;
-  --primary: 221.2 83.2% 53.3%;
-  --radius: 9999px; /* Avatar sempre rounded-full */
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -591,11 +582,12 @@ export interface AvatarFallbackOptions {
             { token: '--background',       value: 'ring-background',          description: stripHtml(t('tokens.table.background')) },
             { token: '--border',           value: 'border',                   description: stripHtml(t('tokens.table.border')) },
             { token: '--primary',          value: 'bg-primary',               description: stripHtml(t('tokens.table.primary')) },
+            { token: '--avatar-size',      value: 'var(--spacing-8)',         description: stripHtml(t('tokens.table.avatarSize')) },
             { token: '--radius',           value: 'rounded-full',             description: stripHtml(t('tokens.table.radius')) },
             { token: '--ring',             value: 'nds-focus-ring',  description: stripHtml(t('tokens.table.ring')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 
