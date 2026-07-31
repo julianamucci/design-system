@@ -28,6 +28,11 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          // A fumaça das docs pages (docs-smoke) inclui a página Icons, que
+          // rende o catálogo lucide inteiro (~2000 ícones) — o scan do axe
+          // leva ~20s e estoura o default de 15s. addon-vitest não expõe
+          // timeout por story.
+          testTimeout: 45_000,
           browser: {
             enabled: true,
             headless: true,
