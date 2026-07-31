@@ -519,7 +519,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 items: [
                   {
                     name: "variant",
-                    type: '"default" | "destructive"',
+                    type: '"default" | "destructive" | "success" | "warning" | "info"',
                     defaultValue: '"default"',
                     required: "Não",
                     description: stripHtml(tContent("props.table.variant")),
@@ -529,7 +529,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: tContent("props.table.className"),
+                    description: stripHtml(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -555,7 +555,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: tContent("props.table.className"),
+                    description: stripHtml(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -581,7 +581,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: tContent("props.table.className"),
+                    description: stripHtml(tContent("props.table.className")),
                   },
                   {
                     name: "children",

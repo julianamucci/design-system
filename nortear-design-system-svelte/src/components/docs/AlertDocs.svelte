@@ -142,7 +142,7 @@ import Info from '@lucide/svelte/icons/info';`;
 
   const interfaceCode = `// Alert
 interface AlertProps {
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   class?: string;
   children?: Snippet;
 }
@@ -435,8 +435,8 @@ interface AlertProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'variant',  type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
-              { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: $tStore('props.table.className')           },
+              { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
+              { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.className'))           },
               { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')            },
             ],
           },

@@ -167,7 +167,7 @@ const codeWithoutTitle = `<Alert>
 
 const interfaceCode = `// Alert
 interface AlertProps {
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   class?: string;
 }
 
@@ -219,8 +219,8 @@ const propCols = computed(() => ({
 }));
 
 const alertPropItems = computed(() => [
-  { name: 'variant', type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
-  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: tContent('props.table.className')             },
+  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
+  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className'))             },
 ]);
 
 const slotPropItems = computed(() => [

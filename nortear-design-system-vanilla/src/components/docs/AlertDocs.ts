@@ -409,7 +409,7 @@ export function createAlertDocs(): HTMLElement {
       case 'propriedades': {
         const interfaceCode = `// createAlert(options)
 export interface AlertOptions {
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   className?: string;
 }
 
@@ -434,8 +434,8 @@ export interface AlertTitleOptions {
               title: t('props.alertTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
-                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: t('props.table.className') },
+                { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
+                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
               ],
             },
             {
@@ -443,7 +443,7 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
               ],
             },
             {
@@ -451,7 +451,7 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
               ],
             },
           ],

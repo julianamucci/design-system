@@ -198,7 +198,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "variant": "Variante semântica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> ou <code>info</code>.",
-        "className": "Classes CSS adicionais — use para aplicar variantes do tema (ex: <code>success</code>, <code>warning</code>) ou customizações pontuais.",
+        "className": "Classes CSS adicionais para customizações pontuais de layout. Variantes visuais usam a prop de variante — não classes.",
         "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription."
       },
       "extensibilityTitle": "Extensibilidade",
@@ -588,7 +588,7 @@
         "required": "Required",
         "description": "Description",
         "variant": "Semantic variant: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> or <code>info</code>.",
-        "className": "Additional CSS classes — use to apply theme variants (e.g., <code>success</code>, <code>warning</code>) or local customizations.",
+        "className": "Additional CSS classes for local layout tweaks. Visual variants use the variant prop — not classes.",
         "children": "Alert content: icon, AlertTitle, and AlertDescription."
       },
       "extensibilityTitle": "Extensibility",
@@ -978,7 +978,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "variant": "Variante semántica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> o <code>info</code>.",
-        "className": "Clases CSS adicionales — usar para aplicar variantes del tema (ej: <code>success</code>, <code>warning</code>) o personalizaciones puntuales.",
+        "className": "Clases CSS adicionales para personalizaciones puntuales de layout. Las variantes visuales usan la prop de variante — no clases.",
         "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription."
       },
       "extensibilityTitle": "Extensibilidad",
