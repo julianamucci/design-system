@@ -212,7 +212,8 @@
         "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription.",
         "dismissible": "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
         "onDismiss": "Callback de fechamento — disparado quando o usuário aciona o botão de fechar.",
-        "dismissLabel": "Rótulo acessível do botão de fechar."
+        "dismissLabel": "Rótulo acessível do botão de fechar.",
+        "titleAs": "Nível do heading do título (h1–h6). Passe o nível que preserva a hierarquia da página onde o Alert está — o padrão h5 pula níveis sob seções h2/h3 e falha o axe (heading-order)."
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Prefira as classes de variante do tema ou tokens CSS semânticos (<code>--success</code>, <code>--warning</code>) definidos no arquivo de tema do projeto — nunca cores hardcoded."
@@ -624,7 +625,8 @@
         "children": "Alert content: icon, AlertTitle, and AlertDescription.",
         "dismissible": "Shows the close button in the top-right corner. Closing removes the alert from the screen.",
         "onDismiss": "Dismiss callback — fired when the user activates the close button.",
-        "dismissLabel": "Accessible label of the close button."
+        "dismissLabel": "Accessible label of the close button.",
+        "titleAs": "Heading level of the title (h1–h6). Pass the level that preserves the hierarchy of the page hosting the Alert — the h5 default skips levels under h2/h3 sections and fails axe (heading-order)."
       },
       "extensibilityTitle": "Extensibility",
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Prefer theme variant classes or semantic CSS tokens (<code>--success</code>, <code>--warning</code>) defined in the project's theme file — never hardcoded colors."
@@ -1036,7 +1038,8 @@
         "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription.",
         "dismissible": "Muestra el botón de cierre en la esquina superior derecha. Cerrar quita el alert de la pantalla.",
         "onDismiss": "Callback de cierre — disparado cuando el usuario activa el botón de cierre.",
-        "dismissLabel": "Etiqueta accesible del botón de cierre."
+        "dismissLabel": "Etiqueta accesible del botón de cierre.",
+        "titleAs": "Nivel del heading del título (h1–h6). Pasa el nivel que preserva la jerarquía de la página donde está el Alert — el h5 por defecto salta niveles bajo secciones h2/h3 y falla axe (heading-order)."
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Prefiere las clases de variante del tema o tokens CSS semánticos (<code>--success</code>, <code>--warning</code>) definidos en el archivo de tema del proyecto — nunca colores hardcoded."

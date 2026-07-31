@@ -231,7 +231,13 @@ Além de escondida, a forma manual saiu errada em duas stacks: Vue e Svelte mont
 
 - **Arquivos:** `alert.tsx` (react), `AlertTitle.vue` / `AlertDescription.vue` (vue), `alert-title.svelte` / `alert-description.svelte` (svelte)
 - **Categoria:** api
-- **Data:** 2026-07-29
+- **Data:** 2026-07-29 · **atualizado 2026-08-01**: `as` configurável no
+  AlertTitle (default `'h5'`) nas 4 stacks, padrão do CardTitle. Motivo: `h5`
+  fixo sob seções `h2` das docs pages violava axe `heading-order` em produção —
+  achado por story de fumaça montando a docs page inteira, superfície que
+  nenhum teste cobria. Docs pages passam `as="h3"`; axe da página zerou
+  (verificado nos dois sentidos: reintroduzir o h5 falha exatamente com
+  heading-order).
 - **Upstream ref:** — (marcação própria)
 
 **Motivo:** o cabeçalho do `alert.css` documenta a estrutura com `<h5 class="nds-alert-title">` e `<section class="nds-alert-description">`, e o CSS traz seletores `.nds-alert > h1..h6` e `.nds-alert > section` justamente para isso. O Vanilla seguia; React, Vue e Svelte renderizavam `<div>` nos dois, perdendo a semântica de cabeçalho e o landmark da descrição. Alinhadas ao Vanilla, que é a referência cross-stack.

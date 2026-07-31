@@ -100,10 +100,12 @@ reservatório mais antigo do padrão morto que regenerava as stories erradas.
 
 ## Achados da fumaça do AlertDocs (2026-08-01)
 
-- Docs page montada por story revelou violacao axe heading-order: AlertTitle
-  renderiza h5 sob secoes h2 (pula h3/h4). Existe nas 4 stacks, em producao.
-  Decisao de design pendente: nivel configuravel no AlertTitle, ou heading
-  demovido para paragrafo com peso visual.
-- Nenhuma story monta docs pages: crash de runtime de pagina e invisivel para
-  o vitest (foi assim que 7 paginas quebraram com portoes verdes). Candidato:
-  story de fumaca por componente ou visita de docs no test-runner.
+- ~~Violação axe heading-order (AlertTitle h5 sob seções h2)~~ — **RESOLVIDO**:
+  `as` configurável no AlertTitle nas 4 stacks (aprovado pela dona), docs pages
+  passam `as="h3"`. Axe da página do Alert zerou, com verificação negativa
+  (reintroduzir o h5 reproduz exatamente heading-order).
+- **ABERTO**: nenhuma story monta docs pages — crash de runtime de página é
+  invisível para o vitest (foi assim que 7 páginas quebraram com portões
+  verdes, e foi só por fumaça manual que o heading-order apareceu). As OUTRAS
+  47 docs pages nunca passaram por axe: o Alert zerou, o resto é incógnita.
+  Candidato: story de fumaça por componente ou visita de docs no test-runner.
