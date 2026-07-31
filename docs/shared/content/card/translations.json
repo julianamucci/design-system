@@ -222,9 +222,13 @@
         "muted": "Fundo soft do CardFooter (token <code>--muted</code>)",
         "mutedForeground": "Texto da CardDescription",
         "foreground": "Cor da borda suave (token <code>--foreground</code> com baixa opacidade)",
-        "border": "Linha divisora acima do CardFooter"
+        "border": "Linha divisora acima do CardFooter",
+        "cardBg": "Fundo do Card — var interna que segue o token de tema",
+        "cardFg": "Texto do Card — var interna",
+        "cardRing": "Anel de contorno sutil — var interna"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": "/* Override escopado — declarar no :root não vence o .nds-card. */\n.meu-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -633,9 +637,13 @@
         "muted": "Soft CardFooter background (token <code>--muted</code>)",
         "mutedForeground": "CardDescription text",
         "foreground": "Soft border color (<code>--foreground</code> token with low opacity)",
-        "border": "Divider line above CardFooter"
+        "border": "Divider line above CardFooter",
+        "cardBg": "Card background — internal var chasing the theme token",
+        "cardFg": "Card text — internal var",
+        "cardRing": "Subtle outline ring — internal var"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": "/* Scoped override — :root does not beat .nds-card's own declaration. */\n.my-theme .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1044,9 +1052,13 @@
         "muted": "Fondo soft del CardFooter (token <code>--muted</code>)",
         "mutedForeground": "Texto del CardDescription",
         "foreground": "Color del borde suave (token <code>--foreground</code> con baja opacidad)",
-        "border": "Línea divisora arriba del CardFooter"
+        "border": "Línea divisora arriba del CardFooter",
+        "cardBg": "Fondo del Card — var interna que sigue el token del tema",
+        "cardFg": "Texto del Card — var interna",
+        "cardRing": "Anillo de contorno sutil — var interna"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": "/* Override con alcance — :root no gana a la declaración de .nds-card. */\n.mi-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

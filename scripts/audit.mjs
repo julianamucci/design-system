@@ -1004,6 +1004,41 @@ function auditI18nKeys(slug) {
   return violations;
 }
 
+/**
+ * Var interna de componente não documentada.
+ *
+ * O padrão de duas camadas (guideline 04 §Tokens de Componente) declara vars
+ * de indireção no seletor raiz (`--alert-bg: hsl(var(--card))`). Elas SÃO a
+ * superfície de customização — o override é escopado à classe do componente.
+ * Se a docs page não as menciona, a superfície é invisível: medido antes desta
+ * regra, 5 de 9 componentes com vars locais não documentavam nenhuma.
+ */
+function auditComponentVars(slug) {
+  const violations = [];
+  const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  // Sem docs page própria (layout.css, pill.css) o lugar é a foundation page —
+  // fora do escopo por-slug desta regra.
+  if (!existsSync(cssFile) || !existsSync(contentFile)) return violations;
+
+  const css = readFile(cssFile) || '';
+  const content = readFile(contentFile) || '';
+  // Vars de layout interno (spacing/cluster/stack/grid) não são superfície de
+  // customização documentável por componente.
+  const vars = [...new Set([...css.matchAll(/^\s+(--[a-z][a-z0-9-]*):/gm)].map((m) => m[1]))]
+    .filter((v) => !/^--(spacing|cluster|stack|grid)-/.test(v));
+
+  for (const v of vars) {
+    if (content.includes(v)) continue;
+    violations.push({
+      category: 'quality', severity: 'low', slug, stack: 'shared',
+      file: relative(ROOT, cssFile), rule: 'undocumented_component_var',
+      message: `${v} é declarada no CSS do componente mas não aparece no translations.json — superfície de customização invisível (guideline 04)`,
+    });
+  }
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
   // A seção é obrigatória se, e só se, existir a chave correspondente no
@@ -1229,6 +1264,7 @@ function runAudit(slug, category) {
     ...auditQuality(slug),
     ...auditTaxonomy(slug),
     ...auditI18nKeys(slug),
+    ...auditComponentVars(slug),
   ];
 }
 

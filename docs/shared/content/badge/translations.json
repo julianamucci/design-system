@@ -210,9 +210,13 @@
         "destructiveForeground": "Texto (variante destructive)",
         "foreground": "Texto (variante outline)",
         "ring": "Cor do foco visível",
-        "background": "Offset do anel de foco"
+        "background": "Offset do anel de foco",
+        "badgeBg": "Fundo — var interna, re-apontada por cada variante",
+        "badgeFg": "Texto — var interna",
+        "badgeBorder": "Borda — var interna"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -590,9 +594,13 @@
         "destructiveForeground": "Text (destructive variant)",
         "foreground": "Text (outline variant)",
         "ring": "Visible focus color",
-        "background": "Focus ring offset"
+        "background": "Focus ring offset",
+        "badgeBg": "Background — internal var, re-pointed by each variant",
+        "badgeFg": "Text — internal var",
+        "badgeBorder": "Border — internal var"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -970,9 +978,13 @@
         "destructiveForeground": "Texto (variante destructive)",
         "foreground": "Texto (variante outline)",
         "ring": "Color del foco visible",
-        "background": "Offset del anillo de foco"
+        "background": "Offset del anillo de foco",
+        "badgeBg": "Fondo — var interna, reasignada por cada variante",
+        "badgeFg": "Texto — var interna",
+        "badgeBorder": "Borde — var interna"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

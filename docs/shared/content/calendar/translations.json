@@ -242,9 +242,10 @@
         "foreground": "Texto das datas padrão",
         "ring": "Focus ring no DayButton",
         "cellRadius": "Raio dos cantos das células (<code>--radius-md</code>)",
-        "cellSize": "Tamanho da célula (variável local <code>--cell-size</code>)"
+        "cellSize": "Tamanho da célula (variável local <code>--nds-cell-size</code>)"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": "/* Células maiores para telas touch, sem tocar na escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -680,9 +681,10 @@
         "foreground": "Text of default dates",
         "ring": "Focus ring on DayButton",
         "cellRadius": "Cell corner radius (<code>--radius-md</code>)",
-        "cellSize": "Cell size (local <code>--cell-size</code> variable)"
+        "cellSize": "Cell size (local <code>--nds-cell-size</code> variable)"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": "/* Larger cells for touch screens, without touching the global scale. */\n.touch-agenda .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1118,9 +1120,10 @@
         "foreground": "Texto de las fechas predeterminadas",
         "ring": "Focus ring en DayButton",
         "cellRadius": "Radio de los cantos de las celdas (<code>--radius-md</code>)",
-        "cellSize": "Tamaño de celda (variable local <code>--cell-size</code>)"
+        "cellSize": "Tamaño de celda (variable local <code>--nds-cell-size</code>)"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": "/* Celdas más grandes para pantallas táctiles, sin tocar la escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

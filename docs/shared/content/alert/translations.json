@@ -222,9 +222,13 @@
         "destructiveText": "Texto e ícone (variante destructive)",
         "success": "Fundo + texto + borda (variante success do tema)",
         "warning": "Fundo + texto + borda (variante warning do tema)",
-        "radius": "Border radius do container"
+        "radius": "Border radius do container",
+        "alertBg": "Fundo do container — var interna, segue o tema pela variante",
+        "alertFg": "Texto e ícone — var interna",
+        "alertBorder": "Borda — var interna"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -613,9 +617,13 @@
         "destructiveText": "Text and icon (destructive variant)",
         "success": "Background + text + border (theme's success variant)",
         "warning": "Background + text + border (theme's warning variant)",
-        "radius": "Container border radius"
+        "radius": "Container border radius",
+        "alertBg": "Container background — internal var, follows the theme per variant",
+        "alertFg": "Text and icon — internal var",
+        "alertBorder": "Border — internal var"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1004,9 +1012,13 @@
         "destructiveText": "Texto e ícono (variante destructive)",
         "success": "Fondo + texto + borde (variante success del tema)",
         "warning": "Fondo + texto + borde (variante warning del tema)",
-        "radius": "Border radius del contenedor"
+        "radius": "Border radius del contenedor",
+        "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
+        "alertFg": "Texto e ícono — var interna",
+        "alertBorder": "Borde — var interna"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

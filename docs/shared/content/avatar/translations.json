@@ -206,9 +206,11 @@
         "border": "Borda opcional do container",
         "primary": "Cor de fundo do indicador de status online",
         "radius": "Border radius — Avatar sempre usa cantos totalmente arredondados (forma circular)",
-        "ring": "Anel de foco ao receber foco via teclado"
+        "ring": "Anel de foco ao receber foco via teclado",
+        "avatarSize": "Largura e altura do avatar — var interna (padrão 32px)"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": "/* Um tamanho fora da escala pré-definida, escopado ao contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -565,9 +567,11 @@
         "border": "Optional container border",
         "primary": "Background color of the online status indicator",
         "radius": "Border radius — Avatar always uses fully rounded corners (circular shape)",
-        "ring": "Focus ring when receiving keyboard focus"
+        "ring": "Focus ring when receiving keyboard focus",
+        "avatarSize": "Avatar width and height — internal var (default 32px)"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": "/* A size outside the predefined scale, scoped to the context. */\n.dense-list .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -924,9 +928,11 @@
         "border": "Borde opcional del contenedor",
         "primary": "Color de fondo del indicador de estado en línea",
         "radius": "Border radius — Avatar siempre usa esquinas totalmente redondeadas (forma circular)",
-        "ring": "Anillo de foco al recibir foco vía teclado"
+        "ring": "Anillo de foco al recibir foco vía teclado",
+        "avatarSize": "Ancho y alto del avatar — var interna (por defecto 32px)"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": "/* Un tamaño fuera de la escala predefinida, con alcance al contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

@@ -1066,6 +1066,57 @@ import { BarChart, Bar } from 'recharts';
 
 ---
 
+## Tokens de Componente — o padrão de duas camadas
+
+Um componente consome cor, raio e dimensão por **duas camadas de token**, com
+papéis diferentes. O Alert é o exemplo canônico:
+
+```css
+/* Camada 1 — TEMA (docs/shared/themes/default.css) */
+--radius-alert: var(--radius-lg);        /* o tema tem contrato de variar isto */
+
+/* Camada 2 — VAR INTERNA (docs/shared/styles/nds/alert.css) */
+.nds-alert {
+  --alert-bg: hsl(var(--card));          /* default PERSEGUE o tema */
+  --alert-fg: hsl(var(--card-foreground));
+  background-color: var(--alert-bg);
+}
+.nds-alert-destructive {
+  --alert-bg: hsl(var(--destructive) / 0.1);   /* variante re-aponta, não redeclara */
+}
+```
+
+### Quando usar cada camada
+
+| Camada | Vive em | Use quando |
+|---|---|---|
+| Token de tema (`--radius-<comp>`) | `themes/*.css` | o TEMA tem contrato de variar o valor (raio, densidade) |
+| Var interna (`--<comp>-bg/fg/…`) | `nds/<comp>.css`, no seletor raiz | variantes re-apontam o valor, e o default deve seguir a paleta |
+
+O ganho da var interna é duplo: a variante troca N propriedades re-apontando
+2–3 vars, e **um tema que muda `--card` recolore todo Alert sem saber que Alert
+existe**. É por isso que um tema completo tem ~20 linhas.
+
+### Regras
+
+1. **Var interna SEMPRE tem default perseguindo token de tema** —
+   `--alert-bg: hsl(var(--card))`, nunca valor cru.
+2. **O override é ESCOPADO, nunca em `:root`**: como a var é declarada no
+   próprio elemento, a declaração dele vence a herdada. Customização é
+   `.meu-tema .nds-alert { --alert-bg: … }`.
+3. **Toda var interna é documentada na seção Tokens da docs page**, com o
+   escopo de override no `customizationCode`. Var não documentada é superfície
+   de customização invisível — o `audit.mjs` acusa
+   (`undocumented_component_var`).
+4. **Temas não declaram vars internas.** Elas não constam de `themes/*.css`;
+   quem quiser customizar componente específico o faz escopado, por cima do
+   tema.
+
+CSS utilitário sem docs page própria (`layout.css`, `pill.css`) documenta as
+vars nas foundation pages correspondentes.
+
+---
+
 ## Validação de Design Tokens
 
 ### Checklist de Implementação
