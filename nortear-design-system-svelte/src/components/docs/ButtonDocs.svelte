@@ -5,7 +5,6 @@
   import Trash2 from '@lucide/svelte/icons/trash-2';
   import Pencil from '@lucide/svelte/icons/pencil';
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
-  import Download from '@lucide/svelte/icons/download';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -407,13 +406,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             preview: compDestructive,
           },
           {
-            name: $tStore('variants.compositions.iconOnly.name'),
-            description: $tStore('variants.compositions.iconOnly.description'),
-            useWhen: $tStore('variants.compositions.iconOnly.use'),
-            code: `<Button size="icon" aria-label="Baixar arquivo">\n  <Download aria-hidden="true" />\n</Button>`,
-            preview: compIconOnly,
-          },
-          {
             name: $tStore('variants.compositions.actionPair.name'),
             description: $tStore('variants.compositions.actionPair.description'),
             useWhen: $tStore('variants.compositions.actionPair.use'),
@@ -446,11 +438,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button variant="destructive">
           <Trash2 class="nds-icon" aria-hidden="true" />
           Excluir
-        </Button>
-      {/snippet}
-      {#snippet compIconOnly()}
-        <Button size="icon" aria-label="Baixar arquivo">
-          <Download class="nds-icon" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet compActionPair()}

@@ -405,18 +405,6 @@ interface CalendarProps {
 />`,
         preview: compDisabledPast,
       },
-      {
-        name: $tStore('variants.compositions.rangeTwoMonths.name'),
-        description: $tStore('variants.compositions.rangeTwoMonths.description'),
-        useWhen: $tStore('variants.compositions.rangeTwoMonths.use'),
-        code: `<Calendar
-  type="single"
-  bind:value
-  locale="pt-BR"
-  numberOfMonths={2}
-/>`,
-        preview: compTwoMonths,
-      },
     ]}
   />
 
@@ -427,9 +415,6 @@ interface CalendarProps {
   {/snippet}
   {#snippet compDisabledPast()}
     <CalendarStory variant="disabled" locale={previewLocale} />
-  {/snippet}
-  {#snippet compTwoMonths()}
-    <CalendarStory variant="twoMonths" locale={previewLocale} />
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

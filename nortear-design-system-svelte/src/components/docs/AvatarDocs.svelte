@@ -9,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -52,7 +52,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -432,132 +431,6 @@ interface AvatarFallbackProps {
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <span
-        aria-label="online"
-        class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-      ></span>
-    </div>
-  {/snippet}
-
-  <!-- ── Composições ──────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="avatar"
-    items={[
-      {
-        name: $tStore('variants.compositions.withImage.name'),
-        description: $tStore('variants.compositions.withImage.description'),
-        useWhen: $tStore('variants.compositions.withImage.use'),
-        code: `<Avatar>
-  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-  <AvatarFallback>MR</AvatarFallback>
-</Avatar>`,
-        preview: compWithImage,
-      },
-      {
-        name: $tStore('variants.compositions.withInitials.name'),
-        description: $tStore('variants.compositions.withInitials.description'),
-        useWhen: $tStore('variants.compositions.withInitials.use'),
-        code: `<Avatar>
-  <AvatarFallback>JP</AvatarFallback>
-</Avatar>`,
-        preview: compWithInitials,
-      },
-      {
-        name: $tStore('variants.compositions.withIcon.name'),
-        description: $tStore('variants.compositions.withIcon.description'),
-        useWhen: $tStore('variants.compositions.withIcon.use'),
-        code: `<Avatar>
-  <AvatarFallback role="img" aria-label="Usuário genérico">
-    <User aria-hidden="true" class="nds-icon nds-text-muted-foreground" />
-  </AvatarFallback>
-</Avatar>`,
-        preview: compWithIcon,
-      },
-      {
-        name: $tStore('variants.compositions.group.name'),
-        description: $tStore('variants.compositions.group.description'),
-        useWhen: $tStore('variants.compositions.group.use'),
-        code: `<div style="display: flex" role="group" aria-label="Participantes">
-  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-    <AvatarFallback>MR</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarFallback>JP</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarFallback>AL</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarFallback>+3</AvatarFallback>
-  </Avatar>
-</div>`,
-        preview: compGroup,
-      },
-      {
-        name: $tStore('variants.compositions.withStatus.name'),
-        description: $tStore('variants.compositions.withStatus.description'),
-        useWhen: $tStore('variants.compositions.withStatus.use'),
-        code: `<div style="position: relative; display: inline-block">
-  <Avatar>
-    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-    <AvatarFallback>MR</AvatarFallback>
-  </Avatar>
-  <span
-    role="status"
-    aria-label="online"
-    class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-  ></span>
-</div>`,
-        preview: compWithStatus,
-      },
-    ]}
-  />
-
-  {#snippet compWithImage()}
-    <Avatar>
-      <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback>MR</AvatarFallback>
-    </Avatar>
-  {/snippet}
-  {#snippet compWithInitials()}
-    <Avatar>
-      <AvatarFallback>JP</AvatarFallback>
-    </Avatar>
-  {/snippet}
-  {#snippet compWithIcon()}
-    <Avatar>
-      <AvatarFallback role="img" aria-label="Usuário genérico">
-        <User aria-hidden="true" class="nds-icon nds-text-muted-foreground" />
-      </AvatarFallback>
-    </Avatar>
-  {/snippet}
-  {#snippet compGroup()}
-    <div style="display: flex" role="group" aria-label="Participantes">
-      <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-        <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-        <AvatarFallback>MR</AvatarFallback>
-      </Avatar>
-      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-        <AvatarFallback>JP</AvatarFallback>
-      </Avatar>
-      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-        <AvatarFallback>AL</AvatarFallback>
-      </Avatar>
-      <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-        <AvatarFallback>+3</AvatarFallback>
-      </Avatar>
-    </div>
-  {/snippet}
-  {#snippet compWithStatus()}
-    <div style="position: relative; display: inline-block">
-      <Avatar>
-        <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-        <AvatarFallback>MR</AvatarFallback>
-      </Avatar>
-      <span
-        role="status"
         aria-label="online"
         class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
       ></span>

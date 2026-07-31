@@ -161,8 +161,6 @@ import { Label } from "@/components/ui/label";`;
   let doPair2Checked3 = $state(false);
 
   // ─── Compositions state ──────────────────────────────────────────────────────
-  let compWithLabelChecked = $state(false);
-  let compWithDescChecked = $state(false);
   let compFieldsetEmail = $state(true);
   let compFieldsetPush = $state(false);
   let compFieldsetSms = $state(false);
@@ -190,22 +188,6 @@ import { Label } from "@/components/ui/label";`;
   let compInListPush = $state(false);
   let compInListSms = $state(false);
   let compInListNewsletter = $state(true);
-
-  // ─── Composition code strings ────────────────────────────────────────────────
-  const codeCompWithLabel = `<div class="nds-cluster" data-spacing="xs">
-  <Checkbox id="cb-tos" bind:checked />
-  <Label for="cb-tos">Aceito os termos e condições</Label>
-</div>`;
-
-  const codeCompWithDescription = `<div class="nds-cluster" data-spacing="xs" data-align="start">
-  <Checkbox id="cb-newsletter" bind:checked style="margin-top: 0.125rem" aria-describedby="cb-newsletter-desc" />
-  <div class="nds-stack" data-spacing="xs">
-    <Label for="cb-newsletter">Receber novidades por email</Label>
-    <p id="cb-newsletter-desc" class="nds-text-body">
-      Enviaremos atualizações ocasionais sobre novos produtos.
-    </p>
-  </div>
-</div>`;
 
   const codeCompFieldset = `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
   <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
@@ -515,20 +497,6 @@ import { Label } from "@/components/ui/label";`;
     componentSlug="checkbox"
     items={[
       {
-        name: $tStore('variants.compositions.withLabel.name'),
-        description: $tStore('variants.compositions.withLabel.description'),
-        useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: codeCompWithLabel,
-        preview: compWithLabel,
-      },
-      {
-        name: $tStore('variants.compositions.withDescription.name'),
-        description: $tStore('variants.compositions.withDescription.description'),
-        useWhen: $tStore('variants.compositions.withDescription.use'),
-        code: codeCompWithDescription,
-        preview: compWithDescription,
-      },
-      {
         name: $tStore('variants.compositions.fieldset.name'),
         description: $tStore('variants.compositions.fieldset.description'),
         useWhen: $tStore('variants.compositions.fieldset.use'),
@@ -551,25 +519,6 @@ import { Label } from "@/components/ui/label";`;
       },
     ]}
   />
-
-  {#snippet compWithLabel()}
-    <div class="nds-cluster" data-spacing="xs">
-      <Checkbox id="comp-tos" bind:checked={compWithLabelChecked} />
-      <Label for="comp-tos">Aceito os termos e condições</Label>
-    </div>
-  {/snippet}
-
-  {#snippet compWithDescription()}
-    <div class="nds-cluster" data-spacing="xs" data-align="start">
-      <Checkbox id="comp-newsletter" bind:checked={compWithDescChecked} style="margin-top: 0.125rem" aria-describedby="comp-newsletter-desc" />
-      <div class="nds-stack" data-spacing="xs">
-        <Label for="comp-newsletter">Receber novidades por email</Label>
-        <p id="comp-newsletter-desc" class="nds-text-body">
-          Enviaremos atualizações ocasionais sobre novos produtos.
-        </p>
-      </div>
-    </div>
-  {/snippet}
 
   {#snippet compFieldset()}
     <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">

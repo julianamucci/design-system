@@ -124,8 +124,6 @@
   let dd2DontValue = $state('');
 
   // Composições state
-  let compStatesValue = $state('');
-  let compGroupsValue = $state('');
   let compFormValue = $state('');
 
   // ─── Localized labels ────────────────────────────────────────────────────────
@@ -678,45 +676,6 @@ interface SelectItemProps {
     componentSlug="select"
     items={[
       {
-        name: $tStore('variants.compositions.states.name'),
-        description: $tStore('variants.compositions.states.description'),
-        useWhen: $tStore('variants.compositions.states.use'),
-        code: `<div class="nds-stack nds-w-sm" data-spacing="sm">
-  <label for="state" class="nds-text-body nds-font-semibold">Estado</label>
-  <Select type="single" bind:value>
-    <SelectTrigger id="state" aria-label="Estado" class="nds-w-full" />
-    <SelectContent>
-      {#each stateOptions as opt (opt.value)}
-        <SelectItem value={opt.value} label={opt.label} />
-      {/each}
-    </SelectContent>
-  </Select>
-</div>`,
-        preview: compStatesSnippet,
-      },
-      {
-        name: $tStore('variants.compositions.regionGroups.name'),
-        description: $tStore('variants.compositions.regionGroups.description'),
-        useWhen: $tStore('variants.compositions.regionGroups.use'),
-        code: `<div class="nds-stack nds-w-sm" data-spacing="sm">
-  <label for="region" class="nds-text-body nds-font-semibold">Região</label>
-  <Select type="single" bind:value>
-    <SelectTrigger id="region" aria-label="Região" class="nds-w-full" />
-    <SelectContent>
-      {#each regionGroups as group (group.label)}
-        <SelectGroup>
-          <SelectGroupHeading>{group.label}</SelectGroupHeading>
-          {#each group.options as opt (opt.value)}
-            <SelectItem value={opt.value} label={opt.label} />
-          {/each}
-        </SelectGroup>
-      {/each}
-    </SelectContent>
-  </Select>
-</div>`,
-        preview: compGroupsSnippet,
-      },
-      {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
@@ -745,51 +704,6 @@ interface SelectItemProps {
       },
     ]}
   />
-
-  {#snippet compStatesSnippet()}
-    <div class="nds-stack nds-w-sm" data-spacing="sm" style="contain: layout">
-      <label for="comp-state" class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</label>
-      <Select type="single" bind:value={compStatesValue}>
-        <SelectTrigger id="comp-state" class="nds-w-full" aria-label={demoLabels.stateLabel}>
-          {#if compStatesValue}
-            <span>{findLabel(stateOptions, compStatesValue)}</span>
-          {:else}
-            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
-          {/if}
-        </SelectTrigger>
-        <SelectContent>
-          {#each stateOptions as opt (opt.value)}
-            <SelectItem value={opt.value} label={opt.label} />
-          {/each}
-        </SelectContent>
-      </Select>
-    </div>
-  {/snippet}
-
-  {#snippet compGroupsSnippet()}
-    <div class="nds-stack nds-w-sm" data-spacing="sm" style="contain: layout">
-      <label for="comp-region" class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</label>
-      <Select type="single" bind:value={compGroupsValue}>
-        <SelectTrigger id="comp-region" class="nds-w-full" aria-label={demoLabels.regionLabel}>
-          {#if compGroupsValue}
-            <span>{findLabelInGroups(regionGroups, compGroupsValue)}</span>
-          {:else}
-            <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
-          {/if}
-        </SelectTrigger>
-        <SelectContent>
-          {#each regionGroups as group (group.label)}
-            <SelectGroup>
-              <SelectGroupHeading>{group.label}</SelectGroupHeading>
-              {#each group.options as opt (opt.value)}
-                <SelectItem value={opt.value} label={opt.label} />
-              {/each}
-            </SelectGroup>
-          {/each}
-        </SelectContent>
-      </Select>
-    </div>
-  {/snippet}
 
   {#snippet compFormSnippet()}
     <form

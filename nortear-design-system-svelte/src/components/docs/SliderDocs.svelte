@@ -103,7 +103,6 @@
   // Composições
   let compVolume = $state<number[]>([50]);
   let compBrightness = $state<number[]>([75]);
-  let compPrice = $state<number[]>([100, 400]);
   let compFormVolume = $state<number[]>([60]);
   let compFormCommitted = $state<number>(60);
   function onCompFormSubmit(e: SubmitEvent) {
@@ -155,18 +154,6 @@
   max={100}
   step={5}
   aria-label="Brilho"
-/>`;
-
-  const codeCompPrice = `<script lang="ts">
-  let range = $state([100, 400]);
-<\/script>
-
-<Slider
-  bind:value={range}
-  min={0}
-  max={1000}
-  step={10}
-  aria-label="Faixa de preço"
 />`;
 
   const codeCompForm = `<form aria-label="Configurações de áudio" onsubmit={onSubmit}>
@@ -466,13 +453,6 @@ interface SliderProps {
         preview: compBrightnessPreview,
       },
       {
-        name: $tStore('variants.compositions.priceRange.name'),
-        description: $tStore('variants.compositions.priceRange.description'),
-        useWhen: $tStore('variants.compositions.priceRange.use'),
-        code: codeCompPrice,
-        preview: compPricePreview,
-      },
-      {
         name: $tStore('variants.compositions.form.name'),
         description: $tStore('variants.compositions.form.description'),
         useWhen: $tStore('variants.compositions.form.use'),
@@ -499,18 +479,6 @@ interface SliderProps {
         <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compBrightness[0]}%</span>
       </div>
       <Slider bind:value={compBrightness} min={0} max={100} step={5} aria-label="Brilho" />
-    </div>
-  {/snippet}
-
-  {#snippet compPricePreview()}
-    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
-      <div class="nds-cluster" data-justify="between">
-        <Label>Faixa de preço</Label>
-        <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">
-          R$ {compPrice[0]} — R$ {compPrice[1]}
-        </span>
-      </div>
-      <Slider bind:value={compPrice} min={0} max={1000} step={10} aria-label="Faixa de preço" />
     </div>
   {/snippet}
 

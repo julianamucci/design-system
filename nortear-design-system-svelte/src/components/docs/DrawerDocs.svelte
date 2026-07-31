@@ -643,32 +643,6 @@ interface TriggerProps {
 </Drawer>`,
         preview: compWithScroll,
       },
-      {
-        name: $tStore('variants.compositions.rightPanel.name'),
-        description: $tStore('variants.compositions.rightPanel.description'),
-        useWhen: $tStore('variants.compositions.rightPanel.use'),
-        code: `<Drawer direction="right">
-  <DrawerTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Abrir filtros</Button>
-    {/snippet}
-  </DrawerTrigger>
-  <DrawerContent class="nds-max-w-md">
-    <DrawerHeader>
-      <DrawerTitle>Filtros</DrawerTitle>
-      <DrawerDescription>Refine os resultados.</DrawerDescription>
-    </DrawerHeader>
-    <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
-    <DrawerFooter>
-      <Button>Aplicar</Button>
-      <DrawerClose>
-        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`,
-        preview: compRightPanel,
-      },
     ]}
   />
 
@@ -733,25 +707,6 @@ interface TriggerProps {
           </div>
           <DrawerFooter>
             <Button>Aceitar termos</Button>
-            <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  {/snippet}
-  {#snippet compRightPanel()}
-    <div style="contain: layout">
-      <Drawer direction="right" defaultOpen={true}>
-        <DrawerContent class="nds-max-w-md">
-          <DrawerHeader>
-            <DrawerTitle>Filtros</DrawerTitle>
-            <DrawerDescription>Refine os resultados.</DrawerDescription>
-          </DrawerHeader>
-          <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
-          <DrawerFooter>
-            <Button>Aplicar</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>

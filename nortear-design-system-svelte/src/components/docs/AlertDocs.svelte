@@ -402,13 +402,6 @@ interface AlertProps {
             code: `<Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
             preview: compCompact,
           },
-          {
-            name: $tStore('variants.compositions.multipleTypes.name'),
-            description: $tStore('variants.compositions.multipleTypes.description'),
-            useWhen: $tStore('variants.compositions.multipleTypes.use'),
-            code: `<div class="nds-stack" data-spacing="sm">\n  <Alert><Info aria-hidden="true" /><AlertTitle>Informação</AlertTitle><AlertDescription>Mensagem informativa e neutra.</AlertDescription></Alert>\n  <Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertTitle>Erro</AlertTitle><AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription></Alert>\n  <Alert variant="success"><CheckCircle2 aria-hidden="true" /><AlertTitle>Sucesso</AlertTitle><AlertDescription>Ação concluída com sucesso.</AlertDescription></Alert>\n  <Alert variant="warning"><TriangleAlert aria-hidden="true" /><AlertTitle>Aviso</AlertTitle><AlertDescription>Aviso que requer atenção.</AlertDescription></Alert>\n</div>`,
-            preview: compMultipleTypes,
-          },
         ]}
       />
 
@@ -434,30 +427,6 @@ interface AlertProps {
           <AlertCircle aria-hidden="true" />
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
-      {/snippet}
-      {#snippet compMultipleTypes()}
-        <div class="nds-stack nds-w-full" data-spacing="sm">
-          <Alert>
-            <Info aria-hidden="true" />
-            <AlertTitle>Informação</AlertTitle>
-            <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
-          </Alert>
-          <Alert variant="destructive">
-            <AlertCircle aria-hidden="true" />
-            <AlertTitle>Erro</AlertTitle>
-            <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
-          </Alert>
-          <Alert variant="success">
-            <CheckCircle2 aria-hidden="true" />
-            <AlertTitle>Sucesso</AlertTitle>
-            <AlertDescription>Ação concluída com sucesso.</AlertDescription>
-          </Alert>
-          <Alert variant="warning">
-            <TriangleAlert aria-hidden="true" />
-            <AlertTitle>Aviso</AlertTitle>
-            <AlertDescription>Aviso que requer atenção.</AlertDescription>
-          </Alert>
-        </div>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

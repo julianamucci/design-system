@@ -109,7 +109,6 @@
 
   // Compositions
   let compEmail = $state(false);
-  let compMarketing = $state(true);
   let compSettingsEmail = $state(true);
   let compSettingsPush = $state(false);
   let compSettingsSms = $state(false);
@@ -467,13 +466,6 @@ interface SwitchProps {
         preview: compWithLabel,
       },
       {
-        name: $tStore('variants.compositions.withDescription.name'),
-        description: $tStore('variants.compositions.withDescription.description'),
-        useWhen: $tStore('variants.compositions.withDescription.use'),
-        code: `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">\n  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n    <Label for="sw-mkt">Emails de marketing</Label>\n    <p class="nds-text-body">Receba novidades e promoções da plataforma.</p>\n  </div>\n  <Switch id="sw-mkt" checked />\n</div>`,
-        preview: compWithDescription,
-      },
-      {
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
@@ -494,16 +486,6 @@ interface SwitchProps {
     <div class="nds-cluster" data-spacing="sm">
       <Switch id="comp-sw-email" bind:checked={compEmail} />
       <Label for="comp-sw-email">Receber notificações por email</Label>
-    </div>
-  {/snippet}
-
-  {#snippet compWithDescription()}
-    <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
-      <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
-        <Label for="comp-sw-mkt">Emails de marketing</Label>
-        <p class="nds-text-body">Receba novidades e promoções da plataforma.</p>
-      </div>
-      <Switch id="comp-sw-mkt" bind:checked={compMarketing} />
     </div>
   {/snippet}
 

@@ -456,38 +456,6 @@ interface TabsContentProps {
 </Tabs>`,
         preview: compBadgeTrigger,
       },
-      {
-        name: $tStore('variants.compositions.vertical.name'),
-        description: $tStore('variants.compositions.vertical.description'),
-        useWhen: $tStore('variants.compositions.vertical.use'),
-        code: `<Tabs value="profile" orientation="vertical" class="nds-w-full nds-cluster" style="max-width: 42rem">
-  <TabsList class="nds-stack nds-shrink-0" style="height: auto; align-items: stretch; min-width: 10rem" aria-label="Configurações">
-    <TabsTrigger value="profile">Perfil</TabsTrigger>
-    <TabsTrigger value="account">Conta</TabsTrigger>
-    <TabsTrigger value="security">Segurança</TabsTrigger>
-  </TabsList>
-  <TabsContent value="profile">…</TabsContent>
-  <TabsContent value="account">…</TabsContent>
-  <TabsContent value="security">…</TabsContent>
-</Tabs>`,
-        preview: compVertical,
-      },
-      {
-        name: $tStore('variants.compositions.lineSubNav.name'),
-        description: $tStore('variants.compositions.lineSubNav.description'),
-        useWhen: $tStore('variants.compositions.lineSubNav.use'),
-        code: `<Tabs value="all" class="nds-w-full">
-  <TabsList variant="line" class="nds-border-b nds-bg-transparent nds-w-full" style="border-radius: 0; justify-content: flex-start" aria-label="Filtros de listagem">
-    <TabsTrigger value="all">Tudo</TabsTrigger>
-    <TabsTrigger value="active">Ativos</TabsTrigger>
-    <TabsTrigger value="archived">Arquivados</TabsTrigger>
-  </TabsList>
-  <TabsContent value="all">…</TabsContent>
-  <TabsContent value="active">…</TabsContent>
-  <TabsContent value="archived">…</TabsContent>
-</Tabs>`,
-        preview: compLineSubNav,
-      },
     ]}
   />
 
@@ -554,47 +522,6 @@ interface TabsContentProps {
           <p class="nds-text-body">Itens excluídos recentemente.</p>
         </div>
       </TabsContent>
-    </Tabs>
-  {/snippet}
-
-  {#snippet compVertical()}
-    <Tabs value="profile" orientation="vertical" class="nds-w-full nds-cluster" style="max-width: 42rem">
-      <TabsList class="nds-stack nds-shrink-0" style="height: auto; align-items: stretch; min-width: 10rem" aria-label="Configurações">
-        <TabsTrigger value="profile">Perfil</TabsTrigger>
-        <TabsTrigger value="account">Conta</TabsTrigger>
-        <TabsTrigger value="security">Segurança</TabsTrigger>
-      </TabsList>
-      <TabsContent value="profile">
-        <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
-          <h3 class="nds-text-body nds-font-semibold">Perfil</h3>
-          <p class="nds-text-body">Edite suas informações públicas.</p>
-        </div>
-      </TabsContent>
-      <TabsContent value="account">
-        <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
-          <h3 class="nds-text-body nds-font-semibold">Conta</h3>
-          <p class="nds-text-body">Email, idioma e preferências.</p>
-        </div>
-      </TabsContent>
-      <TabsContent value="security">
-        <div class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack" data-spacing="sm">
-          <h3 class="nds-text-body nds-font-semibold">Segurança</h3>
-          <p class="nds-text-body">Senha e autenticação em dois fatores.</p>
-        </div>
-      </TabsContent>
-    </Tabs>
-  {/snippet}
-
-  {#snippet compLineSubNav()}
-    <Tabs value="all" class="nds-w-full">
-      <TabsList variant="line" class="nds-border-b nds-bg-transparent nds-w-full" style="border-radius: 0; justify-content: flex-start" aria-label="Filtros de listagem">
-        <TabsTrigger value="all">Tudo</TabsTrigger>
-        <TabsTrigger value="active">Ativos</TabsTrigger>
-        <TabsTrigger value="archived">Arquivados</TabsTrigger>
-      </TabsList>
-      <TabsContent value="all"><p class="nds-text-body" style="padding-top: 0.75rem">Mostrando todos os itens.</p></TabsContent>
-      <TabsContent value="active"><p class="nds-text-body" style="padding-top: 0.75rem">Apenas itens ativos.</p></TabsContent>
-      <TabsContent value="archived"><p class="nds-text-body" style="padding-top: 0.75rem">Itens arquivados.</p></TabsContent>
     </Tabs>
   {/snippet}
 

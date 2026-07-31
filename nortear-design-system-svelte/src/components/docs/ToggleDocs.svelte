@@ -471,16 +471,6 @@ interface ToggleProps {
         preview: compToolbar,
       },
       {
-        name: $tStore('variants.compositions.filterWithLabel.name'),
-        description: $tStore('variants.compositions.filterWithLabel.description'),
-        useWhen: $tStore('variants.compositions.filterWithLabel.use'),
-        code: `<Toggle variant="outline">
-  <Eye aria-hidden="true" />
-  <span>Mostrar ocultos</span>
-</Toggle>`,
-        preview: compFilterWithLabel,
-      },
-      {
         name: $tStore('variants.compositions.sizes.name'),
         description: $tStore('variants.compositions.sizes.description'),
         useWhen: $tStore('variants.compositions.sizes.use'),
@@ -513,13 +503,6 @@ interface ToggleProps {
       <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
       <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
     </div>
-  {/snippet}
-
-  {#snippet compFilterWithLabel()}
-    <Toggle variant="outline">
-      <Eye aria-hidden="true" />
-      <span>Mostrar ocultos</span>
-    </Toggle>
   {/snippet}
 
   {#snippet compSizes()}

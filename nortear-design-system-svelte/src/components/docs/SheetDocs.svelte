@@ -597,23 +597,6 @@ interface TriggerProps {
         preview: compSecondaryNav,
       },
       {
-        name: $tStore('variants.compositions.mobileActions.name'),
-        description: $tStore('variants.compositions.mobileActions.description'),
-        useWhen: $tStore('variants.compositions.mobileActions.use'),
-        code: `<SheetContent side="bottom">
-  <SheetHeader>
-    <SheetTitle>Ações rápidas</SheetTitle>
-    <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-  </SheetHeader>
-  <div class="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
-    <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Compartilhar</button>
-    <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Editar</button>
-    <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Excluir</button>
-  </div>
-</SheetContent>`,
-        preview: compMobileActions,
-      },
-      {
         name: $tStore('variants.compositions.longScrollBody.name'),
         description: $tStore('variants.compositions.longScrollBody.description'),
         useWhen: $tStore('variants.compositions.longScrollBody.use'),
@@ -669,24 +652,6 @@ interface TriggerProps {
             <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Equipe</a>
             <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Configurações</a>
           </nav>
-        </SheetContent>
-      </Sheet>
-    </div>
-  {/snippet}
-
-  {#snippet compMobileActions()}
-    <div style="contain: layout">
-      <Sheet open>
-        <SheetContent side="bottom">
-          <SheetHeader>
-            <SheetTitle>Ações rápidas</SheetTitle>
-            <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-          </SheetHeader>
-          <div class="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
-            <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Compartilhar</button>
-            <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Editar</button>
-            <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Excluir</button>
-          </div>
         </SheetContent>
       </Sheet>
     </div>

@@ -107,9 +107,6 @@
   let varDescValue = $state('');
 
   // Compositions preview state
-  let compVerticalValue = $state('');
-  let compHorizontalValue = $state('');
-  let compDescValue = $state('');
   let compFormValue = $state('');
   let compFormOutput = $state('');
 
@@ -596,27 +593,6 @@ interface RadioGroupItemProps {
     componentSlug="radio-group"
     items={[
       {
-        name: $tStore('variants.compositions.vertical.name'),
-        description: $tStore('variants.compositions.vertical.description'),
-        useWhen: $tStore('variants.compositions.vertical.use'),
-        code: codeVertical,
-        preview: compVertical,
-      },
-      {
-        name: $tStore('variants.compositions.horizontal.name'),
-        description: $tStore('variants.compositions.horizontal.description'),
-        useWhen: $tStore('variants.compositions.horizontal.use'),
-        code: codeHorizontal,
-        preview: compHorizontal,
-      },
-      {
-        name: $tStore('variants.compositions.withDescription.name'),
-        description: $tStore('variants.compositions.withDescription.description'),
-        useWhen: $tStore('variants.compositions.withDescription.use'),
-        code: codeWithDescription,
-        preview: compWithDescription,
-      },
-      {
         name: $tStore('variants.compositions.inForm.name'),
         description: $tStore('variants.compositions.inForm.description'),
         useWhen: $tStore('variants.compositions.inForm.use'),
@@ -625,81 +601,6 @@ interface RadioGroupItemProps {
       },
     ]}
   />
-
-  {#snippet compVertical()}
-    <div class="nds-stack" data-spacing="sm">
-      <p class="nds-text-body nds-font-semibold">Forma de pagamento</p>
-      <RadioGroup bind:value={compVerticalValue} aria-label="Forma de pagamento">
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="card" id="comp-v-card" />
-          <Label for="comp-v-card">Cartão de crédito</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="pix" id="comp-v-pix" />
-          <Label for="comp-v-pix">Pix</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="boleto" id="comp-v-boleto" />
-          <Label for="comp-v-boleto">Boleto bancário</Label>
-        </div>
-      </RadioGroup>
-    </div>
-  {/snippet}
-
-  {#snippet compHorizontal()}
-    <div class="nds-stack" data-spacing="sm">
-      <p class="nds-text-body nds-font-semibold">Forma de entrega</p>
-      <RadioGroup
-        bind:value={compHorizontalValue}
-        orientation="horizontal"
-        class="nds-cluster"
-        data-spacing="lg"
-        aria-label="Forma de entrega"
-      >
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="standard" id="comp-h-standard" />
-          <Label for="comp-h-standard">Padrão (5 dias)</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="express" id="comp-h-express" />
-          <Label for="comp-h-express">Expressa (1 dia)</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <RadioGroupItem value="pickup" id="comp-h-pickup" />
-          <Label for="comp-h-pickup">Retirar na loja</Label>
-        </div>
-      </RadioGroup>
-    </div>
-  {/snippet}
-
-  {#snippet compWithDescription()}
-    <div class="nds-stack nds-w-sm" data-spacing="sm">
-      <p class="nds-text-body nds-font-semibold">Forma de entrega</p>
-      <RadioGroup bind:value={compDescValue} aria-label="Forma de entrega">
-        <div class="nds-cluster" data-spacing="xs" data-align="start">
-          <RadioGroupItem value="standard" id="comp-d-standard" class="nds-mt-1" />
-          <div class="nds-stack" data-spacing="xs">
-            <Label for="comp-d-standard">Padrão</Label>
-            <p class="nds-text-body">Entrega em 5 dias úteis — frete grátis acima de R$ 199.</p>
-          </div>
-        </div>
-        <div class="nds-cluster" data-spacing="xs" data-align="start">
-          <RadioGroupItem value="express" id="comp-d-express" class="nds-mt-1" />
-          <div class="nds-stack" data-spacing="xs">
-            <Label for="comp-d-express">Expressa</Label>
-            <p class="nds-text-body">Receba em 1 dia útil — taxa adicional de R$ 19,90.</p>
-          </div>
-        </div>
-        <div class="nds-cluster" data-spacing="xs" data-align="start">
-          <RadioGroupItem value="pickup" id="comp-d-pickup" class="nds-mt-1" />
-          <div class="nds-stack" data-spacing="xs">
-            <Label for="comp-d-pickup">Retirar na loja</Label>
-            <p class="nds-text-body">Disponível em 2h — sem custo de frete.</p>
-          </div>
-        </div>
-      </RadioGroup>
-    </div>
-  {/snippet}
 
   {#snippet compInForm()}
     <form class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md" onsubmit={handleCompFormSubmit}>

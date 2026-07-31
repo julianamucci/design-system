@@ -98,11 +98,9 @@
   const demoBioMax = 200;
 
   // Composition state
-  let compCounterValue = $state('');
   let compFormValue = $state('');
   let compFormSubmitted = $state(false);
   const compMax = 500;
-  const compCounterAriaLabel = $derived(`${compCounterValue.length} de ${compMax} caracteres usados`);
   const compFormAriaLabel = $derived(`${compFormValue.length} de ${compMax} caracteres usados`);
 
   function handleCompFormSubmit(e: Event) {
@@ -413,13 +411,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
         preview: compWithHint,
       },
       {
-        name: $tStore('variants.compositions.withCounter.name'),
-        description: $tStore('variants.compositions.withCounter.description'),
-        useWhen: $tStore('variants.compositions.withCounter.use'),
-        code: `<script lang="ts">\n  let value = $state('');\n  const max = 500;\n</` + `script>\n\n<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-counter">Descrição</Label>\n  <Textarea id="ta-counter" bind:value maxlength={max} class="nds-resize-y nds-min-h-30" />\n  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">\n    <span>Descreva com clareza.</span>\n    <span class="nds-tabular-nums nds-shrink-0" aria-live="polite" aria-label={\`\${value.length} de \${max} caracteres usados\`}>{value.length}/{max}</span>\n  </div>\n</div>`,
-        preview: compWithCounter,
-      },
-      {
         name: $tStore('variants.compositions.withError.name'),
         description: $tStore('variants.compositions.withError.description'),
         useWhen: $tStore('variants.compositions.withError.use'),
@@ -447,24 +438,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
       <Label for="ta-hint">Descrição</Label>
       <Textarea id="ta-hint" class="nds-resize-y nds-min-h-30" placeholder="ex: Descreva o produto..." />
       <p class="nds-text-caption nds-text-muted-foreground">Descreva o produto com clareza, destacando os principais atributos.</p>
-    </div>
-  {/snippet}
-  {#snippet compWithCounter()}
-    <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
-      <Label for="ta-counter">Descrição</Label>
-      <Textarea
-        id="ta-counter"
-        bind:value={compCounterValue}
-        maxlength={compMax}
-        class="nds-resize-y nds-min-h-30"
-        placeholder="ex: Descreva o produto..."
-      />
-      <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
-        <span>Descreva com clareza.</span>
-        <span class="nds-tabular-nums nds-shrink-0" aria-live="polite" aria-label={compCounterAriaLabel}>
-          {compCounterValue.length}/{compMax}
-        </span>
-      </div>
     </div>
   {/snippet}
   {#snippet compWithError()}

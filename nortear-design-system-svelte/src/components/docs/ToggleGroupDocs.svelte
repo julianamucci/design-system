@@ -115,7 +115,6 @@
 
   // Compositions previews
   let compAlign = $state<string>('left');
-  let compFormat = $state<string[]>(['bold']);
   let compView = $state<string>('grid');
   let compDisabled = $state<string>('left');
   let compFilter = $state<string[]>(['compact']);
@@ -557,17 +556,6 @@ interface ToggleGroupItemProps {
         preview: compAlignmentBar,
       },
       {
-        name: $tStore('variants.compositions.formattingBar.name'),
-        description: $tStore('variants.compositions.formattingBar.description'),
-        useWhen: $tStore('variants.compositions.formattingBar.use'),
-        code: `<ToggleGroup type="multiple" variant="outline" value={['bold']} aria-label="Formatação">
-  <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-  <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-  <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
-</ToggleGroup>`,
-        preview: compFormattingBar,
-      },
-      {
         name: $tStore('variants.compositions.viewMode.name'),
         description: $tStore('variants.compositions.viewMode.description'),
         useWhen: $tStore('variants.compositions.viewMode.use'),
@@ -614,20 +602,6 @@ interface ToggleGroupItemProps {
       </ToggleGroupItem>
       <ToggleGroupItem value="right" aria-label="Alinhar à direita">
         <AlignRight aria-hidden="true" />
-      </ToggleGroupItem>
-    </ToggleGroup>
-  {/snippet}
-
-  {#snippet compFormattingBar()}
-    <ToggleGroup type="multiple" variant="outline" bind:value={compFormat} aria-label="Formatação">
-      <ToggleGroupItem value="bold" aria-label="Negrito">
-        <Bold aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="italic" aria-label="Itálico">
-        <Italic aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="underline" aria-label="Sublinhado">
-        <Underline aria-hidden="true" />
       </ToggleGroupItem>
     </ToggleGroup>
   {/snippet}

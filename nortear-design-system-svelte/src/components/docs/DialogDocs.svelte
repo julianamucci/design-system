@@ -616,29 +616,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         preview: compConfirmEmail,
       },
       {
-        name: $tStore('variants.compositions.profileEdit.name'),
-        description: $tStore('variants.compositions.profileEdit.description'),
-        useWhen: $tStore('variants.compositions.profileEdit.use'),
-        code: `<Dialog>
-  <DialogTrigger>...</DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Editar perfil</DialogTitle>
-      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
-    </DialogHeader>
-    <form class="nds-stack" data-spacing="sm">
-      <Input name="name" defaultValue="Maria Souza" />
-      <Input name="role" defaultValue="Designer" />
-    </form>
-    <DialogFooter>
-      <DialogClose>...</DialogClose>
-      <Button>Salvar alterações</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>`,
-        preview: compProfileEdit,
-      },
-      {
         name: $tStore('variants.compositions.mediaPreview.name'),
         description: $tStore('variants.compositions.mediaPreview.description'),
         useWhen: $tStore('variants.compositions.mediaPreview.use'),
@@ -672,32 +649,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
           </DialogClose>
           <Button>Enviar link</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  {/snippet}
-  {#snippet compProfileEdit()}
-    <Dialog open>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Editar perfil</DialogTitle>
-          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
-        </DialogHeader>
-        <form class="nds-stack" data-spacing="sm">
-          <label class="nds-stack nds-text-body" data-spacing="xs">
-            <span>Nome de exibição</span>
-            <input type="text" class="nds-input" defaultValue="Maria Souza" />
-          </label>
-          <label class="nds-stack nds-text-body" data-spacing="xs">
-            <span>Função</span>
-            <input type="text" class="nds-input" defaultValue="Designer" />
-          </label>
-        </form>
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-          </DialogClose>
-          <Button>Salvar alterações</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
