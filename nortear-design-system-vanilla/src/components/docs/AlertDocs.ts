@@ -297,6 +297,7 @@ export function createAlertDocs(): HTMLElement {
         const codeDestructive = `const alert = createAlert({ variant: 'destructive' });\nalert.appendChild(createAlertIcon('error'));\nalert.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));\nalert.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão e tente novamente.' }));`;
         const codeSuccess = `const alert = createAlert({ variant: 'success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
         const codeWarning = `const alert = createAlert({ variant: 'warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
+        const codeInfo = `const alert = createAlert({ variant: 'info' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         const codeDismissible = `const alert = createAlert({\n  variant: 'default',\n  dismissible: true,\n  dismissLabel: 'Fechar alerta',\n  onDismiss: () => console.log('fechado'),\n});\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         return createDocsCompositions({
@@ -328,6 +329,12 @@ export function createAlertDocs(): HTMLElement {
               description: stripHtml(t('variants.items.warning')),
               code: codeWarning,
               previewFactory: () => buildAlert('warning', 'nds-w-full', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            },
+            {
+              name: 'info',
+              description: stripHtml(t('variants.items.info')),
+              code: codeInfo,
+              previewFactory: () => buildAlert('info', 'nds-w-full', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
             },
             {
               name: stripHtml(t('variants.items.dismissible.name')),

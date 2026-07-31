@@ -63,48 +63,6 @@ export const ComAcao: Story = {
   },
 };
 
-// ─── Múltiplos Tipos ─────────────────────────────────────────────────────────
-
-export const MultiplosTipos: Story = {
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-
-    const a1 = createAlert();
-    a1.appendChild(createAlertIcon('info'));
-    a1.appendChild(createAlertTitle({ text: 'Informação' }));
-    a1.appendChild(createAlertDescription({ text: 'Mensagem informativa e neutra.' }));
-
-    const a2 = createAlert({ variant: 'destructive' });
-    a2.appendChild(createAlertIcon('error'));
-    a2.appendChild(createAlertTitle({ text: 'Erro' }));
-    a2.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
-
-    const a3 = createAlert({ variant: 'success' });
-    a3.appendChild(createAlertIcon('success'));
-    a3.appendChild(createAlertTitle({ text: 'Sucesso' }));
-    a3.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
-
-    const a4 = createAlert({ variant: 'warning' });
-    a4.appendChild(createAlertIcon('warning'));
-    a4.appendChild(createAlertTitle({ text: 'Aviso' }));
-    a4.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));
-
-    wrapper.append(a1, a2, a3, a4);
-    return wrapper;
-  },
-
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const alerts = canvas.getAllByRole('alert');
-    await expect(alerts).toHaveLength(4);
-    await expect(alerts[1]).toHaveClass('nds-alert-destructive');
-    await expect(alerts[2]).toHaveClass('nds-alert-success');
-    await expect(alerts[3]).toHaveClass('nds-alert-warning');
-  },
-};
-
 export const SemIcone: Story = {
   render: () => {
     const alert = createAlert();

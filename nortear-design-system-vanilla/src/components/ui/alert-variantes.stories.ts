@@ -51,7 +51,7 @@ export const Destructive: Story = {
 
 export const Success: Story = {
   render: () => {
-    const alert = createAlert({ className: 'nds-alert-success' });
+    const alert = createAlert({ variant: 'success' });
     alert.appendChild(createAlertIcon('success'));
     alert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
     alert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
@@ -68,7 +68,7 @@ export const Success: Story = {
 
 export const Warning: Story = {
   render: () => {
-    const alert = createAlert({ className: 'nds-alert-warning' });
+    const alert = createAlert({ variant: 'warning' });
     alert.appendChild(createAlertIcon('warning'));
     alert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));
     alert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));
@@ -80,6 +80,23 @@ export const Warning: Story = {
     const alert = canvas.getByRole('alert');
     await expect(alert).toHaveClass('nds-alert-warning');
     await expect(canvas.getByText('Assinatura expirando')).toBeVisible();
+  },
+};
+
+export const Info: Story = {
+  render: () => {
+    const alert = createAlert({ variant: 'info' });
+    alert.appendChild(createAlertIcon('info'));
+    alert.appendChild(createAlertTitle({ text: 'Dica' }));
+    alert.appendChild(createAlertDescription({ text: 'Você pode fixar os filtros mais usados para acessá-los mais rápido.' }));
+    return alert;
+  },
+
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-info');
+    await expect(canvas.getByText('Dica')).toBeVisible();
   },
 };
 
