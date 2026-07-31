@@ -138,7 +138,7 @@
         },
         "richContent": {
           "name": "Conteúdo rico",
-          "description": "AccordionContent aceita qualquer HTML — listas, tabelas, código, parágrafos. Mantenha hierarquia semântica (h3 dentro de content só se justificável).",
+          "description": "AccordionContent aceita qualquer HTML — <code>&lt;ul&gt;</code>, <code>&lt;table&gt;</code>, blocos de código, parágrafos. Mantenha hierarquia semântica (h3 dentro de content só se justificável).",
           "use": "Especificações técnicas, tabelas comparativas, documentação detalhada."
         },
         "faq": {
@@ -709,7 +709,7 @@
         },
         "richContent": {
           "name": "Rich content",
-          "description": "AccordionContent accepts any HTML — lists, tables, code, paragraphs. Keep semantic hierarchy (h3 inside content only if justified).",
+          "description": "AccordionContent accepts any HTML — <code>&lt;ul&gt;</code>, <code>&lt;table&gt;</code>, code blocks, paragraphs. Keep semantic hierarchy (h3 inside content only if justified).",
           "use": "Technical specs, comparison tables, detailed documentation."
         },
         "faq": {
@@ -1280,7 +1280,7 @@
         },
         "richContent": {
           "name": "Contenido enriquecido",
-          "description": "AccordionContent acepta cualquier HTML — listas, tablas, código, párrafos. Mantén la jerarquía semántica (h3 dentro de content solo si se justifica).",
+          "description": "AccordionContent acepta cualquier HTML — <code>&lt;ul&gt;</code>, <code>&lt;table&gt;</code>, bloques de código, párrafos. Mantén la jerarquía semántica (h3 dentro de content solo si se justifica).",
           "use": "Especificaciones técnicas, tablas comparativas, documentación detallada."
         },
         "faq": {

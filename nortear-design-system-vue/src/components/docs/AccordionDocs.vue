@@ -726,8 +726,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
                 <tbody>
                   <tr class="nds-border-b">
                     <td
-                      class="nds-py-1"
-                      style="padding-right: 1rem"
+                      class="nds-py-1 nds-pr-4"
                     >
                       CPU
                     </td><td class="nds-py-1">
@@ -736,8 +735,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
                   </tr>
                   <tr class="nds-border-b">
                     <td
-                      class="nds-py-1"
-                      style="padding-right: 1rem"
+                      class="nds-py-1 nds-pr-4"
                     >
                       RAM
                     </td><td class="nds-py-1">
@@ -746,8 +744,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
                   </tr>
                   <tr>
                     <td
-                      class="nds-py-1"
-                      style="padding-right: 1rem"
+                      class="nds-py-1 nds-pr-4"
                     >
                       SSD
                     </td><td class="nds-py-1">

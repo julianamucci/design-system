@@ -572,7 +572,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
         Novidades da versão 3.0
-        <Badge variant="default" style={{ fontSize: "10px", height: "1rem" }}>Novo</Badge>
+        <Badge>Novo</Badge>
       </span>
     </AccordionTrigger>
     <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
@@ -581,7 +581,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
         Funcionalidades em beta
-        <Badge variant="secondary" style={{ fontSize: "10px", height: "1rem" }}>Beta</Badge>
+        <Badge variant="secondary">Beta</Badge>
       </span>
     </AccordionTrigger>
     <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
@@ -593,7 +593,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                       <AccordionTrigger>
                         <span className="nds-cluster" data-spacing="xs">
                           Novidades da versão 3.0
-                          <Badge variant="default" style={{ fontSize: "10px", height: "1rem" }}>Novo</Badge>
+                          <Badge>Novo</Badge>
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>Confira o que mudou nesta release.</AccordionContent>
@@ -602,7 +602,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                       <AccordionTrigger>
                         <span className="nds-cluster" data-spacing="xs">
                           Funcionalidades em beta
-                          <Badge variant="secondary" style={{ fontSize: "10px", height: "1rem" }}>Beta</Badge>
+                          <Badge variant="secondary">Beta</Badge>
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>Recursos em testes — sujeitos a mudanças.</AccordionContent>
@@ -651,15 +651,15 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                         <table className="nds-w-full nds-text-body nds-border-collapse">
                           <tbody>
                             <tr className="nds-border-b">
-                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>CPU</td>
+                              <td className="nds-py-1 nds-pr-4">CPU</td>
                               <td className="nds-py-1">Intel Core i7-12700</td>
                             </tr>
                             <tr className="nds-border-b">
-                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>RAM</td>
+                              <td className="nds-py-1 nds-pr-4">RAM</td>
                               <td className="nds-py-1">16GB DDR5</td>
                             </tr>
                             <tr>
-                              <td className="nds-py-1" style={{ paddingRight: "1rem" }}>SSD</td>
+                              <td className="nds-py-1 nds-pr-4">SSD</td>
                               <td className="nds-py-1">512GB NVMe</td>
                             </tr>
                           </tbody>

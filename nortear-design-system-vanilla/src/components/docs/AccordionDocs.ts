@@ -533,8 +533,6 @@ export function createAccordionDocs(): HTMLElement {
                   wrapper.dataset.spacing = 'xs';
                   wrapper.textContent = label;
                   const badgeEl = createBadge({ text: badge, variant });
-                  badgeEl.style.fontSize = '10px';
-                  badgeEl.style.height = '1rem';
                   wrapper.appendChild(badgeEl);
                   span.replaceWith(wrapper);
                 });
@@ -563,9 +561,9 @@ export function createAccordionDocs(): HTMLElement {
                 const specsHtml = `
                   <table class="nds-w-full nds-text-body nds-border-collapse">
                     <tbody>
-                      <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">CPU</td><td class="nds-py-1">Intel Core i7-12700</td></tr>
-                      <tr class="nds-border-b"><td class="nds-py-1" style="padding-right:1rem">RAM</td><td class="nds-py-1">16GB DDR5</td></tr>
-                      <tr><td class="nds-py-1" style="padding-right:1rem">SSD</td><td class="nds-py-1">512GB NVMe</td></tr>
+                      <tr class="nds-border-b"><td class="nds-py-1 nds-pr-4">CPU</td><td class="nds-py-1">Intel Core i7-12700</td></tr>
+                      <tr class="nds-border-b"><td class="nds-py-1 nds-pr-4">RAM</td><td class="nds-py-1">16GB DDR5</td></tr>
+                      <tr><td class="nds-py-1 nds-pr-4">SSD</td><td class="nds-py-1">512GB NVMe</td></tr>
                     </tbody>
                   </table>`;
                 const incluiHtml = `

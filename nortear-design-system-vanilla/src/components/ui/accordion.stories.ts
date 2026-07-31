@@ -182,5 +182,15 @@ document.querySelector('#app')?.append(accordion);`;
       await expect(triggers[triggers.length - 1]).toHaveFocus();
     });
 
+    await step('Tab e Shift+Tab movem o foco entre triggers', async () => {
+      // Documentado em accessibility.keyboard.tab/shiftTab; o conteúdo dos itens
+      // não tem elementos focáveis, então Tab vai direto ao próximo trigger.
+      triggers[0].focus();
+      await userEvent.tab();
+      await expect(triggers[1]).toHaveFocus();
+      await userEvent.tab({ shift: true });
+      await expect(triggers[0]).toHaveFocus();
+    });
+
   },
 };

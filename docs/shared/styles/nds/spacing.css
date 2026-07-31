@@ -39,6 +39,9 @@
 .nds-py-1    { padding-block: var(--spacing-1); }
 .nds-py-2    { padding-block: var(--spacing-2); }
 
+/* ── Padding inline-end (pr) ───────────────────────────────────────────────── */
+.nds-pr-4    { padding-inline-end: var(--spacing-4); }
+
 /* ── Margin-bottom (mb) ────────────────────────────────────────────────────── */
 .nds-mb-0    { margin-bottom: 0; }
 .nds-mb-1    { margin-bottom: var(--spacing-1); }
