@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { Card } from '@/components/ui/card';
+  import { CodeBlock } from '@/components/ui/code-block';
   import { Button } from '@/components/ui/button';
   import DOMPurify from 'dompurify';
 
@@ -25,13 +26,16 @@
    * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
    * `data-track-label="Copiar código"`.
    */
-  const { title, items, id = 'variantes', note, componentSlug }: {
+  const { title, items, id = 'variantes', note, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
     title: string;
     items: DocsVariantItem[];
     id?: string;
     /** Nota introdutória da seção (HTML inline permitido). */
     note?: string;
     componentSlug?: string;
+    language?: string;
+    copyLabel?: string;
+    copiedLabel?: string;
   } = $props();
 
   let openStates = $state<Record<number, boolean>>({});
@@ -73,9 +77,7 @@
               {openStates[i] ? 'Ocultar código' : 'Ver código'}
             </Button>
             {#if openStates[i]}
-              <Card class="nds-code-block nds-shadow-none nds-mt-2">
-                <code class="nds-whitespace-pre">{item.code}</code>
-              </Card>
+              <CodeBlock class="nds-mt-2" code={item.code} {language} showLineNumbers={false} {copyLabel} {copiedLabel} />
             {/if}
           </div>
         {/if}

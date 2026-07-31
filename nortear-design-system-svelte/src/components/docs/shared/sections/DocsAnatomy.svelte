@@ -1,13 +1,16 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
-  import { Card } from '@/components/ui/card';
+  import { CodeBlock } from '@/components/ui/code-block';
 
-  const { title, items, structureCode, structureLabel }: {
+  const { title, items, structureCode, structureLabel, language = 'svelte', copyLabel, copiedLabel }: {
     title: string;
     items: string[];
     structureCode: string;
     structureLabel?: string;
+    language?: string;
+    copyLabel?: string;
+    copiedLabel?: string;
   } = $props();
 </script>
 
@@ -25,12 +28,12 @@
             </li>
           {/each}
         </ol>
-        <Card class="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
+        <div>
           {#if structureLabel}
             <p class="nds-text-caption nds-text-muted-foreground nds-mb-2">{structureLabel}</p>
           {/if}
-          <pre class="nds-font-mono nds-text-body nds-whitespace-pre">{structureCode}</pre>
-        </Card>
+          <CodeBlock code={structureCode} {language} showLineNumbers={false} {copyLabel} {copiedLabel} />
+        </div>
     </div>
   </ComponentDemo>
 </section>

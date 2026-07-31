@@ -1,15 +1,19 @@
 <script lang="ts">
   import { Card } from '@/components/ui/card';
+  import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
   interface DocsTokenItem { token: string; value: string; description: string }
 
-  const { title, cols, items, customizationTitle, customizationCode }: {
+  const { title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: {
     title: string;
     cols: { token: string; value: string; description: string };
     items: DocsTokenItem[];
     customizationTitle?: string;
     customizationCode?: string;
+    language?: string;
+    copyLabel?: string;
+    copiedLabel?: string;
   } = $props();
 </script>
 
@@ -40,9 +44,7 @@
       <div class="nds-stack" data-spacing="sm">
         <h3 class="nds-text-base nds-font-semibold">{customizationTitle}</h3>
         {#if customizationCode}
-          <Card class="nds-code-block nds-shadow-none">
-            <code class="nds-whitespace-pre">{customizationCode}</code>
-          </Card>
+          <CodeBlock code={customizationCode} {language} showLineNumbers={false} {copyLabel} {copiedLabel} />
         {/if}
       </div>
     {/if}

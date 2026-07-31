@@ -1,6 +1,7 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
+  import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
   interface DocsPropItem {
@@ -12,7 +13,7 @@
     items: DocsPropItem[];
   }
 
-  const { title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode }: {
+  const { title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'svelte', copyLabel, copiedLabel }: {
     title: string;
     tables: DocsPropsTableDef[];
     interfaceCode?: string;
@@ -20,6 +21,9 @@
     extensibilityNotes?: string;
     /** Exemplo de extensão, renderizado depois das notas. */
     extensibilityCode?: string;
+    language?: string;
+    copyLabel?: string;
+    copiedLabel?: string;
   } = $props();
 </script>
 
@@ -58,9 +62,7 @@
       </div>
     {/each}
     {#if interfaceCode}
-      <Card class="nds-code-block nds-shadow-none">
-        <code class="nds-whitespace-pre">{interfaceCode}</code>
-      </Card>
+      <CodeBlock code={interfaceCode} {language} showLineNumbers={false} {copyLabel} {copiedLabel} />
     {/if}
     {#if extensibilityTitle}
       <div class="nds-stack" data-spacing="sm">
@@ -69,9 +71,7 @@
           <div class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">{@html DOMPurify.sanitize(extensibilityNotes)}</div>
         {/if}
         {#if extensibilityCode}
-          <Card class="nds-code-block nds-shadow-none">
-            <code class="nds-whitespace-pre">{extensibilityCode}</code>
-          </Card>
+          <CodeBlock code={extensibilityCode} {language} showLineNumbers={false} {copyLabel} {copiedLabel} />
         {/if}
       </div>
     {/if}
