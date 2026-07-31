@@ -54,7 +54,7 @@ export const Playground: Story = {
           return `<script lang="ts">
   import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
   import Info from "@lucide/svelte/icons/info";
-<\/script>
+</script>
 
 <Alert${variantAttr}>
   <Info class="nds-icon" aria-hidden="true" />

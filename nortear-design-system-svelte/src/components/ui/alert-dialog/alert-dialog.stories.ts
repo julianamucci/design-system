@@ -70,7 +70,7 @@ export const Playground: Story = {
   import { Button } from "@/components/ui/button";
 
   let open = $state(${open});
-<\/script>
+</script>
 
 <AlertDialog bind:open>
   <AlertDialogTrigger>

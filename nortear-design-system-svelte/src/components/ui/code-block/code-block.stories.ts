@@ -116,7 +116,7 @@ export const Playground: Story = {
           return `<script lang="ts">
   import { CodeBlock } from "@/components/ui/code-block";
   const source = "…";
-<\/script>
+</script>
 
 <CodeBlock
   ${attrs}
