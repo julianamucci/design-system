@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Alert, AlertAction, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
+import { Info } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Alert/Composicoes',
@@ -64,45 +64,6 @@ export const ComAcao: Story = {
       const action = canvasElement.querySelector('[data-slot="alert-action"]');
       await expect(action).toHaveClass('nds-alert-action');
     });
-  },
-};
-
-export const MultiplosTipos: Story = {
-  render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, Info, AlertCircle, CheckCircle2, TriangleAlert },
-    setup() { return {}; },
-    template: `
-      <div class="nds-stack" data-spacing="sm">
-        <Alert>
-          <Info class="nds-icon" aria-hidden="true" />
-          <AlertTitle>Informação</AlertTitle>
-          <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
-        </Alert>
-        <Alert variant="destructive">
-          <AlertCircle class="nds-icon" aria-hidden="true" />
-          <AlertTitle>Erro</AlertTitle>
-          <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
-        </Alert>
-        <Alert variant="success">
-          <CheckCircle2 class="nds-icon" aria-hidden="true" />
-          <AlertTitle>Sucesso</AlertTitle>
-          <AlertDescription>Ação concluída com sucesso.</AlertDescription>
-        </Alert>
-        <Alert variant="warning">
-          <TriangleAlert class="nds-icon" aria-hidden="true" />
-          <AlertTitle>Aviso</AlertTitle>
-          <AlertDescription>Aviso que requer atenção.</AlertDescription>
-        </Alert>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const alerts = canvas.getAllByRole('alert');
-    await expect(alerts).toHaveLength(4);
-    await expect(alerts[1]).toHaveClass('nds-alert-destructive');
-    await expect(alerts[2]).toHaveClass('nds-alert-success');
-    await expect(alerts[3]).toHaveClass('nds-alert-warning');
   },
 };
 

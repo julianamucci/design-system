@@ -60,7 +60,7 @@ export const Success: Story = {
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() { return {}; },
     template: `
-      <Alert class="nds-alert-success">
+      <Alert variant="success">
         <CheckCircle2 class="nds-icon" aria-hidden="true" />
         <AlertTitle>Perfil atualizado</AlertTitle>
         <AlertDescription>Suas informações foram salvas com sucesso.</AlertDescription>
@@ -79,7 +79,7 @@ export const Warning: Story = {
     components: { Alert, AlertTitle, AlertDescription, TriangleAlert },
     setup() { return {}; },
     template: `
-      <Alert class="nds-alert-warning">
+      <Alert variant="warning">
         <TriangleAlert class="nds-icon" aria-hidden="true" />
         <AlertTitle>Assinatura expirando</AlertTitle>
         <AlertDescription>Sua assinatura expira em 3 dias. Renove para evitar interrupções.</AlertDescription>
@@ -90,6 +90,26 @@ export const Warning: Story = {
     const alert = within(canvasElement).getByRole('alert');
     await expect(alert).toHaveClass('nds-alert-warning');
     await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
+  },
+};
+
+export const InfoVariant: Story = {
+  name: 'Info',
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, Info },
+    setup() { return {}; },
+    template: `
+      <Alert variant="info">
+        <Info class="nds-icon" aria-hidden="true" />
+        <AlertTitle>Dica</AlertTitle>
+        <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
+      </Alert>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const alert = within(canvasElement).getByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-info');
+    await expect(within(canvasElement).getByText('Dica')).toBeVisible();
   },
 };
 

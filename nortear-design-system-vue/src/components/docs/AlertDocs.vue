@@ -158,6 +158,14 @@ const codeWarning = `<Alert variant="warning">
   </AlertDescription>
 </Alert>`;
 
+const codeInfo = `<Alert variant="info">
+  <Info aria-hidden="true" />
+  <AlertTitle>Dica</AlertTitle>
+  <AlertDescription>
+    Você pode personalizar os atalhos de teclado nas configurações.
+  </AlertDescription>
+</Alert>`;
+
 const codeWithoutTitle = `<Alert>
   <Info aria-hidden="true" />
   <AlertDescription>
@@ -200,6 +208,7 @@ const variantItems = computed(() => [
   { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive  },
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
+  { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo         },
   { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
   { name: tContent('variants.items.dismissible.name'), description: tContent('variants.items.dismissible.description'), useWhen: tContent('variants.items.dismissible.use'), code: codeDismissible },
 ]);
@@ -500,12 +509,22 @@ const visualTestItems = computed(() => [
         </Alert>
       </template>
       <template #variant-preview-4>
+        <Alert
+          variant="info"
+          class="nds-w-full"
+        >
+          <Info aria-hidden="true" />
+          <AlertTitle>Dica</AlertTitle>
+          <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
+        </Alert>
+      </template>
+      <template #variant-preview-5>
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-6>
         <Alert
           dismissible
           class="nds-w-full"
