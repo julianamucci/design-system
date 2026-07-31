@@ -55,7 +55,7 @@ export const Destructive: Story = {
 
 export const Success: Story = {
   render: () => (
-    <Alert className="nds-alert-success">
+    <Alert variant="success">
       <CheckCircle2 aria-hidden="true" className="nds-icon" />
       <AlertTitle>Perfil atualizado</AlertTitle>
       <AlertDescription>
@@ -68,6 +68,43 @@ export const Success: Story = {
     const alert = canvas.getByRole("alert");
     await expect(alert).toHaveClass("nds-alert-success");
     await expect(canvas.getByText("Perfil atualizado")).toBeVisible();
+  },
+};
+
+export const Warning: Story = {
+  render: () => (
+    <Alert variant="warning">
+      <TriangleAlert aria-hidden="true" className="nds-icon" />
+      <AlertTitle>Assinatura expirando</AlertTitle>
+      <AlertDescription>
+        Sua assinatura expira em 3 dias. Renove para evitar interrupções.
+      </AlertDescription>
+    </Alert>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-warning");
+    await expect(canvas.getByText("Assinatura expirando")).toBeVisible();
+  },
+};
+
+export const InfoVariante: Story = {
+  name: "Info",
+  render: () => (
+    <Alert variant="info">
+      <Info aria-hidden="true" className="nds-icon" />
+      <AlertTitle>Dica</AlertTitle>
+      <AlertDescription>
+        Você pode alterar o tema em Configurações a qualquer momento.
+      </AlertDescription>
+    </Alert>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("alert");
+    await expect(alert).toHaveClass("nds-alert-info");
+    await expect(canvas.getByText("Dica")).toBeVisible();
   },
 };
 
@@ -123,23 +160,5 @@ export const DismissibleTeclado: Story = {
       await expect(canvas.queryByRole("alert")).toBeNull();
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
-  },
-};
-
-export const Warning: Story = {
-  render: () => (
-    <Alert className="nds-alert-warning">
-      <TriangleAlert aria-hidden="true" className="nds-icon" />
-      <AlertTitle>Assinatura expirando</AlertTitle>
-      <AlertDescription>
-        Sua assinatura expira em 3 dias. Renove para evitar interrupções.
-      </AlertDescription>
-    </Alert>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const alert = canvas.getByRole("alert");
-    await expect(alert).toHaveClass("nds-alert-warning");
-    await expect(canvas.getByText("Assinatura expirando")).toBeVisible();
   },
 };

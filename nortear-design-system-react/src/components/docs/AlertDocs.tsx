@@ -162,6 +162,14 @@ import { Info } from "lucide-react";`;
   </AlertDescription>
 </Alert>`;
 
+  const codeInfo = `<Alert variant="info">
+  <Info aria-hidden="true" />
+  <AlertTitle>Dica</AlertTitle>
+  <AlertDescription>
+    Você pode alterar o tema em Configurações a qualquer momento.
+  </AlertDescription>
+</Alert>`;
+
   const codeDismissible = `<Alert dismissible onDismiss={handleDismiss} dismissLabel="Fechar alerta">
   <CheckCircle2 aria-hidden="true" />
   <AlertTitle>Perfil atualizado</AlertTitle>
@@ -431,6 +439,18 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <TriangleAlert aria-hidden="true" />
                     <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
+                name: "info",
+                description: stripHtml(tContent("variants.items.info")),
+                code: codeInfo,
+                preview: (
+                  <Alert variant="info" className="nds-w-full">
+                    <Info aria-hidden="true" />
+                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                    <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
               },

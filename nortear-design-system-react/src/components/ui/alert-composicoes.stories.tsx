@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
+import { Info } from "lucide-react";
 import { Alert, AlertAction, AlertTitle, AlertDescription } from "./alert";
 import { Button } from "./button";
 
@@ -58,41 +58,6 @@ export const ComAcao: Story = {
       const action = canvasElement.querySelector('[data-slot="alert-action"]');
       await expect(action).toHaveClass("nds-alert-action");
     });
-  },
-};
-
-export const MultiplosTipos: Story = {
-  render: () => (
-    <div className="nds-stack" data-spacing="sm">
-      <Alert>
-        <Info aria-hidden="true" className="nds-icon" />
-        <AlertTitle>Informação</AlertTitle>
-        <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
-      </Alert>
-      <Alert variant="destructive">
-        <AlertCircle aria-hidden="true" className="nds-icon" />
-        <AlertTitle>Erro</AlertTitle>
-        <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
-      </Alert>
-      <Alert variant="success">
-        <CheckCircle2 aria-hidden="true" className="nds-icon" />
-        <AlertTitle>Sucesso</AlertTitle>
-        <AlertDescription>Ação concluída com sucesso.</AlertDescription>
-      </Alert>
-      <Alert variant="warning">
-        <TriangleAlert aria-hidden="true" className="nds-icon" />
-        <AlertTitle>Aviso</AlertTitle>
-        <AlertDescription>Aviso que requer atenção.</AlertDescription>
-      </Alert>
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const alerts = canvas.getAllByRole("alert");
-    await expect(alerts).toHaveLength(4);
-    await expect(alerts[1]).toHaveClass("nds-alert-destructive");
-    await expect(alerts[2]).toHaveClass("nds-alert-success");
-    await expect(alerts[3]).toHaveClass("nds-alert-warning");
   },
 };
 
