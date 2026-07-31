@@ -91,12 +91,9 @@ falham identicamente antes e depois (8/8). É o equivalente svelte dos 61
 failures do React já registrados — backlog de correção de primitivos/stories,
 não de lint.
 
-## Skills órfãs pré-históricas — decisão de remoção pendente
+## Skills órfãs pré-históricas — REMOVIDAS (2026-08-01, aprovado pela dona)
 
-`nortear-design-system-react/guidelines/.claude/skills/` tem 4 arquivos
-(skill-document-component, skill-implement-component, skill-create-showcase,
-skill-implement-docs-page) que NADA referencia — são o sistema de skills
-anterior ao `.claude/commands/`, e ensinam a API de duas gerações atrás
-("variantes customizadas sempre via className"). Foi deles + RULES.md que as
-stories erradas de Success/Warning se regeneravam. Apagar é decisão da dona do
-repo; enquanto existirem, são reservatório de padrão morto.
+Os 4 arquivos de `nortear-design-system-react/guidelines/.claude/skills/`
+(sistema anterior ao `.claude/commands/`, sem nenhuma referência, ensinando
+"variantes customizadas sempre via className") foram apagados. Era o
+reservatório mais antigo do padrão morto que regenerava as stories erradas.
