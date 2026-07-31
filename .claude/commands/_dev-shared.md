@@ -305,7 +305,13 @@ Ver `navigation-menu` e `menubar` como referências exemplares.
 
 ```bash
 node scripts/audit.mjs <slug> --category security,performance,analytics,quality --json
+npm run lint            # da SUA stack — errors derrubam o CI, warnings não
 ```
+
+O lint não é opcional e não é substituído pelo typecheck: `svelte-check` não vê
+regras de eslint, e foi assim que 3 stories commitadas por 3 lotes diferentes
+chegaram ao CI com o mesmo error (`no-useless-escape`) — os lotes de react/vue/
+vanilla rodavam eslint, o de svelte só rodava svelte-check.
 
 Para cada violação da sua stack, corrija ANTES do commit. Se não puder corrigir (exige mudar UI primitive), inclua no commit message:
 ```

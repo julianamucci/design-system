@@ -96,6 +96,14 @@ aparecem nesta stack:
    da story. **Toda Playground precisa de `docs.source.transform`** devolvendo o
    uso real do componente, montado a partir de `storyContext.args`.
 
+   **Armadilha do snippet com `<script>`**: dentro de arquivo `.svelte`, o
+   `</script>` em string precisa do escape `<\/script>` — senão o compilador
+   fecha o bloco real. As docs pages têm dezenas desses escapes LEGÍTIMOS, e é
+   deles que se copia o padrão. Mas o transform vive em `*.stories.ts`, e em
+   `.ts` o escape é desnecessário e vira **error** de eslint
+   (`no-useless-escape`), que derruba o CI. Em `.ts`: `</script>` sem escape,
+   sempre. Aconteceu 3 vezes antes desta nota existir.
+
 ---
 
 ## Bits UI Specifics
