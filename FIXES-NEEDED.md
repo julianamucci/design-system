@@ -78,12 +78,15 @@ Chromatic:
   code-block: decisão de conteúdo, não de código. O `ui.json` é global (48
   componentes), então mudá-lo por causa de um componente seria pior.
 
-## Backlog de lint — svelte (não bloqueia CI)
+## Lint svelte: RESOLVIDO (2026-08-01)
 
-271 warnings no `eslint .` da stack Svelte, em 5 famílias:
-`svelte/require-each-key` (~120, concentradas em docs pages e containers),
-`svelte/no-useless-children-snippet` (~45, uma por docs page — padrão do
-DocsPageLayout), `unused-imports/no-unused-vars` (~50, `body`/`canvas` órfãos em
-plays de stories), `storybook/no-redundant-story-name` (~20) e
-`@typescript-eslint/no-explicit-any` (~20). São warnings, não erros — o CI passa;
-limpar vale um lote próprio, por família e não por arquivo.
+Os 271 warnings foram zerados em 2 commits (936a4897 docs, 80661d41 ui):
+eslint . com 0 problems, svelte-check 750 -> 748.
+
+## Backlog de testes — svelte (pré-existente, medido em 2026-08-01)
+
+A suíte completa (vitest storybook) tem 50 de 180 arquivos falhando. Verificado
+por restauração seletiva que NÃO é do lote de lint: tooltip e toggle-group
+falham identicamente antes e depois (8/8). É o equivalente svelte dos 61
+failures do React já registrados — backlog de correção de primitivos/stories,
+não de lint.
