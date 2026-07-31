@@ -6,8 +6,8 @@
     "description": "Mensagem estática e persistente para comunicar erros, avisos, sucesso ou informações importantes no fluxo da página.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentação do Alert: 2 variantes nativas, success e warning via className, acessibilidade WCAG com role=\"alert\" automático.",
-      "aiSummary": "Componente Alert com 2 variantes nativas (default, destructive), variantes success e warning via className, role=\"alert\" automático e suporte a ícone, título e descrição.",
+      "description": "Documentação do Alert: 5 variantes semânticas via prop, opção dismissible e acessibilidade WCAG com role=\"alert\" automático.",
+      "aiSummary": "Componente Alert com 5 variantes semânticas (default, destructive, success, warning, info) pela prop de variante, opção dismissible com botão de fechar, role=\"alert\" automático e suporte a ícone, título e descrição.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
@@ -418,8 +418,8 @@
     "description": "Static, persistent message for communicating errors, warnings, success, or important information within the page flow.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentation for Alert: 2 native variants, success and warning via className, WCAG accessibility with automatic role=\"alert\".",
-      "aiSummary": "Alert component with 2 native variants (default, destructive), success and warning via className, automatic role=\"alert\", and support for icon, title, and description.",
+      "description": "Documentation for Alert: 5 semantic variants via prop, dismissible option and WCAG accessibility with automatic role=\"alert\".",
+      "aiSummary": "Alert component with 5 semantic variants (default, destructive, success, warning, info) through the variant prop, dismissible option with close button, automatic role=\"alert\" and support for icon, title and description.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
@@ -830,8 +830,8 @@
     "description": "Mensaje estático y persistente para comunicar errores, advertencias, éxito o información importante en el flujo de la página.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentación del Alert: 2 variantes nativas, success y warning vía className, accesibilidad WCAG con role=\"alert\" automático.",
-      "aiSummary": "Componente Alert con 2 variantes nativas (default, destructive), success y warning vía className, role=\"alert\" automático y soporte para ícono, título y descripción.",
+      "description": "Documentación del Alert: 5 variantes semánticas vía prop, opción dismissible y accesibilidad WCAG con role=\"alert\" automático.",
+      "aiSummary": "Componente Alert con 5 variantes semánticas (default, destructive, success, warning, info) mediante la prop de variante, opción dismissible con botón de cierre, role=\"alert\" automático y soporte para ícono, título y descripción.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {

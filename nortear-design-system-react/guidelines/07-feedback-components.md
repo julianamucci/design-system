@@ -31,10 +31,11 @@ Alert
 |---|---|---|
 | `default` | nativa | Informativo, neutro |
 | `destructive` | nativa | Erro / destrutivo |
-| Success | via `className` (`bg-success/10 text-success border-success/30`) | Confirmação |
-| Warning | via `className` (`bg-warning/10 text-warning border-warning/30`) | Aviso |
+| `success` | nativa | Confirmação |
+| `warning` | nativa | Aviso |
+| `info` | nativa | Dica / contexto adicional |
 
-> As variantes `warning` e `success` não existem na API oficial — são implementadas via `className` com tokens do projeto.
+> As 5 variantes são valores da prop `variant` desde PATCHES.md#alert-five-variants — **nunca** aplicar variante via `className`. Há também a opção `dismissible` (botão de fechar, PATCHES.md#alert-dismissible).
 
 **Ícones recomendados por contexto** (Lucide React):
 
@@ -96,7 +97,7 @@ O ícone é o **filho direto** do `.nds-alert`, antes do título. O seletor `.nd
 | `destructive` | Estado de erro ou alerta crítico |
 | `outline` | Sutil, sem preenchimento — tag opcional |
 
-> O Badge **não tem prop `size`**. Variações de tamanho são feitas via `className` customizado. Variantes `success` / `warning` via tokens (`bg-success/10 text-success border-success/30`, idem warning).
+> O Badge **não tem prop `size`** (tamanho via `className` customizado) e **não tem variantes `success`/`warning`** — nem como prop nem como classe `.nds-badge-*`. Caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., guideline 04 §Tokens de Componente); demanda recorrente vira patch de API, como o #alert-five-variants.
 
 **Regras**:
 - Texto máximo: 2 palavras — para mais contexto, usar outro componente.

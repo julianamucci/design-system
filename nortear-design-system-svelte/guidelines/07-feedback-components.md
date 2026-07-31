@@ -28,12 +28,15 @@ Alert (variant)
 
 **Variantes**:
 
-| Variante | Fonte | Token / class |
+| Variante | Fonte | Classe emitida |
 |---|---|---|
-| `default` | cva nativa | `bg-background text-foreground` |
-| `destructive` | cva nativa | `text-destructive border-destructive/30` |
-| `success` | via `class` | `bg-success/10 text-success border-success/30` |
-| `warning` | via `class` | `bg-warning/10 text-warning border-warning/30` |
+| `default` | prop `variant` | `.nds-alert` |
+| `destructive` | prop `variant` | `.nds-alert-destructive` |
+| `success` | prop `variant` | `.nds-alert-success` |
+| `warning` | prop `variant` | `.nds-alert-warning` |
+| `info` | prop `variant` | `.nds-alert-info` |
+
+> As 5 variantes são valores da prop `variant` desde PATCHES.md#alert-five-variants — **nunca** aplicar variante via `class`. Há também a opção `dismissible` (PATCHES.md#alert-dismissible).
 
 **Regras**:
 - Sempre acompanhado de ícone + texto — a cor nunca é o único indicador de estado
@@ -56,7 +59,7 @@ Alert (variant)
 | Variante | Fonte |
 |---|---|
 | `default`, `secondary`, `outline`, `destructive` | cva nativa |
-| `success` / `warning` | via `class` com tokens `success`/`warning` |
+| `success` / `warning` | **não existem** — nem prop nem classe `.nds-badge-*`; caso pontual = vars internas escopadas (guideline 04) |
 
 **Regras**:
 - Máximo 2-3 palavras — badges são rótulos, não frases

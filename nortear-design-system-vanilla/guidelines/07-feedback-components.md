@@ -75,7 +75,7 @@ span (inline-flex, rounded-full)
 - Padding horizontal em `--spacing-2.5`, vertical em `--spacing-0.5`; nunca altura fixa
 - `rounded-full` para badges de status; `rounded-md` para chips de categoria
 - Font-weight `semibold` para legibilidade em tamanho pequeno
-- Tokens semânticos: `bg-success/10 text-success border-success/30` para variantes warning/success customizadas
+- Variantes semânticas do Alert (success/warning/info) são opção `variant` da factory (PATCHES.md#alert-five-variants); no Badge não existem — caso pontual sobrescreve as vars internas escopadas (guideline 04 §Tokens de Componente)
 - Não usar emojis dentro do badge — usar ícone lucide (`h-3 w-3`) antes do label se necessário
 
 **Acessibilidade**:

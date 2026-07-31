@@ -32,12 +32,13 @@ Alert (variant)
 
 | Variante | Implementação | Uso |
 |----------|---------------|-----|
-| `default` | nativa | Informativo / neutro |
-| `destructive` | nativa | Erro crítico |
-| `success` | `className="bg-success/10 text-success border-success/30"` | Confirmação de estado |
-| `warning` | `className="bg-warning/10 text-warning border-warning/30"` | Aviso |
+| `default` | prop `variant` | Informativo / neutro |
+| `destructive` | prop `variant` | Erro crítico |
+| `success` | prop `variant` | Confirmação de estado |
+| `warning` | prop `variant` | Aviso |
+| `info` | prop `variant` | Dica / contexto adicional |
 
-> Só `default` e `destructive` são variantes nativas; `success` e `warning` são compostas via `className` com tokens do projeto.
+> As 5 variantes são valores da prop `variant` desde PATCHES.md#alert-five-variants — **nunca** aplicar variante via `class`. Há também a opção `dismissible` (PATCHES.md#alert-dismissible).
 
 **Ícones recomendados por contexto** (Lucide):
 
@@ -95,10 +96,12 @@ Alert (variant)
 | `secondary` | nativa | Informativo secundário — categoria neutra |
 | `destructive` | nativa | Estado de erro ou alerta crítico |
 | `outline` | nativa | Sutil, sem preenchimento — tag opcional |
-| `success` | `className` com tokens `success` | Estado positivo |
-| `warning` | `className` com tokens `warning` | Estado de aviso |
 
-> O Badge **não tem prop `size`**. Variações de tamanho são feitas via `className` customizado.
+> O Badge **não tem prop `size`** (tamanho via `class` customizado) e **não tem
+> variantes `success`/`warning`** — nem como prop nem como classe `.nds-badge-*`.
+> Caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc.,
+> guideline 04 §Tokens de Componente); demanda recorrente vira patch de API,
+> como o #alert-five-variants.
 
 **Regras**:
 - Texto máximo: 2 palavras — para mais contexto, usar outro componente
