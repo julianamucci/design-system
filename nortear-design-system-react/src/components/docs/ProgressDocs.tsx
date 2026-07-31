@@ -477,30 +477,30 @@ interface ProgressProps extends Progress.Root.Props {
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: "value",
-          behavior: tContent("usage.scenarios.cols.scenario"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
           {
-            label: tContent("states.items.default"),
-            trigger: "0",
-            behavior: stripHtml(tContent("states.descriptions.default")),
+            label: tContent("states.default.label"),
+            trigger: tContent("states.default.trigger"),
+            behavior: stripHtml(tContent("states.default.behavior")),
           },
           {
-            label: tContent("states.items.loading"),
-            trigger: "0 < v < 100",
-            behavior: stripHtml(tContent("states.descriptions.loading")),
+            label: tContent("states.loading.label"),
+            trigger: tContent("states.loading.trigger"),
+            behavior: stripHtml(tContent("states.loading.behavior")),
           },
           {
-            label: tContent("states.items.complete"),
-            trigger: "100",
-            behavior: stripHtml(tContent("states.descriptions.complete")),
+            label: tContent("states.complete.label"),
+            trigger: tContent("states.complete.trigger"),
+            behavior: stripHtml(tContent("states.complete.behavior")),
           },
           {
-            label: tContent("states.items.indeterminate"),
-            trigger: "null",
-            behavior: stripHtml(tContent("states.descriptions.indeterminate")),
+            label: tContent("states.indeterminate.label"),
+            trigger: tContent("states.indeterminate.trigger"),
+            behavior: stripHtml(tContent("states.indeterminate.behavior")),
           },
         ]}
       />

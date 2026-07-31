@@ -190,17 +190,6 @@ interface DrawerProps {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
-
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
     trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
@@ -653,22 +642,26 @@ interface DrawerProps {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.closed"),
-            trigger: "defaultOpen={false}",
-            behavior: stripHtml(tContent("states.descriptions.closed")),
+            label: tContent("states.closed.label"),
+            trigger: tContent("states.closed.trigger"),
+            behavior: stripHtml(tContent("states.closed.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: "defaultOpen={true}",
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.controlled"),
-            trigger: "open + onOpenChange",
-            behavior: stripHtml(tContent("states.descriptions.controlled")),
+            label: tContent("states.controlled.label"),
+            trigger: tContent("states.controlled.trigger"),
+            behavior: stripHtml(tContent("states.controlled.behavior")),
           },
         ]}
       />

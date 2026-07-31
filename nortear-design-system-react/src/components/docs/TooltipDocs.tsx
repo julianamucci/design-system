@@ -195,17 +195,6 @@ interface TooltipContentProps {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
-
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
     trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
@@ -713,32 +702,36 @@ interface TooltipContentProps {
         {/* ── Estados ───────────────────────────────────────────────── */}
         <DocsStates
           title={tContent("states.title")}
-          cols={stateCols}
+          cols={{
+            state: tContent("states.cols.state"),
+            trigger: tContent("states.cols.trigger"),
+            behavior: tContent("states.cols.behavior"),
+          }}
           items={[
             {
-              label: tContent("states.items.closed"),
-              trigger: 'data-state="closed"',
-              behavior: stripHtml(tContent("states.descriptions.closed")),
+              label: tContent("states.closed.label"),
+              trigger: tContent("states.closed.trigger"),
+              behavior: stripHtml(tContent("states.closed.behavior")),
             },
             {
-              label: tContent("states.items.open"),
-              trigger: 'data-state="open"',
-              behavior: stripHtml(tContent("states.descriptions.open")),
+              label: tContent("states.open.label"),
+              trigger: tContent("states.open.trigger"),
+              behavior: stripHtml(tContent("states.open.behavior")),
             },
             {
-              label: tContent("states.items.hover"),
-              trigger: "mouseenter",
-              behavior: stripHtml(tContent("states.descriptions.hover")),
+              label: tContent("states.hover.label"),
+              trigger: tContent("states.hover.trigger"),
+              behavior: stripHtml(tContent("states.hover.behavior")),
             },
             {
-              label: tContent("states.items.focus"),
-              trigger: "focus",
-              behavior: stripHtml(tContent("states.descriptions.focus")),
+              label: tContent("states.focus.label"),
+              trigger: tContent("states.focus.trigger"),
+              behavior: stripHtml(tContent("states.focus.behavior")),
             },
             {
-              label: tContent("states.items.delayed"),
-              trigger: 'data-state="delayed-open"',
-              behavior: stripHtml(tContent("states.descriptions.delayed")),
+              label: tContent("states.delayed.label"),
+              trigger: tContent("states.delayed.trigger"),
+              behavior: stripHtml(tContent("states.delayed.behavior")),
             },
           ]}
         />

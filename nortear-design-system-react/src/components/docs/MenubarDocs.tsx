@@ -198,16 +198,6 @@ interface MenubarItemProps {
 }`;
 
   // ─── Locale-aware column labels ─────────────────────────────────────────
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
 
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
@@ -720,27 +710,31 @@ interface MenubarItemProps {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.closed"),
-            trigger: "defaultOpen={false}",
-            behavior: stripHtml(tContent("states.descriptions.closed")),
+            label: tContent("states.closed.label"),
+            trigger: tContent("states.closed.trigger"),
+            behavior: stripHtml(tContent("states.closed.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: "<MenubarMenu defaultOpen>",
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "<Item disabled>",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
           {
-            label: tContent("states.items.checked"),
-            trigger: "<CheckboxItem checked>",
-            behavior: stripHtml(tContent("states.descriptions.checked")),
+            label: tContent("states.checked.label"),
+            trigger: tContent("states.checked.trigger"),
+            behavior: stripHtml(tContent("states.checked.behavior")),
           },
         ]}
       />

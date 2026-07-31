@@ -208,17 +208,6 @@ interface PopoverContentProps {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
-
   const analyticsCols = {
     event: tContent("analytics.table.event"),
     trigger: tContent("analytics.table.trigger"),
@@ -903,27 +892,31 @@ interface PopoverContentProps {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.closed"),
-            trigger: "defaultOpen={false}",
-            behavior: stripHtml(tContent("states.descriptions.closed")),
+            label: tContent("states.closed.label"),
+            trigger: tContent("states.closed.trigger"),
+            behavior: stripHtml(tContent("states.closed.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: "defaultOpen={true}",
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.transitioning"),
-            trigger: "data-open / data-closed",
-            behavior: stripHtml(tContent("states.descriptions.transitioning")),
+            label: tContent("states.transitioning.label"),
+            trigger: tContent("states.transitioning.trigger"),
+            behavior: stripHtml(tContent("states.transitioning.behavior")),
           },
           {
-            label: tContent("states.items.focused"),
-            trigger: "Tab",
-            behavior: stripHtml(tContent("states.descriptions.focused")),
+            label: tContent("states.focused.label"),
+            trigger: tContent("states.focused.trigger"),
+            behavior: stripHtml(tContent("states.focused.behavior")),
           },
         ]}
       />

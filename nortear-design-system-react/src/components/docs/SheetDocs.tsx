@@ -642,30 +642,30 @@ export function SheetDocs() {
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: "data-state",
-          behavior: tContent("usage.scenarios.cols.scenario"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
           {
-            label: tContent("states.items.closed"),
-            trigger: 'closed',
-            behavior: stripHtml(tContent("states.descriptions.closed")),
+            label: tContent("states.closed.label"),
+            trigger: tContent("states.closed.trigger"),
+            behavior: stripHtml(tContent("states.closed.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: 'open',
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.transitioning"),
-            trigger: 'opening/closing',
-            behavior: stripHtml(tContent("states.descriptions.transitioning")),
+            label: tContent("states.transitioning.label"),
+            trigger: tContent("states.transitioning.trigger"),
+            behavior: stripHtml(tContent("states.transitioning.behavior")),
           },
           {
-            label: tContent("states.items.focused"),
-            trigger: ':focus-visible',
-            behavior: stripHtml(tContent("states.descriptions.focused")),
+            label: tContent("states.focused.label"),
+            trigger: tContent("states.focused.trigger"),
+            behavior: stripHtml(tContent("states.focused.behavior")),
           },
           {
             label: tContent("states.longScrollBody.label"),

@@ -727,17 +727,17 @@ function Textarea({
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: tNav("common.userAction"),
-          behavior: tNav("common.expectedResult"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
-          { label: tContent("states.items.default"),  trigger: "—",                 behavior: stripHtml(tContent("states.descriptions.default")) },
-          { label: tContent("states.items.focus"),    trigger: "Tab / click",       behavior: stripHtml(tContent("states.descriptions.focus")) },
-          { label: tContent("states.items.filled"),   trigger: "typing",            behavior: stripHtml(tContent("states.descriptions.filled")) },
-          { label: tContent("states.items.disabled"), trigger: "disabled prop",     behavior: stripHtml(tContent("states.descriptions.disabled")) },
-          { label: tContent("states.items.invalid"),  trigger: "aria-invalid",      behavior: stripHtml(tContent("states.descriptions.invalid")) },
-          { label: tContent("states.items.readonly"), trigger: "readOnly prop",     behavior: stripHtml(tContent("states.descriptions.readonly")) },
+          { label: tContent("states.default.label"),  trigger: tContent("states.default.trigger"),  behavior: stripHtml(tContent("states.default.behavior")) },
+          { label: tContent("states.focus.label"),    trigger: tContent("states.focus.trigger"),    behavior: stripHtml(tContent("states.focus.behavior")) },
+          { label: tContent("states.filled.label"),   trigger: tContent("states.filled.trigger"),   behavior: stripHtml(tContent("states.filled.behavior")) },
+          { label: tContent("states.disabled.label"), trigger: tContent("states.disabled.trigger"), behavior: stripHtml(tContent("states.disabled.behavior")) },
+          { label: tContent("states.invalid.label"),  trigger: tContent("states.invalid.trigger"),  behavior: stripHtml(tContent("states.invalid.behavior")) },
+          { label: tContent("states.readonly.label"), trigger: tContent("states.readonly.trigger"), behavior: stripHtml(tContent("states.readonly.behavior")) },
         ]}
       />
 
@@ -867,12 +867,12 @@ function Textarea({
           },
           {
             event: "docs_page_view",
-            trigger: tNav("common.pageMount") || "Página de docs é montada",
+            trigger: tNav("common.pageMount"),
             payload: '{ component_name: "textarea", locale, page_title }',
           },
           {
             event: "docs_section_viewed",
-            trigger: tNav("common.sectionViewed") || "Seção entra no viewport",
+            trigger: tNav("common.sectionViewed"),
             payload: '{ section_id, component_name: "textarea", locale }',
           },
         ]}

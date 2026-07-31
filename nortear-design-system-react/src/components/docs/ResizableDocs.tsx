@@ -215,16 +215,6 @@ interface PanelResizeHandleProps {
 }`;
 
   // ─── Locale-aware column labels ──────────────────────────────────────────
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
 
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
@@ -629,32 +619,36 @@ interface PanelResizeHandleProps {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.idle"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.idle")),
+            label: tContent("states.idle.label"),
+            trigger: tContent("states.idle.trigger"),
+            behavior: stripHtml(tContent("states.idle.behavior")),
           },
           {
-            label: tContent("states.items.hover"),
-            trigger: ":hover",
-            behavior: stripHtml(tContent("states.descriptions.hover")),
+            label: tContent("states.hover.label"),
+            trigger: tContent("states.hover.trigger"),
+            behavior: stripHtml(tContent("states.hover.behavior")),
           },
           {
-            label: tContent("states.items.dragging"),
-            trigger: "data-resize-handle-active",
-            behavior: stripHtml(tContent("states.descriptions.dragging")),
+            label: tContent("states.dragging.label"),
+            trigger: tContent("states.dragging.trigger"),
+            behavior: stripHtml(tContent("states.dragging.behavior")),
           },
           {
-            label: tContent("states.items.focus"),
-            trigger: ":focus-visible",
-            behavior: stripHtml(tContent("states.descriptions.focus")),
+            label: tContent("states.focus.label"),
+            trigger: tContent("states.focus.trigger"),
+            behavior: stripHtml(tContent("states.focus.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "disabled",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
         ]}
       />

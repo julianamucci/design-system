@@ -143,17 +143,6 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
-
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
     trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
@@ -383,17 +372,21 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.decorative"),
-            trigger: "decorative={true}",
-            behavior: stripHtml(tContent("states.descriptions.decorative")),
+            label: tContent("states.decorative.label"),
+            trigger: tContent("states.decorative.trigger"),
+            behavior: stripHtml(tContent("states.decorative.behavior")),
           },
           {
-            label: tContent("states.items.semantic"),
-            trigger: "decorative={false}",
-            behavior: stripHtml(tContent("states.descriptions.semantic")),
+            label: tContent("states.semantic.label"),
+            trigger: tContent("states.semantic.trigger"),
+            behavior: stripHtml(tContent("states.semantic.behavior")),
           },
         ]}
       />

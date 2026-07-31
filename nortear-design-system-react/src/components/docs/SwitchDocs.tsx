@@ -556,40 +556,40 @@ import { Label } from "@/components/ui/label";`;
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: tNav("common.userAction"),
-          behavior: tNav("common.expectedResult"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
           {
-            label: tContent("states.items.unchecked"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.unchecked")),
+            label: tContent("states.unchecked.label"),
+            trigger: tContent("states.unchecked.trigger"),
+            behavior: stripHtml(tContent("states.unchecked.behavior")),
           },
           {
-            label: tContent("states.items.checked"),
-            trigger: "click / Space",
-            behavior: stripHtml(tContent("states.descriptions.checked")),
+            label: tContent("states.checked.label"),
+            trigger: tContent("states.checked.trigger"),
+            behavior: stripHtml(tContent("states.checked.behavior")),
           },
           {
-            label: tContent("states.items.hover"),
-            trigger: "pointer over",
-            behavior: stripHtml(tContent("states.descriptions.hover")),
+            label: tContent("states.hover.label"),
+            trigger: tContent("states.hover.trigger"),
+            behavior: stripHtml(tContent("states.hover.behavior")),
           },
           {
-            label: tContent("states.items.focus"),
-            trigger: "Tab",
-            behavior: stripHtml(tContent("states.descriptions.focus")),
+            label: tContent("states.focus.label"),
+            trigger: tContent("states.focus.trigger"),
+            behavior: stripHtml(tContent("states.focus.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "disabled prop",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
           {
-            label: tContent("states.items.invalid"),
-            trigger: "aria-invalid",
-            behavior: stripHtml(tContent("states.descriptions.invalid")),
+            label: tContent("states.invalid.label"),
+            trigger: tContent("states.invalid.trigger"),
+            behavior: stripHtml(tContent("states.invalid.behavior")),
           },
         ]}
       />
@@ -759,12 +759,12 @@ import { Label } from "@/components/ui/label";`;
           },
           {
             event: "docs_page_view",
-            trigger: tNav("common.pageMount") || "Página de docs é montada",
+            trigger: tNav("common.pageMount"),
             payload: '{ component_name: "switch", locale, page_title }',
           },
           {
             event: "docs_section_viewed",
-            trigger: tNav("common.sectionViewed") || "Seção entra no viewport",
+            trigger: tNav("common.sectionViewed"),
             payload: '{ section_id, component_name: "switch", locale }',
           },
         ]}

@@ -631,35 +631,35 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: tNav("common.userAction"),
-          behavior: tNav("common.expectedResult"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
           {
-            label: tContent("states.items.default"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.default")),
+            label: tContent("states.default.label"),
+            trigger: tContent("states.default.trigger"),
+            behavior: stripHtml(tContent("states.default.behavior")),
           },
           {
-            label: tContent("states.items.selected"),
-            trigger: "click / Space / Enter",
-            behavior: stripHtml(tContent("states.descriptions.selected")),
+            label: tContent("states.selected.label"),
+            trigger: tContent("states.selected.trigger"),
+            behavior: stripHtml(tContent("states.selected.behavior")),
           },
           {
-            label: tContent("states.items.hover"),
-            trigger: "pointer over",
-            behavior: stripHtml(tContent("states.descriptions.hover")),
+            label: tContent("states.hover.label"),
+            trigger: tContent("states.hover.trigger"),
+            behavior: stripHtml(tContent("states.hover.behavior")),
           },
           {
-            label: tContent("states.items.focus"),
-            trigger: "Tab + setas",
-            behavior: stripHtml(tContent("states.descriptions.focus")),
+            label: tContent("states.focus.label"),
+            trigger: tContent("states.focus.trigger"),
+            behavior: stripHtml(tContent("states.focus.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "disabled prop",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.disabledItem.label"),
@@ -853,12 +853,12 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           },
           {
             event: "docs_page_view",
-            trigger: tNav("common.pageMount") || "Página de docs é montada",
+            trigger: tNav("common.pageMount"),
             payload: '{ component_name: "toggle-group", locale, page_title }',
           },
           {
             event: "docs_section_viewed",
-            trigger: tNav("common.sectionViewed") || "Seção entra no viewport",
+            trigger: tNav("common.sectionViewed"),
             payload: '{ section_id, component_name: "toggle-group", locale }',
           },
         ]}

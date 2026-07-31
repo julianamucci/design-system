@@ -741,35 +741,35 @@ interface TabsContentProps {
       <DocsStates
         title={tContent("states.title")}
         cols={{
-          state: tContent("states.title"),
-          trigger: tNav("common.userAction"),
-          behavior: tNav("common.expectedResult"),
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
         }}
         items={[
           {
-            label: tContent("states.items.default"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.default")),
+            label: tContent("states.default.label"),
+            trigger: tContent("states.default.trigger"),
+            behavior: stripHtml(tContent("states.default.behavior")),
           },
           {
-            label: tContent("states.items.active"),
-            trigger: "Click / Enter / Space",
-            behavior: stripHtml(tContent("states.descriptions.active")),
+            label: tContent("states.active.label"),
+            trigger: tContent("states.active.trigger"),
+            behavior: stripHtml(tContent("states.active.behavior")),
           },
           {
-            label: tContent("states.items.hover"),
-            trigger: "Mouseover",
-            behavior: stripHtml(tContent("states.descriptions.hover")),
+            label: tContent("states.hover.label"),
+            trigger: tContent("states.hover.trigger"),
+            behavior: stripHtml(tContent("states.hover.behavior")),
           },
           {
-            label: tContent("states.items.focus"),
-            trigger: "Tab",
-            behavior: stripHtml(tContent("states.descriptions.focus")),
+            label: tContent("states.focus.label"),
+            trigger: tContent("states.focus.trigger"),
+            behavior: stripHtml(tContent("states.focus.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
         ]}
       />

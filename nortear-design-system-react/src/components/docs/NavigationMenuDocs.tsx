@@ -184,16 +184,6 @@ interface NavigationMenuLinkProps
 }`;
 
   // ─── Locale-aware column labels ─────────────────────────────────────────
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
 
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
@@ -776,22 +766,26 @@ interface NavigationMenuLinkProps
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.closed"),
-            trigger: "defaultValue={undefined}",
-            behavior: stripHtml(tContent("states.descriptions.closed")),
+            label: tContent("states.closed.label"),
+            trigger: tContent("states.closed.trigger"),
+            behavior: stripHtml(tContent("states.closed.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: "<NavigationMenu defaultValue=\"produtos\">",
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.active"),
-            trigger: "<Link aria-current=\"page\">",
-            behavior: stripHtml(tContent("states.descriptions.active")),
+            label: tContent("states.active.label"),
+            trigger: tContent("states.active.trigger"),
+            behavior: stripHtml(tContent("states.active.behavior")),
           },
         ]}
       />

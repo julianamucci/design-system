@@ -740,23 +740,23 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             items={[
               {
                 label: tContent("states.closed.label"),
-                trigger: "—",
-                behavior: tContent("states.closed.description"),
+                trigger: tContent("states.closed.trigger"),
+                behavior: tContent("states.closed.behavior"),
               },
               {
                 label: tContent("states.open.label"),
-                trigger: "Click / Enter / Space",
-                behavior: tContent("states.open.description"),
+                trigger: tContent("states.open.trigger"),
+                behavior: tContent("states.open.behavior"),
               },
               {
                 label: tContent("states.disabled.label"),
-                trigger: "—",
-                behavior: stripHtml(tContent("states.disabled.description")),
+                trigger: tContent("states.disabled.trigger"),
+                behavior: stripHtml(tContent("states.disabled.behavior")),
               },
               {
                 label: tContent("states.focused.label"),
-                trigger: "Tab",
-                behavior: tContent("states.focused.description"),
+                trigger: tContent("states.focused.trigger"),
+                behavior: tContent("states.focused.behavior"),
               },
             ]}
           />

@@ -133,17 +133,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
 
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    behavior:
-      locale === "en"
-        ? "Behavior"
-        : locale === "es"
-        ? "Comportamiento"
-        : "Comportamento",
-  };
-
   const analyticsCols = {
     event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
     trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
@@ -476,17 +465,21 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.default"),
-            trigger: "animate-pulse",
-            behavior: stripHtml(tContent("states.descriptions.default")),
+            label: tContent("states.default.label"),
+            trigger: tContent("states.default.trigger"),
+            behavior: stripHtml(tContent("states.default.behavior")),
           },
           {
-            label: tContent("states.items.motionReduced"),
-            trigger: "prefers-reduced-motion",
-            behavior: stripHtml(tContent("states.descriptions.motionReduced")),
+            label: tContent("states.motionReduced.label"),
+            trigger: tContent("states.motionReduced.trigger"),
+            behavior: stripHtml(tContent("states.motionReduced.behavior")),
           },
         ]}
       />

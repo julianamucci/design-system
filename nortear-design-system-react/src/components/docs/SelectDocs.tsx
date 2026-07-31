@@ -221,12 +221,6 @@ interface SelectContentProps {
 }`;
 
   // ─── Locale-aware column labels ─────────────────────────────────────────
-  const stateCols = {
-    state: locale === "en" ? "State" : "Estado",
-    trigger: locale === "en" ? "Trigger" : "Disparo",
-    behavior:
-      locale === "en" ? "Behavior" : locale === "es" ? "Comportamiento" : "Comportamento",
-  };
 
   return (
     <DocsPageLayout
@@ -691,42 +685,46 @@ interface SelectContentProps {
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
         title={tContent("states.title")}
-        cols={stateCols}
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
         items={[
           {
-            label: tContent("states.items.default"),
-            trigger: "—",
-            behavior: stripHtml(tContent("states.descriptions.default")),
+            label: tContent("states.default.label"),
+            trigger: tContent("states.default.trigger"),
+            behavior: stripHtml(tContent("states.default.behavior")),
           },
           {
-            label: tContent("states.items.open"),
-            trigger: 'data-state="open"',
-            behavior: stripHtml(tContent("states.descriptions.open")),
+            label: tContent("states.open.label"),
+            trigger: tContent("states.open.trigger"),
+            behavior: stripHtml(tContent("states.open.behavior")),
           },
           {
-            label: tContent("states.items.selected"),
-            trigger: "data-checked",
-            behavior: stripHtml(tContent("states.descriptions.selected")),
+            label: tContent("states.selected.label"),
+            trigger: tContent("states.selected.trigger"),
+            behavior: stripHtml(tContent("states.selected.behavior")),
           },
           {
-            label: tContent("states.items.hover"),
-            trigger: ":hover",
-            behavior: stripHtml(tContent("states.descriptions.hover")),
+            label: tContent("states.hover.label"),
+            trigger: tContent("states.hover.trigger"),
+            behavior: stripHtml(tContent("states.hover.behavior")),
           },
           {
-            label: tContent("states.items.focus"),
-            trigger: ":focus-visible",
-            behavior: stripHtml(tContent("states.descriptions.focus")),
+            label: tContent("states.focus.label"),
+            trigger: tContent("states.focus.trigger"),
+            behavior: stripHtml(tContent("states.focus.behavior")),
           },
           {
-            label: tContent("states.items.disabled"),
-            trigger: "disabled",
-            behavior: stripHtml(tContent("states.descriptions.disabled")),
+            label: tContent("states.disabled.label"),
+            trigger: tContent("states.disabled.trigger"),
+            behavior: stripHtml(tContent("states.disabled.behavior")),
           },
           {
-            label: tContent("states.items.invalid"),
-            trigger: 'aria-invalid="true"',
-            behavior: stripHtml(tContent("states.descriptions.invalid")),
+            label: tContent("states.invalid.label"),
+            trigger: tContent("states.invalid.trigger"),
+            behavior: stripHtml(tContent("states.invalid.behavior")),
           },
         ]}
       />
