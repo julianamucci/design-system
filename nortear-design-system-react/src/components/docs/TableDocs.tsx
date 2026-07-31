@@ -575,8 +575,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         componentSlug="table"
         items={[
           {
-            name: tContent("variants.basic.label"),
-            description: stripHtml(tContent("variants.basic.description")),
+            name: tContent("variants.items.basic.label"),
+            description: stripHtml(tContent("variants.items.basic.description")),
             code: codeBasic,
             preview: (
               <div className="nds-w-full nds-overflow-x">
@@ -605,8 +605,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
-            name: tContent("variants.withFooter.label"),
-            description: stripHtml(tContent("variants.withFooter.description")),
+            name: tContent("variants.items.withFooter.label"),
+            description: stripHtml(tContent("variants.items.withFooter.description")),
             code: codeWithFooter,
             preview: (
               <div className="nds-w-full nds-overflow-x">
@@ -641,8 +641,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
-            name: tContent("variants.withSrOnlyCaption.label"),
-            description: stripHtml(tContent("variants.withSrOnlyCaption.description")),
+            name: tContent("variants.items.withSrOnlyCaption.label"),
+            description: stripHtml(tContent("variants.items.withSrOnlyCaption.description")),
             code: codeSrOnlyCaption,
             preview: (
               <div className="nds-w-full nds-overflow-x">
@@ -671,8 +671,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
-            name: tContent("variants.withInlineActions.label"),
-            description: stripHtml(tContent("variants.withInlineActions.description")),
+            name: tContent("variants.items.withInlineActions.label"),
+            description: stripHtml(tContent("variants.items.withInlineActions.description")),
             code: codeWithActions,
             preview: (
               <div className="nds-w-full nds-overflow-x">
@@ -713,8 +713,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             ),
           },
           {
-            name: tContent("variants.withEmptyState.label"),
-            description: stripHtml(tContent("variants.withEmptyState.description")),
+            name: tContent("variants.items.withEmptyState.label"),
+            description: stripHtml(tContent("variants.items.withEmptyState.description")),
             code: codeEmpty,
             preview: (
               <div className="nds-w-full nds-overflow-x">
@@ -1202,7 +1202,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           tContent("accessibility.aria.ariaSort"),
           tContent("accessibility.aria.tabIndex"),
         ]}
-        keyboardTitle={tNav("common.keyboardNavigation")}
+        keyboardTitle={tNav("common.keyboardNav")}
         keyboardItems={[
           { key: "Tab",   description: tContent("accessibility.keyboard.tab") },
           { key: "Enter", description: tContent("accessibility.keyboard.enter") },

@@ -280,7 +280,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
         componentSlug="label"
         items={[
           {
-            name: tContent("variants.default.label"),
+            name: tContent("variants.items.default.label"),
             description: tContent("variants.note"),
             code: codeDefault,
             preview: (

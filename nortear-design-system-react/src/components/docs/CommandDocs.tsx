@@ -923,11 +923,6 @@ interface CommandDialogProps
             behavior: tContent("states.loading.behavior"),
           },
           {
-            label: tContent("states.withDisabled.label"),
-            trigger: stripHtml(tContent("states.withDisabled.trigger")),
-            behavior: stripHtml(tContent("states.withDisabled.behavior")),
-          },
-          {
             label: tContent("states.longList.label"),
             trigger: stripHtml(tContent("states.longList.trigger")),
             behavior: stripHtml(tContent("states.longList.behavior")),

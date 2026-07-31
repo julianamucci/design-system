@@ -844,26 +844,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         }}
         items={[
           {
-            label: tContent("states.single.label"),
-            trigger: stripHtml(tContent("states.single.trigger")),
-            behavior: tContent("states.single.behavior"),
-          },
-          {
-            label: tContent("states.multi.label"),
-            trigger: stripHtml(tContent("states.multi.trigger")),
-            behavior: stripHtml(tContent("states.multi.behavior")),
-          },
-          {
-            label: tContent("states.autoplay.label"),
-            trigger: stripHtml(tContent("states.autoplay.trigger")),
-            behavior: stripHtml(tContent("states.autoplay.behavior")),
-          },
-          {
-            label: tContent("states.vertical.label"),
-            trigger: stripHtml(tContent("states.vertical.trigger")),
-            behavior: tContent("states.vertical.behavior"),
-          },
-          {
             label: tContent("states.disabled.label"),
             trigger: stripHtml(tContent("states.disabled.trigger")),
             behavior: stripHtml(tContent("states.disabled.behavior")),

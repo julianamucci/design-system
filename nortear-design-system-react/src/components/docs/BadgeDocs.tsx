@@ -441,24 +441,9 @@ const badgeVariants = cva(
         }}
         items={[
           {
-            label: tContent("states.withIcon.label"),
-            trigger: stripHtml(tContent("states.withIcon.trigger")),
-            behavior: stripHtml(tContent("states.withIcon.behavior")),
-          },
-          {
             label: tContent("states.countBadge.label"),
             trigger: stripHtml(tContent("states.countBadge.trigger")),
             behavior: stripHtml(tContent("states.countBadge.behavior")),
-          },
-          {
-            label: tContent("states.asLink.label"),
-            trigger: stripHtml(tContent("states.asLink.trigger")),
-            behavior: stripHtml(tContent("states.asLink.behavior")),
-          },
-          {
-            label: tContent("states.asTrigger.label"),
-            trigger: stripHtml(tContent("states.asTrigger.trigger")),
-            behavior: stripHtml(tContent("states.asTrigger.behavior")),
           },
         ]}
       />

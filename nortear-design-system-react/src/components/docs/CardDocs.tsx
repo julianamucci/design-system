@@ -686,16 +686,6 @@ interface CardProps extends React.ComponentProps<"div"> {
             trigger: stripHtml(tContent("states.interactive.trigger")),
             behavior: stripHtml(tContent("states.interactive.behavior")),
           },
-          {
-            label: tContent("states.withImage.label"),
-            trigger: stripHtml(tContent("states.withImage.trigger")),
-            behavior: stripHtml(tContent("states.withImage.behavior")),
-          },
-          {
-            label: tContent("states.withFooter.label"),
-            trigger: stripHtml(tContent("states.withFooter.trigger")),
-            behavior: stripHtml(tContent("states.withFooter.behavior")),
-          },
         ]}
       />
 

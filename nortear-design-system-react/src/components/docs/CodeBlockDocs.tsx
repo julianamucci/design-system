@@ -649,7 +649,6 @@ export function CodeBlockDocs() {
           { label: tContent("states.copied.label"),          trigger: tContent("states.copied.trigger"),          behavior: tContent("states.copied.behavior") },
           { label: tContent("states.numbered.label"),        trigger: tContent("states.numbered.trigger"),        behavior: tContent("states.numbered.behavior") },
           { label: tContent("states.unnumbered.label"),      trigger: tContent("states.unnumbered.trigger"),      behavior: tContent("states.unnumbered.behavior") },
-          { label: tContent("states.highlighted.label"),     trigger: tContent("states.highlighted.trigger"),     behavior: tContent("states.highlighted.behavior") },
           { label: tContent("states.scrolling.label"),       trigger: tContent("states.scrolling.trigger"),       behavior: tContent("states.scrolling.behavior") },
           { label: tContent("states.unknownLanguage.label"), trigger: tContent("states.unknownLanguage.trigger"), behavior: tContent("states.unknownLanguage.behavior") },
         ]}

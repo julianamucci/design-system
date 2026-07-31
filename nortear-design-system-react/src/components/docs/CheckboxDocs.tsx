@@ -173,7 +173,6 @@ export function CheckboxDocs() {
 
   const codeDefault = `<Checkbox id="termos" />`;
 
-  const codeChecked = `<Checkbox id="termos" defaultChecked />`;
 
   const codeWithLabel = `<div className="nds-cluster" data-spacing="xs">
   <Checkbox id="termos" />
@@ -448,19 +447,6 @@ export function CheckboxDocs() {
                     <Checkbox id="var-default" />
                     <label htmlFor="var-default" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
                       {tContent("demonstration.labels.rememberMe")}
-                    </label>
-                  </div>
-                ),
-              },
-              {
-                name: "checked",
-                description: stripHtml(tContent("variants.items.checked")),
-                code: codeChecked,
-                preview: (
-                  <div className="nds-cluster" data-spacing="xs">
-                    <Checkbox id="var-checked" defaultChecked />
-                    <label htmlFor="var-checked" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-                      {tContent("demonstration.labels.newsletter")}
                     </label>
                   </div>
                 ),

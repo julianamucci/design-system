@@ -156,12 +156,6 @@ export function PaginationDocs() {
   <PaginationLink href="#" aria-label="${lblPage} 2">2</PaginationLink>
 </PaginationItem>`;
 
-  const codeActive = `<PaginationItem>
-  <PaginationLink href="#" isActive aria-label="${lblPage} 1">
-    1
-  </PaginationLink>
-</PaginationItem>`;
-
   const codeDirectional = `<PaginationItem>
   <PaginationPrevious href="#" text="${lblPrev}" />
 </PaginationItem>
@@ -585,26 +579,6 @@ type PaginationDirectionalProps =
                   <PaginationItem>
                     <PaginationLink href="#" aria-label={`${lblPage} 2`}>
                       2
-                    </PaginationLink>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            ),
-          },
-          {
-            name: tContent("variants.items.active"),
-            description: stripHtml(tContent("variants.styles.active")),
-            code: codeActive,
-            preview: (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      isActive
-                      aria-label={`${lblPage} 1`}
-                    >
-                      1
                     </PaginationLink>
                   </PaginationItem>
                 </PaginationContent>

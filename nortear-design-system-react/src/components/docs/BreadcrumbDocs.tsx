@@ -652,16 +652,6 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
             behavior: stripHtml(tContent("states.simple.behavior")),
           },
           {
-            label: tContent("states.withEllipsis.label"),
-            trigger: stripHtml(tContent("states.withEllipsis.trigger")),
-            behavior: stripHtml(tContent("states.withEllipsis.behavior")),
-          },
-          {
-            label: tContent("states.customSeparator.label"),
-            trigger: stripHtml(tContent("states.customSeparator.trigger")),
-            behavior: stripHtml(tContent("states.customSeparator.behavior")),
-          },
-          {
             label: tContent("states.asChildLink.label"),
             trigger: stripHtml(tContent("states.asChildLink.trigger")),
             behavior: stripHtml(tContent("states.asChildLink.behavior")),

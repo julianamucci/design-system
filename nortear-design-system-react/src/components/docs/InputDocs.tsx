@@ -494,7 +494,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         items={[
           {
             name: "text",
-            description: stripHtml(tContent("variants.types.text")),
+            description: stripHtml(tContent("variants.items.types.text")),
             code: codeText,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -507,7 +507,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "email",
-            description: stripHtml(tContent("variants.types.email")),
+            description: stripHtml(tContent("variants.items.types.email")),
             code: codeEmail,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -520,7 +520,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "password",
-            description: stripHtml(tContent("variants.types.password")),
+            description: stripHtml(tContent("variants.items.types.password")),
             code: codePassword,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -533,7 +533,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "number",
-            description: stripHtml(tContent("variants.types.number")),
+            description: stripHtml(tContent("variants.items.types.number")),
             code: codeNumber,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -544,7 +544,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "file",
-            description: stripHtml(tContent("variants.types.file")),
+            description: stripHtml(tContent("variants.items.types.file")),
             code: codeFile,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -557,7 +557,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "InputGroup (search)",
-            description: stripHtml(tContent("variants.inputGroup.description")),
+            description: stripHtml(tContent("variants.items.inputGroup.description")),
             code: codeInputGroupSearch,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">
@@ -579,7 +579,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           },
           {
             name: "InputGroup (email + addon)",
-            description: stripHtml(tContent("variants.inputGroup.subcomponents.inputGroupAddon")),
+            description: stripHtml(tContent("variants.items.inputGroup.subcomponents.inputGroupAddon")),
             code: codeInputGroupEmail,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="xs">

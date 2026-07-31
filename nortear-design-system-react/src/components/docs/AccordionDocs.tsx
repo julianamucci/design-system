@@ -427,7 +427,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             items={[
               {
                 name: "single",
-                description: stripHtml(tContent("variants.single.description")),
+                description: stripHtml(tContent("variants.items.single.description")),
                 code: codeSingle,
                 preview: (
                   <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
@@ -444,7 +444,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               },
               {
                 name: "multiple",
-                description: stripHtml(tContent("variants.multiple.description")),
+                description: stripHtml(tContent("variants.items.multiple.description")),
                 code: codeMultiple,
                 preview: (
                   <Accordion multiple className="nds-max-w-sm nds-text-body">
@@ -461,7 +461,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               },
               {
                 name: "controlled",
-                description: stripHtml(tContent("variants.controlled.description")),
+                description: stripHtml(tContent("variants.items.controlled.description")),
                 code: codeControlled,
                 preview: (
                   <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
@@ -474,7 +474,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               },
               {
                 name: "defaultOpen",
-                description: stripHtml(tContent("variants.defaultOpen.description")),
+                description: stripHtml(tContent("variants.items.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
                   <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
