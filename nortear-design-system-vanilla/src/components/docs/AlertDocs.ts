@@ -298,10 +298,12 @@ export function createAlertDocs(): HTMLElement {
         const codeSuccess = `const alert = createAlert({ variant: 'success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
         const codeWarning = `const alert = createAlert({ variant: 'warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
+        const codeDismissible = `const alert = createAlert({\n  variant: 'default',\n  dismissible: true,\n  dismissLabel: 'Fechar alerta',\n  onDismiss: () => console.log('fechado'),\n});\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'alert',
           items: [
             {
               name: 'default',
@@ -326,6 +328,31 @@ export function createAlertDocs(): HTMLElement {
               description: stripHtml(t('variants.items.warning')),
               code: codeWarning,
               previewFactory: () => buildAlert('warning', 'nds-w-full', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+            },
+            {
+              name: stripHtml(t('variants.items.dismissible.name')),
+              description: stripHtml(t('variants.items.dismissible.description')),
+              useWhen: stripHtml(t('variants.items.dismissible.use')),
+              trackId: 'dismissible',
+              code: codeDismissible,
+              // Primeira emissão real do alert_dismiss: o primitivo não importa
+              // analytics — o evento é fiado aqui, no consumidor, via callback.
+              previewFactory: () => {
+                const el = createAlert({
+                  variant: 'default',
+                  className: 'nds-w-full',
+                  dismissible: true,
+                  onDismiss: () => track('alert_dismiss', {
+                    component: 'alert',
+                    label: 'dismissible',
+                    location: 'docs_demo',
+                  }),
+                });
+                el.appendChild(createAlertIcon('info'));
+                el.appendChild(createAlertTitle({ text: stripHtml(t('demonstration.labels.infoTitle')) }));
+                el.appendChild(createAlertDescription({ text: stripHtml(t('demonstration.labels.infoDesc')) }));
+                return el;
+              },
             },
             {
               name: t('states.withoutTitle.label'),
@@ -403,6 +430,7 @@ export function createAlertDocs(): HTMLElement {
             { label: t('states.withoutTitle.label'),  trigger: stripHtml(t('states.withoutTitle.trigger')),  behavior: t('states.withoutTitle.behavior') },
             { label: t('states.withoutIcon.label'),   trigger: t('states.withoutIcon.trigger'),              behavior: t('states.withoutIcon.behavior') },
             { label: t('states.dynamicInsert.label'), trigger: t('states.dynamicInsert.trigger'),            behavior: stripHtml(t('states.dynamicInsert.behavior')) },
+            { label: t('states.dismissed.label'),     trigger: stripHtml(t('states.dismissed.trigger')),     behavior: t('states.dismissed.behavior') },
           ],
         });
 
@@ -411,6 +439,9 @@ export function createAlertDocs(): HTMLElement {
 export interface AlertOptions {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   className?: string;
+  dismissible?: boolean;        // botão X no canto superior direito
+  onDismiss?: () => void;       // dispara uma vez, ao acionar o X
+  dismissLabel?: string;        // aria-label do X — default 'Fechar alerta'
 }
 
 // createAlertTitle(options), createAlertDescription(options)
@@ -436,6 +467,9 @@ export interface AlertTitleOptions {
               items: [
                 { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
                 { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: stripHtml(t('props.table.dismissible')) },
+                { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: stripHtml(t('props.table.onDismiss')) },
+                { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: stripHtml(t('props.table.dismissLabel')) },
               ],
             },
             {
@@ -553,7 +587,7 @@ export interface AlertTitleOptions {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -574,7 +608,7 @@ export interface AlertTitleOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: [1, 2, 3, 4, 5].map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

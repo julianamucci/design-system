@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant } from './alert';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -12,6 +12,10 @@ type AlertArgs = {
   description: string;
   /** Documentada na aba API Reference; o Playground não a encaminha. */
   className?: string;
+  dismissible: boolean;
+  onDismiss: () => void;
+  /** Documentada na aba API Reference; o Playground usa o default da factory. */
+  dismissLabel?: string;
 };
 
 const meta: Meta<AlertArgs> = {
@@ -44,11 +48,28 @@ const meta: Meta<AlertArgs> = {
       description: 'Texto da descrição. Arg da story — o conteúdo entra por createAlertDescription.',
       table: { type: { summary: 'string' } },
     },
+    dismissible: {
+      control: 'boolean',
+      description: 'Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onDismiss: {
+      control: false,
+      description: 'Callback de fechamento — disparado uma única vez ao acionar o botão de fechar.',
+      table: { type: { summary: '() => void' } },
+    },
+    dismissLabel: {
+      control: false,
+      description: 'Rótulo acessível (aria-label) do botão de fechar.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: "'Fechar alerta'" } },
+    },
   },
   args: {
     variant:     'default',
     title:       'Atenção',
     description: 'Suas alterações serão aplicadas na próxima sessão.',
+    dismissible: false,
+    onDismiss:   fn(),
   },
 };
 
@@ -58,7 +79,12 @@ type Story = StoryObj<AlertArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 function buildAlert(args: AlertArgs): HTMLElement {
-  const alert = createAlert({ variant: args.variant });
+  const alert = createAlert({
+    variant: args.variant,
+    dismissible: args.dismissible,
+    onDismiss: args.onDismiss,
+    dismissLabel: args.dismissLabel,
+  });
   alert.appendChild(createAlertIcon(args.variant === 'destructive' ? 'error' : 'info'));
   if (args.title) alert.appendChild(createAlertTitle({ text: args.title }));
   alert.appendChild(createAlertDescription({ text: args.description }));
@@ -73,9 +99,13 @@ export const Playground: Story = {
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AlertArgs> }) => {
-          const { variant = 'default', title = '', description = '' } = ctx.args ?? {};
+          const { variant = 'default', title = '', description = '', dismissible = false } = ctx.args ?? {};
           const icon = variant === 'destructive' ? 'error' : variant === 'default' ? 'info' : variant;
-          const variantArg = variant === 'default' ? '' : `{ variant: '${variant}' }`;
+          const opts = [
+            variant === 'default' ? '' : `variant: '${variant}'`,
+            dismissible ? `dismissible: true, onDismiss: () => console.log('fechado')` : '',
+          ].filter(Boolean).join(', ');
+          const variantArg = opts ? `{ ${opts} }` : '';
           const lines = [
             "import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from '@/components/ui/alert';",
             '',

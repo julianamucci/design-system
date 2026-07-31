@@ -1,11 +1,19 @@
 // ─── Alert ───────────────────────────────────────────────────────────────────
 
+import { createButton } from './button';
+
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
 export interface AlertOptions {
   variant?: AlertVariant;
   /** Additional CSS classes to append. */
   className?: string;
+  /** Renderiza o botão de fechar (X) no canto superior direito. */
+  dismissible?: boolean;
+  /** Disparado uma única vez, quando o usuário aciona o botão de fechar. */
+  onDismiss?: () => void;
+  /** aria-label do botão de fechar. */
+  dismissLabel?: string;
 }
 
 export interface AlertTitleOptions {
@@ -19,12 +27,36 @@ export interface AlertDescriptionOptions {
 }
 
 export function createAlert(options: AlertOptions = {}): HTMLElement {
-  const { variant = 'default', className } = options;
+  const { variant = 'default', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
 
   const el = document.createElement('div');
   el.setAttribute('role', 'alert');
   el.className = variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`;
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+
+  // PATCH: api — variante dismissible: botão X remove o alert e chama onDismiss
+  // uma única vez (ver PATCHES.md#alert-dismissible)
+  if (dismissible) {
+    // O snippet da story vem do outerHTML — a configuração precisa estar no DOM.
+    el.dataset.dismissible = 'true';
+
+    let dismissed = false;
+    const dismissButton = createButton({
+      variant: 'ghost',
+      size: 'icon-sm',
+      ariaLabel: dismissLabel,
+      class: 'nds-alert-dismiss',
+      onClick: () => {
+        if (dismissed) return;
+        dismissed = true;
+        el.remove();
+        onDismiss?.();
+      },
+    });
+    dismissButton.dataset.slot = 'alert-dismiss';
+    dismissButton.appendChild(createDismissIcon());
+    el.appendChild(dismissButton);
+  }
 
   return el;
 }
@@ -75,7 +107,7 @@ export function createAlertAction(options: AlertActionOptions = {}): HTMLElement
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
-import { Info, AlertCircle, CheckCircle2, TriangleAlert } from 'lucide';
+import { Info, AlertCircle, CheckCircle2, TriangleAlert, X } from 'lucide';
 
 export type AlertIconType = 'info' | 'error' | 'success' | 'warning';
 
@@ -101,6 +133,27 @@ export function createAlertIcon(type: AlertIconType): SVGSVGElement {
   // .nds-alert > svg já define width/height 16px via CSS — não precisa setar via class.
 
   for (const [tag, attrs] of ALERT_ICON_MAP[type]) {
+    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+    svg.appendChild(child);
+  }
+  return svg;
+}
+
+/** Ícone X do botão de fechar — mesmo padrão de montagem por nós do lucide. */
+function createDismissIcon(): SVGSVGElement {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'nds-icon');
+
+  for (const [tag, attrs] of X as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
     svg.appendChild(child);

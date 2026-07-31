@@ -507,6 +507,19 @@ A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é in
 
 **Verificação após bump:** ver se a documentação upstream do `cmdk` atualiza o exemplo de combobox. Se sim, sincronizar.
 
+### todas/alert — variante dismissible (`dismissible`/`onDismiss`/`dismissLabel`) {#alert-dismissible}
+
+- **Arquivos:** `alert.tsx` (react), `alert/index.ts` (vue), `alert.svelte` (svelte), `alert.ts` (vanilla)
+- **Categoria:** api
+- **Data:** 2026-07-31
+- **Upstream ref:** — (o Alert não vem de lib primitiva em nenhuma stack; markup próprio sobre o CSS `.nds-*`)
+
+**Depois:** `dismissible?: boolean` (default `false`) renderiza o botão de fechar — Button `ghost` `icon-sm` com `.nds-alert-dismiss`, `data-slot="alert-dismiss"` e ícone X do lucide. Acioná-lo remove o alert da tela e dispara o callback de fechamento (`onDismiss`; Vue: emit `dismiss`) **uma única vez**. `dismissLabel` (default `'Fechar alerta'`) é o aria-label do botão. No Vanilla a raiz também recebe `data-dismissible` (o snippet do Storybook vem do `outerHTML`; config só no closure congela a caixa de código). Mutuamente exclusivo com a composição `AlertAction` por design.
+
+**Motivo:** o evento `alert_dismiss` estava tipado nos 4 `analytics.ts` e documentado na tabela de analytics da doc, mas o componente nunca teve como ser fechado. O CSS já existia no `alert.css` compartilhado (`.nds-alert-dismiss` + `:has()` abrindo o padding). O analytics segue no consumidor via callback — proibido importar `@/lib/analytics` no primitivo.
+
+**Verificação após bump:** n/a (sem upstream no Alert). Se o componente ganhar modo controlado, manter a garantia de `onDismiss` disparar uma única vez por fechamento.
+
 ---
 
 ## Patches `node_modules/` (gerenciados via `patch-package`)
