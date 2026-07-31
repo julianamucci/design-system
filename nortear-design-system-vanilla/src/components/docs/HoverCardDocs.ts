@@ -625,12 +625,11 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
       }
 
       case 'estados': {
-        const locale = getLocale();
-        const cols = locale === 'en'
-          ? { state: 'State',  trigger: 'Trigger', behavior: 'Behavior' }
-          : locale === 'es'
-          ? { state: 'Estado', trigger: 'Disparo', behavior: 'Comportamiento' }
-          : { state: 'Estado', trigger: 'Disparo', behavior: 'Comportamento' };
+        const cols = {
+          state: tNav('common.stateName'),
+          trigger: tNav('common.stateTrigger'),
+          behavior: tNav('common.stateBehavior'),
+        };
 
         return createDocsStates({
           title: t('states.title'),

@@ -655,9 +655,9 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: 'Estado',
-            trigger: 'Quando ocorre',
-            behavior: 'Comportamento',
+            state: tNav('common.stateName'),
+            trigger: tNav('common.stateTrigger'),
+            behavior: tNav('common.stateBehavior'),
           },
           items: [
             { label: t('states.items.unchecked'), trigger: '—',                                 behavior: stripHtml(t('states.descriptions.unchecked')) },

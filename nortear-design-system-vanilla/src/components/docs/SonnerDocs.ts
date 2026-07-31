@@ -498,7 +498,7 @@ export function createSonnerDocs(): HTMLElement {
           cols: {
             state:    tNav('common.state') || 'Composição',
             trigger:  tNav('common.trigger') || 'Código',
-            behavior: tNav('common.behavior') || 'Comportamento',
+            behavior: tNav('common.stateBehavior'),
           },
           items: compositionItems.map(({ label, description }) => ({
             label,

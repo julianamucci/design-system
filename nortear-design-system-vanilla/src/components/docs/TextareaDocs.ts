@@ -749,9 +749,9 @@ form.dataset.spacing = 'md';
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: 'Estado',
-            trigger: 'Quando ocorre',
-            behavior: 'Comportamento',
+            state: tNav('common.stateName'),
+            trigger: tNav('common.stateTrigger'),
+            behavior: tNav('common.stateBehavior'),
           },
           items: [
             { label: t('states.items.default'),  trigger: '—',                                       behavior: stripHtml(t('states.descriptions.default'))  },

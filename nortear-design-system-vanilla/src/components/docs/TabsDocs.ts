@@ -596,12 +596,11 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
       }
 
       case 'estados': {
-        const locale = getLocale();
-        const stateCols = locale === 'en'
-          ? { state: 'State', trigger: 'Trigger', behavior: 'Behavior' }
-          : locale === 'es'
-            ? { state: 'Estado', trigger: 'Trigger', behavior: 'Comportamiento' }
-            : { state: 'Estado', trigger: 'Trigger', behavior: 'Comportamento' };
+        const stateCols = {
+          state: tNav('common.stateName'),
+          trigger: tNav('common.stateTrigger'),
+          behavior: tNav('common.stateBehavior'),
+        };
         return createDocsStates({
           title: t('states.title'),
           cols: stateCols,
