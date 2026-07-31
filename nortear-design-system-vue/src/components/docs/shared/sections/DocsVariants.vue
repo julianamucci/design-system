@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { CodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
 interface DocsVariantItem {
@@ -32,8 +33,13 @@ const props = withDefaults(defineProps<{
   /** Nota introdutória da seção (HTML inline permitido). */
   note?: string;
   componentSlug?: string;
+  /** Linguagem dos snippets de código, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }>(), {
   id: 'variantes',
+  language: 'vue',
 });
 
 const openStates = ref<Record<number, boolean>>({});
@@ -94,10 +100,15 @@ function trackId(item: DocsVariantItem): string | undefined {
           >
             {{ openStates[i] ? 'Ocultar código' : 'Ver código' }}
           </Button>
-          <pre
+          <CodeBlock
             v-if="openStates[i]"
-            class="nds-code-block nds-mt-2"
-          ><code>{{ item.code }}</code></pre>
+            class="nds-mt-2"
+            :code="item.code"
+            :language="props.language"
+            :show-line-numbers="false"
+            :copy-label="props.copyLabel"
+            :copied-label="props.copiedLabel"
+          />
         </div>
       </Card>
     </div>

@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import ComponentDemo from '@/components/ComponentDemo.vue';
-import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 
-defineProps<{
+withDefaults(defineProps<{
   title: string;
   items: string[];
   structureCode: string;
   structureLabel?: string;
-}>();
+  /** Linguagem do snippet de estrutura, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
+}>(), {
+  language: 'vue',
+});
 </script>
 
 <template>
@@ -41,15 +47,21 @@ defineProps<{
             <span v-html="DOMPurify.sanitize(item)" />
           </li>
         </ol>
-        <Card class="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
+        <div>
           <p
             v-if="structureLabel"
             class="nds-text-caption nds-text-muted-foreground nds-mb-2"
           >
             {{ structureLabel }}
           </p>
-          <pre class="nds-font-mono nds-text-body nds-whitespace-pre">{{ structureCode }}</pre>
-        </Card>
+          <CodeBlock
+            :code="structureCode"
+            :language="language"
+            :show-line-numbers="false"
+            :copy-label="copyLabel"
+            :copied-label="copiedLabel"
+          />
+        </div>
       </div>
     </ComponentDemo>
   </section>

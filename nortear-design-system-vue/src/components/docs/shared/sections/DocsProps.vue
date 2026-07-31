@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 interface DocsPropItem {
@@ -17,14 +18,20 @@ interface DocsPropsTableDef {
   items: DocsPropItem[];
 }
 
-defineProps<{
+withDefaults(defineProps<{
   title: string;
   tables: DocsPropsTableDef[];
   interfaceCode?: string;
   extensibilityTitle?: string;
   extensibilityNotes?: string;
   extensibilityCode?: string;
-}>();
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
+}>(), {
+  language: 'vue',
+});
 </script>
 
 <template>
@@ -95,10 +102,14 @@ defineProps<{
           </Table>
         </Card>
       </div>
-      <pre
+      <CodeBlock
         v-if="interfaceCode"
-        class="nds-code-block"
-      ><code>{{ interfaceCode }}</code></pre>
+        :code="interfaceCode"
+        :language="language"
+        :show-line-numbers="false"
+        :copy-label="copyLabel"
+        :copied-label="copiedLabel"
+      />
       <div
         v-if="extensibilityTitle"
         class="nds-stack"
@@ -112,10 +123,14 @@ defineProps<{
           class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
           v-html="DOMPurify.sanitize(extensibilityNotes)"
         />
-        <pre
+        <CodeBlock
           v-if="extensibilityCode"
-          class="nds-code-block"
-        ><code>{{ extensibilityCode }}</code></pre>
+          :code="extensibilityCode"
+          :language="language"
+          :show-line-numbers="false"
+          :copy-label="copyLabel"
+          :copied-label="copiedLabel"
+        />
       </div>
     </div>
   </section>

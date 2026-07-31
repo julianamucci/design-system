@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 interface DocsTokenItem { token: string; value: string; description: string }
 
-defineProps<{
+withDefaults(defineProps<{
   title: string;
   cols: { token: string; value: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
   customizationCode?: string;
-}>();
+  /** Linguagem do snippet de customização, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
+}>(), {
+  language: 'css',
+});
 </script>
 
 <template>
@@ -64,10 +71,14 @@ defineProps<{
         <h3 class="nds-text-base nds-font-semibold">
           {{ customizationTitle }}
         </h3>
-        <pre
+        <CodeBlock
           v-if="customizationCode"
-          class="nds-code-block"
-        ><code>{{ customizationCode }}</code></pre>
+          :code="customizationCode"
+          :language="language"
+          :show-line-numbers="false"
+          :copy-label="copyLabel"
+          :copied-label="copiedLabel"
+        />
       </div>
     </div>
   </section>

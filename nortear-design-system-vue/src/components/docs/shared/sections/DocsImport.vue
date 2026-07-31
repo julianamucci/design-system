@@ -2,22 +2,33 @@
 /**
  * DocsImport — bloco de snippet de importação.
  *
- * `componentSlug` é informativo: o snippet renderizado atualmente é apenas um
- * bloco `<code>` estático, sem botão de "copiar". Se uma futura iteração
- * adicionar o botão, ele deverá receber `data-track="code"` +
- * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
- * `data-track-label="Copiar import"`.
+ * Quando `componentSlug` é informado, a raiz de cada CodeBlock recebe
+ * `data-track="code"` + `data-track-id="{slug}:code:import-primary"` (ou
+ * `import-secondary`) + `data-track-label="Copiar import"`. A guarda do
+ * observer garante que só o clique no botão de copiar conta como
+ * `docs_code_copy`. Se ausente, `data-track-id` é omitido e o observer
+ * ignora o click.
  */
-import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 
-defineProps<{
+const props = withDefaults(defineProps<{
   title: string;
   description?: string;
   code: string;
   secondaryCode?: string;
   secondaryDescription?: string;
   componentSlug?: string;
-}>();
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
+}>(), {
+  language: 'vue',
+});
+
+function trackId(kind: 'import-primary' | 'import-secondary'): string | undefined {
+  return props.componentSlug ? `${props.componentSlug}:code:${kind}` : undefined;
+}
 </script>
 
 <template>
@@ -31,9 +42,16 @@ defineProps<{
     >
       {{ description }}
     </p>
-    <Card class="nds-code-block nds-shadow-none">
-      <code class="nds-whitespace-pre">{{ code }}</code>
-    </Card>
+    <CodeBlock
+      :code="code"
+      :language="language"
+      :show-line-numbers="false"
+      :copy-label="copyLabel"
+      :copied-label="copiedLabel"
+      data-track="code"
+      :data-track-id="trackId('import-primary')"
+      data-track-label="Copiar import"
+    />
     <template v-if="secondaryCode">
       <p
         v-if="secondaryDescription"
@@ -41,9 +59,17 @@ defineProps<{
       >
         {{ secondaryDescription }}
       </p>
-      <Card class="nds-code-block nds-mt-2 nds-shadow-none">
-        <code class="nds-whitespace-pre">{{ secondaryCode }}</code>
-      </Card>
+      <CodeBlock
+        class="nds-mt-2"
+        :code="secondaryCode"
+        :language="language"
+        :show-line-numbers="false"
+        :copy-label="copyLabel"
+        :copied-label="copiedLabel"
+        data-track="code"
+        :data-track-id="trackId('import-secondary')"
+        data-track-label="Copiar import"
+      />
     </template>
   </section>
 </template>
