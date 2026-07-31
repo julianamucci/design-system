@@ -430,18 +430,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                   </Alert>
                 ),
               },
-              {
-                name: tContent("variants.items.compact.name"),
-                description: tContent("variants.items.compact.description"),
-                useWhen: tContent("variants.items.compact.use"),
-                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
-                preview: (
-                  <Alert variant="destructive" className="nds-w-full">
-                    <AlertCircle aria-hidden="true" />
-                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
-                  </Alert>
-                ),
-              },
             ]}
           />
 

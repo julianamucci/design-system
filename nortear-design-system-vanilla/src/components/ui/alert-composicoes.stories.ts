@@ -32,23 +32,6 @@ export const ComIcone: Story = {
   },
 };
 
-export const SemTituloCompacto: Story = {
-  render: () => {
-    const alert = createAlert({ variant: 'destructive' });
-    alert.appendChild(createAlertIcon('error'));
-    alert.appendChild(createAlertDescription({ text: 'Formulário incompleto — preencha todos os campos obrigatórios.' }));
-    return alert;
-  },
-
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const alert = canvas.getByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-destructive');
-    await expect(alert.querySelector('.nds-alert-title')).toBeNull();
-    await expect(canvas.getByText(/Formulário incompleto/)).toBeVisible();
-  },
-};
-
 // ─── Com Ação ────────────────────────────────────────────────────────────────
 
 export const ComAcao: Story = {

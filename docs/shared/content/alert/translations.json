@@ -141,12 +141,7 @@
         "destructive": "Erros críticos ou ações irreversíveis. Texto e borda na cor <code>--destructive</code>.",
         "success": "Confirmações de ações bem-sucedidas. Aplica a variante <code>success</code> do tema, baseada no token <code>--success</code>.",
         "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>.",
-        "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo.",
-        "compact": {
-          "name": "Sem título (compacto)",
-          "description": "Variante <code>destructive</code> com apenas ícone e descrição, sem AlertTitle. Reduz o espaço vertical.",
-          "use": "Erros curtos e autoexplicativos onde o título seria redundante (ex.: validação de formulário inline)."
-        }
+        "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -536,12 +531,7 @@
         "destructive": "Critical errors or irreversible actions. Text and border in <code>--destructive</code>.",
         "success": "Successful action confirmations. Applies the theme's <code>success</code> variant, based on the <code>--success</code> token.",
         "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token.",
-        "info": "Neutral informational emphasis for tips and extra context that do not block the flow.",
-        "compact": {
-          "name": "Without title (compact)",
-          "description": "<code>destructive</code> variant with only icon and description, no AlertTitle. Reduces vertical space.",
-          "use": "Short, self-explanatory errors where the title would be redundant (e.g., inline form validation)."
-        }
+        "info": "Neutral informational emphasis for tips and extra context that do not block the flow."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -931,12 +921,7 @@
         "destructive": "Errores críticos o acciones irreversibles. Texto y borde en color <code>--destructive</code>.",
         "success": "Confirmaciones de acciones exitosas. Aplica la variante <code>success</code> del tema, basada en el token <code>--success</code>.",
         "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>.",
-        "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo.",
-        "compact": {
-          "name": "Sin título (compacto)",
-          "description": "Variante <code>destructive</code> con solo ícono y descripción, sin AlertTitle. Reduce el espacio vertical.",
-          "use": "Errores cortos y autoexplicativos donde el título sería redundante (ej.: validación de formulario inline)."
-        }
+        "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {

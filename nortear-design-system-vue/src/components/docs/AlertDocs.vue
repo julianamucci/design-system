@@ -188,12 +188,6 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
-  {
-    name: tContent('variants.items.compact.name'),
-    description: tContent('variants.items.compact.description'),
-    useWhen: tContent('variants.items.compact.use'),
-    code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
-  },
 ]);
 
 const compositionItems = computed(() => [
