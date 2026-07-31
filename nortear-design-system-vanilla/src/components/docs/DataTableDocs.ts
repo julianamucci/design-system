@@ -380,7 +380,7 @@ export function createDataTableDocs(): HTMLElement {
           items: [
             ...[
               'globalFilter', 'columnFilters', 'selection', 'visibility',
-              'resize', 'reorder', 'pin', 'pagination', 'edit', 'virtual',
+              'resize', 'reorder', 'pagination',
             ].map((key) => ({
               name: key,
               description: stripHtml(t(`variants.items.${key}`)),
@@ -393,10 +393,7 @@ export function createDataTableDocs(): HTMLElement {
                   visibility: { enableColumnVisibility: true, enablePagination: false, enableGlobalFilter: false },
                   resize: { enableColumnResizing: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
                   reorder: { enableColumnOrdering: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                  pin: { enableColumnPinning: true, enablePagination: false, enableGlobalFilter: false },
                   pagination: { enablePagination: true, pageSize: 3, enableColumnVisibility: false, enableGlobalFilter: false },
-                  edit: { enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                  virtual: { virtualized: true, maxHeight: '160px', enableColumnVisibility: false, enableGlobalFilter: false },
                 };
                 return createDataTable<Invoice>({
                   columns: demoColumns(),

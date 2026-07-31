@@ -425,18 +425,6 @@ li.className = [
 ].join(' ');
 li.textContent = 'Excluir';`;
 
-        const codeCheckbox = `// CheckboxItem: role menuitemcheckbox + aria-checked
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitemcheckbox');
-li.setAttribute('aria-checked', 'true');
-li.className = 'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';`;
-
-        const codeRadio = `// RadioItem: role menuitemradio + aria-checked
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitemradio');
-li.setAttribute('aria-checked', 'false');
-li.className = 'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';`;
-
         const codeCompCheckbox = `// Itens com role="menuitemcheckbox" + aria-checked
 const li = document.createElement('li');
 li.setAttribute('role', 'menuitemcheckbox');
@@ -690,68 +678,8 @@ sc.style.marginLeft = 'auto';
               },
             },
             {
-              name: 'checkboxItem',
-              description: t('variants.checkboxItem'),
-              code: codeCheckbox,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitemcheckbox');
-                li.setAttribute('aria-checked', 'true');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const indicator = document.createElement('span');
-                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
-                const labelEl = document.createElement('span');
-                labelEl.textContent = 'Barra de Status';
-                li.append(indicator, labelEl);
-                return li;
-              },
-            },
-            {
-              name: 'radioItem',
-              description: t('variants.radioItem'),
-              code: codeRadio,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitemradio');
-                li.setAttribute('aria-checked', 'true');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const indicator = document.createElement('span');
-                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>`;
-                const labelEl = document.createElement('span');
-                labelEl.textContent = 'Compacto';
-                li.append(indicator, labelEl);
-                return li;
-              },
-            },
-            {
-              name: 'subTrigger',
-              description: t('variants.subTrigger'),
-              code: `const subTrigger = document.createElement('li');
-subTrigger.setAttribute('role', 'menuitem');
-subTrigger.setAttribute('aria-haspopup', 'menu');
-subTrigger.setAttribute('aria-expanded', 'false');
-subTrigger.className = '... nds-cluster ...';
-// ChevronRight inline SVG à direita`,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.setAttribute('aria-haspopup', 'menu');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const labelEl = document.createElement('span');
-                labelEl.className = 'nds-flex-1';
-                labelEl.textContent = t('demonstration.labels.share');
-                const chevron = document.createElement('span');
-                chevron.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>`;
-                li.append(labelEl, chevron);
-                return li;
-              },
-            },
-            {
               name: 'label',
-              description: t('variants.label'),
+              description: t('variants.items.label'),
               code: `const lbl = document.createElement('li');
 lbl.setAttribute('role', 'presentation');
 lbl.className = 'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground';

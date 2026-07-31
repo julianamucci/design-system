@@ -325,7 +325,6 @@ export function createButtonDocs(): HTMLElement {
         const codeOutline     = `createButton({ variant: 'outline', label: 'Cancelar' });`;
         const codeSecondary   = `createButton({ variant: 'secondary', label: 'Ver mais' });`;
         const codeGhost       = `createButton({ variant: 'ghost', label: 'Editar' });`;
-        const codeLink        = `createButton({ variant: 'link', label: 'Saiba mais' });`;
 
         return createDocsCompositions({
           id: 'variantes',
@@ -362,12 +361,6 @@ export function createButtonDocs(): HTMLElement {
               description: stripHtml(t('variants.items.ghost')),
               code: codeGhost,
               previewFactory: () => createButton({ variant: 'ghost', label: t('demonstration.labels.ghost') }),
-            },
-            {
-              name: 'link',
-              description: stripHtml(t('variants.items.link')),
-              code: codeLink,
-              previewFactory: () => createButton({ variant: 'link', label: t('demonstration.labels.link') }),
             },
             {
               name: t('variants.items.asLink.name'),
