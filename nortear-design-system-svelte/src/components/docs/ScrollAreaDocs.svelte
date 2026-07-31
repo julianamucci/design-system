@@ -428,15 +428,15 @@ interface ScrollAreaRootProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tNavStore('common.state') ?? 'Estado',
-      trigger: $tNavStore('common.trigger') ?? 'Gatilho',
-      behavior: $tNavStore('common.behavior') ?? 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.idle'),      trigger: '—',                 behavior: stripHtml($tStore('states.descriptions.idle'))      },
-      { label: $tStore('states.items.scrolling'), trigger: 'data-scrolling',    behavior: stripHtml($tStore('states.descriptions.scrolling')) },
-      { label: $tStore('states.items.hover'),     trigger: ':hover',            behavior: stripHtml($tStore('states.descriptions.hover'))     },
-      { label: $tStore('states.items.focus'),     trigger: ':focus-visible',    behavior: stripHtml($tStore('states.descriptions.focus'))     },
+      { label: $tStore('states.idle.label'),      trigger: $tStore('states.idle.trigger'),      behavior: stripHtml($tStore('states.idle.behavior')) },
+      { label: $tStore('states.scrolling.label'), trigger: $tStore('states.scrolling.trigger'), behavior: stripHtml($tStore('states.scrolling.behavior')) },
+      { label: $tStore('states.hover.label'),     trigger: $tStore('states.hover.trigger'),     behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),     trigger: $tStore('states.focus.trigger'),     behavior: stripHtml($tStore('states.focus.behavior')) },
     ]}
   />
 

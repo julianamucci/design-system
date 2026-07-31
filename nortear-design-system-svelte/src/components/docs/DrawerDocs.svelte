@@ -723,14 +723,14 @@ interface TriggerProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.closed'),     trigger: 'defaultOpen=false',                behavior: stripHtml($tStore('states.descriptions.closed'))     },
-      { label: $tStore('states.items.open'),       trigger: 'defaultOpen=true / click trigger', behavior: stripHtml($tStore('states.descriptions.open'))       },
-      { label: $tStore('states.items.controlled'), trigger: 'bind:open',                        behavior: stripHtml($tStore('states.descriptions.controlled')) },
+      { label: $tStore('states.closed.label'),     trigger: $tStore('states.closed.trigger'),     behavior: stripHtml($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),       trigger: $tStore('states.open.trigger'),       behavior: stripHtml($tStore('states.open.behavior')) },
+      { label: $tStore('states.controlled.label'), trigger: $tStore('states.controlled.trigger'), behavior: stripHtml($tStore('states.controlled.behavior')) },
     ]}
   />
 

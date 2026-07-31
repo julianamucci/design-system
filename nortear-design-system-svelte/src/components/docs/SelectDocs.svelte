@@ -742,18 +742,18 @@ interface SelectItemProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: 'Estado',
-      trigger: 'Disparo',
-      behavior: 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.default'),  trigger: '—',                       behavior: stripHtml($tStore('states.descriptions.default')) },
-      { label: $tStore('states.items.open'),     trigger: 'data-state="open"',       behavior: stripHtml($tStore('states.descriptions.open')) },
-      { label: $tStore('states.items.selected'), trigger: 'value="sp"',              behavior: stripHtml($tStore('states.descriptions.selected')) },
-      { label: $tStore('states.items.hover'),    trigger: ':hover (item)',           behavior: stripHtml($tStore('states.descriptions.hover')) },
-      { label: $tStore('states.items.focus'),    trigger: ':focus-visible',          behavior: stripHtml($tStore('states.descriptions.focus')) },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',                behavior: stripHtml($tStore('states.descriptions.disabled')) },
-      { label: $tStore('states.items.invalid'),  trigger: 'aria-invalid="true"',     behavior: stripHtml($tStore('states.descriptions.invalid')) },
+      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.open.label'),     trigger: $tStore('states.open.trigger'),     behavior: stripHtml($tStore('states.open.behavior')) },
+      { label: $tStore('states.selected.label'), trigger: $tStore('states.selected.trigger'), behavior: stripHtml($tStore('states.selected.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.invalid.label'),  trigger: $tStore('states.invalid.trigger'),  behavior: stripHtml($tStore('states.invalid.behavior')) },
     ]}
   />
 

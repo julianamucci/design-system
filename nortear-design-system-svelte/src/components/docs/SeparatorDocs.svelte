@@ -330,21 +330,13 @@
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      {
-        label: $tStore('states.items.decorative'),
-        trigger: 'decorative={true}',
-        behavior: stripHtml($tStore('states.descriptions.decorative')),
-      },
-      {
-        label: $tStore('states.items.semantic'),
-        trigger: 'decorative={false}',
-        behavior: stripHtml($tStore('states.descriptions.semantic')),
-      },
+      { label: $tStore('states.decorative.label'), trigger: $tStore('states.decorative.trigger'), behavior: stripHtml($tStore('states.decorative.behavior')) },
+      { label: $tStore('states.semantic.label'),   trigger: $tStore('states.semantic.trigger'),   behavior: stripHtml($tStore('states.semantic.behavior')) },
     ]}
   />
 

@@ -529,17 +529,17 @@ interface ToggleProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: 'Estado',
-      trigger: 'Disparo',
-      behavior: 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.off'),      trigger: 'aria-pressed="false"',  behavior: stripHtml($tStore('states.descriptions.off')) },
-      { label: $tStore('states.items.on'),       trigger: 'aria-pressed="true"',   behavior: stripHtml($tStore('states.descriptions.on')) },
-      { label: $tStore('states.items.hover'),    trigger: ':hover',                behavior: stripHtml($tStore('states.descriptions.hover')) },
-      { label: $tStore('states.items.focus'),    trigger: ':focus-visible',        behavior: stripHtml($tStore('states.descriptions.focus')) },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',              behavior: stripHtml($tStore('states.descriptions.disabled')) },
-      { label: $tStore('states.items.invalid'),  trigger: 'aria-invalid="true"',   behavior: stripHtml($tStore('states.descriptions.invalid')) },
+      { label: $tStore('states.off.label'),      trigger: $tStore('states.off.trigger'),      behavior: stripHtml($tStore('states.off.behavior')) },
+      { label: $tStore('states.on.label'),       trigger: $tStore('states.on.trigger'),       behavior: stripHtml($tStore('states.on.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.invalid.label'),  trigger: $tStore('states.invalid.trigger'),  behavior: stripHtml($tStore('states.invalid.behavior')) },
     ]}
   />
 

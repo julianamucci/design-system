@@ -472,16 +472,16 @@ interface HandleProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tNavStore('common.state') ?? 'Estado',
-      trigger: $tNavStore('common.trigger') ?? 'Gatilho',
-      behavior: $tNavStore('common.behavior') ?? 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.idle'),     trigger: '—',                                        behavior: stripHtml($tStore('states.descriptions.idle'))     },
-      { label: $tStore('states.items.hover'),    trigger: 'pointerenter',                             behavior: stripHtml($tStore('states.descriptions.hover'))    },
-      { label: $tStore('states.items.dragging'), trigger: 'pointerdown + drag',                       behavior: stripHtml($tStore('states.descriptions.dragging')) },
-      { label: $tStore('states.items.focus'),    trigger: 'Tab',                                      behavior: stripHtml($tStore('states.descriptions.focus'))    },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',                                 behavior: stripHtml($tStore('states.descriptions.disabled')) },
+      { label: $tStore('states.idle.label'),     trigger: $tStore('states.idle.trigger'),     behavior: stripHtml($tStore('states.idle.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.dragging.label'), trigger: $tStore('states.dragging.trigger'), behavior: stripHtml($tStore('states.dragging.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
     ]}
   />
 

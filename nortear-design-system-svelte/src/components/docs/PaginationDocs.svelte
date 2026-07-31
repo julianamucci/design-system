@@ -620,16 +620,16 @@ interface PaginationDirectionalProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.default'),  trigger: '—',                                 behavior: stripHtml($tStore('states.descriptions.default'))  },
-      { label: $tStore('states.items.hover'),    trigger: 'mouseenter',                        behavior: stripHtml($tStore('states.descriptions.hover'))    },
-      { label: $tStore('states.items.active'),   trigger: 'isActive=true',                     behavior: stripHtml($tStore('states.descriptions.active'))   },
-      { label: $tStore('states.items.disabled'), trigger: 'page === 1 (Previous) / last (Next)', behavior: stripHtml($tStore('states.descriptions.disabled')) },
-      { label: $tStore('states.items.focus'),    trigger: 'Tab',                               behavior: stripHtml($tStore('states.descriptions.focus'))    },
+      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),             behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),               behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.active.label'),   trigger: $tStore('states.active.trigger'),              behavior: stripHtml($tStore('states.active.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'),            behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),               behavior: stripHtml($tStore('states.focus.behavior')) },
       { label: $tStore('states.lastPage.label'), trigger: stripHtml($tStore('states.lastPage.trigger')), behavior: stripHtml($tStore('states.lastPage.behavior')) },
     ]}
   />

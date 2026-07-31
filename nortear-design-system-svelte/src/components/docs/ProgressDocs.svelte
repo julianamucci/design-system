@@ -379,15 +379,15 @@ interface ProgressProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('states.title'),
-      trigger: 'value',
-      behavior: $tStore('usage.scenarios.cols.scenario'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.default'),       trigger: '0',          behavior: stripHtml($tStore('states.descriptions.default'))       },
-      { label: $tStore('states.items.loading'),       trigger: '0 < v < 100', behavior: stripHtml($tStore('states.descriptions.loading'))       },
-      { label: $tStore('states.items.complete'),      trigger: '100',        behavior: stripHtml($tStore('states.descriptions.complete'))      },
-      { label: $tStore('states.items.indeterminate'), trigger: 'null',       behavior: stripHtml($tStore('states.descriptions.indeterminate')) },
+      { label: $tStore('states.default.label'),       trigger: $tStore('states.default.trigger'),       behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.loading.label'),       trigger: $tStore('states.loading.trigger'),       behavior: stripHtml($tStore('states.loading.behavior')) },
+      { label: $tStore('states.complete.label'),      trigger: $tStore('states.complete.trigger'),      behavior: stripHtml($tStore('states.complete.behavior')) },
+      { label: $tStore('states.indeterminate.label'), trigger: $tStore('states.indeterminate.trigger'), behavior: stripHtml($tStore('states.indeterminate.behavior')) },
     ]}
   />
 

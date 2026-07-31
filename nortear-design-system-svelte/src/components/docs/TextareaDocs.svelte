@@ -175,6 +175,10 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   const counterAriaLabel = $derived(`${demoDescriptionValue.length} de ${demoMax} caracteres usados`);
   const bioAriaLabel = $derived(`${demoBioValue.length} de ${demoBioMax} caracteres usados`);
+
+  function stripHtml(s: string) {
+    return s.replace(/<[^>]*>/g, '');
+  }
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="textarea">
@@ -489,17 +493,17 @@ interface TextareaProps extends HTMLTextareaAttributes {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tNavStore('common.storyState'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.default'),  trigger: '—',                              behavior: $tStore('states.descriptions.default')  },
-      { label: $tStore('states.items.focus'),    trigger: 'Tab / click',                    behavior: $tStore('states.descriptions.focus')    },
-      { label: $tStore('states.items.filled'),   trigger: 'Type',                           behavior: $tStore('states.descriptions.filled')   },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',                       behavior: $tStore('states.descriptions.disabled') },
-      { label: $tStore('states.items.invalid'),  trigger: 'aria-invalid="true"',            behavior: $tStore('states.descriptions.invalid')  },
-      { label: $tStore('states.items.readonly'), trigger: 'readonly',                       behavior: $tStore('states.descriptions.readonly') },
+      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.filled.label'),   trigger: $tStore('states.filled.trigger'),   behavior: stripHtml($tStore('states.filled.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.invalid.label'),  trigger: $tStore('states.invalid.trigger'),  behavior: stripHtml($tStore('states.invalid.behavior')) },
+      { label: $tStore('states.readonly.label'), trigger: $tStore('states.readonly.trigger'), behavior: stripHtml($tStore('states.readonly.behavior')) },
     ]}
   />
 

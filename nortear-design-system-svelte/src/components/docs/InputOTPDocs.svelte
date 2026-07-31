@@ -604,16 +604,16 @@ interface InputOTPProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.empty'),    trigger: 'value=""',                  behavior: stripHtml($tStore('states.descriptions.empty'))    },
-      { label: $tStore('states.items.filling'),  trigger: 'value="123"',               behavior: stripHtml($tStore('states.descriptions.filling'))  },
-      { label: $tStore('states.items.complete'), trigger: 'value.length === maxLength', behavior: stripHtml($tStore('states.descriptions.complete')) },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',                  behavior: stripHtml($tStore('states.descriptions.disabled')) },
-      { label: $tStore('states.items.error'),    trigger: 'aria-invalid="true"',       behavior: stripHtml($tStore('states.descriptions.error'))    },
+      { label: $tStore('states.empty.label'),    trigger: $tStore('states.empty.trigger'),    behavior: stripHtml($tStore('states.empty.behavior')) },
+      { label: $tStore('states.filling.label'),  trigger: $tStore('states.filling.trigger'),  behavior: stripHtml($tStore('states.filling.behavior')) },
+      { label: $tStore('states.complete.label'), trigger: $tStore('states.complete.trigger'), behavior: stripHtml($tStore('states.complete.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.error.label'),    trigger: $tStore('states.error.trigger'),    behavior: stripHtml($tStore('states.error.behavior')) },
     ]}
   />
 

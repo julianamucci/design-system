@@ -703,16 +703,16 @@ interface TooltipTriggerProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.closed'),  trigger: 'defaultOpen={false}',     behavior: stripHtml($tStore('states.descriptions.closed'))  },
-      { label: $tStore('states.items.open'),    trigger: 'defaultOpen={true} / open', behavior: stripHtml($tStore('states.descriptions.open'))    },
-      { label: $tStore('states.items.hover'),   trigger: 'pointer enter trigger',   behavior: stripHtml($tStore('states.descriptions.hover'))   },
-      { label: $tStore('states.items.focus'),   trigger: 'Tab → focus trigger',     behavior: stripHtml($tStore('states.descriptions.focus'))   },
-      { label: $tStore('states.items.delayed'), trigger: 'data-state="delayed-open"', behavior: stripHtml($tStore('states.descriptions.delayed')) },
+      { label: $tStore('states.closed.label'),  trigger: $tStore('states.closed.trigger'),  behavior: stripHtml($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),    trigger: $tStore('states.open.trigger'),    behavior: stripHtml($tStore('states.open.behavior')) },
+      { label: $tStore('states.hover.label'),   trigger: $tStore('states.hover.trigger'),   behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),   trigger: $tStore('states.focus.trigger'),   behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.delayed.label'), trigger: $tStore('states.delayed.trigger'), behavior: stripHtml($tStore('states.delayed.behavior')) },
     ]}
   />
 

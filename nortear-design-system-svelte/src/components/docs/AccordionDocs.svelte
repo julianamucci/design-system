@@ -738,10 +738,10 @@ type AccordionProps = {
           behavior: $tStore('states.cols.behavior'),
         }}
         items={[
-          { label: $tStore('states.closed.label'),   trigger: '—',                     behavior: $tStore('states.closed.description')              },
-          { label: $tStore('states.open.label'),     trigger: 'Click / Enter / Space', behavior: $tStore('states.open.description')                },
-          { label: $tStore('states.disabled.label'), trigger: '—',                     behavior: stripHtml($tStore('states.disabled.description')) },
-          { label: $tStore('states.focused.label'),  trigger: 'Tab',                   behavior: $tStore('states.focused.description')             },
+          { label: $tStore('states.closed.label'),   trigger: $tStore('states.closed.trigger'),   behavior: stripHtml($tStore('states.closed.behavior')) },
+          { label: $tStore('states.open.label'),     trigger: $tStore('states.open.trigger'),     behavior: stripHtml($tStore('states.open.behavior')) },
+          { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+          { label: $tStore('states.focused.label'),  trigger: $tStore('states.focused.trigger'),  behavior: stripHtml($tStore('states.focused.behavior')) },
         ]}
       />
 

@@ -316,21 +316,13 @@
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      {
-        label: $tStore('states.items.default'),
-        trigger: 'animate-pulse',
-        behavior: stripHtml($tStore('states.descriptions.default')),
-      },
-      {
-        label: $tStore('states.items.motionReduced'),
-        trigger: 'motion-reduce:animate-none',
-        behavior: stripHtml($tStore('states.descriptions.motionReduced')),
-      },
+      { label: $tStore('states.default.label'),       trigger: $tStore('states.default.trigger'),       behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.motionReduced.label'), trigger: $tStore('states.motionReduced.trigger'), behavior: stripHtml($tStore('states.motionReduced.behavior')) },
     ]}
   />
 

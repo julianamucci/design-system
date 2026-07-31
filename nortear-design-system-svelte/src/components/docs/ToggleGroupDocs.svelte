@@ -627,16 +627,16 @@ interface ToggleGroupItemProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $locale === 'en' ? 'State' : 'Estado',
-      trigger: $locale === 'en' ? 'Trigger' : $locale === 'es' ? 'Disparador' : 'Disparo',
-      behavior: $locale === 'en' ? 'Behavior' : $locale === 'es' ? 'Comportamiento' : 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.default'),  trigger: 'aria-pressed="false"', behavior: stripHtml($tStore('states.descriptions.default')) },
-      { label: $tStore('states.items.selected'), trigger: 'aria-pressed="true"',  behavior: stripHtml($tStore('states.descriptions.selected')) },
-      { label: $tStore('states.items.hover'),    trigger: ':hover',               behavior: stripHtml($tStore('states.descriptions.hover')) },
-      { label: $tStore('states.items.focus'),    trigger: ':focus-visible',       behavior: stripHtml($tStore('states.descriptions.focus')) },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled',             behavior: stripHtml($tStore('states.descriptions.disabled')) },
+      { label: $tStore('states.default.label'),      trigger: $tStore('states.default.trigger'),                 behavior: stripHtml($tStore('states.default.behavior')) },
+      { label: $tStore('states.selected.label'),     trigger: $tStore('states.selected.trigger'),                behavior: stripHtml($tStore('states.selected.behavior')) },
+      { label: $tStore('states.hover.label'),        trigger: $tStore('states.hover.trigger'),                   behavior: stripHtml($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),        trigger: $tStore('states.focus.trigger'),                   behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'),     trigger: $tStore('states.disabled.trigger'),                behavior: stripHtml($tStore('states.disabled.behavior')) },
       { label: $tStore('states.disabledItem.label'), trigger: stripHtml($tStore('states.disabledItem.trigger')), behavior: stripHtml($tStore('states.disabledItem.behavior')) },
     ]}
   />

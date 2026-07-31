@@ -624,14 +624,14 @@ interface NavigationMenuLinkProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.closed'), trigger: 'defaultValue=undefined',          behavior: stripHtml($tStore('states.descriptions.closed')) },
-      { label: $tStore('states.items.open'),   trigger: 'defaultValue / hover Trigger',    behavior: stripHtml($tStore('states.descriptions.open'))   },
-      { label: $tStore('states.items.active'), trigger: 'aria-current="page" no Link',     behavior: stripHtml($tStore('states.descriptions.active')) },
+      { label: $tStore('states.closed.label'), trigger: $tStore('states.closed.trigger'), behavior: stripHtml($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),   trigger: $tStore('states.open.trigger'),   behavior: stripHtml($tStore('states.open.behavior')) },
+      { label: $tStore('states.active.label'), trigger: $tStore('states.active.trigger'), behavior: stripHtml($tStore('states.active.behavior')) },
     ]}
   />
 

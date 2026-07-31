@@ -729,15 +729,15 @@ interface DropdownMenuRadioGroupProps {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tStore('props.table.prop'),
-      trigger: $tNavStore('common.userAction'),
-      behavior: $tNavStore('common.expectedResult'),
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
-      { label: $tStore('states.items.closed'),   trigger: 'defaultOpen=false',                behavior: stripHtml($tStore('states.descriptions.closed'))   },
-      { label: $tStore('states.items.open'),     trigger: 'defaultOpen=true / click trigger', behavior: stripHtml($tStore('states.descriptions.open'))     },
-      { label: $tStore('states.items.disabled'), trigger: 'disabled prop on Item',            behavior: stripHtml($tStore('states.descriptions.disabled')) },
-      { label: $tStore('states.items.checked'),  trigger: 'CheckboxItem / RadioItem',         behavior: stripHtml($tStore('states.descriptions.checked'))  },
+      { label: $tStore('states.closed.label'),   trigger: $tStore('states.closed.trigger'),   behavior: stripHtml($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),     trigger: $tStore('states.open.trigger'),     behavior: stripHtml($tStore('states.open.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.checked.label'),  trigger: $tStore('states.checked.trigger'),  behavior: stripHtml($tStore('states.checked.behavior')) },
     ]}
   />
 
