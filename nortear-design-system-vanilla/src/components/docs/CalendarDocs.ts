@@ -13,7 +13,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -107,7 +106,6 @@ export function createCalendarDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
-        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -169,7 +167,6 @@ export function createCalendarDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
-    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -328,9 +325,25 @@ document.body.appendChild(el);`,
   value: new Date(),
   class: 'nds-rounded-md nds-border-default nds-shadow-sm',
 });`;
+        const codeInlineBordered = `const el = createCalendar({
+  locale: 'pt-BR',
+  value: new Date(),
+  class: 'nds-rounded-md nds-border-default',
+});
+document.body.appendChild(el);`;
+        const codeDisabledPast = `const today = new Date();
+const el = createCalendar({
+  locale: 'pt-BR',
+  value: today,
+  disabled: (d) => d < new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+  class: 'nds-rounded-md nds-border-default',
+});`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.visualTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'calendar',
           items: [
             {
               name: 'single',
@@ -360,35 +373,11 @@ document.body.appendChild(el);`,
                   class: 'nds-rounded-md nds-border-default nds-shadow-sm',
                 }),
             },
-          ],
-        });
-      }
-
-      case 'composicoes': {
-        const codeInlineBordered = `const el = createCalendar({
-  locale: 'pt-BR',
-  value: new Date(),
-  class: 'nds-rounded-md nds-border-default',
-});
-document.body.appendChild(el);`;
-
-        const codeDisabledPast = `const today = new Date();
-const el = createCalendar({
-  locale: 'pt-BR',
-  value: today,
-  disabled: (d) => d < new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-  class: 'nds-rounded-md nds-border-default',
-});`;
-
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'calendar',
-          items: [
             {
-              name: stripHtml(t('variants.compositions.inlineBordered.name')),
-              description: stripHtml(t('variants.compositions.inlineBordered.description')),
-              useWhen: stripHtml(t('variants.compositions.inlineBordered.use')),
+              name: stripHtml(t('variants.items.inlineBordered.name')),
+              description: stripHtml(t('variants.items.inlineBordered.description')),
+              useWhen: stripHtml(t('variants.items.inlineBordered.use')),
+              trackId: 'inlineBordered',
               code: codeInlineBordered,
               previewFactory: () =>
                 createCalendar({
@@ -398,9 +387,10 @@ const el = createCalendar({
                 }),
             },
             {
-              name: stripHtml(t('variants.compositions.disabledPast.name')),
-              description: stripHtml(t('variants.compositions.disabledPast.description')),
-              useWhen: stripHtml(t('variants.compositions.disabledPast.use')),
+              name: stripHtml(t('variants.items.disabledPast.name')),
+              description: stripHtml(t('variants.items.disabledPast.description')),
+              useWhen: stripHtml(t('variants.items.disabledPast.use')),
+              trackId: 'disabledPast',
               code: codeDisabledPast,
               previewFactory: () => {
                 const anchor = referenceDate();

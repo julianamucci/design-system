@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -124,7 +123,6 @@ export function createCommandDocs(): HTMLElement {
       sections: [
         { id: 'importacao',   labelKey: 'nav.import'   },
         { id: 'variantes',    labelKey: 'nav.variants' },
-        { id: 'composicoes',  labelKey: 'nav.compositions' },
         { id: 'estados',      labelKey: 'nav.states'   },
         { id: 'propriedades', labelKey: 'nav.props'    },
         { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -181,7 +179,7 @@ export function createCommandDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -338,8 +336,28 @@ export function createCommandDocs(): HTMLElement {
         const codeCombobox = `// Command inline como combobox dentro de Popover\nconst cmd = createCommand({\n  placeholder: 'Buscar item...',\n  items: listItems,\n  onSelect: (value) => {\n    setSelected(value);\n    closePopover();\n  },\n});`;
         const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  items: globalActions,\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
 
-        return createDocsVariants({
+        const codeWithGroups = `const wrap = document.createElement('div');
+wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
+wrap.style.width = '320px';
+wrap.appendChild(
+  createCommand({
+    placeholder: 'Buscar componente...',
+    items: [
+      { value: 'button',    label: 'Button',    group: 'Componentes' },
+      { value: 'input',     label: 'Input',     group: 'Componentes' },
+      { value: 'badge',     label: 'Badge',     group: 'Componentes' },
+      { value: 'separator', label: 'Separator', group: 'Componentes' },
+      { value: 'cn',        label: 'cn()',       group: 'Utilitários' },
+      { value: 'clsx',      label: 'clsx()',     group: 'Utilitários' },
+      { value: 'twmerge',   label: 'twMerge()',  group: 'Utilitários' },
+    ],
+  })
+);`;
+
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'command',
           items: [
             {
@@ -414,87 +432,16 @@ export function createCommandDocs(): HTMLElement {
                 return outer;
               },
             },
-          ],
-        });
-      }
-
-      // ─── 6b. Composições ───────────────────────────────────────────────
-      case 'composicoes': {
-        const longListLabels = [
-          'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-          'Badge','Breadcrumb','Button','Calendar','Card',
-          'Carousel','Chart','Checkbox','Collapsible','Command',
-          'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
-          'DropdownMenu','Form','HoverCard','Input','InputOTP',
-          'Label','Menubar','NavigationMenu','Pagination','Popover',
-        ];
-
-        const codeWithGroups = `const wrap = document.createElement('div');
-wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
-wrap.appendChild(
-  createCommand({
-    placeholder: 'Buscar componente...',
-    items: [
-      { value: 'button',    label: 'Button',    group: 'Componentes' },
-      { value: 'input',     label: 'Input',     group: 'Componentes' },
-      { value: 'badge',     label: 'Badge',     group: 'Componentes' },
-      { value: 'separator', label: 'Separator', group: 'Componentes' },
-      { value: 'cn',        label: 'cn()',       group: 'Utilitários' },
-      { value: 'clsx',      label: 'clsx()',     group: 'Utilitários' },
-      { value: 'twmerge',   label: 'twMerge()',  group: 'Utilitários' },
-    ],
-  })
-);`;
-
-        const codeWithDisabled = `const wrap = document.createElement('div');
-wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
-wrap.appendChild(
-  createCommand({
-    placeholder: 'Buscar...',
-    items: [
-      { value: 'button', label: 'Button',              group: 'Componentes' },
-      { value: 'input',  label: 'Input (em breve)',    group: 'Componentes', disabled: true },
-      { value: 'badge',  label: 'Badge',               group: 'Componentes' },
-      { value: 'select', label: 'Select (em breve)',   group: 'Componentes', disabled: true },
-      { value: 'cn',     label: 'cn()',                 group: 'Utilitários' },
-      { value: 'clsx',   label: 'clsx() (depreciado)', group: 'Utilitários', disabled: true },
-    ],
-  })
-);`;
-
-        const codeLongList = `const items = [
-  'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-  'Badge','Breadcrumb','Button','Calendar','Card',
-  'Carousel','Chart','Checkbox','Collapsible','Command',
-  // ... e assim por diante
-].map(label => ({ value: label.toLowerCase(), label, group: 'Componentes' }));
-
-const wrap = document.createElement('div');
-wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
-wrap.appendChild(
-  createCommand({
-    placeholder: 'Buscar componente...',
-    items,
-  })
-);`;
-
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'command',
-          items: [
             {
-              name: stripHtml(t('variants.compositions.withGroups.name')),
-              description: stripHtml(t('variants.compositions.withGroups.description')),
-              useWhen: stripHtml(t('variants.compositions.withGroups.use')),
+              name: stripHtml(t('variants.items.withGroups.name')),
+              description: stripHtml(t('variants.items.withGroups.description')),
+              useWhen: stripHtml(t('variants.items.withGroups.use')),
+              trackId: 'withGroups',
               code: codeWithGroups,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
+                wrap.style.width = '320px';
                 wrap.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.searchPlaceholder'),
@@ -507,53 +454,6 @@ wrap.style.width = '320px';
                       { value: 'clsx',      label: 'clsx()',     group: t('demonstration.labels.groupUtils') },
                       { value: 'twmerge',   label: 'twMerge()',  group: t('demonstration.labels.groupUtils') },
                     ],
-                  })
-                );
-                return wrap;
-              },
-            },
-            {
-              name: stripHtml(t('variants.compositions.withDisabled.name')),
-              description: stripHtml(t('variants.compositions.withDisabled.description')),
-              useWhen: stripHtml(t('variants.compositions.withDisabled.use')),
-              code: codeWithDisabled,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
-                wrap.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.searchPlaceholder'),
-                    items: [
-                      { value: 'button', label: 'Button',              group: t('demonstration.labels.groupComponents') },
-                      { value: 'input',  label: 'Input (em breve)',    group: t('demonstration.labels.groupComponents'), disabled: true },
-                      { value: 'badge',  label: 'Badge',               group: t('demonstration.labels.groupComponents') },
-                      { value: 'select', label: 'Select (em breve)',   group: t('demonstration.labels.groupComponents'), disabled: true },
-                      { value: 'cn',     label: 'cn()',                 group: t('demonstration.labels.groupUtils') },
-                      { value: 'clsx',   label: 'clsx() (depreciado)', group: t('demonstration.labels.groupUtils'), disabled: true },
-                    ],
-                  })
-                );
-                return wrap;
-              },
-            },
-            {
-              name: stripHtml(t('variants.compositions.longList.name')),
-              description: stripHtml(t('variants.compositions.longList.description')),
-              useWhen: stripHtml(t('variants.compositions.longList.use')),
-              code: codeLongList,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
-                wrap.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.searchPlaceholder'),
-                    items: longListLabels.map(label => ({
-                      value: label.toLowerCase(),
-                      label,
-                      group: t('demonstration.labels.groupComponents'),
-                    })),
                   })
                 );
                 return wrap;
@@ -592,6 +492,16 @@ wrap.style.width = '320px';
               label:    t('states.loading.label'),
               trigger:  stripHtml(t('states.loading.trigger')),
               behavior: t('states.loading.behavior'),
+            },
+            {
+              label:    t('states.withDisabled.label'),
+              trigger:  stripHtml(t('states.withDisabled.trigger')),
+              behavior: t('states.withDisabled.behavior'),
+            },
+            {
+              label:    t('states.longList.label'),
+              trigger:  stripHtml(t('states.longList.trigger')),
+              behavior: t('states.longList.behavior'),
             },
           ],
         });

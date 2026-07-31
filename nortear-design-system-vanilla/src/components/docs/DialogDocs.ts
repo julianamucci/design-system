@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -397,9 +396,12 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
   showCloseButton: false, // remove o X do canto
 });`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
           note: stripHtml(t('variants.note')),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'dialog',
           items: [
             {
               name: 'default',
@@ -469,20 +471,11 @@ createDialog({ trigger, title: 'Editar perfil', description: '...', content: for
                 showCloseButton: false,
               }),
             },
-          ],
-        });
-      }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'dialog',
-          items: [
             {
-              name: stripHtml(t('variants.compositions.confirmEmail.name')),
-              description: stripHtml(t('variants.compositions.confirmEmail.description')),
-              useWhen: stripHtml(t('variants.compositions.confirmEmail.use')),
+              name: stripHtml(t('variants.items.confirmEmail.name')),
+              trackId: 'confirmEmail',
+              description: stripHtml(t('variants.items.confirmEmail.description')),
+              useWhen: stripHtml(t('variants.items.confirmEmail.use')),
               code: `const body = document.createElement('div');
 body.className = 'nds-text-body nds-text-muted-foreground';
 body.textContent = 'Vamos enviar um link para maria@exemplo.com.';
@@ -512,6 +505,16 @@ createDialog({
                 bodyText: 'Vamos enviar um link para maria@exemplo.com.',
               }),
             },
+          ],
+        });
+      }
+
+      case 'composicoes':
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'dialog',
+          items: [
             {
               name: stripHtml(t('variants.compositions.mediaPreview.name')),
               description: stripHtml(t('variants.compositions.mediaPreview.description')),

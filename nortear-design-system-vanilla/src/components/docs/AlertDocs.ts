@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -299,9 +298,15 @@ export function createAlertDocs(): HTMLElement {
         const codeSuccess = `const alert = createAlert({ variant: 'success' });\nalert.appendChild(createAlertIcon('success'));\nalert.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));\nalert.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));`;
         const codeWarning = `const alert = createAlert({ variant: 'warning' });\nalert.appendChild(createAlertIcon('warning'));\nalert.appendChild(createAlertTitle({ text: 'Assinatura expirando' }));\nalert.appendChild(createAlertDescription({ text: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.' }));`;
         const codeWithoutTitle = `const alert = createAlert({ variant: 'default' });\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
+        const codeCompact =
+          `const alert = createAlert({ variant: 'destructive' });\n` +
+          `alert.appendChild(createAlertIcon('error'));\n` +
+          `alert.appendChild(createAlertDescription({ text: 'Formulário incompleto.' }));`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
           items: [
             {
               name: 'default',
@@ -332,6 +337,14 @@ export function createAlertDocs(): HTMLElement {
               description: t('states.withoutTitle.behavior'),
               code: codeWithoutTitle,
               previewFactory: () => buildAlert('default', 'nds-w-full', 'info', null, 'demonstration.labels.infoDesc'),
+            },
+            {
+              name: t('variants.items.compact.name'),
+              description: t('variants.items.compact.description'),
+              useWhen: t('variants.items.compact.use'),
+              trackId: 'compact',
+              code: codeCompact,
+              previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', null, 'demonstration.labels.errorDesc'),
             },
           ],
         });
@@ -386,16 +399,6 @@ export function createAlertDocs(): HTMLElement {
                 el.appendChild(desc);
                 return el;
               },
-            },
-            {
-              name: t('variants.compositions.compact.name'),
-              description: t('variants.compositions.compact.description'),
-              useWhen: t('variants.compositions.compact.use'),
-              code:
-                `const alert = createAlert({ variant: 'destructive' });\n` +
-                `alert.appendChild(createAlertIcon('error'));\n` +
-                `alert.appendChild(createAlertDescription({ text: 'Formulário incompleto.' }));`,
-              previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', null, 'demonstration.labels.errorDesc'),
             },
           ],
         });

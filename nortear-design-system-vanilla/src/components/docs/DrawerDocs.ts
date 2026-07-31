@@ -16,7 +16,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -353,8 +352,32 @@ const drawer = createSheet({
   footer,
 });`;
 
-        return createDocsVariants({
+        const codeWithScroll = `const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+
+const longBody = document.createElement('div');
+longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+longBody.dataset.spacing = 'sm';
+longBody.style.maxHeight = '16rem';
+longBody.style.paddingRight = '0.5rem';
+for (let i = 1; i <= 12; i++) {
+  const p = document.createElement('p');
+  p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
+  longBody.appendChild(p);
+}
+
+const drawer = createDrawer({
+  trigger,
+  title: 'Termos de uso',
+  description: 'Leia atentamente antes de aceitar.',
+  content: longBody,
+  footer,
+});`;
+
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'drawer',
           items: [
             {
               name: t('variants.items.bottom'),
@@ -407,6 +430,43 @@ const drawer = createSheet({
                 actionLabel: 'Aplicar',
                 side: 'right',
               }),
+            },
+            {
+              name: stripHtml(t('variants.items.withScroll.name')),
+              trackId: 'withScroll',
+              description: stripHtml(t('variants.items.withScroll.description')),
+              useWhen: stripHtml(t('variants.items.withScroll.use')),
+              code: codeWithScroll,
+              previewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
+                const longBody = document.createElement('div');
+                longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+                longBody.dataset.spacing = 'sm';
+                longBody.style.maxHeight = '16rem';
+                longBody.style.paddingRight = '0.5rem';
+                for (let i = 1; i <= 12; i++) {
+                  const p = document.createElement('p');
+                  p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
+                  longBody.appendChild(p);
+                }
+                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const action = createButton({ variant: 'default', label: 'Aceitar termos' });
+                const footer = document.createElement('div');
+                footer.className = 'nds-cluster';
+                footer.dataset.justify = 'end';
+                footer.dataset.spacing = 'xs';
+                footer.append(cancel, action);
+                const el = createDrawer({
+                  trigger,
+                  title: 'Termos de uso',
+                  description: 'Leia atentamente antes de aceitar.',
+                  content: longBody,
+                  footer,
+                });
+                el.dataset.slot = 'drawer';
+                el.dataset.vaulDrawerDirection = 'bottom';
+                return el;
+              },
             },
           ],
         });
@@ -477,27 +537,6 @@ const drawer = createDrawer({
   footer,
 });`;
 
-        const codeWithScroll = `const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
-
-const longBody = document.createElement('div');
-longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
-longBody.dataset.spacing = 'sm';
-longBody.style.maxHeight = '16rem';
-longBody.style.paddingRight = '0.5rem';
-for (let i = 1; i <= 12; i++) {
-  const p = document.createElement('p');
-  p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
-  longBody.appendChild(p);
-}
-
-const drawer = createDrawer({
-  trigger,
-  title: 'Termos de uso',
-  description: 'Leia atentamente antes de aceitar.',
-  content: longBody,
-  footer,
-});`;
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -551,42 +590,6 @@ form.dataset.spacing = 'sm';
                 bodyText: 'Esta ação remove o item desta lista.',
                 side: 'bottom',
               }),
-            },
-            {
-              name: stripHtml(t('variants.compositions.withScroll.name')),
-              description: stripHtml(t('variants.compositions.withScroll.description')),
-              useWhen: stripHtml(t('variants.compositions.withScroll.use')),
-              code: codeWithScroll,
-              previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
-                const longBody = document.createElement('div');
-                longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
-longBody.dataset.spacing = 'sm';
-longBody.style.maxHeight = '16rem';
-longBody.style.paddingRight = '0.5rem';
-                for (let i = 1; i <= 12; i++) {
-                  const p = document.createElement('p');
-                  p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
-                  longBody.appendChild(p);
-                }
-                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-                const action = createButton({ variant: 'default', label: 'Aceitar termos' });
-                const footer = document.createElement('div');
-                footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
-                footer.append(cancel, action);
-                const el = createDrawer({
-                  trigger,
-                  title: 'Termos de uso',
-                  description: 'Leia atentamente antes de aceitar.',
-                  content: longBody,
-                  footer,
-                });
-                el.dataset.slot = 'drawer';
-                el.dataset.vaulDrawerDirection = 'bottom';
-                return el;
-              },
             },
           ],
         });

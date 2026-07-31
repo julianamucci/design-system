@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -336,35 +335,6 @@ export function createFormDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: 'FormField',
-              description: stripHtml(t('variants.note')),
-              code: `const field = createFormField({\n  label: 'Email',\n  input: createInput({ type: 'email' }),\n});`,
-              previewFactory: () => createFormField({
-                label: 'Email',
-                input: createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
-              }),
-            },
-            {
-              name: 'Fieldset',
-              description: 'Agrupamento semântico com legend.',
-              code: `const group = createFieldset({\n  legend: 'Endereço',\n  children: [field1, field2],\n});`,
-              previewFactory: () => createFieldset({
-                legend: 'Endereço',
-                children: [
-                  createFormField({ label: 'Rua',    input: createInput({ type: 'text', placeholder: 'ex: Av. Paulista, 1000' }) }),
-                  createFormField({ label: 'Cidade', input: createInput({ type: 'text', placeholder: 'ex: São Paulo' }) }),
-                ],
-              }),
-            },
-          ],
-        });
-      }
-
-      case 'composicoes': {
         const codeLabelOnly =
           `const field = createFormField({\n` +
           `  label: 'Nome completo',\n` +
@@ -387,6 +357,77 @@ export function createFormDocs(): HTMLElement {
           `  error: 'A senha precisa ter pelo menos 8 caracteres.',\n` +
           `});`;
 
+        return createDocsCompositions({
+          id: 'variantes',
+          title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'form',
+          items: [
+            {
+              name: 'FormField',
+              description: stripHtml(t('variants.note')),
+              code: `const field = createFormField({\n  label: 'Email',\n  input: createInput({ type: 'email' }),\n});`,
+              previewFactory: () => createFormField({
+                label: 'Email',
+                input: createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
+              }),
+            },
+            {
+              name: 'Fieldset',
+              description: 'Agrupamento semântico com legend.',
+              code: `const group = createFieldset({\n  legend: 'Endereço',\n  children: [field1, field2],\n});`,
+              previewFactory: () => createFieldset({
+                legend: 'Endereço',
+                children: [
+                  createFormField({ label: 'Rua',    input: createInput({ type: 'text', placeholder: 'ex: Av. Paulista, 1000' }) }),
+                  createFormField({ label: 'Cidade', input: createInput({ type: 'text', placeholder: 'ex: São Paulo' }) }),
+                ],
+              }),
+            },
+            {
+              name: t('variants.items.labelOnly.name'),
+              trackId: 'labelOnly',
+              description: t('variants.items.labelOnly.description'),
+              useWhen: t('variants.items.labelOnly.use'),
+              code: codeLabelOnly,
+              previewFactory: () => createFormField({
+                label: 'Nome completo',
+                input: createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
+              }),
+            },
+            {
+              name: t('variants.items.withDescription.name'),
+              trackId: 'withDescription',
+              description: t('variants.items.withDescription.description'),
+              useWhen: t('variants.items.withDescription.use'),
+              code: codeWithDescription,
+              previewFactory: () => createFormField({
+                label: 'Email',
+                input: createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
+                description: 'Usaremos apenas para contato.',
+              }),
+            },
+            {
+              name: t('variants.items.withError.name'),
+              trackId: 'withError',
+              description: t('variants.items.withError.description'),
+              useWhen: t('variants.items.withError.use'),
+              code: codeWithError,
+              previewFactory: () => {
+                const inp = createInput({ type: 'password', placeholder: '••••••••' });
+                inp.setAttribute('aria-invalid', 'true');
+                return createFormField({
+                  label: 'Senha',
+                  input: inp,
+                  error: 'A senha precisa ter pelo menos 8 caracteres.',
+                });
+              },
+            },
+          ],
+        });
+      }
+
+      case 'composicoes': {
         const codeFieldset =
           `const group = createFieldset({\n` +
           `  legend: 'Endereço de entrega',\n` +
@@ -401,42 +442,6 @@ export function createFormDocs(): HTMLElement {
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'form',
           items: [
-            {
-              name: t('variants.compositions.labelOnly.name'),
-              description: t('variants.compositions.labelOnly.description'),
-              useWhen: t('variants.compositions.labelOnly.use'),
-              code: codeLabelOnly,
-              previewFactory: () => createFormField({
-                label: 'Nome completo',
-                input: createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
-              }),
-            },
-            {
-              name: t('variants.compositions.withDescription.name'),
-              description: t('variants.compositions.withDescription.description'),
-              useWhen: t('variants.compositions.withDescription.use'),
-              code: codeWithDescription,
-              previewFactory: () => createFormField({
-                label: 'Email',
-                input: createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
-                description: 'Usaremos apenas para contato.',
-              }),
-            },
-            {
-              name: t('variants.compositions.withError.name'),
-              description: t('variants.compositions.withError.description'),
-              useWhen: t('variants.compositions.withError.use'),
-              code: codeWithError,
-              previewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: '••••••••' });
-                inp.setAttribute('aria-invalid', 'true');
-                return createFormField({
-                  label: 'Senha',
-                  input: inp,
-                  error: 'A senha precisa ter pelo menos 8 caracteres.',
-                });
-              },
-            },
             {
               name: t('variants.compositions.fieldset.name'),
               description: t('variants.compositions.fieldset.description'),

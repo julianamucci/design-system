@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -105,7 +104,6 @@ export function createPaginationDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -148,7 +146,7 @@ export function createPaginationDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -362,8 +360,11 @@ const nav = createPagination({
 // Previous fica desabilitado automaticamente em current=1
 // (recebe pointer-events-none + opacity-50).`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'pagination',
           items: [
             {
               name: t('variants.items.default'),
@@ -411,20 +412,11 @@ const nav = createPagination({
                 return wrap;
               },
             },
-          ],
-        });
-      }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'pagination',
-          items: [
             {
-              name: t('variants.compositions.simple.name'),
-              description: t('variants.compositions.simple.description'),
-              useWhen: t('variants.compositions.simple.use'),
+              name: t('variants.items.simple.name'),
+              trackId: 'simple',
+              description: t('variants.items.simple.description'),
+              useWhen: t('variants.items.simple.use'),
               code:
                 `const nav = createPagination({\n` +
                 `  total: 5,\n` +
@@ -448,9 +440,10 @@ const nav = createPagination({
               },
             },
             {
-              name: t('variants.compositions.withEllipsis.name'),
-              description: t('variants.compositions.withEllipsis.description'),
-              useWhen: t('variants.compositions.withEllipsis.use'),
+              name: t('variants.items.withEllipsis.name'),
+              trackId: 'withEllipsis',
+              description: t('variants.items.withEllipsis.description'),
+              useWhen: t('variants.items.withEllipsis.use'),
               code:
                 `const nav = createPagination({\n` +
                 `  total: 12,\n` +
@@ -474,36 +467,10 @@ const nav = createPagination({
               },
             },
             {
-              name: t('variants.compositions.lastPage.name'),
-              description: t('variants.compositions.lastPage.description'),
-              useWhen: t('variants.compositions.lastPage.use'),
-              code:
-                `const nav = createPagination({\n` +
-                `  total: 10,\n` +
-                `  current: 10,\n` +
-                `  showPrevNext: true,\n` +
-                `  onPageChange: (page) => console.log('page', page),\n` +
-                `});\n` +
-                `// Next fica desabilitado automaticamente em current=total.`,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
-                wrap.appendChild(createPagination({
-                  total: 10,
-                  current: 10,
-                  showPrevNext: true,
-                  onPageChange: () => {},
-                }));
-                return wrap;
-              },
-            },
-            {
-              name: t('variants.compositions.interactive.name'),
-              description: t('variants.compositions.interactive.description'),
-              useWhen: t('variants.compositions.interactive.use'),
+              name: t('variants.items.interactive.name'),
+              trackId: 'interactive',
+              description: t('variants.items.interactive.description'),
+              useWhen: t('variants.items.interactive.use'),
               code:
                 `let current = 3;\n` +
                 `const total = 8;\n` +
@@ -562,6 +529,7 @@ const nav = createPagination({
             },
           ],
         });
+      }
 
       case 'estados': {
         const locale = getLocale();
@@ -580,6 +548,7 @@ const nav = createPagination({
             { label: t('states.items.active'),   trigger: 'page === current',                  behavior: stripHtml(t('states.descriptions.active'))   },
             { label: t('states.items.disabled'), trigger: 'current=1 (Prev) / current=total (Next)', behavior: stripHtml(t('states.descriptions.disabled')) },
             { label: t('states.items.focus'),    trigger: 'Tab',                                behavior: stripHtml(t('states.descriptions.focus'))    },
+            { label: t('states.lastPage.label'),  trigger: stripHtml(t('states.lastPage.trigger')), behavior: stripHtml(t('states.lastPage.behavior')) },
           ],
         });
       }

@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -377,8 +376,31 @@ const el = createCarousel({ items: buildSlides(4) });`;
 items.forEach((i) => i.classList.add('basis-1/2'));
 const el = createCarousel({ items });`;
 
-        return createDocsVariants({
+        const buildAutoplayPreview = (): HTMLElement => {
+          const wrap = document.createElement('div');
+          wrap.className = 'nds-w-full nds-max-w-md';
+          wrap.appendChild(
+            createCarousel({
+              items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
+              autoplay: true,
+              autoplayInterval: 4000,
+            }),
+          );
+          return wrap;
+        };
+
+        const codeAutoplay = `// Autoplay com pausa no hover
+const carousel = createCarousel({
+  items: buildSlides(4),
+  autoplay: true,
+  autoplayInterval: 4000,
+});
+// Pausa automática ao mouseenter (built-in da factory).`;
+
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.visualTitle'),
+          useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'carousel',
           items: [
             {
@@ -424,6 +446,14 @@ const el = createCarousel({ items });`;
                 wrap.appendChild(createCarousel({ items: buildSlides(5) }));
                 return wrap;
               },
+            },
+            {
+              name: stripHtml(t('variants.items.autoplay.name')),
+              description: stripHtml(t('variants.items.autoplay.description')),
+              useWhen: stripHtml(t('variants.items.autoplay.use')),
+              trackId: 'autoplay',
+              code: codeAutoplay,
+              previewFactory: buildAutoplayPreview,
             },
           ],
         });
@@ -524,19 +554,6 @@ const el = createCarousel({ items });`;
           return wrap;
         };
 
-        const buildAutoplayPreview = (): HTMLElement => {
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-w-full nds-max-w-md';
-          wrap.appendChild(
-            createCarousel({
-              items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
-              autoplay: true,
-              autoplayInterval: 4000,
-            }),
-          );
-          return wrap;
-        };
-
         const codeWithDots = `// Dots controlados via onIndexChange
 const total = 5;
 const dotsRow = document.createElement('div');
@@ -586,14 +603,6 @@ const items = photos.map((photo) => {
 
 const carousel = createCarousel({ items });`;
 
-        const codeAutoplay = `// Autoplay com pausa no hover
-const carousel = createCarousel({
-  items: buildSlides(4),
-  autoplay: true,
-  autoplayInterval: 4000,
-});
-// Pausa automática ao mouseenter (built-in da factory).`;
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -612,13 +621,6 @@ const carousel = createCarousel({
               useWhen: stripHtml(t('variants.compositions.gallery.use')),
               code: codeGallery,
               previewFactory: buildGalleryPreview,
-            },
-            {
-              name: stripHtml(t('variants.compositions.autoplay.name')),
-              description: stripHtml(t('variants.compositions.autoplay.description')),
-              useWhen: stripHtml(t('variants.compositions.autoplay.use')),
-              code: codeAutoplay,
-              previewFactory: buildAutoplayPreview,
             },
           ],
         });

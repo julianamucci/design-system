@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -416,9 +415,11 @@ toggle.setAttribute('aria-label', 'Negrito');`,
         });
 
       case 'variantes': {
-        return createDocsVariants({
+        return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'toggle',
           items: [
             {
               name: stripHtml(t('variants.items.default')),
@@ -469,6 +470,36 @@ const t = createToggle({ variant: 'outline', children: wrap });`,
                 variant: 'outline',
               }),
             },
+            {
+              name: stripHtml(t('variants.items.sizes.name')),
+              trackId: 'sizes',
+              description: stripHtml(t('variants.items.sizes.description')),
+              useWhen: stripHtml(t('variants.items.sizes.use')),
+              code: `const row = document.createElement('div');
+row.className = 'nds-cluster';
+row.dataset.spacing = 'sm';
+
+const sm = createToggle({ variant: 'outline', size: 'sm', children: wrapIcon(Bold) });
+sm.setAttribute('aria-label', 'Negrito (sm)');
+row.appendChild(sm);
+
+const md = createToggle({ variant: 'outline', size: 'default', children: wrapIcon(Bold) });
+md.setAttribute('aria-label', 'Negrito (default)');
+row.appendChild(md);
+
+const lg = createToggle({ variant: 'outline', size: 'lg', children: wrapIcon(Bold) });
+lg.setAttribute('aria-label', 'Negrito (lg)');
+row.appendChild(lg);`,
+              previewFactory: () => {
+                const row = document.createElement('div');
+                row.className = 'nds-cluster';
+row.dataset.spacing = 'sm';
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (sm)', variant: 'outline', size: 'sm' }));
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (default)', variant: 'outline', size: 'default' }));
+                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (lg)', variant: 'outline', size: 'lg' }));
+                return row;
+              },
+            },
           ],
         });
       }
@@ -510,35 +541,6 @@ toolbar.dataset.spacing = 'xs';
                 toolbar.appendChild(buildIconToggle({ icon: Italic, ariaLabel: 'Itálico' }));
                 toolbar.appendChild(buildIconToggle({ icon: Underline, ariaLabel: 'Sublinhado' }));
                 return toolbar;
-              },
-            },
-            {
-              name: stripHtml(t('variants.compositions.sizes.name')),
-              description: stripHtml(t('variants.compositions.sizes.description')),
-              useWhen: stripHtml(t('variants.compositions.sizes.use')),
-              code: `const row = document.createElement('div');
-row.className = 'nds-cluster';
-row.dataset.spacing = 'sm';
-
-const sm = createToggle({ variant: 'outline', size: 'sm', children: wrapIcon(Bold) });
-sm.setAttribute('aria-label', 'Negrito (sm)');
-row.appendChild(sm);
-
-const md = createToggle({ variant: 'outline', size: 'default', children: wrapIcon(Bold) });
-md.setAttribute('aria-label', 'Negrito (default)');
-row.appendChild(md);
-
-const lg = createToggle({ variant: 'outline', size: 'lg', children: wrapIcon(Bold) });
-lg.setAttribute('aria-label', 'Negrito (lg)');
-row.appendChild(lg);`,
-              previewFactory: () => {
-                const row = document.createElement('div');
-                row.className = 'nds-cluster';
-row.dataset.spacing = 'sm';
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (sm)', variant: 'outline', size: 'sm' }));
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (default)', variant: 'outline', size: 'default' }));
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (lg)', variant: 'outline', size: 'lg' }));
-                return row;
               },
             },
             {

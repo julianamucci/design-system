@@ -13,7 +13,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -126,7 +125,6 @@ export function createContextMenuDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -176,7 +174,7 @@ export function createContextMenuDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -439,111 +437,6 @@ li.setAttribute('role', 'menuitemradio');
 li.setAttribute('aria-checked', 'false');
 li.className = 'nds-cluster nds-rounded-sm nds-px-2 nds-text-body';`;
 
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: 'default',
-              description: t('variants.items.default'),
-              code: codeDefault,
-              previewFactory: () => buildSimpleTriggerArea(t('demonstration.labels.triggerLabel')),
-            },
-            {
-              name: 'destructive',
-              description: t('variants.items.destructive'),
-              code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-text-destructive nds-border-destructive-soft';
-                li.textContent = t('demonstration.labels.delete');
-                return li;
-              },
-            },
-            {
-              name: 'checkboxItem',
-              description: t('variants.checkboxItem'),
-              code: codeCheckbox,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitemcheckbox');
-                li.setAttribute('aria-checked', 'true');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const indicator = document.createElement('span');
-                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
-                const labelEl = document.createElement('span');
-                labelEl.textContent = 'Barra de Status';
-                li.append(indicator, labelEl);
-                return li;
-              },
-            },
-            {
-              name: 'radioItem',
-              description: t('variants.radioItem'),
-              code: codeRadio,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitemradio');
-                li.setAttribute('aria-checked', 'true');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const indicator = document.createElement('span');
-                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>`;
-                const labelEl = document.createElement('span');
-                labelEl.textContent = 'Compacto';
-                li.append(indicator, labelEl);
-                return li;
-              },
-            },
-            {
-              name: 'subTrigger',
-              description: t('variants.subTrigger'),
-              code: `const subTrigger = document.createElement('li');
-subTrigger.setAttribute('role', 'menuitem');
-subTrigger.setAttribute('aria-haspopup', 'menu');
-subTrigger.setAttribute('aria-expanded', 'false');
-subTrigger.className = '... nds-cluster ...';
-// ChevronRight inline SVG à direita`,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.setAttribute('aria-haspopup', 'menu');
-                li.className =
-                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
-                const labelEl = document.createElement('span');
-                labelEl.className = 'nds-flex-1';
-                labelEl.textContent = t('demonstration.labels.share');
-                const chevron = document.createElement('span');
-                chevron.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>`;
-                li.append(labelEl, chevron);
-                return li;
-              },
-            },
-            {
-              name: 'label',
-              description: t('variants.label'),
-              code: `const lbl = document.createElement('li');
-lbl.setAttribute('role', 'presentation');
-lbl.className = 'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground';
-lbl.textContent = 'Ações';`,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'presentation');
-                li.className =
-                  'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground nds-border-default nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Ações';
-                return li;
-              },
-            },
-          ],
-        });
-      }
-
-      // ── 6b. Composições ──────────────────────────────────────────────────
-      case 'composicoes': {
         const codeCompCheckbox = `// Itens com role="menuitemcheckbox" + aria-checked
 const li = document.createElement('li');
 li.setAttribute('role', 'menuitemcheckbox');
@@ -772,14 +665,112 @@ sc.style.marginLeft = 'auto';
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
+          id: 'variantes',
+          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'context-menu',
           items: [
             {
-              name: t('variants.compositions.withCheckbox.name'),
-              description: t('variants.compositions.withCheckbox.description'),
-              useWhen: t('variants.compositions.withCheckbox.use'),
+              name: 'default',
+              description: t('variants.items.default'),
+              code: codeDefault,
+              previewFactory: () => buildSimpleTriggerArea(t('demonstration.labels.triggerLabel')),
+            },
+            {
+              name: 'destructive',
+              description: t('variants.items.destructive'),
+              code: codeDestructive,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'menuitem');
+                li.className =
+                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-text-destructive nds-border-destructive-soft';
+                li.textContent = t('demonstration.labels.delete');
+                return li;
+              },
+            },
+            {
+              name: 'checkboxItem',
+              description: t('variants.checkboxItem'),
+              code: codeCheckbox,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'menuitemcheckbox');
+                li.setAttribute('aria-checked', 'true');
+                li.className =
+                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
+                const indicator = document.createElement('span');
+                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+                const labelEl = document.createElement('span');
+                labelEl.textContent = 'Barra de Status';
+                li.append(indicator, labelEl);
+                return li;
+              },
+            },
+            {
+              name: 'radioItem',
+              description: t('variants.radioItem'),
+              code: codeRadio,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'menuitemradio');
+                li.setAttribute('aria-checked', 'true');
+                li.className =
+                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
+                const indicator = document.createElement('span');
+                indicator.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>`;
+                const labelEl = document.createElement('span');
+                labelEl.textContent = 'Compacto';
+                li.append(indicator, labelEl);
+                return li;
+              },
+            },
+            {
+              name: 'subTrigger',
+              description: t('variants.subTrigger'),
+              code: `const subTrigger = document.createElement('li');
+subTrigger.setAttribute('role', 'menuitem');
+subTrigger.setAttribute('aria-haspopup', 'menu');
+subTrigger.setAttribute('aria-expanded', 'false');
+subTrigger.className = '... nds-cluster ...';
+// ChevronRight inline SVG à direita`,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'menuitem');
+                li.setAttribute('aria-haspopup', 'menu');
+                li.className =
+                  'nds-cluster nds-rounded-md nds-px-2 nds-text-body nds-border-default';
+                const labelEl = document.createElement('span');
+                labelEl.className = 'nds-flex-1';
+                labelEl.textContent = t('demonstration.labels.share');
+                const chevron = document.createElement('span');
+                chevron.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>`;
+                li.append(labelEl, chevron);
+                return li;
+              },
+            },
+            {
+              name: 'label',
+              description: t('variants.label'),
+              code: `const lbl = document.createElement('li');
+lbl.setAttribute('role', 'presentation');
+lbl.className = 'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground';
+lbl.textContent = 'Ações';`,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'presentation');
+                li.className =
+                  'nds-px-2 nds-text-caption nds-font-semibold nds-text-muted-foreground nds-border-default nds-rounded-md';
+                li.style.minWidth = '160px';
+                li.textContent = 'Ações';
+                return li;
+              },
+            },
+            {
+              name: t('variants.items.withCheckbox.name'),
+              trackId: 'withCheckbox',
+              description: t('variants.items.withCheckbox.description'),
+              useWhen: t('variants.items.withCheckbox.use'),
               code: codeCompCheckbox,
               previewFactory: () => {
                 const menu = makeMenuPanel();
@@ -792,9 +783,10 @@ sc.style.marginLeft = 'auto';
               },
             },
             {
-              name: t('variants.compositions.withRadio.name'),
-              description: t('variants.compositions.withRadio.description'),
-              useWhen: t('variants.compositions.withRadio.use'),
+              name: t('variants.items.withRadio.name'),
+              trackId: 'withRadio',
+              description: t('variants.items.withRadio.description'),
+              useWhen: t('variants.items.withRadio.use'),
               code: codeCompRadio,
               previewFactory: () => {
                 const menu = makeMenuPanel();
@@ -820,9 +812,10 @@ sc.style.marginLeft = 'auto';
               },
             },
             {
-              name: t('variants.compositions.withSubmenu.name'),
-              description: t('variants.compositions.withSubmenu.description'),
-              useWhen: t('variants.compositions.withSubmenu.use'),
+              name: t('variants.items.withSubmenu.name'),
+              trackId: 'withSubmenu',
+              description: t('variants.items.withSubmenu.description'),
+              useWhen: t('variants.items.withSubmenu.use'),
               code: codeCompSubmenu,
               previewFactory: () => {
                 const menu = makeMenuPanel();
@@ -860,9 +853,10 @@ sc.style.marginLeft = 'auto';
               },
             },
             {
-              name: t('variants.compositions.withShortcuts.name'),
-              description: t('variants.compositions.withShortcuts.description'),
-              useWhen: t('variants.compositions.withShortcuts.use'),
+              name: t('variants.items.withShortcuts.name'),
+              trackId: 'withShortcuts',
+              description: t('variants.items.withShortcuts.description'),
+              useWhen: t('variants.items.withShortcuts.use'),
               code: codeCompShortcuts,
               previewFactory: () => {
                 const menu = makeMenuPanel();

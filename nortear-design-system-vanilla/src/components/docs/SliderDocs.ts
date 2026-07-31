@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -434,9 +433,10 @@ input.setAttribute('aria-label', 'Volume');`,
         });
 
       case 'variantes': {
-        return createDocsVariants({
+        return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'slider',
           items: [
             {
@@ -555,6 +555,27 @@ input.setAttribute('aria-label', 'Volume');`,
                 return wrap;
               },
             },
+            {
+              name: stripHtml(t('variants.items.brightness.name')),
+              trackId: 'brightness',
+              description: stripHtml(t('variants.items.brightness.description')),
+              useWhen: stripHtml(t('variants.items.brightness.use')),
+              code: `const slider = createSlider({
+  min: 0, max: 100, step: 5, value: 75,
+  onValueChange: (v) => { valueText.textContent = v + '%'; },
+});`,
+              previewFactory: () =>
+                buildLabeledSlider({
+                  idPrefix: 'v-brightness',
+                  labelText: 'Brilho',
+                  ariaLabel: 'Brilho',
+                  min: 0,
+                  max: 100,
+                  step: 5,
+                  value: 75,
+                  unit: '%',
+                }),
+            },
           ],
         });
       }
@@ -582,26 +603,6 @@ input.setAttribute('aria-label', 'Volume');`,
                   min: 0,
                   max: 100,
                   value: 50,
-                  unit: '%',
-                }),
-            },
-            {
-              name: stripHtml(t('variants.compositions.brightness.name')),
-              description: stripHtml(t('variants.compositions.brightness.description')),
-              useWhen: stripHtml(t('variants.compositions.brightness.use')),
-              code: `const slider = createSlider({
-  min: 0, max: 100, step: 5, value: 75,
-  onValueChange: (v) => { valueText.textContent = v + '%'; },
-});`,
-              previewFactory: () =>
-                buildLabeledSlider({
-                  idPrefix: 'comp-brightness',
-                  labelText: 'Brilho',
-                  ariaLabel: 'Brilho',
-                  min: 0,
-                  max: 100,
-                  step: 5,
-                  value: 75,
                   unit: '%',
                 }),
             },

@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -134,7 +133,6 @@ export function createMenubarDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'        },
       { id: 'variantes',    labelKey: 'nav.variants'      },
-      { id: 'composicoes',  labelKey: 'nav.compositions'  },
       { id: 'estados',      labelKey: 'nav.states'        },
       { id: 'propriedades', labelKey: 'nav.props'         },
       { id: 'tokens',       labelKey: 'nav.tokens'        },
@@ -177,7 +175,7 @@ export function createMenubarDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -362,55 +360,6 @@ li.className = 'nds-dropdown-menu-item nds-text-destructive';
 li.textContent = 'Excluir arquivo';
 panel.appendChild(li);`;
 
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: t('variants.items.default'),
-              description: stripHtml(t('variants.styles.default')),
-              code: codeDefault,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '140px';
-                wrap.appendChild(
-                  createMenubar([
-                    {
-                      label: 'Arquivo',
-                      items: [
-                        { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-                        { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
-                      ],
-                    },
-                  ]),
-                );
-                return wrap;
-              },
-            },
-            {
-              name: t('variants.items.destructive'),
-              description:
-                stripHtml(t('variants.styles.destructive')) +
-                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
-              code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('div');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
-                li.style.minWidth = '180px';
-                li.textContent = 'Excluir arquivo';
-                return li;
-              },
-            },
-          ],
-        });
-      }
-
-      case 'composicoes': {
         function injectCheckbox(panel: HTMLElement, label: string, checked: boolean): void {
           const item = document.createElement('div');
           item.setAttribute('role', 'menuitemcheckbox');
@@ -532,14 +481,57 @@ const panel = bar.querySelector('[role="menu"]');
 ]);`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
+          id: 'variantes',
+          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'menubar',
           items: [
             {
-              name: stripHtml(t('variants.compositions.withShortcuts.name')),
-              description: stripHtml(t('variants.compositions.withShortcuts.description')),
-              useWhen: stripHtml(t('variants.compositions.withShortcuts.use')),
+              name: t('variants.items.default'),
+              description: stripHtml(t('variants.styles.default')),
+              code: codeDefault,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '140px';
+                wrap.appendChild(
+                  createMenubar([
+                    {
+                      label: 'Arquivo',
+                      items: [
+                        { type: 'item', label: 'Novo',    shortcut: '⌘N' },
+                        { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+                      ],
+                    },
+                  ]),
+                );
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.items.destructive'),
+              description:
+                stripHtml(t('variants.styles.destructive')) +
+                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
+              code: codeDestructive,
+              previewFactory: () => {
+                const li = document.createElement('div');
+                li.setAttribute('role', 'menuitem');
+                li.className =
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
+                li.style.minWidth = '180px';
+                li.textContent = 'Excluir arquivo';
+                return li;
+              },
+            },
+            {
+              name: stripHtml(t('variants.items.withShortcuts.name')),
+              trackId: 'withShortcuts',
+              description: stripHtml(t('variants.items.withShortcuts.description')),
+              useWhen: stripHtml(t('variants.items.withShortcuts.use')),
               code: codeWithShortcuts,
               previewFactory: () => wrapPreview(
                 createMenubar([
@@ -557,9 +549,10 @@ const panel = bar.querySelector('[role="menu"]');
               ),
             },
             {
-              name: stripHtml(t('variants.compositions.withCheckbox.name')),
-              description: stripHtml(t('variants.compositions.withCheckbox.description')),
-              useWhen: stripHtml(t('variants.compositions.withCheckbox.use')),
+              name: stripHtml(t('variants.items.withCheckbox.name')),
+              trackId: 'withCheckbox',
+              description: stripHtml(t('variants.items.withCheckbox.description')),
+              useWhen: stripHtml(t('variants.items.withCheckbox.use')),
               code: codeWithCheckbox,
               previewFactory: () => {
                 const bar = createMenubar([
@@ -575,9 +568,10 @@ const panel = bar.querySelector('[role="menu"]');
               },
             },
             {
-              name: stripHtml(t('variants.compositions.withRadio.name')),
-              description: stripHtml(t('variants.compositions.withRadio.description')),
-              useWhen: stripHtml(t('variants.compositions.withRadio.use')),
+              name: stripHtml(t('variants.items.withRadio.name')),
+              trackId: 'withRadio',
+              description: stripHtml(t('variants.items.withRadio.description')),
+              useWhen: stripHtml(t('variants.items.withRadio.use')),
               code: codeWithRadio,
               previewFactory: () => {
                 const bar = createMenubar([
@@ -593,9 +587,10 @@ const panel = bar.querySelector('[role="menu"]');
               },
             },
             {
-              name: stripHtml(t('variants.compositions.editorComplete.name')),
-              description: stripHtml(t('variants.compositions.editorComplete.description')),
-              useWhen: stripHtml(t('variants.compositions.editorComplete.use')),
+              name: stripHtml(t('variants.items.editorComplete.name')),
+              trackId: 'editorComplete',
+              description: stripHtml(t('variants.items.editorComplete.description')),
+              useWhen: stripHtml(t('variants.items.editorComplete.use')),
               code: codeEditorComplete,
               previewFactory: () => wrapPreview(
                 createMenubar([

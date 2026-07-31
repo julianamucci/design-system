@@ -13,7 +13,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -295,7 +294,6 @@ export function createCodeBlockDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'       },
       { id: 'variantes',    labelKey: 'nav.variants'     },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'       },
       { id: 'propriedades', labelKey: 'nav.props'        },
       { id: 'tokens',       labelKey: 'nav.tokens'       },
@@ -342,7 +340,7 @@ export function createCodeBlockDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -498,93 +496,88 @@ export function createCodeBlockDocs(): HTMLElement {
         });
 
       case 'variantes':
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
           note: t('variants.note'),
-          componentSlug: 'code-block',
-          items: LANGUAGE_ITEMS.map(item => ({
-            name: item.key,
-            description: t(`variants.items.${item.key}`),
-            code: languageSnippet(item.language),
-            previewFactory: () => block('variantes', item.key, {
-              code: item.code,
-              language: item.language,
-              showLineNumbers: false,
-            }),
-          })),
-        });
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'code-block',
           items: [
+            ...LANGUAGE_ITEMS.map(item => ({
+              name: item.key,
+              description: t(`variants.items.${item.key}`),
+              code: languageSnippet(item.language),
+              previewFactory: () => block('variantes', item.key, {
+                code: item.code,
+                language: item.language,
+                showLineNumbers: false,
+              }),
+            })),
             {
-              name: t('variants.compositions.withTitle.name'),
+              name: t('variants.items.withTitle.name'),
               // O nome é traduzido; sem trackId o mesmo evento sairia com um
               // valor por idioma. A chave é a mesma do data-track-id do preview.
               trackId: 'with-title',
-              description: t('variants.compositions.withTitle.description'),
-              useWhen: t('variants.compositions.withTitle.use'),
+              description: t('variants.items.withTitle.description'),
+              useWhen: t('variants.items.withTitle.use'),
               code:
                 `const bloco = createCodeBlock({\n` +
                 `  code: source,\n` +
                 `  language: 'ts',\n` +
                 `  title: 'lista.ts',\n` +
                 `});`,
-              previewFactory: () => block('composicoes', 'with-title', {
+              previewFactory: () => block('variantes', 'with-title', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
                 title: 'lista.ts',
               }),
             },
             {
-              name: t('variants.compositions.withoutNumbers.name'),
+              name: t('variants.items.withoutNumbers.name'),
               trackId: 'without-numbers',
-              description: t('variants.compositions.withoutNumbers.description'),
-              useWhen: t('variants.compositions.withoutNumbers.use'),
+              description: t('variants.items.withoutNumbers.description'),
+              useWhen: t('variants.items.withoutNumbers.use'),
               code:
                 `const bloco = createCodeBlock({\n` +
                 `  code: source,\n` +
                 `  language: 'ts',\n` +
                 `  showLineNumbers: false,\n` +
                 `});`,
-              previewFactory: () => block('composicoes', 'without-numbers', {
+              previewFactory: () => block('variantes', 'without-numbers', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
                 showLineNumbers: false,
               }),
             },
             {
-              name: t('variants.compositions.highlighted.name'),
+              name: t('variants.items.highlighted.name'),
               trackId: 'highlighted',
-              description: t('variants.compositions.highlighted.description'),
-              useWhen: t('variants.compositions.highlighted.use'),
+              description: t('variants.items.highlighted.description'),
+              useWhen: t('variants.items.highlighted.use'),
               code:
                 `const bloco = createCodeBlock({\n` +
                 `  code: source,\n` +
                 `  language: 'ts',\n` +
                 `  highlightLines: [2],\n` +
                 `});`,
-              previewFactory: () => block('composicoes', 'highlighted', {
+              previewFactory: () => block('variantes', 'highlighted', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
                 highlightLines: [2],
               }),
             },
             {
-              name: t('variants.compositions.withFooter.name'),
+              name: t('variants.items.withFooter.name'),
               trackId: 'with-footer',
-              description: t('variants.compositions.withFooter.description'),
-              useWhen: t('variants.compositions.withFooter.use'),
+              description: t('variants.items.withFooter.description'),
+              useWhen: t('variants.items.withFooter.use'),
               code:
                 `const bloco = createCodeBlock({\n` +
                 `  code: source,\n` +
                 `  language: 'ts',\n` +
                 `  footer: 'A ação de copiar leva apenas o código.',\n` +
                 `});`,
-              previewFactory: () => block('composicoes', 'with-footer', {
+              previewFactory: () => block('variantes', 'with-footer', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
                 footer: t('demonstration.labels.footer'),

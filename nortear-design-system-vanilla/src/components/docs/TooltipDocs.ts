@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -369,8 +368,42 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
 
-        return createDocsVariants({
+        const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
+  const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
+  const el = createTooltip({ trigger, content: \`Tooltip \${side}\`, side });
+  grid.appendChild(el);
+}`;
+
+        function buildSidesPreview(): HTMLElement {
+          const grid = document.createElement('div');
+          grid.style.contain = 'layout';
+          grid.style.minHeight = '160px';
+          grid.className = 'nds-grid nds-w-full';
+          grid.dataset.cols = '4';
+          grid.dataset.spacing = 'xl';
+          grid.style.placeItems = 'center';
+
+          const sides: Array<{ side: 'top' | 'bottom' | 'left' | 'right'; label: string }> = [
+            { side: 'top',    label: 'Top'    },
+            { side: 'right',  label: 'Right'  },
+            { side: 'bottom', label: 'Bottom' },
+            { side: 'left',   label: 'Left'   },
+          ];
+
+          for (const { side, label } of sides) {
+            const trigger = createButton({ variant: 'outline', label, ariaLabel: label });
+            const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
+            grid.appendChild(el);
+          }
+
+          return grid;
+        }
+
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'tooltip',
           items: [
             {
               name: t('variants.items.default'),
@@ -389,6 +422,14 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
               description: stripHtml(t('variants.styles.longText')),
               code: codeLong,
               previewFactory: () => buildLongTextTooltip(),
+            },
+            {
+              name: stripHtml(t('variants.items.positioningSides.name')),
+              trackId: 'positioningSides',
+              description: stripHtml(t('variants.items.positioningSides.description')),
+              useWhen: stripHtml(t('variants.items.positioningSides.use')),
+              code: codeSides,
+              previewFactory: buildSidesPreview,
             },
           ],
         });
@@ -435,12 +476,6 @@ createTooltip({
   side: 'top',
   class: 'nds-max-w-xs nds-whitespace-normal',
 });`;
-
-        const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
-  const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
-  const el = createTooltip({ trigger, content: \`Tooltip \${side}\`, side });
-  grid.appendChild(el);
-}`;
 
         function buildIconShortcutPreview(): HTMLElement {
           const iconWrap = document.createElement('span');
@@ -537,31 +572,6 @@ createTooltip({
           return root;
         }
 
-        function buildSidesPreview(): HTMLElement {
-          const grid = document.createElement('div');
-          grid.style.contain = 'layout';
-          grid.style.minHeight = '160px';
-          grid.className = 'nds-grid nds-w-full';
-          grid.dataset.cols = '4';
-          grid.dataset.spacing = 'xl';
-          grid.style.placeItems = 'center';
-
-          const sides: Array<{ side: 'top' | 'bottom' | 'left' | 'right'; label: string }> = [
-            { side: 'top',    label: 'Top'    },
-            { side: 'right',  label: 'Right'  },
-            { side: 'bottom', label: 'Bottom' },
-            { side: 'left',   label: 'Left'   },
-          ];
-
-          for (const { side, label } of sides) {
-            const trigger = createButton({ variant: 'outline', label, ariaLabel: label });
-            const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
-            grid.appendChild(el);
-          }
-
-          return grid;
-        }
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -587,13 +597,6 @@ createTooltip({
               useWhen: stripHtml(t('variants.compositions.metricDescription.use')),
               code: codeMetric,
               previewFactory: buildMetricPreview,
-            },
-            {
-              name: stripHtml(t('variants.compositions.positioningSides.name')),
-              description: stripHtml(t('variants.compositions.positioningSides.description')),
-              useWhen: stripHtml(t('variants.compositions.positioningSides.use')),
-              code: codeSides,
-              previewFactory: buildSidesPreview,
             },
           ],
         });

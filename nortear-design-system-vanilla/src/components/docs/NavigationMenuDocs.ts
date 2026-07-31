@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -115,7 +114,6 @@ export function createNavigationMenuDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'       },
       { id: 'variantes',    labelKey: 'nav.variants'     },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'       },
       { id: 'propriedades', labelKey: 'nav.props'        },
       { id: 'tokens',       labelKey: 'nav.tokens'       },
@@ -158,7 +156,7 @@ export function createNavigationMenuDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -355,62 +353,6 @@ const ul = nav.querySelector('ul[role="menubar"]') as HTMLElement | null;
 ul?.setAttribute('aria-orientation', 'vertical');
 if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
 
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: t('variants.items.horizontal'),
-              description: stripHtml(t('variants.styles.horizontal')),
-              code: codeHorizontal,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '140px';
-                wrap.appendChild(buildDemoNav());
-                return wrap;
-              },
-            },
-            {
-              name: t('variants.items.vertical'),
-              description:
-                stripHtml(t('variants.styles.vertical')) +
-                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
-              code: codeVertical,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '200px';
-                const nav = createNavigationMenu([
-                  { label: 'Início',     href: '/' },
-                  { label: 'Dashboard',  href: '/dashboard' },
-                  { label: 'Configurações', href: '/configuracoes' },
-                ]);
-                nav.setAttribute('aria-label', 'Navegação lateral');
-                nav.classList.add('nds-stack');
-                const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
-                if (ul) {
-                  ul.setAttribute('aria-orientation', 'vertical');
-                  ul.className =
-                    'nds-stack nds-list-none nds-w-full';
-                  ul.dataset.spacing = 'xs';
-                  ul.style.alignItems = 'stretch';
-                  ul.style.maxWidth = '220px';
-                }
-                wrap.appendChild(nav);
-                return wrap;
-              },
-            },
-          ],
-        });
-      }
-
-      case 'composicoes': {
         function buildLinkSimples(): HTMLElement {
           const wrap = document.createElement('div');
           wrap.style.contain = 'layout';
@@ -605,35 +547,88 @@ card.style.textDecoration = 'none';
 content.insertBefore(card, content.firstChild);`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
+          id: 'variantes',
+          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'navigation-menu',
           items: [
             {
-              name: stripHtml(t('variants.compositions.linkSimples.name')),
-              description: stripHtml(t('variants.compositions.linkSimples.description')),
-              useWhen: stripHtml(t('variants.compositions.linkSimples.use')),
+              name: t('variants.items.horizontal'),
+              description: stripHtml(t('variants.styles.horizontal')),
+              code: codeHorizontal,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '140px';
+                wrap.appendChild(buildDemoNav());
+                return wrap;
+              },
+            },
+            {
+              name: t('variants.items.vertical'),
+              description:
+                stripHtml(t('variants.styles.vertical')) +
+                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
+              code: codeVertical,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.style.contain = 'layout';
+                wrap.className = 'nds-cluster';
+                wrap.dataset.align = 'start';
+                wrap.dataset.justify = 'center';
+                wrap.style.minHeight = '200px';
+                const nav = createNavigationMenu([
+                  { label: 'Início',     href: '/' },
+                  { label: 'Dashboard',  href: '/dashboard' },
+                  { label: 'Configurações', href: '/configuracoes' },
+                ]);
+                nav.setAttribute('aria-label', 'Navegação lateral');
+                nav.classList.add('nds-stack');
+                const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
+                if (ul) {
+                  ul.setAttribute('aria-orientation', 'vertical');
+                  ul.className =
+                    'nds-stack nds-list-none nds-w-full';
+                  ul.dataset.spacing = 'xs';
+                  ul.style.alignItems = 'stretch';
+                  ul.style.maxWidth = '220px';
+                }
+                wrap.appendChild(nav);
+                return wrap;
+              },
+            },
+            {
+              name: stripHtml(t('variants.items.linkSimples.name')),
+              trackId: 'linkSimples',
+              description: stripHtml(t('variants.items.linkSimples.description')),
+              useWhen: stripHtml(t('variants.items.linkSimples.use')),
               code: codeLinkSimples,
               previewFactory: buildLinkSimples,
             },
             {
-              name: stripHtml(t('variants.compositions.comDropdown.name')),
-              description: stripHtml(t('variants.compositions.comDropdown.description')),
-              useWhen: stripHtml(t('variants.compositions.comDropdown.use')),
+              name: stripHtml(t('variants.items.comDropdown.name')),
+              trackId: 'comDropdown',
+              description: stripHtml(t('variants.items.comDropdown.description')),
+              useWhen: stripHtml(t('variants.items.comDropdown.use')),
               code: codeComDropdown,
               previewFactory: buildComDropdown,
             },
             {
-              name: stripHtml(t('variants.compositions.megaMenuGrid.name')),
-              description: stripHtml(t('variants.compositions.megaMenuGrid.description')),
-              useWhen: stripHtml(t('variants.compositions.megaMenuGrid.use')),
+              name: stripHtml(t('variants.items.megaMenuGrid.name')),
+              trackId: 'megaMenuGrid',
+              description: stripHtml(t('variants.items.megaMenuGrid.description')),
+              useWhen: stripHtml(t('variants.items.megaMenuGrid.use')),
               code: codeMegaMenuGrid,
               previewFactory: buildMegaMenuGrid,
             },
             {
-              name: stripHtml(t('variants.compositions.comCardDestacado.name')),
-              description: stripHtml(t('variants.compositions.comCardDestacado.description')),
-              useWhen: stripHtml(t('variants.compositions.comCardDestacado.use')),
+              name: stripHtml(t('variants.items.comCardDestacado.name')),
+              trackId: 'comCardDestacado',
+              description: stripHtml(t('variants.items.comCardDestacado.description')),
+              useWhen: stripHtml(t('variants.items.comCardDestacado.use')),
               code: codeComCardDestacado,
               previewFactory: buildComCardDestacado,
             },

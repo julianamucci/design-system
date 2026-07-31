@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -105,7 +104,6 @@ export function createDropdownMenuDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -148,7 +146,7 @@ export function createDropdownMenuDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -308,34 +306,6 @@ li.setAttribute('role', 'menuitem');
 li.className = 'nds-dropdown-menu-item nds-text-destructive';
 li.textContent = 'Excluir';`;
 
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: t('variants.items.default'),
-              description: stripHtml(t('variants.styles.default')),
-              code: codeDefault,
-              previewFactory: () => buildDemoMenu(t('variants.items.default')),
-            },
-            {
-              name: t('variants.items.destructive'),
-              description: stripHtml(t('variants.styles.destructive')),
-              code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('li');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
-                li.style.minWidth = '160px';
-                li.textContent = 'Excluir';
-                return li;
-              },
-            },
-          ],
-        });
-      }
-
-      case 'composicoes': {
         function makeLabelItem(text: string): HTMLLIElement {
           const li = document.createElement('li');
           li.setAttribute('role', 'presentation');
@@ -425,14 +395,36 @@ li.textContent = 'Excluir';`;
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
+          id: 'variantes',
+          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'dropdown-menu',
           items: [
             {
-              name: t('variants.compositions.withLabel.name'),
-              description: stripHtml(t('variants.compositions.withLabel.description')),
-              useWhen: stripHtml(t('variants.compositions.withLabel.use')),
+              name: t('variants.items.default'),
+              description: stripHtml(t('variants.styles.default')),
+              code: codeDefault,
+              previewFactory: () => buildDemoMenu(t('variants.items.default')),
+            },
+            {
+              name: t('variants.items.destructive'),
+              description: stripHtml(t('variants.styles.destructive')),
+              code: codeDestructive,
+              previewFactory: () => {
+                const li = document.createElement('li');
+                li.setAttribute('role', 'menuitem');
+                li.className =
+                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md';
+                li.style.minWidth = '160px';
+                li.textContent = 'Excluir';
+                return li;
+              },
+            },
+            {
+              name: t('variants.items.withLabel.name'),
+              trackId: 'withLabel',
+              description: stripHtml(t('variants.items.withLabel.description')),
+              useWhen: stripHtml(t('variants.items.withLabel.use')),
               code: `const trigger = createButton({ variant: 'outline', label: 'Conta' });
 const menu = createDropdownMenu({
   trigger,
@@ -459,9 +451,10 @@ const menu = createDropdownMenu({
               }),
             },
             {
-              name: t('variants.compositions.withCheckboxItems.name'),
-              description: stripHtml(t('variants.compositions.withCheckboxItems.description')),
-              useWhen: stripHtml(t('variants.compositions.withCheckboxItems.use')),
+              name: t('variants.items.withCheckboxItems.name'),
+              trackId: 'withCheckboxItems',
+              description: stripHtml(t('variants.items.withCheckboxItems.description')),
+              useWhen: stripHtml(t('variants.items.withCheckboxItems.use')),
               code: `// Nortear: factory padrão não tem checkbox-item; monte manualmente.
 const li = document.createElement('li');
 li.setAttribute('role', 'menuitemcheckbox');
@@ -484,9 +477,10 @@ li.addEventListener('click', () => {
               }),
             },
             {
-              name: t('variants.compositions.withRadioGroup.name'),
-              description: stripHtml(t('variants.compositions.withRadioGroup.description')),
-              useWhen: stripHtml(t('variants.compositions.withRadioGroup.use')),
+              name: t('variants.items.withRadioGroup.name'),
+              trackId: 'withRadioGroup',
+              description: stripHtml(t('variants.items.withRadioGroup.description')),
+              useWhen: stripHtml(t('variants.items.withRadioGroup.use')),
               code: `// Nortear: monte radio-items manualmente; gerencie exclusividade no click.
 function makeRadio(label, checked, group) {
   const li = document.createElement('li');
@@ -510,9 +504,10 @@ function makeRadio(label, checked, group) {
               }),
             },
             {
-              name: t('variants.compositions.withShortcuts.name'),
-              description: stripHtml(t('variants.compositions.withShortcuts.description')),
-              useWhen: stripHtml(t('variants.compositions.withShortcuts.use')),
+              name: t('variants.items.withShortcuts.name'),
+              trackId: 'withShortcuts',
+              description: stripHtml(t('variants.items.withShortcuts.description')),
+              useWhen: stripHtml(t('variants.items.withShortcuts.use')),
               code: `// Nortear: factory padrão não exibe shortcut. Adicione um <span aria-hidden>
 function makeItem(label, shortcut) {
   const li = document.createElement('li');

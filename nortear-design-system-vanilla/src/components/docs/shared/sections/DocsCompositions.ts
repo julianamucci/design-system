@@ -12,6 +12,10 @@ export interface DocsCompositionItem extends DocsVariantItem {
 export interface DocsCompositionsProps {
   /** Título da seção (ex: t('variants.compositionsTitle')). */
   title: string;
+  /** Nota introdutória da seção (HTML inline permitido). Repassada a
+   *  `createDocsVariants` — necessária quando este container renderiza a seção
+   *  Variantes (`id="variantes"`), que pode ter `variants.note`. */
+  note?: string;
   /** Composições documentadas. */
   items: DocsCompositionItem[];
   /** Label da linha "Quando usar:" (i18n, ex: tNav('common.useWhen')). */
@@ -44,6 +48,7 @@ export function createDocsCompositions(props: DocsCompositionsProps): HTMLElemen
   return createDocsVariants({
     id: props.id ?? 'composicoes',
     title: props.title,
+    note: props.note,
     componentSlug: props.componentSlug,
     items,
   });

@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -404,9 +403,13 @@ export function createCollapsibleDocs(): HTMLElement {
         const codeDefaultOpen = `createCollapsible({\n  trigger: 'Ocultar filtros avançados',\n  content: contentEl,\n  defaultOpen: true,\n});`;
         const codeControlled = `let open = false;\ncreateCollapsible({\n  trigger: 'Exibir filtros avançados',\n  content: contentEl,\n  defaultOpen: open,\n  onOpenChange: (next) => {\n    open = next;\n    // sincronizar com estado externo\n  },\n});`;
 
-        return createDocsVariants({
+        const codeCustomButton = `const btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.spacing = 'sm';\nbtn.style.display = 'inline-flex';\nbtn.textContent = 'Exibir opções avançadas';\n\ncreateCollapsible({\n  trigger: btn,\n  content: contentEl,\n});`;
+
+        return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'collapsible',
           items: [
             {
               name: stripHtml(t('variants.items.uncontrolled')).slice(0, 40) + '…',
@@ -444,26 +447,11 @@ export function createCollapsibleDocs(): HTMLElement {
                 });
               },
             },
-          ],
-        });
-      }
-
-      // ── Composições ────────────────────────────────────────────────────
-      case 'composicoes': {
-        const codeCustomButton = `const btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.spacing = 'sm';\nbtn.style.display = 'inline-flex';\nbtn.textContent = 'Exibir opções avançadas';\n\ncreateCollapsible({\n  trigger: btn,\n  content: contentEl,\n});`;
-        const codeIconTrigger = `const trigger = document.createElement('span');\ntrigger.className = 'nds-cluster';\ntrigger.dataset.spacing = 'sm';\ntrigger.appendChild(filterIconSvg); // aria-hidden\nconst label = document.createElement('span');\nlabel.textContent = 'Filtros avançados';\ntrigger.appendChild(label);\n\ncreateCollapsible({ trigger, content: contentEl });`;
-        const codeRotatingChevron = `const chevron = chevronDownSvg;\nchevron.classList.add('transition-transform', 'duration-200', '[[data-state=open]_&]:rotate-180');\n\nconst inner = document.createElement('span');\ninner.className = 'nds-cluster nds-w-full';\ninner.dataset.justify = 'between';\ninner.append(labelSpan, chevron);\n\nconst btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.justify = 'between';\nbtn.appendChild(inner);\n\ncreateCollapsible({ trigger: btn, content: contentEl });`;
-        const codeRichContent = `const trigger = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');\n\nconst content = document.createElement('div');\ncontent.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';\ncontent.dataset.spacing = 'sm';\n// append note + checkbox labels…\n\ncreateCollapsible({ trigger, content });`;
-
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'collapsible',
-          items: [
             {
-              name: t('variants.compositions.customButton.name'),
-              description: t('variants.compositions.customButton.description'),
-              useWhen: t('variants.compositions.customButton.use'),
+              name: t('variants.items.customButton.name'),
+              description: t('variants.items.customButton.description'),
+              useWhen: t('variants.items.customButton.use'),
+              trackId: 'customButton',
               code: codeCustomButton,
               previewFactory: () => {
                 const btn = document.createElement('button');
@@ -479,6 +467,21 @@ export function createCollapsibleDocs(): HTMLElement {
                 });
               },
             },
+          ],
+        });
+      }
+
+      // ── Composições ────────────────────────────────────────────────────
+      case 'composicoes': {
+        const codeIconTrigger = `const trigger = document.createElement('span');\ntrigger.className = 'nds-cluster';\ntrigger.dataset.spacing = 'sm';\ntrigger.appendChild(filterIconSvg); // aria-hidden\nconst label = document.createElement('span');\nlabel.textContent = 'Filtros avançados';\ntrigger.appendChild(label);\n\ncreateCollapsible({ trigger, content: contentEl });`;
+        const codeRotatingChevron = `const chevron = chevronDownSvg;\nchevron.classList.add('transition-transform', 'duration-200', '[[data-state=open]_&]:rotate-180');\n\nconst inner = document.createElement('span');\ninner.className = 'nds-cluster nds-w-full';\ninner.dataset.justify = 'between';\ninner.append(labelSpan, chevron);\n\nconst btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.justify = 'between';\nbtn.appendChild(inner);\n\ncreateCollapsible({ trigger: btn, content: contentEl });`;
+        const codeRichContent = `const trigger = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');\n\nconst content = document.createElement('div');\ncontent.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';\ncontent.dataset.spacing = 'sm';\n// append note + checkbox labels…\n\ncreateCollapsible({ trigger, content });`;
+
+        return createDocsCompositions({
+          title: t('variants.compositionsTitle'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'collapsible',
+          items: [
             {
               name: t('variants.compositions.iconTrigger.name'),
               description: t('variants.compositions.iconTrigger.description'),

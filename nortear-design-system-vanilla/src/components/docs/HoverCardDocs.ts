@@ -15,7 +15,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -202,7 +201,6 @@ export function createHoverCardDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'        },
       { id: 'variantes',    labelKey: 'nav.variants'      },
-      { id: 'composicoes',  labelKey: 'nav.compositions'  },
       { id: 'estados',      labelKey: 'nav.states'        },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -245,7 +243,7 @@ export function createHoverCardDocs(): HTMLElement {
   // ── Sections ──────────────────────────────────────────────────────────────
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -432,8 +430,11 @@ const content = document.createElement('div');
 content.textContent = 'Preview';
 createHoverCard({ trigger, content });`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'hover-card',
           items: [
             {
               name: t('variants.items.default'),
@@ -452,20 +453,11 @@ createHoverCard({ trigger, content });`;
                 return note;
               },
             },
-          ],
-        });
-      }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'hover-card',
-          items: [
             {
-              name: stripHtml(t('variants.compositions.userProfile.name')),
-              description: stripHtml(t('variants.compositions.userProfile.description')),
-              useWhen: stripHtml(t('variants.compositions.userProfile.use')),
+              name: stripHtml(t('variants.items.userProfile.name')),
+              trackId: 'userProfile',
+              description: stripHtml(t('variants.items.userProfile.description')),
+              useWhen: stripHtml(t('variants.items.userProfile.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = '/users/joana';
 trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
@@ -491,9 +483,10 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               previewFactory: () => buildProfilePreview(),
             },
             {
-              name: stripHtml(t('variants.compositions.linkPreview.name')),
-              description: stripHtml(t('variants.compositions.linkPreview.description')),
-              useWhen: stripHtml(t('variants.compositions.linkPreview.use')),
+              name: stripHtml(t('variants.items.linkPreview.name')),
+              trackId: 'linkPreview',
+              description: stripHtml(t('variants.items.linkPreview.description')),
+              useWhen: stripHtml(t('variants.items.linkPreview.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = 'https://design-system.dev';
 trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
@@ -522,9 +515,10 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               previewFactory: () => buildLinkPreview(),
             },
             {
-              name: stripHtml(t('variants.compositions.definitionTooltip.name')),
-              description: stripHtml(t('variants.compositions.definitionTooltip.description')),
-              useWhen: stripHtml(t('variants.compositions.definitionTooltip.use')),
+              name: stripHtml(t('variants.items.definitionTooltip.name')),
+              trackId: 'definitionTooltip',
+              description: stripHtml(t('variants.items.definitionTooltip.description')),
+              useWhen: stripHtml(t('variants.items.definitionTooltip.use')),
               code: `const trigger = document.createElement('button');
 trigger.type = 'button';
 trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
@@ -564,9 +558,10 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               },
             },
             {
-              name: stripHtml(t('variants.compositions.metricExplainer.name')),
-              description: stripHtml(t('variants.compositions.metricExplainer.description')),
-              useWhen: stripHtml(t('variants.compositions.metricExplainer.use')),
+              name: stripHtml(t('variants.items.metricExplainer.name')),
+              trackId: 'metricExplainer',
+              description: stripHtml(t('variants.items.metricExplainer.description')),
+              useWhen: stripHtml(t('variants.items.metricExplainer.use')),
               code: `const trigger = document.createElement('button');
 trigger.type = 'button';
 trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
@@ -627,6 +622,7 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
             },
           ],
         });
+      }
 
       case 'estados': {
         const locale = getLocale();

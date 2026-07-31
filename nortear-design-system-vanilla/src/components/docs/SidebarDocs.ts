@@ -24,7 +24,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -487,93 +486,6 @@ export function createSidebarDocs(): HTMLElement {
           `wrapper.appendChild(instance.element);`,
         ].join('\n');
 
-        return createDocsVariants({
-          title: t('variants.title'),
-          items: [
-            {
-              name: 'sidebar',
-              description: stripHtml(t('variants.sidebar')),
-              code: codeSidebar,
-              previewFactory: () => buildMiniSidebar({ variant: 'sidebar' }),
-            },
-            {
-              name: 'floating',
-              description: stripHtml(t('variants.floating')),
-              code: codeFloating,
-              previewFactory: () => buildMiniSidebar({ variant: 'floating' }),
-            },
-            {
-              name: 'inset',
-              description: stripHtml(t('variants.inset')),
-              code: codeInset,
-              previewFactory: () => buildMiniSidebar({ variant: 'inset' }),
-            },
-          ],
-        });
-      }
-
-      // ── Composições ───────────────────────────────────────────────────────
-
-      case 'composicoes': {
-        function buildWithGroups(): HTMLElement {
-          const instance = createSidebar({ defaultOpen: true });
-          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
-
-          const header = createSidebarHeader();
-          const logoRow = document.createElement('div');
-          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
-          logoRow.textContent = 'Design System';
-          header.appendChild(logoRow);
-          inner.appendChild(header);
-
-          const content = createSidebarContent();
-          content.appendChild(createSidebarGroup({
-            label: 'Principal',
-            items: [
-              { label: 'Dashboard',   icon: makeIcon(ICON_HOME),     active: true, href: '#' },
-              { label: 'Componentes', icon: makeIcon(ICON_LAYOUT),   href: '#' },
-              { label: 'Tokens',      icon: makeIcon(ICON_TOKENS),   href: '#' },
-            ],
-          }));
-          content.appendChild(createSidebarSeparator());
-          content.appendChild(createSidebarGroup({
-            label: 'Conta',
-            items: [
-              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
-              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '5' },
-              { label: 'Perfil',        icon: makeIcon(ICON_USER),     href: '#' },
-            ],
-          }));
-          inner.appendChild(content);
-
-          const inset = document.createElement('div');
-          inset.className = 'nds-stack nds-flex-1';
-  inset.dataset.spacing = 'xs';
-          const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
-  topbar.dataset.spacing = 'sm';
-  topbar.dataset.align = 'center';
-  topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
-          topbar.appendChild(createSidebarTrigger(instance.toggle));
-          const lbl = document.createElement('span');
-          lbl.className = 'nds-text-caption nds-text-muted-foreground';
-          lbl.textContent = 'Dashboard';
-          topbar.appendChild(lbl);
-          inset.appendChild(topbar);
-
-          const wrapper = createSidebarProvider();
-          wrapper.appendChild(instance.element);
-          wrapper.appendChild(inset);
-          const container = document.createElement('div');
-          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
-          container.style.minHeight = '260px';
-          container.style.contain = 'layout';
-          container.appendChild(wrapper);
-          return container;
-        }
-
         function buildWithSubMenu(): HTMLElement {
           const instance = createSidebar({ defaultOpen: true });
           const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -705,6 +617,188 @@ export function createSidebarDocs(): HTMLElement {
           container.appendChild(wrapper);
           return container;
         }
+        function buildWithBadges(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'App';
+          header.appendChild(logoRow);
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          content.appendChild(createSidebarGroup({
+            items: [
+              { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
+              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '12' },
+              { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#', badge: '3'  },
+              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+            ],
+          }));
+          inner.appendChild(content);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Inbox';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
+        const codeWithSubMenu = [
+          `// SidebarMenuSub manual: <ul data-sidebar="menu-sub"> aninhada num <li>`,
+          `let open = false;`,
+          `const parentBtn = document.createElement('button');`,
+          `parentBtn.setAttribute('data-sidebar', 'menu-button');`,
+          `parentBtn.setAttribute('aria-expanded', 'false');`,
+          `// ... ícone + label + chevron`,
+          ``,
+          `const subList = document.createElement('ul');`,
+          `subList.setAttribute('data-sidebar', 'menu-sub');`,
+          `subList.style.display = 'none';`,
+          ``,
+          `parentBtn.addEventListener('click', () => {`,
+          `  open = !open;`,
+          `  subList.style.display = open ? '' : 'none';`,
+          `  parentBtn.setAttribute('aria-expanded', String(open));`,
+          `});`,
+        ].join('\n');
+        const codeWithBadges = [
+          `content.appendChild(createSidebarGroup({`,
+          `  items: [`,
+          `    { label: 'Dashboard',    icon: makeIcon(ICON_HOME),   active: true, href: '#' },`,
+          `    { label: 'Notificações', icon: makeIcon(ICON_BELL),   href: '#', badge: '12' },`,
+          `    { label: 'Componentes',  icon: makeIcon(ICON_LAYOUT), href: '#', badge: '3'  },`,
+          `  ],`,
+          `}));`,
+        ].join('\n');
+
+        return createDocsCompositions({
+          id: 'variantes',
+          title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'sidebar',
+          items: [
+            {
+              name: 'sidebar',
+              description: stripHtml(t('variants.sidebar')),
+              code: codeSidebar,
+              previewFactory: () => buildMiniSidebar({ variant: 'sidebar' }),
+            },
+            {
+              name: 'floating',
+              description: stripHtml(t('variants.floating')),
+              code: codeFloating,
+              previewFactory: () => buildMiniSidebar({ variant: 'floating' }),
+            },
+            {
+              name: 'inset',
+              description: stripHtml(t('variants.inset')),
+              code: codeInset,
+              previewFactory: () => buildMiniSidebar({ variant: 'inset' }),
+            },
+            {
+              name: stripHtml(t('variants.items.withSubMenu.name')),
+              trackId: 'withSubMenu',
+              description: stripHtml(t('variants.items.withSubMenu.description')),
+              useWhen: stripHtml(t('variants.items.withSubMenu.use')),
+              code: codeWithSubMenu,
+              previewFactory: buildWithSubMenu,
+            },
+            {
+              name: stripHtml(t('variants.items.withBadges.name')),
+              trackId: 'withBadges',
+              description: stripHtml(t('variants.items.withBadges.description')),
+              useWhen: stripHtml(t('variants.items.withBadges.use')),
+              code: codeWithBadges,
+              previewFactory: buildWithBadges,
+            },
+          ],
+        });
+      }
+
+      // ── Composições ───────────────────────────────────────────────────────
+
+      case 'composicoes': {
+        function buildWithGroups(): HTMLElement {
+          const instance = createSidebar({ defaultOpen: true });
+          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+          const header = createSidebarHeader();
+          const logoRow = document.createElement('div');
+          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
+  logoRow.style.color = 'var(--sidebar-foreground)';
+          logoRow.textContent = 'Design System';
+          header.appendChild(logoRow);
+          inner.appendChild(header);
+
+          const content = createSidebarContent();
+          content.appendChild(createSidebarGroup({
+            label: 'Principal',
+            items: [
+              { label: 'Dashboard',   icon: makeIcon(ICON_HOME),     active: true, href: '#' },
+              { label: 'Componentes', icon: makeIcon(ICON_LAYOUT),   href: '#' },
+              { label: 'Tokens',      icon: makeIcon(ICON_TOKENS),   href: '#' },
+            ],
+          }));
+          content.appendChild(createSidebarSeparator());
+          content.appendChild(createSidebarGroup({
+            label: 'Conta',
+            items: [
+              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
+              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '5' },
+              { label: 'Perfil',        icon: makeIcon(ICON_USER),     href: '#' },
+            ],
+          }));
+          inner.appendChild(content);
+
+          const inset = document.createElement('div');
+          inset.className = 'nds-stack nds-flex-1';
+  inset.dataset.spacing = 'xs';
+          const topbar = document.createElement('div');
+          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.dataset.spacing = 'sm';
+  topbar.dataset.align = 'center';
+  topbar.style.height = '2.5rem';
+  topbar.style.paddingInline = '0.75rem';
+          topbar.appendChild(createSidebarTrigger(instance.toggle));
+          const lbl = document.createElement('span');
+          lbl.className = 'nds-text-caption nds-text-muted-foreground';
+          lbl.textContent = 'Dashboard';
+          topbar.appendChild(lbl);
+          inset.appendChild(topbar);
+
+          const wrapper = createSidebarProvider();
+          wrapper.appendChild(instance.element);
+          wrapper.appendChild(inset);
+          const container = document.createElement('div');
+          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
+          container.style.minHeight = '260px';
+          container.style.contain = 'layout';
+          container.appendChild(wrapper);
+          return container;
+        }
 
         function buildWithSearch(): HTMLElement {
           const instance = createSidebar({ defaultOpen: true });
@@ -779,56 +873,6 @@ export function createSidebarDocs(): HTMLElement {
           return container;
         }
 
-        function buildWithBadges(): HTMLElement {
-          const instance = createSidebar({ defaultOpen: true });
-          const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
-
-          const header = createSidebarHeader();
-          const logoRow = document.createElement('div');
-          logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
-          logoRow.textContent = 'App';
-          header.appendChild(logoRow);
-          inner.appendChild(header);
-
-          const content = createSidebarContent();
-          content.appendChild(createSidebarGroup({
-            items: [
-              { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
-              { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '12' },
-              { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#', badge: '3'  },
-              { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
-            ],
-          }));
-          inner.appendChild(content);
-
-          const inset = document.createElement('div');
-          inset.className = 'nds-stack nds-flex-1';
-  inset.dataset.spacing = 'xs';
-          const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
-  topbar.dataset.spacing = 'sm';
-  topbar.dataset.align = 'center';
-  topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
-          topbar.appendChild(createSidebarTrigger(instance.toggle));
-          const lbl = document.createElement('span');
-          lbl.className = 'nds-text-caption nds-text-muted-foreground';
-          lbl.textContent = 'Inbox';
-          topbar.appendChild(lbl);
-          inset.appendChild(topbar);
-
-          const wrapper = createSidebarProvider();
-          wrapper.appendChild(instance.element);
-          wrapper.appendChild(inset);
-          const container = document.createElement('div');
-          container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
-          container.style.minHeight = '260px';
-          container.style.contain = 'layout';
-          container.appendChild(wrapper);
-          return container;
-        }
-
         const codeWithGroups = [
           `const instance = createSidebar({ defaultOpen: true });`,
           `const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;`,
@@ -852,25 +896,6 @@ export function createSidebarDocs(): HTMLElement {
           `inner.appendChild(content);`,
         ].join('\n');
 
-        const codeWithSubMenu = [
-          `// SidebarMenuSub manual: <ul data-sidebar="menu-sub"> aninhada num <li>`,
-          `let open = false;`,
-          `const parentBtn = document.createElement('button');`,
-          `parentBtn.setAttribute('data-sidebar', 'menu-button');`,
-          `parentBtn.setAttribute('aria-expanded', 'false');`,
-          `// ... ícone + label + chevron`,
-          ``,
-          `const subList = document.createElement('ul');`,
-          `subList.setAttribute('data-sidebar', 'menu-sub');`,
-          `subList.style.display = 'none';`,
-          ``,
-          `parentBtn.addEventListener('click', () => {`,
-          `  open = !open;`,
-          `  subList.style.display = open ? '' : 'none';`,
-          `  parentBtn.setAttribute('aria-expanded', String(open));`,
-          `});`,
-        ].join('\n');
-
         const codeWithSearch = [
           `const searchWrapper = document.createElement('div');`,
           `searchWrapper.setAttribute('data-sidebar', 'input');`,
@@ -889,16 +914,6 @@ export function createSidebarDocs(): HTMLElement {
           `header.appendChild(searchWrapper);`,
         ].join('\n');
 
-        const codeWithBadges = [
-          `content.appendChild(createSidebarGroup({`,
-          `  items: [`,
-          `    { label: 'Dashboard',    icon: makeIcon(ICON_HOME),   active: true, href: '#' },`,
-          `    { label: 'Notificações', icon: makeIcon(ICON_BELL),   href: '#', badge: '12' },`,
-          `    { label: 'Componentes',  icon: makeIcon(ICON_LAYOUT), href: '#', badge: '3'  },`,
-          `  ],`,
-          `}));`,
-        ].join('\n');
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -912,25 +927,11 @@ export function createSidebarDocs(): HTMLElement {
               previewFactory: buildWithGroups,
             },
             {
-              name: stripHtml(t('variants.compositions.withSubMenu.name')),
-              description: stripHtml(t('variants.compositions.withSubMenu.description')),
-              useWhen: stripHtml(t('variants.compositions.withSubMenu.use')),
-              code: codeWithSubMenu,
-              previewFactory: buildWithSubMenu,
-            },
-            {
               name: stripHtml(t('variants.compositions.withSearch.name')),
               description: stripHtml(t('variants.compositions.withSearch.description')),
               useWhen: stripHtml(t('variants.compositions.withSearch.use')),
               code: codeWithSearch,
               previewFactory: buildWithSearch,
-            },
-            {
-              name: stripHtml(t('variants.compositions.withBadges.name')),
-              description: stripHtml(t('variants.compositions.withBadges.description')),
-              useWhen: stripHtml(t('variants.compositions.withBadges.use')),
-              code: codeWithBadges,
-              previewFactory: buildWithBadges,
             },
           ],
         });

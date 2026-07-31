@@ -445,17 +445,6 @@ createSheet({
           });
           return nav;
         };
-        const buildLongBody = () => {
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-          wrap.dataset.spacing = 'sm';
-          for (let i = 1; i <= 14; i++) {
-            const p = document.createElement('p');
-            p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
-            wrap.appendChild(p);
-          }
-          return wrap;
-        };
 
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
@@ -523,45 +512,6 @@ createSheet({
                 });
               },
             },
-            {
-              name: stripHtml(t('variants.compositions.longScrollBody.name')),
-              description: stripHtml(t('variants.compositions.longScrollBody.description')),
-              useWhen: stripHtml(t('variants.compositions.longScrollBody.use')),
-              code: `// body longo — factory aplica flex-1 overflow-auto no corpo automaticamente
-const body = document.createElement('div');
-// ...muitos parágrafos
-createSheet({
-  trigger,
-  side: 'right',
-  title: 'Termos de uso',
-  description: 'Leia atentamente antes de aceitar.',
-  content: body,
-  footer,
-});`,
-              previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
-                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-                const accept = createButton({ variant: 'default', label: 'Aceitar termos' });
-                const footer = document.createElement('div');
-                footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'xs';
-                footer.append(cancel, accept);
-                const closeFromAction = () => {
-                  const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
-                  overlay?.click();
-                };
-                cancel.addEventListener('click', closeFromAction);
-                accept.addEventListener('click', closeFromAction);
-                return createSheet({
-                  trigger,
-                  side: 'right',
-                  title: 'Termos de uso',
-                  description: 'Leia atentamente antes de aceitar.',
-                  content: buildLongBody(),
-                  footer,
-                });
-              },
-            },
           ],
         });
       }
@@ -582,6 +532,7 @@ createSheet({
             { label: t('states.items.open'),          trigger: 'click no trigger',                behavior: stripHtml(t('states.descriptions.open'))          },
             { label: t('states.items.transitioning'), trigger: 'animação de entrada/saída',       behavior: stripHtml(t('states.descriptions.transitioning')) },
             { label: t('states.items.focused'),       trigger: 'tab em elemento interno',         behavior: stripHtml(t('states.descriptions.focused'))       },
+            { label: t('states.longScrollBody.label'), trigger: stripHtml(t('states.longScrollBody.trigger')), behavior: stripHtml(t('states.longScrollBody.behavior')) },
           ],
         });
       }

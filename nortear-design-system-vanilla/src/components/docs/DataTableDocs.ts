@@ -14,7 +14,6 @@ import {
   createDocsWhenToUse,
   createDocsDoDont,
   createDocsImport,
-  createDocsVariants,
   createDocsCompositions,
   createDocsStates,
   createDocsProps,
@@ -373,35 +372,59 @@ export function createDataTableDocs(): HTMLElement {
         });
 
       case 'variantes':
-        return createDocsVariants({
+        return createDocsCompositions({
+          id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'data-table',
           items: [
-            'globalFilter', 'columnFilters', 'selection', 'visibility',
-            'resize', 'reorder', 'pin', 'pagination', 'edit', 'virtual',
-          ].map((key) => ({
-            name: key,
-            description: stripHtml(t(`variants.items.${key}`)),
-            code: `createDataTable({ columns, data, enable${key.charAt(0).toUpperCase() + key.slice(1)}: true })`,
-            previewFactory: () => {
-              const flag: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
-                globalFilter: { enableGlobalFilter: true, enableColumnVisibility: false, enablePagination: false },
-                columnFilters: { enableColumnFilters: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                selection: { enableRowSelection: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                visibility: { enableColumnVisibility: true, enablePagination: false, enableGlobalFilter: false },
-                resize: { enableColumnResizing: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                reorder: { enableColumnOrdering: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                pin: { enableColumnPinning: true, enablePagination: false, enableGlobalFilter: false },
-                pagination: { enablePagination: true, pageSize: 3, enableColumnVisibility: false, enableGlobalFilter: false },
-                edit: { enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
-                virtual: { virtualized: true, maxHeight: '160px', enableColumnVisibility: false, enableGlobalFilter: false },
-              };
-              return createDataTable<Invoice>({
-                columns: demoColumns(),
-                data: demoInvoices(),
-                ...(flag[key] ?? {}),
-              });
-            },
-          })),
+            ...[
+              'globalFilter', 'columnFilters', 'selection', 'visibility',
+              'resize', 'reorder', 'pin', 'pagination', 'edit', 'virtual',
+            ].map((key) => ({
+              name: key,
+              description: stripHtml(t(`variants.items.${key}`)),
+              code: `createDataTable({ columns, data, enable${key.charAt(0).toUpperCase() + key.slice(1)}: true })`,
+              previewFactory: () => {
+                const flag: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
+                  globalFilter: { enableGlobalFilter: true, enableColumnVisibility: false, enablePagination: false },
+                  columnFilters: { enableColumnFilters: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
+                  selection: { enableRowSelection: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
+                  visibility: { enableColumnVisibility: true, enablePagination: false, enableGlobalFilter: false },
+                  resize: { enableColumnResizing: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
+                  reorder: { enableColumnOrdering: true, enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
+                  pin: { enableColumnPinning: true, enablePagination: false, enableGlobalFilter: false },
+                  pagination: { enablePagination: true, pageSize: 3, enableColumnVisibility: false, enableGlobalFilter: false },
+                  edit: { enableColumnVisibility: false, enablePagination: false, enableGlobalFilter: false },
+                  virtual: { virtualized: true, maxHeight: '160px', enableColumnVisibility: false, enableGlobalFilter: false },
+                };
+                return createDataTable<Invoice>({
+                  columns: demoColumns(),
+                  data: demoInvoices(),
+                  ...(flag[key] ?? {}),
+                });
+              },
+            })),
+            ...['editableSheet', 'virtualizedLog', 'pinnedKey'].map((key) => ({
+              name: t(`variants.items.${key}.name`),
+              trackId: key,
+              description: stripHtml(t(`variants.items.${key}.description`)),
+              useWhen: t(`variants.items.${key}.use`),
+              code: `createDataTable({ /* ${key} */ })`,
+              previewFactory: () => {
+                const arranjo: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
+                  editableSheet: { enableColumnFilters: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
+                  virtualizedLog: { virtualized: true, maxHeight: '180px', enableGlobalFilter: false, enableColumnVisibility: false },
+                  pinnedKey: { enableColumnPinning: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
+                };
+                return createDataTable<Invoice>({
+                  columns: demoColumns(),
+                  data: demoInvoices(),
+                  ...(arranjo[key] ?? {}),
+                });
+              },
+            })),
+          ],
         });
 
       case 'composicoes':
@@ -409,7 +432,7 @@ export function createDataTableDocs(): HTMLElement {
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
-          items: ['selectionWithActions', 'editableSheet', 'virtualizedLog', 'pinnedKey'].map((key) => ({
+          items: ['selectionWithActions'].map((key) => ({
             name: t(`variants.compositions.${key}.name`),
             description: stripHtml(t(`variants.compositions.${key}.description`)),
             useWhen: t(`variants.compositions.${key}.use`),
@@ -417,9 +440,6 @@ export function createDataTableDocs(): HTMLElement {
             previewFactory: () => {
               const variants: Record<string, Partial<Parameters<typeof createDataTable<Invoice>>[0]>> = {
                 selectionWithActions: { enableRowSelection: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
-                editableSheet: { enableColumnFilters: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
-                virtualizedLog: { virtualized: true, maxHeight: '180px', enableGlobalFilter: false, enableColumnVisibility: false },
-                pinnedKey: { enableColumnPinning: true, enableGlobalFilter: false, enableColumnVisibility: false, enablePagination: false },
               };
               return createDataTable<Invoice>({
                 columns: demoColumns(),

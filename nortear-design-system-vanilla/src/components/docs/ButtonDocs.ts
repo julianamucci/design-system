@@ -327,9 +327,11 @@ export function createButtonDocs(): HTMLElement {
         const codeGhost       = `createButton({ variant: 'ghost', label: 'Editar' });`;
         const codeLink        = `createButton({ variant: 'link', label: 'Saiba mais' });`;
 
-        return createDocsVariants({
+        return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          useWhenLabel: tNav('common.useWhen'),
+          componentSlug: 'button',
           items: [
             {
               name: 'default',
@@ -366,6 +368,25 @@ export function createButtonDocs(): HTMLElement {
               description: stripHtml(t('variants.items.link')),
               code: codeLink,
               previewFactory: () => createButton({ variant: 'link', label: t('demonstration.labels.link') }),
+            },
+            {
+              name: t('variants.items.asLink.name'),
+              description: t('variants.items.asLink.description'),
+              useWhen: t('variants.items.asLink.use'),
+              trackId: 'asLink',
+              code:
+                `import { btnClass } from '@/components/ui/button';\n\n` +
+                `const a = document.createElement('a');\n` +
+                `a.href = '/docs';\n` +
+                `a.className = btnClass('link', 'default');\n` +
+                `a.textContent = 'Ver documentação';`,
+              previewFactory: () => {
+                const a = document.createElement('a');
+                a.href = '#docs';
+                a.className = btnClass('link', 'default');
+                a.textContent = 'Ver documentação';
+                return a;
+              },
             },
           ],
         });
@@ -500,24 +521,6 @@ export function createButtonDocs(): HTMLElement {
                   createButton({ variant: 'default', label: 'Confirmar' }),
                 );
                 return wrap;
-              },
-            },
-            {
-              name: t('variants.compositions.asLink.name'),
-              description: t('variants.compositions.asLink.description'),
-              useWhen: t('variants.compositions.asLink.use'),
-              code:
-                `import { btnClass } from '@/components/ui/button';\n\n` +
-                `const a = document.createElement('a');\n` +
-                `a.href = '/docs';\n` +
-                `a.className = btnClass('link', 'default');\n` +
-                `a.textContent = 'Ver documentação';`,
-              previewFactory: () => {
-                const a = document.createElement('a');
-                a.href = '#docs';
-                a.className = btnClass('link', 'default');
-                a.textContent = 'Ver documentação';
-                return a;
               },
             },
           ],

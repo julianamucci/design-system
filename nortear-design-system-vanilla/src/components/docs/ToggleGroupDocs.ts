@@ -695,42 +695,6 @@ group.classList.add('nds-stack');`,
               },
             },
             {
-              name: t('variants.compositions.disabledItem.name'),
-              description: t('variants.compositions.disabledItem.description'),
-              useWhen: t('variants.compositions.disabledItem.use'),
-              code: `const items: ToggleGroupItem[] = [
-  { value: 'left',   children: '' },
-  { value: 'center', children: '', disabled: true },
-  { value: 'right',  children: '' },
-];
-const group = createToggleGroup({
-  type: 'single',
-  variant: 'outline',
-  items,
-  defaultValue: 'left',
-});
-injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-group.setAttribute('aria-label', 'Alinhamento do texto');
-applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar (indisponível)', 'Alinhar à direita']);`,
-              previewFactory: () => {
-                const items: ToggleGroupItem[] = [
-                  { value: 'left',   children: '' },
-                  { value: 'center', children: '', disabled: true },
-                  { value: 'right',  children: '' },
-                ];
-                const group = createToggleGroup({
-                  type: 'single',
-                  variant: 'outline',
-                  items,
-                  defaultValue: 'left',
-                });
-                injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-                group.setAttribute('aria-label', 'Alinhamento do texto');
-                applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar (indisponível)', 'Alinhar à direita']);
-                return group;
-              },
-            },
-            {
               name: t('variants.compositions.filterWithText.name'),
               description: t('variants.compositions.filterWithText.description'),
               useWhen: t('variants.compositions.filterWithText.use'),
@@ -809,6 +773,7 @@ wrapper.appendChild(group);`,
             { label: t('states.items.hover'),    trigger: 'pointer sobre item inativo',     behavior: stripHtml(t('states.descriptions.hover'))    },
             { label: t('states.items.focus'),    trigger: 'Tab (roving tabindex)',          behavior: stripHtml(t('states.descriptions.focus'))    },
             { label: t('states.items.disabled'), trigger: 'item.disabled === true',         behavior: stripHtml(t('states.descriptions.disabled')) },
+            { label: t('states.disabledItem.label'), trigger: stripHtml(t('states.disabledItem.trigger')), behavior: stripHtml(t('states.disabledItem.behavior')) },
           ],
         });
       }
