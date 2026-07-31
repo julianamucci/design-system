@@ -133,6 +133,14 @@ import Info from '@lucide/svelte/icons/info';`;
   </AlertDescription>
 </Alert>`;
 
+  const codeDismissible = `<Alert dismissible onDismiss={() => console.log("fechado")}>
+  <Info aria-hidden="true" />
+  <AlertTitle>Atenção</AlertTitle>
+  <AlertDescription>
+    Suas alterações serão aplicadas na próxima sessão.
+  </AlertDescription>
+</Alert>`;
+
   const codeWithoutTitle = `<Alert>
   <Info aria-hidden="true" />
   <AlertDescription>
@@ -145,6 +153,9 @@ interface AlertProps {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   class?: string;
   children?: Snippet;
+  dismissible?: boolean;       // botão de fechar no canto superior direito
+  onDismiss?: () => void;      // callback de fechamento, dispara uma vez
+  dismissLabel?: string;       // aria-label do botão ('Fechar alerta')
 }
 
 // AlertTitle / AlertDescription aceitam atributos HTML nativos via spread`;
@@ -326,6 +337,7 @@ interface AlertProps {
           { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,  preview: variantDestructive  },
           { name: 'success',     description: stripHtml($tStore('variants.items.success')),      code: codeSuccess,      preview: variantSuccess      },
           { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),      code: codeWarning,      preview: variantWarning      },
+          { name: $tStore('variants.items.dismissible.name'), description: $tStore('variants.items.dismissible.description'), useWhen: $tStore('variants.items.dismissible.use'), trackId: 'dismissible', code: codeDismissible, preview: variantDismissible },
           { name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
         ]}
       />
@@ -356,6 +368,17 @@ interface AlertProps {
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
+        </Alert>
+      {/snippet}
+      {#snippet variantDismissible()}
+        <Alert
+          dismissible
+          class="nds-w-full"
+          onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'dismissible', location: 'docs_demo' })}
+        >
+          <Info aria-hidden="true" />
+          <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWithoutTitle()}
@@ -418,6 +441,7 @@ interface AlertProps {
           { label: $tStore('states.withoutTitle.label'),  trigger: stripHtml($tStore('states.withoutTitle.trigger')),  behavior: $tStore('states.withoutTitle.behavior')         },
           { label: $tStore('states.withoutIcon.label'),   trigger: $tStore('states.withoutIcon.trigger'),              behavior: $tStore('states.withoutIcon.behavior')          },
           { label: $tStore('states.dynamicInsert.label'), trigger: $tStore('states.dynamicInsert.trigger'),            behavior: stripHtml($tStore('states.dynamicInsert.behavior')) },
+          { label: $tStore('states.dismissed.label'),     trigger: $tStore('states.dismissed.trigger'),                behavior: $tStore('states.dismissed.behavior')            },
         ]}
       />
 
@@ -438,6 +462,9 @@ interface AlertProps {
               { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
               { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.className'))           },
               { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')            },
+              { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: $tStore('props.table.dismissible')  },
+              { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: $tStore('props.table.onDismiss')    },
+              { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: $tStore('props.table.dismissLabel') },
             ],
           },
           {
@@ -570,6 +597,7 @@ interface AlertProps {
             { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
             { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
             { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+            { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
           ],
         }}
         accessibility={{
@@ -597,6 +625,7 @@ interface AlertProps {
             { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
             { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
             { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
+            { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
           ],
         }}
       />

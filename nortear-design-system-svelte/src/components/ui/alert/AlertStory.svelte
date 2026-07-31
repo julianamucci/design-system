@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import type { ClassValue } from 'svelte/elements';
   import { Alert, AlertAction, AlertTitle, AlertDescription } from './index';
   import type { AlertVariant } from './index';
   import Info from '@lucide/svelte/icons/info';
@@ -11,14 +12,22 @@
 
   interface Props {
     variant?: AlertVariant;
-    title?: string;
+    // `string | null` e `ClassValue` alinham com HTMLAttributes do Alert —
+    // sem isso o render das stories acusa Component<Props> incompatível.
+    title?: string | null;
     description?: string;
     showIcon?: boolean;
     icon?: IconType;
-    class?: string;
+    class?: ClassValue | null;
     descriptionClass?: string;
     /** Slot de ação no canto superior direito (.nds-alert-action). */
     action?: Snippet;
+    /** Exibe o botão de fechar do Alert. */
+    dismissible?: boolean;
+    /** Callback de fechamento repassado ao Alert. */
+    onDismiss?: () => void;
+    /** Rótulo acessível do botão de fechar. */
+    dismissLabel?: string;
   }
 
   let {
@@ -30,13 +39,16 @@
     class: className = '',
     descriptionClass = '',
     action,
+    dismissible = false,
+    onDismiss,
+    dismissLabel,
   }: Props = $props();
 
   const ICONS = { info: Info, error: AlertCircle, success: CheckCircle2, warning: TriangleAlert };
   let IconComponent = $derived(ICONS[icon]);
 </script>
 
-<Alert {variant} class={className}>
+<Alert {variant} class={className} {dismissible} {onDismiss} {dismissLabel}>
   {#if showIcon}
     <IconComponent class="nds-icon" aria-hidden="true" />
   {/if}

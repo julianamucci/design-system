@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, fn } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDocs from '@/components/docs/AlertDocs.svelte';
@@ -22,6 +22,21 @@ const meta = {
       description: 'Variante semântica do alert.',
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
     },
+    dismissible: {
+      control: 'boolean',
+      description: 'Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onDismiss: {
+      control: false,
+      description: 'Callback de fechamento — disparado quando o usuário aciona o botão de fechar.',
+      table: { type: { summary: '() => void' } },
+    },
+    dismissLabel: {
+      control: false,
+      description: 'Rótulo acessível do botão de fechar.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: "'Fechar alerta'" } },
+    },
     class: {
       control: false,
       description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
@@ -35,6 +50,8 @@ const meta = {
   },
   args: {
     variant: 'default',
+    dismissible: false,
+    onDismiss: fn(),
   },
 } satisfies Meta<typeof Alert>;
 
@@ -48,15 +65,16 @@ export const Playground: Story = {
   parameters: {
     docs: {
       source: {
-        transform: (_generated: string, ctx: { args?: { variant?: string } }) => {
+        transform: (_generated: string, ctx: { args?: { variant?: string; dismissible?: boolean } }) => {
           const variant = ctx.args?.variant ?? 'default';
           const variantAttr = variant === 'default' ? '' : ` variant="${variant}"`;
+          const dismissAttr = ctx.args?.dismissible ? ' dismissible onDismiss={() => console.log("fechado")}' : '';
           return `<script lang="ts">
   import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
   import Info from "@lucide/svelte/icons/info";
 </script>
 
-<Alert${variantAttr}>
+<Alert${variantAttr}${dismissAttr}>
   <Info class="nds-icon" aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
@@ -72,6 +90,8 @@ export const Playground: Story = {
       title: 'Atenção',
       description: 'Suas alterações serão aplicadas na próxima sessão.',
       showIcon: true,
+      dismissible: args.dismissible,
+      onDismiss: args.onDismiss,
     },
   }),
   play: async ({ canvasElement, step }) => {
