@@ -579,37 +579,10 @@ declare module "@tanstack/react-table" {
             preview: PreviewBasic,
           },
           {
-            name: "enableColumnPinning",
-            description: tContent("variants.items.pin"),
-            code: codePin,
-            preview: PreviewBasic,
-          },
-          {
             name: "enablePagination",
             description: tContent("variants.items.pagination"),
             code: codePagination,
             preview: PreviewBasic,
-          },
-          {
-            name: "onCellEdit + meta.editable",
-            description: tContent("variants.items.edit"),
-            code: codeEdit,
-            preview: PreviewBasic,
-          },
-          {
-            name: "virtualized",
-            description: tContent("variants.items.virtual"),
-            code: codeVirtual,
-            preview: (
-              <DataTable<Invoice>
-                columns={demoColumns}
-                data={sampleInvoices}
-                virtualized
-                maxHeight="180px"
-                enableGlobalFilter={false}
-                enableColumnVisibility={false}
-              />
-            ),
           },
           {
             name: tContent("variants.items.editableSheet.name"),

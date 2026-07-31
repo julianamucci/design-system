@@ -123,7 +123,6 @@ import { Plus } from "lucide-react";`;
   const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
   const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
   const codeGhost = `<Button variant="ghost">Editar</Button>`;
-  const codeLink = `<Button variant="link">Saiba mais</Button>`;
 
   const codeSizeDefault = `<Button>Salvar</Button>`;
   const codeSizeSm = `<Button size="sm">Salvar</Button>`;
@@ -379,12 +378,6 @@ import { Plus } from "lucide-react";`;
                 description: stripHtml(tContent("variants.items.ghost")),
                 code: codeGhost,
                 preview: <Button variant="ghost">{tContent("demonstration.labels.ghost")}</Button>,
-              },
-              {
-                name: "link",
-                description: stripHtml(tContent("variants.items.link")),
-                code: codeLink,
-                preview: <Button variant="link">{tContent("demonstration.labels.link")}</Button>,
               },
               {
                 name: tContent("variants.items.asLink.name"),

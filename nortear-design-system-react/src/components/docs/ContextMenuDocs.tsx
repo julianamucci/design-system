@@ -283,46 +283,6 @@ export function ContextMenuDocs() {
   </ContextMenuContent>
 </ContextMenu>`;
 
-  const codeVariantCheckbox = `const [showGrid, setShowGrid] = useState(true);
-
-<ContextMenu>
-  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
-  <ContextMenuContent>
-    <ContextMenuCheckboxItem
-      checked={showGrid}
-      onCheckedChange={setShowGrid}
-    >
-      Mostrar grade
-    </ContextMenuCheckboxItem>
-  </ContextMenuContent>
-</ContextMenu>`;
-
-  const codeVariantRadio = `const [zoom, setZoom] = useState("100");
-
-<ContextMenu>
-  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
-  <ContextMenuContent>
-    <ContextMenuRadioGroup value={zoom} onValueChange={setZoom}>
-      <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
-      <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
-      <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
-    </ContextMenuRadioGroup>
-  </ContextMenuContent>
-</ContextMenu>`;
-
-  const codeVariantSubTrigger = `<ContextMenu>
-  <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
-  <ContextMenuContent>
-    <ContextMenuSub>
-      <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-      <ContextMenuSubContent>
-        <ContextMenuItem>Por e-mail</ContextMenuItem>
-        <ContextMenuItem>Por link</ContextMenuItem>
-      </ContextMenuSubContent>
-    </ContextMenuSub>
-  </ContextMenuContent>
-</ContextMenu>`;
-
   const codeVariantLabel = `<ContextMenu>
   <ContextMenuTrigger>Área de clique direito</ContextMenuTrigger>
   <ContextMenuContent>
@@ -608,41 +568,8 @@ interface ContextMenuCheckboxItemProps
             ),
           },
           {
-            name: "CheckboxItem",
-            description: stripHtml(tContent("variants.checkboxItem")),
-            code: codeVariantCheckbox,
-            preview: <CheckboxDemo tContent={tContent} />,
-          },
-          {
-            name: "RadioItem",
-            description: stripHtml(tContent("variants.radioItem")),
-            code: codeVariantRadio,
-            preview: <RadioDemo tContent={tContent} />,
-          },
-          {
-            name: "SubTrigger",
-            description: stripHtml(tContent("variants.subTrigger")),
-            code: codeVariantSubTrigger,
-            preview: (
-              <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
-                  Right-click aqui
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuSub>
-                    <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-                    <ContextMenuSubContent>
-                      <ContextMenuItem>Por e-mail</ContextMenuItem>
-                      <ContextMenuItem>Por link</ContextMenuItem>
-                    </ContextMenuSubContent>
-                  </ContextMenuSub>
-                </ContextMenuContent>
-              </ContextMenu>
-            ),
-          },
-          {
             name: "Label + Inset",
-            description: stripHtml(tContent("variants.label")),
+            description: stripHtml(tContent("variants.items.label")),
             code: codeVariantLabel,
             preview: (
               <ContextMenu>
