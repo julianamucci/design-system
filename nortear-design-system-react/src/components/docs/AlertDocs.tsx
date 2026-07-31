@@ -162,6 +162,14 @@ import { Info } from "lucide-react";`;
   </AlertDescription>
 </Alert>`;
 
+  const codeDismissible = `<Alert dismissible onDismiss={handleDismiss} dismissLabel="Fechar alerta">
+  <CheckCircle2 aria-hidden="true" />
+  <AlertTitle>Perfil atualizado</AlertTitle>
+  <AlertDescription>
+    Suas informações foram salvas com sucesso.
+  </AlertDescription>
+</Alert>`;
+
   const codeWithoutTitle = `<Alert>
   <Info aria-hidden="true" />
   <AlertDescription>
@@ -171,7 +179,14 @@ import { Info } from "lucide-react";`;
 
   const interfaceCode = `// Alert
 interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof alertVariants> {}
+  VariantProps<typeof alertVariants> {
+  /** Exibe o botão de fechar no canto superior direito. */
+  dismissible?: boolean;
+  /** Disparado uma única vez ao acionar o botão de fechar. */
+  onDismiss?: () => void;
+  /** aria-label do botão de fechar. @default "Fechar alerta" */
+  dismissLabel?: string;
+}
 
 // AlertTitle
 interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
@@ -420,6 +435,30 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 ),
               },
               {
+                name: tContent("variants.items.dismissible.name"),
+                trackId: "dismissible",
+                description: tContent("variants.items.dismissible.description"),
+                useWhen: tContent("variants.items.dismissible.use"),
+                code: codeDismissible,
+                preview: (
+                  // Alert dismissible real — fechar remove o preview e dispara a
+                  // primeira emissão real de alert_dismiss (payload tipado em analytics.ts).
+                  <Alert dismissible className="nds-w-full"
+                    onDismiss={() =>
+                      track("alert_dismiss", {
+                        component: "alert",
+                        label: "dismissible",
+                        location: "docs_demo",
+                      })
+                    }
+                  >
+                    <CheckCircle2 aria-hidden="true" />
+                    <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
+                    <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
+              {
                 name: tContent("states.withoutTitle.label"),
                 description: tContent("states.withoutTitle.behavior"),
                 code: codeWithoutTitle,
@@ -500,6 +539,11 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 trigger: tContent("states.dynamicInsert.trigger"),
                 behavior: stripHtml(tContent("states.dynamicInsert.behavior")),
               },
+              {
+                label: tContent("states.dismissed.label"),
+                trigger: stripHtml(tContent("states.dismissed.trigger")),
+                behavior: tContent("states.dismissed.behavior"),
+              },
             ]}
           />
 
@@ -537,6 +581,27 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     defaultValue: "—",
                     required: "Sim",
                     description: tContent("props.table.children"),
+                  },
+                  {
+                    name: "dismissible",
+                    type: "boolean",
+                    defaultValue: "false",
+                    required: "Não",
+                    description: stripHtml(tContent("props.table.dismissible")),
+                  },
+                  {
+                    name: "onDismiss",
+                    type: "() => void",
+                    defaultValue: "—",
+                    required: "Não",
+                    description: stripHtml(tContent("props.table.onDismiss")),
+                  },
+                  {
+                    name: "dismissLabel",
+                    type: "string",
+                    defaultValue: '"Fechar alerta"',
+                    required: "Não",
+                    description: stripHtml(tContent("props.table.dismissLabel")),
                   },
                 ],
               },
@@ -752,6 +817,11 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                   result: tContent("testes.functional.item6.result"),
                   priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.high"),
                 },
+                {
+                  action: tContent("testes.functional.item7.action"),
+                  result: tContent("testes.functional.item7.result"),
+                  priority: tNav(priorityKeyMap[tContent("testes.functional.item7.priority")] ?? "common.high"),
+                },
               ],
             }}
             accessibility={{
@@ -795,6 +865,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 { story: tContent("testes.visual.item2.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high") },
                 { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.medium") },
                 { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
+                { story: tContent("testes.visual.item5.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.medium") },
               ],
             }}
           />

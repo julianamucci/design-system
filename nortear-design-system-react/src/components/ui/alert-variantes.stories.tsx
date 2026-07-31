@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { within, expect, fn, userEvent } from "storybook/test";
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 
@@ -68,6 +68,61 @@ export const Success: Story = {
     const alert = canvas.getByRole("alert");
     await expect(alert).toHaveClass("nds-alert-success");
     await expect(canvas.getByText("Perfil atualizado")).toBeVisible();
+  },
+};
+
+export const Dismissible: Story = {
+  args: { onDismiss: fn() },
+  render: (args) => (
+    <Alert dismissible onDismiss={args.onDismiss}>
+      <CheckCircle2 aria-hidden="true" className="nds-icon" />
+      <AlertTitle>Perfil atualizado</AlertTitle>
+      <AlertDescription>
+        Suas informações foram salvas com sucesso.
+      </AlertDescription>
+    </Alert>
+  ),
+  play: async ({ canvasElement, args, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Botão de fechar visível e acessível por rótulo", async () => {
+      const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
+      await expect(dismiss).toBeVisible();
+      await expect(dismiss).toHaveAttribute("data-slot", "alert-dismiss");
+    });
+
+    await step("Clique fecha o alert e dispara o callback uma vez", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Fechar alerta" }));
+      await expect(canvas.queryByRole("alert")).toBeNull();
+      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    });
+  },
+};
+
+// Segundo cenário do contrato: o caso documentado é "clique ou Enter" — este
+// story remonta o alert e cobre o caminho de teclado (Enter no botão focado).
+export const DismissibleTeclado: Story = {
+  args: { onDismiss: fn() },
+  render: (args) => (
+    <Alert dismissible onDismiss={args.onDismiss}>
+      <Info aria-hidden="true" className="nds-icon" />
+      <AlertTitle>Atenção</AlertTitle>
+      <AlertDescription>
+        Suas alterações serão aplicadas na próxima sessão.
+      </AlertDescription>
+    </Alert>
+  ),
+  play: async ({ canvasElement, args, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Enter no botão focado fecha o alert e dispara o callback uma vez", async () => {
+      const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
+      dismiss.focus();
+      await expect(dismiss).toHaveFocus();
+      await userEvent.keyboard("{Enter}");
+      await expect(canvas.queryByRole("alert")).toBeNull();
+      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    });
   },
 };
 

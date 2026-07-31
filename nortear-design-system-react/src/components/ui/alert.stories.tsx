@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { within, expect, fn } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import { AlertDocs } from "@/components/docs/AlertDocs";
@@ -21,6 +21,22 @@ const meta = {
       description: "Variante semântica do alert.",
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
     },
+    dismissible: {
+      control: "boolean",
+      description: "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
+    },
+    onDismiss: {
+      control: false,
+      description: "Callback de fechamento — disparado uma única vez ao acionar o botão de fechar.",
+      table: { type: { summary: "() => void" } },
+    },
+    dismissLabel: {
+      // O render não precisa fiá-lo: o default do componente já cobre o playground.
+      control: false,
+      description: "Rótulo acessível (aria-label) do botão de fechar.",
+      table: { type: { summary: "string" }, defaultValue: { summary: "'Fechar alerta'" } },
+    },
     className: {
       control: false,
       description: "Classes adicionais no elemento raiz.",
@@ -34,6 +50,8 @@ const meta = {
   },
   args: {
     variant: "default",
+    dismissible: false,
+    onDismiss: fn(),
   },
 } satisfies Meta<typeof Alert>;
 

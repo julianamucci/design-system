@@ -1,6 +1,8 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva("nds-alert", {
@@ -21,15 +23,51 @@ const alertVariants = cva("nds-alert", {
 function Alert({
   className,
   variant,
+  dismissible = false,
+  onDismiss,
+  dismissLabel = "Fechar alerta",
+  children,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof alertVariants> & {
+    /** Renderiza o botão de fechar no canto superior direito. */
+    dismissible?: boolean
+    /** Disparado uma única vez quando o usuário aciona o botão de fechar. */
+    onDismiss?: () => void
+    /** aria-label do botão de fechar. */
+    dismissLabel?: string
+  }) {
+  // Fechar remove o alert da tela. Consumidor que quiser modo controlado
+  // renderiza condicionalmente por conta própria.
+  const [dismissed, setDismissed] = React.useState(false)
+
+  if (dismissed) return null
+
   return (
     <div
       data-slot="alert"
       role="alert"
       className={cn(alertVariants({ variant }), className)}
       {...props}
-    />
+    >
+      {children}
+      {dismissible && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="nds-alert-dismiss"
+          type="button"
+          aria-label={dismissLabel}
+          data-slot="alert-dismiss"
+          onClick={() => {
+            setDismissed(true)
+            onDismiss?.()
+          }}
+        >
+          <X className="nds-icon" aria-hidden="true" />
+        </Button>
+      )}
+    </div>
   )
 }
 
