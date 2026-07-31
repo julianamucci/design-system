@@ -12,6 +12,16 @@ Este arquivo registra toda divergência intencional entre este design system e s
    Categorias permitidas: `a11y`, `i18n`, `theme`, `security`, `bugfix`, `api` (extensão de API de factory Vanilla — a stack não tem upstream, mas a mudança de contrato é registrada aqui para rastreabilidade).
 3. **Todo patch é descrito aqui.** Uma entrada por patch, com diff antes/depois, justificativa e link para PR/issue upstream se houver.
 4. **Revisão obrigatória no bump.** Ao atualizar `@base-ui/react`, `reka-ui`, `bits-ui` ou as libs externas de componente, rode `npm run patches:list` e re-valide cada entrada.
+5. **Patch que muda API pública varre TODAS as superfícies que descreviam a API
+   antiga — e re-roda `/quality` no componente.** A auditoria anterior ao patch
+   validou o mundo velho; ela não protege o patch. Caso registrado: o
+   `#alert-five-variants` moveu variantes de className para a prop `variant` e
+   declarou isso na própria mensagem, mas deixou a description do `className`
+   ensinando o caminho antigo e 7 uniões de tipo em `"default" | "destructive"`
+   nas docs pages — descoberto 3 dias depois, por leitura humana. Checklist
+   mínimo da varredura: `props.table.*` (descriptions E types), `interfaceCode`,
+   `argTypes` das stories, exemplos de `usage`/`doDont`, e um grep pelos nomes
+   dos valores antigos.
 
 > **Histórico de stack de primitivas (React):**
 > - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)
