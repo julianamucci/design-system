@@ -97,3 +97,13 @@ Os 4 arquivos de `nortear-design-system-react/guidelines/.claude/skills/`
 (sistema anterior ao `.claude/commands/`, sem nenhuma referência, ensinando
 "variantes customizadas sempre via className") foram apagados. Era o
 reservatório mais antigo do padrão morto que regenerava as stories erradas.
+
+## Achados da fumaça do AlertDocs (2026-08-01)
+
+- Docs page montada por story revelou violacao axe heading-order: AlertTitle
+  renderiza h5 sob secoes h2 (pula h3/h4). Existe nas 4 stacks, em producao.
+  Decisao de design pendente: nivel configuravel no AlertTitle, ou heading
+  demovido para paragrafo com peso visual.
+- Nenhuma story monta docs pages: crash de runtime de pagina e invisivel para
+  o vitest (foi assim que 7 paginas quebraram com portoes verdes). Candidato:
+  story de fumaca por componente ou visita de docs no test-runner.
