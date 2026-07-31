@@ -168,23 +168,27 @@
       "title": "Estados",
       "closed": {
         "label": "Fechado (padrão)",
-        "description": "Item colapsado. Chevron aponta para baixo."
+        "trigger": "—",
+        "behavior": "Item colapsado. Chevron aponta para baixo."
       },
       "open": {
         "label": "Aberto",
-        "description": "Item expandido. Chevron rotaciona 180°. Animação de abertura ativa."
+        "trigger": "Click / Enter / Space",
+        "behavior": "Item expandido. Chevron rotaciona 180°. Animação de abertura ativa."
       },
       "disabled": {
         "label": "Desabilitado",
-        "description": "Item com prop <code>disabled</code>. Trigger não responde a cliques; mantém aparência visual reduzida."
+        "trigger": "—",
+        "behavior": "Item com prop <code>disabled</code>. Trigger não responde a cliques; mantém aparência visual reduzida."
       },
       "focused": {
         "label": "Com foco",
-        "description": "Focus ring visível ao navegar por teclado. Totalmente operável via Tab, Enter e Space."
+        "trigger": "Tab",
+        "behavior": "Focus ring visível ao navegar por teclado. Totalmente operável via Tab, Enter e Space."
       },
       "cols": {
-        "state": "Configuração",
-        "trigger": "Como ativar",
+        "state": "Estado",
+        "trigger": "Quando ocorre",
         "behavior": "Comportamento"
       }
     },
@@ -733,23 +737,27 @@
       "title": "States",
       "closed": {
         "label": "Closed (default)",
-        "description": "Collapsed item. Chevron points down."
+        "trigger": "—",
+        "behavior": "Collapsed item. Chevron points down."
       },
       "open": {
         "label": "Open",
-        "description": "Expanded item. Chevron rotates 180°. Opening animation active."
+        "trigger": "Click / Enter / Space",
+        "behavior": "Expanded item. Chevron rotates 180°. Opening animation active."
       },
       "disabled": {
         "label": "Disabled",
-        "description": "Item with <code>disabled</code> prop. Trigger doesn't respond to clicks; reduced visual appearance."
+        "trigger": "—",
+        "behavior": "Item with <code>disabled</code> prop. Trigger doesn't respond to clicks; reduced visual appearance."
       },
       "focused": {
         "label": "Focused",
-        "description": "Visible focus ring when navigating by keyboard. Fully operable via Tab, Enter and Space."
+        "trigger": "Tab",
+        "behavior": "Visible focus ring when navigating by keyboard. Fully operable via Tab, Enter and Space."
       },
       "cols": {
-        "state": "Configuration",
-        "trigger": "How to activate",
+        "state": "State",
+        "trigger": "When it happens",
         "behavior": "Behavior"
       }
     },
@@ -1298,23 +1306,27 @@
       "title": "Estados",
       "closed": {
         "label": "Cerrado (predeterminado)",
-        "description": "Ítem colapsado. El chevron apunta hacia abajo."
+        "trigger": "—",
+        "behavior": "Ítem colapsado. El chevron apunta hacia abajo."
       },
       "open": {
         "label": "Abierto",
-        "description": "Ítem expandido. El chevron rota 180°. Animación de apertura activa."
+        "trigger": "Click / Enter / Space",
+        "behavior": "Ítem expandido. El chevron rota 180°. Animación de apertura activa."
       },
       "disabled": {
         "label": "Deshabilitado",
-        "description": "Ítem con prop <code>disabled</code>. El trigger no responde a clics; apariencia visual reducida."
+        "trigger": "—",
+        "behavior": "Ítem con prop <code>disabled</code>. El trigger no responde a clics; apariencia visual reducida."
       },
       "focused": {
         "label": "Con foco",
-        "description": "Focus ring visible al navegar por teclado. Completamente operable via Tab, Enter y Space."
+        "trigger": "Tab",
+        "behavior": "Focus ring visible al navegar por teclado. Completamente operable via Tab, Enter y Space."
       },
       "cols": {
-        "state": "Configuración",
-        "trigger": "Cómo activar",
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
         "behavior": "Comportamiento"
       }
     },

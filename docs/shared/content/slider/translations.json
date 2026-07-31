@@ -162,19 +162,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "focus": "Focus",
-        "active": "Active",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado padrão — thumb branco com borda <code>ring</code>, track <code>muted</code>, range <code>primary</code>."
       },
-      "descriptions": {
-        "default": "Estado padrão — thumb branco com borda <code>ring</code>, track <code>muted</code>, range <code>primary</code>.",
-        "hover": "Mouse sobre o thumb — anel <code>ring-3 ring-ring/50</code>.",
-        "focus": "Focado via teclado — mesmo anel hover; setas/Home/End/PgUp/PgDn alteram valor.",
-        "active": "Em arrasto — anel <code>ring-3</code> permanece; cursor segue o thumb.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, sem pointer events."
+      "hover": {
+        "label": "Hover",
+        "trigger": "Pointer sobre o thumb",
+        "behavior": "Mouse sobre o thumb — anel <code>ring-3 ring-ring/50</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab — foco via teclado",
+        "behavior": "Focado via teclado — mesmo anel hover; setas/Home/End/PgUp/PgDn alteram valor."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Durante o arrasto",
+        "behavior": "Em arrasto — anel <code>ring-3</code> permanece; cursor segue o thumb."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o consumidor desabilita o controle",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, sem pointer events."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -598,19 +614,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "focus": "Focus",
-        "active": "Active",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Default state — white thumb with <code>ring</code> border, <code>muted</code> track, <code>primary</code> range."
       },
-      "descriptions": {
-        "default": "Default state — white thumb with <code>ring</code> border, <code>muted</code> track, <code>primary</code> range.",
-        "hover": "Mouse over thumb — <code>ring-3 ring-ring/50</code>.",
-        "focus": "Keyboard focused — same hover ring; arrows/Home/End/PgUp/PgDn change value.",
-        "active": "While dragging — <code>ring-3</code> remains; cursor follows thumb.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, no pointer events."
+      "hover": {
+        "label": "Hover",
+        "trigger": "Pointer over the thumb",
+        "behavior": "Mouse over thumb — <code>ring-3 ring-ring/50</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab — keyboard focus",
+        "behavior": "Keyboard focused — same hover ring; arrows/Home/End/PgUp/PgDn change value."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "While dragging",
+        "behavior": "While dragging — <code>ring-3</code> remains; cursor follows thumb."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the consumer disables the control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, no pointer events."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1034,19 +1066,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "focus": "Focus",
-        "active": "Active",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado por defecto — thumb blanco con borde <code>ring</code>, track <code>muted</code>, range <code>primary</code>."
       },
-      "descriptions": {
-        "default": "Estado por defecto — thumb blanco con borde <code>ring</code>, track <code>muted</code>, range <code>primary</code>.",
-        "hover": "Mouse sobre el thumb — <code>ring-3 ring-ring/50</code>.",
-        "focus": "Enfocado por teclado — mismo anillo de hover; flechas/Home/End/PgUp/PgDn cambian el valor.",
-        "active": "Durante arrastre — <code>ring-3</code> se mantiene; cursor sigue al thumb.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, sin pointer events."
+      "hover": {
+        "label": "Hover",
+        "trigger": "Pointer sobre el thumb",
+        "behavior": "Mouse sobre el thumb — <code>ring-3 ring-ring/50</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab — foco por teclado",
+        "behavior": "Enfocado por teclado — mismo anillo de hover; flechas/Home/End/PgUp/PgDn cambian el valor."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Durante el arrastre",
+        "behavior": "Durante arrastre — <code>ring-3</code> se mantiene; cursor sigue al thumb."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el consumidor deshabilita el control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, sin pointer events."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

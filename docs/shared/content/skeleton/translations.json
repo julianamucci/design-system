@@ -147,13 +147,20 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Padrão",
-        "motionReduced": "Movimento Reduzido"
+      "default": {
+        "label": "Padrão",
+        "trigger": "animate-pulse",
+        "behavior": "<code>animate-pulse</code> aplicado por padrão; cor pulsante via <code>bg-muted</code>."
       },
-      "descriptions": {
-        "default": "<code>animate-pulse</code> aplicado por padrão; cor pulsante via <code>bg-muted</code>.",
-        "motionReduced": "Com <code>motion-reduce:animate-none</code>, a animação para quando o usuário ativa <code>prefers-reduced-motion</code> no sistema."
+      "motionReduced": {
+        "label": "Movimento Reduzido",
+        "trigger": "prefers-reduced-motion",
+        "behavior": "Com <code>motion-reduce:animate-none</code>, a animação para quando o usuário ativa <code>prefers-reduced-motion</code> no sistema."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -508,13 +515,20 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "motionReduced": "Reduced Motion"
+      "default": {
+        "label": "Default",
+        "trigger": "animate-pulse",
+        "behavior": "<code>animate-pulse</code> applied by default; pulsating color via <code>bg-muted</code>."
       },
-      "descriptions": {
-        "default": "<code>animate-pulse</code> applied by default; pulsating color via <code>bg-muted</code>.",
-        "motionReduced": "With <code>motion-reduce:animate-none</code>, animation stops when the user enables <code>prefers-reduced-motion</code>."
+      "motionReduced": {
+        "label": "Reduced Motion",
+        "trigger": "prefers-reduced-motion",
+        "behavior": "With <code>motion-reduce:animate-none</code>, animation stops when the user enables <code>prefers-reduced-motion</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -869,13 +883,20 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Predeterminado",
-        "motionReduced": "Movimiento Reducido"
+      "default": {
+        "label": "Predeterminado",
+        "trigger": "animate-pulse",
+        "behavior": "<code>animate-pulse</code> aplicado por defecto; color pulsante vía <code>bg-muted</code>."
       },
-      "descriptions": {
-        "default": "<code>animate-pulse</code> aplicado por defecto; color pulsante vía <code>bg-muted</code>.",
-        "motionReduced": "Con <code>motion-reduce:animate-none</code>, la animación se detiene cuando el usuario activa <code>prefers-reduced-motion</code>."
+      "motionReduced": {
+        "label": "Movimiento Reducido",
+        "trigger": "prefers-reduced-motion",
+        "behavior": "Con <code>motion-reduce:animate-none</code>, la animación se detiene cuando el usuario activa <code>prefers-reduced-motion</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

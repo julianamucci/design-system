@@ -167,24 +167,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
-      },
-      "descriptions": {
-        "default": "Item não selecionado — <code>aria-pressed=\"false\"</code>, fundo transparente.",
-        "selected": "Item ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code>.",
-        "hover": "Mouse sobre item inativo — fundo <code>muted</code>, texto <code>foreground</code>.",
-        "focus": "Item focado via teclado (roving tabindex) — anel <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> no grupo ou item — <code>opacity-50</code>, <code>pointer-events-none</code>."
-      },
       "disabledItem": {
         "label": "Com item desabilitado",
         "trigger": "Item marcado como desabilitado",
         "behavior": "Item com <code>disabled: true</code> — útil quando uma opção não se aplica ao contexto atual. O <code>aria-label</code> deve indicar explicitamente a indisponibilidade."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Item não selecionado — <code>aria-pressed=\"false\"</code>, fundo transparente."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "click ou Space/Enter",
+        "behavior": "Item ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre item inativo",
+        "behavior": "Mouse sobre item inativo — fundo <code>muted</code>, texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab (roving tabindex)",
+        "behavior": "Item focado via teclado (roving tabindex) — anel <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o item é marcado como indisponível",
+        "behavior": "<code>disabled</code> no grupo ou item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -615,24 +631,40 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
-      },
-      "descriptions": {
-        "default": "Unselected item — <code>aria-pressed=\"false\"</code>, transparent background.",
-        "selected": "Active item — <code>aria-pressed=\"true\"</code>, <code>muted</code> background.",
-        "hover": "Mouse over inactive item — <code>muted</code> background, <code>foreground</code> text.",
-        "focus": "Keyboard focused item (roving tabindex) — <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> on group or item — <code>opacity-50</code>, <code>pointer-events-none</code>."
-      },
       "disabledItem": {
         "label": "With disabled item",
         "trigger": "Item marked as disabled",
         "behavior": "Item with <code>disabled: true</code> — useful when an option doesn't apply to the current context. The <code>aria-label</code> should explicitly state the unavailability."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Unselected item — <code>aria-pressed=\"false\"</code>, transparent background."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "click or Space/Enter",
+        "behavior": "Active item — <code>aria-pressed=\"true\"</code>, <code>muted</code> background."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer over an inactive item",
+        "behavior": "Mouse over inactive item — <code>muted</code> background, <code>foreground</code> text."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab (roving tabindex)",
+        "behavior": "Keyboard focused item (roving tabindex) — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the item is marked unavailable",
+        "behavior": "<code>disabled</code> on group or item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1063,24 +1095,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
-      },
-      "descriptions": {
-        "default": "Ítem no seleccionado — <code>aria-pressed=\"false\"</code>, fondo transparente.",
-        "selected": "Ítem activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code>.",
-        "hover": "Mouse sobre ítem inactivo — fondo <code>muted</code>, texto <code>foreground</code>.",
-        "focus": "Ítem enfocado por teclado (roving tabindex) — <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> en grupo o ítem — <code>opacity-50</code>, <code>pointer-events-none</code>."
-      },
       "disabledItem": {
         "label": "Con ítem deshabilitado",
         "trigger": "Ítem marcado como deshabilitado",
         "behavior": "Ítem con <code>disabled: true</code> — útil cuando una opción no aplica al contexto actual. El <code>aria-label</code> debe indicar explícitamente la indisponibilidad."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Ítem no seleccionado — <code>aria-pressed=\"false\"</code>, fondo transparente."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "click o Space/Enter",
+        "behavior": "Ítem activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre un ítem inactivo",
+        "behavior": "Mouse sobre ítem inactivo — fondo <code>muted</code>, texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab (roving tabindex)",
+        "behavior": "Ítem enfocado por teclado (roving tabindex) — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el ítem se marca como no disponible",
+        "behavior": "<code>disabled</code> en grupo o ítem — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

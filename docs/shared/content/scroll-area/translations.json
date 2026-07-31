@@ -142,17 +142,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "idle": "Idle",
-        "scrolling": "Scrolling",
-        "hover": "Hover",
-        "focus": "Focus"
+      "idle": {
+        "label": "Idle",
+        "trigger": "—",
+        "behavior": "Estado padrão — scrollbar visível com cor <code>border</code> no thumb."
       },
-      "descriptions": {
-        "idle": "Estado padrão — scrollbar visível com cor <code>border</code> no thumb.",
-        "scrolling": "Durante rolagem — thumb pode aumentar opacidade conforme a lib.",
-        "hover": "Cursor sobre a scrollbar — thumb fica mais visível.",
-        "focus": "Viewport focado via Tab — anel <code>ring-[3px] ring-ring/50</code>."
+      "scrolling": {
+        "label": "Scrolling",
+        "trigger": "wheel / drag",
+        "behavior": "Durante rolagem — thumb pode aumentar opacidade conforme a lib."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter scrollbar",
+        "behavior": "Cursor sobre a scrollbar — thumb fica mais visível."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Viewport focado via Tab — anel <code>ring-[3px] ring-ring/50</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -528,17 +541,30 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "idle": "Idle",
-        "scrolling": "Scrolling",
-        "hover": "Hover",
-        "focus": "Focus"
+      "idle": {
+        "label": "Idle",
+        "trigger": "—",
+        "behavior": "Default state — scrollbar visible with <code>border</code> color on thumb."
       },
-      "descriptions": {
-        "idle": "Default state — scrollbar visible with <code>border</code> color on thumb.",
-        "scrolling": "While scrolling — thumb may increase opacity depending on lib.",
-        "hover": "Cursor over scrollbar — thumb becomes more visible.",
-        "focus": "Viewport focused via Tab — <code>ring-[3px] ring-ring/50</code>."
+      "scrolling": {
+        "label": "Scrolling",
+        "trigger": "wheel / drag",
+        "behavior": "While scrolling — thumb may increase opacity depending on lib."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter scrollbar",
+        "behavior": "Cursor over scrollbar — thumb becomes more visible."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Viewport focused via Tab — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -914,17 +940,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "idle": "Idle",
-        "scrolling": "Scrolling",
-        "hover": "Hover",
-        "focus": "Focus"
+      "idle": {
+        "label": "Idle",
+        "trigger": "—",
+        "behavior": "Estado por defecto — scrollbar visible con color <code>border</code> en el thumb."
       },
-      "descriptions": {
-        "idle": "Estado por defecto — scrollbar visible con color <code>border</code> en el thumb.",
-        "scrolling": "Durante el desplazamiento — el thumb puede aumentar opacidad según la lib.",
-        "hover": "Cursor sobre la scrollbar — el thumb se vuelve más visible.",
-        "focus": "Viewport enfocado vía Tab — <code>ring-[3px] ring-ring/50</code>."
+      "scrolling": {
+        "label": "Scrolling",
+        "trigger": "wheel / drag",
+        "behavior": "Durante el desplazamiento — el thumb puede aumentar opacidad según la lib."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter scrollbar",
+        "behavior": "Cursor sobre la scrollbar — el thumb se vuelve más visible."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Viewport enfocado vía Tab — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

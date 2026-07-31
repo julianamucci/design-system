@@ -162,19 +162,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "active": "Active",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Tab não ativa — texto <code>foreground/60</code>, sem fundo."
       },
-      "descriptions": {
-        "default": "Tab não ativa — texto <code>foreground/60</code>, sem fundo.",
-        "active": "Tab ativa — <code>data-active</code>, fundo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) ou linha inferior (variant line).",
-        "hover": "Mouse sobre tab inativa — texto <code>foreground</code>.",
-        "focus": "Focada via teclado — anel <code>ring-[3px] ring-ring/50</code>, borda <code>ring</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>pointer-events-none</code>."
+      "active": {
+        "label": "Active",
+        "trigger": "Click / Arrow / Home/End",
+        "behavior": "Tab ativa — <code>data-active</code>, fundo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) ou linha inferior (variant line)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "Mouse hover",
+        "behavior": "Mouse sobre tab inativa — texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab / Arrow",
+        "behavior": "Focada via teclado — anel <code>ring-[3px] ring-ring/50</code>, borda <code>ring</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "—",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -584,19 +600,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "active": "Active",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Inactive tab — <code>foreground/60</code> text, no background."
       },
-      "descriptions": {
-        "default": "Inactive tab — <code>foreground/60</code> text, no background.",
-        "active": "Active tab — <code>data-active</code>, <code>background</code> fill, <code>foreground</code> text, soft shadow (default variant) or bottom line (line variant).",
-        "hover": "Mouse over inactive tab — <code>foreground</code> text.",
-        "focus": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>, <code>ring</code> border.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>pointer-events-none</code>."
+      "active": {
+        "label": "Active",
+        "trigger": "Click / Arrow / Home/End",
+        "behavior": "Active tab — <code>data-active</code>, <code>background</code> fill, <code>foreground</code> text, soft shadow (default variant) or bottom line (line variant)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "Mouse hover",
+        "behavior": "Mouse over inactive tab — <code>foreground</code> text."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab / Arrow",
+        "behavior": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>, <code>ring</code> border."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "—",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1006,19 +1038,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "active": "Active",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Tab no activa — texto <code>foreground/60</code>, sin fondo."
       },
-      "descriptions": {
-        "default": "Tab no activa — texto <code>foreground/60</code>, sin fondo.",
-        "active": "Tab activa — <code>data-active</code>, fondo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) o línea inferior (variant line).",
-        "hover": "Mouse sobre tab inactiva — texto <code>foreground</code>.",
-        "focus": "Enfocada por teclado — <code>ring-[3px] ring-ring/50</code>, borde <code>ring</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>pointer-events-none</code>."
+      "active": {
+        "label": "Active",
+        "trigger": "Click / Arrow / Home/End",
+        "behavior": "Tab activa — <code>data-active</code>, fondo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) o línea inferior (variant line)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "Mouse hover",
+        "behavior": "Mouse sobre tab inactiva — texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab / Arrow",
+        "behavior": "Enfocada por teclado — <code>ring-[3px] ring-ring/50</code>, borde <code>ring</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "—",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>pointer-events-none</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

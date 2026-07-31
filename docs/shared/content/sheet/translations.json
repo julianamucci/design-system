@@ -177,22 +177,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
-      },
-      "descriptions": {
-        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado.",
-        "open": "Aberto — <code>data-state=\"open\"</code>, foco move ao primeiro elemento focável.",
-        "transitioning": "Animação de entrada/saída — <code>translate-x/y</code> conforme <code>side</code>.",
-        "focused": "Elemento interno focado — anel <code>ring-2 ring-ring</code>."
-      },
       "longScrollBody": {
         "label": "Body com scroll interno",
         "trigger": "Conteúdo excede a altura do painel",
         "behavior": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo."
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "click no trigger",
+        "behavior": "Aberto — <code>data-state=\"open\"</code>, foco move ao primeiro elemento focável."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "animação de entrada/saída",
+        "behavior": "Animação de entrada/saída — <code>translate-x/y</code> conforme <code>side</code>."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "tab em elemento interno",
+        "behavior": "Elemento interno focado — anel <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -620,22 +633,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
-      },
-      "descriptions": {
-        "closed": "Initial state — <code>data-state=\"closed\"</code>, content unmounted.",
-        "open": "Open — <code>data-state=\"open\"</code>, focus moves to first focusable element.",
-        "transitioning": "Enter/exit animation — <code>translate-x/y</code> based on <code>side</code>.",
-        "focused": "Internal element focused — <code>ring-2 ring-ring</code>."
-      },
       "longScrollBody": {
         "label": "Body with internal scroll",
         "trigger": "Content exceeds the panel height",
         "behavior": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed."
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Initial state — <code>data-state=\"closed\"</code>, content unmounted."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "click on the trigger",
+        "behavior": "Open — <code>data-state=\"open\"</code>, focus moves to first focusable element."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "enter/exit animation",
+        "behavior": "Enter/exit animation — <code>translate-x/y</code> based on <code>side</code>."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "Tab to an inner element",
+        "behavior": "Internal element focused — <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1063,22 +1089,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
-      },
-      "descriptions": {
-        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado.",
-        "open": "Abierto — <code>data-state=\"open\"</code>, el foco va al primer elemento focalizable.",
-        "transitioning": "Animación de entrada/salida — <code>translate-x/y</code> según <code>side</code>.",
-        "focused": "Elemento interno enfocado — <code>ring-2 ring-ring</code>."
-      },
       "longScrollBody": {
         "label": "Body con scroll interno",
         "trigger": "El contenido excede la altura del panel",
         "behavior": "Panel <code>side=\"right\"</code> con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo."
+      },
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado."
+      },
+      "open": {
+        "label": "Open",
+        "trigger": "click en el trigger",
+        "behavior": "Abierto — <code>data-state=\"open\"</code>, el foco va al primer elemento focalizable."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "animación de entrada/salida",
+        "behavior": "Animación de entrada/salida — <code>translate-x/y</code> según <code>side</code>."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "Tab en un elemento interno",
+        "behavior": "Elemento interno enfocado — <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

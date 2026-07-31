@@ -159,23 +159,45 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "open": "Open",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado inicial — trigger com placeholder e indicador <code>ChevronDown</code>."
       },
-      "descriptions": {
-        "default": "Estado inicial — trigger com placeholder e indicador <code>ChevronDown</code>.",
-        "open": "Dropdown aberto — <code>data-state=\"open\"</code>, lista renderizada em portal.",
-        "selected": "Item selecionado — <code>data-checked</code>, ícone <code>Check</code> à direita.",
-        "hover": "Cursor sobre item — fundo <code>accent</code>, texto <code>accent-foreground</code>.",
-        "focus": "Trigger focado via teclado — <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      "open": {
+        "label": "Open",
+        "trigger": "Click ou Enter no trigger",
+        "behavior": "Dropdown aberto — <code>data-state=\"open\"</code>, lista renderizada em portal."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "Usuário escolhe uma opção",
+        "behavior": "Item selecionado — <code>data-checked</code>, ícone <code>Check</code> à direita."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre item",
+        "behavior": "Cursor sobre item — fundo <code>accent</code>, texto <code>accent-foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab até o trigger",
+        "behavior": "Trigger focado via teclado — <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando a opção é marcada como indisponível",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "Quando a validação marca o campo como inválido",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -596,23 +618,45 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "open": "Open",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Initial state — trigger with placeholder and <code>ChevronDown</code> indicator."
       },
-      "descriptions": {
-        "default": "Initial state — trigger with placeholder and <code>ChevronDown</code> indicator.",
-        "open": "Dropdown open — <code>data-state=\"open\"</code>, list rendered in portal.",
-        "selected": "Selected item — <code>data-checked</code>, <code>Check</code> icon on the right.",
-        "hover": "Cursor over item — <code>accent</code> background, <code>accent-foreground</code> text.",
-        "focus": "Trigger focused via keyboard — <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      "open": {
+        "label": "Open",
+        "trigger": "Click or Enter on the trigger",
+        "behavior": "Dropdown open — <code>data-state=\"open\"</code>, list rendered in portal."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "User picks an option",
+        "behavior": "Selected item — <code>data-checked</code>, <code>Check</code> icon on the right."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer over item",
+        "behavior": "Cursor over item — <code>accent</code> background, <code>accent-foreground</code> text."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the trigger",
+        "behavior": "Trigger focused via keyboard — <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the option is marked unavailable",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "When validation marks the field invalid",
+        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1033,23 +1077,45 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "open": "Open",
-        "selected": "Selected",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado inicial — trigger con placeholder e indicador <code>ChevronDown</code>."
       },
-      "descriptions": {
-        "default": "Estado inicial — trigger con placeholder e indicador <code>ChevronDown</code>.",
-        "open": "Dropdown abierto — <code>data-state=\"open\"</code>, lista en portal.",
-        "selected": "Ítem seleccionado — <code>data-checked</code>, icono <code>Check</code> a la derecha.",
-        "hover": "Cursor sobre ítem — fondo <code>accent</code>, texto <code>accent-foreground</code>.",
-        "focus": "Trigger enfocado por teclado — <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      "open": {
+        "label": "Open",
+        "trigger": "Click o Enter en el trigger",
+        "behavior": "Dropdown abierto — <code>data-state=\"open\"</code>, lista en portal."
+      },
+      "selected": {
+        "label": "Selected",
+        "trigger": "El usuario elige una opción",
+        "behavior": "Ítem seleccionado — <code>data-checked</code>, icono <code>Check</code> a la derecha."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre el ítem",
+        "behavior": "Cursor sobre ítem — fondo <code>accent</code>, texto <code>accent-foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el trigger",
+        "behavior": "Trigger enfocado por teclado — <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando la opción se marca como no disponible",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "Cuando la validación marca el campo como no válido",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

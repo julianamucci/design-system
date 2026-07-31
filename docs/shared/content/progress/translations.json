@@ -143,17 +143,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "loading": "Loading",
-        "complete": "Complete",
-        "indeterminate": "Indeterminate"
+      "default": {
+        "label": "Default",
+        "trigger": "value=0",
+        "behavior": "Estado inicial — <code>value=0</code>, indicador em <code>0%</code>."
       },
-      "descriptions": {
-        "default": "Estado inicial — <code>value=0</code>, indicador em <code>0%</code>.",
-        "loading": "Em progresso — <code>0 < value < 100</code>, indicador preenchido proporcionalmente.",
-        "complete": "Finalizado — <code>value=100</code>, barra cheia. Considere remover ou trocar por mensagem de sucesso.",
-        "indeterminate": "Sem valor definido — animação infinita no indicador via CSS."
+      "loading": {
+        "label": "Loading",
+        "trigger": "value entre 0 e 100",
+        "behavior": "Em progresso — <code>value</code> entre 0 e 100 (exclusivo), indicador preenchido proporcionalmente."
+      },
+      "complete": {
+        "label": "Complete",
+        "trigger": "value=100",
+        "behavior": "Finalizado — <code>value=100</code>, barra cheia. Considere remover ou trocar por mensagem de sucesso."
+      },
+      "indeterminate": {
+        "label": "Indeterminate",
+        "trigger": "value=null",
+        "behavior": "Sem valor definido — animação infinita no indicador via CSS."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -529,17 +542,30 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "loading": "Loading",
-        "complete": "Complete",
-        "indeterminate": "Indeterminate"
+      "default": {
+        "label": "Default",
+        "trigger": "value=0",
+        "behavior": "Initial state — <code>value=0</code>, indicator at <code>0%</code>."
       },
-      "descriptions": {
-        "default": "Initial state — <code>value=0</code>, indicator at <code>0%</code>.",
-        "loading": "In progress — <code>0 < value < 100</code>, indicator filled proportionally.",
-        "complete": "Finished — <code>value=100</code>, full bar. Consider removing or swapping for success message.",
-        "indeterminate": "No defined value — infinite indicator animation via CSS."
+      "loading": {
+        "label": "Loading",
+        "trigger": "value between 0 and 100",
+        "behavior": "In progress — <code>value</code> between 0 and 100 (exclusive), indicator filled proportionally."
+      },
+      "complete": {
+        "label": "Complete",
+        "trigger": "value=100",
+        "behavior": "Finished — <code>value=100</code>, full bar. Consider removing or swapping for success message."
+      },
+      "indeterminate": {
+        "label": "Indeterminate",
+        "trigger": "value=null",
+        "behavior": "No defined value — infinite indicator animation via CSS."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -915,17 +941,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "loading": "Loading",
-        "complete": "Complete",
-        "indeterminate": "Indeterminate"
+      "default": {
+        "label": "Default",
+        "trigger": "value=0",
+        "behavior": "Estado inicial — <code>value=0</code>, indicador en <code>0%</code>."
       },
-      "descriptions": {
-        "default": "Estado inicial — <code>value=0</code>, indicador en <code>0%</code>.",
-        "loading": "En progreso — <code>0 < value < 100</code>, indicador lleno proporcionalmente.",
-        "complete": "Finalizado — <code>value=100</code>, barra llena. Considera retirar o cambiar por mensaje de éxito.",
-        "indeterminate": "Sin valor definido — animación infinita del indicador vía CSS."
+      "loading": {
+        "label": "Loading",
+        "trigger": "value entre 0 y 100",
+        "behavior": "En progreso — <code>value</code> entre 0 y 100 (exclusivo), indicador rellenado proporcionalmente."
+      },
+      "complete": {
+        "label": "Complete",
+        "trigger": "value=100",
+        "behavior": "Finalizado — <code>value=100</code>, barra llena. Considera retirar o cambiar por mensaje de éxito."
+      },
+      "indeterminate": {
+        "label": "Indeterminate",
+        "trigger": "value=null",
+        "behavior": "Sin valor definido — animación infinita del indicador vía CSS."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

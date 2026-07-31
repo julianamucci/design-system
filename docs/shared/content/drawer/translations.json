@@ -172,15 +172,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Fechado",
-        "open": "Aberto",
-        "controlled": "Controlado"
+      "closed": {
+        "label": "Fechado",
+        "trigger": "defaultOpen=false",
+        "behavior": "Estado padrão — apenas o trigger renderizado; portal vazio."
       },
-      "descriptions": {
-        "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
-        "open": "Painel visível com overlay; focus trap ativo; ESC e swipe fecham.",
-        "controlled": "Estado controlado + callback de mudança permitem gerenciar o estado externamente (útil para abrir via lógica de negócio)."
+      "open": {
+        "label": "Aberto",
+        "trigger": "click trigger / defaultOpen=true",
+        "behavior": "Painel visível com overlay; focus trap ativo; ESC e swipe fecham."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "trigger": "open + onOpenChange",
+        "behavior": "Estado controlado + callback de mudança permitem gerenciar o estado externamente (útil para abrir via lógica de negócio)."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -596,15 +606,25 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "controlled": "Controlled"
+      "closed": {
+        "label": "Closed",
+        "trigger": "defaultOpen=false",
+        "behavior": "Default state — only the trigger is rendered; portal is empty."
       },
-      "descriptions": {
-        "closed": "Default state — only the trigger is rendered; portal is empty.",
-        "open": "Visible panel with overlay; focus trap active; ESC and swipe close it.",
-        "controlled": "A controlled state + change callback manage state externally (useful for opening via business logic)."
+      "open": {
+        "label": "Open",
+        "trigger": "click trigger / defaultOpen=true",
+        "behavior": "Visible panel with overlay; focus trap active; ESC and swipe close it."
+      },
+      "controlled": {
+        "label": "Controlled",
+        "trigger": "open + onOpenChange",
+        "behavior": "A controlled state + change callback manage state externally (useful for opening via business logic)."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1020,15 +1040,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Cerrado",
-        "open": "Abierto",
-        "controlled": "Controlado"
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "defaultOpen=false",
+        "behavior": "Estado predeterminado — solo el trigger renderizado; portal vacío."
       },
-      "descriptions": {
-        "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
-        "open": "Panel visible con overlay; focus trap activo; ESC y swipe lo cierran.",
-        "controlled": "Estado controlado + callback de cambio permiten gestionar el estado externamente (útil para abrir vía lógica de negocio)."
+      "open": {
+        "label": "Abierto",
+        "trigger": "click trigger / defaultOpen=true",
+        "behavior": "Panel visible con overlay; focus trap activo; ESC y swipe lo cierran."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "trigger": "open + onOpenChange",
+        "behavior": "Estado controlado + callback de cambio permiten gestionar el estado externamente (útil para abrir vía lógica de negocio)."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

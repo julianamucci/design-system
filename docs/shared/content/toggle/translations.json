@@ -160,21 +160,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "off": "Off",
-        "on": "On",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "off": {
+        "label": "Off",
+        "trigger": "—",
+        "behavior": "Inativo — <code>aria-pressed=\"false\"</code>, fundo transparente."
       },
-      "descriptions": {
-        "off": "Inativo — <code>aria-pressed=\"false\"</code>, fundo transparente.",
-        "on": "Ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code> (<code>data-state=on</code>).",
-        "hover": "Mouse sobre — fundo <code>muted</code>, texto <code>foreground</code>.",
-        "focus": "Focado via teclado — anel <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      "on": {
+        "label": "On",
+        "trigger": "click ou Space/Enter",
+        "behavior": "Ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code> (<code>data-state=on</code>)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre o Toggle",
+        "behavior": "Mouse sobre — fundo <code>muted</code>, texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab para o Toggle",
+        "behavior": "Focado via teclado — anel <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o consumidor desabilita o controle",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" no Toggle",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -576,21 +595,40 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "off": "Off",
-        "on": "On",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "off": {
+        "label": "Off",
+        "trigger": "—",
+        "behavior": "Inactive — <code>aria-pressed=\"false\"</code>, transparent background."
       },
-      "descriptions": {
-        "off": "Inactive — <code>aria-pressed=\"false\"</code>, transparent background.",
-        "on": "Active — <code>aria-pressed=\"true\"</code>, <code>muted</code> background (<code>data-state=on</code>).",
-        "hover": "Mouse over — <code>muted</code> background, <code>foreground</code> text.",
-        "focus": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      "on": {
+        "label": "On",
+        "trigger": "click or Space/Enter",
+        "behavior": "Active — <code>aria-pressed=\"true\"</code>, <code>muted</code> background (<code>data-state=on</code>)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer over the Toggle",
+        "behavior": "Mouse over — <code>muted</code> background, <code>foreground</code> text."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the Toggle",
+        "behavior": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the consumer disables the control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" on the Toggle",
+        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -992,21 +1030,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "off": "Off",
-        "on": "On",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "off": {
+        "label": "Off",
+        "trigger": "—",
+        "behavior": "Inactivo — <code>aria-pressed=\"false\"</code>, fondo transparente."
       },
-      "descriptions": {
-        "off": "Inactivo — <code>aria-pressed=\"false\"</code>, fondo transparente.",
-        "on": "Activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code> (<code>data-state=on</code>).",
-        "hover": "Mouse encima — fondo <code>muted</code>, texto <code>foreground</code>.",
-        "focus": "Enfocado por teclado — <code>ring-[3px] ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      "on": {
+        "label": "On",
+        "trigger": "click o Space/Enter",
+        "behavior": "Activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code> (<code>data-state=on</code>)."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre el Toggle",
+        "behavior": "Mouse encima — fondo <code>muted</code>, texto <code>foreground</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el Toggle",
+        "behavior": "Enfocado por teclado — <code>ring-[3px] ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el consumidor deshabilita el control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" en el Toggle",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

@@ -171,17 +171,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Fechado",
-        "open": "Aberto",
-        "disabled": "Desabilitado",
-        "checked": "Checked"
+      "closed": {
+        "label": "Fechado",
+        "trigger": "estado inicial",
+        "behavior": "Estado padrão — apenas a barra com Triggers visíveis."
       },
-      "descriptions": {
-        "closed": "Estado padrão — apenas a barra com Triggers visíveis.",
-        "open": "Um menu aberto exibindo Content; setas Esquerda/Direita movem para outros menus.",
-        "disabled": "<code>disabled</code> em Item bloqueia interação; <code>aria-disabled=\"true\"</code>.",
-        "checked": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+      "open": {
+        "label": "Aberto",
+        "trigger": "click no Trigger",
+        "behavior": "Um menu aberto exibindo Content; setas Esquerda/Direita movem para outros menus."
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "item.disabled=true",
+        "behavior": "<code>disabled</code> em Item bloqueia interação; <code>aria-disabled=\"true\"</code>."
+      },
+      "checked": {
+        "label": "Checked",
+        "trigger": "aria-checked=\"true\"",
+        "behavior": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -622,17 +635,30 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "disabled": "Disabled",
-        "checked": "Checked"
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Default state — only the bar with visible Triggers."
       },
-      "descriptions": {
-        "closed": "Default state — only the bar with visible Triggers.",
-        "open": "One menu open displaying Content; Left/Right arrows move to other menus.",
-        "disabled": "<code>disabled</code> on Item blocks interaction; <code>aria-disabled=\"true\"</code>.",
-        "checked": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+      "open": {
+        "label": "Open",
+        "trigger": "click on Trigger",
+        "behavior": "One menu open displaying Content; Left/Right arrows move to other menus."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "item.disabled=true",
+        "behavior": "<code>disabled</code> on Item blocks interaction; <code>aria-disabled=\"true\"</code>."
+      },
+      "checked": {
+        "label": "Checked",
+        "trigger": "aria-checked=\"true\"",
+        "behavior": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1073,17 +1099,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Cerrado",
-        "open": "Abierto",
-        "disabled": "Deshabilitado",
-        "checked": "Checked"
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "estado inicial",
+        "behavior": "Estado predeterminado — solo la barra con Triggers visibles."
       },
-      "descriptions": {
-        "closed": "Estado predeterminado — solo la barra con Triggers visibles.",
-        "open": "Un menú abierto mostrando Content; flechas Izquierda/Derecha mueven a otros menús.",
-        "disabled": "<code>disabled</code> en Item bloquea interacción; <code>aria-disabled=\"true\"</code>.",
-        "checked": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+      "open": {
+        "label": "Abierto",
+        "trigger": "clic en el Trigger",
+        "behavior": "Un menú abierto mostrando Content; flechas Izquierda/Derecha mueven a otros menús."
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "item.disabled=true",
+        "behavior": "<code>disabled</code> en Item bloquea interacción; <code>aria-disabled=\"true\"</code>."
+      },
+      "checked": {
+        "label": "Checked",
+        "trigger": "aria-checked=\"true\"",
+        "behavior": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

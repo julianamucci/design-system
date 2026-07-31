@@ -173,19 +173,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "empty": "Vazio",
-        "filling": "Preenchendo",
-        "complete": "Completo",
-        "disabled": "Desabilitado",
-        "error": "Erro"
+      "empty": {
+        "label": "Vazio",
+        "trigger": "inicial",
+        "behavior": "Nenhum slot preenchido; primeiro slot tem foco se <code>autoFocus</code>."
       },
-      "descriptions": {
-        "empty": "Nenhum slot preenchido; primeiro slot tem foco se <code>autoFocus</code>.",
-        "filling": "Slots parcialmente preenchidos; foco move para o próximo slot automaticamente.",
-        "complete": "Todos os slots preenchidos; <code>onComplete</code> dispara automaticamente.",
-        "disabled": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> e bloqueia interação.",
-        "error": "<code>aria-invalid=\"true\"</code> aplica borda <code>border-destructive</code> e ring vermelho."
+      "filling": {
+        "label": "Preenchendo",
+        "trigger": "input em slot",
+        "behavior": "Slots parcialmente preenchidos; foco move para o próximo slot automaticamente."
+      },
+      "complete": {
+        "label": "Completo",
+        "trigger": "último slot preenchido",
+        "behavior": "Todos os slots preenchidos; <code>onComplete</code> dispara automaticamente."
+      },
+      "disabled": {
+        "label": "Desabilitado",
+        "trigger": "prop disabled=true",
+        "behavior": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> e bloqueia interação."
+      },
+      "error": {
+        "label": "Erro",
+        "trigger": "aria-invalid=true",
+        "behavior": "<code>aria-invalid=\"true\"</code> aplica borda <code>border-destructive</code> e ring vermelho."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -619,19 +635,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "empty": "Empty",
-        "filling": "Filling",
-        "complete": "Complete",
-        "disabled": "Disabled",
-        "error": "Error"
+      "empty": {
+        "label": "Empty",
+        "trigger": "initial",
+        "behavior": "No slots filled; first slot has focus if <code>autoFocus</code>."
       },
-      "descriptions": {
-        "empty": "No slots filled; first slot has focus if <code>autoFocus</code>.",
-        "filling": "Slots partially filled; focus moves to next slot automatically.",
-        "complete": "All slots filled; <code>onComplete</code> fires automatically.",
-        "disabled": "<code>disabled</code> applies <code>has-disabled:opacity-50</code> and blocks interaction.",
-        "error": "<code>aria-invalid=\"true\"</code> applies <code>border-destructive</code> and red ring."
+      "filling": {
+        "label": "Filling",
+        "trigger": "input in slot",
+        "behavior": "Slots partially filled; focus moves to next slot automatically."
+      },
+      "complete": {
+        "label": "Complete",
+        "trigger": "last slot filled",
+        "behavior": "All slots filled; <code>onComplete</code> fires automatically."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "prop disabled=true",
+        "behavior": "<code>disabled</code> applies <code>has-disabled:opacity-50</code> and blocks interaction."
+      },
+      "error": {
+        "label": "Error",
+        "trigger": "aria-invalid=true",
+        "behavior": "<code>aria-invalid=\"true\"</code> applies <code>border-destructive</code> and red ring."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1065,19 +1097,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "empty": "Vacío",
-        "filling": "Llenando",
-        "complete": "Completo",
-        "disabled": "Deshabilitado",
-        "error": "Error"
+      "empty": {
+        "label": "Vacío",
+        "trigger": "inicial",
+        "behavior": "Ningún slot lleno; primer slot tiene foco si <code>autoFocus</code>."
       },
-      "descriptions": {
-        "empty": "Ningún slot lleno; primer slot tiene foco si <code>autoFocus</code>.",
-        "filling": "Slots parcialmente llenos; foco se mueve al siguiente slot automáticamente.",
-        "complete": "Todos los slots llenos; <code>onComplete</code> se dispara automáticamente.",
-        "disabled": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> y bloquea interacción.",
-        "error": "<code>aria-invalid=\"true\"</code> aplica <code>border-destructive</code> y ring rojo."
+      "filling": {
+        "label": "Llenando",
+        "trigger": "input en slot",
+        "behavior": "Slots parcialmente llenos; foco se mueve al siguiente slot automáticamente."
+      },
+      "complete": {
+        "label": "Completo",
+        "trigger": "último slot completado",
+        "behavior": "Todos los slots llenos; <code>onComplete</code> se dispara automáticamente."
+      },
+      "disabled": {
+        "label": "Deshabilitado",
+        "trigger": "prop disabled=true",
+        "behavior": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> y bloquea interacción."
+      },
+      "error": {
+        "label": "Error",
+        "trigger": "aria-invalid=true",
+        "behavior": "<code>aria-invalid=\"true\"</code> aplica <code>border-destructive</code> y ring rojo."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

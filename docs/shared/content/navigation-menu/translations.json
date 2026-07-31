@@ -170,15 +170,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Fechado",
-        "open": "Aberto",
-        "active": "Ativo (página atual)"
+      "closed": {
+        "label": "Fechado",
+        "trigger": "estado inicial",
+        "behavior": "Estado padrão — apenas Triggers e Links visíveis na barra."
       },
-      "descriptions": {
-        "closed": "Estado padrão — apenas Triggers e Links visíveis na barra.",
-        "open": "Trigger ativo com Content expandido no Viewport; data-state=\"open\".",
-        "active": "Link da página atual com <code>aria-current=\"page\"</code> e estilo destacado (<code>bg-accent</code>)."
+      "open": {
+        "label": "Aberto",
+        "trigger": "Hover ou foco no gatilho",
+        "behavior": "Trigger ativo com Content expandido no Viewport; data-state=\"open\"."
+      },
+      "active": {
+        "label": "Ativo (página atual)",
+        "trigger": "aria-current=\"page\"",
+        "behavior": "Link da página atual com <code>aria-current=\"page\"</code> e estilo destacado (<code>bg-accent</code>)."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -608,15 +618,25 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "active": "Active (current page)"
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Default state — only Triggers and Links visible on the bar."
       },
-      "descriptions": {
-        "closed": "Default state — only Triggers and Links visible on the bar.",
-        "open": "Active Trigger with Content expanded in Viewport; data-state=\"open\".",
-        "active": "Current page Link with <code>aria-current=\"page\"</code> and highlighted style (<code>bg-accent</code>)."
+      "open": {
+        "label": "Open",
+        "trigger": "Hover or focus on the trigger",
+        "behavior": "Active Trigger with Content expanded in Viewport; data-state=\"open\"."
+      },
+      "active": {
+        "label": "Active (current page)",
+        "trigger": "aria-current=\"page\"",
+        "behavior": "Current page Link with <code>aria-current=\"page\"</code> and highlighted style (<code>bg-accent</code>)."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1046,15 +1066,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Cerrado",
-        "open": "Abierto",
-        "active": "Activo (página actual)"
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "estado inicial",
+        "behavior": "Estado predeterminado — solo Triggers y Links visibles en la barra."
       },
-      "descriptions": {
-        "closed": "Estado predeterminado — solo Triggers y Links visibles en la barra.",
-        "open": "Trigger activo con Content expandido en el Viewport; data-state=\"open\".",
-        "active": "Link de la página actual con <code>aria-current=\"page\"</code> y estilo destacado (<code>bg-accent</code>)."
+      "open": {
+        "label": "Abierto",
+        "trigger": "Hover o foco en el disparador",
+        "behavior": "Trigger activo con Content expandido en el Viewport; data-state=\"open\"."
+      },
+      "active": {
+        "label": "Activo (página actual)",
+        "trigger": "aria-current=\"page\"",
+        "behavior": "Link de la página actual con <code>aria-current=\"page\"</code> y estilo destacado (<code>bg-accent</code>)."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

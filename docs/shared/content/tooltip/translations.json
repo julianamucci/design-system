@@ -166,19 +166,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "hover": "Hover",
-        "focus": "Focus",
-        "delayed": "Delayed"
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — conteúdo desmontado, <code>data-state=\"closed\"</code>."
       },
-      "descriptions": {
-        "closed": "Estado inicial — conteúdo desmontado, <code>data-state=\"closed\"</code>.",
-        "open": "Visível — <code>data-state=\"open\"</code> ou <code>delayed-open</code>, posicionado por <code>side</code>.",
-        "hover": "Mouse sobre o trigger — abre após <code>delay</code> do Provider.",
-        "focus": "Trigger focado via teclado — abre imediatamente (sem delay).",
-        "delayed": "Em delay — <code>data-state=\"delayed-open\"</code> antes da animação completar."
+      "open": {
+        "label": "Open",
+        "trigger": "hover/focus no trigger",
+        "behavior": "Visível — <code>data-state=\"open\"</code> ou <code>delayed-open</code>, posicionado por <code>side</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter no trigger",
+        "behavior": "Mouse sobre o trigger — abre após <code>delay</code> do Provider."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab até o trigger",
+        "behavior": "Trigger focado via teclado — abre imediatamente (sem delay)."
+      },
+      "delayed": {
+        "label": "Delayed",
+        "trigger": "antes do delay completar",
+        "behavior": "Em delay — <code>data-state=\"delayed-open\"</code> antes da animação completar."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -586,19 +602,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "hover": "Hover",
-        "focus": "Focus",
-        "delayed": "Delayed"
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Initial state — content unmounted, <code>data-state=\"closed\"</code>."
       },
-      "descriptions": {
-        "closed": "Initial state — content unmounted, <code>data-state=\"closed\"</code>.",
-        "open": "Visible — <code>data-state=\"open\"</code> or <code>delayed-open</code>, positioned by <code>side</code>.",
-        "hover": "Mouse over trigger — opens after Provider <code>delay</code>.",
-        "focus": "Keyboard-focused trigger — opens immediately (no delay).",
-        "delayed": "In delay — <code>data-state=\"delayed-open\"</code> before animation completes."
+      "open": {
+        "label": "Open",
+        "trigger": "hover/focus on the trigger",
+        "behavior": "Visible — <code>data-state=\"open\"</code> or <code>delayed-open</code>, positioned by <code>side</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter on the trigger",
+        "behavior": "Mouse over trigger — opens after Provider <code>delay</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the trigger",
+        "behavior": "Keyboard-focused trigger — opens immediately (no delay)."
+      },
+      "delayed": {
+        "label": "Delayed",
+        "trigger": "before the delay completes",
+        "behavior": "In delay — <code>data-state=\"delayed-open\"</code> before animation completes."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1006,19 +1038,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "hover": "Hover",
-        "focus": "Focus",
-        "delayed": "Delayed"
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — contenido desmontado, <code>data-state=\"closed\"</code>."
       },
-      "descriptions": {
-        "closed": "Estado inicial — contenido desmontado, <code>data-state=\"closed\"</code>.",
-        "open": "Visible — <code>data-state=\"open\"</code> o <code>delayed-open</code>, posicionado por <code>side</code>.",
-        "hover": "Mouse sobre el trigger — abre tras el <code>delay</code> del Provider.",
-        "focus": "Trigger enfocado por teclado — abre inmediatamente (sin delay).",
-        "delayed": "En delay — <code>data-state=\"delayed-open\"</code> antes de completar la animación."
+      "open": {
+        "label": "Open",
+        "trigger": "hover/focus en el trigger",
+        "behavior": "Visible — <code>data-state=\"open\"</code> o <code>delayed-open</code>, posicionado por <code>side</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter en el trigger",
+        "behavior": "Mouse sobre el trigger — abre tras el <code>delay</code> del Provider."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el trigger",
+        "behavior": "Trigger enfocado por teclado — abre inmediatamente (sin delay)."
+      },
+      "delayed": {
+        "label": "Delayed",
+        "trigger": "antes de que se complete el delay",
+        "behavior": "En delay — <code>data-state=\"delayed-open\"</code> antes de completar la animación."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

@@ -145,19 +145,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "idle": "Idle",
-        "hover": "Hover",
-        "dragging": "Dragging",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "idle": {
+        "label": "Idle",
+        "trigger": "estado inicial",
+        "behavior": "Estado padrão — handle visível com cor <code>border</code>."
       },
-      "descriptions": {
-        "idle": "Estado padrão — handle visível com cor <code>border</code>.",
-        "hover": "Mouse sobre o handle — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário.",
-        "dragging": "Arrasto ativo — cursor <code>col-resize</code>/<code>row-resize</code>, painéis se ajustam em tempo real.",
-        "focus": "Handle focado via teclado — <code>ring-1 ring-ring</code>, setas ajustam tamanho.",
-        "disabled": "Handle desabilitado — <code>data-disabled</code>, sem cursor de resize."
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouse sobre handle",
+        "behavior": "Mouse sobre o handle — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário."
+      },
+      "dragging": {
+        "label": "Dragging",
+        "trigger": "mousedown + mousemove",
+        "behavior": "Arrasto ativo — cursor <code>col-resize</code>/<code>row-resize</code>, painéis se ajustam em tempo real."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab até o handle",
+        "behavior": "Handle focado via teclado — <code>ring-1 ring-ring</code>, setas ajustam tamanho."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "data-disabled no handle",
+        "behavior": "Handle desabilitado — <code>data-disabled</code>, sem cursor de resize."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -549,19 +565,35 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "idle": "Idle",
-        "hover": "Hover",
-        "dragging": "Dragging",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "idle": {
+        "label": "Idle",
+        "trigger": "initial state",
+        "behavior": "Default state — handle visible with <code>border</code> color."
       },
-      "descriptions": {
-        "idle": "Default state — handle visible with <code>border</code> color.",
-        "hover": "Mouse over handle — no required visual change; apply <code>hover:</code> as needed.",
-        "dragging": "Active drag — <code>col-resize</code>/<code>row-resize</code> cursor, panels adjust in real time.",
-        "focus": "Keyboard-focused handle — <code>ring-1 ring-ring</code>, arrows adjust size.",
-        "disabled": "Disabled handle — <code>data-disabled</code>, no resize cursor."
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouse over handle",
+        "behavior": "Mouse over handle — no required visual change; apply <code>hover:</code> as needed."
+      },
+      "dragging": {
+        "label": "Dragging",
+        "trigger": "mousedown + mousemove",
+        "behavior": "Active drag — <code>col-resize</code>/<code>row-resize</code> cursor, panels adjust in real time."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the handle",
+        "behavior": "Keyboard-focused handle — <code>ring-1 ring-ring</code>, arrows adjust size."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "data-disabled on handle",
+        "behavior": "Disabled handle — <code>data-disabled</code>, no resize cursor."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -953,19 +985,35 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "idle": "Idle",
-        "hover": "Hover",
-        "dragging": "Dragging",
-        "focus": "Focus",
-        "disabled": "Disabled"
+      "idle": {
+        "label": "Idle",
+        "trigger": "estado inicial",
+        "behavior": "Estado por defecto — handle visible con color <code>border</code>."
       },
-      "descriptions": {
-        "idle": "Estado por defecto — handle visible con color <code>border</code>.",
-        "hover": "Mouse sobre el handle — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario.",
-        "dragging": "Arrastre activo — cursor <code>col-resize</code>/<code>row-resize</code>, paneles se ajustan en tiempo real.",
-        "focus": "Handle enfocado por teclado — <code>ring-1 ring-ring</code>, flechas ajustan tamaño.",
-        "disabled": "Handle deshabilitado — <code>data-disabled</code>, sin cursor de resize."
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouse sobre el handle",
+        "behavior": "Mouse sobre el handle — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario."
+      },
+      "dragging": {
+        "label": "Dragging",
+        "trigger": "mousedown + mousemove",
+        "behavior": "Arrastre activo — cursor <code>col-resize</code>/<code>row-resize</code>, paneles se ajustan en tiempo real."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el handle",
+        "behavior": "Handle enfocado por teclado — <code>ring-1 ring-ring</code>, flechas ajustan tamaño."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "data-disabled en el handle",
+        "behavior": "Handle deshabilitado — <code>data-disabled</code>, sin cursor de resize."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

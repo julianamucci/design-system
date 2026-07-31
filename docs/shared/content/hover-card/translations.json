@@ -159,15 +159,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Fechado",
-        "open": "Aberto",
-        "controlled": "Controlado"
+      "closed": {
+        "label": "Fechado",
+        "trigger": "estado inicial",
+        "behavior": "Estado padrão — apenas o trigger renderizado; portal vazio."
       },
-      "descriptions": {
-        "closed": "Estado padrão — apenas o trigger renderizado; portal vazio.",
-        "open": "Cartão visível após <code>openDelay</code>; permanece enquanto cursor estiver sobre trigger ou content.",
-        "controlled": "Estado controlado + callback de mudança permitem gerenciar o estado externamente."
+      "open": {
+        "label": "Aberto",
+        "trigger": "mouseenter no trigger",
+        "behavior": "Cartão visível após <code>openDelay</code>; permanece enquanto cursor estiver sobre trigger ou content."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "trigger": "onOpenChange callback",
+        "behavior": "Estado controlado + callback de mudança permitem gerenciar o estado externamente."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -579,15 +589,25 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "controlled": "Controlled"
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Default state — only the trigger renders; portal is empty."
       },
-      "descriptions": {
-        "closed": "Default state — only the trigger renders; portal is empty.",
-        "open": "Card visible after <code>openDelay</code>; persists while cursor stays on trigger or content.",
-        "controlled": "Controlled state + change callback manage state externally."
+      "open": {
+        "label": "Open",
+        "trigger": "mouseenter on trigger",
+        "behavior": "Card visible after <code>openDelay</code>; persists while cursor stays on trigger or content."
+      },
+      "controlled": {
+        "label": "Controlled",
+        "trigger": "onOpenChange callback",
+        "behavior": "Controlled state + change callback manage state externally."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -999,15 +1019,25 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Cerrado",
-        "open": "Abierto",
-        "controlled": "Controlado"
+      "closed": {
+        "label": "Cerrado",
+        "trigger": "estado inicial",
+        "behavior": "Estado predeterminado — solo el trigger renderizado; portal vacío."
       },
-      "descriptions": {
-        "closed": "Estado predeterminado — solo el trigger renderizado; portal vacío.",
-        "open": "Tarjeta visible tras <code>openDelay</code>; persiste mientras el cursor esté sobre trigger o content.",
-        "controlled": "Estado controlado + callback de cambio permiten gestionar el estado externamente."
+      "open": {
+        "label": "Abierto",
+        "trigger": "mouseenter en el trigger",
+        "behavior": "Tarjeta visible tras <code>openDelay</code>; persiste mientras el cursor esté sobre trigger o content."
+      },
+      "controlled": {
+        "label": "Controlado",
+        "trigger": "onOpenChange callback",
+        "behavior": "Estado controlado + callback de cambio permiten gestionar el estado externamente."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

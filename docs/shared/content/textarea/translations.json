@@ -171,21 +171,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "focus": "Focus",
-        "filled": "Filled",
-        "disabled": "Disabled",
-        "invalid": "Invalid",
-        "readonly": "Read-only"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado padrão — borda <code>input</code>, placeholder <code>muted-foreground</code>."
       },
-      "descriptions": {
-        "default": "Estado padrão — borda <code>input</code>, placeholder <code>muted-foreground</code>.",
-        "focus": "Focado — borda <code>ring</code> + anel <code>ring-3 ring-ring/50</code>.",
-        "filled": "Com conteúdo — texto <code>foreground</code>, placeholder some.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fundo <code>input/50</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code>, anel <code>destructive/20</code>.",
-        "readonly": "<code>readOnly</code> — texto selecionável mas não editável; sem mudança de fundo."
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab ou click no textarea",
+        "behavior": "Focado — borda <code>ring</code> + anel <code>ring-3 ring-ring/50</code>."
+      },
+      "filled": {
+        "label": "Filled",
+        "trigger": "Usuário digita conteúdo",
+        "behavior": "Com conteúdo — texto <code>foreground</code>, placeholder some."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o consumidor desabilita o campo",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fundo <code>input/50</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" no textarea",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code>, anel <code>destructive/20</code>."
+      },
+      "readonly": {
+        "label": "Read-only",
+        "trigger": "textarea.readOnly = true",
+        "behavior": "<code>readOnly</code> — texto selecionável mas não editável; sem mudança de fundo."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -616,21 +635,40 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "focus": "Focus",
-        "filled": "Filled",
-        "disabled": "Disabled",
-        "invalid": "Invalid",
-        "readonly": "Read-only"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Default state — <code>input</code> border, <code>muted-foreground</code> placeholder."
       },
-      "descriptions": {
-        "default": "Default state — <code>input</code> border, <code>muted-foreground</code> placeholder.",
-        "focus": "Focused — <code>ring</code> border + <code>ring-3 ring-ring/50</code> ring.",
-        "filled": "With content — <code>foreground</code> text, placeholder disappears.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, <code>input/50</code> background.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border, <code>destructive/20</code> ring.",
-        "readonly": "<code>readOnly</code> — selectable but not editable; no background change."
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab or click on the textarea",
+        "behavior": "Focused — <code>ring</code> border + <code>ring-3 ring-ring/50</code> ring."
+      },
+      "filled": {
+        "label": "Filled",
+        "trigger": "User types content",
+        "behavior": "With content — <code>foreground</code> text, placeholder disappears."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the consumer disables the field",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, <code>input/50</code> background."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" on the textarea",
+        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border, <code>destructive/20</code> ring."
+      },
+      "readonly": {
+        "label": "Read-only",
+        "trigger": "textarea.readOnly = true",
+        "behavior": "<code>readOnly</code> — selectable but not editable; no background change."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1061,21 +1099,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "focus": "Focus",
-        "filled": "Filled",
-        "disabled": "Disabled",
-        "invalid": "Invalid",
-        "readonly": "Read-only"
+      "default": {
+        "label": "Default",
+        "trigger": "—",
+        "behavior": "Estado por defecto — borde <code>input</code>, placeholder <code>muted-foreground</code>."
       },
-      "descriptions": {
-        "default": "Estado por defecto — borde <code>input</code>, placeholder <code>muted-foreground</code>.",
-        "focus": "Enfocado — borde <code>ring</code> + anillo <code>ring-3 ring-ring/50</code>.",
-        "filled": "Con contenido — texto <code>foreground</code>, el placeholder desaparece.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fondo <code>input/50</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code>, anillo <code>destructive/20</code>.",
-        "readonly": "<code>readOnly</code> — texto seleccionable pero no editable; sin cambio de fondo."
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab o click en el textarea",
+        "behavior": "Enfocado — borde <code>ring</code> + anillo <code>ring-3 ring-ring/50</code>."
+      },
+      "filled": {
+        "label": "Filled",
+        "trigger": "El usuario escribe contenido",
+        "behavior": "Con contenido — texto <code>foreground</code>, el placeholder desaparece."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el consumidor deshabilita el campo",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fondo <code>input/50</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" en el textarea",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code>, anillo <code>destructive/20</code>."
+      },
+      "readonly": {
+        "label": "Read-only",
+        "trigger": "textarea.readOnly = true",
+        "behavior": "<code>readOnly</code> — texto seleccionable pero no editable; sin cambio de fondo."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

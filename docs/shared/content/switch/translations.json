@@ -160,21 +160,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "unchecked": "Unchecked",
-        "checked": "Checked",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "unchecked": {
+        "label": "Unchecked",
+        "trigger": "—",
+        "behavior": "Desativado — <code>data-unchecked</code>, fundo <code>input</code>, thumb à esquerda."
       },
-      "descriptions": {
-        "unchecked": "Desativado — <code>data-unchecked</code>, fundo <code>input</code>, thumb à esquerda.",
-        "checked": "Ativado — <code>data-checked</code>, fundo <code>primary</code>, thumb à direita.",
-        "hover": "Mouse sobre — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário.",
-        "focus": "Focado via teclado — anel <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      "checked": {
+        "label": "Checked",
+        "trigger": "click ou Space/Enter",
+        "behavior": "Ativado — <code>data-checked</code>, fundo <code>primary</code>, thumb à direita."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre o Switch",
+        "behavior": "Mouse sobre — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab para o Switch",
+        "behavior": "Focado via teclado — anel <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Quando o consumidor desabilita o controle",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" no Switch",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -581,21 +600,40 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "unchecked": "Unchecked",
-        "checked": "Checked",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "unchecked": {
+        "label": "Unchecked",
+        "trigger": "—",
+        "behavior": "Off — <code>data-unchecked</code>, <code>input</code> background, thumb on the left."
       },
-      "descriptions": {
-        "unchecked": "Off — <code>data-unchecked</code>, <code>input</code> background, thumb on the left.",
-        "checked": "On — <code>data-checked</code>, <code>primary</code> background, thumb on the right.",
-        "hover": "Mouse over — no required visual change; apply <code>hover:</code> as needed.",
-        "focus": "Keyboard focused — <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      "checked": {
+        "label": "Checked",
+        "trigger": "click or Space/Enter",
+        "behavior": "On — <code>data-checked</code>, <code>primary</code> background, thumb on the right."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer over the Switch",
+        "behavior": "Mouse over — no required visual change; apply <code>hover:</code> as needed."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab to the Switch",
+        "behavior": "Keyboard focused — <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "When the consumer disables the control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" on the Switch",
+        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1002,21 +1040,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "unchecked": "Unchecked",
-        "checked": "Checked",
-        "hover": "Hover",
-        "focus": "Focus",
-        "disabled": "Disabled",
-        "invalid": "Invalid"
+      "unchecked": {
+        "label": "Unchecked",
+        "trigger": "—",
+        "behavior": "Apagado — <code>data-unchecked</code>, fondo <code>input</code>, thumb a la izquierda."
       },
-      "descriptions": {
-        "unchecked": "Apagado — <code>data-unchecked</code>, fondo <code>input</code>, thumb a la izquierda.",
-        "checked": "Encendido — <code>data-checked</code>, fondo <code>primary</code>, thumb a la derecha.",
-        "hover": "Mouse encima — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario.",
-        "focus": "Enfocado por teclado — <code>ring-3 ring-ring/50</code>.",
-        "disabled": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>.",
-        "invalid": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      "checked": {
+        "label": "Checked",
+        "trigger": "click o Space/Enter",
+        "behavior": "Encendido — <code>data-checked</code>, fondo <code>primary</code>, thumb a la derecha."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "pointer sobre el Switch",
+        "behavior": "Mouse encima — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab hasta el Switch",
+        "behavior": "Enfocado por teclado — <code>ring-3 ring-ring/50</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "Cuando el consumidor deshabilita el control",
+        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>."
+      },
+      "invalid": {
+        "label": "Invalid",
+        "trigger": "aria-invalid=\"true\" en el Switch",
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

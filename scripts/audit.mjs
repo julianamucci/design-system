@@ -118,9 +118,12 @@ function filesForSlug(slug, stack) {
     const n = basename(f).toLowerCase();
     return SUFFIX_RX.test(n) || f.toLowerCase().includes(`/${s}/`);
   });
-  const docsFiles = globStack(stack, 'components/docs', ext).filter(f =>
-    new RegExp(`^${Slug}Docs\\.`).test(basename(f)),
-  );
+  // Case-insensitive: o slug `input-otp` deriva `InputOtpDocs`, mas o arquivo
+  // real é `InputOTPDocs` — sigla em caixa alta. Com match sensível a caixa, a
+  // docs page inteira ficava invisível para TODAS as regras, e o componente
+  // marcava zero por não ser lido, não por estar correto.
+  const docsRx = new RegExp(`^${Slug}Docs\\.`, 'i');
+  const docsFiles = globStack(stack, 'components/docs', ext).filter(f => docsRx.test(basename(f)));
 
   return { ui: uiFiles, docs: docsFiles, all: [...uiFiles, ...docsFiles] };
 }

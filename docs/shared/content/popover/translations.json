@@ -173,17 +173,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado."
       },
-      "descriptions": {
-        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, conteúdo desmontado.",
-        "open": "Aberto — <code>data-state=\"open\"</code>, foco no primeiro elemento focável.",
-        "transitioning": "Animação de entrada/saída — <code>data-open</code>/<code>data-closed</code> aplicam classes <code>animate-in</code>/<code>animate-out</code>.",
-        "focused": "Elemento interno focado — anel de foco visível com <code>ring-2 ring-ring</code>."
+      "open": {
+        "label": "Open",
+        "trigger": "click no trigger",
+        "behavior": "Aberto — <code>data-state=\"open\"</code>, foco no primeiro elemento focável."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "animação de entrada/saída",
+        "behavior": "Animação de entrada/saída — <code>data-open</code>/<code>data-closed</code> aplicam classes <code>animate-in</code>/<code>animate-out</code>."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "tab em elemento interno",
+        "behavior": "Elemento interno focado — anel de foco visível com <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -605,17 +618,30 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
+      "closed": {
+        "label": "Closed",
+        "trigger": "initial state",
+        "behavior": "Initial state — <code>data-state=\"closed\"</code>, content unmounted."
       },
-      "descriptions": {
-        "closed": "Initial state — <code>data-state=\"closed\"</code>, content unmounted.",
-        "open": "Open — <code>data-state=\"open\"</code>, focus on the first focusable element.",
-        "transitioning": "Enter/exit animation — <code>data-open</code>/<code>data-closed</code> apply <code>animate-in</code>/<code>animate-out</code> classes.",
-        "focused": "Internal element focused — visible focus ring with <code>ring-2 ring-ring</code>."
+      "open": {
+        "label": "Open",
+        "trigger": "click on trigger",
+        "behavior": "Open — <code>data-state=\"open\"</code>, focus on the first focusable element."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "enter/exit animation",
+        "behavior": "Enter/exit animation — <code>data-open</code>/<code>data-closed</code> apply <code>animate-in</code>/<code>animate-out</code> classes."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "tab on inner element",
+        "behavior": "Internal element focused — visible focus ring with <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -1037,17 +1063,30 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "closed": "Closed",
-        "open": "Open",
-        "transitioning": "Transitioning",
-        "focused": "Focused"
+      "closed": {
+        "label": "Closed",
+        "trigger": "estado inicial",
+        "behavior": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado."
       },
-      "descriptions": {
-        "closed": "Estado inicial — <code>data-state=\"closed\"</code>, contenido desmontado.",
-        "open": "Abierto — <code>data-state=\"open\"</code>, foco en el primer elemento focalizable.",
-        "transitioning": "Animación de entrada/salida — <code>data-open</code>/<code>data-closed</code> aplican <code>animate-in</code>/<code>animate-out</code>.",
-        "focused": "Elemento interno enfocado — anillo de foco visible con <code>ring-2 ring-ring</code>."
+      "open": {
+        "label": "Open",
+        "trigger": "clic en el trigger",
+        "behavior": "Abierto — <code>data-state=\"open\"</code>, foco en el primer elemento focalizable."
+      },
+      "transitioning": {
+        "label": "Transitioning",
+        "trigger": "animación de entrada/salida",
+        "behavior": "Animación de entrada/salida — <code>data-open</code>/<code>data-closed</code> aplican <code>animate-in</code>/<code>animate-out</code>."
+      },
+      "focused": {
+        "label": "Focused",
+        "trigger": "tab en elemento interno",
+        "behavior": "Elemento interno enfocado — anillo de foco visible con <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

@@ -160,24 +160,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "active": "Active",
-        "disabled": "Disabled",
-        "focus": "Focus"
-      },
-      "descriptions": {
-        "default": "Estado padrão — sem fundo, texto em <code>foreground</code>.",
-        "hover": "Fundo <code>accent</code> e texto <code>accent-foreground</code>.",
-        "active": "Página atual — borda visível e <code>aria-current=\"page\"</code>.",
-        "disabled": "Previous na primeira página ou Next na última — <code>opacity-50</code> e <code>pointer-events-none</code>.",
-        "focus": "Anel de foco visível com <code>ring-2 ring-ring</code>."
-      },
       "lastPage": {
         "label": "Última página (Next desabilitado)",
         "trigger": "Página atual é a última",
         "behavior": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> + opacidade reduzida + <code>pointer-events: none</code>. Mesmo padrão para Prev quando <code>current === 1</code>."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "estado inicial",
+        "behavior": "Estado padrão — sem fundo, texto em <code>foreground</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter",
+        "behavior": "Fundo <code>accent</code> e texto <code>accent-foreground</code>."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Quando o número corresponde à página exibida",
+        "behavior": "Página atual — borda visível e <code>aria-current=\"page\"</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "current=1 (Prev) / current=total (Next)",
+        "behavior": "Previous na primeira página ou Next na última — <code>opacity-50</code> e <code>pointer-events-none</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Anel de foco visível com <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -565,24 +581,40 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "active": "Active",
-        "disabled": "Disabled",
-        "focus": "Focus"
-      },
-      "descriptions": {
-        "default": "Default state — no background, text in <code>foreground</code>.",
-        "hover": "<code>accent</code> background and <code>accent-foreground</code> text.",
-        "active": "Current page — visible border and <code>aria-current=\"page\"</code>.",
-        "disabled": "Previous on the first page or Next on the last — <code>opacity-50</code> and <code>pointer-events-none</code>.",
-        "focus": "Visible focus ring with <code>ring-2 ring-ring</code>."
-      },
       "lastPage": {
         "label": "Last page (Next disabled)",
         "trigger": "Current page is the last",
         "behavior": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> + reduced opacity + <code>pointer-events: none</code>. Same pattern for Prev when <code>current === 1</code>."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "initial state",
+        "behavior": "Default state — no background, text in <code>foreground</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter",
+        "behavior": "<code>accent</code> background and <code>accent-foreground</code> text."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "When the number matches the displayed page",
+        "behavior": "Current page — visible border and <code>aria-current=\"page\"</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "current=1 (Prev) / current=total (Next)",
+        "behavior": "Previous on the first page or Next on the last — <code>opacity-50</code> and <code>pointer-events-none</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Visible focus ring with <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -970,24 +1002,40 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "default": "Default",
-        "hover": "Hover",
-        "active": "Active",
-        "disabled": "Disabled",
-        "focus": "Focus"
-      },
-      "descriptions": {
-        "default": "Estado por defecto — sin fondo, texto en <code>foreground</code>.",
-        "hover": "Fondo <code>accent</code> y texto <code>accent-foreground</code>.",
-        "active": "Página actual — borde visible y <code>aria-current=\"page\"</code>.",
-        "disabled": "Previous en la primera página o Next en la última — <code>opacity-50</code> y <code>pointer-events-none</code>.",
-        "focus": "Anillo de foco visible con <code>ring-2 ring-ring</code>."
-      },
       "lastPage": {
         "label": "Última página (Next deshabilitado)",
         "trigger": "La página actual es la última",
         "behavior": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> + opacidad reducida + <code>pointer-events: none</code>. Mismo patrón para Prev cuando <code>current === 1</code>."
+      },
+      "default": {
+        "label": "Default",
+        "trigger": "estado inicial",
+        "behavior": "Estado por defecto — sin fondo, texto en <code>foreground</code>."
+      },
+      "hover": {
+        "label": "Hover",
+        "trigger": "mouseenter",
+        "behavior": "Fondo <code>accent</code> y texto <code>accent-foreground</code>."
+      },
+      "active": {
+        "label": "Active",
+        "trigger": "Cuando el número corresponde a la página mostrada",
+        "behavior": "Página actual — borde visible y <code>aria-current=\"page\"</code>."
+      },
+      "disabled": {
+        "label": "Disabled",
+        "trigger": "current=1 (Prev) / current=total (Next)",
+        "behavior": "Previous en la primera página o Next en la última — <code>opacity-50</code> y <code>pointer-events-none</code>."
+      },
+      "focus": {
+        "label": "Focus",
+        "trigger": "Tab",
+        "behavior": "Anillo de foco visible con <code>ring-2 ring-ring</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {

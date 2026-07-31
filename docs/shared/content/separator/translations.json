@@ -145,13 +145,20 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "decorative": "Decorativo",
-        "semantic": "Semântico"
+      "decorative": {
+        "label": "Decorativo",
+        "trigger": "Quando o separador é puramente visual",
+        "behavior": "<code>decorative={true}</code> — padrão. Aplica <code>role=\"none\"</code> e <code>aria-hidden</code>; ignorado por leitores de tela."
       },
-      "descriptions": {
-        "decorative": "<code>decorative={true}</code> — padrão. Aplica <code>role=\"none\"</code> e <code>aria-hidden</code>; ignorado por leitores de tela.",
-        "semantic": "<code>decorative={false}</code> — anuncia separação ao leitor de tela com <code>role=\"separator\"</code> e <code>aria-orientation</code>."
+      "semantic": {
+        "label": "Semântico",
+        "trigger": "Quando o separador divide grupos com significado",
+        "behavior": "<code>decorative={false}</code> — anuncia separação ao leitor de tela com <code>role=\"separator\"</code> e <code>aria-orientation</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Quando ocorre",
+        "behavior": "Comportamento"
       }
     },
     "props": {
@@ -507,13 +514,20 @@
     },
     "states": {
       "title": "States",
-      "items": {
-        "decorative": "Decorative",
-        "semantic": "Semantic"
+      "decorative": {
+        "label": "Decorative",
+        "trigger": "When the separator is purely visual",
+        "behavior": "<code>decorative={true}</code> — default. Applies <code>role=\"none\"</code> and <code>aria-hidden</code>; ignored by screen readers."
       },
-      "descriptions": {
-        "decorative": "<code>decorative={true}</code> — default. Applies <code>role=\"none\"</code> and <code>aria-hidden</code>; ignored by screen readers.",
-        "semantic": "<code>decorative={false}</code> — announces separation to screen readers with <code>role=\"separator\"</code> and <code>aria-orientation</code>."
+      "semantic": {
+        "label": "Semantic",
+        "trigger": "When the separator divides meaningful groups",
+        "behavior": "<code>decorative={false}</code> — announces separation to screen readers with <code>role=\"separator\"</code> and <code>aria-orientation</code>."
+      },
+      "cols": {
+        "state": "State",
+        "trigger": "When it happens",
+        "behavior": "Behavior"
       }
     },
     "props": {
@@ -869,13 +883,20 @@
     },
     "states": {
       "title": "Estados",
-      "items": {
-        "decorative": "Decorativo",
-        "semantic": "Semántico"
+      "decorative": {
+        "label": "Decorativo",
+        "trigger": "Cuando el separador es puramente visual",
+        "behavior": "<code>decorative={true}</code> — predeterminado. Aplica <code>role=\"none\"</code> y <code>aria-hidden</code>; ignorado por lectores de pantalla."
       },
-      "descriptions": {
-        "decorative": "<code>decorative={true}</code> — predeterminado. Aplica <code>role=\"none\"</code> y <code>aria-hidden</code>; ignorado por lectores de pantalla.",
-        "semantic": "<code>decorative={false}</code> — anuncia separación al lector de pantalla con <code>role=\"separator\"</code> y <code>aria-orientation</code>."
+      "semantic": {
+        "label": "Semántico",
+        "trigger": "Cuando el separador divide grupos con significado",
+        "behavior": "<code>decorative={false}</code> — anuncia separación al lector de pantalla con <code>role=\"separator\"</code> y <code>aria-orientation</code>."
+      },
+      "cols": {
+        "state": "Estado",
+        "trigger": "Cuándo ocurre",
+        "behavior": "Comportamiento"
       }
     },
     "props": {
