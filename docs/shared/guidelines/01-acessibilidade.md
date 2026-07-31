@@ -147,18 +147,18 @@ Daltonismo afeta aproximadamente 8% dos homens e 0.5% das mulheres. Os tipos mai
 
 ```tsx
 {/* ❌ ERRADO — só a cor diferencia sucesso de erro */}
-<Badge className="bg-success">Aprovado</Badge>
-<Badge className="bg-destructive">Reprovado</Badge>
+<Alert variant="success"><AlertDescription>Aprovado</AlertDescription></Alert>
+<Alert variant="destructive"><AlertDescription>Reprovado</AlertDescription></Alert>
 
 {/* ✅ CORRETO — ícone + cor + texto */}
-<Badge className="bg-success/10 text-success border border-success/30">
-  <CheckCircle2 className="h-3 w-3 mr-1" aria-hidden="true" />
-  Aprovado
-</Badge>
-<Badge className="bg-destructive/10 text-destructive border border-destructive/30">
-  <XCircle className="h-3 w-3 mr-1" aria-hidden="true" />
-  Reprovado
-</Badge>
+<Alert variant="success">
+  <CheckCircle2 className="nds-icon" aria-hidden="true" />
+  <AlertTitle>Aprovado</AlertTitle>
+</Alert>
+<Alert variant="destructive">
+  <XCircle className="nds-icon" aria-hidden="true" />
+  <AlertTitle>Reprovado</AlertTitle>
+</Alert>
 
 {/* ❌ ERRADO — campo com erro apenas com borda vermelha */}
 <Input className="border-destructive" />

@@ -90,3 +90,13 @@ por restauração seletiva que NÃO é do lote de lint: tooltip e toggle-group
 falham identicamente antes e depois (8/8). É o equivalente svelte dos 61
 failures do React já registrados — backlog de correção de primitivos/stories,
 não de lint.
+
+## Skills órfãs pré-históricas — decisão de remoção pendente
+
+ tem 4 arquivos
+(skill-document-component, skill-implement-component, skill-create-showcase,
+skill-implement-docs-page) que NADA referencia — são o sistema de skills
+anterior ao , e ensinam a API de duas gerações atrás
+('variantes customizadas sempre via className'). Foi deles + RULES.md que as
+stories erradas de Success/Warning se regeneravam. Apagar é decisão da dona do
+repo; enquanto existirem, são reservatório de padrão morto.

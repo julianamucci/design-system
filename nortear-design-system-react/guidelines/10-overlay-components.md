@@ -69,7 +69,7 @@ AlertDialog
 
 **Regras**:
 - `AlertDialogTrigger asChild` obrigatório.
-- **Consistência visual trigger → action**: trigger `destructive` → `AlertDialogAction` com `className` `bg-destructive text-destructive-foreground hover:bg-destructive/90`. Aplicar via `className` diretamente no `AlertDialogAction` — ele tem estilo próprio que pode sobrescrever o Button filho.
+- **Consistência visual trigger → action**: trigger `destructive` → `AlertDialogAction` com `className="nds-bg-destructive"` (é o padrão do `AlertDialogDocs`). Aplicar diretamente no `AlertDialogAction` — ele tem estilo próprio que pode sobrescrever o Button filho.
 - `AlertDialogCancel` antes do `AlertDialogAction` no DOM — confirmação sempre à direita.
 - Não usar para confirmações reversíveis — reservar para ações de alto impacto.
 

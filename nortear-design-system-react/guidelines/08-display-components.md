@@ -15,17 +15,17 @@ Avatar
 └── AvatarFallback (fallback — exibido enquanto carrega ou quando falha)
 ```
 
-**Tamanhos** (via `className`, não existe prop `size`):
+**Tamanhos** (var interna `--avatar-size`, override escopado — guideline 04 §Tokens de Componente; não existe prop `size`):
 
-| Classe | Uso |
+| Override | Uso |
 |---|---|
-| `h-6 w-6` | Pequeno |
-| `h-8 w-8` | Médio-compacto |
-| `h-10 w-10` | Padrão (aplicado internamente) |
-| `h-12 w-12` | Grande |
+| `--avatar-size: var(--spacing-6)` (24px) | Compacto — listas densas |
+| padrão interno: `var(--spacing-8)` (32px) | Padrão |
+| `--avatar-size: var(--spacing-10)` (40px) | Destaque |
+| `--avatar-size: var(--spacing-12)` (48px) | Perfil / cabeçalho |
 
 **Regras**:
-- Tamanho padrão `h-10 w-10` — aplicado internamente; não existe prop `size`.
+- Tamanho padrão `var(--spacing-8)` (32px) — aplicado internamente; não existe prop `size`. Sobrescreva `--avatar-size` escopado ao contexto, nunca classe de altura.
 - `AvatarFallback` obrigatório — sem ele, falha de imagem resulta em elemento vazio.
 - `delayMs={600}` no `AvatarFallback` — previne flash do fallback durante carregamento normal de rede.
 - Formato circular padrão: `rounded-full` já aplicado internamente.
