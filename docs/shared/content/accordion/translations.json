@@ -389,7 +389,9 @@
         "enter": "Expande ou colapsa o item focado.",
         "space": "Expande ou colapsa o item focado.",
         "arrowDown": "Move o foco para o próximo trigger, com loop no final da lista.",
-        "arrowUp": "Move o foco para o trigger anterior, com loop no início da lista."
+        "arrowUp": "Move o foco para o trigger anterior, com loop no início da lista.",
+        "home": "Move o foco para o primeiro trigger da lista.",
+        "end": "Move o foco para o último trigger da lista."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> no trigger — aplicado automaticamente.",
@@ -960,7 +962,9 @@
         "enter": "Expands or collapses the focused item.",
         "space": "Expands or collapses the focused item.",
         "arrowDown": "Moves focus to the next trigger, looping at the end of the list.",
-        "arrowUp": "Moves focus to the previous trigger, looping at the start of the list."
+        "arrowUp": "Moves focus to the previous trigger, looping at the start of the list.",
+        "home": "Moves focus to the first trigger in the list.",
+        "end": "Moves focus to the last trigger in the list."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> on trigger — applied automatically.",
@@ -1531,7 +1535,9 @@
         "enter": "Expande o colapsa el ítem enfocado.",
         "space": "Expande o colapsa el ítem enfocado.",
         "arrowDown": "Mueve el foco al siguiente trigger, con bucle al final de la lista.",
-        "arrowUp": "Mueve el foco al trigger anterior, con bucle al inicio de la lista."
+        "arrowUp": "Mueve el foco al trigger anterior, con bucle al inicio de la lista.",
+        "home": "Mueve el foco al primer trigger de la lista.",
+        "end": "Mueve el foco al último trigger de la lista."
       },
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> en el trigger — aplicado automáticamente.",

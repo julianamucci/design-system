@@ -689,6 +689,8 @@ export function createAccordionDocs(): HTMLElement {
             { key: 'Space',     description: t('accessibility.keyboard.space')     },
             { key: '↓',         description: t('accessibility.keyboard.arrowDown') },
             { key: '↑',         description: t('accessibility.keyboard.arrowUp')   },
+            { key: 'Home',      description: t('accessibility.keyboard.home')      },
+            { key: 'End',       description: t('accessibility.keyboard.end')       },
           ],
         });
 

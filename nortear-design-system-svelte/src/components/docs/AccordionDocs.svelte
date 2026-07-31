@@ -832,6 +832,8 @@ type AccordionProps = {
           { key: 'Space',     description: $tStore('accessibility.keyboard.space')     },
           { key: '↓',         description: $tStore('accessibility.keyboard.arrowDown') },
           { key: '↑',         description: $tStore('accessibility.keyboard.arrowUp')   },
+          { key: 'Home',      description: $tStore('accessibility.keyboard.home')      },
+          { key: 'End',       description: $tStore('accessibility.keyboard.end')       },
         ]}
       />
 

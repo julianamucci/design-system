@@ -320,6 +320,8 @@ const keyboardItems = computed(() => [
   { key: 'Space',      description: tContent('accessibility.keyboard.space')     },
   { key: '↓',          description: tContent('accessibility.keyboard.arrowDown') },
   { key: '↑',          description: tContent('accessibility.keyboard.arrowUp')   },
+  { key: 'Home',       description: tContent('accessibility.keyboard.home')      },
+  { key: 'End',        description: tContent('accessibility.keyboard.end')       },
 ]);
 
 const accessibilityItems = computed(() => [
