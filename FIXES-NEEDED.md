@@ -104,11 +104,12 @@ reservatório mais antigo do padrão morto que regenerava as stories erradas.
   `as` configurável no AlertTitle nas 4 stacks (aprovado pela dona), docs pages
   passam `as="h3"`. Axe da página do Alert zerou, com verificação negativa
   (reintroduzir o h5 reproduz exatamente heading-order).
-- **ABERTO**: nenhuma story monta docs pages — crash de runtime de página é
-  invisível para o vitest (foi assim que 7 páginas quebraram com portões
-  verdes, e foi só por fumaça manual que o heading-order apareceu). As OUTRAS
-  47 docs pages nunca passaram por axe: o Alert zerou, o resto é incógnita.
-  Candidato: story de fumaça por componente ou visita de docs no test-runner.
+- ~~nenhuma story monta docs pages~~ — **RESOLVIDO (2026-07-31)**: suíte de
+  fumaça `docs-smoke.stories.*` nas 4 stacks (commits 49d8fd7b react, f0f9c1a4
+  vue, 3a65c0d5 vanilla, 34080de9 svelte). Toda docs page agora monta no
+  runner; crash de página é teste vermelho. Página limpa tem axe como PORTÃO;
+  a dívida axe restante está catalogada em modo `todo` nas seções por stack
+  abaixo e na consolidação.
 
 ## Fumaça das docs pages — react (2026-07-31)
 
@@ -157,3 +158,134 @@ Infra: `testTimeout: 60000` no projeto storybook do vite.config.ts — docs
 pages inteiras sob axe estouravam os 15s default com os 4 runners em paralelo
 (e um timeout no meio da suíte vazava landmarks pra story seguinte: o
 `landmark-no-duplicate-banner` fantasma do input-otp era isso).
+
+## Fumaça das docs pages — vue (2026-07-31, commit f0f9c1a4)
+
+63 páginas · 39 limpas (axe = portão) · 24 em todo · 0 crash.
+`testTimeout: 120s` (IconsDocs leva ~75s legítimos sob axe).
+
+| Página | Rules |
+| --- | --- |
+| avatar | aria-prohibited-attr |
+| breadcrumb | landmark-unique |
+| button | scrollable-region-focusable |
+| calendar | landmark-unique |
+| carousel | landmark-unique |
+| checkbox | empty-heading, target-size |
+| command | aria-required-children, button-name, empty-heading |
+| icons | color-contrast |
+| input | label |
+| label | empty-heading |
+| navigation-menu | aria-hidden-focus, landmark-unique |
+| pagination | landmark-unique |
+| radio-group | empty-heading |
+| select | empty-heading |
+| sidebar | empty-heading, landmark-no-duplicate-main, landmark-unique |
+| skeleton | aria-prohibited-attr |
+| slider | empty-heading |
+| sonner | landmark-unique |
+| switch | button-name, empty-heading |
+| textarea | empty-heading |
+| theme-system | heading-order |
+| toggle | empty-heading |
+| toggle-group | button-name, empty-heading |
+| tooltip | button-name |
+
+Top 3: empty-heading (11 páginas — h3 vazio recorrente nas seções, padrão
+sistêmico só do Vue), landmark-unique (7), button-name (4).
+
+## Fumaça das docs pages — vanilla (2026-07-31, commit 3a65c0d5)
+
+64 páginas · 44 limpas (axe = portão) · 20 em todo · 0 crash.
+`testTimeout: 45s` (IconsDocs ~20s sob axe). Nenhum vazamento de
+observers/subscriptions entre os 64 testes em sequência.
+
+| Página | Rules |
+| --- | --- |
+| accordion, breadcrumb, carousel, navigation-menu, pagination | landmark-unique |
+| calendar, icons | color-contrast |
+| context-menu | aria-required-parent, color-contrast |
+| select | color-contrast, select-name |
+| sidebar | color-contrast, listitem |
+| dropdown-menu, menubar | aria-required-parent |
+| input, slider, textarea | label |
+| switch, toggle-group | button-name |
+| avatar, chart | aria-prohibited-attr |
+| checkbox | aria-toggle-field-name |
+
+Top 3: landmark-unique (5), color-contrast (5), aria-required-parent e label
+(3 cada).
+
+## Fumaça das docs pages — svelte (2026-07-31, commit 34080de9)
+
+63 páginas · 43 limpas (axe = portão) · 19 em todo · 1 fora (Icons, excluída
+por decisão da dona — o catálogo lucide completo falha por timeout mesmo com
+360s; comentário `// FORA:` no arquivo). `testTimeout: 120s`. Alert saiu limpo
+nas 3 execuções (sanidade do harness).
+
+Crash real encontrado e CORRIGIDO: **InputOTPDocs nunca montava nesta stack**
+— usava a API React do input-otp (`<InputOTPSlot index={N}/>`) enquanto o slot
+Svelte (bits-ui PinInput) exige `cell` → `TypeError: reading 'isActive'`. Os 8
+sites renderizados foram corrigidos para `{#snippet children({ cells })}`.
+**Dívida remanescente**: as code strings didáticas da página (codeSixDigits
+etc.) ainda ensinam a API `index={}`/`maxLength` que não existe nesta stack —
+mesmo padrão de "docs ensinando API velha" já visto no alert; corrigir na
+revisão do input-otp.
+
+| Página | Rules |
+| --- | --- |
+| avatar | aria-prohibited-attr |
+| breadcrumb | landmark-unique |
+| calendar | landmark-unique |
+| carousel | landmark-unique |
+| checkbox | button-name, empty-heading, target-size |
+| command | aria-required-attr, aria-required-children, button-name, nested-interactive, target-size |
+| dialog | scrollable-region-focusable |
+| label | label |
+| navigation-menu | landmark-unique |
+| pagination | landmark-unique |
+| popover | label |
+| radio-group | button-name |
+| select | color-contrast |
+| sidebar | landmark-unique |
+| skeleton | aria-prohibited-attr |
+| sonner | landmark-unique |
+| switch | button-name, heading-order |
+| toggle-group | aria-allowed-attr |
+| tooltip | button-name |
+
+Top 3: landmark-unique (7), button-name (5), aria-prohibited-attr e
+target-size (2 cada).
+
+Bônus do portão: svelte-check caiu de 735/748 para **689** erros (novo
+baseline).
+
+## Fumaça das docs pages — CONSOLIDAÇÃO 4 STACKS (2026-07-31)
+
+253 páginas no runner · 167 limpas com axe como portão · 84 em todo ·
+2 crashes reais de produção encontrados e corrigidos (DropdownMenuDocs react,
+InputOTPDocs svelte) · 1 página excluída (Icons svelte).
+
+**Rules sistêmicas — um fix nos containers compartilhados limpa dezenas de
+páginas:**
+
+1. **landmark-unique** — 27 páginas nas 4 stacks (accordion, breadcrumb,
+   calendar, carousel, navigation-menu, pagination, sidebar, sonner…). O demo
+   renderiza `<nav>`/`<aside>`/`<header>` repetidos sem `aria-label`
+   distintivo. Provável fix único no padrão de demo/preview.
+2. **empty-heading** — 11 páginas, SÓ no Vue: alguma seção do Vue renderiza
+   `<h3>` vazio quando a chave não existe. Fix em um container Vue.
+3. **color-contrast / button-name / label / aria-prohibited-attr** — padrões
+   por componente (avatar e skeleton falham aria-prohibited-attr nas 4 stacks;
+   select falha select-name/color-contrast em 3) — fix no primitivo vale para
+   as 4 stacks de uma vez.
+
+**Assimetria da página Icons (a decidir na revisão):** react = `a11y.disable`
+justificado na story · vue = roda com timeout 120s (75s reais) · vanilla =
+roda com 45s · svelte = excluída da fumaça. Padronizar quando o grid for
+virtualizado/paginado — isso destrava axe nas 4.
+
+**Melhoria cross-stack sugerida pelos 4 agents:** as 16 páginas Foundations
+renderizam `<section>` sem `id` nas 4 stacks — a play da fumaça precisou de
+seletor relaxado. Dar `id` às sections de Foundations ganha âncora de
+deep-link de graça e devolve a play estrita `section[id]`.
