@@ -133,6 +133,14 @@ import Info from '@lucide/svelte/icons/info';`;
   </AlertDescription>
 </Alert>`;
 
+  const codeInfo = `<Alert variant="info">
+  <Info aria-hidden="true" />
+  <AlertTitle>Dica</AlertTitle>
+  <AlertDescription>
+    Você pode fixar seus filtros favoritos para acessá-los mais rápido.
+  </AlertDescription>
+</Alert>`;
+
   const codeDismissible = `<Alert dismissible onDismiss={() => console.log("fechado")}>
   <Info aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
@@ -337,6 +345,7 @@ interface AlertProps {
           { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,  preview: variantDestructive  },
           { name: 'success',     description: stripHtml($tStore('variants.items.success')),      code: codeSuccess,      preview: variantSuccess      },
           { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),      code: codeWarning,      preview: variantWarning      },
+          { name: 'info',        description: stripHtml($tStore('variants.items.info')),         code: codeInfo,         preview: variantInfo         },
           { name: $tStore('variants.items.dismissible.name'), description: $tStore('variants.items.dismissible.description'), useWhen: $tStore('variants.items.dismissible.use'), trackId: 'dismissible', code: codeDismissible, preview: variantDismissible },
           { name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
         ]}
@@ -368,6 +377,13 @@ interface AlertProps {
           <TriangleAlert aria-hidden="true" />
           <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
+        </Alert>
+      {/snippet}
+      {#snippet variantInfo()}
+        <Alert variant="info" class="nds-w-full">
+          <Info aria-hidden="true" />
+          <AlertTitle>Dica</AlertTitle>
+          <AlertDescription>Você pode fixar seus filtros favoritos para acessá-los mais rápido.</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDismissible()}

@@ -4,7 +4,6 @@ import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertAcaoStory from './AlertAcaoStory.svelte';
-import AlertTiposStory from './AlertTiposStory.svelte';
 
 const meta = {
   parameters: {
@@ -53,20 +52,6 @@ export const ComAcao: Story = {
       const action = canvasElement.querySelector('[data-slot="alert-action"]');
       await expect(action).toHaveClass('nds-alert-action');
     });
-  },
-};
-
-export const MultiplosTipos: Story = {
-  render: () => ({ Component: AlertTiposStory }),
-
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByRole('alert');
-    const alerts = canvas.getAllByRole('alert');
-    await expect(alerts).toHaveLength(4);
-    await expect(alerts[1]).toHaveClass('nds-alert-destructive');
-    await expect(alerts[2]).toHaveClass('nds-alert-success');
-    await expect(alerts[3]).toHaveClass('nds-alert-warning');
   },
 };
 

@@ -60,12 +60,11 @@ export const Success: Story = {
   render: () => ({
     Component: AlertStory,
     props: {
-      variant: 'default',
+      variant: 'success',
       title: 'Perfil atualizado',
       description: 'Suas informações foram salvas com sucesso.',
       showIcon: true,
       icon: 'success',
-      class: 'nds-alert-success',
     },
   }),
 
@@ -73,6 +72,44 @@ export const Success: Story = {
     const alert = await within(canvasElement).findByRole('alert');
     await expect(alert).toHaveClass('nds-alert-success');
     await expect(within(canvasElement).getByText('Perfil atualizado')).toBeVisible();
+  },
+};
+
+export const Warning: Story = {
+  render: () => ({
+    Component: AlertStory,
+    props: {
+      variant: 'warning',
+      title: 'Assinatura expirando',
+      description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
+      showIcon: true,
+      icon: 'warning',
+    },
+  }),
+
+  play: async ({ canvasElement }) => {
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-warning');
+    await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
+  },
+};
+
+export const Info: Story = {
+  render: () => ({
+    Component: AlertStory,
+    props: {
+      variant: 'info',
+      title: 'Dica',
+      description: 'Você pode fixar seus filtros favoritos para acessá-los mais rápido.',
+      showIcon: true,
+      icon: 'info',
+    },
+  }),
+
+  play: async ({ canvasElement }) => {
+    const alert = await within(canvasElement).findByRole('alert');
+    await expect(alert).toHaveClass('nds-alert-info');
+    await expect(within(canvasElement).getByText('Dica')).toBeVisible();
   },
 };
 
@@ -140,25 +177,5 @@ export const DismissibleTeclado: Story = {
       await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
-  },
-};
-
-export const Warning: Story = {
-  render: () => ({
-    Component: AlertStory,
-    props: {
-      variant: 'default',
-      title: 'Assinatura expirando',
-      description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
-      showIcon: true,
-      icon: 'warning',
-      class: 'nds-alert-warning',
-    },
-  }),
-
-  play: async ({ canvasElement }) => {
-    const alert = await within(canvasElement).findByRole('alert');
-    await expect(alert).toHaveClass('nds-alert-warning');
-    await expect(within(canvasElement).getByText('Assinatura expirando')).toBeVisible();
   },
 };
