@@ -227,22 +227,6 @@ const codeWithImage = `<Card>
   <CardContent>R$ 1.299,00</CardContent>
 </Card>`;
 
-const codeCustomizationTokens = `/* globals.css — personalize o Card via tokens de tema */
-:root {
-  --radius-card: 0.75rem;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-}
-
-.dark {
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-}`;
-
 const interfaceCode = `// Card (root)
 interface CardProps {
   size?: 'default' | 'sm';
@@ -310,6 +294,9 @@ const tokenRows = computed(() => [
   { token: '--muted-foreground', value: 'nds-text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
   { token: '--foreground',      value: 'ring-foreground/10',      description: stripHtml(tContent('tokens.table.foreground'))  },
   { token: '--border',          value: 'border-t',                description: tContent('tokens.table.border')          },
+  { token: '--card-bg',         value: 'hsl(var(--card))',            description: tContent('tokens.table.cardBg')      },
+  { token: '--card-fg',         value: 'hsl(var(--card-foreground))', description: tContent('tokens.table.cardFg')      },
+  { token: '--card-ring',       value: 'hsl(var(--foreground) / 0.1)', description: tContent('tokens.table.cardRing')   },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -776,7 +763,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

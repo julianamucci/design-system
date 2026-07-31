@@ -172,17 +172,6 @@ const codeWithStatus = `<div style="position: relative; display: inline-block">
   />
 </div>`;
 
-const codeCustomizationTokens = `/* Em globals.css — personalizar tokens do fallback */
-:root {
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-}
-
-.dark {
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-}`;
-
 const interfaceCode = `// Avatar
 interface AvatarProps {
   class?: string;
@@ -256,6 +245,7 @@ const tokenRows = computed(() => [
   { token: '--background',       value: 'ring-background',        description: stripHtml(tContent('tokens.table.background')) },
   { token: '--border',           value: 'border',                 description: tContent('tokens.table.border')          },
   { token: '--primary',          value: 'bg-primary',             description: tContent('tokens.table.primary')         },
+  { token: '--avatar-size',      value: 'var(--spacing-8)',       description: tContent('tokens.table.avatarSize')      },
   { token: '--radius',           value: 'rounded-full',           description: stripHtml(tContent('tokens.table.radius')) },
   { token: '--ring',             value: 'ring',                   description: tContent('tokens.table.ring')            },
 ]);
@@ -715,7 +705,7 @@ const testesVisual = computed(() => ({
       :cols="tokensCols"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

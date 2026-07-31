@@ -131,19 +131,6 @@ const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
 const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
 const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
-const codeCustomizationTokens = `/* Em globals.css — personalizar tokens semânticos */
-:root {
-  --primary: 221 83% 53%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 96%;
-  --destructive: 0 84% 60%;
-}
-
-.dark {
-  --primary: 217 91% 60%;
-  --secondary: 217 33% 18%;
-}`;
-
 const interfaceCode = `// Badge
 interface BadgeProps {
   variant?: 'default' | 'secondary' | 'destructive' | 'outline';
@@ -221,6 +208,9 @@ const tokenRows = computed(() => [
   { token: '--foreground',            value: 'text-foreground',           description: tContent('tokens.table.foreground')          },
   { token: '--ring',                  value: 'focus:ring-ring',           description: tContent('tokens.table.ring')                },
   { token: '--background',            value: 'focus:ring-offset-background', description: tContent('tokens.table.background')      },
+  { token: '--badge-bg',              value: 'hsl(var(--primary))',           description: tContent('tokens.table.badgeBg')         },
+  { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: tContent('tokens.table.badgeFg')        },
+  { token: '--badge-border',          value: 'transparent',                   description: tContent('tokens.table.badgeBorder')     },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -536,7 +526,7 @@ const visualTestItems = computed(() => [
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

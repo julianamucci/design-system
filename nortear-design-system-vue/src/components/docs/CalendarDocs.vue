@@ -206,15 +206,6 @@ const codeDisabled = `<Calendar
   :is-date-disabled="(d) => d.compare(today(getLocalTimeZone())) < 0"
 />`;
 
-const codeCustomizationTokens = `/* Tokens usados pelo Calendar (globals.css) */
-:root {
-  --radius-md: 0.375rem;   /* cantos das células         */
-  --primary: ...;           /* fundo da data selecionada  */
-  --primary-foreground: ...;
-  --muted: ...;             /* hoje + meio do intervalo   */
-  --muted-foreground: ...;  /* weekdays + outside days    */
-}`;
-
 const interfaceCode = `// Calendar (raiz — props reka-ui CalendarRootProps + extras do projeto)
 interface CalendarProps {
   modelValue?: DateValue | DateValue[];   // v-model: single ou multiple
@@ -345,8 +336,8 @@ const tokenRows = computed(() => [
   { token: '--muted-foreground',   value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground') },
   { token: '--foreground',         value: 'text-foreground',                       description: tContent('tokens.table.foreground')      },
   { token: '--ring',               value: 'nds-focus-ring',            description: tContent('tokens.table.ring')            },
-  { token: '--radius-md',          value: '[--cell-radius:var(--radius-md)]',      description: stripHtml(tContent('tokens.table.cellRadius')) },
-  { token: '--cell-size',          value: '[--cell-size:--spacing(7)]',            description: stripHtml(tContent('tokens.table.cellSize'))   },
+  { token: '--nds-cell-size',      value: '2rem',                                  description: stripHtml(tContent('tokens.table.cellSize'))   },
+  { token: '--nds-cell-radius',    value: 'var(--radius-md)',                      description: stripHtml(tContent('tokens.table.cellRadius')) },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -648,7 +639,7 @@ const visualTestItems = computed(() => [
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
