@@ -1,4 +1,5 @@
 import { createCard } from '@/components/ui/card';
+import { createCodeBlock } from '@/components/ui/code-block';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsTokenItem { token: string; value: string; description: string }
@@ -8,9 +9,15 @@ export interface DocsTokensProps {
   items: DocsTokenItem[];
   customizationTitle?: string;
   customizationCode?: string;
+  /** Linguagem do snippet de customização, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
 export function createDocsTokens(props: DocsTokensProps): HTMLElement {
+  const { language = 'css', copyLabel, copiedLabel } = props;
+
   const section = document.createElement('section');
   section.id = 'tokens';
 
@@ -56,12 +63,13 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
     customH3.textContent = props.customizationTitle;
     customBlock.appendChild(customH3);
     if (props.customizationCode) {
-      const codeBlock = document.createElement('pre');
-      codeBlock.className = 'nds-code-block';
-      const codeEl = document.createElement('code');
-      codeEl.textContent = props.customizationCode;
-      codeBlock.appendChild(codeEl);
-      customBlock.appendChild(codeBlock);
+      customBlock.appendChild(createCodeBlock({
+        code: props.customizationCode,
+        language,
+        showLineNumbers: false,
+        copyLabel,
+        copiedLabel,
+      }));
     }
     container.appendChild(customBlock);
   }

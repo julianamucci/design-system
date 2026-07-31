@@ -1,6 +1,7 @@
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createButton } from '@/components/ui/button';
+import { createCodeBlock } from '@/components/ui/code-block';
 
 export interface DocsVariantItem {
   name: string;
@@ -31,9 +32,15 @@ export interface DocsVariantsProps {
    * `data-track-label="Copiar código"`. Se ausente, `data-track-id` é omitido.
    */
   componentSlug?: string;
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
 export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
+  const { language = 'ts', copyLabel, copiedLabel } = props;
+
   const section = document.createElement('section');
   section.id = props.id ?? 'variantes';
 
@@ -89,11 +96,14 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
       }
       toggle.setAttribute('data-track-label', 'Copiar código');
 
-      const codeBlock = document.createElement('pre');
-      codeBlock.className = 'nds-code-block nds-mt-2 nds-hidden';
-      const codeEl = document.createElement('code');
-      codeEl.textContent = item.code;
-      codeBlock.appendChild(codeEl);
+      const codeBlock = createCodeBlock({
+        code: item.code,
+        language,
+        showLineNumbers: false,
+        copyLabel,
+        copiedLabel,
+        class: 'nds-mt-2 nds-hidden',
+      });
 
       toggleWrap.append(toggle, codeBlock);
       card.appendChild(toggleWrap);

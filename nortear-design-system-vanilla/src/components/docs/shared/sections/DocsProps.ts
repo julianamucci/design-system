@@ -1,5 +1,6 @@
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
+import { createCodeBlock } from '@/components/ui/code-block';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsPropItem {
@@ -17,6 +18,10 @@ export interface DocsPropsProps {
   extensibilityTitle?: string;
   extensibilityNotes?: string;
   extensibilityCode?: string;
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
 function buildTable(def: DocsPropsTableDef): DocumentFragment {
@@ -61,6 +66,8 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
 }
 
 export function createDocsProps(props: DocsPropsProps): HTMLElement {
+  const { language = 'ts', copyLabel, copiedLabel } = props;
+
   const section = document.createElement('section');
   section.id = 'propriedades';
 
@@ -76,12 +83,13 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
   props.tables.forEach(def => container.appendChild(buildTable(def)));
 
   if (props.interfaceCode) {
-    const codeBlock = document.createElement('pre');
-    codeBlock.className = 'nds-code-block';
-    const codeEl = document.createElement('code');
-    codeEl.textContent = props.interfaceCode;
-    codeBlock.appendChild(codeEl);
-    container.appendChild(codeBlock);
+    container.appendChild(createCodeBlock({
+      code: props.interfaceCode,
+      language,
+      showLineNumbers: false,
+      copyLabel,
+      copiedLabel,
+    }));
   }
 
   if (props.extensibilityTitle) {
@@ -99,12 +107,13 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
       extBlock.appendChild(extNotes);
     }
     if (props.extensibilityCode) {
-      const extCode = document.createElement('pre');
-      extCode.className = 'nds-code-block';
-      const codeEl = document.createElement('code');
-      codeEl.textContent = props.extensibilityCode;
-      extCode.appendChild(codeEl);
-      extBlock.appendChild(extCode);
+      extBlock.appendChild(createCodeBlock({
+        code: props.extensibilityCode,
+        language,
+        showLineNumbers: false,
+        copyLabel,
+        copiedLabel,
+      }));
     }
     container.appendChild(extBlock);
   }
