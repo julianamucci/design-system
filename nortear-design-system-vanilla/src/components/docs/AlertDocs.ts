@@ -490,7 +490,7 @@ export interface AlertTitleOptions {
             { token: '--destructive', value: 'hsl(var(--destructive))',        description: t('tokens.table.destructiveText') },
             { token: '--success',     value: '.nds-alert-success',             description: t('tokens.table.success') },
             { token: '--warning',     value: '.nds-alert-warning',             description: t('tokens.table.warning') },
-            { token: '--alert-bg',     value: 'hsl(var(--card))',              description: t('tokens.table.alertBg') },
+            { token: '--alert-bg',     value: 'hsl(var(--muted))',              description: t('tokens.table.alertBg') },
             { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: t('tokens.table.alertFg') },
             { token: '--alert-border', value: 'hsl(var(--border))',            description: t('tokens.table.alertBorder') },
             { token: '--radius',      value: 'var(--radius-alert, 0.625rem)',  description: t('tokens.table.radius') },

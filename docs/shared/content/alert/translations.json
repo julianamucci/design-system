@@ -228,7 +228,7 @@
         "alertBorder": "Borda — var interna"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -623,7 +623,7 @@
         "alertBorder": "Border — internal var"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1018,7 +1018,7 @@
         "alertBorder": "Borde — var interna"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--muted));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",

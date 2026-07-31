@@ -241,7 +241,7 @@ const tokenRows = computed(() => [
   { token: '--destructive', value: 'text-destructive',                             description: tContent('tokens.table.destructiveText')   },
   { token: '--success',     value: 'bg-success/10 text-success border-success/30', description: tContent('tokens.table.success')           },
   { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30', description: tContent('tokens.table.warning')           },
-  { token: '--alert-bg',     value: 'hsl(var(--card))',                            description: tContent('tokens.table.alertBg')           },
+  { token: '--alert-bg',     value: 'hsl(var(--muted))',                            description: tContent('tokens.table.alertBg')           },
   { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',                 description: tContent('tokens.table.alertFg')           },
   { token: '--alert-border', value: 'hsl(var(--border))',                          description: tContent('tokens.table.alertBorder')       },
   { token: '--radius',      value: 'rounded-lg',                                   description: tContent('tokens.table.radius')            },

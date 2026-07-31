@@ -10,15 +10,15 @@
  *   </div>
  *
  * Variantes:
- *   .nds-alert                  → default (bg-card, fg-card-foreground)
+ *   .nds-alert                  → default (bg-muted, fg-card-foreground)
  *   .nds-alert.nds-alert-destructive → vermelho (texto destructive)
  *
- * Tokens: --card, --card-foreground, --destructive, --muted-foreground,
+ * Tokens: --muted, --card-foreground, --destructive, --muted-foreground,
  *         --border, --radius-alert, --spacing-*
  */
 
 .nds-alert {
-  --alert-bg: hsl(var(--card));
+  --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
 

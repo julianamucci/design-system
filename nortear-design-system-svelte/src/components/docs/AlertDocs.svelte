@@ -502,7 +502,7 @@ interface AlertProps {
           { token: '--destructive', value: 'text-destructive',                             description: $tStore('tokens.table.destructiveText')   },
           { token: '--success',     value: 'bg-success/10 text-success border-success/30', description: $tStore('tokens.table.success')           },
           { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30', description: $tStore('tokens.table.warning')           },
-          { token: '--alert-bg',     value: 'hsl(var(--card))',                            description: $tStore('tokens.table.alertBg')           },
+          { token: '--alert-bg',     value: 'hsl(var(--muted))',                            description: $tStore('tokens.table.alertBg')           },
           { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',                 description: $tStore('tokens.table.alertFg')           },
           { token: '--alert-border', value: 'hsl(var(--border))',                          description: $tStore('tokens.table.alertBorder')       },
           { token: '--radius',      value: 'rounded-lg',                                   description: $tStore('tokens.table.radius')            },
