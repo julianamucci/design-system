@@ -13,7 +13,7 @@
  *   .nds-alert                  → default (bg-muted, fg-card-foreground)
  *   .nds-alert.nds-alert-destructive → vermelho (texto destructive)
  *
- * Tokens: --muted, --card-foreground, --destructive, --muted-foreground,
+ * Tokens: --muted, --card-foreground, --foreground, --destructive,
  *         --border, --radius-alert, --spacing-*
  */
 
@@ -74,7 +74,9 @@
 }
 
 /* Descrição — section nativa (semântica de landmark preservada).
- * Display grid para empilhar parágrafos com gap consistente. */
+ * Display grid para empilhar parágrafos com gap consistente.
+ * Texto corrido sempre em foreground — a regra dos containers já valia para as
+ * variantes semânticas; o default alinhou quando o fundo virou --muted. */
 .nds-alert-description,
 .nds-alert > section {
   grid-column-start: 2;
@@ -82,7 +84,7 @@
   gap: var(--spacing-1);                        /* 4px entre <p> */
   justify-items: start;
   font-size: inherit;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground));
 }
 .nds-alert-description > p,
 .nds-alert > section > p {
@@ -166,15 +168,6 @@
   color: hsl(var(--foreground));
 }
 
-/* Descrição em qualquer variante semântica → sempre foreground.
-   Garante contraste WCAG AA (4.5:1) no texto longo, mesmo sobre bg colorido. */
-.nds-alert-destructive .nds-alert-description,
-.nds-alert-destructive > section,
-.nds-alert-success .nds-alert-description,
-.nds-alert-success > section,
-.nds-alert-warning .nds-alert-description,
-.nds-alert-warning > section,
-.nds-alert-info .nds-alert-description,
-.nds-alert-info > section {
-  color: hsl(var(--foreground));
-}
+/* A regra "descrição sempre foreground" vale para TODAS as variantes e vive na
+   regra base da descrição — o bloco por-variante que existia aqui forçava o
+   mesmo valor e saiu como redundância. */
