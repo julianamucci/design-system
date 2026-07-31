@@ -141,7 +141,12 @@
         "destructive": "Erros críticos ou ações irreversíveis. Texto e borda na cor <code>--destructive</code>.",
         "success": "Confirmações de ações bem-sucedidas. Aplica a variante <code>success</code> do tema, baseada no token <code>--success</code>.",
         "warning": "Avisos que requerem atenção, mas não bloqueiam. Aplica a variante <code>warning</code> do tema, baseada no token <code>--warning</code>.",
-        "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo."
+        "info": "Destaque neutro-informativo para dicas e contexto adicional que não bloqueiam o fluxo.",
+        "dismissible": {
+          "name": "Dispensável (dismissible)",
+          "description": "Botão de fechar no canto superior direito. Ao acionar, o alert sai da tela e o callback de fechamento dispara — é ele que alimenta o evento de analytics.",
+          "use": "Mensagens que o usuário já leu e não precisam persistir: confirmações, avisos informativos. Não use em erros que exigem correção."
+        }
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -183,6 +188,11 @@
         "label": "Inserção dinâmica",
         "trigger": "Renderizar após montagem via estado",
         "behavior": "Adicionar <code>aria-live=\"polite\"</code> no container pai para anunciar via leitor de tela"
+      },
+      "dismissed": {
+        "label": "Fechado",
+        "trigger": "Acionar o botão de fechar",
+        "behavior": "O alert sai da tela e o callback de fechamento dispara uma única vez."
       }
     },
     "props": {
@@ -199,7 +209,10 @@
         "description": "Descrição",
         "variant": "Variante semântica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> ou <code>info</code>.",
         "className": "Classes CSS adicionais para customizações pontuais de layout. Variantes visuais usam a prop de variante — não classes.",
-        "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription."
+        "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription.",
+        "dismissible": "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
+        "onDismiss": "Callback de fechamento — disparado quando o usuário aciona o botão de fechar.",
+        "dismissLabel": "Rótulo acessível do botão de fechar."
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Prefira as classes de variante do tema ou tokens CSS semânticos (<code>--success</code>, <code>--warning</code>) definidos no arquivo de tema do projeto — nunca cores hardcoded."
@@ -321,6 +334,11 @@
           "action": "Inserir Alert dinamicamente no DOM",
           "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Acionar o botão de fechar (clique ou Enter)",
+          "result": "Alert sai da tela e o callback de fechamento dispara uma única vez",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -364,6 +382,10 @@
         },
         "item4": {
           "story": "Configurações — com e sem ícone",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Variantes — Dismissible",
           "priority": "medium"
         }
       }
@@ -531,7 +553,12 @@
         "destructive": "Critical errors or irreversible actions. Text and border in <code>--destructive</code>.",
         "success": "Successful action confirmations. Applies the theme's <code>success</code> variant, based on the <code>--success</code> token.",
         "warning": "Warnings requiring attention but not blocking. Applies the theme's <code>warning</code> variant, based on the <code>--warning</code> token.",
-        "info": "Neutral informational emphasis for tips and extra context that do not block the flow."
+        "info": "Neutral informational emphasis for tips and extra context that do not block the flow.",
+        "dismissible": {
+          "name": "Dismissible",
+          "description": "Close button in the top-right corner. Activating it removes the alert and fires the dismiss callback — which feeds the analytics event.",
+          "use": "Messages the user has read and that need not persist: confirmations, informative notices. Do not use on errors that require correction."
+        }
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -573,6 +600,11 @@
         "label": "Dynamic insertion",
         "trigger": "Render after mount via state",
         "behavior": "Add <code>aria-live=\"polite\"</code> to the parent container to announce via screen reader"
+      },
+      "dismissed": {
+        "label": "Dismissed",
+        "trigger": "Activate the close button",
+        "behavior": "The alert leaves the screen and the dismiss callback fires exactly once."
       }
     },
     "props": {
@@ -589,7 +621,10 @@
         "description": "Description",
         "variant": "Semantic variant: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> or <code>info</code>.",
         "className": "Additional CSS classes for local layout tweaks. Visual variants use the variant prop — not classes.",
-        "children": "Alert content: icon, AlertTitle, and AlertDescription."
+        "children": "Alert content: icon, AlertTitle, and AlertDescription.",
+        "dismissible": "Shows the close button in the top-right corner. Closing removes the alert from the screen.",
+        "onDismiss": "Dismiss callback — fired when the user activates the close button.",
+        "dismissLabel": "Accessible label of the close button."
       },
       "extensibilityTitle": "Extensibility",
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Prefer theme variant classes or semantic CSS tokens (<code>--success</code>, <code>--warning</code>) defined in the project's theme file — never hardcoded colors."
@@ -711,6 +746,11 @@
           "action": "Insert Alert dynamically in DOM",
           "result": "Screen reader announces content (active role=\"alert\")",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Activate the close button (click or Enter)",
+          "result": "Alert leaves the screen and the dismiss callback fires exactly once",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -754,6 +794,10 @@
         },
         "item4": {
           "story": "Configurations — with and without icon",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Variantes — Dismissible",
           "priority": "medium"
         }
       }
@@ -921,7 +965,12 @@
         "destructive": "Errores críticos o acciones irreversibles. Texto y borde en color <code>--destructive</code>.",
         "success": "Confirmaciones de acciones exitosas. Aplica la variante <code>success</code> del tema, basada en el token <code>--success</code>.",
         "warning": "Advertencias que requieren atención pero no bloquean. Aplica la variante <code>warning</code> del tema, basada en el token <code>--warning</code>.",
-        "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo."
+        "info": "Énfasis neutro-informativo para consejos y contexto adicional que no bloquean el flujo.",
+        "dismissible": {
+          "name": "Descartable (dismissible)",
+          "description": "Botón de cierre en la esquina superior derecha. Al activarlo, el alert sale de la pantalla y se dispara el callback de cierre — que alimenta el evento de analytics.",
+          "use": "Mensajes que el usuario ya leyó y no necesitan persistir: confirmaciones, avisos informativos. No usar en errores que exigen corrección."
+        }
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -963,6 +1012,11 @@
         "label": "Inserción dinámica",
         "trigger": "Renderizar después del montaje vía estado",
         "behavior": "Agregar <code>aria-live=\"polite\"</code> al contenedor padre para anunciar vía lector de pantalla"
+      },
+      "dismissed": {
+        "label": "Cerrado",
+        "trigger": "Activar el botón de cierre",
+        "behavior": "El alert sale de la pantalla y el callback de cierre se dispara una única vez."
       }
     },
     "props": {
@@ -979,7 +1033,10 @@
         "description": "Descripción",
         "variant": "Variante semántica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> o <code>info</code>.",
         "className": "Clases CSS adicionales para personalizaciones puntuales de layout. Las variantes visuales usan la prop de variante — no clases.",
-        "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription."
+        "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription.",
+        "dismissible": "Muestra el botón de cierre en la esquina superior derecha. Cerrar quita el alert de la pantalla.",
+        "onDismiss": "Callback de cierre — disparado cuando el usuario activa el botón de cierre.",
+        "dismissLabel": "Etiqueta accesible del botón de cierre."
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Prefiere las clases de variante del tema o tokens CSS semánticos (<code>--success</code>, <code>--warning</code>) definidos en el archivo de tema del proyecto — nunca colores hardcoded."
@@ -1101,6 +1158,11 @@
           "action": "Insertar Alert dinámicamente en el DOM",
           "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)",
           "priority": "high"
+        },
+        "item7": {
+          "action": "Activar el botón de cierre (clic o Enter)",
+          "result": "El alert sale de la pantalla y el callback de cierre se dispara una única vez",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1144,6 +1206,10 @@
         },
         "item4": {
           "story": "Configuraciones — con y sin ícono",
+          "priority": "medium"
+        },
+        "item5": {
+          "story": "Variantes — Dismissible",
           "priority": "medium"
         }
       }

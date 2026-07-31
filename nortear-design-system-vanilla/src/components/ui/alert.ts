@@ -56,6 +56,15 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     dismissButton.dataset.slot = 'alert-dismiss';
     dismissButton.appendChild(createDismissIcon());
     el.appendChild(dismissButton);
+    // Ordem no DOM: o consumidor appenda ícone/título/descrição DEPOIS do
+    // createAlert, o que deixaria o X como primeiro filho — leitor de tela
+    // anunciaria "Fechar alerta" antes do conteúdo, divergindo das outras 3
+    // stacks (lá o X renderiza após os children). O microtask reposiciona o
+    // botão para o fim depois que os appends síncronos do consumidor rodarem.
+    // Visual não muda (position: absolute); só a ordem de leitura e de Tab.
+    queueMicrotask(() => {
+      if (el.lastElementChild !== dismissButton) el.appendChild(dismissButton);
+    });
   }
 
   return el;

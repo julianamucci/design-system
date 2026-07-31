@@ -156,6 +156,25 @@
   padding-inline-end: var(--spacing-18, 4.5rem);
 }
 
+/* ── Dismiss (X no canto superior direito) ────────────────────────────────── *
+ * Variante dismissible: o próprio Alert renderiza o botão de fechar (Button
+ * ghost icon-sm da stack). Mutuamente exclusivo com .nds-alert-action por
+ * design — quem precisa de ação usa a composição AlertAction. */
+.nds-alert-dismiss {
+  position: absolute;
+  top: var(--spacing-1);
+  right: var(--spacing-1);
+  color: hsl(var(--muted-foreground));
+}
+
+.nds-alert-dismiss:hover {
+  color: hsl(var(--foreground));
+}
+
+.nds-alert:has(.nds-alert-dismiss) {
+  padding-inline-end: var(--spacing-10);        /* 40px — botão icon-sm + respiro */
+}
+
 /* Links dentro de título/descrição */
 .nds-alert-title a,
 .nds-alert-description a {

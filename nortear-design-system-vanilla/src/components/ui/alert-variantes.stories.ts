@@ -88,60 +88,66 @@ export const Warning: Story = {
 const onDismissClick = fn();
 const onDismissKeyboard = fn();
 
+// Duas stories separadas, como nas outras 3 stacks (Dismissible +
+// DismissibleTeclado): mesma matriz de cobertura por nome de story nas 4, e o
+// Chromatic fotografa os mesmos casos.
 export const Dismissible: Story = {
   render: () => {
     onDismissClick.mockClear();
-    onDismissKeyboard.mockClear();
-
-    // Dois alerts dismissible: fechar remove o elemento do DOM, então o caso
-    // de clique e o de teclado precisam cada um do seu próprio mount.
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
-    wrap.dataset.spacing = 'sm';
-
-    const byClick = createAlert({ variant: 'default', dismissible: true, onDismiss: onDismissClick });
-    byClick.appendChild(createAlertIcon('info'));
-    byClick.appendChild(createAlertTitle({ text: 'Preferências salvas' }));
-    byClick.appendChild(createAlertDescription({ text: 'Você pode fechar este aviso quando quiser.' }));
-
-    const byKeyboard = createAlert({
-      variant: 'success',
-      dismissible: true,
-      dismissLabel: 'Fechar confirmação',
-      onDismiss: onDismissKeyboard,
-    });
-    byKeyboard.appendChild(createAlertIcon('success'));
-    byKeyboard.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
-    byKeyboard.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
-
-    wrap.append(byClick, byKeyboard);
-    return wrap;
+    const el = createAlert({ variant: 'default', dismissible: true, onDismiss: onDismissClick });
+    el.appendChild(createAlertIcon('info'));
+    el.appendChild(createAlertTitle({ text: 'Preferências salvas' }));
+    el.appendChild(createAlertDescription({ text: 'Você pode fechar este aviso quando quiser.' }));
+    return el;
   },
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     await step('X visível, acessível por rótulo e registrado na raiz', async () => {
-      const alerts = canvas.getAllByRole('alert');
-      await expect(alerts).toHaveLength(2);
-      await expect(alerts[0]).toHaveAttribute('data-dismissible', 'true');
+      await expect(canvas.getByRole('alert')).toHaveAttribute('data-dismissible', 'true');
       await expect(canvas.getByRole('button', { name: 'Fechar alerta' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Fechar confirmação' })).toBeVisible();
+    });
+
+    await step('X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes', async () => {
+      // O consumidor appenda o conteúdo depois do createAlert; sem o microtask
+      // de reposicionamento o botão ficaria como primeiro filho, divergindo
+      // da ordem de leitura das outras 3 stacks.
+      const alert = canvas.getByRole('alert');
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
     });
 
     await step('Clique no X remove o alert e dispara o callback uma vez', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
-      await expect(canvas.queryByText('Preferências salvas')).not.toBeInTheDocument();
+      await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
       await expect(onDismissClick).toHaveBeenCalledTimes(1);
-      await expect(onDismissKeyboard).not.toHaveBeenCalled();
     });
+  },
+};
+
+export const DismissibleTeclado: Story = {
+  render: () => {
+    onDismissKeyboard.mockClear();
+    const el = createAlert({
+      variant: 'success',
+      dismissible: true,
+      dismissLabel: 'Fechar confirmação',
+      onDismiss: onDismissKeyboard,
+    });
+    el.appendChild(createAlertIcon('success'));
+    el.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
+    el.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
+    return el;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step('Enter no X focado remove o alert e dispara o callback uma vez', async () => {
       canvas.getByRole('button', { name: 'Fechar confirmação' }).focus();
       await userEvent.keyboard('{Enter}');
       await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
       await expect(onDismissKeyboard).toHaveBeenCalledTimes(1);
-      await expect(onDismissClick).toHaveBeenCalledTimes(1);
     });
   },
 };
