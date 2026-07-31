@@ -287,39 +287,37 @@ interface ContextMenuRadioGroupProps {
 
   <!-- ── Demonstração ──────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
-        <ContextMenu.Root onOpenChange={(o: boolean) => { if (o) track('menu_open', { component: 'context_menu', menu: 'demo', location: 'docs_demo' }); }}>
-          <ContextMenu.Trigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
-            data-align="center"
-            data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
-          >
-            {$tStore('demonstration.labels.triggerLabel')}
-          </ContextMenu.Trigger>
-          <ContextMenu.Content>
-            <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'edit', menu: 'demo', location: 'docs_demo' })}>
-              {$tStore('demonstration.labels.edit')}
-              <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
-            </ContextMenu.Item>
-            <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'duplicate', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
-            <ContextMenu.Sub>
-              <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
-              <ContextMenu.SubContent>
-                <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-email', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
-                <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-link', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareLink')}</ContextMenu.Item>
-              </ContextMenu.SubContent>
-            </ContextMenu.Sub>
-            <ContextMenu.Separator />
-            <ContextMenu.Item variant="destructive" onSelect={() => track('menu_item_click', { label: 'delete', menu: 'demo', location: 'docs_demo' })}>
-              {$tStore('demonstration.labels.delete')}
-              <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
-            </ContextMenu.Item>
-          </ContextMenu.Content>
-        </ContextMenu.Root>
-      </div>
-    {/snippet}
+    <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
+      <ContextMenu.Root onOpenChange={(o: boolean) => { if (o) track('menu_open', { component: 'context_menu', menu: 'demo', location: 'docs_demo' }); }}>
+        <ContextMenu.Trigger
+          class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+          data-align="center"
+          data-justify="center"
+          style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+        >
+          {$tStore('demonstration.labels.triggerLabel')}
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'edit', menu: 'demo', location: 'docs_demo' })}>
+            {$tStore('demonstration.labels.edit')}
+            <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
+          </ContextMenu.Item>
+          <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'duplicate', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+          <ContextMenu.Sub>
+            <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
+            <ContextMenu.SubContent>
+              <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-email', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
+              <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-link', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareLink')}</ContextMenu.Item>
+            </ContextMenu.SubContent>
+          </ContextMenu.Sub>
+          <ContextMenu.Separator />
+          <ContextMenu.Item variant="destructive" onSelect={() => track('menu_item_click', { label: 'delete', menu: 'demo', location: 'docs_demo' })}>
+            {$tStore('demonstration.labels.delete')}
+            <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

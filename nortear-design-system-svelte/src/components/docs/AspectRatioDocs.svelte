@@ -162,34 +162,32 @@
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <div class="nds-grid nds-w-full" style="gap: var(--spacing-6)">
-            <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sixteenNine')}</p>
-              <AspectRatio ratio={16 / 9}>
-                <img src={IMG_LANDSCAPE} alt="Paisagem ao entardecer" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
-              </AspectRatio>
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.fourThree')}</p>
-              <AspectRatio ratio={4 / 3}>
-                <img src={IMG_PRODUCT} alt="Produto em destaque" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
-              </AspectRatio>
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.square')}</p>
-              <AspectRatio ratio={1}>
-                <img src={IMG_AVATAR} alt="Avatar de usuário" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
-              </AspectRatio>
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.threeFour')}</p>
-              <AspectRatio ratio={3 / 4}>
-                <img src={IMG_PORTRAIT} alt="Retrato vertical" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
-              </AspectRatio>
-            </div>
+        <div class="nds-grid nds-w-full" style="gap: var(--spacing-6)">
+          <div class="nds-stack" data-spacing="xs">
+            <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sixteenNine')}</p>
+            <AspectRatio ratio={16 / 9}>
+              <img src={IMG_LANDSCAPE} alt="Paisagem ao entardecer" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
+            </AspectRatio>
           </div>
-        {/snippet}
+          <div class="nds-stack" data-spacing="xs">
+            <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.fourThree')}</p>
+            <AspectRatio ratio={4 / 3}>
+              <img src={IMG_PRODUCT} alt="Produto em destaque" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
+            </AspectRatio>
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.square')}</p>
+            <AspectRatio ratio={1}>
+              <img src={IMG_AVATAR} alt="Avatar de usuário" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
+            </AspectRatio>
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.threeFour')}</p>
+            <AspectRatio ratio={3 / 4}>
+              <img src={IMG_PORTRAIT} alt="Retrato vertical" loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="object-fit: cover; height: 100%" />
+            </AspectRatio>
+          </div>
+        </div>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -266,29 +266,27 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-w-full">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'home', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.home')}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'components', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.components')}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'navigation', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.navigation')}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-    {/snippet}
+    <div class="nds-w-full">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'home', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.home')}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'components', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.components')}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'navigation', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.navigation')}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{$tStore('demonstration.labels.breadcrumb')}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

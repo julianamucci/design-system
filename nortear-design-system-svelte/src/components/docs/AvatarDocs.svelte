@@ -180,64 +180,62 @@ interface AvatarFallbackProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
+    <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
+      <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <Avatar>
+          <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
+          <AvatarFallback delayMs={600}>MR</AvatarFallback>
+        </Avatar>
+        <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
+      </div>
+      <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <Avatar>
+          <AvatarFallback>{$tStore('demonstration.labels.withFallbackInitials')}</AvatarFallback>
+        </Avatar>
+        <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withFallback')}</span>
+      </div>
+      <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <Avatar>
+          <AvatarFallback aria-label={$tStore('demonstration.labels.withIcon')}>
+            <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
+          </AvatarFallback>
+        </Avatar>
+        <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
+      </div>
+      <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div style="display: flex" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
+          <Avatar style="box-shadow: 0 0 0 2px var(--background)">
+            <AvatarImage src={IMG_MARIA} alt="" />
+            <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
+          </Avatar>
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+            <AvatarImage src={IMG_JOAO} alt="" />
+            <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
+          </Avatar>
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+            <AvatarImage src={IMG_ANA} alt="" />
+            <AvatarFallback class="nds-text-caption">AS</AvatarFallback>
+          </Avatar>
+          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+            <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
+          </Avatar>
+        </div>
+        <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.groupTitle')}</span>
+      </div>
+      <div class="nds-stack" data-spacing="xs" style="align-items: center">
+        <div style="position: relative; display: inline-block">
           <Avatar>
             <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
-            <AvatarFallback delayMs={600}>MR</AvatarFallback>
+            <AvatarFallback>MR</AvatarFallback>
           </Avatar>
-          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
+          <span
+            aria-label={$tStore('demonstration.labels.statusOnline')}
+            class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
+          ></span>
         </div>
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
-          <Avatar>
-            <AvatarFallback>{$tStore('demonstration.labels.withFallbackInitials')}</AvatarFallback>
-          </Avatar>
-          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withFallback')}</span>
-        </div>
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
-          <Avatar>
-            <AvatarFallback aria-label={$tStore('demonstration.labels.withIcon')}>
-              <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
-            </AvatarFallback>
-          </Avatar>
-          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
-        </div>
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
-          <div style="display: flex" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-              <AvatarImage src={IMG_MARIA} alt="" />
-              <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
-            </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-              <AvatarImage src={IMG_JOAO} alt="" />
-              <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
-            </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-              <AvatarImage src={IMG_ANA} alt="" />
-              <AvatarFallback class="nds-text-caption">AS</AvatarFallback>
-            </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-              <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
-            </Avatar>
-          </div>
-          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.groupTitle')}</span>
-        </div>
-        <div class="nds-stack" data-spacing="xs" style="align-items: center">
-          <div style="position: relative; display: inline-block">
-            <Avatar>
-              <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
-              <AvatarFallback>MR</AvatarFallback>
-            </Avatar>
-            <span
-              aria-label={$tStore('demonstration.labels.statusOnline')}
-              class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-            ></span>
-          </div>
-          <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>
-        </div>
+        <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>
       </div>
-    {/snippet}
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

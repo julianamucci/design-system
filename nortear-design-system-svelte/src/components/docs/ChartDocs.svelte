@@ -217,42 +217,40 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-stack nds-w-full" data-spacing="md" style="align-items: center">
-        <div class="nds-cluster" data-spacing="sm">
-          <button
-            type="button"
-            onclick={() => demoType = 'bar'}
-            class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
-            style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
-            class:nds-bg-primary={demoType === 'bar'}
-            class:nds-text-primary-foreground={demoType === 'bar'}
-            class:nds-bg-muted={demoType !== 'bar'}
-            class:nds-text-muted-foreground={demoType !== 'bar'}
-          >
-            {$tStore('demonstration.labels.bar')}
-          </button>
-          <button
-            type="button"
-            onclick={() => demoType = 'line'}
-            class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
-            style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
-            class:nds-bg-primary={demoType === 'line'}
-            class:nds-text-primary-foreground={demoType === 'line'}
-            class:nds-bg-muted={demoType !== 'line'}
-            class:nds-text-muted-foreground={demoType !== 'line'}
-          >
-            {$tStore('demonstration.labels.line')}
-          </button>
-        </div>
-        <ChartContainer
-          option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-          class="nds-w-full"
-          style="height: 220px; max-width: 400px"
-          aria-label={$tStore('demonstration.labels.chartTitle')}
-         />
+    <div class="nds-stack nds-w-full" data-spacing="md" style="align-items: center">
+      <div class="nds-cluster" data-spacing="sm">
+        <button
+          type="button"
+          onclick={() => demoType = 'bar'}
+          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
+          style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+          class:nds-bg-primary={demoType === 'bar'}
+          class:nds-text-primary-foreground={demoType === 'bar'}
+          class:nds-bg-muted={demoType !== 'bar'}
+          class:nds-text-muted-foreground={demoType !== 'bar'}
+        >
+          {$tStore('demonstration.labels.bar')}
+        </button>
+        <button
+          type="button"
+          onclick={() => demoType = 'line'}
+          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
+          style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+          class:nds-bg-primary={demoType === 'line'}
+          class:nds-text-primary-foreground={demoType === 'line'}
+          class:nds-bg-muted={demoType !== 'line'}
+          class:nds-text-muted-foreground={demoType !== 'line'}
+        >
+          {$tStore('demonstration.labels.line')}
+        </button>
       </div>
-    {/snippet}
+      <ChartContainer
+        option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
+        class="nds-w-full"
+        style="height: 220px; max-width: 400px"
+        aria-label={$tStore('demonstration.labels.chartTitle')}
+       />
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -54,7 +54,7 @@
     <p class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed">{@html DOMPurify.sanitize(note)}</p>
   {/if}
   <div class="nds-stack" data-spacing="md">
-    {#each items as item, i}
+    {#each items as item, i (i)}
       <Card class="nds-p-4">
         <div>
           <p class="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>

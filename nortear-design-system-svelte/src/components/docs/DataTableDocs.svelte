@@ -163,16 +163,14 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="data-table">
-    {#snippet children()}
-      <div class="nds-w-full">
-        <DataTable
-          columns={demoColumns}
-          data={demoData}
-          enableRowSelection
-          globalFilterPlaceholder={$tStore('demonstration.labels.search')}
-        />
-      </div>
-    {/snippet}
+    <div class="nds-w-full">
+      <DataTable
+        columns={demoColumns}
+        data={demoData}
+        enableRowSelection
+        globalFilterPlaceholder={$tStore('demonstration.labels.search')}
+      />
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

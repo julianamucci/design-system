@@ -18,7 +18,7 @@
   <h2 class="nds-section-title">{title}</h2>
   <Card class="nds-cluster nds-p-4 nds-mt-2">
       <div class="nds-stack nds-w-full" data-spacing="xl">
-        {#each pairs as pair}
+        {#each pairs as pair, i (i)}
           <div class="nds-grid" data-cols="2" data-spacing="lg">
             <!-- DO -->
             <div class="nds-stack" data-spacing="sm">

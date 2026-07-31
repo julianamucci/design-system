@@ -303,35 +303,33 @@ interface TableRowProps {
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <Table>
-            <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
-            <TableHeader>
+        <Table>
+          <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
+              <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
+              <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
+              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {#each invoiceIds as key, i (key)}
               <TableRow>
-                <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
-                <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-                <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
-                <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+                <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
+                <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
+                <TableCell>{$tStore(`demonstration.labels.${invoices[i].method}`)}</TableCell>
+                <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {#each invoiceIds as key, i (key)}
-                <TableRow>
-                  <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
-                  <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
-                  <TableCell>{$tStore(`demonstration.labels.${invoices[i].method}`)}</TableCell>
-                  <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
-                </TableRow>
-              {/each}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colspan={3}>{$tStore('demonstration.labels.total')}</TableCell>
-                <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
-        {/snippet}
+            {/each}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colspan={3}>{$tStore('demonstration.labels.total')}</TableCell>
+              <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

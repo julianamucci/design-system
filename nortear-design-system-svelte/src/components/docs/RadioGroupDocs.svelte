@@ -237,98 +237,96 @@ interface RadioGroupItemProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="radio-group">
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-        <!-- Demo 1: vertical -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.groupLabel')}</p>
-          <RadioGroup
-            bind:value={paymentValue}
-            onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'payment', value: v, location: 'docs_demo' })}
-            aria-label={$tStore('demonstration.labels.groupLabel')}
-            data-track="demo"
-            data-track-id="radio-group:demo:payment"
-            data-track-label={$tStore('demonstration.labels.groupLabel')}
-          >
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="cartao" id="demo-cartao" />
-              <Label for="demo-cartao">{$tStore('demonstration.labels.card')}</Label>
-            </div>
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="pix" id="demo-pix" />
-              <Label for="demo-pix">{$tStore('demonstration.labels.pix')}</Label>
-            </div>
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="boleto" id="demo-boleto" />
-              <Label for="demo-boleto">{$tStore('demonstration.labels.boleto')}</Label>
-            </div>
-          </RadioGroup>
-        </div>
-
-        <!-- Demo 2: horizontal -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
-          <RadioGroup
-            bind:value={deliveryValue}
-            onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery', value: v, location: 'docs_demo' })}
-            orientation="horizontal"
-            style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
-            aria-label={$tStore('demonstration.labels.deliveryLabel')}
-            data-track="demo"
-            data-track-id="radio-group:demo:delivery"
-            data-track-label={$tStore('demonstration.labels.deliveryLabel')}
-          >
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="standard" id="demo-standard" />
-              <Label for="demo-standard">{$tStore('demonstration.labels.standard')}</Label>
-            </div>
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="express" id="demo-express" />
-              <Label for="demo-express">{$tStore('demonstration.labels.express')}</Label>
-            </div>
-            <div class="nds-cluster" data-spacing="xs">
-              <RadioGroupItem value="pickup" id="demo-pickup" />
-              <Label for="demo-pickup">{$tStore('demonstration.labels.pickup')}</Label>
-            </div>
-          </RadioGroup>
-        </div>
-
-        <!-- Demo 3: with description -->
-        <div class="nds-stack" data-spacing="sm" style="grid-column: 1 / -1">
-          <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
-          <RadioGroup
-            bind:value={descValue}
-            onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery_desc', value: v, location: 'docs_demo' })}
-            aria-label={$tStore('demonstration.labels.deliveryLabel')}
-            data-track="demo"
-            data-track-id="radio-group:demo:delivery-desc"
-            data-track-label={$tStore('demonstration.labels.deliveryLabel')}
-          >
-            <div class="nds-cluster" data-spacing="xs" data-align="start">
-              <RadioGroupItem value="standard" id="demo-desc-standard" class="nds-mt-0-5" />
-              <div class="nds-stack" data-spacing="xs">
-                <Label for="demo-desc-standard">{$tStore('demonstration.labels.standard')}</Label>
-                <p class="nds-text-body">{descCopy.standard}</p>
-              </div>
-            </div>
-            <div class="nds-cluster" data-spacing="xs" data-align="start">
-              <RadioGroupItem value="express" id="demo-desc-express" class="nds-mt-0-5" />
-              <div class="nds-stack" data-spacing="xs">
-                <Label for="demo-desc-express">{$tStore('demonstration.labels.express')}</Label>
-                <p class="nds-text-body">{descCopy.express}</p>
-              </div>
-            </div>
-            <div class="nds-cluster" data-spacing="xs" data-align="start">
-              <RadioGroupItem value="pickup" id="demo-desc-pickup" class="nds-mt-0-5" />
-              <div class="nds-stack" data-spacing="xs">
-                <Label for="demo-desc-pickup">{$tStore('demonstration.labels.pickup')}</Label>
-                <p class="nds-text-body">{descCopy.pickup}</p>
-              </div>
-            </div>
-          </RadioGroup>
-        </div>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+      <!-- Demo 1: vertical -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.groupLabel')}</p>
+        <RadioGroup
+          bind:value={paymentValue}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'payment', value: v, location: 'docs_demo' })}
+          aria-label={$tStore('demonstration.labels.groupLabel')}
+          data-track="demo"
+          data-track-id="radio-group:demo:payment"
+          data-track-label={$tStore('demonstration.labels.groupLabel')}
+        >
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="cartao" id="demo-cartao" />
+            <Label for="demo-cartao">{$tStore('demonstration.labels.card')}</Label>
+          </div>
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="pix" id="demo-pix" />
+            <Label for="demo-pix">{$tStore('demonstration.labels.pix')}</Label>
+          </div>
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="boleto" id="demo-boleto" />
+            <Label for="demo-boleto">{$tStore('demonstration.labels.boleto')}</Label>
+          </div>
+        </RadioGroup>
       </div>
-    {/snippet}
+
+      <!-- Demo 2: horizontal -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
+        <RadioGroup
+          bind:value={deliveryValue}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery', value: v, location: 'docs_demo' })}
+          orientation="horizontal"
+          style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
+          aria-label={$tStore('demonstration.labels.deliveryLabel')}
+          data-track="demo"
+          data-track-id="radio-group:demo:delivery"
+          data-track-label={$tStore('demonstration.labels.deliveryLabel')}
+        >
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="standard" id="demo-standard" />
+            <Label for="demo-standard">{$tStore('demonstration.labels.standard')}</Label>
+          </div>
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="express" id="demo-express" />
+            <Label for="demo-express">{$tStore('demonstration.labels.express')}</Label>
+          </div>
+          <div class="nds-cluster" data-spacing="xs">
+            <RadioGroupItem value="pickup" id="demo-pickup" />
+            <Label for="demo-pickup">{$tStore('demonstration.labels.pickup')}</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      <!-- Demo 3: with description -->
+      <div class="nds-stack" data-spacing="sm" style="grid-column: 1 / -1">
+        <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
+        <RadioGroup
+          bind:value={descValue}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery_desc', value: v, location: 'docs_demo' })}
+          aria-label={$tStore('demonstration.labels.deliveryLabel')}
+          data-track="demo"
+          data-track-id="radio-group:demo:delivery-desc"
+          data-track-label={$tStore('demonstration.labels.deliveryLabel')}
+        >
+          <div class="nds-cluster" data-spacing="xs" data-align="start">
+            <RadioGroupItem value="standard" id="demo-desc-standard" class="nds-mt-0-5" />
+            <div class="nds-stack" data-spacing="xs">
+              <Label for="demo-desc-standard">{$tStore('demonstration.labels.standard')}</Label>
+              <p class="nds-text-body">{descCopy.standard}</p>
+            </div>
+          </div>
+          <div class="nds-cluster" data-spacing="xs" data-align="start">
+            <RadioGroupItem value="express" id="demo-desc-express" class="nds-mt-0-5" />
+            <div class="nds-stack" data-spacing="xs">
+              <Label for="demo-desc-express">{$tStore('demonstration.labels.express')}</Label>
+              <p class="nds-text-body">{descCopy.express}</p>
+            </div>
+          </div>
+          <div class="nds-cluster" data-spacing="xs" data-align="start">
+            <RadioGroupItem value="pickup" id="demo-desc-pickup" class="nds-mt-0-5" />
+            <div class="nds-stack" data-spacing="xs">
+              <Label for="demo-desc-pickup">{$tStore('demonstration.labels.pickup')}</Label>
+              <p class="nds-text-body">{descCopy.pickup}</p>
+            </div>
+          </div>
+        </RadioGroup>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

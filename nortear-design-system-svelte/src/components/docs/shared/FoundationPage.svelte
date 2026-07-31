@@ -41,16 +41,16 @@
 
   // Seções top-level do locale corrente (excluindo metadados).
   const sections = $derived.by(() => {
-    const raw = (translations as Record<string, any>)[$locale]
-      ?? (translations as Record<string, any>)['pt-BR']
-      ?? {};
+    const raw = (translations[$locale]
+      ?? translations['pt-BR']
+      ?? {}) as Record<string, unknown>;
     return Object.entries(raw).filter(([k]) => !META_KEYS.has(k));
   });
 
   $effect(() => {
     const t = $tStore;
-    const seoBlock = ((translations as Record<string, any>)[$locale]?.seo
-      ?? (translations as Record<string, any>)['pt-BR']?.seo
+    const seoBlock = ((translations[$locale] as Record<string, unknown> | undefined)?.seo
+      ?? (translations['pt-BR'] as Record<string, unknown> | undefined)?.seo
       ?? {}) as Record<string, string>;
     const cleanup = applySeo({
       title: seoBlock.title ?? t('title'),

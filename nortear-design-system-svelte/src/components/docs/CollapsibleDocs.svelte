@@ -192,81 +192,79 @@ interface CollapsibleContentProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-w-full nds-stack" data-spacing="xl">
-        <!-- Demo 1: Não-controlado (padrão) -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium">
-            Não-controlado
-          </p>
-          <Collapsible class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: 'header-label', value: o ? 'open' : 'closed', location: 'docs_demo' })}>
-            <CollapsibleTrigger
-              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
-            >
-              {$tStore('demonstration.labels.headerLabel')}
-              <ChevronDown
-                aria-hidden="true"
-                class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
-              />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
-                <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
-                <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-          <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.basicFilter')}</p>
-        </div>
-
-        <!-- Demo 2: Controlado -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium">
-            Controlado
-          </p>
-          <Collapsible bind:open={controlledOpen} class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: 'trigger-closed', value: o ? 'open' : 'closed', location: 'docs_demo' })}>
-            <CollapsibleTrigger
-              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
-            >
-              {controlledOpen
-                ? $tStore('demonstration.labels.triggerOpen')
-                : $tStore('demonstration.labels.triggerClosed')}
-              <ChevronDown
-                aria-hidden="true"
-                class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
-              />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
-                <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
-                <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-
-        <!-- Demo 3: Desabilitado -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-body nds-font-medium">
-            Desabilitado
-          </p>
-          <Collapsible disabled class="nds-w-full">
-            <CollapsibleTrigger
-              disabled
-              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium"
-              data-justify="between"
-              style="opacity: 0.5; cursor: not-allowed"
-            >
-              {$tStore('demonstration.labels.triggerClosed')}
-              <ChevronDown
-                aria-hidden="true"
-                class="nds-icon nds-shrink-0"
-              />
-            </CollapsibleTrigger>
-          </Collapsible>
-        </div>
+    <div class="nds-w-full nds-stack" data-spacing="xl">
+      <!-- Demo 1: Não-controlado (padrão) -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-medium">
+          Não-controlado
+        </p>
+        <Collapsible class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: 'header-label', value: o ? 'open' : 'closed', location: 'docs_demo' })}>
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
+          >
+            {$tStore('demonstration.labels.headerLabel')}
+            <ChevronDown
+              aria-hidden="true"
+              class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
+            />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+              <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
+              <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+        <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.basicFilter')}</p>
       </div>
-    {/snippet}
+
+      <!-- Demo 2: Controlado -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-medium">
+          Controlado
+        </p>
+        <Collapsible bind:open={controlledOpen} class="nds-w-full" onOpenChange={(o: boolean) => track('collapsible_toggle', { label: 'trigger-closed', value: o ? 'open' : 'closed', location: 'docs_demo' })}>
+          <CollapsibleTrigger
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"
+          >
+            {controlledOpen
+              ? $tStore('demonstration.labels.triggerOpen')
+              : $tStore('demonstration.labels.triggerClosed')}
+            <ChevronDown
+              aria-hidden="true"
+              class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
+            />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+              <p>{$tStore('demonstration.labels.advancedFilter1')}</p>
+              <p>{$tStore('demonstration.labels.advancedFilter2')}</p>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
+
+      <!-- Demo 3: Desabilitado -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-medium">
+          Desabilitado
+        </p>
+        <Collapsible disabled class="nds-w-full">
+          <CollapsibleTrigger
+            disabled
+            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium"
+            data-justify="between"
+            style="opacity: 0.5; cursor: not-allowed"
+          >
+            {$tStore('demonstration.labels.triggerClosed')}
+            <ChevronDown
+              aria-hidden="true"
+              class="nds-icon nds-shrink-0"
+            />
+          </CollapsibleTrigger>
+        </Collapsible>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────── -->
@@ -388,7 +386,7 @@ interface CollapsibleContentProps {
   {/snippet}
   {#snippet dontPair2()}
     <div class="nds-w-full nds-stack" data-spacing="sm">
-      {#each [1, 2] as i}
+      {#each [1, 2] as i (i)}
         <Collapsible class="nds-w-full">
           <CollapsibleTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent" data-justify="between"

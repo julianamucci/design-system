@@ -24,7 +24,7 @@
       <Card class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack" data-spacing="sm">
           <h3 class="nds-font-medium nds-text-body">{guidelines.title}</h3>
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
-            {#each guidelines.items as item}
+            {#each guidelines.items as item, i (i)}
               <li>{@html DOMPurify.sanitize(item)}</li>
             {/each}
           </ul>
@@ -41,7 +41,7 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            {#each scenarios.items as item}
+            {#each scenarios.items as item (item.s)}
               <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                 <TableCell class="nds-p-2">{item.s}</TableCell>
                 <TableCell class="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>
@@ -79,7 +79,7 @@
               </TableRow>
             </TableHeader>
             <TableBody>
-              {#each uxWriting.items as row}
+              {#each uxWriting.items as row (row.element)}
                 <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                   <TableCell class="nds-p-2 nds-font-medium">{row.element}</TableCell>
                   {#if uxWriting.cols.rules}
@@ -103,7 +103,7 @@
               {doBlock.title}
             </h3>
             <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
-              {#each doBlock.items as item}
+              {#each doBlock.items as item, i (i)}
                 <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}
             </ul>
@@ -114,7 +114,7 @@
               {dontBlock.title}
             </h3>
             <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed" data-spacing="sm">
-              {#each dontBlock.items as item}
+              {#each dontBlock.items as item, i (i)}
                 <li>{@html DOMPurify.sanitize(item)}</li>
               {/each}
             </ul>

@@ -404,65 +404,63 @@ render(items, total);`;
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="code-block">
-        {#snippet children()}
-          <div class="nds-w-full nds-stack" data-spacing="md">
-            <CodeBlock
-              class="nds-w-full"
-              title={$tStore('demonstration.labels.fileName')}
-              language="tsx"
-              code={demoTsx}
-              showLineNumbers
-              highlightLines="3, 5-7"
-              footer={$tStore('demonstration.labels.footer')}
-              {copyLabel}
-              {copiedLabel}
-              data-track="code"
-              data-track-id="code-block:demonstracao:exemplo-tsx"
-            />
-            <CodeBlock
-              class="nds-w-full"
-              title={$tStore('demonstration.labels.terminalTitle')}
-              language="bash"
-              code={demoBash}
-              showLineNumbers={false}
-              {copyLabel}
-              {copiedLabel}
-              data-track="code"
-              data-track-id="code-block:demonstracao:terminal"
-            />
-            <CodeBlock
-              class="nds-w-full"
-              title={$tStore('demonstration.labels.themeTitle')}
-              language="css"
-              code={demoCss}
-              {copyLabel}
-              {copiedLabel}
-              data-track="code"
-              data-track-id="code-block:demonstracao:tema-css"
-            />
-            <CodeBlock
-              class="nds-w-full"
-              title={$tStore('demonstration.labels.dataTitle')}
-              language="json"
-              code={demoJson}
-              {copyLabel}
-              {copiedLabel}
-              data-track="code"
-              data-track-id="code-block:demonstracao:package-json"
-            />
-            <CodeBlock
-              class="nds-w-full"
-              title={$tStore('demonstration.labels.plainTitle')}
-              language="txt"
-              code={demoTxt}
-              showLineNumbers={false}
-              {copyLabel}
-              {copiedLabel}
-              data-track="code"
-              data-track-id="code-block:demonstracao:notas-txt"
-            />
-          </div>
-        {/snippet}
+        <div class="nds-w-full nds-stack" data-spacing="md">
+          <CodeBlock
+            class="nds-w-full"
+            title={$tStore('demonstration.labels.fileName')}
+            language="tsx"
+            code={demoTsx}
+            showLineNumbers
+            highlightLines="3, 5-7"
+            footer={$tStore('demonstration.labels.footer')}
+            {copyLabel}
+            {copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:exemplo-tsx"
+          />
+          <CodeBlock
+            class="nds-w-full"
+            title={$tStore('demonstration.labels.terminalTitle')}
+            language="bash"
+            code={demoBash}
+            showLineNumbers={false}
+            {copyLabel}
+            {copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:terminal"
+          />
+          <CodeBlock
+            class="nds-w-full"
+            title={$tStore('demonstration.labels.themeTitle')}
+            language="css"
+            code={demoCss}
+            {copyLabel}
+            {copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:tema-css"
+          />
+          <CodeBlock
+            class="nds-w-full"
+            title={$tStore('demonstration.labels.dataTitle')}
+            language="json"
+            code={demoJson}
+            {copyLabel}
+            {copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:package-json"
+          />
+          <CodeBlock
+            class="nds-w-full"
+            title={$tStore('demonstration.labels.plainTitle')}
+            language="txt"
+            code={demoTxt}
+            showLineNumbers={false}
+            {copyLabel}
+            {copiedLabel}
+            data-track="code"
+            data-track-id="code-block:demonstracao:notas-txt"
+          />
+        </div>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -187,70 +187,68 @@ interface ToggleProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="toggle">
-    {#snippet children()}
-      <div class="nds-stack" data-spacing="lg" style="align-items: flex-start">
-        <!-- Formatting toolbar (icon-only) -->
-        <div class="nds-cluster" data-spacing="xs">
-          <Toggle
-            bind:pressed={demoBold}
-            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'bold', value: String(v), location: 'docs_demo' })}
-            aria-label={$tStore('demonstration.labels.bold')}
-            data-track="demo"
-            data-track-id="toggle:demo:bold"
-            data-track-label={$tStore('demonstration.labels.bold')}
-          >
-            <Bold aria-hidden="true" />
-          </Toggle>
-          <Toggle
-            bind:pressed={demoItalic}
-            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'italic', value: String(v), location: 'docs_demo' })}
-            aria-label={$tStore('demonstration.labels.italic')}
-            data-track="demo"
-            data-track-id="toggle:demo:italic"
-            data-track-label={$tStore('demonstration.labels.italic')}
-          >
-            <Italic aria-hidden="true" />
-          </Toggle>
-          <Toggle
-            bind:pressed={demoUnderline}
-            onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'underline', value: String(v), location: 'docs_demo' })}
-            aria-label={$tStore('demonstration.labels.underline')}
-            data-track="demo"
-            data-track-id="toggle:demo:underline"
-            data-track-label={$tStore('demonstration.labels.underline')}
-          >
-            <Underline aria-hidden="true" />
-          </Toggle>
-        </div>
-
-        <!-- Outline com label visível -->
+    <div class="nds-stack" data-spacing="lg" style="align-items: flex-start">
+      <!-- Formatting toolbar (icon-only) -->
+      <div class="nds-cluster" data-spacing="xs">
         <Toggle
-          bind:pressed={demoShowHidden}
-          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'showHidden', value: String(v), location: 'docs_demo' })}
-          variant="outline"
+          bind:pressed={demoBold}
+          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'bold', value: String(v), location: 'docs_demo' })}
+          aria-label={$tStore('demonstration.labels.bold')}
           data-track="demo"
-          data-track-id="toggle:demo:showHidden"
-          data-track-label={$tStore('demonstration.labels.showHidden')}
+          data-track-id="toggle:demo:bold"
+          data-track-label={$tStore('demonstration.labels.bold')}
         >
-          <Eye aria-hidden="true" />
-          <span>{$tStore('demonstration.labels.showHidden')}</span>
+          <Bold aria-hidden="true" />
         </Toggle>
-
-        <!-- Tamanho lg com label visível -->
         <Toggle
-          bind:pressed={demoCompact}
-          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'compactView', value: String(v), location: 'docs_demo' })}
-          variant="outline"
-          size="lg"
+          bind:pressed={demoItalic}
+          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'italic', value: String(v), location: 'docs_demo' })}
+          aria-label={$tStore('demonstration.labels.italic')}
           data-track="demo"
-          data-track-id="toggle:demo:compactView"
-          data-track-label={$tStore('demonstration.labels.compactView')}
+          data-track-id="toggle:demo:italic"
+          data-track-label={$tStore('demonstration.labels.italic')}
         >
-          <LayoutGrid aria-hidden="true" />
-          <span>{$tStore('demonstration.labels.compactView')}</span>
+          <Italic aria-hidden="true" />
+        </Toggle>
+        <Toggle
+          bind:pressed={demoUnderline}
+          onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'underline', value: String(v), location: 'docs_demo' })}
+          aria-label={$tStore('demonstration.labels.underline')}
+          data-track="demo"
+          data-track-id="toggle:demo:underline"
+          data-track-label={$tStore('demonstration.labels.underline')}
+        >
+          <Underline aria-hidden="true" />
         </Toggle>
       </div>
-    {/snippet}
+
+      <!-- Outline com label visível -->
+      <Toggle
+        bind:pressed={demoShowHidden}
+        onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'showHidden', value: String(v), location: 'docs_demo' })}
+        variant="outline"
+        data-track="demo"
+        data-track-id="toggle:demo:showHidden"
+        data-track-label={$tStore('demonstration.labels.showHidden')}
+      >
+        <Eye aria-hidden="true" />
+        <span>{$tStore('demonstration.labels.showHidden')}</span>
+      </Toggle>
+
+      <!-- Tamanho lg com label visível -->
+      <Toggle
+        bind:pressed={demoCompact}
+        onPressedChange={(v: boolean) => track('field_change', { component: 'toggle', field_name: 'compactView', value: String(v), location: 'docs_demo' })}
+        variant="outline"
+        size="lg"
+        data-track="demo"
+        data-track-id="toggle:demo:compactView"
+        data-track-label={$tStore('demonstration.labels.compactView')}
+      >
+        <LayoutGrid aria-hidden="true" />
+        <span>{$tStore('demonstration.labels.compactView')}</span>
+      </Toggle>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

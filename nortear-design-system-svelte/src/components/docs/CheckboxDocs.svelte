@@ -254,26 +254,24 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="checkbox">
-    {#snippet children()}
-      <div class="nds-stack" data-spacing="sm">
-        <div class="nds-cluster" data-spacing="xs">
-          <Checkbox id="demo-1" bind:checked={demoChecked1} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'acceptTerms', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:acceptTerms" data-track-label={$tStore('demonstration.labels.acceptTerms')} />
-          <Label for="demo-1">{$tStore('demonstration.labels.acceptTerms')}</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <Checkbox id="demo-2" bind:checked={demoChecked2} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'newsletter', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:newsletter" data-track-label={$tStore('demonstration.labels.newsletter')} />
-          <Label for="demo-2">{$tStore('demonstration.labels.newsletter')}</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <Checkbox id="demo-3" bind:checked={demoChecked3} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'rememberMe', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:rememberMe" data-track-label={$tStore('demonstration.labels.rememberMe')} />
-          <Label for="demo-3">{$tStore('demonstration.labels.rememberMe')}</Label>
-        </div>
-        <div class="nds-cluster" data-spacing="xs">
-          <Checkbox id="demo-indeterminate" bind:checked={demoCheckedAll} bind:indeterminate={demoIndeterminate} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'selectAll', value: demoIndeterminate ? 'indeterminate' : String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:selectAll" data-track-label={$tStore('demonstration.labels.selectAll')} />
-          <Label for="demo-indeterminate">{$tStore('demonstration.labels.selectAll')}</Label>
-        </div>
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="xs">
+        <Checkbox id="demo-1" bind:checked={demoChecked1} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'acceptTerms', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:acceptTerms" data-track-label={$tStore('demonstration.labels.acceptTerms')} />
+        <Label for="demo-1">{$tStore('demonstration.labels.acceptTerms')}</Label>
       </div>
-    {/snippet}
+      <div class="nds-cluster" data-spacing="xs">
+        <Checkbox id="demo-2" bind:checked={demoChecked2} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'newsletter', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:newsletter" data-track-label={$tStore('demonstration.labels.newsletter')} />
+        <Label for="demo-2">{$tStore('demonstration.labels.newsletter')}</Label>
+      </div>
+      <div class="nds-cluster" data-spacing="xs">
+        <Checkbox id="demo-3" bind:checked={demoChecked3} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'rememberMe', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:rememberMe" data-track-label={$tStore('demonstration.labels.rememberMe')} />
+        <Label for="demo-3">{$tStore('demonstration.labels.rememberMe')}</Label>
+      </div>
+      <div class="nds-cluster" data-spacing="xs">
+        <Checkbox id="demo-indeterminate" bind:checked={demoCheckedAll} bind:indeterminate={demoIndeterminate} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'selectAll', value: demoIndeterminate ? 'indeterminate' : String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:selectAll" data-track-label={$tStore('demonstration.labels.selectAll')} />
+        <Label for="demo-indeterminate">{$tStore('demonstration.labels.selectAll')}</Label>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

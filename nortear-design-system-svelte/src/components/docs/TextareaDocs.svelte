@@ -193,54 +193,52 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
-        <div class="nds-stack" data-spacing="sm">
-          <Label for="demo-descricao">{$tStore('demonstration.labels.descriptionLabel')}</Label>
-          <Textarea
-            id="demo-descricao"
-            bind:value={demoDescriptionValue}
-            onblur={() => { if (demoDescriptionValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'description', location: 'docs_demo' }); }}
-            maxlength={demoMax}
-            placeholder={$tStore('demonstration.labels.descriptionPlaceholder')}
-            class="nds-resize-y nds-min-h-30"
-          />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
-            <span>{$tStore('demonstration.labels.descriptionHelp')}</span>
-            <span aria-live="polite" aria-label={counterAriaLabel}>
-              {demoDescriptionValue.length}/{demoMax}
-            </span>
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <Label for="demo-bio">{$tStore('demonstration.labels.bioLabel')}</Label>
-          <Textarea
-            id="demo-bio"
-            bind:value={demoBioValue}
-            onblur={() => { if (demoBioValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'bio', location: 'docs_demo' }); }}
-            maxlength={demoBioMax}
-            placeholder={$tStore('demonstration.labels.bioPlaceholder')}
-            class="nds-resize-none nds-min-h-25"
-          />
-          <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
-            <span aria-live="polite" aria-label={bioAriaLabel}>
-              {demoBioValue.length}/{demoBioMax}
-            </span>
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <Label for="demo-feedback">{$tStore('demonstration.labels.feedbackLabel')}</Label>
-          <Textarea
-            id="demo-feedback"
-            onblur={(e: FocusEvent) => { if ((e.currentTarget as HTMLTextAreaElement).value.length > 0) track('field_blur', { component: 'textarea', field_name: 'feedback', location: 'docs_demo' }); }}
-            placeholder={$tStore('demonstration.labels.feedbackPlaceholder')}
-            class="nds-resize-y nds-min-h-30"
-          />
+    <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="demo-descricao">{$tStore('demonstration.labels.descriptionLabel')}</Label>
+        <Textarea
+          id="demo-descricao"
+          bind:value={demoDescriptionValue}
+          onblur={() => { if (demoDescriptionValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'description', location: 'docs_demo' }); }}
+          maxlength={demoMax}
+          placeholder={$tStore('demonstration.labels.descriptionPlaceholder')}
+          class="nds-resize-y nds-min-h-30"
+        />
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-spacing="sm">
+          <span>{$tStore('demonstration.labels.descriptionHelp')}</span>
+          <span aria-live="polite" aria-label={counterAriaLabel}>
+            {demoDescriptionValue.length}/{demoMax}
+          </span>
         </div>
       </div>
-    {/snippet}
+
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="demo-bio">{$tStore('demonstration.labels.bioLabel')}</Label>
+        <Textarea
+          id="demo-bio"
+          bind:value={demoBioValue}
+          onblur={() => { if (demoBioValue.length > 0) track('field_blur', { component: 'textarea', field_name: 'bio', location: 'docs_demo' }); }}
+          maxlength={demoBioMax}
+          placeholder={$tStore('demonstration.labels.bioPlaceholder')}
+          class="nds-resize-none nds-min-h-25"
+        />
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="end">
+          <span aria-live="polite" aria-label={bioAriaLabel}>
+            {demoBioValue.length}/{demoBioMax}
+          </span>
+        </div>
+      </div>
+
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="demo-feedback">{$tStore('demonstration.labels.feedbackLabel')}</Label>
+        <Textarea
+          id="demo-feedback"
+          onblur={(e: FocusEvent) => { if ((e.currentTarget as HTMLTextAreaElement).value.length > 0) track('field_blur', { component: 'textarea', field_name: 'feedback', location: 'docs_demo' }); }}
+          placeholder={$tStore('demonstration.labels.feedbackPlaceholder')}
+          class="nds-resize-y nds-min-h-30"
+        />
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

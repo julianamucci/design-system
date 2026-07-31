@@ -166,53 +166,51 @@ interface ProgressProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-        <!-- Upload animado com label e valor -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.upload')}</p>
-          <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-            <div class="nds-cluster nds-text-body" data-justify="between">
-              <span class="nds-font-medium nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
-              <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">{uploadValue}%</span>
-            </div>
-            <Progress value={uploadValue} aria-label={$tStore('demonstration.labels.upload')} />
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+      <!-- Upload animado com label e valor -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.upload')}</p>
+        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+          <div class="nds-cluster nds-text-body" data-justify="between">
+            <span class="nds-font-medium nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
+            <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">{uploadValue}%</span>
           </div>
-        </div>
-
-        <!-- Loading animado simples -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.loading')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md">
-            <Progress value={loadingValue} aria-label={$tStore('demonstration.labels.loading')} />
-          </div>
-        </div>
-
-        <!-- Completo -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.complete')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md">
-            <Progress
-              value={100}
-              aria-label={$tStore('demonstration.labels.complete')}
-              class="nds-progress-success-wrap"
-            />
-          </div>
-        </div>
-
-        <!-- Indeterminate -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.indeterminate')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md">
-            <Progress
-              value={null}
-              aria-label={$tStore('demonstration.labels.indeterminate')}
-              class="nds-progress-indeterminate-wrap"
-            />
-          </div>
+          <Progress value={uploadValue} aria-label={$tStore('demonstration.labels.upload')} />
         </div>
       </div>
-    {/snippet}
+
+      <!-- Loading animado simples -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.loading')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md">
+          <Progress value={loadingValue} aria-label={$tStore('demonstration.labels.loading')} />
+        </div>
+      </div>
+
+      <!-- Completo -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.complete')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md">
+          <Progress
+            value={100}
+            aria-label={$tStore('demonstration.labels.complete')}
+            class="nds-progress-success-wrap"
+          />
+        </div>
+      </div>
+
+      <!-- Indeterminate -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.indeterminate')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md">
+          <Progress
+            value={null}
+            aria-label={$tStore('demonstration.labels.indeterminate')}
+            class="nds-progress-indeterminate-wrap"
+          />
+        </div>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

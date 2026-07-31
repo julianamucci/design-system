@@ -193,39 +193,37 @@ interface PaginationDirectionalProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-        <Pagination count={120} perPage={10} page={6} siblingCount={1} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
-          {#snippet children({ pages, currentPage })}
-            <PaginationContent>
+    <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
+      <Pagination count={120} perPage={10} page={6} siblingCount={1} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
+        {#snippet children({ pages, currentPage })}
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious aria-label={$tStore('demonstration.labels.previous')} />
+            </PaginationItem>
+            {#each pages as p (p.key)}
               <PaginationItem>
-                <PaginationPrevious aria-label={$tStore('demonstration.labels.previous')} />
+                {#if p.type === 'ellipsis'}
+                  <PaginationEllipsis />
+                {:else}
+                  <PaginationLink
+                    page={p}
+                    isActive={currentPage === p.value}
+                    aria-label={currentPage === p.value
+                      ? `${$tStore('demonstration.labels.current')}, ${p.value}`
+                      : `${$tStore('demonstration.labels.page')} ${p.value}`}
+                  >
+                    {p.value}
+                  </PaginationLink>
+                {/if}
               </PaginationItem>
-              {#each pages as p (p.key)}
-                <PaginationItem>
-                  {#if p.type === 'ellipsis'}
-                    <PaginationEllipsis />
-                  {:else}
-                    <PaginationLink
-                      page={p}
-                      isActive={currentPage === p.value}
-                      aria-label={currentPage === p.value
-                        ? `${$tStore('demonstration.labels.current')}, ${p.value}`
-                        : `${$tStore('demonstration.labels.page')} ${p.value}`}
-                    >
-                      {p.value}
-                    </PaginationLink>
-                  {/if}
-                </PaginationItem>
-              {/each}
-              <PaginationItem>
-                <PaginationNext aria-label={$tStore('demonstration.labels.next')} />
-              </PaginationItem>
-            </PaginationContent>
-          {/snippet}
-        </Pagination>
-      </div>
-    {/snippet}
+            {/each}
+            <PaginationItem>
+              <PaginationNext aria-label={$tStore('demonstration.labels.next')} />
+            </PaginationItem>
+          </PaginationContent>
+        {/snippet}
+      </Pagination>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -397,7 +395,7 @@ interface PaginationDirectionalProps {
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
-            <PaginationLink page={{ type: 'page', value: 1, key: 'p1' } as any} isActive={false}>
+            <PaginationLink page={{ type: 'page', value: 1 }} isActive={false}>
               &lt;
             </PaginationLink>
           </PaginationItem>
@@ -411,7 +409,7 @@ interface PaginationDirectionalProps {
             </PaginationItem>
           {/each}
           <PaginationItem>
-            <PaginationLink page={{ type: 'page', value: 5, key: 'p5' } as any} isActive={false}>
+            <PaginationLink page={{ type: 'page', value: 5 }} isActive={false}>
               &gt;
             </PaginationLink>
           </PaginationItem>

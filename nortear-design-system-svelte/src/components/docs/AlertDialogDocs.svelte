@@ -211,47 +211,45 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
-        <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'trigger-label', location: 'docs_demo' })}>
-          <AlertDialogTrigger>
-            {#snippet child({ props })}
-              <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
-            {/snippet}
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{$tStore('demonstration.labels.title')}</AlertDialogTitle>
-              <AlertDialogDescription>{$tStore('demonstration.labels.description')}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive" onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'action', location: 'docs_demo' })}>
-                {$tStore('demonstration.labels.action')}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'trigger-label', location: 'docs_demo' })}>
+        <AlertDialogTrigger>
+          {#snippet child({ props })}
+            <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
+          {/snippet}
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{$tStore('demonstration.labels.title')}</AlertDialogTitle>
+            <AlertDialogDescription>{$tStore('demonstration.labels.description')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
+            <AlertDialogAction class="nds-bg-destructive" onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'action', location: 'docs_demo' })}>
+              {$tStore('demonstration.labels.action')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-        <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'neutral-trigger-label', location: 'docs_demo' })}>
-          <AlertDialogTrigger>
-            {#snippet child({ props })}
-              <Button {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
-            {/snippet}
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{$tStore('demonstration.labels.neutralTitle')}</AlertDialogTitle>
-              <AlertDialogDescription>{$tStore('demonstration.labels.neutralDescription')}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-              <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'neutral-action', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    {/snippet}
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'neutral-trigger-label', location: 'docs_demo' })}>
+        <AlertDialogTrigger>
+          {#snippet child({ props })}
+            <Button {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
+          {/snippet}
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{$tStore('demonstration.labels.neutralTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{$tStore('demonstration.labels.neutralDescription')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'neutral-action', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

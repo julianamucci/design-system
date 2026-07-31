@@ -30,7 +30,7 @@
 <section id="propriedades">
   <h2 class="nds-section-title">{title}</h2>
   <div class="nds-stack" data-spacing="xl">
-    {#each tables as def}
+    {#each tables as def, i (i)}
       <div class="nds-stack" data-spacing="sm">
         {#if def.title}
           <h3 class="nds-text-base nds-font-semibold">{def.title}</h3>
@@ -47,7 +47,7 @@
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {#each def.items as item}
+                {#each def.items as item (item.name)}
                   <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                     <TableCell class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
                     <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>

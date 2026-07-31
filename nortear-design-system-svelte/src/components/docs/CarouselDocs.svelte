@@ -7,6 +7,7 @@
     CarouselPrevious,
     CarouselNext,
   } from '@/components/ui/carousel';
+  import type { CarouselAPI } from '@/components/ui/carousel/context.js';
   import Autoplay from 'embla-carousel-autoplay';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -98,14 +99,14 @@
   }
 
   // Dots demo — capture API to sync dots with selected slide
-  let demoApi = $state<any>(undefined);
+  let demoApi = $state<CarouselAPI | undefined>(undefined);
   let demoSelectedIndex = $state(0);
   let demoScrollSnaps = $state<number[]>([]);
   // Modalidade da navegação — capturada no wrapper da demo (capture phase)
   // antes de o select do embla disparar; swipe é detectado via dragHandler.
   let demoNavModality: 'button' | 'keyboard' = 'button';
 
-  function setDemoApi(a: any) {
+  function setDemoApi(a: CarouselAPI | undefined) {
     demoApi = a;
     if (!a) return;
     demoScrollSnaps = a.scrollSnapList();
@@ -132,9 +133,9 @@
   }
 
   // Composições — dots preview state
-  let dotsApi = $state<any>(undefined);
+  let dotsApi = $state<CarouselAPI | undefined>(undefined);
   let dotsCurrent = $state(0);
-  function setDotsApi(a: any) {
+  function setDotsApi(a: CarouselAPI | undefined) {
     dotsApi = a;
     if (!a) return;
     dotsCurrent = a.selectedScrollSnap();
@@ -322,54 +323,52 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div
-        class="nds-w-full nds-max-w-sm"
-        style="margin-inline: auto"
-        onpointerdowncapture={() => (demoNavModality = 'button')}
-        onkeydowncapture={() => (demoNavModality = 'keyboard')}
+    <div
+      class="nds-w-full nds-max-w-sm"
+      style="margin-inline: auto"
+      onpointerdowncapture={() => (demoNavModality = 'button')}
+      onkeydowncapture={() => (demoNavModality = 'keyboard')}
+    >
+      <Carousel
+        opts={{ loop: false }}
+        setApi={setDemoApi}
+        aria-label={stripHtml($tStore('description'))}
       >
-        <Carousel
-          opts={{ loop: false }}
-          setApi={setDemoApi}
-          aria-label={stripHtml($tStore('description'))}
-        >
-          <CarouselContent>
-            {#each [1, 2, 3, 4, 5] as i}
-              <CarouselItem>
-                <div class="nds-p-1">
-                  <div
-                    class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground"
-                    data-justify="center"
-                    data-align="center"
-                    style="aspect-ratio: 1 / 1; font-size: 1.875rem; user-select: none"
-                    aria-label={`${$tStore('demonstration.labels.slide')} ${i} ${$tStore('demonstration.labels.of')} 5`}
-                  >
-                    {i}
-                  </div>
+        <CarouselContent>
+          {#each [1, 2, 3, 4, 5] as i (i)}
+            <CarouselItem>
+              <div class="nds-p-1">
+                <div
+                  class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground"
+                  data-justify="center"
+                  data-align="center"
+                  style="aspect-ratio: 1 / 1; font-size: 1.875rem; user-select: none"
+                  aria-label={`${$tStore('demonstration.labels.slide')} ${i} ${$tStore('demonstration.labels.of')} 5`}
+                >
+                  {i}
                 </div>
-              </CarouselItem>
-            {/each}
-          </CarouselContent>
-          <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
-          <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
-        </Carousel>
-        <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação">
-          {#each demoScrollSnaps as _, i}
-            <button
-              type="button"
-              role="tab"
-              aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1}`}
-              aria-selected={demoSelectedIndex === i}
-              class="nds-rounded-full"
-              class:nds-bg-primary={demoSelectedIndex === i}
-              style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${demoSelectedIndex !== i ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
-              onclick={() => demoGoTo(i)}
-            ></button>
+              </div>
+            </CarouselItem>
           {/each}
-        </div>
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+      <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação">
+        {#each demoScrollSnaps as _, i (i)}
+          <button
+            type="button"
+            role="tab"
+            aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1}`}
+            aria-selected={demoSelectedIndex === i}
+            class="nds-rounded-full"
+            class:nds-bg-primary={demoSelectedIndex === i}
+            style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${demoSelectedIndex !== i ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
+            onclick={() => demoGoTo(i)}
+          ></button>
+        {/each}
       </div>
-    {/snippet}
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -474,7 +473,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
       <Carousel aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}>
         <CarouselContent>
-          {#each [1, 2, 3] as i}
+          {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -493,7 +492,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
       <Carousel>
         <CarouselContent>
-          {#each [1, 2, 3] as i}
+          {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -514,7 +513,7 @@ interface CarouselNavProps extends ButtonProps {
         aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}
       >
         <CarouselContent>
-          {#each [1, 2, 3] as i}
+          {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -536,7 +535,7 @@ interface CarouselNavProps extends ButtonProps {
         plugins={[Autoplay({ delay: 800, stopOnInteraction: false })]}
       >
         <CarouselContent>
-          {#each [1, 2, 3] as i}
+          {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -586,7 +585,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 280px">
       <Carousel aria-label="Horizontal">
         <CarouselContent>
-          {#each [1, 2, 3, 4] as i}
+          {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -605,7 +604,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 200px; height: 220px">
       <Carousel orientation="vertical" aria-label="Vertical">
         <CarouselContent style="height: 220px">
-          {#each [1, 2, 3, 4] as i}
+          {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -624,7 +623,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 260px">
       <Carousel aria-label="Single">
         <CarouselContent>
-          {#each [1, 2, 3] as i}
+          {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -643,7 +642,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 480px">
       <Carousel aria-label="Multi responsivo">
         <CarouselContent>
-          {#each [1, 2, 3, 4, 5, 6] as i}
+          {#each [1, 2, 3, 4, 5, 6] as i (i)}
             <CarouselItem class="nds-md-basis-half nds-lg-basis-third">
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
@@ -666,7 +665,7 @@ interface CarouselNavProps extends ButtonProps {
         aria-label="Destaques"
       >
         <CarouselContent>
-          {#each [1, 2, 3, 4] as i}
+          {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -709,7 +708,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full nds-stack" data-spacing="sm" style="max-width: 280px">
       <Carousel setApi={setDotsApi} aria-label="Galeria">
         <CarouselContent>
-          {#each [1, 2, 3, 4, 5] as i}
+          {#each [1, 2, 3, 4, 5] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
@@ -723,7 +722,7 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
       </Carousel>
       <div class="nds-cluster" data-align="center" data-justify="center" data-spacing="sm" aria-label={$tStore('demonstration.labels.goToSlide')}>
-        {#each [1, 2, 3, 4, 5] as _, i}
+        {#each [1, 2, 3, 4, 5] as _, i (i)}
           <button
             type="button"
             aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} 5`}
@@ -742,7 +741,7 @@ interface CarouselNavProps extends ButtonProps {
     <div class="nds-w-full" style="max-width: 280px">
       <Carousel aria-label="Galeria de fotos">
         <CarouselContent>
-          {#each galleryPhotos as photo}
+          {#each galleryPhotos as photo (photo.title)}
             <CarouselItem>
               <div class="nds-overflow-hidden nds-rounded-md nds-border-default nds-bg-card">
                 <div class="nds-cluster" data-justify="center" data-align="center" style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))">

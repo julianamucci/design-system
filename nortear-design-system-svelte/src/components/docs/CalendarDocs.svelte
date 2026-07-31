@@ -204,23 +204,21 @@ interface CalendarProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-stack" data-spacing="sm" data-align="center">
-        <Calendar
-          type="single"
-          bind:value={demoValue}
-          onValueChange={(v: DateValue | undefined) => track('field_change', { component: 'calendar', field_name: 'date', value: v ? v.toString() : '', location: 'docs_demo' })}
-          locale={previewLocale}
-        />
-        <p class="nds-text-caption nds-text-muted-foreground">
-          {#if demoValue}
-            {$tStore('demonstration.labels.singleLabel')}: {demoValue.toString()}
-          {:else}
-            {$tStore('demonstration.labels.noDate')}
-          {/if}
-        </p>
-      </div>
-    {/snippet}
+    <div class="nds-stack" data-spacing="sm" data-align="center">
+      <Calendar
+        type="single"
+        bind:value={demoValue}
+        onValueChange={(v: DateValue | undefined) => track('field_change', { component: 'calendar', field_name: 'date', value: v ? v.toString() : '', location: 'docs_demo' })}
+        locale={previewLocale}
+      />
+      <p class="nds-text-caption nds-text-muted-foreground">
+        {#if demoValue}
+          {$tStore('demonstration.labels.singleLabel')}: {demoValue.toString()}
+        {:else}
+          {$tStore('demonstration.labels.noDate')}
+        {/if}
+      </p>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

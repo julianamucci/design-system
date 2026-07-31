@@ -194,97 +194,95 @@ interface TriggerProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="contain: layout">
-        <Drawer direction="bottom">
-          <DrawerTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.bottom')}</Button>
-            {/snippet}
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{$tStore('title')}</DrawerTitle>
-              <DrawerDescription>{$tStore('description')}</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>OK</Button>
-              <DrawerClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" {...props}>Cancelar</Button>
-                {/snippet}
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="contain: layout">
+      <Drawer direction="bottom">
+        <DrawerTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.bottom')}</Button>
+          {/snippet}
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{$tStore('title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>OK</Button>
+            <DrawerClose>
+              {#snippet child({ props })}
+                <Button variant="outline" {...props}>Cancelar</Button>
+              {/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
-        <Drawer direction="right">
-          <DrawerTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.right')}</Button>
-            {/snippet}
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{$tStore('title')}</DrawerTitle>
-              <DrawerDescription>{$tStore('description')}</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>OK</Button>
-              <DrawerClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" {...props}>Cancelar</Button>
-                {/snippet}
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+      <Drawer direction="right">
+        <DrawerTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.right')}</Button>
+          {/snippet}
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{$tStore('title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>OK</Button>
+            <DrawerClose>
+              {#snippet child({ props })}
+                <Button variant="outline" {...props}>Cancelar</Button>
+              {/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
-        <Drawer direction="left">
-          <DrawerTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.left')}</Button>
-            {/snippet}
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{$tStore('title')}</DrawerTitle>
-              <DrawerDescription>{$tStore('description')}</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>OK</Button>
-              <DrawerClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" {...props}>Cancelar</Button>
-                {/snippet}
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+      <Drawer direction="left">
+        <DrawerTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.left')}</Button>
+          {/snippet}
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{$tStore('title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>OK</Button>
+            <DrawerClose>
+              {#snippet child({ props })}
+                <Button variant="outline" {...props}>Cancelar</Button>
+              {/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
-        <Drawer direction="top">
-          <DrawerTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.top')}</Button>
-            {/snippet}
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{$tStore('title')}</DrawerTitle>
-              <DrawerDescription>{$tStore('description')}</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>OK</Button>
-              <DrawerClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" {...props}>Cancelar</Button>
-                {/snippet}
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </div>
-    {/snippet}
+      <Drawer direction="top">
+        <DrawerTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.top')}</Button>
+          {/snippet}
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{$tStore('title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('description')}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>OK</Button>
+            <DrawerClose>
+              {#snippet child({ props })}
+                <Button variant="outline" {...props}>Cancelar</Button>
+              {/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -589,7 +587,7 @@ interface TriggerProps {
             <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
           </DrawerHeader>
           <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
-            {#each Array.from({ length: 12 }) as _, i}
+            {#each Array.from({ length: 12 }) as _, i (i)}
               <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
             {/each}
           </div>

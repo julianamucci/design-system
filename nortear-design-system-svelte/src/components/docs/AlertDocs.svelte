@@ -173,30 +173,28 @@ interface AlertProps {
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <div class="nds-w-full nds-stack" data-spacing="sm">
-            <Alert>
-              <Info aria-hidden="true" />
-              <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
-              <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
-            </Alert>
-            <Alert variant="destructive">
-              <AlertCircle aria-hidden="true" />
-              <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
-              <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
-            </Alert>
-            <Alert variant="success">
-              <CheckCircle2 aria-hidden="true" />
-              <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
-              <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
-            </Alert>
-            <Alert variant="warning">
-              <TriangleAlert aria-hidden="true" />
-              <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
-              <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
-            </Alert>
-          </div>
-        {/snippet}
+        <div class="nds-w-full nds-stack" data-spacing="sm">
+          <Alert>
+            <Info aria-hidden="true" />
+            <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+            <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
+          </Alert>
+          <Alert variant="destructive">
+            <AlertCircle aria-hidden="true" />
+            <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+            <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
+          </Alert>
+          <Alert variant="success">
+            <CheckCircle2 aria-hidden="true" />
+            <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
+            <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
+          </Alert>
+          <Alert variant="warning">
+            <TriangleAlert aria-hidden="true" />
+            <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
+            <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
+          </Alert>
+        </div>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

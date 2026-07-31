@@ -221,92 +221,90 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-        <Menubar>
-          <MenubarMenu value="file">
-            <MenubarTrigger>Arquivo</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>
-                Novo
-                <MenubarShortcut>⌘N</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Abrir...
-                <MenubarShortcut>⌘O</MenubarShortcut>
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarSub>
-                <MenubarSubTrigger>Exportar como</MenubarSubTrigger>
-                <MenubarSubContent>
-                  <MenubarItem>PDF</MenubarItem>
-                  <MenubarItem>CSV</MenubarItem>
-                  <MenubarItem>JSON</MenubarItem>
-                </MenubarSubContent>
-              </MenubarSub>
-              <MenubarSeparator />
-              <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
+    <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
+      <Menubar>
+        <MenubarMenu value="file">
+          <MenubarTrigger>Arquivo</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Novo
+              <MenubarShortcut>⌘N</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Abrir...
+              <MenubarShortcut>⌘O</MenubarShortcut>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>Exportar como</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem>PDF</MenubarItem>
+                <MenubarItem>CSV</MenubarItem>
+                <MenubarItem>JSON</MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
+            <MenubarSeparator />
+            <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
 
-          <MenubarMenu value="edit">
-            <MenubarTrigger>Editar</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>
-                Desfazer
-                <MenubarShortcut>⌘Z</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Refazer
-                <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem>
-                Copiar
-                <MenubarShortcut>⌘C</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Colar
-                <MenubarShortcut>⌘V</MenubarShortcut>
-              </MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
+        <MenubarMenu value="edit">
+          <MenubarTrigger>Editar</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Desfazer
+              <MenubarShortcut>⌘Z</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Refazer
+              <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>
+              Copiar
+              <MenubarShortcut>⌘C</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Colar
+              <MenubarShortcut>⌘V</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
 
-          <MenubarMenu value="view">
-            <MenubarTrigger>Exibir</MenubarTrigger>
-            <MenubarContent>
-              <MenubarLabel>Visualização</MenubarLabel>
-              <MenubarSeparator />
-              <MenubarCheckboxItem
-                checked={demoStatus}
-                onCheckedChange={(v) => (demoStatus = v)}
-              >
-                Status bar
-              </MenubarCheckboxItem>
-              <MenubarCheckboxItem
-                checked={demoActivity}
-                onCheckedChange={(v) => (demoActivity = v)}
-              >
-                Activity bar
-              </MenubarCheckboxItem>
-            </MenubarContent>
-          </MenubarMenu>
+        <MenubarMenu value="view">
+          <MenubarTrigger>Exibir</MenubarTrigger>
+          <MenubarContent>
+            <MenubarLabel>Visualização</MenubarLabel>
+            <MenubarSeparator />
+            <MenubarCheckboxItem
+              checked={demoStatus}
+              onCheckedChange={(v) => (demoStatus = v)}
+            >
+              Status bar
+            </MenubarCheckboxItem>
+            <MenubarCheckboxItem
+              checked={demoActivity}
+              onCheckedChange={(v) => (demoActivity = v)}
+            >
+              Activity bar
+            </MenubarCheckboxItem>
+          </MenubarContent>
+        </MenubarMenu>
 
-          <MenubarMenu value="tools">
-            <MenubarTrigger>Ferramentas</MenubarTrigger>
-            <MenubarContent>
-              <MenubarLabel>Zoom</MenubarLabel>
-              <MenubarSeparator />
-              <MenubarRadioGroup bind:value={demoZoom}>
-                <MenubarRadioItem value="50">50%</MenubarRadioItem>
-                <MenubarRadioItem value="100">100%</MenubarRadioItem>
-                <MenubarRadioItem value="150">150%</MenubarRadioItem>
-              </MenubarRadioGroup>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
-      </div>
-    {/snippet}
+        <MenubarMenu value="tools">
+          <MenubarTrigger>Ferramentas</MenubarTrigger>
+          <MenubarContent>
+            <MenubarLabel>Zoom</MenubarLabel>
+            <MenubarSeparator />
+            <MenubarRadioGroup bind:value={demoZoom}>
+              <MenubarRadioItem value="50">50%</MenubarRadioItem>
+              <MenubarRadioItem value="100">100%</MenubarRadioItem>
+              <MenubarRadioItem value="150">150%</MenubarRadioItem>
+            </MenubarRadioGroup>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

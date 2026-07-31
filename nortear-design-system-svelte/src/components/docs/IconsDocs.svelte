@@ -207,7 +207,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
         </div>
       </div>
       <ul class="nds-stack nds-text-body nds-text-muted-foreground nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
-        {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule}
+        {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule (rule)}
           <li class="nds-cluster nds-list-none" data-spacing="sm" data-align="start">
             <span class="nds-text-primary nds-shrink-0 nds-mt-0-5">✓</span>
             <!-- eslint-disable svelte/no-at-html-tags -->
@@ -258,7 +258,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
       class:is-hidden={!hasResults}
       aria-label={iconsAvailableText}
     >
-      {#each ALL_ICON_NAMES as name}
+      {#each ALL_ICON_NAMES as name (name)}
         {@const isCopied = copied === name}
         <li
           class="nds-icon-grid-item"

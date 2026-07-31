@@ -215,18 +215,16 @@ interface TabsContentProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <Tabs bind:value={demoValue} class="nds-w-full nds-max-w-lg">
-        <TabsList aria-label={$tStore('demonstration.title')}>
-          <TabsTrigger value="overview">{$tStore('demonstration.labels.overview')}</TabsTrigger>
-          <TabsTrigger value="properties">{$tStore('demonstration.labels.properties')}</TabsTrigger>
-          <TabsTrigger value="examples">{$tStore('demonstration.labels.examples')}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview">{$tStore('demonstration.labels.overviewContent')}</TabsContent>
-        <TabsContent value="properties">{$tStore('demonstration.labels.propertiesContent')}</TabsContent>
-        <TabsContent value="examples">{$tStore('demonstration.labels.examplesContent')}</TabsContent>
-      </Tabs>
-    {/snippet}
+    <Tabs bind:value={demoValue} class="nds-w-full nds-max-w-lg">
+      <TabsList aria-label={$tStore('demonstration.title')}>
+        <TabsTrigger value="overview">{$tStore('demonstration.labels.overview')}</TabsTrigger>
+        <TabsTrigger value="properties">{$tStore('demonstration.labels.properties')}</TabsTrigger>
+        <TabsTrigger value="examples">{$tStore('demonstration.labels.examples')}</TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview">{$tStore('demonstration.labels.overviewContent')}</TabsContent>
+      <TabsContent value="properties">{$tStore('demonstration.labels.propertiesContent')}</TabsContent>
+      <TabsContent value="examples">{$tStore('demonstration.labels.examplesContent')}</TabsContent>
+    </Tabs>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

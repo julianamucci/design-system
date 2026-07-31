@@ -38,7 +38,7 @@
               </TableRow>
             </TableHeader>
             <TableBody>
-              {#each functional.items as item}
+              {#each functional.items as item (item.action)}
                 <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                   <TableCell class="nds-p-2">{item.action}</TableCell>
                   <TableCell class="nds-p-2 nds-text-muted-foreground">{item.result}</TableCell>
@@ -59,7 +59,7 @@
         <p class="nds-text-body nds-text-muted-foreground">{accessibility.description}</p>
       {/if}
       <div class="nds-grid" data-cols="2" data-spacing="sm">
-        {#each accessibility.items as item}
+        {#each accessibility.items as item (item.criterion)}
           <Card class="nds-bg-muted-soft nds-border-none nds-shadow-none nds-p-2 nds-stack" data-spacing="xs">
               <div class="nds-row" data-spacing="sm" data-align="center">
                 <kbd data-slot="kbd" class="nds-kbd">{item.level}</kbd>
@@ -86,7 +86,7 @@
               </TableRow>
             </TableHeader>
             <TableBody>
-              {#each visual.items as item}
+              {#each visual.items as item (item.story)}
                 <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                   <TableCell class="nds-p-2">{item.story}</TableCell>
                   <TableCell class="nds-p-2 nds-font-medium">

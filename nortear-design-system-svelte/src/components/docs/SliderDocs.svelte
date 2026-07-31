@@ -200,83 +200,81 @@ interface SliderProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-        <!-- Single — Volume -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.single')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between">
-              <Label>{$tStore('demonstration.labels.volume')}</Label>
-              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoVolume[0]}%</span>
-            </div>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+      <!-- Single — Volume -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.single')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
+            <Label>{$tStore('demonstration.labels.volume')}</Label>
+            <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoVolume[0]}%</span>
+          </div>
+          <Slider
+            bind:value={demoVolume}
+            onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'volume', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
+            min={0}
+            max={100}
+            step={1}
+            aria-label={$tStore('demonstration.labels.volume')}
+          />
+        </div>
+      </div>
+
+      <!-- Range — Preço -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.range')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
+            <Label>{$tStore('demonstration.labels.priceRange')}</Label>
+            <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">
+              R$ {demoPriceRange[0]} — R$ {demoPriceRange[1]}
+            </span>
+          </div>
+          <Slider
+            bind:value={demoPriceRange}
+            onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'price_range', value: v.join('-'), min: 0, max: 500, location: 'docs_demo' })}
+            min={0}
+            max={500}
+            step={10}
+            aria-label={$tStore('demonstration.labels.priceRange')}
+          />
+        </div>
+      </div>
+
+      <!-- Vertical — Brilho -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between" style="width: 10rem;">
+            <Label>{$tStore('demonstration.labels.brightness')}</Label>
+            <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoBrightness[0]}%</span>
+          </div>
+          <div class="nds-cluster" data-justify="center" style="height: 10rem;">
             <Slider
-              bind:value={demoVolume}
-              onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'volume', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
+              bind:value={demoBrightness}
+              onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'brightness', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
+              orientation="vertical"
               min={0}
               max={100}
               step={1}
-              aria-label={$tStore('demonstration.labels.volume')}
+              aria-label={$tStore('demonstration.labels.brightness')}
             />
-          </div>
-        </div>
-
-        <!-- Range — Preço -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.range')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between">
-              <Label>{$tStore('demonstration.labels.priceRange')}</Label>
-              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">
-                R$ {demoPriceRange[0]} — R$ {demoPriceRange[1]}
-              </span>
-            </div>
-            <Slider
-              bind:value={demoPriceRange}
-              onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'price_range', value: v.join('-'), min: 0, max: 500, location: 'docs_demo' })}
-              min={0}
-              max={500}
-              step={10}
-              aria-label={$tStore('demonstration.labels.priceRange')}
-            />
-          </div>
-        </div>
-
-        <!-- Vertical — Brilho -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between" style="width: 10rem;">
-              <Label>{$tStore('demonstration.labels.brightness')}</Label>
-              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoBrightness[0]}%</span>
-            </div>
-            <div class="nds-cluster" data-justify="center" style="height: 10rem;">
-              <Slider
-                bind:value={demoBrightness}
-                onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'brightness', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
-                orientation="vertical"
-                min={0}
-                max={100}
-                step={1}
-                aria-label={$tStore('demonstration.labels.brightness')}
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Disabled -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">Disabled</p>
-          <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
-            <div class="nds-cluster" data-justify="between">
-              <Label>{$tStore('demonstration.labels.volume')}</Label>
-              <span class="nds-text-body" style="font-variant-numeric: tabular-nums;">30%</span>
-            </div>
-            <Slider value={[30]} min={0} max={100} disabled aria-label={$tStore('demonstration.labels.volume')} />
           </div>
         </div>
       </div>
-    {/snippet}
+
+      <!-- Disabled -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">Disabled</p>
+        <div class="nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
+            <Label>{$tStore('demonstration.labels.volume')}</Label>
+            <span class="nds-text-body" style="font-variant-numeric: tabular-nums;">30%</span>
+          </div>
+          <Slider value={[30]} min={0} max={100} disabled aria-label={$tStore('demonstration.labels.volume')} />
+        </div>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

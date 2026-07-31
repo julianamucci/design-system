@@ -226,69 +226,67 @@ interface ToggleGroupItemProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="toggle-group">
-    {#snippet children()}
-      <div class="nds-stack" data-spacing="lg" data-align="start">
-        <!-- Single — alinhamento -->
-        <ToggleGroup
-          type="single"
-          bind:value={demoAlignment}
-          onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'alignment', value: v, location: 'docs_demo' })}
-          aria-label={$tStore('demonstration.labels.alignmentLabel')}
-          data-track="demo"
-          data-track-id="toggle-group:demo:alignment"
-        >
-          <ToggleGroupItem value="left" aria-label={$tStore('demonstration.labels.left')}>
-            <AlignLeft aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="center" aria-label={$tStore('demonstration.labels.center')}>
-            <AlignCenter aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="right" aria-label={$tStore('demonstration.labels.right')}>
-            <AlignRight aria-hidden="true" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+    <div class="nds-stack" data-spacing="lg" data-align="start">
+      <!-- Single — alinhamento -->
+      <ToggleGroup
+        type="single"
+        bind:value={demoAlignment}
+        onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'alignment', value: v, location: 'docs_demo' })}
+        aria-label={$tStore('demonstration.labels.alignmentLabel')}
+        data-track="demo"
+        data-track-id="toggle-group:demo:alignment"
+      >
+        <ToggleGroupItem value="left" aria-label={$tStore('demonstration.labels.left')}>
+          <AlignLeft aria-hidden="true" />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="center" aria-label={$tStore('demonstration.labels.center')}>
+          <AlignCenter aria-hidden="true" />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="right" aria-label={$tStore('demonstration.labels.right')}>
+          <AlignRight aria-hidden="true" />
+        </ToggleGroupItem>
+      </ToggleGroup>
 
-        <!-- Multiple — formatação -->
-        <ToggleGroup
-          type="multiple"
-          bind:value={demoFormatting}
-          onValueChange={(v: string[]) => track('field_change', { component: 'toggle_group', field_name: 'formatting', value: v.join(','), location: 'docs_demo' })}
-          variant="outline"
-          aria-label={$tStore('demonstration.labels.formattingLabel')}
-          data-track="demo"
-          data-track-id="toggle-group:demo:formatting"
-        >
-          <ToggleGroupItem value="bold" aria-label={$tStore('demonstration.labels.bold')}>
-            <Bold aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="italic" aria-label={$tStore('demonstration.labels.italic')}>
-            <Italic aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="underline" aria-label={$tStore('demonstration.labels.underline')}>
-            <Underline aria-hidden="true" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+      <!-- Multiple — formatação -->
+      <ToggleGroup
+        type="multiple"
+        bind:value={demoFormatting}
+        onValueChange={(v: string[]) => track('field_change', { component: 'toggle_group', field_name: 'formatting', value: v.join(','), location: 'docs_demo' })}
+        variant="outline"
+        aria-label={$tStore('demonstration.labels.formattingLabel')}
+        data-track="demo"
+        data-track-id="toggle-group:demo:formatting"
+      >
+        <ToggleGroupItem value="bold" aria-label={$tStore('demonstration.labels.bold')}>
+          <Bold aria-hidden="true" />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="italic" aria-label={$tStore('demonstration.labels.italic')}>
+          <Italic aria-hidden="true" />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="underline" aria-label={$tStore('demonstration.labels.underline')}>
+          <Underline aria-hidden="true" />
+        </ToggleGroupItem>
+      </ToggleGroup>
 
-        <!-- Vertical — modo de visualização -->
-        <ToggleGroup
-          type="single"
-          orientation="vertical"
-          variant="outline"
-          bind:value={demoView}
-          onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'view', value: v, location: 'docs_demo' })}
-          aria-label={$tStore('demonstration.labels.viewLabel')}
-          data-track="demo"
-          data-track-id="toggle-group:demo:view"
-        >
-          <ToggleGroupItem value="grid" aria-label={$tStore('demonstration.labels.grid')}>
-            <LayoutGrid aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="list" aria-label={$tStore('demonstration.labels.list')}>
-            <List aria-hidden="true" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-    {/snippet}
+      <!-- Vertical — modo de visualização -->
+      <ToggleGroup
+        type="single"
+        orientation="vertical"
+        variant="outline"
+        bind:value={demoView}
+        onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'view', value: v, location: 'docs_demo' })}
+        aria-label={$tStore('demonstration.labels.viewLabel')}
+        data-track="demo"
+        data-track-id="toggle-group:demo:view"
+      >
+        <ToggleGroupItem value="grid" aria-label={$tStore('demonstration.labels.grid')}>
+          <LayoutGrid aria-hidden="true" />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="list" aria-label={$tStore('demonstration.labels.list')}>
+          <List aria-hidden="true" />
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

@@ -229,59 +229,57 @@ interface CardPartProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="md" style="align-items: start">
-        <Card>
-          <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
-          <CardHeader>
-            <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
-            <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
-            <CardAction>
-              <Badge variant="secondary">{$tStore('demonstration.labels.productStock')}</Badge>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <p class="nds-text-base nds-font-semibold">{$tStore('demonstration.labels.productPrice')}</p>
-          </CardContent>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
-            <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: 'action-edit', variant: 'outline', location: 'docs_demo' })}>
-              {$tStore('demonstration.labels.actionEdit')}
-            </Button>
-            <Button variant="destructive" size="sm" aria-label={`${$tStore('demonstration.labels.actionDelete')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: 'action-delete', variant: 'destructive', location: 'docs_demo' })}>
-              {$tStore('demonstration.labels.actionDelete')}
-            </Button>
-          </CardFooter>
-        </Card>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="md" style="align-items: start">
+      <Card>
+        <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
+        <CardHeader>
+          <CardTitle>{$tStore('demonstration.labels.productTitle')}</CardTitle>
+          <CardDescription>{$tStore('demonstration.labels.productDescription')}</CardDescription>
+          <CardAction>
+            <Badge variant="secondary">{$tStore('demonstration.labels.productStock')}</Badge>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <p class="nds-text-base nds-font-semibold">{$tStore('demonstration.labels.productPrice')}</p>
+        </CardContent>
+        <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <Button variant="outline" size="sm" aria-label={`${$tStore('demonstration.labels.actionEdit')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: 'action-edit', variant: 'outline', location: 'docs_demo' })}>
+            {$tStore('demonstration.labels.actionEdit')}
+          </Button>
+          <Button variant="destructive" size="sm" aria-label={`${$tStore('demonstration.labels.actionDelete')} ${$tStore('demonstration.labels.productTitle')}`} onclick={() => track('button_click', { component: 'button', label: 'action-delete', variant: 'destructive', location: 'docs_demo' })}>
+            {$tStore('demonstration.labels.actionDelete')}
+          </Button>
+        </CardFooter>
+      </Card>
 
-        <Card size="sm">
-          <CardHeader>
-            <CardDescription>{$tStore('demonstration.labels.metricTitle')}</CardDescription>
-            <CardTitle class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem; font-variant-numeric: tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p class="nds-text-caption nds-text-success">{$tStore('demonstration.labels.metricTrend')}</p>
-          </CardContent>
-        </Card>
+      <Card size="sm">
+        <CardHeader>
+          <CardDescription>{$tStore('demonstration.labels.metricTitle')}</CardDescription>
+          <CardTitle class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem; font-variant-numeric: tabular-nums">{$tStore('demonstration.labels.metricValue')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p class="nds-text-caption nds-text-success">{$tStore('demonstration.labels.metricTrend')}</p>
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <div class="nds-cluster" data-spacing="sm">
-              <Avatar>
-                <AvatarImage src="https://i.pravatar.cc/80?img=47" alt={$tStore('demonstration.labels.profileTitle')} />
-                <AvatarFallback>MR</AvatarFallback>
-              </Avatar>
-              <div class="nds-stack" data-spacing="sm">
-                <CardTitle>{$tStore('demonstration.labels.profileTitle')}</CardTitle>
-                <CardDescription>{$tStore('demonstration.labels.profileDescription')}</CardDescription>
-              </div>
+      <Card>
+        <CardHeader>
+          <div class="nds-cluster" data-spacing="sm">
+            <Avatar>
+              <AvatarImage src="https://i.pravatar.cc/80?img=47" alt={$tStore('demonstration.labels.profileTitle')} />
+              <AvatarFallback>MR</AvatarFallback>
+            </Avatar>
+            <div class="nds-stack" data-spacing="sm">
+              <CardTitle>{$tStore('demonstration.labels.profileTitle')}</CardTitle>
+              <CardDescription>{$tStore('demonstration.labels.profileDescription')}</CardDescription>
             </div>
-          </CardHeader>
-          <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
-            <Button variant="outline" size="sm" onclick={() => track('button_click', { component: 'button', label: 'action-edit', variant: 'outline', location: 'docs_demo' })}>{$tStore('demonstration.labels.actionEdit')}</Button>
-          </CardFooter>
-        </Card>
-      </div>
-    {/snippet}
+          </div>
+        </CardHeader>
+        <CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">
+          <Button variant="outline" size="sm" onclick={() => track('button_click', { component: 'button', label: 'action-edit', variant: 'outline', location: 'docs_demo' })}>{$tStore('demonstration.labels.actionEdit')}</Button>
+        </CardFooter>
+      </Card>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

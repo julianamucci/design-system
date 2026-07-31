@@ -162,41 +162,39 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-nome">{$tStore('demonstration.labels.defaultLabel')}</Label>
-              <Input id="demo-nome" type="text" placeholder={$tStore('demonstration.labels.defaultPlaceholder')} onfocus={() => trackFieldFocus('nome')} onblur={(e: FocusEvent) => trackFieldBlur('nome', e)} />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-email">{$tStore('demonstration.labels.emailLabel')}</Label>
-              <Input id="demo-email" type="email" placeholder={$tStore('demonstration.labels.emailPlaceholder')} onfocus={() => trackFieldFocus('email')} onblur={(e: FocusEvent) => trackFieldBlur('email', e)} />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-senha">{$tStore('demonstration.labels.passwordLabel')}</Label>
-              <Input id="demo-senha" type="password" placeholder={$tStore('demonstration.labels.passwordPlaceholder')} onfocus={() => trackFieldFocus('senha')} onblur={(e: FocusEvent) => trackFieldBlur('senha', e)} />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-busca">{$tStore('demonstration.labels.searchLabel')}</Label>
-              <Input id="demo-busca" type="search" placeholder={$tStore('demonstration.labels.searchPlaceholder')} onfocus={() => trackFieldFocus('busca')} onblur={(e: FocusEvent) => trackFieldBlur('busca', e)} />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-disabled">{$tStore('demonstration.labels.disabledLabel')}</Label>
-              <Input id="demo-disabled" type="text" disabled placeholder={$tStore('demonstration.labels.disabledPlaceholder')} />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <Label for="demo-error">{$tStore('demonstration.labels.errorLabel')}</Label>
-              <Input
-                id="demo-error"
-                type="email"
-                aria-invalid="true"
-                aria-describedby="demo-error-msg"
-                placeholder={$tStore('demonstration.labels.errorPlaceholder')}
-              />
-              <p id="demo-error-msg" class="nds-text-caption nds-text-destructive">{$tStore('demonstration.labels.errorMessage')}</p>
-            </div>
+        <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-nome">{$tStore('demonstration.labels.defaultLabel')}</Label>
+            <Input id="demo-nome" type="text" placeholder={$tStore('demonstration.labels.defaultPlaceholder')} onfocus={() => trackFieldFocus('nome')} onblur={(e: FocusEvent) => trackFieldBlur('nome', e)} />
           </div>
-        {/snippet}
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-email">{$tStore('demonstration.labels.emailLabel')}</Label>
+            <Input id="demo-email" type="email" placeholder={$tStore('demonstration.labels.emailPlaceholder')} onfocus={() => trackFieldFocus('email')} onblur={(e: FocusEvent) => trackFieldBlur('email', e)} />
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-senha">{$tStore('demonstration.labels.passwordLabel')}</Label>
+            <Input id="demo-senha" type="password" placeholder={$tStore('demonstration.labels.passwordPlaceholder')} onfocus={() => trackFieldFocus('senha')} onblur={(e: FocusEvent) => trackFieldBlur('senha', e)} />
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-busca">{$tStore('demonstration.labels.searchLabel')}</Label>
+            <Input id="demo-busca" type="search" placeholder={$tStore('demonstration.labels.searchPlaceholder')} onfocus={() => trackFieldFocus('busca')} onblur={(e: FocusEvent) => trackFieldBlur('busca', e)} />
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-disabled">{$tStore('demonstration.labels.disabledLabel')}</Label>
+            <Input id="demo-disabled" type="text" disabled placeholder={$tStore('demonstration.labels.disabledPlaceholder')} />
+          </div>
+          <div class="nds-stack" data-spacing="xs">
+            <Label for="demo-error">{$tStore('demonstration.labels.errorLabel')}</Label>
+            <Input
+              id="demo-error"
+              type="email"
+              aria-invalid="true"
+              aria-describedby="demo-error-msg"
+              placeholder={$tStore('demonstration.labels.errorPlaceholder')}
+            />
+            <p id="demo-error-msg" class="nds-text-caption nds-text-destructive">{$tStore('demonstration.labels.errorMessage')}</p>
+          </div>
+        </div>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

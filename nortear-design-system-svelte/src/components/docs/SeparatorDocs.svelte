@@ -129,56 +129,54 @@
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-        <!-- Horizontal -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
-          <div class="nds-stack nds-rounded-md nds-border-default nds-p-4 nds-text-body" data-spacing="sm">
-            <p class="nds-font-medium">Header</p>
-            <Separator orientation="horizontal" />
-            <p class="nds-text-muted-foreground">Content</p>
-          </div>
-        </div>
-
-        <!-- Vertical -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-          <div class="nds-cluster nds-rounded-md nds-border-default nds-px-4 nds-text-body" data-spacing="md" data-align="center" style="height: 4rem">
-            <span>Docs</span>
-            <Separator orientation="vertical" />
-            <span>Source</span>
-            <Separator orientation="vertical" />
-            <span>API</span>
-          </div>
-        </div>
-
-        <!-- In Menu -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inMenu')}</p>
-          <div class="nds-rounded-md nds-border-default nds-p-2 nds-w-full nds-max-w-xs">
-            <ul class="nds-list-none nds-text-body">
-              <li class="nds-px-2 nds-py-1">Perfil</li>
-              <li class="nds-px-2 nds-py-1">Configurações</li>
-              <li><Separator class="nds-mt-1 nds-mb-1" /></li>
-              <li class="nds-px-2 nds-py-1 nds-text-destructive">Sair</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- In Card -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inCard')}</p>
-          <div class="nds-rounded-md nds-border-default nds-bg-card nds-text-card-foreground">
-            <div class="nds-p-4 nds-text-body nds-font-semibold">Notificações</div>
-            <Separator />
-            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Você tem 3 mensagens não lidas.</div>
-            <Separator />
-            <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Ver tudo</div>
-          </div>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
+      <!-- Horizontal -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
+        <div class="nds-stack nds-rounded-md nds-border-default nds-p-4 nds-text-body" data-spacing="sm">
+          <p class="nds-font-medium">Header</p>
+          <Separator orientation="horizontal" />
+          <p class="nds-text-muted-foreground">Content</p>
         </div>
       </div>
-    {/snippet}
+
+      <!-- Vertical -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
+        <div class="nds-cluster nds-rounded-md nds-border-default nds-px-4 nds-text-body" data-spacing="md" data-align="center" style="height: 4rem">
+          <span>Docs</span>
+          <Separator orientation="vertical" />
+          <span>Source</span>
+          <Separator orientation="vertical" />
+          <span>API</span>
+        </div>
+      </div>
+
+      <!-- In Menu -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inMenu')}</p>
+        <div class="nds-rounded-md nds-border-default nds-p-2 nds-w-full nds-max-w-xs">
+          <ul class="nds-list-none nds-text-body">
+            <li class="nds-px-2 nds-py-1">Perfil</li>
+            <li class="nds-px-2 nds-py-1">Configurações</li>
+            <li><Separator class="nds-mt-1 nds-mb-1" /></li>
+            <li class="nds-px-2 nds-py-1 nds-text-destructive">Sair</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- In Card -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.inCard')}</p>
+        <div class="nds-rounded-md nds-border-default nds-bg-card nds-text-card-foreground">
+          <div class="nds-p-4 nds-text-body nds-font-semibold">Notificações</div>
+          <Separator />
+          <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Você tem 3 mensagens não lidas.</div>
+          <Separator />
+          <div class="nds-p-4 nds-text-body nds-text-muted-foreground">Ver tudo</div>
+        </div>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

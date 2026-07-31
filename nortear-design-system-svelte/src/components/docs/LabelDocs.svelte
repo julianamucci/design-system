@@ -140,30 +140,28 @@ interface LabelProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="label">
-    {#snippet children()}
-      <div class="nds-stack nds-w-full" data-spacing="lg">
-        <!-- Padrão -->
-        <div class="nds-stack" data-spacing="sm">
-          <Label for="demo-default">{$tStore('demonstration.labels.default')}</Label>
-          <Input id="demo-default" type="text" />
-        </div>
-
-        <!-- Required -->
-        <div class="nds-stack" data-spacing="sm">
-          <Label for="demo-required">
-            {$tStore('demonstration.labels.required')}
-            <span class="nds-text-destructive" aria-hidden="true">{$tStore('demonstration.labels.requiredMarker')}</span>
-          </Label>
-          <Input id="demo-required" type="email" aria-required="true" />
-        </div>
-
-        <!-- Disabled via peer -->
-        <div class="nds-stack" data-spacing="sm">
-          <Input id="demo-disabled" disabled class="nds-peer" />
-          <Label for="demo-disabled">{$tStore('demonstration.labels.disabled')}</Label>
-        </div>
+    <div class="nds-stack nds-w-full" data-spacing="lg">
+      <!-- Padrão -->
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="demo-default">{$tStore('demonstration.labels.default')}</Label>
+        <Input id="demo-default" type="text" />
       </div>
-    {/snippet}
+
+      <!-- Required -->
+      <div class="nds-stack" data-spacing="sm">
+        <Label for="demo-required">
+          {$tStore('demonstration.labels.required')}
+          <span class="nds-text-destructive" aria-hidden="true">{$tStore('demonstration.labels.requiredMarker')}</span>
+        </Label>
+        <Input id="demo-required" type="email" aria-required="true" />
+      </div>
+
+      <!-- Disabled via peer -->
+      <div class="nds-stack" data-spacing="sm">
+        <Input id="demo-disabled" disabled class="nds-peer" />
+        <Label for="demo-disabled">{$tStore('demonstration.labels.disabled')}</Label>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

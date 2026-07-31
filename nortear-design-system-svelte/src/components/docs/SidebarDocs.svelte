@@ -272,54 +272,52 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 400px">
-        <SidebarProvider defaultOpen={true} bind:open={demoSidebarOpen}>
-          <nav aria-label={$tStore('demonstration.labels.mainNav')}>
-            <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-              <SidebarHeader class="nds-px-4" style="padding-block: 0.75rem; border-bottom: 1px solid var(--sidebar-border)">
-                <span class="nds-font-semibold nds-text-body" style="color: var(--sidebar-foreground)">Design System</span>
-              </SidebarHeader>
-              <SidebarContent>
-                <SidebarGroup>
-                  <SidebarGroupLabel>{$tStore('demonstration.labels.mainNav')}</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {#each navItems as item}
-                        <SidebarMenuItem>
-                          <SidebarMenuButton
-                            isActive={item.isActive}
-                            tooltip={$tStore(item.label)}
-                            aria-current={item.isActive ? 'page' : undefined}
-                            onclick={() => track('navigation_click', { component: 'sidebar', label: leafKey(item.label), destination: `#${leafKey(item.label)}`, location: 'docs_demo' })}
-                          >
-                            <item.icon aria-hidden="true" />
-                            <span>{$tStore(item.label)}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      {/each}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              </SidebarContent>
-              <SidebarFooter class="nds-px-4" style="padding-block: 0.75rem; border-top: 1px solid var(--sidebar-border)">
-                <span class="nds-text-caption" style="color: var(--sidebar-foreground); opacity: 0.6">{$tStore('demonstration.labels.profile')}</span>
-              </SidebarFooter>
-              <SidebarRail />
-            </Sidebar>
-          </nav>
-          <SidebarInset>
-            <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
-              <SidebarTrigger onclick={() => track('sidebar_toggle', { action: demoSidebarOpen ? 'close' : 'open', trigger: 'button' })} />
-              <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Dashboard</span>
-            </header>
-            <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
-              <p class="nds-text-body">{$tStore('description')}</p>
-            </main>
-          </SidebarInset>
-        </SidebarProvider>
-      </div>
-    {/snippet}
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 400px">
+      <SidebarProvider defaultOpen={true} bind:open={demoSidebarOpen}>
+        <nav aria-label={$tStore('demonstration.labels.mainNav')}>
+          <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
+            <SidebarHeader class="nds-px-4" style="padding-block: 0.75rem; border-bottom: 1px solid var(--sidebar-border)">
+              <span class="nds-font-semibold nds-text-body" style="color: var(--sidebar-foreground)">Design System</span>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>{$tStore('demonstration.labels.mainNav')}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {#each navItems as item (item.label)}
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          isActive={item.isActive}
+                          tooltip={$tStore(item.label)}
+                          aria-current={item.isActive ? 'page' : undefined}
+                          onclick={() => track('navigation_click', { component: 'sidebar', label: leafKey(item.label), destination: `#${leafKey(item.label)}`, location: 'docs_demo' })}
+                        >
+                          <item.icon aria-hidden="true" />
+                          <span>{$tStore(item.label)}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    {/each}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            <SidebarFooter class="nds-px-4" style="padding-block: 0.75rem; border-top: 1px solid var(--sidebar-border)">
+              <span class="nds-text-caption" style="color: var(--sidebar-foreground); opacity: 0.6">{$tStore('demonstration.labels.profile')}</span>
+            </SidebarFooter>
+            <SidebarRail />
+          </Sidebar>
+        </nav>
+        <SidebarInset>
+          <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+            <SidebarTrigger onclick={() => track('sidebar_toggle', { action: demoSidebarOpen ? 'close' : 'open', trigger: 'button' })} />
+            <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Dashboard</span>
+          </header>
+          <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
+            <p class="nds-text-body">{$tStore('description')}</p>
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -647,7 +645,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
                           <item.icon aria-hidden="true" />
@@ -678,7 +676,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
                           <item.icon aria-hidden="true" />
@@ -708,7 +706,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
                           <item.icon aria-hidden="true" />
@@ -738,7 +736,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
                           <item.icon aria-hidden="true" />
@@ -769,7 +767,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive}>
                           <item.icon aria-hidden="true" />
@@ -802,7 +800,7 @@ interface SidebarMenuButtonProps {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {#each navItems.slice(0, 3) as item}
+                    {#each navItems.slice(0, 3) as item (item.label)}
                       <SidebarMenuItem>
                         <SidebarMenuButton isActive={item.isActive} tooltip={$tStore(item.label)}>
                           <item.icon aria-hidden="true" />
@@ -975,7 +973,7 @@ interface SidebarMenuButtonProps {
                       </SidebarMenuButton>
                       {#if subOpen}
                         <SidebarMenuSub>
-                          {#each ['Alert','Button','Card','Dialog'] as name}
+                          {#each ['Alert','Button','Card','Dialog'] as name (name)}
                             <SidebarMenuSubItem>
                               <SidebarMenuSubButton>{name}</SidebarMenuSubButton>
                             </SidebarMenuSubItem>

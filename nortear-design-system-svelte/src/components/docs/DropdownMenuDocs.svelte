@@ -216,86 +216,84 @@ interface DropdownMenuRadioGroupProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap; contain: layout">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.basic')}</Button>
-            {/snippet}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuLabel>Conta</DropdownMenuLabel>
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap; contain: layout">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.basic')}</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Conta</DropdownMenuLabel>
+          <DropdownMenuItem>Perfil</DropdownMenuItem>
+          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.withCheckbox')}</Button>
-            {/snippet}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuLabel>Visualização</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem
-              checked={demoShowStatus}
-              onCheckedChange={(v) => (demoShowStatus = v)}
-            >
-              Status bar
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={demoShowActivity}
-              onCheckedChange={(v) => (demoShowActivity = v)}
-            >
-              Activity bar
-            </DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withCheckbox')}</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Visualização</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuCheckboxItem
+            checked={demoShowStatus}
+            onCheckedChange={(v) => (demoShowStatus = v)}
+          >
+            Status bar
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={demoShowActivity}
+            onCheckedChange={(v) => (demoShowActivity = v)}
+          >
+            Activity bar
+          </DropdownMenuCheckboxItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.withRadio')}</Button>
-            {/snippet}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuLabel>Posição</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup bind:value={demoRadio}>
-              <DropdownMenuRadioItem value="top">Topo</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="bottom">Inferior</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="right">Direita</DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withRadio')}</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuLabel>Posição</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup bind:value={demoRadio}>
+            <DropdownMenuRadioItem value="top">Topo</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="bottom">Inferior</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="right">Direita</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            {#snippet child({ props })}
-              <Button variant="outline" {...props}>{$tStore('demonstration.labels.withSubmenu')}</Button>
-            {/snippet}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuItem>Novo arquivo</DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>PDF</DropdownMenuItem>
-                <DropdownMenuItem>CSV</DropdownMenuItem>
-                <DropdownMenuItem>JSON</DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    {/snippet}
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {#snippet child({ props })}
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withSubmenu')}</Button>
+          {/snippet}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuItem>Novo arquivo</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>PDF</DropdownMenuItem>
+              <DropdownMenuItem>CSV</DropdownMenuItem>
+              <DropdownMenuItem>JSON</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

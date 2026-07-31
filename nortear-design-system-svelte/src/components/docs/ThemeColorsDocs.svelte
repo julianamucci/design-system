@@ -87,9 +87,9 @@
 
   // Conteúdo da tabela de demonstração de densidade — reativo ao locale.
   const densityData = $derived(
-    (themeColorsTranslations as Record<string, any>)[$locale].axes.density as {
-      tableCols: string[]; tableRows: string[][];
-    }
+    ((themeColorsTranslations as Record<string, unknown>)[$locale] as {
+      axes: { density: { tableCols: string[]; tableRows: string[][] } };
+    }).axes.density
   );
 
   // Tema/modo ativos derivados das classes do <html>, para que os cards
@@ -195,11 +195,11 @@
         <p class="nds-text-body">{$tStore('palette.subtitle')}</p>
       </div>
 
-      {#each PALETTE_GROUPS as group}
+      {#each PALETTE_GROUPS as group (group.key)}
         <div class="nds-swatch-group">
           <h3 class="nds-swatch-group-title">{$tStore(`palette.groups.${group.key}`)}</h3>
           <ul class="nds-swatch-grid">
-            {#each group.tokens as token}
+            {#each group.tokens as token (token)}
               <li class="nds-swatch-grid-item">
                 <Swatch
                   {token}
@@ -222,12 +222,12 @@
         <p class="nds-text-body">{$tStore('brand.subtitle')}</p>
       </div>
       <div class="nds-theme-card-grid">
-        {#each BRAND_THEMES as theme}
+        {#each BRAND_THEMES as theme (theme.key)}
           <div class="nds-theme-card">
             <div class={`nds-theme-card-scope ${theme.className}${paginaDark ? ' dark' : ''}`}>
               <span class="nds-theme-card-label">{$tStore(`brand.themes.${theme.key}`)}</span>
               <div class="nds-miniswatch-row">
-                {#each MINI_TOKENS as token}
+                {#each MINI_TOKENS as token (token)}
                   <Swatch {token} orientation="vertical" />
                 {/each}
               </div>
@@ -244,12 +244,12 @@
         <p class="nds-text-body">{$tStore('modes.subtitle')}</p>
       </div>
       <div class="nds-theme-card-grid">
-        {#each MODES as mode}
+        {#each MODES as mode (mode.key)}
           <div class="nds-theme-card">
             <div class={`nds-theme-card-scope ${temaAtivo}${mode.className ? ` ${mode.className}` : ''}`}>
               <span class="nds-theme-card-label">{$tStore(`modes.${mode.key}`)}</span>
               <div class="nds-miniswatch-row">
-                {#each MINI_TOKENS as token}
+                {#each MINI_TOKENS as token (token)}
                   <Swatch {token} orientation="vertical" />
                 {/each}
               </div>
@@ -273,22 +273,22 @@
           <p class="nds-text-body">{$tStore('axes.density.subtitle')}</p>
         </div>
         <div class="nds-axis-grid">
-          {#each DENSITY_ITEMS as item}
+          {#each DENSITY_ITEMS as item (item.key)}
             <div class="nds-axis-sample">
               <span class="nds-axis-sample-label">{$tStore(`axes.density.items.${item.key}`)}</span>
               <div class={`nds-axis-scope ${item.className}`}>
                 <Table class="nds-axis-density-table">
                   <TableHeader>
                     <TableRow>
-                      {#each densityData.tableCols as col}
+                      {#each densityData.tableCols as col, i (i)}
                         <TableHead>{col}</TableHead>
                       {/each}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {#each densityData.tableRows as row}
+                    {#each densityData.tableRows as row, i (i)}
                       <TableRow>
-                        {#each row as val}
+                        {#each row as val, vi (vi)}
                           <TableCell>{val}</TableCell>
                         {/each}
                       </TableRow>
@@ -308,7 +308,7 @@
           <p class="nds-text-body">{$tStore('axes.fonts.subtitle')}</p>
         </div>
         <div class="nds-axis-grid" data-cols="4">
-          {#each FONT_ITEMS as item}
+          {#each FONT_ITEMS as item (item.key)}
             <div class="nds-axis-sample">
               <span class="nds-axis-sample-label">{$tStore(`axes.fonts.items.${item.key}`)}</span>
               <div class={item.className}>

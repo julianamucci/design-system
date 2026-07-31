@@ -277,90 +277,88 @@ interface SelectItemProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="select">
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
-        <!-- Demo 1: default -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</p>
-          <Select type="single" bind:value={demoStateValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
-            <SelectTrigger
-              class="nds-w-full"
-              aria-label={demoLabels.stateLabel}
-              data-track="demo"
-              data-track-id="select:demo:state"
-              data-track-label={demoLabels.stateLabel}
-            >
-              {#if demoStateValue}
-                <span>{findLabel(stateOptions, demoStateValue)}</span>
-              {:else}
-                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
-              {/if}
-            </SelectTrigger>
-            <SelectContent>
-              {#each stateOptions as opt (opt.value)}
-                <SelectItem value={opt.value} label={opt.label} />
-              {/each}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <!-- Demo 2: groups -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</p>
-          <Select type="single" bind:value={demoRegionValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'region', value: v, label: findLabelInGroups(regionGroups, v), location: 'docs_demo' })}>
-            <SelectTrigger
-              class="nds-w-full"
-              aria-label={demoLabels.regionLabel}
-              data-track="demo"
-              data-track-id="select:demo:region"
-              data-track-label={demoLabels.regionLabel}
-            >
-              {#if demoRegionValue}
-                <span>{findLabelInGroups(regionGroups, demoRegionValue)}</span>
-              {:else}
-                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
-              {/if}
-            </SelectTrigger>
-            <SelectContent>
-              {#each regionGroups as group (group.label)}
-                <SelectGroup>
-                  <SelectGroupHeading>{group.label}</SelectGroupHeading>
-                  {#each group.options as opt (opt.value)}
-                    <SelectItem value={opt.value} label={opt.label} />
-                  {/each}
-                </SelectGroup>
-              {/each}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <!-- Demo 3: size sm -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout; grid-column: 1 / -1;">
-          <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel} (sm)</p>
-          <Select type="single" bind:value={demoSmValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state_sm', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
-            <SelectTrigger
-              size="sm"
-              style="width: 14rem;"
-              aria-label={demoLabels.stateLabel}
-              data-track="demo"
-              data-track-id="select:demo:state-sm"
-              data-track-label={demoLabels.stateLabel}
-            >
-              {#if demoSmValue}
-                <span>{findLabel(stateOptions, demoSmValue)}</span>
-              {:else}
-                <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
-              {/if}
-            </SelectTrigger>
-            <SelectContent>
-              {#each stateOptions as opt (opt.value)}
-                <SelectItem value={opt.value} label={opt.label} />
-              {/each}
-            </SelectContent>
-          </Select>
-        </div>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
+      <!-- Demo 1: default -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel}</p>
+        <Select type="single" bind:value={demoStateValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
+          <SelectTrigger
+            class="nds-w-full"
+            aria-label={demoLabels.stateLabel}
+            data-track="demo"
+            data-track-id="select:demo:state"
+            data-track-label={demoLabels.stateLabel}
+          >
+            {#if demoStateValue}
+              <span>{findLabel(stateOptions, demoStateValue)}</span>
+            {:else}
+              <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
+            {/if}
+          </SelectTrigger>
+          <SelectContent>
+            {#each stateOptions as opt (opt.value)}
+              <SelectItem value={opt.value} label={opt.label} />
+            {/each}
+          </SelectContent>
+        </Select>
       </div>
-    {/snippet}
+
+      <!-- Demo 2: groups -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-body nds-font-semibold">{demoLabels.regionLabel}</p>
+        <Select type="single" bind:value={demoRegionValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'region', value: v, label: findLabelInGroups(regionGroups, v), location: 'docs_demo' })}>
+          <SelectTrigger
+            class="nds-w-full"
+            aria-label={demoLabels.regionLabel}
+            data-track="demo"
+            data-track-id="select:demo:region"
+            data-track-label={demoLabels.regionLabel}
+          >
+            {#if demoRegionValue}
+              <span>{findLabelInGroups(regionGroups, demoRegionValue)}</span>
+            {:else}
+              <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
+            {/if}
+          </SelectTrigger>
+          <SelectContent>
+            {#each regionGroups as group (group.label)}
+              <SelectGroup>
+                <SelectGroupHeading>{group.label}</SelectGroupHeading>
+                {#each group.options as opt (opt.value)}
+                  <SelectItem value={opt.value} label={opt.label} />
+                {/each}
+              </SelectGroup>
+            {/each}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <!-- Demo 3: size sm -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout; grid-column: 1 / -1;">
+        <p class="nds-text-body nds-font-semibold">{demoLabels.stateLabel} (sm)</p>
+        <Select type="single" bind:value={demoSmValue} onValueChange={(v: string) => track('option_select', { component: 'select', field_name: 'state_sm', value: v, label: findLabel(stateOptions, v), location: 'docs_demo' })}>
+          <SelectTrigger
+            size="sm"
+            style="width: 14rem;"
+            aria-label={demoLabels.stateLabel}
+            data-track="demo"
+            data-track-id="select:demo:state-sm"
+            data-track-label={demoLabels.stateLabel}
+          >
+            {#if demoSmValue}
+              <span>{findLabel(stateOptions, demoSmValue)}</span>
+            {:else}
+              <span class="nds-text-muted-foreground">{demoLabels.placeholder}</span>
+            {/if}
+          </SelectTrigger>
+          <SelectContent>
+            {#each stateOptions as opt (opt.value)}
+              <SelectItem value={opt.value} label={opt.label} />
+            {/each}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
@@ -658,10 +656,8 @@ interface SelectItemProps {
         <SelectContent>
           {#each stateOptions as opt (opt.value)}
             <SelectItem value={opt.value} label={opt.label}>
-              {#snippet children()}
-                <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
-                <span>{opt.label}</span>
-              {/snippet}
+              <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
+              <span>{opt.label}</span>
             </SelectItem>
           {/each}
         </SelectContent>

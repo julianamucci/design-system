@@ -379,100 +379,98 @@ interface CommandLoadingProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-w-full nds-stack" data-spacing="xl" style="align-items: center">
+    <div class="nds-w-full nds-stack" data-spacing="xl" style="align-items: center">
 
-        <!-- Demo 1: Inline -->
-        <div class="nds-w-full nds-max-w-sm">
-          <p class="nds-mb-2 nds-text-body nds-font-medium">Inline</p>
-          <div class="nds-rounded-md nds-border-default nds-shadow-md">
-            <Command.Root>
-              <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
-              <Command.List>
-                <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-                <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
-                  <Command.Item value="button" onSelect={() => track('command_item_select', { label: 'button', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemButton')}</Command.Item>
-                  <Command.Item value="input" onSelect={() => track('command_item_select', { label: 'input', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemInput')}</Command.Item>
-                </Command.Group>
-                <Command.Separator />
-                <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
-                  <Command.Item value="separator" onSelect={() => track('command_item_select', { label: 'separator', group: 'utils', pattern: 'inline' })}>{$tStore('demonstration.labels.itemSeparator')}</Command.Item>
-                </Command.Group>
-              </Command.List>
-            </Command.Root>
-          </div>
-        </div>
-
-        <!-- Demo 2: Com CommandLoading -->
-        <div class="nds-w-full nds-max-w-sm">
-          <p class="nds-mb-2 nds-text-body nds-font-medium">Com CommandLoading</p>
-          <div class="nds-rounded-md nds-border-default nds-shadow-md">
-            <Command.Root>
-              <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
-              <Command.List>
-                <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-                <Command.Loading>
-                  <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" data-justify="center" role="progressbar" aria-label="Carregando resultados" style="padding-block: 1rem">
-                    <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
-                    <span>Carregando resultados...</span>
-                  </div>
-                </Command.Loading>
-              </Command.List>
-            </Command.Root>
-          </div>
-        </div>
-
-        <!-- Demo 3: Command Palette -->
-        <div class="nds-stack" data-spacing="sm" style="align-items: center">
-          <p class="nds-text-body nds-font-medium">Command Palette</p>
-          <Button
-            variant="outline"
-            class="nds-cluster nds-text-muted-foreground"
-            data-justify="between"
-            style="width: 280px"
-            onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button' }); }}
-          >
-            <span class="nds-cluster" data-spacing="sm">
-              <Search class="nds-size-4" aria-hidden="true" />
-              {$tStore('demonstration.labels.openPalette')}
-            </span>
-            <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
-              <span class="nds-text-caption">⌘</span>K
-            </kbd>
-          </Button>
-          <Command.Dialog bind:open={paletteOpen} title={$tStore('demonstration.labels.dialogTitle')} description={$tStore('demonstration.labels.dialogDescription')}>
+      <!-- Demo 1: Inline -->
+      <div class="nds-w-full nds-max-w-sm">
+        <p class="nds-mb-2 nds-text-body nds-font-medium">Inline</p>
+        <div class="nds-rounded-md nds-border-default nds-shadow-md">
+          <Command.Root>
             <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
             <Command.List>
               <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
               <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
-                <Command.Item value="dashboard" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'dashboard', group: 'components', pattern: 'palette' }); }}>
-                  <LayoutDashboard aria-hidden="true" />
-                  Dashboard
-                  <Command.Shortcut>⌘D</Command.Shortcut>
-                </Command.Item>
-                <Command.Item value="documents" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'documents', group: 'components', pattern: 'palette' }); }}>
-                  <FileText aria-hidden="true" />
-                  Documentos
-                </Command.Item>
-                <Command.Item value="users" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'users', group: 'components', pattern: 'palette' }); }}>
-                  <Users aria-hidden="true" />
-                  Usuários
-                </Command.Item>
+                <Command.Item value="button" onSelect={() => track('command_item_select', { label: 'button', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemButton')}</Command.Item>
+                <Command.Item value="input" onSelect={() => track('command_item_select', { label: 'input', group: 'components', pattern: 'inline' })}>{$tStore('demonstration.labels.itemInput')}</Command.Item>
               </Command.Group>
               <Command.Separator />
               <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
-                <Command.Item value="settings" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'settings', group: 'utils', pattern: 'palette' }); }}>
-                  <Settings aria-hidden="true" />
-                  Configurações
-                  <Command.Shortcut>⌘,</Command.Shortcut>
-                </Command.Item>
+                <Command.Item value="separator" onSelect={() => track('command_item_select', { label: 'separator', group: 'utils', pattern: 'inline' })}>{$tStore('demonstration.labels.itemSeparator')}</Command.Item>
               </Command.Group>
             </Command.List>
-          </Command.Dialog>
+          </Command.Root>
         </div>
-
       </div>
-    {/snippet}
+
+      <!-- Demo 2: Com CommandLoading -->
+      <div class="nds-w-full nds-max-w-sm">
+        <p class="nds-mb-2 nds-text-body nds-font-medium">Com CommandLoading</p>
+        <div class="nds-rounded-md nds-border-default nds-shadow-md">
+          <Command.Root>
+            <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
+            <Command.List>
+              <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
+              <Command.Loading>
+                <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" data-justify="center" role="progressbar" aria-label="Carregando resultados" style="padding-block: 1rem">
+                  <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
+                  <span>Carregando resultados...</span>
+                </div>
+              </Command.Loading>
+            </Command.List>
+          </Command.Root>
+        </div>
+      </div>
+
+      <!-- Demo 3: Command Palette -->
+      <div class="nds-stack" data-spacing="sm" style="align-items: center">
+        <p class="nds-text-body nds-font-medium">Command Palette</p>
+        <Button
+          variant="outline"
+          class="nds-cluster nds-text-muted-foreground"
+          data-justify="between"
+          style="width: 280px"
+          onclick={() => { paletteOpen = true; track('command_palette_open', { trigger: 'button' }); }}
+        >
+          <span class="nds-cluster" data-spacing="sm">
+            <Search class="nds-size-4" aria-hidden="true" />
+            {$tStore('demonstration.labels.openPalette')}
+          </span>
+          <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.125rem 0.375rem">
+            <span class="nds-text-caption">⌘</span>K
+          </kbd>
+        </Button>
+        <Command.Dialog bind:open={paletteOpen} title={$tStore('demonstration.labels.dialogTitle')} description={$tStore('demonstration.labels.dialogDescription')}>
+          <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
+          <Command.List>
+            <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
+            <Command.Group heading={$tStore('demonstration.labels.groupComponents')}>
+              <Command.Item value="dashboard" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'dashboard', group: 'components', pattern: 'palette' }); }}>
+                <LayoutDashboard aria-hidden="true" />
+                Dashboard
+                <Command.Shortcut>⌘D</Command.Shortcut>
+              </Command.Item>
+              <Command.Item value="documents" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'documents', group: 'components', pattern: 'palette' }); }}>
+                <FileText aria-hidden="true" />
+                Documentos
+              </Command.Item>
+              <Command.Item value="users" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'users', group: 'components', pattern: 'palette' }); }}>
+                <Users aria-hidden="true" />
+                Usuários
+              </Command.Item>
+            </Command.Group>
+            <Command.Separator />
+            <Command.Group heading={$tStore('demonstration.labels.groupUtils')}>
+              <Command.Item value="settings" onSelect={() => { paletteOpen = false; track('command_item_select', { label: 'settings', group: 'utils', pattern: 'palette' }); }}>
+                <Settings aria-hidden="true" />
+                Configurações
+                <Command.Shortcut>⌘,</Command.Shortcut>
+              </Command.Item>
+            </Command.Group>
+          </Command.List>
+        </Command.Dialog>
+      </div>
+
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ─────────────────────────────────────────────────── -->
@@ -666,7 +664,7 @@ interface CommandLoadingProps {
           <Command.List>
             <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
             <Command.Group>
-              {#each comboboxItems as item}
+              {#each comboboxItems as item (item.value)}
                 <Command.Item
                   value={item.value}
                   onSelect={() => { comboboxValue = item.value; comboboxOpen = false; }}

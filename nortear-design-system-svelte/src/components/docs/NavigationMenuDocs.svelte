@@ -189,41 +189,39 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-        <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label="Navegação principal">
-          <NavigationMenuList>
-            <NavigationMenuItem value="home">
-              <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem value="produtos">
-              <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 440px">
-                  <li><NavigationMenuLink href="/produtos/a">Produto A</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="/produtos/b">Produto B</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="/produtos/c">Produto C</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="/produtos/d">Produto D</NavigationMenuLink></li>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem value="solucoes">
-              <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 280px">
-                  <li><NavigationMenuLink href="/solucoes/startups">Startups</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="/solucoes/empresas">Empresas</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="/solucoes/agencias">Agências</NavigationMenuLink></li>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem value="sobre">
-              <NavigationMenuLink href="/sobre">Sobre</NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenuRoot>
-      </div>
-    {/snippet}
+    <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
+      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label="Navegação principal">
+        <NavigationMenuList>
+          <NavigationMenuItem value="home">
+            <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem value="produtos">
+            <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 440px">
+                <li><NavigationMenuLink href="/produtos/a">Produto A</NavigationMenuLink></li>
+                <li><NavigationMenuLink href="/produtos/b">Produto B</NavigationMenuLink></li>
+                <li><NavigationMenuLink href="/produtos/c">Produto C</NavigationMenuLink></li>
+                <li><NavigationMenuLink href="/produtos/d">Produto D</NavigationMenuLink></li>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem value="solucoes">
+            <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 280px">
+                <li><NavigationMenuLink href="/solucoes/startups">Startups</NavigationMenuLink></li>
+                <li><NavigationMenuLink href="/solucoes/empresas">Empresas</NavigationMenuLink></li>
+                <li><NavigationMenuLink href="/solucoes/agencias">Agências</NavigationMenuLink></li>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem value="sobre">
+            <NavigationMenuLink href="/sobre">Sobre</NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenuRoot>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -384,7 +382,7 @@ interface NavigationMenuLinkProps {
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul class="nds-grid nds-p-2 nds-overflow-y" data-spacing="xs" style="width: 260px; max-height: 10rem">
-                {#each Array(30) as _, i}
+                {#each Array(30) as _, i (i)}
                   <li><NavigationMenuLink href={`/p/${i}`}>Item {i + 1}</NavigationMenuLink></li>
                 {/each}
               </ul>

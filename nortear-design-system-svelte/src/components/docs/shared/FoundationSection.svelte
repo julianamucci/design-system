@@ -139,13 +139,13 @@
   {:else if isArray(value)}
     {#if value.every((v) => isString(v))}
       <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
-        {#each value as item}
+        {#each value as item, i (i)}
           <li>{@html item}</li>
         {/each}
       </ul>
     {:else}
       <div class="nds-stack" data-spacing="sm">
-        {#each value as item}
+        {#each value as item, i (i)}
           {#if isObject(item)}
             <div class="nds-stack nds-p-4 nds-rounded-md nds-border-soft nds-bg-card" data-spacing="xs">
               {@render renderObject(item, depth + 1)}
@@ -164,7 +164,7 @@
 {#snippet renderObject(obj: Record<string, unknown>, depth: number)}
   {@const table = asTable(obj)}
   <div class="nds-stack" data-spacing="md">
-    {#each entries(obj) as [key, value]}
+    {#each entries(obj) as [key, value] (key)}
         {#if (key === 'cols' || key === 'tableCols') && table}
           <!-- Tabela renderizada na posição da chave `cols` — as demais chaves
                (title, subtitle, rules...) continuam no fluxo. Antes, um `if`
@@ -172,20 +172,20 @@
           <Table>
             <TableHeader>
               <TableRow>
-                {#each table.cols as col}
+                {#each table.cols as col, ci (ci)}
                   <TableHead>{col}</TableHead>
                 {/each}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {#each table.rows as row}
+              {#each table.rows as row, ri (ri)}
                 <TableRow>
                   {#if isRowArray(row)}
-                    {#each row as cell}
+                    {#each row as cell, ci (ci)}
                       <TableCell>{@html String(cell)}</TableCell>
                     {/each}
                   {:else if isObject(row)}
-                    {#each cellsOfObjectRow(row, table.cols) as cell}
+                    {#each cellsOfObjectRow(row, table.cols) as cell, ci (ci)}
                       <TableCell>{@html cell}</TableCell>
                     {/each}
                   {/if}
@@ -207,7 +207,7 @@
           {#if itemsAreCards}
             <!-- Itens objeto → grid fixo de 2 colunas de Card (title + description + extras) -->
             <div class="nds-grid" data-cols="2" data-fixed="true" data-spacing="md">
-              {#each entries(value) as [, item]}
+              {#each entries(value) as [itemKey, item] (itemKey)}
                 <Card>
                   <CardHeader>
                     {#if itemTitle(item)}
@@ -219,7 +219,7 @@
                   </CardHeader>
                   {#if itemExtras(item).length}
                     <CardContent class="nds-stack" data-spacing="xs">
-                      {#each itemExtras(item) as [, exVal]}
+                      {#each itemExtras(item) as [exKey, exVal] (exKey)}
                         <p class="nds-text-caption nds-text-muted-foreground nds-m-0">{@html exVal}</p>
                       {/each}
                     </CardContent>
@@ -229,7 +229,7 @@
             </div>
           {:else}
             <ul class="nds-stack nds-list-none" data-spacing="md">
-              {#each entries(value) as [, item]}
+              {#each entries(value) as [itemKey, item] (itemKey)}
                 <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
               {/each}
             </ul>
@@ -237,7 +237,7 @@
         {:else if key === 'rules' && (isObject(value) || isArray(value))}
           <!-- rules → lista de acento, sem heading do nome da chave (igual às demais stacks) -->
           <ul class="nds-stack nds-list-none" data-spacing="md">
-            {#each (isArray(value) ? value : Object.values(value)) as rule}
+            {#each (isArray(value) ? value : Object.values(value)) as rule, i (i)}
               {#if isString(rule)}
                 <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html rule}</li>
               {/if}
@@ -245,7 +245,7 @@
           </ul>
         {:else if key === 'items' && isArray(value)}
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
-            {#each value as item}
+            {#each value as item, i (i)}
               {#if isString(item)}
                 <li>{@html item}</li>
               {:else if isObject(item) && isString(item.title)}
@@ -266,7 +266,7 @@
           <!-- mapa/array puro de strings (ex.: usage.ranges) → lista de acento,
                igual React/Vue — sem heading inventado, sem parágrafos soltos -->
           <ul class="nds-stack nds-list-none" data-spacing="md">
-            {#each (isArray(value) ? value : Object.values(value)) as item}
+            {#each (isArray(value) ? value : Object.values(value)) as item, i (i)}
               <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
             {/each}
           </ul>

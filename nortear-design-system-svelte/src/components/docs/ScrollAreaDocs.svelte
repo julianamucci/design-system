@@ -159,67 +159,65 @@ interface ScrollAreaRootProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-stack nds-w-full" data-spacing="xl">
-        <!-- Demo 1: Vertical -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.verticalTitle')}
-          </p>
-          <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 300px; width: 100%; max-width: 360px;">
-            <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
-              <div class="nds-stack nds-p-4" data-spacing="sm">
-                {#each VERTICAL_TAGS as n}
-                  <div class="nds-text-body nds-border-b nds-last-border-0" style="padding-bottom: 0.5rem">
-                    {$tStore('demonstration.labels.tag')} {n}
-                  </div>
-                {/each}
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
-
-        <!-- Demo 2: Horizontal -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.horizontalTitle')}
-          </p>
-          <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 180px; width: 100%; max-width: 500px;">
-            <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
-              <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
-                {#each HORIZONTAL_CARDS as n}
-                  <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style="height: 120px; width: 140px">
-                    Card {n}
-                  </div>
-                {/each}
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
-
-        <!-- Demo 3: Both -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.bothTitle')}
-          </p>
-          <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 260px; width: 100%; max-width: 500px;">
-            <ScrollArea orientation="both" class="nds-w-full" style="height: 100%">
-              <table class="nds-border-collapse nds-text-caption" style="width: max-content">
-                <tbody>
-                  {#each MATRIX_ROWS as r}
-                    <tr>
-                      {#each MATRIX_COLS as c}
-                        <td class="nds-border-default nds-whitespace-nowrap" style="padding: 0.5rem 0.75rem">R{r}·C{c}</td>
-                      {/each}
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </ScrollArea>
-          </div>
+    <div class="nds-stack nds-w-full" data-spacing="xl">
+      <!-- Demo 1: Vertical -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.verticalTitle')}
+        </p>
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 300px; width: 100%; max-width: 360px;">
+          <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+            <div class="nds-stack nds-p-4" data-spacing="sm">
+              {#each VERTICAL_TAGS as n (n)}
+                <div class="nds-text-body nds-border-b nds-last-border-0" style="padding-bottom: 0.5rem">
+                  {$tStore('demonstration.labels.tag')} {n}
+                </div>
+              {/each}
+            </div>
+          </ScrollArea>
         </div>
       </div>
-    {/snippet}
+
+      <!-- Demo 2: Horizontal -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.horizontalTitle')}
+        </p>
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 180px; width: 100%; max-width: 500px;">
+          <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+            <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
+              {#each HORIZONTAL_CARDS as n (n)}
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style="height: 120px; width: 140px">
+                  Card {n}
+                </div>
+              {/each}
+            </div>
+          </ScrollArea>
+        </div>
+      </div>
+
+      <!-- Demo 3: Both -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.bothTitle')}
+        </p>
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 260px; width: 100%; max-width: 500px;">
+          <ScrollArea orientation="both" class="nds-w-full" style="height: 100%">
+            <table class="nds-border-collapse nds-text-caption" style="width: max-content">
+              <tbody>
+                {#each MATRIX_ROWS as r (r)}
+                  <tr>
+                    {#each MATRIX_COLS as c (c)}
+                      <td class="nds-border-default nds-whitespace-nowrap" style="padding: 0.5rem 0.75rem">R{r}·C{c}</td>
+                    {/each}
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </ScrollArea>
+        </div>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -324,7 +322,7 @@ interface ScrollAreaRootProps {
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 160px; width: 100%;">
       <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
-          {#each Array.from({ length: 12 }, (_, i) => i + 1) as i}
+          {#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
           {/each}
         </div>
@@ -335,7 +333,7 @@ interface ScrollAreaRootProps {
     <div class="nds-w-full">
       <ScrollArea orientation="vertical" class="nds-w-full nds-rounded-md nds-border-default" style="height: 100%">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
-          {#each Array.from({ length: 5 }, (_, i) => i + 1) as i}
+          {#each Array.from({ length: 5 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
           {/each}
         </div>
@@ -346,7 +344,7 @@ interface ScrollAreaRootProps {
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 160px; width: 100%;">
       <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
-          {#each Array.from({ length: 14 }, (_, i) => i + 1) as i}
+          {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
             <div>Linha {i}</div>
           {/each}
         </div>
@@ -359,7 +357,7 @@ interface ScrollAreaRootProps {
         <div style="height: 140px;">
           <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
             <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
-              {#each Array.from({ length: 14 }, (_, i) => i + 1) as i}
+              {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
                 <div>Linha {i}</div>
               {/each}
             </div>
@@ -386,7 +384,7 @@ interface ScrollAreaRootProps {
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 200px; width: 100%; max-width: 300px;">
       <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
-          {#each VERTICAL_TAGS.slice(0, 20) as n}
+          {#each VERTICAL_TAGS.slice(0, 20) as n (n)}
             <div class="nds-border-b nds-last-border-0" style="padding-bottom: 0.25rem">{$tStore('demonstration.labels.tag')} {n}</div>
           {/each}
         </div>
@@ -397,7 +395,7 @@ interface ScrollAreaRootProps {
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 140px; width: 100%; max-width: 420px;">
       <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
         <div class="nds-cluster" data-spacing="sm" style="width: max-content; padding: 0.75rem">
-          {#each HORIZONTAL_CARDS as n}
+          {#each HORIZONTAL_CARDS as n (n)}
             <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-caption nds-shrink-0" data-align="center" data-justify="center" style="height: 90px; width: 120px">
               Card {n}
             </div>
@@ -411,9 +409,9 @@ interface ScrollAreaRootProps {
       <ScrollArea orientation="both" class="nds-w-full" style="height: 100%">
         <table class="nds-border-collapse nds-text-caption" style="width: max-content">
           <tbody>
-            {#each MATRIX_ROWS.slice(0, 10) as r}
+            {#each MATRIX_ROWS.slice(0, 10) as r (r)}
               <tr>
-                {#each MATRIX_COLS.slice(0, 10) as c}
+                {#each MATRIX_COLS.slice(0, 10) as c (c)}
                   <td class="nds-border-default nds-px-2 nds-py-1 nds-whitespace-nowrap">R{r}·C{c}</td>
                 {/each}
               </tr>

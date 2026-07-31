@@ -205,81 +205,79 @@ toast.promise(promise, {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div style="contain: layout" class="nds-cluster" data-spacing="sm">
-        <Toaster position="top-right" richColors />
-        <Button variant="outline" onclick={fireDefault}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-default"
-          data-track-label={$tStore('demonstration.labels.triggerDefault')}>
-          {$tStore('demonstration.labels.triggerDefault')}
-        </Button>
-        <Button variant="outline" onclick={fireSuccess}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-success"
-          data-track-label={$tStore('demonstration.labels.triggerSuccess')}>
-          {$tStore('demonstration.labels.triggerSuccess')}
-        </Button>
-        <Button variant="outline" onclick={fireError}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-error"
-          data-track-label={$tStore('demonstration.labels.triggerError')}>
-          {$tStore('demonstration.labels.triggerError')}
-        </Button>
-        <Button variant="outline" onclick={fireWarning}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-warning"
-          data-track-label={$tStore('demonstration.labels.triggerWarning')}>
-          {$tStore('demonstration.labels.triggerWarning')}
-        </Button>
-        <Button variant="outline" onclick={fireInfo}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-info"
-          data-track-label={$tStore('demonstration.labels.triggerInfo')}>
-          {$tStore('demonstration.labels.triggerInfo')}
-        </Button>
-        <Button variant="outline" onclick={fireLoading}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-loading"
-          data-track-label={$tStore('demonstration.labels.triggerLoading')}>
-          {$tStore('demonstration.labels.triggerLoading')}
-        </Button>
-        <Button variant="outline" onclick={fireWithDescription}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-with-description"
-          data-track-label={$tStore('demonstration.labels.triggerWithDescription')}>
-          {$tStore('demonstration.labels.triggerWithDescription')}
-        </Button>
-        <Button variant="outline" onclick={fireWithAction}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-with-action"
-          data-track-label={$tStore('demonstration.labels.triggerWithAction')}>
-          {$tStore('demonstration.labels.triggerWithAction')}
-        </Button>
-        <Button variant="outline" onclick={firePromise}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-promise"
-          data-track-label={$tStore('demonstration.labels.triggerPromise')}>
-          {$tStore('demonstration.labels.triggerPromise')}
-        </Button>
-        <Button variant="outline" onclick={firePersistent}
-          data-track="docs_demo_click"
-          data-track-component="sonner"
-          data-track-element-id="trigger-persistent"
-          data-track-label={$tStore('demonstration.labels.triggerPersistent')}>
-          {$tStore('demonstration.labels.triggerPersistent')}
-        </Button>
-      </div>
-    {/snippet}
+    <div style="contain: layout" class="nds-cluster" data-spacing="sm">
+      <Toaster position="top-right" richColors />
+      <Button variant="outline" onclick={fireDefault}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-default"
+        data-track-label={$tStore('demonstration.labels.triggerDefault')}>
+        {$tStore('demonstration.labels.triggerDefault')}
+      </Button>
+      <Button variant="outline" onclick={fireSuccess}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-success"
+        data-track-label={$tStore('demonstration.labels.triggerSuccess')}>
+        {$tStore('demonstration.labels.triggerSuccess')}
+      </Button>
+      <Button variant="outline" onclick={fireError}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-error"
+        data-track-label={$tStore('demonstration.labels.triggerError')}>
+        {$tStore('demonstration.labels.triggerError')}
+      </Button>
+      <Button variant="outline" onclick={fireWarning}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-warning"
+        data-track-label={$tStore('demonstration.labels.triggerWarning')}>
+        {$tStore('demonstration.labels.triggerWarning')}
+      </Button>
+      <Button variant="outline" onclick={fireInfo}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-info"
+        data-track-label={$tStore('demonstration.labels.triggerInfo')}>
+        {$tStore('demonstration.labels.triggerInfo')}
+      </Button>
+      <Button variant="outline" onclick={fireLoading}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-loading"
+        data-track-label={$tStore('demonstration.labels.triggerLoading')}>
+        {$tStore('demonstration.labels.triggerLoading')}
+      </Button>
+      <Button variant="outline" onclick={fireWithDescription}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-with-description"
+        data-track-label={$tStore('demonstration.labels.triggerWithDescription')}>
+        {$tStore('demonstration.labels.triggerWithDescription')}
+      </Button>
+      <Button variant="outline" onclick={fireWithAction}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-with-action"
+        data-track-label={$tStore('demonstration.labels.triggerWithAction')}>
+        {$tStore('demonstration.labels.triggerWithAction')}
+      </Button>
+      <Button variant="outline" onclick={firePromise}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-promise"
+        data-track-label={$tStore('demonstration.labels.triggerPromise')}>
+        {$tStore('demonstration.labels.triggerPromise')}
+      </Button>
+      <Button variant="outline" onclick={firePersistent}
+        data-track="docs_demo_click"
+        data-track-component="sonner"
+        data-track-element-id="trigger-persistent"
+        data-track-label={$tStore('demonstration.labels.triggerPersistent')}>
+        {$tStore('demonstration.labels.triggerPersistent')}
+      </Button>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

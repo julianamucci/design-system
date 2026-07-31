@@ -19,7 +19,7 @@
     <div class="nds-stack" data-spacing="md">
       <p class="nds-text-body nds-leading-relaxed">{@html DOMPurify.sanitize(summary)}</p>
       <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
-        {#each items as item}
+        {#each items as item, i (i)}
           <li class="nds-leading-relaxed">{@html DOMPurify.sanitize(item)}</li>
         {/each}
       </ul>
@@ -27,7 +27,7 @@
     <div>
       <h3 class="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
       <div class="nds-grid" data-cols="2" data-spacing="sm">
-        {#each keyboardItems as item}
+        {#each keyboardItems as item (item.key)}
           <Card class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4" data-spacing="sm" data-align="start">
               <kbd class="nds-kbd">
                 {item.key}

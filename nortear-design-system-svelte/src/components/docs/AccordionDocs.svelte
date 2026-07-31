@@ -290,18 +290,16 @@ type AccordionProps = {
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <Accordion type="single" value="q1" class="nds-max-w-lg">
-            {#each demoItems as item (item.value)}
-              <AccordionItem value={item.value}>
-                <AccordionTrigger onclick={(e: MouseEvent) => handleDemoTriggerClick(e, item.q)}>
-                  {item.q}
-                </AccordionTrigger>
-                <AccordionContent>{item.a}</AccordionContent>
-              </AccordionItem>
-            {/each}
-          </Accordion>
-        {/snippet}
+        <Accordion type="single" value="q1" class="nds-max-w-lg">
+          {#each demoItems as item (item.value)}
+            <AccordionItem value={item.value}>
+              <AccordionTrigger onclick={(e: MouseEvent) => handleDemoTriggerClick(e, item.q)}>
+                {item.q}
+              </AccordionTrigger>
+              <AccordionContent>{item.a}</AccordionContent>
+            </AccordionItem>
+          {/each}
+        </Accordion>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -159,25 +159,23 @@ interface BadgeProps extends HTMLAnchorAttributes {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
-        <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
-        <Badge variant="secondary">{$tStore('demonstration.labels.secondaryLabel')}</Badge>
-        <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
-        <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
-        <Badge variant="default">
-          <Check aria-hidden="true" />
-          {$tStore('demonstration.labels.statusLabel')}
-        </Badge>
-        <Badge variant="secondary">
-          <TagIcon aria-hidden="true" />
-          {$tStore('demonstration.labels.tagLabel')}
-        </Badge>
-        <Badge variant="destructive" aria-label="12 notificações não lidas">
-          {$tStore('demonstration.labels.countLabel')}
-        </Badge>
-      </div>
-    {/snippet}
+    <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+      <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
+      <Badge variant="secondary">{$tStore('demonstration.labels.secondaryLabel')}</Badge>
+      <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
+      <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
+      <Badge variant="default">
+        <Check aria-hidden="true" />
+        {$tStore('demonstration.labels.statusLabel')}
+      </Badge>
+      <Badge variant="secondary">
+        <TagIcon aria-hidden="true" />
+        {$tStore('demonstration.labels.tagLabel')}
+      </Badge>
+      <Badge variant="destructive" aria-label="12 notificações não lidas">
+        {$tStore('demonstration.labels.countLabel')}
+      </Badge>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

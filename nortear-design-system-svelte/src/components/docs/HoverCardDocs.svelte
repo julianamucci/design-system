@@ -187,97 +187,95 @@ interface HoverCardContentProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
-        <!-- Profile preview -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.userProfile')}
-          </p>
-          <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
-            <HoverCardTrigger>
-              {#snippet child({ props })}
-                <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
-              {/snippet}
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <div class="nds-cluster" data-spacing="sm">
-                <Avatar>
-                  <AvatarImage src="" alt="" />
-                  <AvatarFallback>JS</AvatarFallback>
-                </Avatar>
-                <div class="nds-stack">
-                  <p class="nds-font-medium nds-text-body">Joana Silva</p>
-                  <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-                </div>
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+      <!-- Profile preview -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.userProfile')}
+        </p>
+        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+          <HoverCardTrigger>
+            {#snippet child({ props })}
+              <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
+            {/snippet}
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div class="nds-cluster" data-spacing="sm">
+              <Avatar>
+                <AvatarImage src="" alt="" />
+                <AvatarFallback>JS</AvatarFallback>
+              </Avatar>
+              <div class="nds-stack">
+                <p class="nds-font-medium nds-text-body">Joana Silva</p>
+                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
               </div>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-
-        <!-- Link preview -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.linkPreview')}
-          </p>
-          <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
-            <HoverCardTrigger>
-              {#snippet child({ props })}
-                <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
-              {/snippet}
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <div class="nds-stack" data-spacing="sm">
-                <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
-                  <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center">D</span>
-                  <span>design-system.dev</span>
-                </div>
-                <p class="nds-font-medium">Guia de overlays acessíveis</p>
-              </div>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-
-        <!-- Definition -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.definitionTooltip')}
-          </p>
-          <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
-            <HoverCardTrigger>
-              {#snippet child({ props })}
-                <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.2</a>
-              {/snippet}
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p class="nds-font-medium nds-text-body">WCAG 2.2</p>
-              <p class="nds-text-caption nds-text-muted-foreground">
-                Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
-              </p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-
-        <!-- Metric -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.metricExplainer')}
-          </p>
-          <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
-            <HoverCardTrigger>
-              {#snippet child({ props })}
-                <a href="#metric" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>3,42%</a>
-              {/snippet}
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
-              <p class="nds-text-h4 nds-font-semibold">3,42%</p>
-              <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos.</p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
       </div>
-    {/snippet}
+
+      <!-- Link preview -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.linkPreview')}
+        </p>
+        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+          <HoverCardTrigger>
+            {#snippet child({ props })}
+              <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
+            {/snippet}
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div class="nds-stack" data-spacing="sm">
+              <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="sm">
+                <span class="nds-icon nds-rounded-sm nds-bg-muted" style="display: inline-flex; align-items: center; justify-content: center">D</span>
+                <span>design-system.dev</span>
+              </div>
+              <p class="nds-font-medium">Guia de overlays acessíveis</p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+
+      <!-- Definition -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.definitionTooltip')}
+        </p>
+        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+          <HoverCardTrigger>
+            {#snippet child({ props })}
+              <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.2</a>
+            {/snippet}
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <p class="nds-font-medium nds-text-body">WCAG 2.2</p>
+            <p class="nds-text-caption nds-text-muted-foreground">
+              Web Content Accessibility Guidelines: padrão internacional de acessibilidade.
+            </p>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+
+      <!-- Metric -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.metricExplainer')}
+        </p>
+        <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
+          <HoverCardTrigger>
+            {#snippet child({ props })}
+              <a href="#metric" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>3,42%</a>
+            {/snippet}
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <p class="nds-text-caption nds-text-muted-foreground">Conversão (últimos 30d)</p>
+            <p class="nds-text-h4 nds-font-semibold">3,42%</p>
+            <p class="nds-text-caption nds-text-muted-foreground">Cliques no CTA / usuários únicos.</p>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

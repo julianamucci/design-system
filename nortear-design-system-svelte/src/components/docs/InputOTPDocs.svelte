@@ -209,95 +209,93 @@ interface InputOTPProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
-        <!-- 6 dígitos -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.sixDigits')}
-          </p>
-          <InputOTP
-            maxlength={6}
-            bind:value={sixValue}
-            aria-label={stripHtml($tStore('demonstration.labels.sixDigits'))}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-
-        <!-- 4 dígitos -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.fourDigits')}
-          </p>
-          <InputOTP
-            maxlength={4}
-            bind:value={fourValue}
-            aria-label={stripHtml($tStore('demonstration.labels.fourDigits'))}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-
-        <!-- Com Separator -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.withSeparator')}
-          </p>
-          <InputOTP
-            maxlength={6}
-            bind:value={sepValue}
-            aria-label={stripHtml($tStore('demonstration.labels.withSeparator'))}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-
-        <!-- Alfanumérico -->
-        <div class="nds-stack" data-spacing="sm" style="contain: layout">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
-            {$tStore('demonstration.labels.alphanumeric')}
-          </p>
-          <InputOTP
-            maxlength={6}
-            bind:value={alphaValue}
-            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-            aria-label={stripHtml($tStore('demonstration.labels.alphanumeric'))}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
+    <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+      <!-- 6 dígitos -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.sixDigits')}
+        </p>
+        <InputOTP
+          maxlength={6}
+          bind:value={sixValue}
+          aria-label={stripHtml($tStore('demonstration.labels.sixDigits'))}
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+          </InputOTPGroup>
+        </InputOTP>
       </div>
-    {/snippet}
+
+      <!-- 4 dígitos -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.fourDigits')}
+        </p>
+        <InputOTP
+          maxlength={4}
+          bind:value={fourValue}
+          aria-label={stripHtml($tStore('demonstration.labels.fourDigits'))}
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
+
+      <!-- Com Separator -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.withSeparator')}
+        </p>
+        <InputOTP
+          maxlength={6}
+          bind:value={sepValue}
+          aria-label={stripHtml($tStore('demonstration.labels.withSeparator'))}
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+          </InputOTPGroup>
+          <InputOTPSeparator />
+          <InputOTPGroup>
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
+
+      <!-- Alfanumérico -->
+      <div class="nds-stack" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+          {$tStore('demonstration.labels.alphanumeric')}
+        </p>
+        <InputOTP
+          maxlength={6}
+          bind:value={alphaValue}
+          pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+          aria-label={stripHtml($tStore('demonstration.labels.alphanumeric'))}
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -192,68 +192,66 @@ interface SwitchProps {
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="switch">
-    {#snippet children()}
-      <div class="nds-stack nds-w-sm" data-spacing="lg">
-        <!-- Default -->
-        <div class="nds-cluster" data-spacing="sm">
-          <Switch
-            id="demo-notifications"
-            bind:checked={demoNotifications}
-            onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'notifications', value: String(v), location: 'docs_demo' })}
-            data-track="demo"
-            data-track-id="switch:demo:notifications"
-            data-track-label={$tStore('demonstration.labels.notifications')}
-          />
-          <Label for="demo-notifications">{$tStore('demonstration.labels.notifications')}</Label>
-        </div>
-
-        <!-- With description (panel) -->
-        <div class="nds-cluster" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label for="demo-marketing">{$tStore('demonstration.labels.marketing')}</Label>
-            <p class="nds-text-body">{$tStore('demonstration.labels.marketingDesc')}</p>
-          </div>
-          <Switch
-            id="demo-marketing"
-            bind:checked={demoMarketing}
-            onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'marketing', value: String(v), location: 'docs_demo' })}
-            data-track="demo"
-            data-track-id="switch:demo:marketing"
-            data-track-label={$tStore('demonstration.labels.marketing')}
-          />
-        </div>
-
-        <!-- Dark mode (panel) -->
-        <div class="nds-cluster" data-justify="between">
-          <div class="nds-stack" data-spacing="xs">
-            <Label for="demo-darkmode">{$tStore('demonstration.labels.darkMode')}</Label>
-            <p class="nds-text-body">{$tStore('demonstration.labels.darkModeDesc')}</p>
-          </div>
-          <Switch
-            id="demo-darkmode"
-            bind:checked={demoDarkMode}
-            onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'darkMode', value: String(v), location: 'docs_demo' })}
-            data-track="demo"
-            data-track-id="switch:demo:darkMode"
-            data-track-label={$tStore('demonstration.labels.darkMode')}
-          />
-        </div>
-
-        <!-- Sm -->
-        <div class="nds-cluster" data-spacing="sm">
-          <Switch
-            id="demo-sm"
-            size="sm"
-            bind:checked={demoSm}
-            onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'sm', value: String(v), location: 'docs_demo' })}
-            data-track="demo"
-            data-track-id="switch:demo:sm"
-            data-track-label={$tStore('demonstration.labels.sm')}
-          />
-          <Label for="demo-sm">{$tStore('demonstration.labels.sm')}</Label>
-        </div>
+    <div class="nds-stack nds-w-sm" data-spacing="lg">
+      <!-- Default -->
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch
+          id="demo-notifications"
+          bind:checked={demoNotifications}
+          onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'notifications', value: String(v), location: 'docs_demo' })}
+          data-track="demo"
+          data-track-id="switch:demo:notifications"
+          data-track-label={$tStore('demonstration.labels.notifications')}
+        />
+        <Label for="demo-notifications">{$tStore('demonstration.labels.notifications')}</Label>
       </div>
-    {/snippet}
+
+      <!-- With description (panel) -->
+      <div class="nds-cluster" data-justify="between">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="demo-marketing">{$tStore('demonstration.labels.marketing')}</Label>
+          <p class="nds-text-body">{$tStore('demonstration.labels.marketingDesc')}</p>
+        </div>
+        <Switch
+          id="demo-marketing"
+          bind:checked={demoMarketing}
+          onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'marketing', value: String(v), location: 'docs_demo' })}
+          data-track="demo"
+          data-track-id="switch:demo:marketing"
+          data-track-label={$tStore('demonstration.labels.marketing')}
+        />
+      </div>
+
+      <!-- Dark mode (panel) -->
+      <div class="nds-cluster" data-justify="between">
+        <div class="nds-stack" data-spacing="xs">
+          <Label for="demo-darkmode">{$tStore('demonstration.labels.darkMode')}</Label>
+          <p class="nds-text-body">{$tStore('demonstration.labels.darkModeDesc')}</p>
+        </div>
+        <Switch
+          id="demo-darkmode"
+          bind:checked={demoDarkMode}
+          onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'darkMode', value: String(v), location: 'docs_demo' })}
+          data-track="demo"
+          data-track-id="switch:demo:darkMode"
+          data-track-label={$tStore('demonstration.labels.darkMode')}
+        />
+      </div>
+
+      <!-- Sm -->
+      <div class="nds-cluster" data-spacing="sm">
+        <Switch
+          id="demo-sm"
+          size="sm"
+          bind:checked={demoSm}
+          onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'sm', value: String(v), location: 'docs_demo' })}
+          data-track="demo"
+          data-track-id="switch:demo:sm"
+          data-track-label={$tStore('demonstration.labels.sm')}
+        />
+        <Label for="demo-sm">{$tStore('demonstration.labels.sm')}</Label>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->

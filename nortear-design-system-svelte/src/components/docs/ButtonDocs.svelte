@@ -161,23 +161,21 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        {#snippet children()}
-          <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
-            <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
-            <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
-            <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
-            <Button variant="outline" onclick={() => handleDemoClick('outline')}>{$tStore('demonstration.labels.outline')}</Button>
-            <Button variant="ghost" onclick={() => handleDemoClick('ghost')}>{$tStore('demonstration.labels.ghost')}</Button>
-            <Button variant="link" onclick={() => handleDemoClick('link')}>{$tStore('demonstration.labels.link')}</Button>
-            <Button variant="outline" onclick={() => handleDemoClick('outline-icon')}>
-              <Plus class="nds-icon" aria-hidden="true" />
-              {$tStore('demonstration.labels.withIcon')}
-            </Button>
-            <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')} onclick={() => handleDemoClick('icon-only')}>
-              <Trash2 class="nds-icon" aria-hidden="true" />
-            </Button>
-          </div>
-        {/snippet}
+        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+          <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
+          <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
+          <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
+          <Button variant="outline" onclick={() => handleDemoClick('outline')}>{$tStore('demonstration.labels.outline')}</Button>
+          <Button variant="ghost" onclick={() => handleDemoClick('ghost')}>{$tStore('demonstration.labels.ghost')}</Button>
+          <Button variant="link" onclick={() => handleDemoClick('link')}>{$tStore('demonstration.labels.link')}</Button>
+          <Button variant="outline" onclick={() => handleDemoClick('outline-icon')}>
+            <Plus class="nds-icon" aria-hidden="true" />
+            {$tStore('demonstration.labels.withIcon')}
+          </Button>
+          <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')} onclick={() => handleDemoClick('icon-only')}>
+            <Trash2 class="nds-icon" aria-hidden="true" />
+          </Button>
+        </div>
       </DocsDemonstration>
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->

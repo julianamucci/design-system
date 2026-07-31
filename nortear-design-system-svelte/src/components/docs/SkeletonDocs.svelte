@@ -116,60 +116,58 @@
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
-        <!-- Card de perfil -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
-          <div
-            aria-busy="true"
-            aria-label={$tStore('demonstration.labels.card')}
-            class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
-            data-spacing="md"
-            data-align="center"
-          >
-            <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
-            <div class="nds-stack nds-flex-1" data-spacing="sm">
-              <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
-              <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Lista -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
-          <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack" data-spacing="sm">
-            {#each Array.from({ length: 3 }) as _, i (i)}
-              <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
-                <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2rem; width: 2rem" aria-hidden="true" />
-                <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 140px" aria-hidden="true" />
-              </li>
-            {/each}
-          </ul>
-        </div>
-
-        <!-- Imagem AspectRatio -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
-          <div aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
-            <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;">
-              <Skeleton class="nds-w-full nds-motion-reduce-none" style="position: absolute; inset: 0; height: 100%" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Parágrafo -->
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
-          <div aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-            <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 0.75rem" aria-hidden="true" />
-            <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
-            <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+      <!-- Card de perfil -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
+        <div
+          aria-busy="true"
+          aria-label={$tStore('demonstration.labels.card')}
+          class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+          data-spacing="md"
+          data-align="center"
+        >
+          <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+          <div class="nds-stack nds-flex-1" data-spacing="sm">
+            <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
+            <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
           </div>
         </div>
       </div>
-    {/snippet}
+
+      <!-- Lista -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
+        <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack" data-spacing="sm">
+          {#each Array.from({ length: 3 }) as _, i (i)}
+            <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
+              <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2rem; width: 2rem" aria-hidden="true" />
+              <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 140px" aria-hidden="true" />
+            </li>
+          {/each}
+        </ul>
+      </div>
+
+      <!-- Imagem AspectRatio -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
+        <div aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
+          <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;">
+            <Skeleton class="nds-w-full nds-motion-reduce-none" style="position: absolute; inset: 0; height: 100%" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Parágrafo -->
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
+        <div aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+          <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 0.75rem" aria-hidden="true" />
+          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
+          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
+        </div>
+      </div>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

@@ -232,44 +232,42 @@ interface TooltipTriggerProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <TooltipProvider delayDuration={200}>
-        <div class="nds-cluster nds-w-full" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; min-height: 120px; position: relative;">
-          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'save', location: 'docs_demo' }); }}>
-            <TooltipTrigger>
-              {#snippet child({ props })}
-                <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
-                  <Save aria-hidden="true" class="nds-icon" />
-                </Button>
-              {/snippet}
-            </TooltipTrigger>
-            <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
-          </Tooltip>
+    <TooltipProvider delayDuration={200}>
+      <div class="nds-cluster nds-w-full" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; min-height: 120px; position: relative;">
+        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'save', location: 'docs_demo' }); }}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
+                <Save aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.save')}</TooltipContent>
+        </Tooltip>
 
-          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'delete', location: 'docs_demo' }); }}>
-            <TooltipTrigger>
-              {#snippet child({ props })}
-                <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
-                  <Trash2 aria-hidden="true" class="nds-icon" />
-                </Button>
-              {/snippet}
-            </TooltipTrigger>
-            <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
-          </Tooltip>
+        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'delete', location: 'docs_demo' }); }}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.deleteButton')} {...props}>
+                <Trash2 aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.delete')}</TooltipContent>
+        </Tooltip>
 
-          <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'share', location: 'docs_demo' }); }}>
-            <TooltipTrigger>
-              {#snippet child({ props })}
-                <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
-                  <Share2 aria-hidden="true" class="nds-icon" />
-                </Button>
-              {/snippet}
-            </TooltipTrigger>
-            <TooltipContent>{$tStore('demonstration.labels.share')}</TooltipContent>
-          </Tooltip>
-        </div>
-      </TooltipProvider>
-    {/snippet}
+        <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'share', location: 'docs_demo' }); }}>
+          <TooltipTrigger>
+            {#snippet child({ props })}
+              <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.shareButton')} {...props}>
+                <Share2 aria-hidden="true" class="nds-icon" />
+              </Button>
+            {/snippet}
+          </TooltipTrigger>
+          <TooltipContent>{$tStore('demonstration.labels.share')}</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->

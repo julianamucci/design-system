@@ -26,11 +26,14 @@
 <section id="relacionados">
   <h2 class="nds-section-title">{title}</h2>
   <div class="nds-grid" data-cols="2" data-spacing="md">
-    {#each items as item}
+    {#each items as item (item.path)}
       <!-- Card clicável com aparência do button outline (border + bg + hover accent).
            Implementado como classe própria .nds-related-card em vez de usar
            .nds-button-outline porque o layout difere (vertical, multi-linha,
            padding maior, sem white-space:nowrap nem inline-flex centralizado). -->
+      <!-- Regra do router do SvelteKit: o projeto roda em Storybook sem SvelteKit
+           e o href navega o manager (target="_top"), não há resolve() aplicável. -->
+      <!-- eslint-disable svelte/no-navigation-without-resolve -->
       <a
         href={item.path}
         target="_top"
@@ -39,6 +42,7 @@
         data-track-id={trackId(item.name)}
         data-track-label={item.name}
       >
+      <!-- eslint-enable svelte/no-navigation-without-resolve -->
         <span class="nds-related-card-title">{item.name}</span>
         <span class="nds-related-card-description">{item.description}</span>
       </a>

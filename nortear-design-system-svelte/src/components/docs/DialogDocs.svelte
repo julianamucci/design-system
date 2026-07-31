@@ -264,31 +264,29 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    {#snippet children()}
-      <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
-        <Dialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'dialog', label: 'trigger-label', location: 'docs_demo' })}>
-          <DialogTrigger>
-            {#snippet child({ props })}
-              <Button {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
-            {/snippet}
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
-              <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose>
-                {#snippet child({ props })}
-                  <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
-                {/snippet}
-              </DialogClose>
-              <Button onclick={() => track('dialog_action', { component: 'dialog', action_label: 'action', location: 'docs_demo' })}>{$tStore('demonstration.labels.action')}</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    {/snippet}
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
+      <Dialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'dialog', label: 'trigger-label', location: 'docs_demo' })}>
+        <DialogTrigger>
+          {#snippet child({ props })}
+            <Button {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
+          {/snippet}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
+            <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose>
+              {#snippet child({ props })}
+                <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
+              {/snippet}
+            </DialogClose>
+            <Button onclick={() => track('dialog_action', { component: 'dialog', action_label: 'action', location: 'docs_demo' })}>{$tStore('demonstration.labels.action')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   </DocsDemonstration>
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
@@ -556,7 +554,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogDescription>Leia atentamente antes de aceitar.</DialogDescription>
         </DialogHeader>
         <div class="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground" data-spacing="sm" style="max-height: 40vh; padding-right: 0.5rem;">
-          {#each Array.from({ length: 10 }) as _, i}
+          {#each Array.from({ length: 10 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno.</p>
           {/each}
         </div>

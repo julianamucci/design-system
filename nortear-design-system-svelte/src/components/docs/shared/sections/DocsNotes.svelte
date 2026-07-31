@@ -27,7 +27,7 @@
 <section id="notas">
   <h2 class="nds-section-title">{title}</h2>
   <div class="nds-stack" data-spacing="md">
-    {#each items as item, i}
+    {#each items as item, i (i)}
       <div data-track="link" data-track-id={trackId(i)}>
         <Alert variant="default">
           {#if item.title}
