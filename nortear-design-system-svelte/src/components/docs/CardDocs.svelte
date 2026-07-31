@@ -184,24 +184,6 @@ import { Button } from "@/components/ui/button";`;
   </CardContent>
 </Card>`;
 
-  const codeCustomizationTokens = `/* globals.css — personalize Card via tokens semânticos */
-:root {
-  --radius-card: 0.75rem;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --border: 240 5.9% 90%;
-}
-
-.dark {
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --border: 240 3.7% 15.9%;
-}`;
-
   const interfaceCode = `// Card — único subcomponente com prop custom
 interface CardProps {
   size?: 'default' | 'sm';
@@ -660,9 +642,12 @@ interface CardPartProps {
       { token: '--muted-foreground', value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
       { token: '--foreground',       value: 'ring-foreground/10',      description: stripHtml($tStore('tokens.table.foreground')) },
       { token: '--border',           value: 'border-t',                description: $tStore('tokens.table.border')          },
+      { token: '--card-bg',          value: 'hsl(var(--card))',        description: $tStore('tokens.table.cardBg')          },
+      { token: '--card-fg',          value: 'hsl(var(--card-foreground))', description: $tStore('tokens.table.cardFg')      },
+      { token: '--card-ring',        value: 'hsl(var(--foreground) / 0.1)', description: $tStore('tokens.table.cardRing')   },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

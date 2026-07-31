@@ -137,14 +137,6 @@ import User from '@lucide/svelte/icons/user';`;
   />
 </div>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — tokens semânticos usados pelo Avatar */
-:root {
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --primary: 221 83% 53%;
-  --background: 0 0% 100%;
-}`;
-
   const interfaceCode = `// Avatar
 interface AvatarProps {
   class?: string;
@@ -520,11 +512,12 @@ interface AvatarFallbackProps {
       { token: '--background',       value: 'ring-background',      description: stripHtml($tStore('tokens.table.background')) },
       { token: '--border',           value: 'border',               description: $tStore('tokens.table.border')          },
       { token: '--primary',          value: 'bg-primary',           description: $tStore('tokens.table.primary')         },
+      { token: '--avatar-size',      value: 'var(--spacing-8)',     description: $tStore('tokens.table.avatarSize')      },
       { token: '--radius',           value: 'rounded-full',         description: stripHtml($tStore('tokens.table.radius')) },
       { token: '--ring',             value: 'ring-ring',            description: $tStore('tokens.table.ring')            },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

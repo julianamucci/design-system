@@ -140,17 +140,6 @@ import Info from '@lucide/svelte/icons/info';`;
   </AlertDescription>
 </Alert>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — definir tokens semânticos */
-:root {
-  --success: 142 76% 36%;
-  --warning: 38 92% 50%;
-}
-
-.dark {
-  --success: 142 69% 58%;
-  --warning: 48 96% 53%;
-}`;
-
   const interfaceCode = `// Alert
 interface AlertProps {
   variant?: 'default' | 'destructive';
@@ -513,10 +502,13 @@ interface AlertProps {
           { token: '--destructive', value: 'text-destructive',                             description: $tStore('tokens.table.destructiveText')   },
           { token: '--success',     value: 'bg-success/10 text-success border-success/30', description: $tStore('tokens.table.success')           },
           { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30', description: $tStore('tokens.table.warning')           },
+          { token: '--alert-bg',     value: 'hsl(var(--card))',                            description: $tStore('tokens.table.alertBg')           },
+          { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',                 description: $tStore('tokens.table.alertFg')           },
+          { token: '--alert-border', value: 'hsl(var(--border))',                          description: $tStore('tokens.table.alertBorder')       },
           { token: '--radius',      value: 'rounded-lg',                                   description: $tStore('tokens.table.radius')            },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={$tStore('tokens.customizationCode')}
       />
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->

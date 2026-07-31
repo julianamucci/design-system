@@ -153,16 +153,6 @@
 
 <Calendar type="single" locale="pt-BR" isDateDisabled={isPast} />`;
 
-  const codeCustomizationTokens = `/* app.css — personalize as cores e dimensões do Calendar via tokens */
-:root {
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --ring: 240 5% 64.9%;
-  --radius-md: 0.375rem;
-}`;
-
   const interfaceCode = `// Calendar (wrapper sobre bits-ui)
 interface CalendarProps {
   type: 'single' | 'multiple';
@@ -478,11 +468,11 @@ interface CalendarProps {
       { token: '--muted-foreground', value: 'nds-text-muted-foreground',          description: stripHtml($tStore('tokens.table.mutedForeground')) },
       { token: '--foreground',       value: 'text-foreground',                description: $tStore('tokens.table.foreground')      },
       { token: '--ring',             value: 'focus:ring-ring/50',             description: $tStore('tokens.table.ring')            },
-      { token: '--cell-radius',      value: 'rounded-(--cell-radius)',        description: stripHtml($tStore('tokens.table.cellRadius')) },
-      { token: '--cell-size',        value: 'size-(--cell-size)',             description: stripHtml($tStore('tokens.table.cellSize')) },
+      { token: '--nds-cell-radius',  value: 'var(--radius-md)',               description: stripHtml($tStore('tokens.table.cellRadius')) },
+      { token: '--nds-cell-size',    value: '2rem',                           description: stripHtml($tStore('tokens.table.cellSize')) },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

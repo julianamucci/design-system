@@ -128,16 +128,6 @@ import Check from '@lucide/svelte/icons/check';`;
   <Badge variant="outline">React</Badge>
 </button>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — personalizar tokens do Badge */
-:root {
-  --primary: 222 47% 11%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-}`;
-
   const interfaceCode = `// Badge
 interface BadgeProps extends HTMLAnchorAttributes {
   variant?: 'default' | 'secondary' | 'destructive' | 'outline';
@@ -436,9 +426,12 @@ interface BadgeProps extends HTMLAnchorAttributes {
       { token: '--foreground',            value: 'text-foreground',          description: $tStore('tokens.table.foreground')           },
       { token: '--ring',                  value: 'focus:ring-ring',          description: $tStore('tokens.table.ring')                 },
       { token: '--background',            value: 'focus:ring-offset-background', description: $tStore('tokens.table.background')      },
+      { token: '--badge-bg',              value: 'hsl(var(--primary))',      description: $tStore('tokens.table.badgeBg')              },
+      { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: $tStore('tokens.table.badgeFg')        },
+      { token: '--badge-border',          value: 'transparent',              description: $tStore('tokens.table.badgeBorder')          },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
