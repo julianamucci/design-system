@@ -18,6 +18,8 @@ export interface AlertOptions {
 
 export interface AlertTitleOptions {
   text?: string;
+  /** Nível do heading do título — default 'h5'. */
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   className?: string;
 }
 
@@ -71,9 +73,11 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
 }
 
 export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
-  const { text = '', className } = options;
+  const { text = '', as = 'h5', className } = options;
 
-  const el = document.createElement('h5');
+  // PATCH: api — nível do heading configurável via `as`, default 'h5'
+  // (ver PATCHES.md#alert-title-desc-semantics)
+  const el = document.createElement(as);
   el.className = 'nds-alert-title';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
   if (text) el.textContent = text;

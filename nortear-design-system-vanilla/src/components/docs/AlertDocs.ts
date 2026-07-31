@@ -57,7 +57,8 @@ function buildAlert(
 ): HTMLElement {
   const el = createAlert({ variant, className: [className, extraClass].filter(Boolean).join(' ') });
   if (icon) el.appendChild(createAlertIcon(icon));
-  if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)) }));
+  // as: 'h3' — as seções da docs page são h2; h3 preserva a hierarquia (axe heading-order).
+  if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)), as: 'h3' }));
   el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
   return el;
 }
@@ -251,7 +252,7 @@ export function createAlertDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const el = createAlert({ variant: 'default' });
                 el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
                 el.appendChild(createAlertDescription({ text: 'Não foi possível salvar. Verifique sua conexão.' }));
                 return el;
               },
@@ -269,13 +270,13 @@ export function createAlertDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const el = createAlert({ variant: 'destructive' });
                 el.appendChild(createAlertIcon('error'));
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
                 el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
                 return el;
               },
               dontPreviewFactory: () => {
                 const el = createAlert({ variant: 'destructive' });
-                el.appendChild(createAlertTitle({ text: 'Erro ao salvar' }));
+                el.appendChild(createAlertTitle({ text: 'Erro ao salvar', as: 'h3' }));
                 el.appendChild(createAlertDescription({ text: 'Verifique sua conexão.' }));
                 return el;
               },
@@ -356,7 +357,7 @@ export function createAlertDocs(): HTMLElement {
                   }),
                 });
                 el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: stripHtml(t('demonstration.labels.infoTitle')) }));
+                el.appendChild(createAlertTitle({ text: stripHtml(t('demonstration.labels.infoTitle')), as: 'h3' }));
                 el.appendChild(createAlertDescription({ text: stripHtml(t('demonstration.labels.infoDesc')) }));
                 return el;
               },
@@ -407,7 +408,7 @@ export function createAlertDocs(): HTMLElement {
               previewFactory: () => {
                 const el = createAlert({ className: 'nds-w-full' });
                 el.appendChild(createAlertIcon('info'));
-                el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));
+                el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos', as: 'h3' }));
                 const desc = document.createElement('div');
                 desc.className = 'nds-alert-description nds-cluster';
                 desc.dataset.align = 'center';
@@ -454,6 +455,7 @@ export interface AlertOptions {
 // createAlertTitle(options), createAlertDescription(options)
 export interface AlertTitleOptions {
   text?: string;
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';  // nível do heading — default 'h5'
   className?: string;
 }`;
 
@@ -484,6 +486,7 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
+                { name: 'as',        type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: 'Não', description: stripHtml(t('props.table.titleAs')) },
                 { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
               ],
             },
