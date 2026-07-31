@@ -512,50 +512,6 @@ export function CheckboxDocs() {
             componentSlug="checkbox"
             items={[
               {
-                name: tContent("variants.compositions.withLabel.name"),
-                description: tContent("variants.compositions.withLabel.description"),
-                useWhen: tContent("variants.compositions.withLabel.use"),
-                code: `<div className="nds-cluster" data-spacing="xs">
-  <Checkbox id="cb-tos" />
-  <Label htmlFor="cb-tos" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-    Aceito os termos e condições
-  </Label>
-</div>`,
-                preview: (
-                  <div className="nds-cluster" data-spacing="xs">
-                    <Checkbox id="cb-tos" />
-                    <Label htmlFor="cb-tos" className="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-                      Aceito os termos e condições
-                    </Label>
-                  </div>
-                ),
-              },
-              {
-                name: tContent("variants.compositions.withDescription.name"),
-                description: tContent("variants.compositions.withDescription.description"),
-                useWhen: tContent("variants.compositions.withDescription.use"),
-                code: `<div className="nds-cluster" data-spacing="xs" data-align="start">
-  <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
-  <div className="nds-stack" data-spacing="xs">
-    <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-    <p className="nds-text-body">
-      Enviaremos atualizações sobre novos recursos e melhorias do produto.
-    </p>
-  </div>
-</div>`,
-                preview: (
-                  <div className="nds-cluster" data-spacing="xs" data-align="start">
-                    <Checkbox id="cb-newsletter" style={{ marginTop: "0.125rem" }} />
-                    <div className="nds-stack" data-spacing="xs">
-                      <Label htmlFor="cb-newsletter">Receber novidades por email</Label>
-                      <p className="nds-text-body">
-                        Enviaremos atualizações sobre novos recursos e melhorias do produto.
-                      </p>
-                    </div>
-                  </div>
-                ),
-              },
-              {
                 name: tContent("variants.compositions.fieldset.name"),
                 description: tContent("variants.compositions.fieldset.description"),
                 useWhen: tContent("variants.compositions.fieldset.use"),

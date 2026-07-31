@@ -505,21 +505,6 @@ import { Bold } from "lucide-react";`;
             ),
           },
           {
-            name: tContent("variants.compositions.filterWithLabel.name"),
-            description: tContent("variants.compositions.filterWithLabel.description"),
-            useWhen: tContent("variants.compositions.filterWithLabel.use"),
-            code: `<Toggle variant="outline">
-  <Eye className="nds-icon" />
-  Mostrar ocultos
-</Toggle>`,
-            preview: (
-              <Toggle variant="outline">
-                <Eye className="nds-icon" />
-                Mostrar ocultos
-              </Toggle>
-            ),
-          },
-          {
             name: tContent("variants.compositions.sizes.name"),
             description: tContent("variants.compositions.sizes.description"),
             useWhen: tContent("variants.compositions.sizes.use"),

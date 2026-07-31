@@ -28,7 +28,6 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
-import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -73,7 +72,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -658,76 +656,6 @@ interface CardProps extends React.ComponentProps<"div"> {
                 <CardContent>
                   <p className="nds-text-body">{productPrice}</p>
                 </CardContent>
-              </Card>
-            ),
-          },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        componentSlug="card"
-        useWhenLabel={tNav("common.useWhen")}
-        items={[
-          {
-            name: tContent("variants.compositions.withFooter.name"),
-            description: tContent("variants.compositions.withFooter.description"),
-            useWhen: tContent("variants.compositions.withFooter.use"),
-            code: `<Card className="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p className="nds-text-lead nds-font-semibold">R$ 1.299,00</p>\n  </CardContent>\n  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">\n    <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>\n    <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>\n  </CardFooter>\n</Card>`,
-            preview: (
-              <Card className="nds-w-full nds-max-w-sm">
-                <CardHeader>
-                  <CardTitle>Cadeira Gamer Pro</CardTitle>
-                  <CardDescription>Estrutura ergonômica com ajuste de altura.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="nds-text-lead nds-font-semibold">R$ 1.299,00</p>
-                </CardContent>
-                <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
-                  <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">Editar</Button>
-                  <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">Excluir</Button>
-                </CardFooter>
-              </Card>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withAction.name"),
-            description: tContent("variants.compositions.withAction.description"),
-            useWhen: tContent("variants.compositions.withAction.use"),
-            code: `<Card className="nds-w-full nds-max-w-sm">\n  <CardHeader>\n    <CardTitle>Assinantes ativos</CardTitle>\n    <CardDescription>+12% no mês</CardDescription>\n    <CardAction>\n      <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>\n    </CardAction>\n  </CardHeader>\n  <CardContent>\n    <p className="nds-text-h4 nds-font-semibold">8.742</p>\n  </CardContent>\n</Card>`,
-            preview: (
-              <Card className="nds-w-full nds-max-w-sm">
-                <CardHeader>
-                  <CardTitle>Assinantes ativos</CardTitle>
-                  <CardDescription>+12% no mês</CardDescription>
-                  <CardAction>
-                    <Button variant="outline" size="sm" aria-label="Editar métrica Assinantes ativos">Editar</Button>
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <p className="nds-text-h4 nds-font-semibold">8.742</p>
-                </CardContent>
-              </Card>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withImage.name"),
-            description: tContent("variants.compositions.withImage.description"),
-            useWhen: tContent("variants.compositions.withImage.use"),
-            code: `<Card className="nds-w-full nds-max-w-sm">\n  <img\n    src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"\n    alt="Cadeira Gamer Pro"\n    className="nds-w-full"\n    style={{ height: "10rem", objectFit: "cover" }}\n  />\n  <CardHeader>\n    <CardTitle>Cadeira Gamer Pro</CardTitle>\n    <CardDescription>Estrutura ergonômica.</CardDescription>\n  </CardHeader>\n</Card>`,
-            preview: (
-              <Card className="nds-w-full nds-max-w-sm">
-                <img
-                  src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80"
-                  alt="Cadeira Gamer Pro"
-                  className="nds-w-full"
-                  style={{ height: "10rem", objectFit: "cover" }}
-                />
-                <CardHeader>
-                  <CardTitle>Cadeira Gamer Pro</CardTitle>
-                  <CardDescription>Estrutura ergonômica.</CardDescription>
-                </CardHeader>
               </Card>
             ),
           },

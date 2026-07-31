@@ -830,41 +830,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               </Carousel>
             ),
           },
-          {
-            name: tContent("variants.compositions.multiResponsive.name"),
-            description: tContent("variants.compositions.multiResponsive.description"),
-            useWhen: tContent("variants.compositions.multiResponsive.use"),
-            code: `<Carousel className="nds-w-full" style={{ maxWidth: "42rem" }} aria-label="Cards de produto">
-  <CarouselContent>
-    {products.map((p) => (
-      <CarouselItem key={p.id} className="nds-md-basis-half nds-lg-basis-third">
-        <Card>
-          <CardContent>{p.name}</CardContent>
-        </Card>
-      </CarouselItem>
-    ))}
-  </CarouselContent>
-  <CarouselPrevious aria-label="Item anterior" />
-  <CarouselNext aria-label="Próximo item" />
-</Carousel>`,
-            preview: (
-              <Carousel
-                className="nds-w-full"
-                style={{ maxWidth: "42rem" }}
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
-              >
-                <CarouselContent>
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
-                      <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious aria-label={previousLabel} />
-                <CarouselNext aria-label={nextLabel} />
-              </Carousel>
-            ),
-          },
         ]}
       />
 

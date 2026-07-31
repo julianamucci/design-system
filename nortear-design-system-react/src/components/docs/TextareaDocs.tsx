@@ -140,7 +140,6 @@ export function TextareaDocs() {
   const demoMax = 500;
 
   // Compositions state
-  const [compCounter, setCompCounter] = useState("");
   const [compForm, setCompForm] = useState("");
   const [compFormResult, setCompFormResult] = useState<string | null>(null);
 
@@ -607,57 +606,6 @@ function Textarea({
                 <p className="nds-text-caption nds-text-muted-foreground">
                   Descreva o produto com clareza, destacando os principais atributos.
                 </p>
-              </div>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withCounter.name"),
-            description: tContent("variants.compositions.withCounter.description"),
-            useWhen: tContent("variants.compositions.withCounter.use"),
-            code: `const [value, setValue] = useState("");
-
-<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
-  <Label htmlFor="ta-counter">Descrição</Label>
-  <Textarea
-    id="ta-counter"
-    className="nds-resize-y nds-min-h-30"
-    placeholder="ex: Descreva o produto..."
-    maxLength={500}
-    value={value}
-    onChange={(e) => setValue(e.target.value)}
-  />
-  <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
-    <span>Descreva o produto com clareza.</span>
-    <span
-      className="nds-tabular-nums nds-shrink-0"
-      aria-live="polite"
-      aria-label={\`\${value.length} de 500 caracteres usados\`}
-    >
-      0/500
-    </span>
-  </div>
-</div>`,
-            preview: (
-              <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
-                <Label htmlFor="comp-ta-counter">Descrição</Label>
-                <Textarea
-                  id="comp-ta-counter"
-                  className="nds-resize-y nds-min-h-30"
-                  placeholder="ex: Descreva o produto..."
-                  maxLength={500}
-                  value={compCounter}
-                  onChange={(e) => setCompCounter(e.target.value)}
-                />
-                <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">
-                  <span>Descreva o produto com clareza.</span>
-                  <span
-                    className="nds-tabular-nums nds-shrink-0"
-                    aria-live="polite"
-                    aria-label={counterLabel(compCounter.length, 500)}
-                  >
-                    {compCounter.length}/500
-                  </span>
-                </div>
               </div>
             ),
           },

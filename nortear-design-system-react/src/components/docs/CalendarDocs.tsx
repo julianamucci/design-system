@@ -549,27 +549,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
               />
             ),
           },
-          {
-            name: tContent("variants.compositions.rangeTwoMonths.name"),
-            description: tContent("variants.compositions.rangeTwoMonths.description"),
-            useWhen: tContent("variants.compositions.rangeTwoMonths.use"),
-            code: `<Calendar
-  mode="range"
-  selected={range}
-  onSelect={setRange}
-  numberOfMonths={2}
-  locale={ptBR}
-/>`,
-            preview: (
-              <Calendar
-                mode="range"
-                selected={range}
-                onSelect={setRange as never}
-                numberOfMonths={2}
-                locale={ptBR}
-              />
-            ),
-          },
         ]}
       />
 

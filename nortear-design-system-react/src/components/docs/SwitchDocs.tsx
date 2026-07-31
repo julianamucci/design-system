@@ -494,23 +494,6 @@ import { Label } from "@/components/ui/label";`;
             ),
           },
           {
-            name: tContent("variants.compositions.withDescription.name"),
-            description: tContent("variants.compositions.withDescription.description"),
-            useWhen: tContent("variants.compositions.withDescription.use"),
-            code: `<div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>\n  <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n    <Label htmlFor="sw-marketing">Emails de marketing</Label>\n    <p className="nds-text-body">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id="sw-marketing" defaultChecked />\n</div>`,
-            preview: (
-              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
-                <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
-                  <Label htmlFor="sw-marketing">Emails de marketing</Label>
-                  <p className="nds-text-body">
-                    Receba novidades e promoções da plataforma.
-                  </p>
-                </div>
-                <Switch id="sw-marketing" defaultChecked />
-              </div>
-            ),
-          },
-          {
             name: tContent("variants.compositions.settingsList.name"),
             description: tContent("variants.compositions.settingsList.description"),
             useWhen: tContent("variants.compositions.settingsList.use"),

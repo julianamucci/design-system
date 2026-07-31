@@ -608,30 +608,6 @@ interface SliderProps {
             preview: <BrightnessCompDemo />,
           },
           {
-            name: tContent("variants.compositions.priceRange.name"),
-            description: tContent("variants.compositions.priceRange.description"),
-            useWhen: tContent("variants.compositions.priceRange.use"),
-            code: `const [range, setRange] = useState([100, 400]);
-
-<div className="nds-stack" data-spacing="sm">
-  <div className="nds-cluster" data-justify="between">
-    <Label>Faixa de preço</Label>
-    <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
-      R$ {range[0]} — R$ {range[1]}
-    </span>
-  </div>
-  <Slider
-    value={range}
-    onValueChange={setRange}
-    min={0}
-    max={1000}
-    step={10}
-    aria-label="Faixa de preço"
-  />
-</div>`,
-            preview: <PriceRangeDemo label="Faixa de preço" />,
-          },
-          {
             name: tContent("variants.compositions.form.name"),
             description: tContent("variants.compositions.form.description"),
             useWhen: tContent("variants.compositions.form.use"),

@@ -637,43 +637,6 @@ export function SheetDocs() {
             ),
           },
           {
-            name: tContent("variants.compositions.mobileActions.name"),
-            description: tContent("variants.compositions.mobileActions.description"),
-            useWhen: tContent("variants.compositions.mobileActions.use"),
-            code: `<Sheet>
-  <SheetTrigger render={<Button variant="outline" />}>Mais opções</SheetTrigger>
-  <SheetContent side="bottom">
-    <SheetHeader>
-      <SheetTitle>Ações rápidas</SheetTitle>
-      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-    </SheetHeader>
-    <div className="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
-      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Compartilhar</button>
-      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Editar</button>
-      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Excluir</button>
-    </div>
-  </SheetContent>
-</Sheet>`,
-            preview: (
-              <div style={{ contain: "layout" }}>
-                <Sheet>
-                  <SheetTrigger render={<Button variant="outline" />}>Mais opções</SheetTrigger>
-                  <SheetContent side="bottom">
-                    <SheetHeader>
-                      <SheetTitle>Ações rápidas</SheetTitle>
-                      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-                    </SheetHeader>
-                    <div className="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
-                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Compartilhar</button>
-                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Editar</button>
-                      <button type="button" className="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style={{ alignItems: "center", padding: "0.75rem" }}>Excluir</button>
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
-            ),
-          },
-          {
             name: tContent("variants.compositions.longScrollBody.name"),
             description: tContent("variants.compositions.longScrollBody.description"),
             useWhen: tContent("variants.compositions.longScrollBody.use"),

@@ -26,7 +26,6 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
-import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -62,7 +61,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -552,64 +550,6 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
                 cancel={tContent("demonstration.labels.cancel")}
                 action={tContent("demonstration.labels.neutralAction")}
               />
-            ),
-          },
-        ]}
-      />
-
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        items={[
-          {
-            name: tContent("variants.compositions.destructive.name"),
-            description: tContent("variants.compositions.destructive.description"),
-            useWhen: tContent("variants.compositions.destructive.use"),
-            code: `<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant="destructive">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>\n      <AlertDialogDescription>\n        Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction className="nds-bg-destructive">\n        Excluir conta\n      </AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>`,
-            preview: (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Excluir conta</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction className="nds-bg-destructive">
-                      Excluir conta
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.neutral.name"),
-            description: tContent("variants.compositions.neutral.description"),
-            useWhen: tContent("variants.compositions.neutral.use"),
-            code: `<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button>Publicar agora</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>\n      <AlertDialogDescription>\n        Ao publicar, o conteúdo fica visível para todos os usuários.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Voltar</AlertDialogCancel>\n      <AlertDialogAction>Publicar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>`,
-            preview: (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button>Publicar agora</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Ao publicar, o conteúdo fica visível para todos os usuários.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Voltar</AlertDialogCancel>
-                    <AlertDialogAction>Publicar</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
             ),
           },
         ]}

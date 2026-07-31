@@ -16,7 +16,6 @@ import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToU
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
-import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
@@ -63,7 +62,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -542,89 +540,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                   className="nds-rounded-full nds-bg-primary"
                   style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
                 />
-              </div>
-            ),
-          },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="avatar"
-        items={[
-          {
-            name: tContent("variants.compositions.withImage.name"),
-            description: tContent("variants.compositions.withImage.description"),
-            useWhen: tContent("variants.compositions.withImage.use"),
-            code: `<Avatar>\n  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n  <AvatarFallback>MR</AvatarFallback>\n</Avatar>`,
-            preview: (
-              <Avatar>
-                <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-                <AvatarFallback>MR</AvatarFallback>
-              </Avatar>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withInitials.name"),
-            description: tContent("variants.compositions.withInitials.description"),
-            useWhen: tContent("variants.compositions.withInitials.use"),
-            code: `<Avatar>\n  <AvatarFallback>JP</AvatarFallback>\n</Avatar>`,
-            preview: (
-              <Avatar>
-                <AvatarFallback>JP</AvatarFallback>
-              </Avatar>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withIcon.name"),
-            description: tContent("variants.compositions.withIcon.description"),
-            useWhen: tContent("variants.compositions.withIcon.use"),
-            code: `<Avatar>\n  <AvatarFallback role="img" aria-label="Usuário genérico">\n    <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />\n  </AvatarFallback>\n</Avatar>`,
-            preview: (
-              <Avatar>
-                <AvatarFallback role="img" aria-label="Usuário genérico">
-                  <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
-                </AvatarFallback>
-              </Avatar>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.group.name"),
-            description: tContent("variants.compositions.group.description"),
-            useWhen: tContent("variants.compositions.group.use"),
-            code: `<div style={{ display: "flex" }} role="group" aria-label="Participantes">\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>JP</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>AL</AvatarFallback>\n  </Avatar>\n  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>\n    <AvatarFallback>+3</AvatarFallback>\n  </Avatar>\n</div>`,
-            preview: (
-              <div style={{ display: "flex" }} role="group" aria-label="Participantes">
-                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
-                  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-                  <AvatarFallback>MR</AvatarFallback>
-                </Avatar>
-                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-                  <AvatarFallback>JP</AvatarFallback>
-                </Avatar>
-                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-                  <AvatarFallback>AL</AvatarFallback>
-                </Avatar>
-                <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-                  <AvatarFallback>+3</AvatarFallback>
-                </Avatar>
-              </div>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withStatus.name"),
-            description: tContent("variants.compositions.withStatus.description"),
-            useWhen: tContent("variants.compositions.withStatus.use"),
-            code: `<div style={{ position: "relative", display: "inline-block" }}>\n  <Avatar>\n    <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />\n    <AvatarFallback>MR</AvatarFallback>\n  </Avatar>\n  <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />\n</div>`,
-            preview: (
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <Avatar>
-                  <AvatarImage src="https://i.pravatar.cc/128?img=47" alt="Foto de perfil de Maria Rodrigues" />
-                  <AvatarFallback>MR</AvatarFallback>
-                </Avatar>
-                <span role="status" aria-label="online" className="nds-rounded-full nds-bg-primary" style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }} />
               </div>
             ),
           },

@@ -586,25 +586,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
-            name: tContent("variants.compositions.formattingBar.name"),
-            description: tContent("variants.compositions.formattingBar.description"),
-            useWhen: tContent("variants.compositions.formattingBar.use"),
-            code: `<ToggleGroup type="multiple" variant="outline" defaultValue={["bold"]} aria-label="Formatação">\n  <ToggleGroupItem value="bold" aria-label="Negrito">\n    <Bold aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="italic" aria-label="Itálico">\n    <Italic aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="underline" aria-label="Sublinhado">\n    <Underline aria-hidden="true" />\n  </ToggleGroupItem>\n</ToggleGroup>`,
-            preview: (
-              <ToggleGroup type="multiple" variant="outline" defaultValue={["bold"]} aria-label="Formatação">
-                <ToggleGroupItem value="bold" aria-label="Negrito">
-                  <Bold aria-hidden="true" />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="italic" aria-label="Itálico">
-                  <Italic aria-hidden="true" />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="underline" aria-label="Sublinhado">
-                  <Underline aria-hidden="true" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-            ),
-          },
-          {
             name: tContent("variants.compositions.viewMode.name"),
             description: tContent("variants.compositions.viewMode.description"),
             useWhen: tContent("variants.compositions.viewMode.use"),

@@ -646,53 +646,6 @@ interface DrawerProps {
               </Drawer>
             ),
           },
-          {
-            name: tContent("variants.compositions.rightPanel.name"),
-            description: tContent("variants.compositions.rightPanel.description"),
-            useWhen: tContent("variants.compositions.rightPanel.use"),
-            code: `<Drawer direction="right">
-  <DrawerTrigger asChild>
-    <Button variant="outline">Abrir filtros</Button>
-  </DrawerTrigger>
-  <DrawerContent className="nds-max-w-md">
-    <DrawerHeader>
-      <DrawerTitle>Filtros</DrawerTitle>
-      <DrawerDescription>Refine os resultados.</DrawerDescription>
-    </DrawerHeader>
-    <div className="nds-px-4 nds-text-body nds-text-muted-foreground">
-      Conteúdo dos filtros…
-    </div>
-    <DrawerFooter>
-      <Button>Aplicar</Button>
-      <DrawerClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`,
-            preview: (
-              <Drawer direction="right">
-                <DrawerTrigger asChild>
-                  <Button variant="outline">Abrir filtros</Button>
-                </DrawerTrigger>
-                <DrawerContent className="nds-max-w-md">
-                  <DrawerHeader>
-                    <DrawerTitle>Filtros</DrawerTitle>
-                    <DrawerDescription>Refine os resultados.</DrawerDescription>
-                  </DrawerHeader>
-                  <div className="nds-px-4 nds-text-body nds-text-muted-foreground">
-                    Conteúdo dos filtros…
-                  </div>
-                  <DrawerFooter>
-                    <Button>Aplicar</Button>
-                    <DrawerClose asChild>
-                      <Button variant="outline">Cancelar</Button>
-                    </DrawerClose>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            ),
-          },
         ]}
       />
 

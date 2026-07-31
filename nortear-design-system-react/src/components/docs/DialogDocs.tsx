@@ -751,63 +751,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             ),
           },
           {
-            name: tContent("variants.compositions.profileEdit.name"),
-            description: tContent("variants.compositions.profileEdit.description"),
-            useWhen: tContent("variants.compositions.profileEdit.use"),
-            code: `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Editar perfil</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Editar perfil</DialogTitle>
-      <DialogDescription>
-        Atualize suas informações pessoais.
-      </DialogDescription>
-    </DialogHeader>
-    <form className="nds-stack" data-spacing="sm">
-      <Label htmlFor="name">Nome de exibição</Label>
-      <Input id="name" defaultValue="Maria Souza" />
-      <Label htmlFor="role">Função</Label>
-      <Input id="role" defaultValue="Designer" />
-    </form>
-    <DialogFooter>
-      <DialogClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </DialogClose>
-      <Button>Salvar alterações</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>`,
-            preview: (
-              <Dialog>
-                <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Editar perfil</DialogTitle>
-                    <DialogDescription>
-                      Atualize suas informações pessoais.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form className="nds-stack" data-spacing="sm">
-                    <div className="nds-stack" data-spacing="xs">
-                      <Label htmlFor="docs-comp-name">Nome de exibição</Label>
-                      <Input id="docs-comp-name" defaultValue="Maria Souza" />
-                    </div>
-                    <div className="nds-stack" data-spacing="xs">
-                      <Label htmlFor="docs-comp-role">Função</Label>
-                      <Input id="docs-comp-role" defaultValue="Designer" />
-                    </div>
-                  </form>
-                  <DialogFooter>
-                    <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
-                    <Button>Salvar alterações</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            ),
-          },
-          {
             name: tContent("variants.compositions.mediaPreview.name"),
             description: tContent("variants.compositions.mediaPreview.description"),
             useWhen: tContent("variants.compositions.mediaPreview.use"),

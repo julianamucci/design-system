@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { Plus, Trash2, Pencil, ChevronRight, Download } from "lucide-react";
+import { Plus, Trash2, Pencil, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -480,17 +480,6 @@ import { Plus } from "lucide-react";`;
                   <Button variant="destructive">
                     <Trash2 aria-hidden="true" />
                     Excluir
-                  </Button>
-                ),
-              },
-              {
-                name: tContent("variants.compositions.iconOnly.name"),
-                description: tContent("variants.compositions.iconOnly.description"),
-                useWhen: tContent("variants.compositions.iconOnly.use"),
-                code: `<Button size="icon" aria-label="Baixar arquivo">\n  <Download aria-hidden="true" />\n</Button>`,
-                preview: (
-                  <Button size="icon" aria-label="Baixar arquivo">
-                    <Download aria-hidden="true" />
                   </Button>
                 ),
               },
