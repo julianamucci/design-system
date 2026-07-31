@@ -106,13 +106,21 @@ function filesForSlug(slug, stack) {
     vanilla: ['.ts'],
   }[stack];
 
+  // `startsWith` puro casava slug com vizinho de nome mais longo: `alert` pegava
+  // AlertDialogDocs, `toggle` pegava toggle-group.ts, `input` pegava
+  // input-otp.ts. O componente era auditado contra o conteúdo do outro — e o
+  // achado aparecia no slug errado. Depois do slug só pode vir `.` ou um sufixo
+  // de sub-story conhecido.
+  const s = slug.toLowerCase();
+  const SUFFIX_RX = new RegExp(`^${s}(\\.|-(${STORY_VARIANT_SUFFIXES.join('|')})\\.)`);
+
   const uiFiles = globStack(stack, 'components/ui', ext).filter(f => {
     const n = basename(f).toLowerCase();
-    return n.startsWith(slug.toLowerCase()) || f.toLowerCase().includes(`/${slug.toLowerCase()}/`);
+    return SUFFIX_RX.test(n) || f.toLowerCase().includes(`/${s}/`);
   });
-  const docsFiles = globStack(stack, 'components/docs', ext).filter(f => {
-    return basename(f).startsWith(Slug);
-  });
+  const docsFiles = globStack(stack, 'components/docs', ext).filter(f =>
+    new RegExp(`^${Slug}Docs\\.`).test(basename(f)),
+  );
 
   return { ui: uiFiles, docs: docsFiles, all: [...uiFiles, ...docsFiles] };
 }

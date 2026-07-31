@@ -174,11 +174,6 @@
           "description": "Body curto com mensagem informativa + footer com ação primária neutra. Confirma uma operação reversível antes de disparar o efeito real (envio, agendamento, geração).",
           "use": "Confirmar envio de link, mensagem ou convite. O usuário pode revisar o endereço/destinatário antes de prosseguir e cancelar sem consequência."
         },
-        "profileEdit": {
-          "name": "Edição de perfil",
-          "description": "Body com formulário inline (campos de texto e <code>textarea</code>) + footer com <code>Cancelar</code> e ação primária descritiva (<code>Salvar alterações</code>). Caso de uso canônico do Dialog.",
-          "use": "Edição de recurso curto sem sair da tela atual (perfil, item, configuração). Combine com <code>Form</code> e valide antes de fechar — em erro, mantenha o diálogo aberto."
-        },
         "mediaPreview": {
           "name": "Pré-visualização de mídia",
           "description": "Body com mídia em destaque (imagem, vídeo, capa) e botão Close visível, sem footer de ações. A única intenção é \"ver\", não \"fazer\".",
@@ -630,11 +625,6 @@
           "description": "Short informational body + footer with a neutral primary action. Confirms a reversible operation before triggering the real effect (send, schedule, generate).",
           "use": "Confirm sending a link, message, or invite. The user can review the address/recipient before proceeding and cancel without consequence."
         },
-        "profileEdit": {
-          "name": "Profile editing",
-          "description": "Body with inline form (text inputs and <code>textarea</code>) + footer with <code>Cancel</code> and a descriptive primary action (<code>Save changes</code>). Canonical Dialog use case.",
-          "use": "Editing a short resource without leaving the current screen (profile, item, setting). Pair with <code>Form</code> and validate before closing — on error, keep the dialog open."
-        },
         "mediaPreview": {
           "name": "Media preview",
           "description": "Body with highlighted media (image, video, cover) and visible Close button, no actions footer. The only intent is to \"view\", not to \"do\".",
@@ -1085,11 +1075,6 @@
           "name": "Confirmación de e-mail",
           "description": "Body corto con mensaje informativo + footer con acción primaria neutra. Confirma una operación reversible antes de disparar el efecto real (envío, programación, generación).",
           "use": "Confirmar el envío de un enlace, mensaje o invitación. El usuario puede revisar la dirección/destinatario antes de continuar y cancelar sin consecuencia."
-        },
-        "profileEdit": {
-          "name": "Edición de perfil",
-          "description": "Body con formulario inline (campos de texto y <code>textarea</code>) + footer con <code>Cancelar</code> y acción primaria descriptiva (<code>Guardar cambios</code>). Caso de uso canónico del Dialog.",
-          "use": "Edición de recurso corto sin salir de la pantalla actual (perfil, ítem, configuración). Combina con <code>Form</code> y valida antes de cerrar — en error, mantén el diálogo abierto."
         },
         "mediaPreview": {
           "name": "Previsualización de media",

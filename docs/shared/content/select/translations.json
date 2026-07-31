@@ -150,16 +150,6 @@
       },
       "compositionsTitle": "Composições",
       "compositions": {
-        "states": {
-          "name": "Lista de estados",
-          "description": "Caso padrão: lista plana com placeholder <code>\"Selecione...\"</code> e nenhuma pré-seleção. O <code>Label</code> é associado ao trigger via <code>for/id</code> ou via wrapper de <code>SelectField</code>.",
-          "use": "Formulários simples onde as opções são planas e mutuamente exclusivas (estado civil, estado/UF, prioridade). Para 10+ opções com busca, prefira <code>Combobox</code>."
-        },
-        "regionGroups": {
-          "name": "Agrupado por região",
-          "description": "Opções agrupadas em duas categorias (<code>Sudeste</code> e <code>Sul</code>) com cabeçalhos visuais. Cada grupo isola itens semanticamente relacionados, melhorando a leitura de listas médias.",
-          "use": "Quando as opções têm categorias claras e cada categoria contém mais de um item — evite criar grupos com apenas 1 item. Bom para regiões, departamentos, marcas, etc."
-        },
         "inForm": {
           "name": "Em formulário",
           "description": "Select dentro de um <code>&lt;form&gt;</code> com <code>name</code> definido — participa do <code>FormData</code> no submit. <code>required</code> ativa a validação nativa do navegador antes de enviar.",
@@ -597,16 +587,6 @@
       },
       "compositionsTitle": "Compositions",
       "compositions": {
-        "states": {
-          "name": "State list",
-          "description": "Standard case: flat list with placeholder <code>\"Select...\"</code> and no pre-selection. The <code>Label</code> is associated to the trigger via <code>for/id</code> or via a <code>SelectField</code> wrapper.",
-          "use": "Simple forms where options are flat and mutually exclusive (marital status, state/region, priority). For 10+ options with search, prefer <code>Combobox</code>."
-        },
-        "regionGroups": {
-          "name": "Grouped by region",
-          "description": "Options grouped into two categories (<code>Southeast</code> and <code>South</code>) with visual headers. Each group semantically isolates related items, improving readability for medium-sized lists.",
-          "use": "When options have clear categories and each category has more than one item — avoid creating groups with only 1 item. Good for regions, departments, brands, etc."
-        },
         "inForm": {
           "name": "In a form",
           "description": "Select inside a <code>&lt;form&gt;</code> with <code>name</code> defined — participates in <code>FormData</code> on submit. <code>required</code> enables native browser validation before sending.",
@@ -1044,16 +1024,6 @@
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
-        "states": {
-          "name": "Lista de estados",
-          "description": "Caso estándar: lista plana con placeholder <code>\"Selecciona...\"</code> y sin preselección. El <code>Label</code> se asocia al trigger vía <code>for/id</code> o vía wrapper de <code>SelectField</code>.",
-          "use": "Formularios simples donde las opciones son planas y mutuamente excluyentes (estado civil, estado/región, prioridad). Para 10+ opciones con búsqueda, prefiere <code>Combobox</code>."
-        },
-        "regionGroups": {
-          "name": "Agrupado por región",
-          "description": "Opciones agrupadas en dos categorías (<code>Sudeste</code> y <code>Sur</code>) con encabezados visuales. Cada grupo aísla semánticamente ítems relacionados, mejorando la lectura de listas medianas.",
-          "use": "Cuando las opciones tienen categorías claras y cada categoría contiene más de un ítem — evita crear grupos con un solo ítem. Bueno para regiones, departamentos, marcas, etc."
-        },
         "inForm": {
           "name": "En formulario",
           "description": "Select dentro de un <code>&lt;form&gt;</code> con <code>name</code> definido — participa del <code>FormData</code> al enviar. <code>required</code> activa la validación nativa del navegador antes de enviar.",

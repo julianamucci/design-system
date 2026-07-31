@@ -157,16 +157,6 @@
           "name": "Com badge no trigger",
           "description": "Badge ao lado do label do trigger sinalizando contagem ou status (12 não lidos, Beta, Novo). Decorativo — não receba foco próprio.",
           "use": "Caixas de mensagem, listas com contadores, abas que apresentam recursos beta."
-        },
-        "vertical": {
-          "name": "Vertical",
-          "description": "Lista lateral à esquerda + conteúdo à direita. Container usa <code>flex gap-4</code>; tablist recebe <code>aria-orientation=\"vertical\"</code> e <code>flex-col</code>.",
-          "use": "Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal."
-        },
-        "lineSubNav": {
-          "name": "Sub-navegação (line)",
-          "description": "Visual minimalista com <code>border-b</code> e sem fundo. Tabs alinhadas à esquerda formando uma sub-navegação dentro da página.",
-          "use": "Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers."
         }
       }
     },
@@ -589,16 +579,6 @@
           "name": "With badge in trigger",
           "description": "Badge next to the trigger label signaling count or status (12 unread, Beta, New). Decorative — should not receive its own focus.",
           "use": "Message inboxes, lists with counters, tabs that present beta features."
-        },
-        "vertical": {
-          "name": "Vertical",
-          "description": "Side list on the left + content on the right. Container uses <code>flex gap-4</code>; tablist receives <code>aria-orientation=\"vertical\"</code> and <code>flex-col</code>.",
-          "use": "Long settings with many categories (5+), admin panels. On narrow screens, prefer the horizontal layout."
-        },
-        "lineSubNav": {
-          "name": "Sub-navigation (line)",
-          "description": "Minimalist look with <code>border-b</code> and no background. Tabs left-aligned forming a sub-navigation within the page.",
-          "use": "Listing filters (All / Active / Archived), sub-sections inside a page where the default style would compete with other containers."
         }
       }
     },
@@ -1021,16 +1001,6 @@
           "name": "Con badge en el trigger",
           "description": "Badge junto al label del trigger señalando conteo o estado (12 no leídos, Beta, Nuevo). Decorativo — no debe recibir foco propio.",
           "use": "Bandejas de mensajes, listas con contadores, tabs que presentan funciones beta."
-        },
-        "vertical": {
-          "name": "Vertical",
-          "description": "Lista lateral a la izquierda + contenido a la derecha. Contenedor usa <code>flex gap-4</code>; el tablist recibe <code>aria-orientation=\"vertical\"</code> y <code>flex-col</code>.",
-          "use": "Configuraciones largas con muchas categorías (5+), paneles administrativos. En pantallas estrechas, prefiere layout horizontal."
-        },
-        "lineSubNav": {
-          "name": "Sub-navegación (line)",
-          "description": "Estilo minimalista con <code>border-b</code> y sin fondo. Tabs alineadas a la izquierda formando una sub-navegación dentro de la página.",
-          "use": "Filtros de listado (Todo / Activos / Archivados), sub-secciones dentro de una página donde el estilo default competiría con otros contenedores."
         }
       }
     },

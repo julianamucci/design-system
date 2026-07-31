@@ -144,29 +144,6 @@
         "withEllipsis": "Níveis intermediários colapsados em <code>BreadcrumbEllipsis</code> quando a hierarquia excede 4 níveis.",
         "customSeparator": "Separador customizado via <code>children</code> de <code>BreadcrumbSeparator</code> (ex: <code>/</code>, <code>•</code>).",
         "responsive": "No mobile, use <code>DropdownMenu</code> dentro do <code>BreadcrumbEllipsis</code> para exibir os níveis ocultos."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
-        "default": {
-          "name": "Padrão",
-          "description": "Composição canônica: 2–4 níveis de hierarquia separados por <code>ChevronRight</code> (›). O último item é <code>BreadcrumbPage</code> com <code>aria-current=\"page\"</code> — não navegável.",
-          "use": "Hierarquia rasa (até 4 níveis). Sempre o item atual como último — nunca um link para a própria página."
-        },
-        "withEllipsis": {
-          "name": "Com ellipsis",
-          "description": "Níveis intermediários colapsados via <code>BreadcrumbEllipsis</code> (ícone <code>MoreHorizontal</code> com label sr-only) quando a hierarquia excede 4 níveis.",
-          "use": "Páginas profundas (5+ níveis) onde exibir todo o caminho quebraria o layout. O ellipsis pode ser expansível ao clique."
-        },
-        "customSeparator": {
-          "name": "Separador customizado",
-          "description": "Substitui o ChevronRight padrão por outro caractere ou ícone (ex.: <code>/</code>, <code>•</code>) via opção <code>content</code> do <code>createBreadcrumbSeparator</code>.",
-          "use": "Identidade visual específica (UNIX-like com <code>/</code>, design editorial com <code>•</code>). Mantenha consistência em todo o app."
-        },
-        "responsive": {
-          "name": "Colapso responsivo",
-          "description": "No mobile, envolva o <code>BreadcrumbEllipsis</code> em um <code>DropdownMenu</code> para expor os níveis ocultos ao clique — nunca os esconda permanentemente.",
-          "use": "Apps com hierarquia profunda em telas pequenas. O dropdown garante que toda a hierarquia continue acessível."
-        }
       }
     },
     "states": {
@@ -562,29 +539,6 @@
         "withEllipsis": "Intermediate levels collapsed into <code>BreadcrumbEllipsis</code> when hierarchy exceeds 4 levels.",
         "customSeparator": "Custom separator via <code>children</code> of <code>BreadcrumbSeparator</code> (e.g., <code>/</code>, <code>•</code>).",
         "responsive": "On mobile, use <code>DropdownMenu</code> inside <code>BreadcrumbEllipsis</code> to expose the hidden levels."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
-        "default": {
-          "name": "Default",
-          "description": "Canonical composition: 2–4 hierarchy levels separated by <code>ChevronRight</code> (›). The last item is <code>BreadcrumbPage</code> with <code>aria-current=\"page\"</code> — not navigable.",
-          "use": "Shallow hierarchy (up to 4 levels). Always the current item as last — never link to the current page."
-        },
-        "withEllipsis": {
-          "name": "With ellipsis",
-          "description": "Intermediate levels collapsed via <code>BreadcrumbEllipsis</code> (<code>MoreHorizontal</code> icon with sr-only label) when hierarchy exceeds 4 levels.",
-          "use": "Deep pages (5+ levels) where displaying the full path would break the layout. The ellipsis can be expandable on click."
-        },
-        "customSeparator": {
-          "name": "Custom separator",
-          "description": "Replaces the default ChevronRight with another character or icon (e.g., <code>/</code>, <code>•</code>) via the <code>content</code> option of <code>createBreadcrumbSeparator</code>.",
-          "use": "Specific visual identity (UNIX-like with <code>/</code>, editorial design with <code>•</code>). Keep consistency across the app."
-        },
-        "responsive": {
-          "name": "Responsive collapse",
-          "description": "On mobile, wrap <code>BreadcrumbEllipsis</code> in a <code>DropdownMenu</code> to expose the hidden levels on click — never hide them permanently.",
-          "use": "Apps with deep hierarchy on small screens. The dropdown ensures the full hierarchy stays accessible."
-        }
       }
     },
     "states": {
@@ -980,29 +934,6 @@
         "withEllipsis": "Niveles intermedios colapsados en <code>BreadcrumbEllipsis</code> cuando la jerarquía supera 4 niveles.",
         "customSeparator": "Separador personalizado vía <code>children</code> de <code>BreadcrumbSeparator</code> (ej: <code>/</code>, <code>•</code>).",
         "responsive": "En mobile, usa <code>DropdownMenu</code> dentro de <code>BreadcrumbEllipsis</code> para exponer los niveles ocultos."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
-        "default": {
-          "name": "Predeterminada",
-          "description": "Composición canónica: 2–4 niveles de jerarquía separados por <code>ChevronRight</code> (›). El último ítem es <code>BreadcrumbPage</code> con <code>aria-current=\"page\"</code> — no navegable.",
-          "use": "Jerarquía superficial (hasta 4 niveles). El ítem actual siempre al final — nunca un enlace a la página actual."
-        },
-        "withEllipsis": {
-          "name": "Con ellipsis",
-          "description": "Niveles intermedios colapsados vía <code>BreadcrumbEllipsis</code> (ícono <code>MoreHorizontal</code> con label sr-only) cuando la jerarquía supera 4 niveles.",
-          "use": "Páginas profundas (5+ niveles) donde mostrar todo el camino rompería el layout. El ellipsis puede ser expandible al clic."
-        },
-        "customSeparator": {
-          "name": "Separador personalizado",
-          "description": "Sustituye el ChevronRight por otro carácter o ícono (ej.: <code>/</code>, <code>•</code>) vía la opción <code>content</code> de <code>createBreadcrumbSeparator</code>.",
-          "use": "Identidad visual específica (UNIX-like con <code>/</code>, diseño editorial con <code>•</code>). Mantén consistencia en toda la app."
-        },
-        "responsive": {
-          "name": "Colapso responsivo",
-          "description": "En mobile, envuelve <code>BreadcrumbEllipsis</code> en un <code>DropdownMenu</code> para exponer los niveles ocultos al clic — nunca los ocultes permanentemente.",
-          "use": "Apps con jerarquía profunda en pantallas pequeñas. El dropdown asegura que toda la jerarquía siga siendo accesible."
-        }
       }
     },
     "states": {

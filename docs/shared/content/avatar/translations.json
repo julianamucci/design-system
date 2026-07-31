@@ -142,34 +142,6 @@
         "icon": "Com ícone genérico (ex: <code>User</code>) como fallback. Indica usuário anônimo ou placeholder.",
         "group": "Avatares agrupados com sobreposição via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "Com indicador de status posicionado absolutamente. Sinaliza presença ou disponibilidade."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
-        "withImage": {
-          "name": "Com imagem",
-          "description": "Avatar com <code>AvatarImage</code> carregando a foto. O fallback fica oculto após o load completo; permanece visível durante o carregamento e em caso de falha.",
-          "use": "Foto de perfil de usuário identificado. Sempre forneça <code>alt</code> descritivo com o nome da pessoa."
-        },
-        "withInitials": {
-          "name": "Com iniciais",
-          "description": "Sem imagem — apenas <code>AvatarFallback</code> com 1–2 letras (geralmente iniciais do nome).",
-          "use": "Fallback padrão quando não há foto. Nunca mais de 2 letras; mantenha consistência (primeira do nome + primeira do sobrenome)."
-        },
-        "withIcon": {
-          "name": "Com ícone",
-          "description": "Fallback com ícone genérico (ex.: <code>User</code>) em vez de iniciais. Use <code>role=\"img\"</code> + <code>aria-label</code> no fallback para permitir descrição.",
-          "use": "Usuário anônimo, placeholder antes do login, ou contextos em que iniciais não fazem sentido."
-        },
-        "group": {
-          "name": "Agrupamento",
-          "description": "Vários avatares lado a lado com sobreposição. Aplique <code>ring</code> com cor de background para criar a borda de separação. O último item pode ser \"+N\" indicando contagem.",
-          "use": "Listas de participantes, comentadores, contribuidores. Marque o container com <code>role=\"group\"</code> e <code>aria-label</code>."
-        },
-        "withStatus": {
-          "name": "Com indicador de status",
-          "description": "Avatar com elemento irmão posicionado absolutamente em um wrapper <code>relative</code>. O indicador é um <code>&lt;span&gt;</code> circular pequeno com cor de status.",
-          "use": "Presença em chats, disponibilidade em listas. Use <code>role=\"status\"</code> + <code>aria-label</code> descritivo (\"online\", \"ausente\")."
-        }
       }
     },
     "states": {
@@ -529,34 +501,6 @@
         "icon": "With a generic icon (e.g. <code>User</code>) as fallback. Indicates anonymous or placeholder user.",
         "group": "Avatars grouped with overlap via <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "With an absolutely positioned status indicator. Signals presence or availability."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
-        "withImage": {
-          "name": "With image",
-          "description": "Avatar with <code>AvatarImage</code> loading the photo. Fallback is hidden once the load completes; remains visible during loading and on failure.",
-          "use": "Identified user profile photo. Always provide descriptive <code>alt</code> with the person's name."
-        },
-        "withInitials": {
-          "name": "With initials",
-          "description": "No image — only <code>AvatarFallback</code> with 1–2 letters (typically initials of the name).",
-          "use": "Default fallback when there's no photo. Never more than 2 letters; stay consistent (first of name + first of surname)."
-        },
-        "withIcon": {
-          "name": "With icon",
-          "description": "Fallback with a generic icon (e.g., <code>User</code>) instead of initials. Use <code>role=\"img\"</code> + <code>aria-label</code> on the fallback to allow description.",
-          "use": "Anonymous user, pre-login placeholder, or contexts where initials don't make sense."
-        },
-        "group": {
-          "name": "Group",
-          "description": "Multiple avatars side by side with overlap. Apply <code>ring</code> with background color to create the separation border. Last item can be \"+N\" indicating count.",
-          "use": "Lists of participants, commenters, contributors. Mark the container with <code>role=\"group\"</code> and <code>aria-label</code>."
-        },
-        "withStatus": {
-          "name": "With status indicator",
-          "description": "Avatar with an absolutely positioned sibling element in a <code>relative</code> wrapper. The indicator is a small circular <code>&lt;span&gt;</code> with a status color.",
-          "use": "Presence in chats, availability in lists. Use <code>role=\"status\"</code> + descriptive <code>aria-label</code> (\"online\", \"away\")."
-        }
       }
     },
     "states": {
@@ -916,34 +860,6 @@
         "icon": "Con ícono genérico (ej: <code>User</code>) como fallback. Indica usuario anónimo o placeholder.",
         "group": "Avatares agrupados con superposición vía <code>-space-x-2</code> + <code>ring-2 ring-background</code>.",
         "withStatus": "Con indicador de estado posicionado absolutamente. Señala presencia o disponibilidad."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
-        "withImage": {
-          "name": "Con imagen",
-          "description": "Avatar con <code>AvatarImage</code> cargando la foto. El fallback se oculta tras la carga; permanece visible durante el load y en caso de fallo.",
-          "use": "Foto de perfil de usuario identificado. Provee siempre <code>alt</code> descriptivo con el nombre de la persona."
-        },
-        "withInitials": {
-          "name": "Con iniciales",
-          "description": "Sin imagen — solo <code>AvatarFallback</code> con 1–2 letras (típicamente iniciales del nombre).",
-          "use": "Fallback predeterminado cuando no hay foto. Nunca más de 2 letras; mantén consistencia (primera del nombre + primera del apellido)."
-        },
-        "withIcon": {
-          "name": "Con ícono",
-          "description": "Fallback con ícono genérico (ej.: <code>User</code>) en vez de iniciales. Usa <code>role=\"img\"</code> + <code>aria-label</code> en el fallback para permitir descripción.",
-          "use": "Usuario anónimo, placeholder antes del login, o contextos donde iniciales no tienen sentido."
-        },
-        "group": {
-          "name": "Agrupación",
-          "description": "Varios avatares lado a lado con superposición. Aplica <code>ring</code> con color de fondo para crear el borde de separación. El último ítem puede ser \"+N\" indicando conteo.",
-          "use": "Listas de participantes, comentaristas, contribuidores. Marca el contenedor con <code>role=\"group\"</code> y <code>aria-label</code>."
-        },
-        "withStatus": {
-          "name": "Con indicador de estado",
-          "description": "Avatar con elemento hermano posicionado absolutamente en un wrapper <code>relative</code>. El indicador es un <code>&lt;span&gt;</code> circular pequeño con color de estado.",
-          "use": "Presencia en chats, disponibilidad en listas. Usa <code>role=\"status\"</code> + <code>aria-label</code> descriptivo (\"en línea\", \"ausente\")."
-        }
       }
     },
     "states": {

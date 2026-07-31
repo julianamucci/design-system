@@ -162,24 +162,6 @@
         "withFooter": "Com <code>CardFooter</code> — ganha borda superior e fundo soft (<code>--muted</code>); o Card remove o padding inferior para alinhar o footer.",
         "withAction": "Com <code>CardAction</code> — header vira grid <code>[1fr_auto]</code>; a ação (Button, Badge, DropdownMenu) fica à direita.",
         "withImage": "Primeiro ou último filho <code>&lt;img&gt;</code> — o Card aplica <code>rounded-t/b-(--radius-card)</code> automaticamente e remove o padding correspondente."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
-        "withFooter": {
-          "name": "Com footer (ações)",
-          "description": "Card com <code>CardFooter</code> alojando botões alinhados à direita. Footer ganha borda superior e fundo soft; o padding inferior do Card é removido automaticamente.",
-          "use": "Produtos, registros editáveis, cards com ações primárias e secundárias. Sempre inclua <code>aria-label</code> contextual nos botões com o título do item."
-        },
-        "withAction": {
-          "name": "Com slot de ação no header",
-          "description": "Header com <code>CardAction</code> posiciona um elemento (Button, Badge, DropdownMenu) à direita do título e descrição, em coluna separada do grid.",
-          "use": "Métricas, KPIs, cards com uma única ação contextual (editar, configurar, mais opções) sem necessidade de footer."
-        },
-        "withImage": {
-          "name": "Com imagem",
-          "description": "Imagem como primeiro filho do Card — o padding superior é removido automaticamente e a imagem herda o radius superior do Card.",
-          "use": "Cards de produto, post, mídia. Imagem deve ter <code>alt</code> descritivo e <code>object-fit: cover</code> para manter proporção."
-        }
       }
     },
     "states": {
@@ -601,24 +583,6 @@
         "withFooter": "With <code>CardFooter</code> — gains top border and soft background (<code>--muted</code>); Card removes its bottom padding to align the footer.",
         "withAction": "With <code>CardAction</code> — header becomes <code>[1fr_auto]</code> grid; the action (Button, Badge, DropdownMenu) sits on the right.",
         "withImage": "First or last <code>&lt;img&gt;</code> child — Card applies <code>rounded-t/b-(--radius-card)</code> automatically and removes the matching padding."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
-        "withFooter": {
-          "name": "With footer (actions)",
-          "description": "Card with <code>CardFooter</code> housing right-aligned buttons. Footer gains top border and soft background; Card's bottom padding is removed automatically.",
-          "use": "Products, editable records, cards with primary and secondary actions. Always include contextual <code>aria-label</code> on buttons referencing the item title."
-        },
-        "withAction": {
-          "name": "With header action slot",
-          "description": "Header with <code>CardAction</code> places an element (Button, Badge, DropdownMenu) to the right of the title and description, in a separate grid column.",
-          "use": "Metrics, KPIs, cards with a single contextual action (edit, configure, more options) without needing a footer."
-        },
-        "withImage": {
-          "name": "With image",
-          "description": "Image as the first child of Card — top padding is removed automatically and the image inherits the Card's top radius.",
-          "use": "Product, post, or media cards. Image must have descriptive <code>alt</code> and <code>object-fit: cover</code> to preserve aspect ratio."
-        }
       }
     },
     "states": {
@@ -1040,24 +1004,6 @@
         "withFooter": "Con <code>CardFooter</code> — gana borde superior y fondo soft (<code>--muted</code>); el Card elimina su padding inferior para alinear el footer.",
         "withAction": "Con <code>CardAction</code> — el header se vuelve grid <code>[1fr_auto]</code>; la acción (Button, Badge, DropdownMenu) queda a la derecha.",
         "withImage": "Primer o último hijo <code>&lt;img&gt;</code> — el Card aplica <code>rounded-t/b-(--radius-card)</code> automáticamente y elimina el padding correspondiente."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
-        "withFooter": {
-          "name": "Con footer (acciones)",
-          "description": "Card con <code>CardFooter</code> alojando botones alineados a la derecha. Footer gana borde superior y fondo soft; el padding inferior del Card se elimina automáticamente.",
-          "use": "Productos, registros editables, cards con acciones primarias y secundarias. Incluye siempre <code>aria-label</code> contextual en los botones con el título del ítem."
-        },
-        "withAction": {
-          "name": "Con slot de acción en el header",
-          "description": "Header con <code>CardAction</code> posiciona un elemento (Button, Badge, DropdownMenu) a la derecha del título y descripción, en columna separada del grid.",
-          "use": "Métricas, KPIs, cards con una única acción contextual (editar, configurar, más opciones) sin necesidad de footer."
-        },
-        "withImage": {
-          "name": "Con imagen",
-          "description": "Imagen como primer hijo del Card — el padding superior se elimina automáticamente y la imagen hereda el radius superior del Card.",
-          "use": "Cards de producto, post, medio. La imagen debe tener <code>alt</code> descriptivo y <code>object-fit: cover</code> para preservar la proporción."
-        }
       }
     },
     "states": {

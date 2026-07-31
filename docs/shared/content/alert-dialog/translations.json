@@ -152,19 +152,6 @@
       "items": {
         "destructive": "Trigger e action com variante <code>destructive</code>. Para exclusão, cancelamento, remoção permanente.",
         "default": "Trigger e action com variante <code>default</code>. Para confirmações neutras como sair, arquivar, publicar."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
-        "destructive": {
-          "name": "Confirmação destrutiva",
-          "description": "Trigger com variante <code>destructive</code> + AlertDialogAction estilizado com tokens <code>--destructive</code>. Reforça visualmente a irreversibilidade da ação.",
-          "use": "Excluir conta, remover dados permanentemente, cancelar assinatura. Sempre exija escolha explícita — não use Escape ou clique no overlay para fechar."
-        },
-        "neutral": {
-          "name": "Confirmação neutra",
-          "description": "Trigger com variante <code>default</code> + AlertDialogAction com estilo padrão do Button. Sem cor de alerta — apenas confirmação de intenção.",
-          "use": "Publicar conteúdo, arquivar item, enviar formulário. Ações reversíveis ou de baixo risco onde o usuário pode mudar de ideia depois."
-        }
       }
     },
     "states": {
@@ -594,19 +581,6 @@
       "items": {
         "destructive": "Trigger and action with <code>destructive</code> variant. For deletion, cancellation, permanent removal.",
         "default": "Trigger and action with <code>default</code> variant. For neutral confirmations like sign out, archive, publish."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
-        "destructive": {
-          "name": "Destructive confirmation",
-          "description": "Trigger with <code>destructive</code> variant + AlertDialogAction styled with <code>--destructive</code> tokens. Visually reinforces the irreversibility of the action.",
-          "use": "Delete account, permanently remove data, cancel subscription. Always require explicit choice — never close on Escape or overlay click."
-        },
-        "neutral": {
-          "name": "Neutral confirmation",
-          "description": "Trigger with <code>default</code> variant + AlertDialogAction with default Button style. No alert color — just intent confirmation.",
-          "use": "Publish content, archive item, submit form. Reversible or low-risk actions where the user can change their mind later."
-        }
       }
     },
     "states": {
@@ -1036,19 +1010,6 @@
       "items": {
         "destructive": "Trigger y action con variante <code>destructive</code>. Para eliminación, cancelación, remoción permanente.",
         "default": "Trigger y action con variante <code>default</code>. Para confirmaciones neutras como cerrar sesión, archivar, publicar."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
-        "destructive": {
-          "name": "Confirmación destructiva",
-          "description": "Trigger con variante <code>destructive</code> + AlertDialogAction estilizado con tokens <code>--destructive</code>. Refuerza visualmente la irreversibilidad de la acción.",
-          "use": "Eliminar cuenta, remover datos permanentemente, cancelar suscripción. Exige siempre elección explícita — nunca cerrar con Escape ni clic en overlay."
-        },
-        "neutral": {
-          "name": "Confirmación neutra",
-          "description": "Trigger con variante <code>default</code> + AlertDialogAction con estilo predeterminado del Button. Sin color de alerta — solo confirmación de intención.",
-          "use": "Publicar contenido, archivar ítem, enviar formulario. Acciones reversibles o de bajo riesgo donde el usuario puede cambiar de opinión luego."
-        }
       }
     },
     "states": {

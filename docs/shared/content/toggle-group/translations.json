@@ -153,11 +153,6 @@
           "description": "Três ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) com <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Apenas uma opção pode estar ativa.",
           "use": "Editores de texto, controles de alinhamento. Sempre <code>aria-label</code> no grupo (\"Alinhamento do texto\") e em cada item (função específica)."
         },
-        "formattingBar": {
-          "name": "Barra de formatação (multiple)",
-          "description": "Três items (Bold, Italic, Underline) com <code>type=\"multiple\"</code> — múltiplas opções podem coexistir. O <code>value</code> emitido é <code>string[]</code>.",
-          "use": "Editores rich-text onde formatos podem ser combinados (negrito + itálico simultâneos). Ordem segue convenção do domínio (B → I → U), não alfabética."
-        },
         "viewMode": {
           "name": "Modo de visualização (vertical + texto)",
           "description": "Layout vertical via <code>orientation=\"vertical\"</code> + items com ícone + texto visível (Grade/Lista). Como o texto está visível, items dispensam <code>aria-label</code> próprio.",
@@ -606,11 +601,6 @@
           "description": "Three icon-only ToggleGroupItems (AlignLeft, AlignCenter, AlignRight) with <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Only one option can be active.",
           "use": "Text editors, alignment controls. Always set <code>aria-label</code> on the group (\"Text alignment\") and on each item (specific function)."
         },
-        "formattingBar": {
-          "name": "Formatting bar (multiple)",
-          "description": "Three items (Bold, Italic, Underline) with <code>type=\"multiple\"</code> — multiple options can coexist. The emitted <code>value</code> is <code>string[]</code>.",
-          "use": "Rich-text editors where formats can be combined (bold + italic together). Order follows the domain convention (B → I → U), not alphabetical."
-        },
         "viewMode": {
           "name": "View mode (vertical + text)",
           "description": "Vertical layout via <code>orientation=\"vertical\"</code> + items with icon + visible text (Grid/List). Since the text is visible, items don't need their own <code>aria-label</code>.",
@@ -1058,11 +1048,6 @@
           "name": "Barra de alineación (single)",
           "description": "Tres ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) con <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Solo una opción puede estar activa.",
           "use": "Editores de texto, controles de alineación. Provee siempre <code>aria-label</code> en el grupo (\"Alineación del texto\") y en cada ítem (función específica)."
-        },
-        "formattingBar": {
-          "name": "Barra de formato (multiple)",
-          "description": "Tres ítems (Bold, Italic, Underline) con <code>type=\"multiple\"</code> — múltiples opciones pueden coexistir. El <code>value</code> emitido es <code>string[]</code>.",
-          "use": "Editores rich-text donde formatos pueden combinarse (negrita + itálica simultáneas). El orden sigue la convención del dominio (B → I → U), no alfabético."
         },
         "viewMode": {
           "name": "Modo de visualización (vertical + texto)",

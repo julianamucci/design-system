@@ -159,11 +159,6 @@
           "name": "Sem título (compacto)",
           "description": "Variante <code>destructive</code> com apenas ícone e descrição, sem AlertTitle. Reduz o espaço vertical.",
           "use": "Erros curtos e autoexplicativos onde o título seria redundante (ex.: validação de formulário inline)."
-        },
-        "multipleTypes": {
-          "name": "Múltiplos tipos lado a lado",
-          "description": "Vários Alerts empilhados verticalmente, um para cada variante semântica (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Cada Alert mantém ícone + título + descrição com a cor da própria severidade.",
-          "use": "Comparação visual de severidades em uma mesma tela (ex.: lista de notificações ou histórico de mensagens). Em produção, prefira agrupar por contexto: misturar várias severidades juntas dilui o significado de cada uma."
         }
       }
     },
@@ -555,11 +550,6 @@
           "name": "Without title (compact)",
           "description": "<code>destructive</code> variant with only icon and description, no AlertTitle. Reduces vertical space.",
           "use": "Short, self-explanatory errors where the title would be redundant (e.g., inline form validation)."
-        },
-        "multipleTypes": {
-          "name": "Multiple types side by side",
-          "description": "Several Alerts stacked vertically, one per semantic variant (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Each Alert keeps its own icon + title + description with the severity color.",
-          "use": "Visual comparison of severities in the same screen (e.g., notifications list or message history). In production, prefer grouping by context — mixing several severities together dilutes the meaning of each one."
         }
       }
     },
@@ -951,11 +941,6 @@
           "name": "Sin título (compacto)",
           "description": "Variante <code>destructive</code> con solo ícono y descripción, sin AlertTitle. Reduce el espacio vertical.",
           "use": "Errores cortos y autoexplicativos donde el título sería redundante (ej.: validación de formulario inline)."
-        },
-        "multipleTypes": {
-          "name": "Múltiples tipos lado a lado",
-          "description": "Varios Alerts apilados verticalmente, uno por variante semántica (<code>info</code>, <code>destructive</code>, <code>success</code>, <code>warning</code>). Cada Alert mantiene ícono + título + descripción con el color de su severidad.",
-          "use": "Comparación visual de severidades en la misma pantalla (ej.: lista de notificaciones o historial). En producción, prefiere agrupar por contexto: mezclar varias severidades diluye el significado de cada una."
         }
       }
     },

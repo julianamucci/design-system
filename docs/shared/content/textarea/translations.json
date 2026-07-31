@@ -157,11 +157,6 @@
           "description": "Textarea com label + parágrafo de hint na cor <code>--muted-foreground</code>. Explica formato, tom esperado ou exemplo.",
           "use": "Quando o label não basta — descreva o que esperar (\"explique em 2–3 frases\", \"use linguagem objetiva\")."
         },
-        "withCounter": {
-          "name": "Com contador acessível",
-          "description": "Textarea com <code>maxLength</code> + span de contador (formato <code>N/MAX</code>) usando <code>aria-live=\"polite\"</code> + <code>aria-label</code> dinâmico (\"N de MAX caracteres usados\").",
-          "use": "Campos com limite (bio, descrição, resposta curta). Use <code>aria-live=\"polite\"</code> para anunciar mudanças sem interromper o usuário."
-        },
         "withError": {
           "name": "Com mensagem de erro",
           "description": "Textarea com <code>aria-invalid=\"true\"</code> + mensagem de erro abaixo na cor <code>--destructive</code>. <code>aria-describedby</code> aponta para o id da mensagem.",
@@ -607,11 +602,6 @@
           "description": "Textarea with label + hint paragraph in <code>--muted-foreground</code> color. Explains format, expected tone or example.",
           "use": "When the label isn't enough — describe what to expect (\"explain in 2–3 sentences\", \"use plain language\")."
         },
-        "withCounter": {
-          "name": "With accessible counter",
-          "description": "Textarea with <code>maxLength</code> + counter span (<code>N/MAX</code> format) using <code>aria-live=\"polite\"</code> + dynamic <code>aria-label</code> (\"N of MAX characters used\").",
-          "use": "Fields with a limit (bio, description, short answer). Use <code>aria-live=\"polite\"</code> to announce changes without interrupting the user."
-        },
         "withError": {
           "name": "With error message",
           "description": "Textarea with <code>aria-invalid=\"true\"</code> + error message below in <code>--destructive</code> color. <code>aria-describedby</code> points to the message id.",
@@ -1056,11 +1046,6 @@
           "name": "Con texto de apoyo",
           "description": "Textarea con label + párrafo de hint en color <code>--muted-foreground</code>. Explica formato, tono esperado o ejemplo.",
           "use": "Cuando el label no basta — describe qué esperar (\"explica en 2–3 frases\", \"usa lenguaje objetivo\")."
-        },
-        "withCounter": {
-          "name": "Con contador accesible",
-          "description": "Textarea con <code>maxLength</code> + span de contador (formato <code>N/MAX</code>) usando <code>aria-live=\"polite\"</code> + <code>aria-label</code> dinámico (\"N de MAX caracteres usados\").",
-          "use": "Campos con límite (bio, descripción, respuesta corta). Usa <code>aria-live=\"polite\"</code> para anunciar cambios sin interrumpir al usuario."
         },
         "withError": {
           "name": "Con mensaje de error",

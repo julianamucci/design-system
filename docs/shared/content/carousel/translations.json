@@ -161,11 +161,6 @@
           "name": "Autoplay com pausa",
           "description": "Avanço automático via plugin com <code>loop: true</code>, <code>delay</code> entre 3–6s e <code>stopOnInteraction: true</code>. Respeita <code>prefers-reduced-motion</code> e pausa quando o usuário interage com botões, teclado ou gesto.",
           "use": "Destaques em homepages e banners promocionais não-críticos. Evite em conteúdo informacional essencial — usuários com leitores de tela ou cognição reduzida podem perder o conteúdo."
-        },
-        "multiResponsive": {
-          "name": "Multi-item responsivo",
-          "description": "Cada <code>CarouselItem</code> recebe <code>basis-*</code> com breakpoints: 1 item em mobile, 2 em tablet (<code>md:basis-1/2</code>), 3 em desktop (<code>lg:basis-1/3</code>). O número visível adapta automaticamente.",
-          "use": "Listas de cards de produto, depoimentos ou recursos onde se quer mostrar mais itens em telas maiores sem quebrar a sequência horizontal."
         }
       }
     },
@@ -589,11 +584,6 @@
           "name": "Autoplay with pause",
           "description": "Auto-advance via plugin with <code>loop: true</code>, <code>delay</code> between 3–6s, and <code>stopOnInteraction: true</code>. Respects <code>prefers-reduced-motion</code> and pauses when the user interacts via buttons, keyboard, or gesture.",
           "use": "Homepage highlights and non-critical promotional banners. Avoid for essential informational content — screen reader or cognitive-load users may miss it."
-        },
-        "multiResponsive": {
-          "name": "Responsive multi-item",
-          "description": "Each <code>CarouselItem</code> gets <code>basis-*</code> with breakpoints: 1 item on mobile, 2 on tablet (<code>md:basis-1/2</code>), 3 on desktop (<code>lg:basis-1/3</code>). The visible count adapts automatically.",
-          "use": "Lists of product cards, testimonials, or features where you want to show more items on larger screens without breaking the horizontal sequence."
         }
       }
     },
@@ -1017,11 +1007,6 @@
           "name": "Autoplay con pausa",
           "description": "Avance automático vía plugin con <code>loop: true</code>, <code>delay</code> entre 3–6s y <code>stopOnInteraction: true</code>. Respeta <code>prefers-reduced-motion</code> y pausa cuando el usuario interactúa con botones, teclado o gesto.",
           "use": "Destacados en homepages y banners promocionales no críticos. Evita en contenido informacional esencial — usuarios con lectores de pantalla o carga cognitiva pueden perderlo."
-        },
-        "multiResponsive": {
-          "name": "Multi-ítem responsivo",
-          "description": "Cada <code>CarouselItem</code> recibe <code>basis-*</code> con breakpoints: 1 ítem en mobile, 2 en tablet (<code>md:basis-1/2</code>), 3 en desktop (<code>lg:basis-1/3</code>). El número visible se adapta automáticamente.",
-          "use": "Listas de cards de producto, testimonios o features donde quieres mostrar más ítems en pantallas grandes sin romper la secuencia horizontal."
         }
       }
     },

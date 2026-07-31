@@ -173,11 +173,6 @@
           "description": "Painel <code>side=\"left\"</code> com lista de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
           "use": "Menus de área administrativa, navegação entre seções secundárias do app, drill-down de hierarquias profundas que não cabem no header."
         },
-        "mobileActions": {
-          "name": "Ações rápidas mobile",
-          "description": "Painel <code>side=\"bottom\"</code> com grid de ações (compartilhar, editar, excluir). Equivalente ao Drawer, sem o gesto de arrastar.",
-          "use": "Menus de ações por item em viewports estreitos, quando o Drawer não estiver disponível ou o gesto de swipe não for esperado pelo usuário."
-        },
         "longScrollBody": {
           "name": "Body com scroll interno",
           "description": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo.",
@@ -621,11 +616,6 @@
           "description": "<code>side=\"left\"</code> panel with a list of links as main content. Replaces permanent menus in compact layouts.",
           "use": "Admin area menus, navigation between secondary app sections, drill-down for deep hierarchies that don't fit in the header."
         },
-        "mobileActions": {
-          "name": "Mobile quick actions",
-          "description": "<code>side=\"bottom\"</code> panel with a grid of actions (share, edit, delete). Equivalent to Drawer, without the drag gesture.",
-          "use": "Per-item action menus on narrow viewports, when Drawer isn't available or swipe isn't expected by the user."
-        },
         "longScrollBody": {
           "name": "Body with internal scroll",
           "description": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed.",
@@ -1068,11 +1058,6 @@
           "name": "Navegación secundaria",
           "description": "Panel <code>side=\"left\"</code> con lista de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
           "use": "Menús de área administrativa, navegación entre secciones secundarias del app, drill-down de jerarquías profundas que no caben en el header."
-        },
-        "mobileActions": {
-          "name": "Acciones rápidas móvil",
-          "description": "Panel <code>side=\"bottom\"</code> con grilla de acciones (compartir, editar, eliminar). Equivalente al Drawer, sin gesto de arrastre.",
-          "use": "Menús de acciones por ítem en viewports estrechos, cuando el Drawer no esté disponible o el swipe no sea esperado por el usuario."
         },
         "longScrollBody": {
           "name": "Body con scroll interno",

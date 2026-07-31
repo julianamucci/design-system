@@ -144,21 +144,6 @@
       },
       "compositionsTitle": "Composições",
       "compositions": {
-        "vertical": {
-          "name": "Forma de pagamento (vertical)",
-          "description": "Layout padrão empilhado com 3+ opções mutuamente exclusivas. Cada item é Radio + Label inline; grupo recebe <code>role=\"radiogroup\"</code> e <code>aria-labelledby</code> apontando para um legend visível.",
-          "use": "Maioria dos casos — formas de pagamento, métodos de envio, tipos de conta. Use vertical sempre que houver 4+ opções ou textos longos."
-        },
-        "horizontal": {
-          "name": "Forma de entrega (horizontal)",
-          "description": "Layout inline para 2–3 opções curtas via <code>grid-flow-col auto-cols-max gap-6</code> no <code>&lt;fieldset&gt;</code>. Mantém todos os itens visíveis no campo de visão.",
-          "use": "Apenas 2–3 opções com labels curtos (Sim/Não, Padrão/Expressa). Para labels longos ou 4+ opções, prefira vertical."
-        },
-        "withDescription": {
-          "name": "Com descrição por item",
-          "description": "Cada item acompanha um parágrafo auxiliar abaixo do Label, na cor <code>--muted-foreground</code>. Radio alinhado ao topo do bloco de texto.",
-          "use": "Quando o nome da opção sozinho não comunica o critério (ex.: plano com preço/limites). Mantenha as descrições paralelas em tamanho."
-        },
         "inForm": {
           "name": "Em formulário",
           "description": "RadioGroup dentro de <code>&lt;form&gt;</code> com <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> nativos. O <code>&lt;input type=\"radio\"&gt;</code> interno (com <code>name</code>) participa do FormData no submit.",
@@ -571,21 +556,6 @@
       },
       "compositionsTitle": "Compositions",
       "compositions": {
-        "vertical": {
-          "name": "Payment method (vertical)",
-          "description": "Default stacked layout with 3+ mutually exclusive options. Each item is Radio + inline Label; the group gets <code>role=\"radiogroup\"</code> and <code>aria-labelledby</code> pointing to a visible legend.",
-          "use": "Most cases — payment methods, shipping methods, account types. Use vertical whenever there are 4+ options or long texts."
-        },
-        "horizontal": {
-          "name": "Shipping method (horizontal)",
-          "description": "Inline layout for 2–3 short options via <code>grid-flow-col auto-cols-max gap-6</code> on the <code>&lt;fieldset&gt;</code>. Keeps all items in view.",
-          "use": "Only 2–3 options with short labels (Yes/No, Standard/Express). For long labels or 4+ options, prefer vertical."
-        },
-        "withDescription": {
-          "name": "With per-item description",
-          "description": "Each item has a helper paragraph below the Label in <code>--muted-foreground</code> color. Radio aligned to the top of the text block.",
-          "use": "When the option name alone doesn't convey the criterion (e.g., plans with price/limits). Keep descriptions parallel in length."
-        },
         "inForm": {
           "name": "In a form",
           "description": "RadioGroup inside <code>&lt;form&gt;</code> with native <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. The internal <code>&lt;input type=\"radio\"&gt;</code> (with <code>name</code>) participates in FormData on submit.",
@@ -998,21 +968,6 @@
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
-        "vertical": {
-          "name": "Forma de pago (vertical)",
-          "description": "Layout apilado predeterminado con 3+ opciones mutuamente exclusivas. Cada ítem es Radio + Label inline; el grupo recibe <code>role=\"radiogroup\"</code> y <code>aria-labelledby</code> apuntando a un legend visible.",
-          "use": "La mayoría de los casos — formas de pago, métodos de envío, tipos de cuenta. Usa vertical cuando hay 4+ opciones o textos largos."
-        },
-        "horizontal": {
-          "name": "Forma de envío (horizontal)",
-          "description": "Layout inline para 2–3 opciones cortas vía <code>grid-flow-col auto-cols-max gap-6</code> en el <code>&lt;fieldset&gt;</code>. Mantiene todos los ítems a la vista.",
-          "use": "Solo 2–3 opciones con labels cortos (Sí/No, Estándar/Express). Para labels largos o 4+ opciones, prefiere vertical."
-        },
-        "withDescription": {
-          "name": "Con descripción por ítem",
-          "description": "Cada ítem incluye un párrafo auxiliar bajo el Label en color <code>--muted-foreground</code>. Radio alineado al inicio del bloque de texto.",
-          "use": "Cuando el nombre de la opción por sí solo no comunica el criterio (ej.: planes con precio/límites). Mantén las descripciones paralelas en longitud."
-        },
         "inForm": {
           "name": "En formulario",
           "description": "RadioGroup dentro de <code>&lt;form&gt;</code> con <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> nativos. El <code>&lt;input type=\"radio\"&gt;</code> interno (con <code>name</code>) participa del FormData al enviar.",

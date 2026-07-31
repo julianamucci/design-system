@@ -176,11 +176,6 @@
           "description": "Variante <code>destructive</code> combinada com ícone (geralmente lixeira). O ícone aumenta a percepção de irreversibilidade.",
           "use": "Excluir, remover, deletar definitivamente. Confirma intenção destrutiva antes do clique."
         },
-        "iconOnly": {
-          "name": "Apenas ícone",
-          "description": "Botão quadrado com tamanho <code>icon</code> (ou <code>icon-sm</code>/<code>icon-lg</code>). Exige <code>aria-label</code> obrigatório — sem ele o leitor de tela anuncia apenas \"button\".",
-          "use": "Toolbars densos, ações repetitivas com símbolo universal (download, fechar, editar). Evite para ações ambíguas."
-        },
         "actionPair": {
           "name": "Par de ações",
           "description": "Combinação canônica: variante <code>outline</code> (ação secundária / cancelar) à esquerda, <code>default</code> (ação primária / confirmar) à direita. Convenção ocidental — primária sempre na posição final.",
@@ -623,11 +618,6 @@
           "description": "<code>destructive</code> variant combined with an icon (typically a trash can). The icon increases the perception of irreversibility.",
           "use": "Delete, remove, permanently erase. Reinforces destructive intent before the click."
         },
-        "iconOnly": {
-          "name": "Icon only",
-          "description": "Square button with size <code>icon</code> (or <code>icon-sm</code>/<code>icon-lg</code>). Requires mandatory <code>aria-label</code> — without it the screen reader only announces \"button\".",
-          "use": "Dense toolbars, repetitive actions with universal symbols (download, close, edit). Avoid for ambiguous actions."
-        },
         "actionPair": {
           "name": "Action pair",
           "description": "Canonical combination: <code>outline</code> variant (secondary / cancel) on the left, <code>default</code> (primary / confirm) on the right. Western convention — primary always in the final position.",
@@ -1069,11 +1059,6 @@
           "name": "Destructivo con ícono",
           "description": "Variante <code>destructive</code> combinada con ícono (típicamente una papelera). El ícono aumenta la percepción de irreversibilidad.",
           "use": "Eliminar, borrar definitivamente. Refuerza la intención destructiva antes del clic."
-        },
-        "iconOnly": {
-          "name": "Solo ícono",
-          "description": "Botón cuadrado con tamaño <code>icon</code> (o <code>icon-sm</code>/<code>icon-lg</code>). Requiere <code>aria-label</code> obligatorio — sin él el lector de pantalla anuncia solo \"button\".",
-          "use": "Toolbars densos, acciones repetitivas con símbolos universales (descargar, cerrar, editar). Evita para acciones ambiguas."
         },
         "actionPair": {
           "name": "Par de acciones",

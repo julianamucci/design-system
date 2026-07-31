@@ -166,11 +166,6 @@
           "name": "Bloqueio de datas passadas",
           "description": "Calendar com <code>disabled={{ before: today }}</code>. Datas anteriores ao dia atual ficam <code>aria-disabled</code> e não disparam <code>onSelect</code>.",
           "use": "Reservas, eventos futuros, formulários de check-in — sempre que selecionar uma data no passado for inválido por regra de negócio."
-        },
-        "rangeTwoMonths": {
-          "name": "Range com dois meses",
-          "description": "Calendar em modo range com <code>numberOfMonths={2}</code>. Mostra mês atual e seguinte lado a lado, reduzindo cliques de navegação para selecionar início e fim.",
-          "use": "Reservas de hospedagem, períodos de férias, intervalos longos — qualquer fluxo em que <code>from</code> e <code>to</code> tendem a cair em meses diferentes."
         }
       }
     },
@@ -612,11 +607,6 @@
           "name": "Block past dates",
           "description": "Calendar with <code>disabled={{ before: today }}</code>. Dates before today become <code>aria-disabled</code> and do not fire <code>onSelect</code>.",
           "use": "Bookings, future events, check-in forms — whenever selecting a past date is invalid per business rules."
-        },
-        "rangeTwoMonths": {
-          "name": "Range with two months",
-          "description": "Calendar in range mode with <code>numberOfMonths={2}</code>. Shows current month and the next side by side, cutting navigation clicks for picking start and end.",
-          "use": "Stay bookings, vacation periods, long intervals — any flow where <code>from</code> and <code>to</code> tend to fall in different months."
         }
       }
     },
@@ -1058,11 +1048,6 @@
           "name": "Bloqueo de fechas pasadas",
           "description": "Calendar con <code>disabled={{ before: today }}</code>. Las fechas anteriores a hoy quedan <code>aria-disabled</code> y no disparan <code>onSelect</code>.",
           "use": "Reservas, eventos futuros, formularios de check-in — siempre que seleccionar una fecha pasada sea inválido por regla de negocio."
-        },
-        "rangeTwoMonths": {
-          "name": "Range con dos meses",
-          "description": "Calendar en modo range con <code>numberOfMonths={2}</code>. Muestra el mes actual y el siguiente lado a lado, reduciendo clics de navegación para elegir inicio y fin.",
-          "use": "Reservas de alojamiento, períodos de vacaciones, intervalos largos — cualquier flujo donde <code>from</code> y <code>to</code> tiendan a caer en meses distintos."
         }
       }
     },

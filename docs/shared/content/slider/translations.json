@@ -153,11 +153,6 @@
           "description": "Slider single com <code>step={5}</code> — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.",
           "use": "Configurações onde o usuário não precisa de precisão (brilho de tela, zoom em incrementos fixos). Combine com <code>aria-live</code> para anunciar o salto."
         },
-        "priceRange": {
-          "name": "Faixa de preço (range)",
-          "description": "Slider com dois thumbs controlando <code>min</code> e <code>max</code>. Valor exibido como \"R$ <em>min</em> — R$ <em>max</em>\" com travessão entre os limites.",
-          "use": "Filtros de busca por preço, faixa etária, intervalos de data numérica. Forneça <code>aria-label</code> distinto para cada thumb (\"mínimo\" e \"máximo\")."
-        },
         "form": {
           "name": "Em formulário com debounce",
           "description": "Slider dentro de <code>&lt;form&gt;</code> com analytics disparado apenas no valor confirmado (drag end ou keyup), evitando 1 evento por pixel arrastado.",
@@ -594,11 +589,6 @@
           "description": "Single slider with <code>step={5}</code> — discrete granularity to avoid tiny movements when fine tuning is unnecessary.",
           "use": "Settings where the user doesn't need precision (screen brightness, zoom in fixed increments). Combine with <code>aria-live</code> to announce each jump."
         },
-        "priceRange": {
-          "name": "Price range",
-          "description": "Slider with two thumbs controlling <code>min</code> and <code>max</code>. Value displayed as \"$<em>min</em> — $<em>max</em>\" with an em-dash between the limits.",
-          "use": "Price search filters, age ranges, numeric date intervals. Provide a distinct <code>aria-label</code> for each thumb (\"minimum\" and \"maximum\")."
-        },
         "form": {
           "name": "In form with debounce",
           "description": "Slider inside a <code>&lt;form&gt;</code> with analytics fired only on the committed value (drag end or keyup), avoiding one event per dragged pixel.",
@@ -1034,11 +1024,6 @@
           "name": "Ajuste con step grande",
           "description": "Slider single con <code>step={5}</code> — granularidad discreta para evitar movimientos minúsculos cuando el ajuste fino no importa.",
           "use": "Configuraciones donde el usuario no necesita precisión (brillo de pantalla, zoom en incrementos fijos). Combina con <code>aria-live</code> para anunciar el salto."
-        },
-        "priceRange": {
-          "name": "Rango de precio",
-          "description": "Slider con dos thumbs controlando <code>min</code> y <code>max</code>. Valor mostrado como \"$<em>min</em> — $<em>max</em>\" con raya entre los límites.",
-          "use": "Filtros de búsqueda por precio, rangos de edad, intervalos de fecha numérica. Provee <code>aria-label</code> distinto para cada thumb (\"mínimo\" y \"máximo\")."
         },
         "form": {
           "name": "En formulario con debounce",

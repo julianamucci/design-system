@@ -167,11 +167,6 @@
           "name": "Com conteúdo rolável",
           "description": "Drawer cujo body usa <code>overflow-y-auto</code> e altura máxima, permitindo rolagem interna sem expandir o painel. Header e footer permanecem fixos.",
           "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível em elementos interativos dentro da área rolável."
-        },
-        "rightPanel": {
-          "name": "Painel lateral à direita",
-          "description": "Drawer com <code>direction=\"right\"</code> renderizado como painel lateral fixo (útil em desktop). Largura controlada via <code>max-w-*</code> no <code>DrawerContent</code>.",
-          "use": "Filtros, detalhes contextuais e painéis de edição em desktop. Em mobile, prefira <code>direction=\"bottom\"</code> para aproveitar o gesto natural de swipe."
         }
       }
     },
@@ -596,11 +591,6 @@
           "name": "With scrollable content",
           "description": "Drawer whose body uses <code>overflow-y-auto</code> and a max-height, allowing internal scroll without expanding the panel. Header and footer stay fixed.",
           "use": "Terms of use, long lists, and details that exceed the panel's visible height. Ensure visible focus on interactive elements inside the scrollable area."
-        },
-        "rightPanel": {
-          "name": "Right side panel",
-          "description": "Drawer with <code>direction=\"right\"</code> rendered as a fixed side panel (useful on desktop). Width controlled via <code>max-w-*</code> on <code>DrawerContent</code>.",
-          "use": "Filters, contextual details and editing panels on desktop. On mobile, prefer <code>direction=\"bottom\"</code> to leverage the natural swipe gesture."
         }
       }
     },
@@ -1025,11 +1015,6 @@
           "name": "Con contenido desplazable",
           "description": "Drawer cuyo body usa <code>overflow-y-auto</code> y una max-height, permitiendo scroll interno sin expandir el panel. Header y footer permanecen fijos.",
           "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Garantiza foco visible en elementos interactivos dentro del área desplazable."
-        },
-        "rightPanel": {
-          "name": "Panel lateral derecho",
-          "description": "Drawer con <code>direction=\"right\"</code> renderizado como panel lateral fijo (útil en desktop). Ancho controlado vía <code>max-w-*</code> en <code>DrawerContent</code>.",
-          "use": "Filtros, detalles contextuales y paneles de edición en desktop. En mobile, prefiere <code>direction=\"bottom\"</code> para aprovechar el gesto natural de swipe."
         }
       }
     },
