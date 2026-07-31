@@ -100,8 +100,6 @@
   let checkboxShowBookmarks = $state(true);
   let checkboxShowFullUrls = $state(false);
   let radioValue = $state('pedro');
-  let variantCheckboxChecked = $state(false);
-  let variantRadioValue = $state('system');
 
   // Composições — estado
   let compShowGrid = $state(true);
@@ -157,47 +155,6 @@
   Excluir
   <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
 </ContextMenu.Item>`;
-
-  const codeVariantCheckbox = `<script lang="ts">
-  import * as ContextMenu from "@/components/ui/context-menu";
-  let checked = $state(false);
-<\/script>
-<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.CheckboxItem bind:checked>
-      Modo escuro
-    </ContextMenu.CheckboxItem>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeVariantRadio = `<script lang="ts">
-  import * as ContextMenu from "@/components/ui/context-menu";
-  let theme = $state("system");
-<\/script>
-<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.RadioGroup bind:value={theme}>
-      <ContextMenu.RadioItem value="light">Claro</ContextMenu.RadioItem>
-      <ContextMenu.RadioItem value="dark">Escuro</ContextMenu.RadioItem>
-      <ContextMenu.RadioItem value="system">Sistema</ContextMenu.RadioItem>
-    </ContextMenu.RadioGroup>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeVariantSubTrigger = `<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Sub>
-      <ContextMenu.SubTrigger>Compartilhar</ContextMenu.SubTrigger>
-      <ContextMenu.SubContent>
-        <ContextMenu.Item>Por e-mail</ContextMenu.Item>
-        <ContextMenu.Item>Por link</ContextMenu.Item>
-      </ContextMenu.SubContent>
-    </ContextMenu.Sub>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
 
   const codeVariantLabel = `<ContextMenu.Root>
   <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
@@ -549,10 +506,7 @@ interface ContextMenuRadioGroupProps {
     items={[
       { name: 'default',      description: stripHtml($tStore('variants.items.default')),      code: codeDefault,           preview: variantDefault      },
       { name: 'destructive',  description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,       preview: variantDestructive  },
-      { name: 'CheckboxItem', description: stripHtml($tStore('variants.checkboxItem')),       code: codeVariantCheckbox,   preview: variantCheckbox     },
-      { name: 'RadioItem',    description: stripHtml($tStore('variants.radioItem')),          code: codeVariantRadio,      preview: variantRadio        },
-      { name: 'SubTrigger',   description: stripHtml($tStore('variants.subTrigger')),         code: codeVariantSubTrigger, preview: variantSubTrigger   },
-      { name: 'Label + Inset',description: stripHtml($tStore('variants.label')),             code: codeVariantLabel,      preview: variantLabel        },
+      { name: 'Label + Inset',description: stripHtml($tStore('variants.items.label')),        code: codeVariantLabel,      preview: variantLabel        },
       {
         name: $tStore('variants.items.withCheckbox.name'),
         description: $tStore('variants.items.withCheckbox.description'),
@@ -612,54 +566,6 @@ interface ContextMenuRadioGroupProps {
           {$tStore('demonstration.labels.delete')}
           <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
         </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantCheckbox()}
-    <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.CheckboxItem
-          checked={variantCheckboxChecked}
-          onCheckedChange={(v: boolean) => { variantCheckboxChecked = v; }}
-        >
-          Modo escuro
-        </ContextMenu.CheckboxItem>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantRadio()}
-    <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.RadioGroup value={variantRadioValue} onValueChange={(v: string) => { variantRadioValue = v; }}>
-          <ContextMenu.RadioItem value="light">Claro</ContextMenu.RadioItem>
-          <ContextMenu.RadioItem value="dark">Escuro</ContextMenu.RadioItem>
-          <ContextMenu.RadioItem value="system">Sistema</ContextMenu.RadioItem>
-        </ContextMenu.RadioGroup>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantSubTrigger()}
-    <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Sub>
-          <ContextMenu.SubTrigger>Compartilhar</ContextMenu.SubTrigger>
-          <ContextMenu.SubContent>
-            <ContextMenu.Item>Por e-mail</ContextMenu.Item>
-            <ContextMenu.Item>Por link</ContextMenu.Item>
-          </ContextMenu.SubContent>
-        </ContextMenu.Sub>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}

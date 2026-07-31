@@ -320,10 +320,7 @@ const columns: DataTableColumn<Invoice>[] = [
       { name: 'enableColumnVisibility',description: stripHtml($tStore('variants.items.visibility')),     code: '<DataTable enableColumnVisibility />', preview: noPreview },
       { name: 'enableColumnResizing',  description: stripHtml($tStore('variants.items.resize')),         code: '<DataTable enableColumnResizing />',   preview: noPreview },
       { name: 'enableColumnOrdering',  description: stripHtml($tStore('variants.items.reorder')),        code: '<DataTable enableColumnOrdering />',   preview: noPreview },
-      { name: 'enableColumnPinning',   description: stripHtml($tStore('variants.items.pin')),            code: '<DataTable enableColumnPinning />',    preview: noPreview },
       { name: 'enablePagination',      description: stripHtml($tStore('variants.items.pagination')),     code: '<DataTable enablePagination />',       preview: noPreview },
-      { name: 'meta.editable',         description: stripHtml($tStore('variants.items.edit')),           code: 'meta: { editable: true }',             preview: noPreview },
-      { name: 'virtualized',           description: stripHtml($tStore('variants.items.virtual')),        code: '<DataTable virtualized maxHeight="480px" />', preview: noPreview },
       {
         name: $tStore('variants.items.editableSheet.name'),
         description: $tStore('variants.items.editableSheet.description'),

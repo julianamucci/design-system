@@ -106,7 +106,6 @@ import Plus from '@lucide/svelte/icons/plus';`;
   const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
   const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
   const codeGhost = `<Button variant="ghost">Editar</Button>`;
-  const codeLink = `<Button variant="link">Saiba mais</Button>`;
 
   const codeSizeDefault = `<Button>Salvar</Button>`;
   const codeSizeSm = `<Button size="sm">Salvar</Button>`;
@@ -319,7 +318,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           { name: 'outline',     description: stripHtml($tStore('variants.items.outline')),     code: codeOutline,     preview: variantOutline     },
           { name: 'secondary',   description: stripHtml($tStore('variants.items.secondary')),   code: codeSecondary,   preview: variantSecondary   },
           { name: 'ghost',       description: stripHtml($tStore('variants.items.ghost')),       code: codeGhost,       preview: variantGhost       },
-          { name: 'link',        description: stripHtml($tStore('variants.items.link')),        code: codeLink,        preview: variantLink        },
           {
             name: $tStore('variants.items.asLink.name'),
             description: $tStore('variants.items.asLink.description'),
@@ -344,9 +342,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
       {#snippet variantGhost()}
         <Button variant="ghost">{$tStore('demonstration.labels.ghost')}</Button>
-      {/snippet}
-      {#snippet variantLink()}
-        <Button variant="link">{$tStore('demonstration.labels.link')}</Button>
       {/snippet}
       {#snippet variantAsLink()}
         <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
