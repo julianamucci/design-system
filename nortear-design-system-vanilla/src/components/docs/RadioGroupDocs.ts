@@ -497,98 +497,6 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
       }
 
       case 'composicoes': {
-        const buildVertical = () => {
-          const group = createRadioGroup({
-            name: 'payment',
-            items: [
-              { value: 'card', label: 'Cartão de crédito' },
-              { value: 'pix', label: 'Pix' },
-              { value: 'boleto', label: 'Boleto bancário' },
-            ],
-          });
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-stack';
-          wrap.dataset.spacing = 'sm';
-          const legend = document.createElement('p');
-          legend.id = 'comp-payment-legend';
-          legend.className = 'nds-text-body nds-font-semibold';
-          legend.textContent = 'Forma de pagamento';
-          group.setAttribute('role', 'radiogroup');
-          group.setAttribute('aria-labelledby', 'comp-payment-legend');
-          wrap.append(legend, group);
-          return wrap;
-        };
-
-        const buildHorizontal = () => {
-          const group = createRadioGroup({
-            name: 'delivery',
-            items: [
-              { value: 'standard', label: 'Padrão (5 dias)' },
-              { value: 'express', label: 'Expressa (1 dia)' },
-              { value: 'pickup', label: 'Retirar na loja' },
-            ],
-          });
-          group.style.gridAutoFlow = 'column';
-          group.style.gridAutoColumns = 'max-content';
-          group.style.gap = '1.5rem';
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-stack';
-          wrap.dataset.spacing = 'sm';
-          const legend = document.createElement('p');
-          legend.id = 'comp-delivery-legend';
-          legend.className = 'nds-text-body nds-font-semibold';
-          legend.textContent = 'Forma de entrega';
-          group.setAttribute('role', 'radiogroup');
-          group.setAttribute('aria-labelledby', 'comp-delivery-legend');
-          wrap.append(legend, group);
-          return wrap;
-        };
-
-        const buildWithDescription = () => {
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-stack';
-          wrap.dataset.spacing = 'sm';
-          wrap.style.width = '20rem';
-          const legend = document.createElement('p');
-          legend.id = 'comp-desc-legend';
-          legend.className = 'nds-text-body nds-font-semibold';
-          legend.textContent = 'Forma de entrega';
-
-          const items = [
-            { value: 'standard', label: 'Padrão',          description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.' },
-            { value: 'express',  label: 'Expressa',        description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.' },
-            { value: 'pickup',   label: 'Retirar na loja', description: 'Disponível em 2h — sem custo de frete.' },
-          ];
-
-          const base = createRadioGroup({
-            name: 'delivery-desc',
-            items: items.map(i => ({ value: i.value, label: i.label })),
-          });
-          base.setAttribute('role', 'radiogroup');
-          base.setAttribute('aria-labelledby', 'comp-desc-legend');
-
-          items.forEach((item, idx) => {
-            const row = base.children[idx] as HTMLElement;
-            if (!row) return;
-            row.style.alignItems = 'flex-start';
-            const label = row.querySelector('label');
-            if (label) {
-              const textGroup = document.createElement('div');
-              textGroup.className = 'nds-stack';
-              textGroup.dataset.spacing = 'xs';
-              label.replaceWith(textGroup);
-              label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-              const desc = document.createElement('p');
-              desc.className = 'nds-text-body';
-              desc.textContent = item.description;
-              textGroup.append(label, desc);
-            }
-          });
-
-          wrap.append(legend, base);
-          return wrap;
-        };
-
         const buildInForm = () => {
           const form = document.createElement('form');
           form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
@@ -638,75 +546,6 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
           return form;
         };
 
-        const codeVertical = `const group = createRadioGroup({
-  name: 'payment',
-  items: [
-    { value: 'card', label: 'Cartão de crédito' },
-    { value: 'pix', label: 'Pix' },
-    { value: 'boleto', label: 'Boleto bancário' },
-  ],
-});
-const wrap = document.createElement('div');
-wrap.className = 'nds-stack';
-const legend = document.createElement('p');
-legend.id = 'comp-payment-legend';
-legend.className = 'nds-text-body nds-font-semibold';
-legend.textContent = 'Forma de pagamento';
-group.setAttribute('role', 'radiogroup');
-group.setAttribute('aria-labelledby', 'comp-payment-legend');
-wrap.append(legend, group);`;
-
-        const codeHorizontal = `const group = createRadioGroup({
-  name: 'delivery',
-  items: [
-    { value: 'standard', label: 'Padrão (5 dias)' },
-    { value: 'express', label: 'Expressa (1 dia)' },
-    { value: 'pickup', label: 'Retirar na loja' },
-  ],
-});
-group.style.gridAutoFlow = 'column';
-group.style.gridAutoColumns = 'max-content';
-group.style.gap = '1.5rem';
-const wrap = document.createElement('div');
-wrap.className = 'nds-stack';
-const legend = document.createElement('p');
-legend.id = 'comp-delivery-legend';
-legend.className = 'nds-text-body nds-font-semibold';
-legend.textContent = 'Forma de entrega';
-group.setAttribute('role', 'radiogroup');
-group.setAttribute('aria-labelledby', 'comp-delivery-legend');
-wrap.append(legend, group);`;
-
-        const codeWithDescription = `const items = [
-  { value: 'standard', label: 'Padrão',          description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.' },
-  { value: 'express',  label: 'Expressa',        description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.' },
-  { value: 'pickup',   label: 'Retirar na loja', description: 'Disponível em 2h — sem custo de frete.' },
-];
-
-const base = createRadioGroup({
-  name: 'delivery-desc',
-  items: items.map(i => ({ value: i.value, label: i.label })),
-});
-base.setAttribute('role', 'radiogroup');
-base.setAttribute('aria-labelledby', 'comp-desc-legend');
-
-items.forEach((item, idx) => {
-  const row = base.children[idx] as HTMLElement;
-  if (!row) return;
-  row.style.alignItems = 'flex-start';
-  const label = row.querySelector('label');
-  if (label) {
-    const textGroup = document.createElement('div');
-    textGroup.className = 'nds-stack';
-    label.replaceWith(textGroup);
-    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    const desc = document.createElement('p');
-    desc.className = 'nds-text-body';
-    desc.textContent = item.description;
-    textGroup.append(label, desc);
-  }
-});`;
-
         const codeInForm = `const form = document.createElement('form');
 form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
 
@@ -751,27 +590,6 @@ form.addEventListener('submit', (e) => {
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'radio-group',
           items: [
-            {
-              name: t('variants.compositions.vertical.name'),
-              description: t('variants.compositions.vertical.description'),
-              useWhen: t('variants.compositions.vertical.use'),
-              code: codeVertical,
-              previewFactory: buildVertical,
-            },
-            {
-              name: t('variants.compositions.horizontal.name'),
-              description: t('variants.compositions.horizontal.description'),
-              useWhen: t('variants.compositions.horizontal.use'),
-              code: codeHorizontal,
-              previewFactory: buildHorizontal,
-            },
-            {
-              name: t('variants.compositions.withDescription.name'),
-              description: t('variants.compositions.withDescription.description'),
-              useWhen: t('variants.compositions.withDescription.use'),
-              code: codeWithDescription,
-              previewFactory: buildWithDescription,
-            },
             {
               name: t('variants.compositions.inForm.name'),
               description: t('variants.compositions.inForm.description'),

@@ -22,7 +22,6 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
-  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -187,7 +186,6 @@ export function createBreadcrumbDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
-        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -249,7 +247,6 @@ export function createBreadcrumbDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
-    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -470,89 +467,6 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
           ],
         });
       }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'breadcrumb',
-          items: [
-            {
-              name: t('variants.compositions.default.name'),
-              description: t('variants.compositions.default.description'),
-              useWhen: t('variants.compositions.default.use'),
-              code:
-                `const nav = createBreadcrumb();\n` +
-                `const list = createBreadcrumbList();\n` +
-                `const home = createBreadcrumbItem();\n` +
-                `home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));\n` +
-                `const components = createBreadcrumbItem();\n` +
-                `components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));\n` +
-                `const current = createBreadcrumbItem();\n` +
-                `current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));\n` +
-                `list.append(home, createBreadcrumbSeparator(), components, createBreadcrumbSeparator(), current);\n` +
-                `nav.appendChild(list);`,
-              previewFactory: () => buildDefaultBreadcrumb(),
-            },
-            {
-              name: t('variants.compositions.withEllipsis.name'),
-              description: t('variants.compositions.withEllipsis.description'),
-              useWhen: t('variants.compositions.withEllipsis.use'),
-              code:
-                `const nav = createBreadcrumb();\n` +
-                `const list = createBreadcrumbList();\n` +
-                `const home = createBreadcrumbItem();\n` +
-                `home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));\n` +
-                `const ellipsis = createBreadcrumbItem();\n` +
-                `ellipsis.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));\n` +
-                `const components = createBreadcrumbItem();\n` +
-                `components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));\n` +
-                `const current = createBreadcrumbItem();\n` +
-                `current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));\n` +
-                `list.append(home, createBreadcrumbSeparator(), ellipsis, createBreadcrumbSeparator(), components, createBreadcrumbSeparator(), current);\n` +
-                `nav.appendChild(list);`,
-              previewFactory: () => buildWithEllipsisBreadcrumb(),
-            },
-            {
-              name: t('variants.compositions.customSeparator.name'),
-              description: t('variants.compositions.customSeparator.description'),
-              useWhen: t('variants.compositions.customSeparator.use'),
-              code:
-                `const nav = createBreadcrumb();\n` +
-                `const list = createBreadcrumbList();\n` +
-                `const home = createBreadcrumbItem();\n` +
-                `home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));\n` +
-                `const components = createBreadcrumbItem();\n` +
-                `components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));\n` +
-                `const current = createBreadcrumbItem();\n` +
-                `current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));\n` +
-                `list.append(home, createBreadcrumbSeparator({ content: '/' }), components, createBreadcrumbSeparator({ content: '/' }), current);\n` +
-                `nav.appendChild(list);`,
-              previewFactory: () => buildCustomSeparatorBreadcrumb(),
-            },
-            {
-              name: t('variants.compositions.responsive.name'),
-              description: t('variants.compositions.responsive.description'),
-              useWhen: t('variants.compositions.responsive.use'),
-              code:
-                `const nav = createBreadcrumb();\n` +
-                `const list = createBreadcrumbList();\n` +
-                `const home = createBreadcrumbItem();\n` +
-                `home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));\n` +
-                `const ellipsis = createBreadcrumbItem();\n` +
-                `ellipsis.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));\n` +
-                `const guide = createBreadcrumbItem();\n` +
-                `guide.appendChild(createBreadcrumbLink({ href: '#', text: 'Guia' }));\n` +
-                `const components = createBreadcrumbItem();\n` +
-                `components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));\n` +
-                `const current = createBreadcrumbItem();\n` +
-                `current.appendChild(createBreadcrumbPage({ text: 'Breadcrumb' }));\n` +
-                `list.append(home, createBreadcrumbSeparator(), ellipsis, createBreadcrumbSeparator(), guide, createBreadcrumbSeparator(), components, createBreadcrumbSeparator(), current);\n` +
-                `nav.appendChild(list);`,
-              previewFactory: () => buildResponsiveBreadcrumb(),
-            },
-          ],
-        });
 
       case 'estados':
         return createDocsStates({

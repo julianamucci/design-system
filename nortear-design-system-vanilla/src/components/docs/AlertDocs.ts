@@ -397,58 +397,6 @@ export function createAlertDocs(): HTMLElement {
                 `alert.appendChild(createAlertDescription({ text: 'Formulário incompleto.' }));`,
               previewFactory: () => buildAlert('destructive', 'nds-w-full', 'error', null, 'demonstration.labels.errorDesc'),
             },
-            {
-              name: t('variants.compositions.multipleTypes.name'),
-              description: t('variants.compositions.multipleTypes.description'),
-              useWhen: t('variants.compositions.multipleTypes.use'),
-              code:
-                `const wrapper = document.createElement('div');\n` +
-                `wrapper.className = 'nds-stack';\n` +
-                `\n` +
-                `const info = createAlert();\n` +
-                `info.appendChild(createAlertIcon('info'));\n` +
-                `info.appendChild(createAlertTitle({ text: 'Informação' }));\n` +
-                `info.appendChild(createAlertDescription({ text: 'Mensagem informativa e neutra.' }));\n` +
-                `\n` +
-                `const err = createAlert({ variant: 'destructive' });\n` +
-                `err.appendChild(createAlertIcon('error'));\n` +
-                `err.appendChild(createAlertTitle({ text: 'Erro' }));\n` +
-                `err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));\n` +
-                `\n` +
-                `const ok = createAlert({ variant: 'success' });\n` +
-                `ok.appendChild(createAlertIcon('success'));\n` +
-                `ok.appendChild(createAlertTitle({ text: 'Sucesso' }));\n` +
-                `ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));\n` +
-                `\n` +
-                `const warn = createAlert({ variant: 'warning' });\n` +
-                `warn.appendChild(createAlertIcon('warning'));\n` +
-                `warn.appendChild(createAlertTitle({ text: 'Aviso' }));\n` +
-                `warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));\n` +
-                `\n` +
-                `wrapper.append(info, err, ok, warn);`,
-              previewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                const info = createAlert();
-                info.appendChild(createAlertIcon('info'));
-                info.appendChild(createAlertTitle({ text: 'Informação' }));
-                info.appendChild(createAlertDescription({ text: 'Mensagem informativa e neutra.' }));
-                const err = createAlert({ variant: 'destructive' });
-                err.appendChild(createAlertIcon('error'));
-                err.appendChild(createAlertTitle({ text: 'Erro' }));
-                err.appendChild(createAlertDescription({ text: 'Erro crítico que bloqueia o fluxo.' }));
-                const ok = createAlert({ variant: 'success' });
-                ok.appendChild(createAlertIcon('success'));
-                ok.appendChild(createAlertTitle({ text: 'Sucesso' }));
-                ok.appendChild(createAlertDescription({ text: 'Ação concluída com sucesso.' }));
-                const warn = createAlert({ variant: 'warning' });
-                warn.appendChild(createAlertIcon('warning'));
-                warn.appendChild(createAlertTitle({ text: 'Aviso' }));
-                warn.appendChild(createAlertDescription({ text: 'Aviso que requer atenção.' }));
-                wrapper.append(info, err, ok, warn);
-                return wrapper;
-              },
-            },
           ],
         });
 

@@ -20,7 +20,6 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
-  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -197,7 +196,6 @@ export function createAvatarDocs(): HTMLElement {
     { labelKey: 'nav.techRef', sections: [
       { id: 'importacao',   labelKey: 'nav.import'   },
       { id: 'variantes',    labelKey: 'nav.variants' },
-      { id: 'composicoes',  labelKey: 'nav.compositions' },
       { id: 'estados',      labelKey: 'nav.states'   },
       { id: 'propriedades', labelKey: 'nav.props'    },
       { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -247,7 +245,7 @@ export function createAvatarDocs(): HTMLElement {
 
   const sectionOrder = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-    'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
+    'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
     'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
   ] as const;
   type SectionId = typeof sectionOrder[number];
@@ -484,138 +482,6 @@ wrapper.appendChild(status);`;
           ],
         });
       }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'avatar',
-          items: [
-            {
-              name: t('variants.compositions.withImage.name'),
-              description: t('variants.compositions.withImage.description'),
-              useWhen: t('variants.compositions.withImage.use'),
-              code:
-                `const av = createAvatar({\n` +
-                `  src: 'https://i.pravatar.cc/128?img=47',\n` +
-                `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
-                `  fallbackText: 'MR',\n` +
-                `});`,
-              previewFactory: () => buildImageAvatar(),
-            },
-            {
-              name: t('variants.compositions.withInitials.name'),
-              description: t('variants.compositions.withInitials.description'),
-              useWhen: t('variants.compositions.withInitials.use'),
-              code:
-                `const root = createAvatarRoot();\n` +
-                `root.appendChild(createAvatarFallback({ text: 'JP' }));`,
-              previewFactory: () => buildInitialsAvatar('', 'JP'),
-            },
-            {
-              name: t('variants.compositions.withIcon.name'),
-              description: t('variants.compositions.withIcon.description'),
-              useWhen: t('variants.compositions.withIcon.use'),
-              code:
-                `const root = createAvatarRoot();\n` +
-                `const fallback = createAvatarFallback();\n` +
-                `fallback.setAttribute('role', 'img');\n` +
-                `fallback.setAttribute('aria-label', 'Usuário genérico');\n` +
-                `const svg = createUserIconSvg(); // nds-icon nds-text-muted-foreground, aria-hidden\n` +
-                `fallback.appendChild(svg);\n` +
-                `root.appendChild(fallback);`,
-              previewFactory: () => {
-                const root = createAvatarRoot();
-                const fallback = createAvatarFallback();
-                fallback.setAttribute('role', 'img');
-                fallback.setAttribute('aria-label', 'Usuário genérico');
-                fallback.appendChild(buildUserIconSvg());
-                root.appendChild(fallback);
-                return root;
-              },
-            },
-            {
-              name: t('variants.compositions.group.name'),
-              description: t('variants.compositions.group.description'),
-              useWhen: t('variants.compositions.group.use'),
-              code:
-                `const group = document.createElement('div');\n` +
-                `group.style.display = 'flex';\n` +
-                `group.setAttribute('role', 'group');\n` +
-                `group.setAttribute('aria-label', 'Participantes');\n` +
-                `const members = [\n` +
-                `  { src: 'https://i.pravatar.cc/128?img=47', alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },\n` +
-                `  { alt: '', fallback: 'JP' },\n` +
-                `  { alt: '', fallback: 'AL' },\n` +
-                `  { alt: '', fallback: '+3' },\n` +
-                `];\n` +
-                `members.forEach((m, i) => {\n` +
-                `  const av = createAvatar({ src: m.src, alt: m.alt, fallbackText: m.fallback });\n` +
-                `  av.style.cssText = 'box-shadow:0 0 0 2px var(--background);' + (i > 0 ? 'margin-left:-0.5rem;' : '');\n` +
-                `  group.appendChild(av);\n` +
-                `});`,
-              previewFactory: () => {
-                const group = document.createElement('div');
-                group.style.display = 'flex';
-                group.setAttribute('role', 'group');
-                group.setAttribute('aria-label', 'Participantes');
-                const members: Array<{ src?: string; alt: string; fallback: string }> = [
-                  { src: PREVIEW_SRC, alt: 'Foto de perfil de Maria Rodrigues', fallback: 'MR' },
-                  { alt: '', fallback: 'JP' },
-                  { alt: '', fallback: 'AL' },
-                  { alt: '', fallback: '+3' },
-                ];
-                members.forEach((m, i) => {
-                  const av = createAvatar({
-                    src: m.src,
-                    alt: m.alt,
-                    fallbackText: m.fallback,
-                  });
-                  av.style.cssText = 'box-shadow:0 0 0 2px var(--background);' + (i > 0 ? 'margin-left:-0.5rem;' : '');
-                  group.appendChild(av);
-                });
-                return group;
-              },
-            },
-            {
-              name: t('variants.compositions.withStatus.name'),
-              description: t('variants.compositions.withStatus.description'),
-              useWhen: t('variants.compositions.withStatus.use'),
-              code:
-                `const wrapper = document.createElement('div');\n` +
-                `wrapper.style.position = 'relative';\n` +
-                `wrapper.style.display = 'inline-block';\n` +
-                `const av = createAvatar({\n` +
-                `  src: 'https://i.pravatar.cc/128?img=47',\n` +
-                `  alt: 'Foto de perfil de Maria Rodrigues',\n` +
-                `  fallbackText: 'MR',\n` +
-                `});\n` +
-                `const status = document.createElement('span');\n` +
-                `status.className = 'nds-rounded-full nds-bg-primary';\n` +
-                `status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';\n` +
-                `status.setAttribute('role', 'status');\n` +
-                `status.setAttribute('aria-label', 'online');\n` +
-                `wrapper.append(av, status);`,
-              previewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.style.position = 'relative';
-                wrapper.style.display = 'inline-block';
-                const av = createAvatar({
-                  src: PREVIEW_SRC,
-                  alt: 'Foto de perfil de Maria Rodrigues',
-                  fallbackText: 'MR',
-                });
-                const status = document.createElement('span');
-                status.className = 'nds-rounded-full nds-bg-primary';
-                status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
-                status.setAttribute('role', 'status');
-                status.setAttribute('aria-label', 'online');
-                wrapper.append(av, status);
-                return wrapper;
-              },
-            },
-          ],
-        });
 
       case 'estados':
         return createDocsStates({

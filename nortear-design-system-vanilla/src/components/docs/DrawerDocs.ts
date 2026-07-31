@@ -498,23 +498,6 @@ const drawer = createDrawer({
   footer,
 });`;
 
-        const codeRightPanel = `// No Nortear, direction != 'bottom' usa createSheet
-import { createSheet } from '@/components/ui/sheet';
-
-const trigger = createButton({ variant: 'outline', label: 'Abrir filtros' });
-const body = document.createElement('div');
-body.className = 'nds-px-4 nds-text-body nds-text-muted-foreground';
-body.textContent = 'Conteúdo dos filtros…';
-
-const drawer = createSheet({
-  trigger,
-  side: 'right',
-  title: 'Filtros',
-  description: 'Refine os resultados.',
-  content: body,
-  footer,
-});`;
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -604,21 +587,6 @@ longBody.style.paddingRight = '0.5rem';
                 el.dataset.vaulDrawerDirection = 'bottom';
                 return el;
               },
-            },
-            {
-              name: stripHtml(t('variants.compositions.rightPanel.name')),
-              description: stripHtml(t('variants.compositions.rightPanel.description')),
-              useWhen: stripHtml(t('variants.compositions.rightPanel.use')),
-              code: codeRightPanel,
-              previewFactory: () => buildDrawerDemo({
-                triggerLabel: 'Abrir filtros',
-                title: 'Filtros',
-                description: 'Refine os resultados.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Aplicar',
-                bodyText: 'Conteúdo dos filtros…',
-                side: 'right',
-              }),
             },
           ],
         });

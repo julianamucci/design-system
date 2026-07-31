@@ -513,26 +513,6 @@ toolbar.dataset.spacing = 'xs';
               },
             },
             {
-              name: stripHtml(t('variants.compositions.filterWithLabel.name')),
-              description: stripHtml(t('variants.compositions.filterWithLabel.description')),
-              useWhen: stripHtml(t('variants.compositions.filterWithLabel.use')),
-              code: `const wrap = document.createElement('span');
-wrap.className = 'nds-cluster';
-wrap.dataset.spacing = 'xs';
-wrap.style.display = 'inline-flex';
-wrap.appendChild(buildLucideSvg(Eye)); // aria-hidden
-const text = document.createElement('span');
-text.textContent = 'Mostrar ocultos';
-wrap.appendChild(text);
-
-const toggle = createToggle({ variant: 'outline', children: wrap });`,
-              previewFactory: () => buildLabelToggle({
-                icon: Eye,
-                labelText: 'Mostrar ocultos',
-                variant: 'outline',
-              }),
-            },
-            {
               name: stripHtml(t('variants.compositions.sizes.name')),
               description: stripHtml(t('variants.compositions.sizes.description')),
               useWhen: stripHtml(t('variants.compositions.sizes.use')),

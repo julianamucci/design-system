@@ -526,50 +526,6 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
               },
             },
             {
-              name: t('variants.compositions.withDescription.name'),
-              description: t('variants.compositions.withDescription.description'),
-              useWhen: t('variants.compositions.withDescription.use'),
-              code:
-                `const panel = document.createElement('div');\n` +
-                `panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';\n` +
-                `const sw = createSwitch({ id: 'sw-marketing', checked: true });\n` +
-                `const textGroup = document.createElement('div');\n` +
-                `textGroup.className = 'nds-stack nds-pr-3';\n` +
-                `const label = document.createElement('label');\n` +
-                `label.htmlFor = 'sw-marketing';\n` +
-                `label.textContent = 'Emails de marketing';\n` +
-                `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
-                `label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });\n` +
-                `const desc = document.createElement('p');\n` +
-                `desc.className = 'nds-text-body';\n` +
-                `desc.textContent = 'Receba novidades e promoções da plataforma.';\n` +
-                `textGroup.append(label, desc);\n` +
-                `panel.append(textGroup, sw);`,
-              previewFactory: () => {
-                const panel = document.createElement('div');
-                panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
-                panel.dataset.justify = 'between';
-                panel.style.width = '20rem';
-                const id = 'comp-sw-marketing';
-                const sw = createSwitch({ id, checked: true });
-                const textGroup = document.createElement('div');
-                textGroup.className = 'nds-stack';
-                textGroup.dataset.spacing = 'xs';
-                textGroup.style.paddingRight = 'var(--spacing-2)';
-                const label = document.createElement('label');
-                label.htmlFor = id;
-                label.textContent = 'Emails de marketing';
-                label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-                const desc = document.createElement('p');
-                desc.className = 'nds-text-body';
-                desc.textContent = 'Receba novidades e promoções da plataforma.';
-                textGroup.append(label, desc);
-                panel.append(textGroup, sw);
-                return panel;
-              },
-            },
-            {
               name: t('variants.compositions.settingsList.name'),
               description: t('variants.compositions.settingsList.description'),
               useWhen: t('variants.compositions.settingsList.use'),

@@ -445,23 +445,6 @@ createSheet({
           });
           return nav;
         };
-        const buildMobileActionsBody = () => {
-          const grid = document.createElement('div');
-          grid.className = 'nds-grid nds-px-4 nds-text-body';
-          grid.dataset.cols = '3';
-          grid.dataset.spacing = 'sm';
-          ['Compartilhar', 'Editar', 'Excluir', 'Arquivar', 'Mover', 'Copiar link'].forEach((label) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent';
-            btn.dataset.spacing = 'xs';
-            btn.style.alignItems = 'center';
-            btn.style.padding = '0.75rem';
-            btn.textContent = label;
-            grid.appendChild(btn);
-          });
-          return grid;
-        };
         const buildLongBody = () => {
           const wrap = document.createElement('div');
           wrap.className = 'nds-stack nds-text-body nds-text-muted-foreground';
@@ -537,38 +520,6 @@ createSheet({
                   title: 'Menu',
                   description: 'Navegue entre as áreas do sistema.',
                   content: buildSecondaryNavBody(),
-                });
-              },
-            },
-            {
-              name: stripHtml(t('variants.compositions.mobileActions.name')),
-              description: stripHtml(t('variants.compositions.mobileActions.description')),
-              useWhen: stripHtml(t('variants.compositions.mobileActions.use')),
-              code: `const grid = document.createElement('div');
-grid.className = 'nds-grid';
-grid.dataset.cols = '3';
-grid.dataset.spacing = 'sm';
-['Compartilhar', 'Editar', 'Excluir'].forEach(label => {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.textContent = label;
-  grid.appendChild(btn);
-});
-createSheet({
-  trigger,
-  side: 'bottom',
-  title: 'Ações rápidas',
-  description: 'Escolha o que fazer com este item.',
-  content: grid,
-});`,
-              previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Mais opções' });
-                return createSheet({
-                  trigger,
-                  side: 'bottom',
-                  title: 'Ações rápidas',
-                  description: 'Escolha o que fazer com este item.',
-                  content: buildMobileActionsBody(),
                 });
               },
             },

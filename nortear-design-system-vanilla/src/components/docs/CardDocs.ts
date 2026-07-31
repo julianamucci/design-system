@@ -24,7 +24,6 @@ import {
   createDocsDoDont,
   createDocsImport,
   createDocsVariants,
-  createDocsCompositions,
   createDocsStates,
   createDocsProps,
   createDocsTokens,
@@ -267,7 +266,6 @@ export function createCardDocs(): HTMLElement {
       sections: [
         { id: 'importacao', labelKey: 'nav.import' },
         { id: 'variantes', labelKey: 'nav.variants' },
-        { id: 'composicoes', labelKey: 'nav.compositions' },
         { id: 'estados', labelKey: 'nav.states' },
         { id: 'propriedades', labelKey: 'nav.props' },
         { id: 'tokens', labelKey: 'nav.tokens' },
@@ -329,7 +327,6 @@ export function createCardDocs(): HTMLElement {
     'do-dont',
     'importacao',
     'variantes',
-    'composicoes',
     'estados',
     'propriedades',
     'tokens',
@@ -563,117 +560,6 @@ card.append(img, header);`;
           ],
         });
       }
-
-      case 'composicoes':
-        return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
-          useWhenLabel: tNav('common.useWhen'),
-          componentSlug: 'card',
-          items: [
-            {
-              name: t('variants.compositions.withFooter.name'),
-              description: t('variants.compositions.withFooter.description'),
-              useWhen: t('variants.compositions.withFooter.use'),
-              code:
-                `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });\n` +
-                `const header = createCardHeader();\n` +
-                `header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));\n` +
-                `header.appendChild(createCardDescription({ text: 'Estrutura ergonômica.' }));\n` +
-                `const content = createCardContent();\n` +
-                `const price = document.createElement('p');\n` +
-                `price.className = 'nds-text-lead nds-font-semibold';\n` +
-                `price.textContent = 'R$ 1.299,00';\n` +
-                `content.appendChild(price);\n` +
-                `const footer = createCardFooter({ className: 'nds-cluster' });\n` +
-                `footer.dataset.spacing = 'sm'; footer.dataset.justify = 'end';\n` +
-                `footer.appendChild(createButton({ variant: 'outline', label: 'Editar', ariaLabel: 'Editar produto Cadeira Gamer Pro' }));\n` +
-                `footer.appendChild(createButton({ variant: 'destructive', label: 'Excluir', ariaLabel: 'Excluir produto Cadeira Gamer Pro' }));\n` +
-                `card.append(header, content, footer);`,
-              previewFactory: () => {
-                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
-                const header = createCardHeader();
-                header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
-                header.appendChild(createCardDescription({ text: 'Estrutura ergonômica.' }));
-                const content = createCardContent();
-                const price = document.createElement('p');
-                price.className = 'nds-text-lead nds-font-semibold';
-                price.textContent = 'R$ 1.299,00';
-                content.appendChild(price);
-                const footer = createCardFooter({ className: 'nds-cluster' });
-                footer.dataset.justify = 'end';
-                footer.dataset.spacing = 'sm';
-                footer.appendChild(createButton({ variant: 'outline', label: 'Editar', ariaLabel: 'Editar produto Cadeira Gamer Pro' }));
-                footer.appendChild(createButton({ variant: 'destructive', label: 'Excluir', ariaLabel: 'Excluir produto Cadeira Gamer Pro' }));
-                card.append(header, content, footer);
-                return card;
-              },
-            },
-            {
-              name: t('variants.compositions.withAction.name'),
-              description: t('variants.compositions.withAction.description'),
-              useWhen: t('variants.compositions.withAction.use'),
-              code:
-                `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });\n` +
-                `const header = createCardHeader();\n` +
-                `header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));\n` +
-                `header.appendChild(createCardDescription({ text: '+12% no mês' }));\n` +
-                `const action = createCardAction();\n` +
-                `action.appendChild(createButton({ variant: 'outline', size: 'sm', label: 'Editar', ariaLabel: 'Editar métrica Assinantes ativos' }));\n` +
-                `header.appendChild(action);\n` +
-                `const content = createCardContent();\n` +
-                `const value = document.createElement('p');\n` +
-                `value.className = 'text-2xl nds-font-semibold';\n` +
-                `value.textContent = '8.742';\n` +
-                `content.appendChild(value);\n` +
-                `card.append(header, content);`,
-              previewFactory: () => {
-                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
-                const header = createCardHeader();
-                header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
-                header.appendChild(createCardDescription({ text: '+12% no mês' }));
-                const action = createCardAction();
-                action.appendChild(createButton({ variant: 'outline', size: 'sm', label: 'Editar', ariaLabel: 'Editar métrica Assinantes ativos' }));
-                header.appendChild(action);
-                const content = createCardContent();
-                const value = document.createElement('p');
-                value.className = 'nds-text-h4 nds-font-semibold';
-                value.textContent = '8.742';
-                content.appendChild(value);
-                card.append(header, content);
-                return card;
-              },
-            },
-            {
-              name: t('variants.compositions.withImage.name'),
-              description: t('variants.compositions.withImage.description'),
-              useWhen: t('variants.compositions.withImage.use'),
-              code:
-                `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });\n` +
-                `const img = document.createElement('img');\n` +
-                `img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';\n` +
-                `img.alt = 'Cadeira Gamer Pro';\n` +
-                `img.className = 'nds-w-full object-cover';\n` +
-                `const header = createCardHeader();\n` +
-                `header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));\n` +
-                `header.appendChild(createCardDescription({ text: 'Estrutura ergonômica.' }));\n` +
-                `card.append(img, header);`,
-              previewFactory: () => {
-                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
-                const img = document.createElement('img');
-                img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';
-                img.alt = 'Cadeira Gamer Pro';
-                img.className = 'nds-w-full';
-  img.style.height = '10rem';
-  img.style.objectFit = 'cover';
-                const header = createCardHeader();
-                header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
-                header.appendChild(createCardDescription({ text: 'Estrutura ergonômica.' }));
-                card.append(img, header);
-                return card;
-              },
-            },
-          ],
-        });
 
       case 'estados':
         return createDocsStates({

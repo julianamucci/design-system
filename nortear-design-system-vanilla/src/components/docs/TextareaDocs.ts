@@ -602,24 +602,6 @@ hint.className = 'nds-text-caption nds-text-muted-foreground';
 hint.textContent = 'Descreva o produto com clareza, destacando os principais atributos.';
 wrapper.appendChild(hint);`;
 
-        const codeWithCounter = `const max = 500;
-const textarea = createTextarea({
-  placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
-});
-textarea.maxLength = max;
-
-const counter = document.createElement('span');
-counter.setAttribute('aria-live', 'polite');
-counter.setAttribute('aria-label', \`0 de \${max} caracteres usados\`);
-counter.textContent = \`0/\${max}\`;
-
-textarea.addEventListener('input', () => {
-  const len = textarea.value.length;
-  counter.textContent = \`\${len}/\${max}\`;
-  counter.setAttribute('aria-label', \`\${len} de \${max} caracteres usados\`);
-});`;
-
         const codeWithError = `const textarea = createTextarea({
   placeholder: 'ex: Descreva o produto...',
   class: 'resize-y min-h-[120px]',
@@ -692,25 +674,6 @@ form.addEventListener('submit', (e) => {
                   labelFor: 'comp-hint',
                   textareaEl: ta,
                   hintText: 'Descreva o produto com clareza, destacando os principais atributos.',
-                });
-              },
-            },
-            {
-              name: t('variants.compositions.withCounter.name'),
-              description: t('variants.compositions.withCounter.description'),
-              useWhen: t('variants.compositions.withCounter.use'),
-              code: codeWithCounter,
-              previewFactory: () => {
-                const ta = createTextarea({
-                  placeholder: 'ex: Descreva o produto em até 500 caracteres...',
-                  class: 'resize-y min-h-[120px]',
-                });
-                return createTextareaField({
-                  labelText: 'Descrição',
-                  labelFor: 'comp-counter',
-                  textareaEl: ta,
-                  hintText: 'Descreva o produto com clareza.',
-                  maxLength: 500,
                 });
               },
             },

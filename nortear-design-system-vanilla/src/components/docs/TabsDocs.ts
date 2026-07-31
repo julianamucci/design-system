@@ -516,39 +516,6 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
 });
 root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');`;
 
-        const codeVertical =
-`const root = createTabs({
-  defaultValue: 'profile',
-  class: 'nds-w-full nds-cluster',
-  items: [
-    { value: 'profile',  label: 'Perfil',    content: panelEl },
-    { value: 'account',  label: 'Conta',     content: panelEl },
-    { value: 'security', label: 'Segurança', content: panelEl },
-  ],
-});
-const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-if (list) {
-  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch'; list.style.minWidth = '10rem';
-  list.setAttribute('aria-orientation', 'vertical');
-  list.setAttribute('aria-label', 'Configurações');
-}`;
-
-        const codeLineSubNav =
-`const root = createTabs({
-  defaultValue: 'all',
-  class: 'nds-w-full',
-  items: [
-    { value: 'all',      label: 'Tudo',       content: panelEl },
-    { value: 'active',   label: 'Ativos',     content: panelEl },
-    { value: 'archived', label: 'Arquivados', content: panelEl },
-  ],
-});
-const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-if (list) {
-  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
-  list.setAttribute('aria-label', 'Filtros de listagem');
-}`;
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -621,47 +588,6 @@ if (list) {
                   trigger.appendChild(wrapper);
                 });
                 r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');
-                return r;
-              },
-            },
-            {
-              name: t('variants.compositions.vertical.name'),
-              description: t('variants.compositions.vertical.description'),
-              useWhen: t('variants.compositions.vertical.use'),
-              code: codeVertical,
-              previewFactory: () => {
-                const items: TabsItemDef[] = [
-                  { value: 'profile',  label: 'Perfil',    content: richPanel('Perfil',    'Edite suas informações públicas.') },
-                  { value: 'account',  label: 'Conta',     content: richPanel('Conta',     'Email, idioma e preferências.') },
-                  { value: 'security', label: 'Segurança', content: richPanel('Segurança', 'Senha e autenticação em dois fatores.') },
-                ];
-                const r = createTabs({ defaultValue: 'profile', class: 'nds-w-full nds-cluster', items });
-                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
-                if (list) {
-                  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch'; list.style.minWidth = '10rem';
-                  list.setAttribute('aria-orientation', 'vertical');
-                  list.setAttribute('aria-label', 'Configurações');
-                }
-                return r;
-              },
-            },
-            {
-              name: t('variants.compositions.lineSubNav.name'),
-              description: t('variants.compositions.lineSubNav.description'),
-              useWhen: t('variants.compositions.lineSubNav.use'),
-              code: codeLineSubNav,
-              previewFactory: () => {
-                const items: TabsItemDef[] = [
-                  { value: 'all',      label: 'Tudo',       content: textPanel('Mostrando todos os itens.') },
-                  { value: 'active',   label: 'Ativos',     content: textPanel('Mostrando apenas ativos.') },
-                  { value: 'archived', label: 'Arquivados', content: textPanel('Mostrando apenas arquivados.') },
-                ];
-                const r = createTabs({ defaultValue: 'all', class: 'nds-w-full', items });
-                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
-                if (list) {
-                  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
-                  list.setAttribute('aria-label', 'Filtros de listagem');
-                }
                 return r;
               },
             },

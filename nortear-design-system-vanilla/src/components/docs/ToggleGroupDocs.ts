@@ -650,42 +650,6 @@ applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à di
               },
             },
             {
-              name: t('variants.compositions.formattingBar.name'),
-              description: t('variants.compositions.formattingBar.description'),
-              useWhen: t('variants.compositions.formattingBar.use'),
-              code: `const items: ToggleGroupItem[] = [
-  { value: 'bold',      children: '' },
-  { value: 'italic',    children: '' },
-  { value: 'underline', children: '' },
-];
-const group = createToggleGroup({
-  type: 'multiple',
-  variant: 'outline',
-  items,
-  defaultValue: ['bold'],
-});
-injectIcons(group, [Bold, Italic, Underline]);
-group.setAttribute('aria-label', 'Formatação');
-applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);`,
-              previewFactory: () => {
-                const items: ToggleGroupItem[] = [
-                  { value: 'bold',      children: '' },
-                  { value: 'italic',    children: '' },
-                  { value: 'underline', children: '' },
-                ];
-                const group = createToggleGroup({
-                  type: 'multiple',
-                  variant: 'outline',
-                  items,
-                  defaultValue: ['bold'],
-                });
-                injectIcons(group, [Bold, Italic, Underline]);
-                group.setAttribute('aria-label', 'Formatação');
-                applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);
-                return group;
-              },
-            },
-            {
               name: t('variants.compositions.viewMode.name'),
               description: t('variants.compositions.viewMode.description'),
               useWhen: t('variants.compositions.viewMode.use'),

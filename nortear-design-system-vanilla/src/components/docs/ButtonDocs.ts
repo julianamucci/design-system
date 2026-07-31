@@ -480,19 +480,6 @@ export function createButtonDocs(): HTMLElement {
               },
             },
             {
-              name: t('variants.compositions.iconOnly.name'),
-              description: t('variants.compositions.iconOnly.description'),
-              useWhen: t('variants.compositions.iconOnly.use'),
-              code:
-                `const btn = createButton({ size: 'icon', ariaLabel: 'Baixar arquivo' });\n` +
-                `btn.appendChild(createButtonIcon('download'));`,
-              previewFactory: () => {
-                const btn = createButton({ size: 'icon', ariaLabel: 'Baixar arquivo' });
-                btn.appendChild(createButtonIcon('download'));
-                return btn;
-              },
-            },
-            {
               name: t('variants.compositions.actionPair.name'),
               description: t('variants.compositions.actionPair.description'),
               useWhen: t('variants.compositions.actionPair.use'),

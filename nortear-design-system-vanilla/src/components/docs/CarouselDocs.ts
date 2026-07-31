@@ -537,16 +537,6 @@ const el = createCarousel({ items });`;
           return wrap;
         };
 
-        const buildMultiResponsivePreview = (): HTMLElement => {
-          const wrap = document.createElement('div');
-          wrap.className = 'nds-w-full';
-          wrap.style.maxWidth = '42rem';
-          const items = buildSlides(6, stripHtml(t('demonstration.labels.slide')));
-          items.forEach((it) => it.classList.add('md:basis-1/2', 'lg:basis-1/3'));
-          wrap.appendChild(createCarousel({ items }));
-          return wrap;
-        };
-
         const codeWithDots = `// Dots controlados via onIndexChange
 const total = 5;
 const dotsRow = document.createElement('div');
@@ -604,11 +594,6 @@ const carousel = createCarousel({
 });
 // Pausa automática ao mouseenter (built-in da factory).`;
 
-        const codeMultiResponsive = `// Aplica basis responsivo em cada slide
-const items = buildSlides(6);
-items.forEach((it) => it.classList.add('md:basis-1/2', 'lg:basis-1/3'));
-const carousel = createCarousel({ items });`;
-
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
@@ -634,13 +619,6 @@ const carousel = createCarousel({ items });`;
               useWhen: stripHtml(t('variants.compositions.autoplay.use')),
               code: codeAutoplay,
               previewFactory: buildAutoplayPreview,
-            },
-            {
-              name: stripHtml(t('variants.compositions.multiResponsive.name')),
-              description: stripHtml(t('variants.compositions.multiResponsive.description')),
-              useWhen: stripHtml(t('variants.compositions.multiResponsive.use')),
-              code: codeMultiResponsive,
-              previewFactory: buildMultiResponsivePreview,
             },
           ],
         });
