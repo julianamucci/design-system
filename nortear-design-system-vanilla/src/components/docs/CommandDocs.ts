@@ -605,8 +605,8 @@ export type CommandItem = {
           items: [1, 2, 3, 4].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: tNav('common.keyboardNav') || 'Navegação por teclado',
           keyboardItems: [
-            { key: '↓',      description: stripHtml(t('accessibility.keyboard.arrowDown')) },
-            { key: '↑',      description: stripHtml(t('accessibility.keyboard.arrowUp'))   },
+            { key: 'Arrow Down',      description: stripHtml(t('accessibility.keyboard.arrowDown')) },
+            { key: 'Arrow Up',      description: stripHtml(t('accessibility.keyboard.arrowUp'))   },
             { key: 'Enter',  description: stripHtml(t('accessibility.keyboard.enter'))      },
             { key: 'Escape', description: stripHtml(t('accessibility.keyboard.escape'))     },
             { key: 'Tab',    description: stripHtml(t('accessibility.keyboard.tab'))        },

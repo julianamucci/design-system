@@ -320,8 +320,8 @@ const accessibilityItems = computed(() => [
 
 const keyboardItems = computed(() => [
   { key: 'Tab',        description: tContent('accessibility.keyboard.tab')        },
-  { key: 'ArrowRight', description: tContent('accessibility.keyboard.arrowRight') },
-  { key: 'ArrowLeft',  description: tContent('accessibility.keyboard.arrowLeft')  },
+  { key: 'Arrow Right', description: tContent('accessibility.keyboard.arrowRight') },
+  { key: 'Arrow Left',  description: tContent('accessibility.keyboard.arrowLeft')  },
 ]);
 
 const relatedItems = computed(() => [

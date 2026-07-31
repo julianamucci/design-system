@@ -501,7 +501,7 @@ interface CalendarProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
-      { key: 'Arrow',          description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
+      { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
       { key: 'Page Up/Down',   description: stripHtml($tStore('accessibility.keyboard.pageUpDown')) },
       { key: 'Home/End',       description: stripHtml($tStore('accessibility.keyboard.homeEnd'))   },
       { key: 'Enter',          description: stripHtml($tStore('accessibility.keyboard.enter'))     },

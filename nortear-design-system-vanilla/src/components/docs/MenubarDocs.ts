@@ -725,8 +725,8 @@ export function createMenubar(
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))              },
-            { key: '← / →',       description: stripHtml(t('accessibility.keyboard.arrowsHorizontal')) },
-            { key: '↑ / ↓',       description: stripHtml(t('accessibility.keyboard.arrowsVertical'))   },
+            { key: 'Arrow Left / Arrow Right',       description: stripHtml(t('accessibility.keyboard.arrowsHorizontal')) },
+            { key: 'Arrow Up / Arrow Down',       description: stripHtml(t('accessibility.keyboard.arrowsVertical'))   },
             { key: 'Enter/Space', description: stripHtml(t('accessibility.keyboard.enter'))            },
             { key: 'Esc',         description: stripHtml(t('accessibility.keyboard.escape'))           },
             { key: 'Home/End',    description: stripHtml(t('accessibility.keyboard.homeEnd'))          },

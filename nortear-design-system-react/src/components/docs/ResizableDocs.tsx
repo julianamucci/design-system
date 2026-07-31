@@ -782,8 +782,8 @@ interface PanelResizeHandleProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "← / →", description: `${stripHtml(tContent("accessibility.keyboard.arrowLeft"))} · ${stripHtml(tContent("accessibility.keyboard.arrowRight"))}` },
-          { key: "↑ / ↓", description: `${stripHtml(tContent("accessibility.keyboard.arrowUp"))} · ${stripHtml(tContent("accessibility.keyboard.arrowDown"))}` },
+          { key: "Arrow Left / Arrow Right", description: `${stripHtml(tContent("accessibility.keyboard.arrowLeft"))} · ${stripHtml(tContent("accessibility.keyboard.arrowRight"))}` },
+          { key: "Arrow Up / Arrow Down", description: `${stripHtml(tContent("accessibility.keyboard.arrowUp"))} · ${stripHtml(tContent("accessibility.keyboard.arrowDown"))}` },
           { key: "Home", description: stripHtml(tContent("accessibility.keyboard.home")) },
           { key: "End", description: stripHtml(tContent("accessibility.keyboard.end")) },
           { key: "Enter", description: stripHtml(tContent("accessibility.keyboard.enter")) },

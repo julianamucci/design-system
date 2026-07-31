@@ -393,10 +393,10 @@ const accessibilityItems = computed(() => [
 
 const keyboardItems = computed(() => [
   { key: 'Right Click',  description: tContent('accessibility.keyboard.rightClick') },
-  { key: '↓',            description: tContent('accessibility.keyboard.arrowDown')  },
-  { key: '↑',            description: tContent('accessibility.keyboard.arrowUp')    },
-  { key: '→',            description: tContent('accessibility.keyboard.arrowRight') },
-  { key: '←',            description: tContent('accessibility.keyboard.arrowLeft')  },
+  { key: 'Arrow Down',            description: tContent('accessibility.keyboard.arrowDown')  },
+  { key: 'Arrow Up',            description: tContent('accessibility.keyboard.arrowUp')    },
+  { key: 'Arrow Right',            description: tContent('accessibility.keyboard.arrowRight') },
+  { key: 'Arrow Left',            description: tContent('accessibility.keyboard.arrowLeft')  },
   { key: 'Enter',        description: tContent('accessibility.keyboard.enter')      },
   { key: 'Space',        description: tContent('accessibility.keyboard.space')      },
   { key: 'Esc',          description: tContent('accessibility.keyboard.escape')     },

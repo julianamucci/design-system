@@ -359,7 +359,7 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Arrow',     description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
+  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
   { key: 'PgUp/PgDn', description: stripHtml(tContent('accessibility.keyboard.pageUpDown')) },
   { key: 'Home/End',  description: stripHtml(tContent('accessibility.keyboard.homeEnd'))   },
   { key: 'Enter',     description: stripHtml(tContent('accessibility.keyboard.enter'))     },

@@ -693,7 +693,7 @@ render(items, total);`;
           { key: 'Tab',         description: $tStore('accessibility.keyboard.tab')      },
           { key: 'Enter',       description: $tStore('accessibility.keyboard.enter')    },
           { key: 'Space',       description: $tStore('accessibility.keyboard.space')    },
-          { key: '↑ ↓ ← →',     description: $tStore('accessibility.keyboard.arrows')   },
+          { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',     description: $tStore('accessibility.keyboard.arrows')   },
           { key: 'Home / End',  description: $tStore('accessibility.keyboard.homeEnd')  },
         ]}
       />

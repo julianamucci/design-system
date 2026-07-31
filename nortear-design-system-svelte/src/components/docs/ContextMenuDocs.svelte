@@ -840,10 +840,10 @@ interface ContextMenuRadioGroupProps {
     keyboardTitle={$tStore('accessibility.title')}
     keyboardItems={[
       { key: 'Right-click / Menu', description: $tStore('accessibility.keyboard.rightClick') },
-      { key: '↓',                  description: $tStore('accessibility.keyboard.arrowDown')  },
-      { key: '↑',                  description: $tStore('accessibility.keyboard.arrowUp')    },
-      { key: '→',                  description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: '←',                  description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Arrow Down',                  description: $tStore('accessibility.keyboard.arrowDown')  },
+      { key: 'Arrow Up',                  description: $tStore('accessibility.keyboard.arrowUp')    },
+      { key: 'Arrow Right',                  description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',                  description: $tStore('accessibility.keyboard.arrowLeft')  },
       { key: 'Enter',              description: $tStore('accessibility.keyboard.enter')      },
       { key: 'Space',              description: $tStore('accessibility.keyboard.space')      },
       { key: 'Escape',             description: $tStore('accessibility.keyboard.escape')     },

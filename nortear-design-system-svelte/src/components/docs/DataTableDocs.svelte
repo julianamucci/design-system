@@ -477,7 +477,7 @@ const columns: DataTableColumn<Invoice>[] = [
       { key: 'Enter',  description: $tStore('accessibility.keyboard.enter')     },
       { key: 'Space',  description: $tStore('accessibility.keyboard.space')     },
       { key: 'Escape', description: $tStore('accessibility.keyboard.escape')    },
-      { key: '↑ ↓',    description: $tStore('accessibility.keyboard.arrowKeys') },
+      { key: 'Arrow Up / Arrow Down',    description: $tStore('accessibility.keyboard.arrowKeys') },
     ]}
   />
 

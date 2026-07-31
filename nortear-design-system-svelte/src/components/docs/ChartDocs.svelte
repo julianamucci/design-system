@@ -600,8 +600,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
       { key: 'Tab',        description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'ArrowRight', description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: 'ArrowLeft',  description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Arrow Right', description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',  description: $tStore('accessibility.keyboard.arrowLeft')  },
     ]}
   />
 

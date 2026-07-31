@@ -620,8 +620,8 @@ export type ChartOptions = {
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
             { key: 'Tab', description: t('accessibility.keyboard.tab') },
-            { key: 'ArrowRight', description: t('accessibility.keyboard.arrowRight') },
-            { key: 'ArrowLeft', description: t('accessibility.keyboard.arrowLeft') },
+            { key: 'Arrow Right', description: t('accessibility.keyboard.arrowRight') },
+            { key: 'Arrow Left', description: t('accessibility.keyboard.arrowLeft') },
           ],
         });
 

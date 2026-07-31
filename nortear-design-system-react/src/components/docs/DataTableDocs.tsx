@@ -782,7 +782,7 @@ declare module "@tanstack/react-table" {
           { key: "Enter",  description: tContent("accessibility.keyboard.enter") },
           { key: "Space",  description: tContent("accessibility.keyboard.space") },
           { key: "Escape", description: tContent("accessibility.keyboard.escape") },
-          { key: "Arrows", description: tContent("accessibility.keyboard.arrowKeys") },
+          { key: "Arrow Up / Arrow Down", description: tContent("accessibility.keyboard.arrowKeys") },
         ]}
       />
 

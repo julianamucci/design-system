@@ -830,8 +830,8 @@ type AccordionProps = {
           { key: 'Shift+Tab', description: $tStore('accessibility.keyboard.shiftTab')  },
           { key: 'Enter',     description: $tStore('accessibility.keyboard.enter')     },
           { key: 'Space',     description: $tStore('accessibility.keyboard.space')     },
-          { key: '↓',         description: $tStore('accessibility.keyboard.arrowDown') },
-          { key: '↑',         description: $tStore('accessibility.keyboard.arrowUp')   },
+          { key: 'Arrow Down',         description: $tStore('accessibility.keyboard.arrowDown') },
+          { key: 'Arrow Up',         description: $tStore('accessibility.keyboard.arrowUp')   },
           { key: 'Home',      description: $tStore('accessibility.keyboard.home')      },
           { key: 'End',       description: $tStore('accessibility.keyboard.end')       },
         ]}

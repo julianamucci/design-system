@@ -670,10 +670,10 @@ interface ScrollBarProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "↓", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "↑", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "→", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "←", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Up", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
           { key: "PageDown", description: stripHtml(tContent("accessibility.keyboard.pageDown")) },
           { key: "PageUp", description: stripHtml(tContent("accessibility.keyboard.pageUp")) },
           { key: "Home", description: stripHtml(tContent("accessibility.keyboard.home")) },

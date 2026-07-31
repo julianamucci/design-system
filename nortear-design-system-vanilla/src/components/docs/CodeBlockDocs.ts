@@ -657,7 +657,7 @@ export function createCodeBlockDocs(): HTMLElement {
             { key: 'Tab',         description: t('accessibility.keyboard.tab') },
             { key: 'Enter',       description: t('accessibility.keyboard.enter') },
             { key: 'Space',       description: t('accessibility.keyboard.space') },
-            { key: '↑ ↓ ← →',     description: t('accessibility.keyboard.arrows') },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',     description: t('accessibility.keyboard.arrows') },
             { key: 'Home / End',  description: t('accessibility.keyboard.homeEnd') },
           ],
         });

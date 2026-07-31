@@ -855,7 +855,7 @@ interface InputOTPProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrows", description: stripHtml(tContent("accessibility.keyboard.arrows")) },
+          { key: "Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrows")) },
           { key: "Backspace", description: stripHtml(tContent("accessibility.keyboard.backspace")) },
           { key: "Ctrl+V", description: stripHtml(tContent("accessibility.keyboard.paste")) },
         ]}

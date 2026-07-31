@@ -639,7 +639,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',          description: t('accessibility.keyboard.tab')      },
-            { key: '↑/↓ ←/→',      description: t('accessibility.keyboard.arrows')   },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',      description: t('accessibility.keyboard.arrows')   },
             { key: 'Enter/Space',  description: t('accessibility.keyboard.enter')    },
             { key: 'Esc',          description: t('accessibility.keyboard.escape')   },
             { key: 'Home/End',     description: t('accessibility.keyboard.homeEnd')  },

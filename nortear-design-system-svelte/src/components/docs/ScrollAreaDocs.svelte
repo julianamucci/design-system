@@ -501,10 +501,10 @@ interface ScrollAreaRootProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',       description: $tStore('accessibility.keyboard.tab')        },
-      { key: '↓',         description: $tStore('accessibility.keyboard.arrowDown')  },
-      { key: '↑',         description: $tStore('accessibility.keyboard.arrowUp')    },
-      { key: '→',         description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: '←',         description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Arrow Down',         description: $tStore('accessibility.keyboard.arrowDown')  },
+      { key: 'Arrow Up',         description: $tStore('accessibility.keyboard.arrowUp')    },
+      { key: 'Arrow Right',         description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',         description: $tStore('accessibility.keyboard.arrowLeft')  },
       { key: 'PageDown',  description: $tStore('accessibility.keyboard.pageDown')   },
       { key: 'PageUp',    description: $tStore('accessibility.keyboard.pageUp')     },
       { key: 'Home',      description: $tStore('accessibility.keyboard.home')       },

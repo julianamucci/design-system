@@ -701,10 +701,10 @@ export type RadioGroupOptions = {
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',         description: t('accessibility.keyboard.tab')        },
-            { key: 'ArrowDown',   description: t('accessibility.keyboard.arrowDown')  },
-            { key: 'ArrowUp',     description: t('accessibility.keyboard.arrowUp')    },
-            { key: 'ArrowRight',  description: t('accessibility.keyboard.arrowRight') },
-            { key: 'ArrowLeft',   description: t('accessibility.keyboard.arrowLeft')  },
+            { key: 'Arrow Down',   description: t('accessibility.keyboard.arrowDown')  },
+            { key: 'Arrow Up',     description: t('accessibility.keyboard.arrowUp')    },
+            { key: 'Arrow Right',  description: t('accessibility.keyboard.arrowRight') },
+            { key: 'Arrow Left',   description: t('accessibility.keyboard.arrowLeft')  },
             { key: 'Space',       description: t('accessibility.keyboard.space')      },
           ],
         });

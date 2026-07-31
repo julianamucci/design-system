@@ -711,8 +711,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         keyboardTitle={tContent("accessibility.keyboardTitle")}
         keyboardItems={[
           { key: "Tab",        description: tContent("accessibility.keyboard.tab") },
-          { key: "ArrowRight", description: tContent("accessibility.keyboard.arrowRight") },
-          { key: "ArrowLeft",  description: tContent("accessibility.keyboard.arrowLeft") },
+          { key: "Arrow Right", description: tContent("accessibility.keyboard.arrowRight") },
+          { key: "Arrow Left",  description: tContent("accessibility.keyboard.arrowLeft") },
         ]}
       />
 

@@ -323,7 +323,7 @@ const keyboardItems = computed(() => [
   { key: 'Enter',   description: tContent('accessibility.keyboard.enter')      },
   { key: 'Espaço',  description: tContent('accessibility.keyboard.space')      },
   { key: 'Escape',  description: tContent('accessibility.keyboard.escape')     },
-  { key: 'Setas',   description: tContent('accessibility.keyboard.arrowKeys')  },
+  { key: 'Arrow Up / Arrow Down',  description: tContent('accessibility.keyboard.arrowKeys')  },
 ]);
 
 const relatedItems = computed(() => [

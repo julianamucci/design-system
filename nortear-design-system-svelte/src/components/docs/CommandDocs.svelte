@@ -860,8 +860,8 @@ interface CommandLoadingProps {
     ]}
     keyboardTitle="Navegação por Teclado"
     keyboardItems={[
-      { key: '↓',       description: $tStore('accessibility.keyboard.arrowDown') },
-      { key: '↑',       description: $tStore('accessibility.keyboard.arrowUp')   },
+      { key: 'Arrow Down',       description: $tStore('accessibility.keyboard.arrowDown') },
+      { key: 'Arrow Up',       description: $tStore('accessibility.keyboard.arrowUp')   },
       { key: 'Enter',   description: $tStore('accessibility.keyboard.enter')     },
       { key: 'Escape',  description: $tStore('accessibility.keyboard.escape')    },
       { key: 'Tab',     description: $tStore('accessibility.keyboard.tab')       },

@@ -327,7 +327,7 @@ const accessibilityItems = computed(() => [
 
 const keyboardItems = computed(() => [
   { key: 'Tab',         description: stripHtml(tContent('accessibility.keyboard.tab'))       },
-  { key: '← / →',       description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
+  { key: 'Arrow Left / Arrow Right',       description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
   { key: 'Backspace',   description: stripHtml(tContent('accessibility.keyboard.backspace')) },
   { key: 'Ctrl/Cmd+V',  description: stripHtml(tContent('accessibility.keyboard.paste'))     },
   { key: '0-9 / A-Z',   description: stripHtml(tContent('accessibility.keyboard.digit'))     },

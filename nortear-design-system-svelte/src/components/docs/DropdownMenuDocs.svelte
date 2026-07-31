@@ -798,7 +798,7 @@ interface DropdownMenuRadioGroupProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',                description: $tStore('accessibility.keyboard.tab')       },
-      { key: '↑ ↓',                description: $tStore('accessibility.keyboard.arrows')    },
+      { key: 'Arrow Up / Arrow Down',                description: $tStore('accessibility.keyboard.arrows')    },
       { key: 'Enter / Space',      description: $tStore('accessibility.keyboard.enter')     },
       { key: 'Escape',             description: $tStore('accessibility.keyboard.escape')    },
       { key: 'Home / End',         description: $tStore('accessibility.keyboard.homeEnd')   },

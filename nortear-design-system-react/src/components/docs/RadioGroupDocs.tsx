@@ -822,10 +822,10 @@ interface RadioGroupItemProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "↓ ArrowDown", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "↑ ArrowUp", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "→ ArrowRight", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "← ArrowLeft", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Up", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
           { key: "Space", description: stripHtml(tContent("accessibility.keyboard.space")) },
         ]}
       />

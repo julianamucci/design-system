@@ -705,10 +705,10 @@ interface RadioGroupItemProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',          description: stripHtml($tStore('accessibility.keyboard.tab')) },
-      { key: '↓ ArrowDown',  description: stripHtml($tStore('accessibility.keyboard.arrowDown')) },
-      { key: '↑ ArrowUp',    description: stripHtml($tStore('accessibility.keyboard.arrowUp')) },
-      { key: '→ ArrowRight', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
-      { key: '← ArrowLeft',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft')) },
+      { key: 'Arrow Down',  description: stripHtml($tStore('accessibility.keyboard.arrowDown')) },
+      { key: 'Arrow Up',    description: stripHtml($tStore('accessibility.keyboard.arrowUp')) },
+      { key: 'Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft')) },
       { key: 'Space',        description: stripHtml($tStore('accessibility.keyboard.space')) },
     ]}
   />

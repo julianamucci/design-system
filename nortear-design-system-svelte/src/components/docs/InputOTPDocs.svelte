@@ -675,7 +675,7 @@ interface InputOTPProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',       description: stripHtml($tStore('accessibility.keyboard.tab'))       },
-      { key: 'Arrows',    description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
+      { key: 'Arrow Left / Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
       { key: 'Backspace', description: stripHtml($tStore('accessibility.keyboard.backspace')) },
       { key: 'Ctrl+V',    description: stripHtml($tStore('accessibility.keyboard.paste'))     },
       { key: '0-9',       description: stripHtml($tStore('accessibility.keyboard.digit'))     },

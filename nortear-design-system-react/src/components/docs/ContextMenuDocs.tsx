@@ -968,10 +968,10 @@ const [showRulers, setShowRulers] = useState(false);
         keyboardTitle={tContent("accessibility.title")}
         keyboardItems={[
           { key: "Right-click / Menu", description: tContent("accessibility.keyboard.rightClick") },
-          { key: "↓",                  description: tContent("accessibility.keyboard.arrowDown") },
-          { key: "↑",                  description: tContent("accessibility.keyboard.arrowUp") },
-          { key: "→",                  description: tContent("accessibility.keyboard.arrowRight") },
-          { key: "←",                  description: tContent("accessibility.keyboard.arrowLeft") },
+          { key: "Arrow Down",                  description: tContent("accessibility.keyboard.arrowDown") },
+          { key: "Arrow Up",                  description: tContent("accessibility.keyboard.arrowUp") },
+          { key: "Arrow Right",                  description: tContent("accessibility.keyboard.arrowRight") },
+          { key: "Arrow Left",                  description: tContent("accessibility.keyboard.arrowLeft") },
           { key: "Enter",              description: tContent("accessibility.keyboard.enter") },
           { key: "Space",              description: tContent("accessibility.keyboard.space") },
           { key: "Escape",             description: tContent("accessibility.keyboard.escape") },

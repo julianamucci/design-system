@@ -363,7 +363,7 @@ const accessibilityItems = computed(() => [
 
 const keyboardItems = computed(() => [
   { key: 'Tab',           description: stripHtml(tContent('accessibility.keyboard.tab'))     },
-  { key: '← / →  ↑ / ↓',  description: stripHtml(tContent('accessibility.keyboard.arrows')) },
+  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',  description: stripHtml(tContent('accessibility.keyboard.arrows')) },
   { key: 'Enter / Space', description: stripHtml(tContent('accessibility.keyboard.enter'))  },
   { key: 'Escape',        description: stripHtml(tContent('accessibility.keyboard.escape')) },
   { key: 'Home / End',    description: stripHtml(tContent('accessibility.keyboard.homeEnd'))},

@@ -670,7 +670,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         ]}
         keyboardTitle={tContent("accessibility.keyboardTitle")}
         keyboardItems={[
-          { key: "Arrow keys",           description: stripHtml(tContent("accessibility.keyboard.arrows")) },
+          { key: "Arrow Up / Arrow Down / Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrows")) },
           { key: "Page Up / Page Down",  description: stripHtml(tContent("accessibility.keyboard.pageUpDown")) },
           { key: "Home / End",           description: stripHtml(tContent("accessibility.keyboard.homeEnd")) },
           { key: "Enter / Space",        description: stripHtml(tContent("accessibility.keyboard.enter")) },

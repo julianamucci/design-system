@@ -584,7 +584,7 @@ export function createDataTableDocs(): HTMLElement {
             { key: 'Enter',  description: t('accessibility.keyboard.enter') },
             { key: 'Space',  description: t('accessibility.keyboard.space') },
             { key: 'Escape', description: t('accessibility.keyboard.escape') },
-            { key: '↑ ↓',    description: t('accessibility.keyboard.arrowKeys') },
+            { key: 'Arrow Up / Arrow Down',    description: t('accessibility.keyboard.arrowKeys') },
           ],
         });
 

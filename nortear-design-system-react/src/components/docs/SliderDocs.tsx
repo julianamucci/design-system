@@ -827,10 +827,10 @@ interface SliderProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
-          { key: "ArrowRight",  description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "ArrowLeft",   description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
-          { key: "ArrowUp",     description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "ArrowDown",   description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Right",  description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left",   description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Arrow Up",     description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Down",   description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
           { key: "Home",        description: stripHtml(tContent("accessibility.keyboard.home")) },
           { key: "End",         description: stripHtml(tContent("accessibility.keyboard.end")) },
           { key: "PageUp",      description: stripHtml(tContent("accessibility.keyboard.pageUp")) },

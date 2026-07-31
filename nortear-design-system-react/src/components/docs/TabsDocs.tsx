@@ -846,19 +846,19 @@ interface TabsContentProps {
         keyboardItems={[
           { key: "Tab", description: tContent("accessibility.keyboard.tab") },
           {
-            key: "ArrowRight",
+            key: "Arrow Right",
             description: tContent("accessibility.keyboard.arrowRight"),
           },
           {
-            key: "ArrowLeft",
+            key: "Arrow Left",
             description: tContent("accessibility.keyboard.arrowLeft"),
           },
           {
-            key: "ArrowDown",
+            key: "Arrow Down",
             description: tContent("accessibility.keyboard.arrowDown"),
           },
           {
-            key: "ArrowUp",
+            key: "Arrow Up",
             description: tContent("accessibility.keyboard.arrowUp"),
           },
           { key: "Home", description: tContent("accessibility.keyboard.home") },

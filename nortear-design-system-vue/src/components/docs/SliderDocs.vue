@@ -377,10 +377,10 @@ const accessibilityItems = computed(() => [
 
 const keyboardItems = computed(() => [
   { key: 'Tab',         description: tContent('accessibility.keyboard.tab')        },
-  { key: 'ArrowRight',  description: tContent('accessibility.keyboard.arrowRight') },
-  { key: 'ArrowLeft',   description: tContent('accessibility.keyboard.arrowLeft')  },
-  { key: 'ArrowUp',     description: tContent('accessibility.keyboard.arrowUp')    },
-  { key: 'ArrowDown',   description: tContent('accessibility.keyboard.arrowDown')  },
+  { key: 'Arrow Right',  description: tContent('accessibility.keyboard.arrowRight') },
+  { key: 'Arrow Left',   description: tContent('accessibility.keyboard.arrowLeft')  },
+  { key: 'Arrow Up',     description: tContent('accessibility.keyboard.arrowUp')    },
+  { key: 'Arrow Down',   description: tContent('accessibility.keyboard.arrowDown')  },
   { key: 'Home',        description: tContent('accessibility.keyboard.home')       },
   { key: 'End',         description: tContent('accessibility.keyboard.end')        },
   { key: 'PageUp',      description: tContent('accessibility.keyboard.pageUp')     },

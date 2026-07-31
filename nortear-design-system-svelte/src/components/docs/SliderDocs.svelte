@@ -594,10 +594,10 @@ interface SliderProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',        description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'ArrowRight', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
-      { key: 'ArrowLeft',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft'))  },
-      { key: 'ArrowUp',    description: stripHtml($tStore('accessibility.keyboard.arrowUp'))    },
-      { key: 'ArrowDown',  description: stripHtml($tStore('accessibility.keyboard.arrowDown'))  },
+      { key: 'Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft'))  },
+      { key: 'Arrow Up',    description: stripHtml($tStore('accessibility.keyboard.arrowUp'))    },
+      { key: 'Arrow Down',  description: stripHtml($tStore('accessibility.keyboard.arrowDown'))  },
       { key: 'Home',       description: stripHtml($tStore('accessibility.keyboard.home'))       },
       { key: 'End',        description: stripHtml($tStore('accessibility.keyboard.end'))        },
       { key: 'PageUp',     description: $tStore('accessibility.keyboard.pageUp')     },

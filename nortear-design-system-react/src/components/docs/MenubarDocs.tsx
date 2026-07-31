@@ -871,8 +871,8 @@ interface MenubarItemProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "← / →", description: stripHtml(tContent("accessibility.keyboard.arrowsHorizontal")) },
-          { key: "↑ / ↓", description: stripHtml(tContent("accessibility.keyboard.arrowsVertical")) },
+          { key: "Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowsHorizontal")) },
+          { key: "Arrow Up / Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowsVertical")) },
           { key: "Enter / Space", description: stripHtml(tContent("accessibility.keyboard.enter")) },
           { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
           { key: "Home / End", description: stripHtml(tContent("accessibility.keyboard.homeEnd")) },

@@ -740,7 +740,7 @@ export function CodeBlockDocs() {
           { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
           { key: "Enter",       description: tContent("accessibility.keyboard.enter") },
           { key: "Space",       description: tContent("accessibility.keyboard.space") },
-          { key: "↑ ↓ ← →",     description: tContent("accessibility.keyboard.arrows") },
+          { key: "Arrow Up / Arrow Down / Arrow Left / Arrow Right",     description: tContent("accessibility.keyboard.arrows") },
           { key: "Home / End",  description: tContent("accessibility.keyboard.homeEnd") },
         ]}
       />

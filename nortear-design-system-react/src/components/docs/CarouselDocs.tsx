@@ -1035,8 +1035,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         keyboardTitle={tContent("accessibility.keyboardTitle")}
         keyboardItems={[
           { key: "Tab",        description: tContent("accessibility.keyboard.tab") },
-          { key: "ArrowLeft",  description: tContent("accessibility.keyboard.arrowLeft") },
-          { key: "ArrowRight", description: tContent("accessibility.keyboard.arrowRight") },
+          { key: "Arrow Left",  description: tContent("accessibility.keyboard.arrowLeft") },
+          { key: "Arrow Right", description: tContent("accessibility.keyboard.arrowRight") },
           { key: "Enter",      description: tContent("accessibility.keyboard.enter") },
           { key: "Space",      description: tContent("accessibility.keyboard.space") },
         ]}

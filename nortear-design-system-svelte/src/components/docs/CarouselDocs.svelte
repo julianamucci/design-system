@@ -881,8 +881,8 @@ interface CarouselNavProps extends ButtonProps {
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
       { key: 'Tab',        description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'ArrowLeft',  description: $tStore('accessibility.keyboard.arrowLeft')  },
-      { key: 'ArrowRight', description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',  description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Arrow Right', description: $tStore('accessibility.keyboard.arrowRight') },
       { key: 'Enter',      description: $tStore('accessibility.keyboard.enter')      },
       { key: 'Space',      description: $tStore('accessibility.keyboard.space')      },
     ]}

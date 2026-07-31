@@ -862,8 +862,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               { key: "Shift+Tab",  description: tContent("accessibility.keyboard.shiftTab") },
               { key: "Enter",      description: tContent("accessibility.keyboard.enter") },
               { key: "Space",      description: tContent("accessibility.keyboard.space") },
-              { key: "↓",          description: tContent("accessibility.keyboard.arrowDown") },
-              { key: "↑",          description: tContent("accessibility.keyboard.arrowUp") },
+              { key: "Arrow Down",          description: tContent("accessibility.keyboard.arrowDown") },
+              { key: "Arrow Up",          description: tContent("accessibility.keyboard.arrowUp") },
               { key: "Home",       description: tContent("accessibility.keyboard.home") },
               { key: "End",        description: tContent("accessibility.keyboard.end") },
             ]}

@@ -553,7 +553,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           keyboardItems: [
             { key: 'Tab', description: stripHtml(t('accessibility.keyboard.tab')) },
             { key: 'Enter / Space', description: stripHtml(t('accessibility.keyboard.enter')) },
-            { key: 'Arrow', description: stripHtml(t('accessibility.keyboard.arrows')) },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(t('accessibility.keyboard.arrows')) },
             { key: 'Page Up / Page Down', description: stripHtml(t('accessibility.keyboard.pageUpDown')) },
             { key: 'Home / End', description: stripHtml(t('accessibility.keyboard.homeEnd')) },
           ],

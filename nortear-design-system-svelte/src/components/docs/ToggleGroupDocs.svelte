@@ -704,10 +704,10 @@ interface ToggleGroupItemProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',         description: $tStore('accessibility.keyboard.tab') },
-      { key: 'ArrowRight',  description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: 'ArrowLeft',   description: $tStore('accessibility.keyboard.arrowLeft') },
-      { key: 'ArrowDown',   description: $tStore('accessibility.keyboard.arrowDown') },
-      { key: 'ArrowUp',     description: $tStore('accessibility.keyboard.arrowUp') },
+      { key: 'Arrow Right',  description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Left',   description: $tStore('accessibility.keyboard.arrowLeft') },
+      { key: 'Arrow Down',   description: $tStore('accessibility.keyboard.arrowDown') },
+      { key: 'Arrow Up',     description: $tStore('accessibility.keyboard.arrowUp') },
       { key: 'Home',        description: $tStore('accessibility.keyboard.home') },
       { key: 'End',         description: $tStore('accessibility.keyboard.end') },
       { key: 'Space',       description: $tStore('accessibility.keyboard.space') },

@@ -578,10 +578,10 @@ interface HandleProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',         description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'ArrowLeft',   description: $tStore('accessibility.keyboard.arrowLeft')  },
-      { key: 'ArrowRight',  description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: 'ArrowUp',     description: $tStore('accessibility.keyboard.arrowUp')    },
-      { key: 'ArrowDown',   description: $tStore('accessibility.keyboard.arrowDown')  },
+      { key: 'Arrow Left',   description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Arrow Right',  description: $tStore('accessibility.keyboard.arrowRight') },
+      { key: 'Arrow Up',     description: $tStore('accessibility.keyboard.arrowUp')    },
+      { key: 'Arrow Down',   description: $tStore('accessibility.keyboard.arrowDown')  },
       { key: 'Home',        description: $tStore('accessibility.keyboard.home')       },
       { key: 'End',         description: $tStore('accessibility.keyboard.end')        },
       { key: 'Enter',       description: $tStore('accessibility.keyboard.enter')      },

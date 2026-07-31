@@ -734,7 +734,7 @@ export function createNavigationMenu(
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',          description: stripHtml(t('accessibility.keyboard.tab'))     },
-            { key: '← / → / ↑ / ↓', description: stripHtml(t('accessibility.keyboard.arrows')) },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(t('accessibility.keyboard.arrows')) },
             { key: 'Enter/Space',  description: stripHtml(t('accessibility.keyboard.enter'))   },
             { key: 'Esc',          description: stripHtml(t('accessibility.keyboard.escape'))  },
             { key: 'Home/End',     description: stripHtml(t('accessibility.keyboard.homeEnd')) },
