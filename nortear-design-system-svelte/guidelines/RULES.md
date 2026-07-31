@@ -24,7 +24,7 @@ Tokens de superfície:
 - Inputs: `bg-input border-input`
 
 Tokens de cor de estado aplicados via `class` — nunca via prop inexistente:
-- Warning/Success em Alert e Badge: `class="bg-warning/10 text-warning border-warning/30"`
+- Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via class). Badge não tem essas variantes; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., ver guideline 04 §Tokens de Componente)
 
 Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
 
@@ -92,9 +92,8 @@ Nunca inventar props que não existem. Casos frequentes:
 
 | Componente | Prop inexistente | Correto |
 |------------|-----------------|---------|
-| Avatar | `size` | `class="h-8 w-8"` |
+| Avatar | `size` | var interna escopada: `--avatar-size` (guideline 04) |
 | Badge | `size` | `class` customizado |
-| Alert | variantes `warning`/`success` | `class` com tokens do projeto |
 | Drawer | prop `side` | `direction` no `<Drawer.Root>` |
 | Select | busca integrada | usar Combobox (Command + Popover) |
 

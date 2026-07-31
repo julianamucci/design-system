@@ -20,8 +20,13 @@ Este arquivo registra toda divergência intencional entre este design system e s
    ensinando o caminho antigo e 7 uniões de tipo em `"default" | "destructive"`
    nas docs pages — descoberto 3 dias depois, por leitura humana. Checklist
    mínimo da varredura: `props.table.*` (descriptions E types), `interfaceCode`,
-   `argTypes` das stories, exemplos de `usage`/`doDont`, e um grep pelos nomes
-   dos valores antigos.
+   `argTypes` das stories, exemplos de `usage`/`doDont`, **as STORIES que
+   demonstram a API antiga**, `testes.*` do translations.json, e —
+   principalmente — **`guidelines/RULES.md` e as skills**: é a camada que
+   REGENERA componente novo, e foi nela que "variante via className" sobreviveu
+   mais tempo (as stories erradas de Success/Warning nasceram de agents
+   seguindo o RULES.md à risca). O grep pelos nomes dos valores antigos é
+   repo-wide, não só no componente.
 
 > **Histórico de stack de primitivas (React):**
 > - Até 2026-04-21: `@radix-ui/react-*` individuais (modo legado)

@@ -25,7 +25,7 @@ Tokens de superfície:
 - Inputs: `bg-input border-input`
 
 Tokens de cor de estado aplicados via `className` — nunca via atributo ou style direto:
-- Warning/Success em Alert e Badge: `className="bg-warning/10 text-warning border-warning/30"`
+- Warning/Success em Alert: **opção** `variant: 'warning'` / `variant: 'success'` da factory (desde PATCHES.md#alert-five-variants — nunca via className). Badge não tem essas variantes; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., ver guideline 04 §Tokens de Componente)
 
 Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
 
