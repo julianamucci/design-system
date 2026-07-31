@@ -226,10 +226,7 @@ const variantItems = computed(() => [
   { name: 'enableColumnVisibility', description: stripHtml(tContent('variants.items.visibility'))       },
   { name: 'enableColumnResizing',   description: stripHtml(tContent('variants.items.resize'))           },
   { name: 'enableColumnOrdering',   description: stripHtml(tContent('variants.items.reorder'))          },
-  { name: 'enableColumnPinning',    description: stripHtml(tContent('variants.items.pin'))              },
   { name: 'enablePagination',       description: stripHtml(tContent('variants.items.pagination'))       },
-  { name: 'meta.editable',          description: stripHtml(tContent('variants.items.edit'))             },
-  { name: 'virtualized',            description: stripHtml(tContent('variants.items.virtual'))          },
   {
     name: tContent('variants.items.editableSheet.name'),
     description: tContent('variants.items.editableSheet.description'),

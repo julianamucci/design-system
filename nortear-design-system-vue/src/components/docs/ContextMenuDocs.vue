@@ -209,29 +209,6 @@ const codeDestructive = `<ContextMenu>
   </ContextMenuContent>
 </ContextMenu>`;
 
-const codeCheckboxItem = `<ContextMenuCheckboxItem
-  :checked="showGrid"
-  @update:checked="showGrid = $event"
->
-  Mostrar grade
-</ContextMenuCheckboxItem>`;
-
-const codeRadioGroup = `<ContextMenuRadioGroup
-  :model-value="layout"
-  @update:model-value="layout = $event"
->
-  <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>
-  <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
-</ContextMenuRadioGroup>`;
-
-const codeSubTrigger = `<ContextMenuSub>
-  <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
-  <ContextMenuSubContent>
-    <ContextMenuItem>Por e-mail</ContextMenuItem>
-    <ContextMenuItem>Por link</ContextMenuItem>
-  </ContextMenuSubContent>
-</ContextMenuSub>`;
-
 const codeLabel = `<ContextMenuLabel inset>Arquivo</ContextMenuLabel>
 <ContextMenuItem inset>Editar</ContextMenuItem>`;
 
@@ -308,10 +285,7 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: 'default',      description: stripHtml(tContent('variants.items.default')),      code: codeDefault       },
   { name: 'destructive',  description: stripHtml(tContent('variants.items.destructive')),  code: codeDestructive   },
-  { name: 'CheckboxItem', description: stripHtml(tContent('variants.checkboxItem')),        code: codeCheckboxItem  },
-  { name: 'RadioItem',    description: stripHtml(tContent('variants.radioItem')),           code: codeRadioGroup    },
-  { name: 'SubTrigger',   description: stripHtml(tContent('variants.subTrigger')),          code: codeSubTrigger    },
-  { name: 'Label',        description: stripHtml(tContent('variants.label')),               code: codeLabel         },
+  { name: 'Label',        description: stripHtml(tContent('variants.items.label')),         code: codeLabel         },
   {
     name: tContent('variants.items.withCheckbox.name'),
     description: tContent('variants.items.withCheckbox.description'),
@@ -492,11 +466,7 @@ const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item6.story'), priority: localPriority(tContent('testes.visual.item6.priority')) },
 ]);
 
-// ─── Demo state ───────────────────────────────────────────────────────────────
-const demoShowGrid = ref(true);
-const demoLayout   = ref('grid');
-
-// Composições — state
+// ─── Composições — state ──────────────────────────────────────────────────────
 const compShowGrid   = ref(true);
 const compShowRulers = ref(false);
 const compZoom       = ref('100');
@@ -866,80 +836,8 @@ const codeCompositionShortcuts = `<ContextMenu>
         </ContextMenu>
       </template>
 
-      <!-- CheckboxItem -->
-      <template #variant-preview-2>
-        <ContextMenu>
-          <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
-            data-align="center"
-            data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
-          >
-            {{ tContent('demonstration.labels.triggerLabel') }}
-          </ContextMenuTrigger>
-          <ContextMenuContent>
-            <ContextMenuCheckboxItem
-              :checked="demoShowGrid"
-              @update:checked="demoShowGrid = $event"
-            >
-              Mostrar grade
-            </ContextMenuCheckboxItem>
-          </ContextMenuContent>
-        </ContextMenu>
-      </template>
-
-      <!-- RadioItem -->
-      <template #variant-preview-3>
-        <ContextMenu>
-          <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
-            data-align="center"
-            data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
-          >
-            {{ tContent('demonstration.labels.triggerLabel') }}
-          </ContextMenuTrigger>
-          <ContextMenuContent>
-            <ContextMenuRadioGroup
-              :model-value="demoLayout"
-              @update:model-value="demoLayout = $event as string"
-            >
-              <ContextMenuRadioItem value="grid">
-                Grade
-              </ContextMenuRadioItem>
-              <ContextMenuRadioItem value="list">
-                Lista
-              </ContextMenuRadioItem>
-            </ContextMenuRadioGroup>
-          </ContextMenuContent>
-        </ContextMenu>
-      </template>
-
-      <!-- SubTrigger -->
-      <template #variant-preview-4>
-        <ContextMenu>
-          <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
-            data-align="center"
-            data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
-          >
-            {{ tContent('demonstration.labels.triggerLabel') }}
-          </ContextMenuTrigger>
-          <ContextMenuContent>
-            <ContextMenuSub>
-              <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
-              <ContextMenuSubContent>
-                <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
-                <ContextMenuItem>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuItem>
-              </ContextMenuSubContent>
-            </ContextMenuSub>
-          </ContextMenuContent>
-        </ContextMenu>
-      </template>
-
       <!-- Label inset -->
-      <template #variant-preview-5>
+      <template #variant-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -964,7 +862,7 @@ const codeCompositionShortcuts = `<ContextMenu>
         </ContextMenu>
       </template>
       <!-- withCheckbox -->
-      <template #variant-preview-6>
+      <template #variant-preview-3>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -997,7 +895,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       </template>
 
       <!-- withRadio -->
-      <template #variant-preview-7>
+      <template #variant-preview-4>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -1032,7 +930,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       </template>
 
       <!-- withSubmenu -->
-      <template #variant-preview-8>
+      <template #variant-preview-5>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -1057,7 +955,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       </template>
 
       <!-- withShortcuts -->
-      <template #variant-preview-9>
+      <template #variant-preview-6>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"

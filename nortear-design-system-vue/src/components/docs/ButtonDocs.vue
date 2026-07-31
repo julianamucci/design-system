@@ -132,7 +132,6 @@ const codeDestructive = `<Button variant="destructive">Excluir conta</Button>`;
 const codeOutline = `<Button variant="outline">Cancelar</Button>`;
 const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
 const codeGhost = `<Button variant="ghost">Fechar</Button>`;
-const codeLink = `<Button variant="link">Saiba mais</Button>`;
 
 const codeSizeDefault = `<Button>Padrão</Button>`;
 const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
@@ -181,7 +180,6 @@ const variantItems = computed(() => [
   { name: 'outline',     description: stripHtml(tContent('variants.items.outline')),     code: codeOutline     },
   { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'ghost',       description: stripHtml(tContent('variants.items.ghost')),       code: codeGhost       },
-  { name: 'link',        description: stripHtml(tContent('variants.items.link')),        code: codeLink        },
   {
     name: tContent('variants.items.asLink.name'),
     description: tContent('variants.items.asLink.description'),
@@ -195,8 +193,8 @@ const sizeItems = computed(() => [
   { name: 'sm',       description: stripHtml(tContent('variants.sizes.sm')),       code: codeSizeSm       },
   { name: 'lg',       description: stripHtml(tContent('variants.sizes.lg')),       code: codeSizeLg       },
   { name: 'icon',     description: stripHtml(tContent('variants.sizes.icon')),     code: codeSizeIcon     },
-  { name: 'icon-sm',  description: stripHtml(tContent('variants.sizes.iconSm')),   code: codeSizeIconSm   },
-  { name: 'icon-lg',  description: stripHtml(tContent('variants.sizes.iconLg')),   code: codeSizeIconLg   },
+  { name: 'icon-sm',  description: stripHtml(tContent('variants.sizes.icon-sm')), code: codeSizeIconSm   },
+  { name: 'icon-lg',  description: stripHtml(tContent('variants.sizes.icon-lg')), code: codeSizeIconLg   },
 ]);
 
 const compositionItems = computed(() => [
@@ -519,11 +517,6 @@ function handleDemoClick(variant: string) {
         </Button>
       </template>
       <template #variant-preview-5>
-        <Button variant="link">
-          {{ tContent('demonstration.labels.link') }}
-        </Button>
-      </template>
-      <template #variant-preview-6>
         <Button
           as="a"
           href="#docs"
