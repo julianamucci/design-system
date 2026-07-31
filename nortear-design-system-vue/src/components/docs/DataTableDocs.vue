@@ -16,7 +16,7 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
+import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -83,6 +83,7 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -229,6 +230,29 @@ const variantItems = computed(() => [
   { name: 'enablePagination',       description: stripHtml(tContent('variants.items.pagination'))       },
   { name: 'meta.editable',          description: stripHtml(tContent('variants.items.edit'))             },
   { name: 'virtualized',            description: stripHtml(tContent('variants.items.virtual'))          },
+  {
+    name: tContent('variants.items.editableSheet.name'),
+    description: tContent('variants.items.editableSheet.description'),
+    useWhen: tContent('variants.items.editableSheet.use'),
+  },
+  {
+    name: tContent('variants.items.virtualizedLog.name'),
+    description: tContent('variants.items.virtualizedLog.description'),
+    useWhen: tContent('variants.items.virtualizedLog.use'),
+  },
+  {
+    name: tContent('variants.items.pinnedKey.name'),
+    description: tContent('variants.items.pinnedKey.description'),
+    useWhen: tContent('variants.items.pinnedKey.use'),
+  },
+]);
+
+const compositionItems = computed(() => [
+  {
+    name: tContent('variants.compositions.selectionWithActions.name'),
+    description: tContent('variants.compositions.selectionWithActions.description'),
+    useWhen: tContent('variants.compositions.selectionWithActions.use'),
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -490,9 +514,20 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Recursos ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="data-table"
       :items="variantItems"
+    />
+
+    <!-- ── Composições ───────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="data-table"
+      :items="compositionItems"
     />
 
     <!-- ── Estados ───────────────────────────────────────────────── -->

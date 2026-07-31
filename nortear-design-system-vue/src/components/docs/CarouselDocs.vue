@@ -16,7 +16,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -217,6 +216,12 @@ const variantItems = computed(() => [
   { name: 'vertical',   description: stripHtml(tContent('variants.items.vertical')),   code: codeVertical   },
   { name: 'single',     description: stripHtml(tContent('variants.items.single')),     code: codeSingle     },
   { name: 'multi',      description: stripHtml(tContent('variants.items.multi')),      code: codeMulti      },
+  {
+    name: tContent('variants.items.autoplay.name'),
+    description: tContent('variants.items.autoplay.description'),
+    useWhen: tContent('variants.items.autoplay.use'),
+    code: codeCompositionAutoplay,
+  },
 ]);
 
 const codeCompositionWithDots = `<script setup lang="ts">
@@ -310,12 +315,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.gallery.description'),
     useWhen: tContent('variants.compositions.gallery.use'),
     code: codeCompositionGallery,
-  },
-  {
-    name: tContent('variants.compositions.autoplay.name'),
-    description: tContent('variants.compositions.autoplay.description'),
-    useWhen: tContent('variants.compositions.autoplay.use'),
-    code: codeCompositionAutoplay,
   },
 ]);
 
@@ -725,8 +724,10 @@ function onDemoInit(payload: any) {
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="carousel"
     >
@@ -865,7 +866,41 @@ function onDemoInit(payload: any) {
           </Carousel>
         </div>
       </template>
-    </DocsVariants>
+      <template #variant-preview-4>
+        <div
+          class="nds-w-full nds-cluster"
+          data-justify="center"
+          data-align="center"
+        >
+          <Carousel
+            class="nds-w-full nds-max-w-xs"
+            :opts="{ loop: true }"
+            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          >
+            <CarouselContent>
+              <CarouselItem
+                v-for="n in demoSlides"
+                :key="n"
+              >
+                <Card
+                  class="nds-cluster nds-p-6"
+                  data-align="center"
+                  data-justify="center"
+                  style="aspect-ratio: 1 / 1"
+                >
+                  <span
+                    class="nds-font-semibold nds-text-foreground"
+                    style="font-size: 1.5rem"
+                  >{{ n }}</span>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
+            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
+          </Carousel>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
@@ -961,40 +996,6 @@ function onDemoInit(payload: any) {
                       {{ photo.description }}
                     </p>
                   </div>
-                </Card>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
-            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
-          </Carousel>
-        </div>
-      </template>
-      <template #variant-preview-2>
-        <div
-          class="nds-w-full nds-cluster"
-          data-justify="center"
-          data-align="center"
-        >
-          <Carousel
-            class="nds-w-full nds-max-w-xs"
-            :opts="{ loop: true }"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
-          >
-            <CarouselContent>
-              <CarouselItem
-                v-for="n in demoSlides"
-                :key="n"
-              >
-                <Card
-                  class="nds-cluster nds-p-6"
-                  data-align="center"
-                  data-justify="center"
-                  style="aspect-ratio: 1 / 1"
-                >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
                 </Card>
               </CarouselItem>
             </CarouselContent>

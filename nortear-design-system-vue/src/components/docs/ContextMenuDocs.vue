@@ -30,7 +30,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -100,7 +99,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -314,6 +312,30 @@ const variantItems = computed(() => [
   { name: 'RadioItem',    description: stripHtml(tContent('variants.radioItem')),           code: codeRadioGroup    },
   { name: 'SubTrigger',   description: stripHtml(tContent('variants.subTrigger')),          code: codeSubTrigger    },
   { name: 'Label',        description: stripHtml(tContent('variants.label')),               code: codeLabel         },
+  {
+    name: tContent('variants.items.withCheckbox.name'),
+    description: tContent('variants.items.withCheckbox.description'),
+    useWhen: tContent('variants.items.withCheckbox.use'),
+    code: codeCompositionCheckbox,
+  },
+  {
+    name: tContent('variants.items.withRadio.name'),
+    description: tContent('variants.items.withRadio.description'),
+    useWhen: tContent('variants.items.withRadio.use'),
+    code: codeCompositionRadio,
+  },
+  {
+    name: tContent('variants.items.withSubmenu.name'),
+    description: tContent('variants.items.withSubmenu.description'),
+    useWhen: tContent('variants.items.withSubmenu.use'),
+    code: codeCompositionSubmenu,
+  },
+  {
+    name: tContent('variants.items.withShortcuts.name'),
+    description: tContent('variants.items.withShortcuts.description'),
+    useWhen: tContent('variants.items.withShortcuts.use'),
+    code: codeCompositionShortcuts,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -548,32 +570,6 @@ const codeCompositionShortcuts = `<ContextMenu>
   </ContextMenuContent>
 </ContextMenu>`;
 
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.withCheckbox.name'),
-    description: tContent('variants.compositions.withCheckbox.description'),
-    useWhen: tContent('variants.compositions.withCheckbox.use'),
-    code: codeCompositionCheckbox,
-  },
-  {
-    name: tContent('variants.compositions.withRadio.name'),
-    description: tContent('variants.compositions.withRadio.description'),
-    useWhen: tContent('variants.compositions.withRadio.use'),
-    code: codeCompositionRadio,
-  },
-  {
-    name: tContent('variants.compositions.withSubmenu.name'),
-    description: tContent('variants.compositions.withSubmenu.description'),
-    useWhen: tContent('variants.compositions.withSubmenu.use'),
-    code: codeCompositionSubmenu,
-  },
-  {
-    name: tContent('variants.compositions.withShortcuts.name'),
-    description: tContent('variants.compositions.withShortcuts.description'),
-    useWhen: tContent('variants.compositions.withShortcuts.use'),
-    code: codeCompositionShortcuts,
-  },
-]);
 </script>
 
 <template>
@@ -819,8 +815,11 @@ const compositionItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="context-menu"
       :items="variantItems"
     >
       <!-- default -->
@@ -964,17 +963,8 @@ const compositionItems = computed(() => [
           </ContextMenuContent>
         </ContextMenu>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="context-menu"
-      :items="compositionItems"
-    >
       <!-- withCheckbox -->
-      <template #variant-preview-0>
+      <template #variant-preview-6>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -1007,7 +997,7 @@ const compositionItems = computed(() => [
       </template>
 
       <!-- withRadio -->
-      <template #variant-preview-1>
+      <template #variant-preview-7>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -1042,7 +1032,7 @@ const compositionItems = computed(() => [
       </template>
 
       <!-- withSubmenu -->
-      <template #variant-preview-2>
+      <template #variant-preview-8>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
@@ -1067,7 +1057,7 @@ const compositionItems = computed(() => [
       </template>
 
       <!-- withShortcuts -->
-      <template #variant-preview-3>
+      <template #variant-preview-9>
         <ContextMenu>
           <ContextMenuTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"

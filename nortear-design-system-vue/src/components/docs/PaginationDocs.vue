@@ -23,7 +23,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -112,7 +111,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -262,6 +260,24 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
   { name: tContent('variants.items.active'),      description: stripHtml(tContent('variants.styles.active')),      code: codeActive      },
   { name: tContent('variants.items.directional'), description: stripHtml(tContent('variants.styles.directional')), code: codeDirectional },
+  {
+    name: tContent('variants.items.simple.name'),
+    description: stripHtml(tContent('variants.items.simple.description')),
+    useWhen: tContent('variants.items.simple.use'),
+    code: codeCompSimple,
+  },
+  {
+    name: tContent('variants.items.withEllipsis.name'),
+    description: stripHtml(tContent('variants.items.withEllipsis.description')),
+    useWhen: tContent('variants.items.withEllipsis.use'),
+    code: codeCompEllipsis,
+  },
+  {
+    name: tContent('variants.items.interactive.name'),
+    description: stripHtml(tContent('variants.items.interactive.description')),
+    useWhen: tContent('variants.items.interactive.use'),
+    code: codeCompInteractive,
+  },
 ]);
 
 const codeCompSimple = `<Pagination :total="50" :items-per-page="10" :default-page="1">
@@ -290,17 +306,6 @@ const codeCompEllipsis = `<Pagination :total="120" :items-per-page="10" :default
   </PaginationContent>
 </Pagination>`;
 
-const codeCompLastPage = `<Pagination :total="100" :items-per-page="10" :default-page="10">
-  <PaginationContent>
-    <PaginationItem><PaginationPrevious /></PaginationItem>
-    <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationLink>9</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink :is-active="true">10</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationNext aria-disabled="true" /></PaginationItem>
-  </PaginationContent>
-</Pagination>`;
-
 const codeCompInteractive = `const current = ref(3);
 
 <Pagination :total="80" :items-per-page="10" :page="current">
@@ -314,12 +319,6 @@ const codeCompInteractive = `const current = ref(3);
 </Pagination>
 <p>Página {{ current }} de 8</p>`;
 
-const compositionItems = computed(() => [
-  { name: tContent('variants.compositions.simple.name'),       description: stripHtml(tContent('variants.compositions.simple.description')),       useWhen: tContent('variants.compositions.simple.use'),       code: codeCompSimple      },
-  { name: tContent('variants.compositions.withEllipsis.name'), description: stripHtml(tContent('variants.compositions.withEllipsis.description')), useWhen: tContent('variants.compositions.withEllipsis.use'), code: codeCompEllipsis    },
-  { name: tContent('variants.compositions.lastPage.name'),     description: stripHtml(tContent('variants.compositions.lastPage.description')),     useWhen: tContent('variants.compositions.lastPage.use'),     code: codeCompLastPage    },
-  { name: tContent('variants.compositions.interactive.name'),  description: stripHtml(tContent('variants.compositions.interactive.description')),  useWhen: tContent('variants.compositions.interactive.use'),  code: codeCompInteractive },
-]);
 
 const stateItems = computed(() => [
   { label: tContent('states.items.default'),  trigger: '—',                 behavior: stripHtml(tContent('states.descriptions.default'))  },
@@ -327,6 +326,7 @@ const stateItems = computed(() => [
   { label: tContent('states.items.active'),   trigger: 'isActive',          behavior: stripHtml(tContent('states.descriptions.active'))   },
   { label: tContent('states.items.disabled'), trigger: 'first/last page',   behavior: stripHtml(tContent('states.descriptions.disabled')) },
   { label: tContent('states.items.focus'),    trigger: 'Tab',               behavior: stripHtml(tContent('states.descriptions.focus'))    },
+  { label: tContent('states.lastPage.label'), trigger: stripHtml(tContent('states.lastPage.trigger')), behavior: stripHtml(tContent('states.lastPage.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -704,9 +704,12 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
       :items="variantItems"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="pagination"
     >
       <template #variant-preview-0>
         <Pagination
@@ -772,16 +775,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="pagination"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-3>
         <Pagination
           :total="50"
           :items-per-page="10"
@@ -822,7 +816,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-4>
         <Pagination
           :total="120"
           :items-per-page="10"
@@ -865,46 +859,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-      <template #variant-preview-2>
-        <Pagination
-          :total="100"
-          :items-per-page="10"
-          :default-page="10"
-          class="nds-w-full"
-        >
-          <PaginationContent>
-            <PaginationItem><PaginationPrevious /></PaginationItem>
-            <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 1`">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem><PaginationEllipsis /></PaginationItem>
-            <PaginationItem>
-              <PaginationLink :aria-label="`Ir para página 9`">
-                9
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                :is-active="true"
-                :aria-label="`Página atual, 10`"
-              >
-                10
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                aria-disabled="true"
-                tabindex="-1"
-                class="nds-cursor-default"
-                style="pointer-events: none; opacity: 0.5"
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </template>
-      <template #variant-preview-3>
+      <template #variant-preview-5>
         <div
           class="nds-stack nds-w-full"
           data-spacing="sm"

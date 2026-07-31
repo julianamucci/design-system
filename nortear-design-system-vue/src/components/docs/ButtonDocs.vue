@@ -182,6 +182,12 @@ const variantItems = computed(() => [
   { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'ghost',       description: stripHtml(tContent('variants.items.ghost')),       code: codeGhost       },
   { name: 'link',        description: stripHtml(tContent('variants.items.link')),        code: codeLink        },
+  {
+    name: tContent('variants.items.asLink.name'),
+    description: tContent('variants.items.asLink.description'),
+    useWhen: tContent('variants.items.asLink.use'),
+    code: `<Button as="a" href="/docs" variant="link">\n  Ver documentação\n</Button>`,
+  },
 ]);
 
 const sizeItems = computed(() => [
@@ -217,12 +223,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.actionPair.description'),
     useWhen: tContent('variants.compositions.actionPair.use'),
     code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
-  },
-  {
-    name: tContent('variants.compositions.asLink.name'),
-    description: tContent('variants.compositions.asLink.description'),
-    useWhen: tContent('variants.compositions.asLink.use'),
-    code: `<Button as="a" href="/docs" variant="link">\n  Ver documentação\n</Button>`,
   },
 ]);
 
@@ -488,8 +488,11 @@ function handleDemoClick(variant: string) {
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="button"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -520,7 +523,16 @@ function handleDemoClick(variant: string) {
           {{ tContent('demonstration.labels.link') }}
         </Button>
       </template>
-    </DocsVariants>
+      <template #variant-preview-6>
+        <Button
+          as="a"
+          href="#docs"
+          variant="link"
+        >
+          Ver documentação
+        </Button>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Tamanhos ──────────────────────────────────────────────── -->
     <DocsVariants
@@ -602,15 +614,6 @@ function handleDemoClick(variant: string) {
           </Button>
           <Button>Confirmar</Button>
         </div>
-      </template>
-      <template #variant-preview-4>
-        <Button
-          as="a"
-          href="#docs"
-          variant="link"
-        >
-          Ver documentação
-        </Button>
       </template>
     </DocsCompositions>
 

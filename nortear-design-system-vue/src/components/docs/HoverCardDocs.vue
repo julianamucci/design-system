@@ -21,7 +21,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -98,7 +97,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')        },
       { id: 'variantes',    label: tContent('nav.variants')      },
-      { id: 'composicoes',  label: tContent('nav.compositions')  },
       { id: 'estados',      label: tContent('nav.states')        },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -184,6 +182,30 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
   { name: tContent('variants.items.withDelay'), description: stripHtml(tContent('variants.styles.withDelay')), code: codeWithDelay },
+  {
+    name: tContent('variants.items.userProfile.name'),
+    description: tContent('variants.items.userProfile.description'),
+    useWhen: tContent('variants.items.userProfile.use'),
+    code: codeCompUserProfile,
+  },
+  {
+    name: tContent('variants.items.linkPreview.name'),
+    description: tContent('variants.items.linkPreview.description'),
+    useWhen: tContent('variants.items.linkPreview.use'),
+    code: codeCompLinkPreview,
+  },
+  {
+    name: tContent('variants.items.definitionTooltip.name'),
+    description: tContent('variants.items.definitionTooltip.description'),
+    useWhen: tContent('variants.items.definitionTooltip.use'),
+    code: codeCompDefinition,
+  },
+  {
+    name: tContent('variants.items.metricExplainer.name'),
+    description: tContent('variants.items.metricExplainer.description'),
+    useWhen: tContent('variants.items.metricExplainer.use'),
+    code: codeCompMetric,
+  },
 ]);
 
 const codeCompUserProfile = `<HoverCard :open-delay="500" :close-delay="200">
@@ -258,32 +280,6 @@ const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   </HoverCardContent>
 </HoverCard>`;
 
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.userProfile.name'),
-    description: tContent('variants.compositions.userProfile.description'),
-    useWhen: tContent('variants.compositions.userProfile.use'),
-    code: codeCompUserProfile,
-  },
-  {
-    name: tContent('variants.compositions.linkPreview.name'),
-    description: tContent('variants.compositions.linkPreview.description'),
-    useWhen: tContent('variants.compositions.linkPreview.use'),
-    code: codeCompLinkPreview,
-  },
-  {
-    name: tContent('variants.compositions.definitionTooltip.name'),
-    description: tContent('variants.compositions.definitionTooltip.description'),
-    useWhen: tContent('variants.compositions.definitionTooltip.use'),
-    code: codeCompDefinition,
-  },
-  {
-    name: tContent('variants.compositions.metricExplainer.name'),
-    description: tContent('variants.compositions.metricExplainer.description'),
-    useWhen: tContent('variants.compositions.metricExplainer.use'),
-    code: codeCompMetric,
-  },
-]);
 
 const stateItems = computed(() => [
   { label: tContent('states.items.closed'),     trigger: 'defaultOpen={false}',     behavior: stripHtml(tContent('states.descriptions.closed'))     },
@@ -714,9 +710,12 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
       :items="variantItems"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="hover-card"
     >
       <template #variant-preview-0>
         <div
@@ -738,16 +737,7 @@ const a11yCritCols = computed(() => ({
           </div>
         </div>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="hover-card"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
           class="nds-w-full"
@@ -789,7 +779,7 @@ const a11yCritCols = computed(() => ({
           </HoverCard>
         </div>
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
           class="nds-w-full"
@@ -829,7 +819,7 @@ const a11yCritCols = computed(() => ({
           </HoverCard>
         </div>
       </template>
-      <template #variant-preview-2>
+      <template #variant-preview-4>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
           class="nds-w-full"
@@ -859,7 +849,7 @@ const a11yCritCols = computed(() => ({
           </HoverCard>
         </div>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-5>
         <div
           style="contain: layout; min-height: 140px; position: relative;"
           class="nds-w-full"

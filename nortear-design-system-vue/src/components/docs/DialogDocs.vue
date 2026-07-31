@@ -28,7 +28,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -281,6 +280,12 @@ const variantItems = computed(() => [
   { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeDefault },
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
   { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeDefault },
+  {
+    name: tContent('variants.items.confirmEmail.name'),
+    description: tContent('variants.items.confirmEmail.description'),
+    useWhen: tContent('variants.items.confirmEmail.use'),
+    code: codeCompositionConfirmEmail,
+  },
 ]);
 
 const codeCompositionConfirmEmail = `<Dialog>
@@ -318,12 +323,6 @@ const codeCompositionMediaPreview = `<Dialog>
 </Dialog>`;
 
 const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.confirmEmail.name'),
-    description: tContent('variants.compositions.confirmEmail.description'),
-    useWhen: tContent('variants.compositions.confirmEmail.use'),
-    code: codeCompositionConfirmEmail,
-  },
   {
     name: tContent('variants.compositions.mediaPreview.name'),
     description: tContent('variants.compositions.mediaPreview.description'),
@@ -659,8 +658,11 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="dialog"
       :items="variantItems"
       :note="stripHtml(tContent('variants.note'))"
     >
@@ -805,16 +807,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ─────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="dialog"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-6>
         <Dialog default-open>
           <DialogContent>
             <DialogHeader>
@@ -835,7 +828,16 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-1>
+    </DocsCompositions>
+
+    <!-- ── Composições ─────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="dialog"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
         <Dialog default-open>
           <DialogContent>
             <DialogHeader>

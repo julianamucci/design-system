@@ -23,7 +23,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -221,6 +220,12 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.default'),       description: stripHtml(tContent('variants.styles.default')),       code: codeDefault       },
   { name: tContent('variants.items.withShortcut'),  description: stripHtml(tContent('variants.styles.withShortcut')),  code: codeWithShortcut  },
   { name: tContent('variants.items.longText'),      description: stripHtml(tContent('variants.styles.longText')),      code: codeLongText      },
+  {
+    name: tContent('variants.items.positioningSides.name'),
+    description: tContent('variants.items.positioningSides.description'),
+    useWhen: tContent('variants.items.positioningSides.use'),
+    code: codeCompSides,
+  },
 ]);
 
 const codeCompIconShortcut = `<Tooltip>
@@ -295,12 +300,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.metricDescription.description'),
     useWhen: tContent('variants.compositions.metricDescription.use'),
     code: codeCompMetric,
-  },
-  {
-    name: tContent('variants.compositions.positioningSides.name'),
-    description: tContent('variants.compositions.positioningSides.description'),
-    useWhen: tContent('variants.compositions.positioningSides.use'),
-    code: codeCompSides,
   },
 ]);
 
@@ -644,8 +643,11 @@ const a11yCritCols = computed(() => ({
       />
 
       <!-- ── Variantes ────────────────────────────────────────────── -->
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         :title="tContent('variants.title')"
+        :use-when-label="tNav('common.useWhen')"
+        component-slug="tooltip"
         :items="variantItems"
       >
         <template #variant-preview-0>
@@ -725,7 +727,54 @@ const a11yCritCols = computed(() => ({
             </Tooltip>
           </div>
         </template>
-      </DocsVariants>
+        <template #variant-preview-3>
+          <div
+            style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;"
+            class="nds-grid nds-w-full"
+          >
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">
+                  Top
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                Tooltip top
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">
+                  Right
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                Tooltip right
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">
+                  Bottom
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                Tooltip bottom
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="outline">
+                  Left
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                Tooltip left
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </template>
+      </DocsCompositions>
 
       <!-- ── Composições ─────────────────────────────────────────── -->
       <DocsCompositions
@@ -854,53 +903,6 @@ const a11yCritCols = computed(() => ({
                 1.8s
               </p>
             </div>
-          </div>
-        </template>
-        <template #variant-preview-3>
-          <div
-            style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;"
-            class="nds-grid nds-w-full"
-          >
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <Button variant="outline">
-                  Top
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                Tooltip top
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <Button variant="outline">
-                  Right
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                Tooltip right
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <Button variant="outline">
-                  Bottom
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                Tooltip bottom
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <Button variant="outline">
-                  Left
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="left">
-                Tooltip left
-              </TooltipContent>
-            </Tooltip>
           </div>
         </template>
       </DocsCompositions>

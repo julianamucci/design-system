@@ -17,7 +17,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -221,6 +220,12 @@ const variantItems = computed(() => [
   { name: 'line', description: stripHtml(tContent('variants.items.line')), code: codeLineChart },
   { name: 'area', description: stripHtml(tContent('variants.items.area')), code: codeAreaChart },
   { name: 'pie',  description: stripHtml(tContent('variants.items.pie')),  code: codePieChart  },
+  {
+    name: tContent('variants.items.smallInline.name'),
+    description: tContent('variants.items.smallInline.description'),
+    useWhen: tContent('variants.items.smallInline.use'),
+    code: codeCompSmallInline,
+  },
 ]);
 
 // ─── Compositions ─────────────────────────────────────────────────────────────
@@ -238,12 +243,6 @@ const codeCompInCard = `<Card class="nds-w-full nds-max-w-sm">
   </CardContent>
 </Card>`;
 
-const codeCompMultiSeries = `<ChartContainer
-  :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-  class="nds-w-full" style="height: 240px"
-  aria-label="Gráfico multi-séries: Desktop e Mobile"
-/>`;
-
 const codeCompSmallInline = `<div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
   <div>
     <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
@@ -256,39 +255,12 @@ const codeCompSmallInline = `<div class="nds-cluster nds-rounded-md nds-border-d
    />
 </div>`;
 
-const codeCompEmpty = `<div
-  v-if="data.length === 0"
-  role="status"
-  class="nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style="height: 200px; align-items: center; border: 1px dashed var(--border)"
->
-  Nenhum dado disponível para o período selecionado.
-</div>
-<ChartContainer v-else :option="buildBarOption({ xAxis: xMonths, series: multiSeries })" class="nds-w-full" style="height: 200px" aria-label="..." />`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.inCard.name'),
     description: tContent('variants.compositions.inCard.description'),
     useWhen: tContent('variants.compositions.inCard.use'),
     code: codeCompInCard,
-  },
-  {
-    name: tContent('variants.compositions.multiSeriesWithLegend.name'),
-    description: tContent('variants.compositions.multiSeriesWithLegend.description'),
-    useWhen: tContent('variants.compositions.multiSeriesWithLegend.use'),
-    code: codeCompMultiSeries,
-  },
-  {
-    name: tContent('variants.compositions.smallInline.name'),
-    description: tContent('variants.compositions.smallInline.description'),
-    useWhen: tContent('variants.compositions.smallInline.use'),
-    code: codeCompSmallInline,
-  },
-  {
-    name: tContent('variants.compositions.withEmptyState.name'),
-    description: tContent('variants.compositions.withEmptyState.description'),
-    useWhen: tContent('variants.compositions.withEmptyState.use'),
-    code: codeCompEmpty,
   },
 ]);
 
@@ -297,6 +269,8 @@ const stateItems = computed(() => [
   { label: tContent('states.loading.label'),       trigger: stripHtml(tContent('states.loading.trigger')),       behavior: stripHtml(tContent('states.loading.behavior'))       },
   { label: tContent('states.singleSeries.label'),  trigger: stripHtml(tContent('states.singleSeries.trigger')),  behavior: stripHtml(tContent('states.singleSeries.behavior'))  },
   { label: tContent('states.multiSeries.label'),   trigger: stripHtml(tContent('states.multiSeries.trigger')),   behavior: stripHtml(tContent('states.multiSeries.behavior'))   },
+  { label: tContent('states.withEmptyState.label'),         trigger: stripHtml(tContent('states.withEmptyState.trigger')),         behavior: stripHtml(tContent('states.withEmptyState.behavior'))         },
+  { label: tContent('states.multiSeriesWithLegend.label'),  trigger: stripHtml(tContent('states.multiSeriesWithLegend.trigger')),  behavior: stripHtml(tContent('states.multiSeriesWithLegend.behavior'))  },
 ]);
 
 const propCols = computed(() => ({
@@ -598,8 +572,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="chart"
     >
@@ -662,47 +638,8 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="chart"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
-        <Card class="nds-w-full nds-max-w-sm">
-          <CardHeader>
-            <CardTitle>Acessos mensais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-              class="nds-w-full"
-              style="height: 200px"
-              aria-label="Gráfico de barras: acessos mensais por dispositivo"
-            />
-          </CardContent>
-        </Card>
-      </template>
-
-      <template #variant-preview-1>
-        <div
-          class="nds-stack nds-w-full"
-          data-spacing="sm"
-          style="align-items: center"
-        >
-          <ChartContainer
-            :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-            class="nds-w-full nds-max-w-md"
-            style="height: 200px"
-            aria-label="Gráfico multi-séries: Desktop e Mobile"
-          />
-        </div>
-      </template>
-
-      <template #variant-preview-2>
+      <!-- Small inline (sparkline) -->
+      <template #variant-preview-4>
         <div
           class="nds-cluster nds-rounded-md nds-border-default nds-p-4"
           data-spacing="md"
@@ -726,16 +663,29 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
+    </DocsCompositions>
 
-      <template #variant-preview-3>
-        <div
-          role="status"
-          class="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground"
-          data-justify="center"
-          style="height: 200px; align-items: center; border: 1px dashed var(--border)"
-        >
-          Nenhum dado disponível para o período selecionado.
-        </div>
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="chart"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
+        <Card class="nds-w-full nds-max-w-sm">
+          <CardHeader>
+            <CardTitle>Acessos mensais</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
+              class="nds-w-full"
+              style="height: 200px"
+              aria-label="Gráfico de barras: acessos mensais por dispositivo"
+            />
+          </CardContent>
+        </Card>
       </template>
     </DocsCompositions>
 

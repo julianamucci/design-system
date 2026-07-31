@@ -17,7 +17,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -200,6 +199,12 @@ const variantItems = computed(() => [
   { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess      },
   { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning      },
   { name: tContent('states.withoutTitle.label'), description: tContent('states.withoutTitle.behavior'), code: codeWithoutTitle },
+  {
+    name: tContent('variants.items.compact.name'),
+    description: tContent('variants.items.compact.description'),
+    useWhen: tContent('variants.items.compact.use'),
+    code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+  },
 ]);
 
 const compositionItems = computed(() => [
@@ -214,12 +219,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
     code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
-  },
-  {
-    name: tContent('variants.compositions.compact.name'),
-    description: tContent('variants.compositions.compact.description'),
-    useWhen: tContent('variants.compositions.compact.use'),
-    code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
   },
 ]);
 
@@ -442,8 +441,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="alert"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -483,7 +485,16 @@ const visualTestItems = computed(() => [
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
-    </DocsVariants>
+      <template #variant-preview-5>
+        <Alert
+          variant="destructive"
+          class="nds-w-full"
+        >
+          <AlertCircle aria-hidden="true" />
+          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
+        </Alert>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Composições ─────────────────────────────────────────────── -->
     <DocsCompositions
@@ -517,15 +528,6 @@ const visualTestItems = computed(() => [
               Salvar agora
             </Button>
           </AlertDescription>
-        </Alert>
-      </template>
-      <template #variant-preview-2>
-        <Alert
-          variant="destructive"
-          class="nds-w-full"
-        >
-          <AlertCircle aria-hidden="true" />
-          <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
     </DocsCompositions>

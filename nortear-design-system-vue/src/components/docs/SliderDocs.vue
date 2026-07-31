@@ -15,7 +15,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -264,6 +263,12 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.single'),   description: stripHtml(tContent('variants.styles.single')),   code: codeSingle   },
   { name: tContent('variants.items.range'),    description: stripHtml(tContent('variants.styles.range')),    code: codeRange    },
   { name: tContent('variants.items.vertical'), description: stripHtml(tContent('variants.styles.vertical')), code: codeVertical },
+  {
+    name: tContent('variants.items.brightness.name'),
+    description: tContent('variants.items.brightness.description'),
+    useWhen: tContent('variants.items.brightness.use'),
+    code: codeCompBrightness,
+  },
 ]);
 
 // ─── Composições ─────────────────────────────────────────────────────────────
@@ -315,12 +320,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.volume.description'),
     useWhen: tContent('variants.compositions.volume.use'),
     code: codeCompVolume,
-  },
-  {
-    name: tContent('variants.compositions.brightness.name'),
-    description: tContent('variants.compositions.brightness.description'),
-    useWhen: tContent('variants.compositions.brightness.use'),
-    code: codeCompBrightness,
   },
   {
     name: tContent('variants.compositions.form.name'),
@@ -704,8 +703,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="slider"
     >
@@ -778,7 +779,33 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
-    </DocsVariants>
+      <template #variant-preview-3>
+        <div
+          class="nds-stack"
+          data-spacing="sm"
+          style="width: 18rem;"
+        >
+          <div
+            class="nds-cluster"
+            data-justify="between"
+          >
+            <Label>Brilho</Label>
+            <span
+              aria-live="polite"
+              class="nds-text-body"
+              style="font-variant-numeric: tabular-nums;"
+            >{{ compBrightness[0] }}%</span>
+          </div>
+          <Slider
+            v-model="compBrightness"
+            :min="0"
+            :max="100"
+            :step="5"
+            aria-label="Brilho"
+          />
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Composições ──────────────────────────────────────────────── -->
     <DocsCompositions
@@ -814,33 +841,6 @@ const visualTestItems = computed(() => [
       </template>
 
       <template #variant-preview-1>
-        <div
-          class="nds-stack"
-          data-spacing="sm"
-          style="width: 18rem;"
-        >
-          <div
-            class="nds-cluster"
-            data-justify="between"
-          >
-            <Label>Brilho</Label>
-            <span
-              aria-live="polite"
-              class="nds-text-body"
-              style="font-variant-numeric: tabular-nums;"
-            >{{ compBrightness[0] }}%</span>
-          </div>
-          <Slider
-            v-model="compBrightness"
-            :min="0"
-            :max="100"
-            :step="5"
-            aria-label="Brilho"
-          />
-        </div>
-      </template>
-
-      <template #variant-preview-2>
         <form
           aria-label="Configurações de áudio"
           class="nds-stack"

@@ -27,7 +27,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -224,6 +223,12 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeBottom.replace('<Drawer>', '<Drawer direction="top">') },
   { name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeBottom.replace('<Drawer>', '<Drawer direction="left">') },
   { name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
+  {
+    name: tContent('variants.items.withScroll.name'),
+    description: tContent('variants.items.withScroll.description'),
+    useWhen: tContent('variants.items.withScroll.use'),
+    code: codeCompWithScroll,
+  },
 ]);
 
 const codeCompWithForm = `<Drawer>
@@ -307,12 +312,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withConfirmation.description'),
     useWhen: tContent('variants.compositions.withConfirmation.use'),
     code: codeCompWithConfirmation,
-  },
-  {
-    name: tContent('variants.compositions.withScroll.name'),
-    description: tContent('variants.compositions.withScroll.description'),
-    useWhen: tContent('variants.compositions.withScroll.use'),
-    code: codeCompWithScroll,
   },
 ]);
 
@@ -638,8 +637,11 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="drawer"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -742,7 +744,47 @@ const a11yCritCols = computed(() => ({
           </Drawer>
         </div>
       </template>
-    </DocsVariants>
+      <template #variant-preview-4>
+        <div
+          style="contain: layout"
+          class="nds-w-full"
+        >
+          <Drawer>
+            <DrawerTrigger as-child>
+              <Button variant="outline">
+                Ler termos
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Termos de uso</DrawerTitle>
+                <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+              </DrawerHeader>
+              <div
+                class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+                data-spacing="sm"
+                style="max-height: 16rem"
+              >
+                <p
+                  v-for="i in 12"
+                  :key="i"
+                >
+                  Parágrafo {{ i }}: termos longos para garantir scroll interno.
+                </p>
+              </div>
+              <DrawerFooter>
+                <Button>Aceitar termos</Button>
+                <DrawerClose as-child>
+                  <Button variant="outline">
+                    Cancelar
+                  </Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Composições ──────────────────────────────────────────── -->
     <DocsCompositions
@@ -821,46 +863,6 @@ const a11yCritCols = computed(() => ({
                 <Button variant="destructive">
                   Remover
                 </Button>
-                <DrawerClose as-child>
-                  <Button variant="outline">
-                    Cancelar
-                  </Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
-        </div>
-      </template>
-      <template #variant-preview-2>
-        <div
-          style="contain: layout"
-          class="nds-w-full"
-        >
-          <Drawer>
-            <DrawerTrigger as-child>
-              <Button variant="outline">
-                Ler termos
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Termos de uso</DrawerTitle>
-                <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
-              </DrawerHeader>
-              <div
-                class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
-                data-spacing="sm"
-                style="max-height: 16rem"
-              >
-                <p
-                  v-for="i in 12"
-                  :key="i"
-                >
-                  Parágrafo {{ i }}: termos longos para garantir scroll interno.
-                </p>
-              </div>
-              <DrawerFooter>
-                <Button>Aceitar termos</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
                     Cancelar

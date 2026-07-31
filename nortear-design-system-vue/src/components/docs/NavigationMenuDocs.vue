@@ -22,7 +22,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -99,7 +98,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants')     },
-      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')       },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -210,6 +208,30 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.horizontal'), description: stripHtml(tContent('variants.styles.horizontal')), code: codeHorizontal },
   { name: tContent('variants.items.vertical'),   description: stripHtml(tContent('variants.styles.vertical')),   code: codeVertical   },
+  {
+    name: tContent('variants.items.linkSimples.name'),
+    description: tContent('variants.items.linkSimples.description'),
+    useWhen: tContent('variants.items.linkSimples.use'),
+    code: codeLinkSimples,
+  },
+  {
+    name: tContent('variants.items.comDropdown.name'),
+    description: tContent('variants.items.comDropdown.description'),
+    useWhen: tContent('variants.items.comDropdown.use'),
+    code: codeComDropdown,
+  },
+  {
+    name: tContent('variants.items.megaMenuGrid.name'),
+    description: tContent('variants.items.megaMenuGrid.description'),
+    useWhen: tContent('variants.items.megaMenuGrid.use'),
+    code: codeMegaMenuGrid,
+  },
+  {
+    name: tContent('variants.items.comCardDestacado.name'),
+    description: tContent('variants.items.comCardDestacado.description'),
+    useWhen: tContent('variants.items.comCardDestacado.use'),
+    code: codeComCardDestacado,
+  },
 ]);
 
 // ─── Composições ──────────────────────────────────────────────────────────────
@@ -295,32 +317,6 @@ const codeComCardDestacado = `<NavigationMenu aria-label="Navegação principal"
   </NavigationMenuList>
 </NavigationMenu>`;
 
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.linkSimples.name'),
-    description: tContent('variants.compositions.linkSimples.description'),
-    useWhen: tContent('variants.compositions.linkSimples.use'),
-    code: codeLinkSimples,
-  },
-  {
-    name: tContent('variants.compositions.comDropdown.name'),
-    description: tContent('variants.compositions.comDropdown.description'),
-    useWhen: tContent('variants.compositions.comDropdown.use'),
-    code: codeComDropdown,
-  },
-  {
-    name: tContent('variants.compositions.megaMenuGrid.name'),
-    description: tContent('variants.compositions.megaMenuGrid.description'),
-    useWhen: tContent('variants.compositions.megaMenuGrid.use'),
-    code: codeMegaMenuGrid,
-  },
-  {
-    name: tContent('variants.compositions.comCardDestacado.name'),
-    description: tContent('variants.compositions.comCardDestacado.description'),
-    useWhen: tContent('variants.compositions.comCardDestacado.use'),
-    code: codeComCardDestacado,
-  },
-]);
 
 const stateItems = computed(() => [
   { label: tContent('states.items.closed'), trigger: '—',            behavior: stripHtml(tContent('states.descriptions.closed')) },
@@ -745,9 +741,12 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
       :items="variantItems"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="navigation-menu"
     >
       <template #variant-preview-0>
         <div
@@ -832,16 +831,7 @@ const a11yCritCols = computed(() => ({
           </NavigationMenu>
         </div>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="navigation-menu"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 200px;"
           class="nds-cluster nds-w-full"
@@ -871,7 +861,7 @@ const a11yCritCols = computed(() => ({
           </NavigationMenu>
         </div>
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 280px;"
           class="nds-cluster nds-w-full"
@@ -923,7 +913,7 @@ const a11yCritCols = computed(() => ({
           </NavigationMenu>
         </div>
       </template>
-      <template #variant-preview-2>
+      <template #variant-preview-4>
         <div
           style="contain: layout; min-height: 320px;"
           class="nds-cluster nds-w-full"
@@ -1005,7 +995,7 @@ const a11yCritCols = computed(() => ({
           </NavigationMenu>
         </div>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-5>
         <div
           style="contain: layout; min-height: 320px;"
           class="nds-cluster nds-w-full"

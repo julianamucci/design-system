@@ -26,7 +26,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -99,7 +98,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -344,77 +342,6 @@ const codeCompWithGroups = `<Command>
   </CommandList>
 </Command>`;
 
-const codeCompWithDisabled = `<Command>
-  <CommandInput placeholder="Buscar..." />
-  <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-    <CommandGroup heading="Componentes">
-      <CommandItem value="button">Button</CommandItem>
-      <CommandItem value="input" disabled>Input (em breve)</CommandItem>
-      <CommandItem value="badge">Badge</CommandItem>
-      <CommandItem value="select" disabled>Select (em breve)</CommandItem>
-    </CommandGroup>
-    <CommandSeparator />
-    <CommandGroup heading="Utilitários">
-      <CommandItem value="cn">cn()</CommandItem>
-      <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
-    </CommandGroup>
-  </CommandList>
-</Command>`;
-
-const codeCompLongList = `<script setup>
-const items = [
-  'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-  'Badge','Breadcrumb','Button','Calendar','Card',
-  'Carousel','Chart','Checkbox','Collapsible','Command',
-  'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
-  'DropdownMenu','Form','HoverCard','Input','InputOTP',
-  'Label','Menubar','NavigationMenu','Pagination','Popover',
-];
-<\/script>
-
-<Command>
-  <CommandInput placeholder="Buscar componente..." />
-  <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-    <CommandGroup heading="Componentes">
-      <CommandItem v-for="label in items" :key="label" :value="label.toLowerCase()">
-        {{ label }}
-      </CommandItem>
-    </CommandGroup>
-  </CommandList>
-</Command>`;
-
-const longListItems = [
-  'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-  'Badge','Breadcrumb','Button','Calendar','Card',
-  'Carousel','Chart','Checkbox','Collapsible','Command',
-  'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
-  'DropdownMenu','Form','HoverCard','Input','InputOTP',
-  'Label','Menubar','NavigationMenu','Pagination','Popover',
-];
-
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.withGroups.name'),
-    description: tContent('variants.compositions.withGroups.description'),
-    useWhen: tContent('variants.compositions.withGroups.use'),
-    code: codeCompWithGroups,
-  },
-  {
-    name: tContent('variants.compositions.withDisabled.name'),
-    description: tContent('variants.compositions.withDisabled.description'),
-    useWhen: tContent('variants.compositions.withDisabled.use'),
-    code: codeCompWithDisabled,
-  },
-  {
-    name: tContent('variants.compositions.longList.name'),
-    description: tContent('variants.compositions.longList.description'),
-    useWhen: tContent('variants.compositions.longList.use'),
-    code: codeCompLongList,
-  },
-]);
-
 // ─── Computed data ────────────────────────────────────────────────────────────
 
 const anatomyItems = computed(() => [
@@ -433,6 +360,12 @@ const variantItems = computed(() => [
   { name: 'inline',   description: stripHtml(tContent('variants.items.inline')),   code: codeInline   },
   { name: 'combobox', description: stripHtml(tContent('variants.items.combobox')), code: codeCombobox },
   { name: 'palette',  description: stripHtml(tContent('variants.items.palette')),  code: codePalette  },
+  {
+    name: tContent('variants.items.withGroups.name'),
+    description: tContent('variants.items.withGroups.description'),
+    useWhen: tContent('variants.items.withGroups.use'),
+    code: codeCompWithGroups,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -455,6 +388,16 @@ const stateItems = computed(() => [
     label: tContent('states.loading.label'),
     trigger: stripHtml(tContent('states.loading.trigger')),
     behavior: tContent('states.loading.behavior'),
+  },
+  {
+    label: tContent('states.withDisabled.label'),
+    trigger: stripHtml(tContent('states.withDisabled.trigger')),
+    behavior: tContent('states.withDisabled.behavior'),
+  },
+  {
+    label: tContent('states.longList.label'),
+    trigger: stripHtml(tContent('states.longList.trigger')),
+    behavior: tContent('states.longList.behavior'),
   },
 ]);
 
@@ -887,8 +830,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="command"
       :items="variantItems"
       :note="tContent('variants.note')"
     >
@@ -968,16 +914,9 @@ const visualTestItems = computed(() => [
           >⌘K</kbd>
         </div>
       </template>
-    </DocsVariants>
 
-    <!-- ── Composições ────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="command"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <!-- withGroups preview -->
+      <template #variant-preview-3>
         <div
           class="nds-border-default nds-rounded-md nds-shadow-md"
           style="width: 320px"
@@ -1010,73 +949,6 @@ const visualTestItems = computed(() => [
                 </CommandItem>
                 <CommandItem value="twmerge">
                   twMerge()
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </div>
-      </template>
-      <template #variant-preview-1>
-        <div
-          class="nds-border-default nds-rounded-md nds-shadow-md"
-          style="width: 320px"
-        >
-          <Command>
-            <CommandInput placeholder="Buscar..." />
-            <CommandList>
-              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-              <CommandGroup heading="Componentes">
-                <CommandItem value="button">
-                  Button
-                </CommandItem>
-                <CommandItem
-                  value="input"
-                  disabled
-                >
-                  Input (em breve)
-                </CommandItem>
-                <CommandItem value="badge">
-                  Badge
-                </CommandItem>
-                <CommandItem
-                  value="select"
-                  disabled
-                >
-                  Select (em breve)
-                </CommandItem>
-              </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup heading="Utilitários">
-                <CommandItem value="cn">
-                  cn()
-                </CommandItem>
-                <CommandItem
-                  value="clsx"
-                  disabled
-                >
-                  clsx() (depreciado)
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </div>
-      </template>
-      <template #variant-preview-2>
-        <div
-          class="nds-border-default nds-rounded-md nds-shadow-md"
-          style="width: 320px"
-        >
-          <Command>
-            <CommandInput placeholder="Buscar componente..." />
-            <CommandList>
-              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-              <CommandGroup heading="Componentes">
-                <CommandItem
-                  v-for="label in longListItems"
-                  :key="label"
-                  :value="label.toLowerCase()"
-                >
-                  {{ label }}
                 </CommandItem>
               </CommandGroup>
             </CommandList>

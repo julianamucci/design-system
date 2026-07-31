@@ -26,7 +26,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -102,7 +101,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'composicoes',  label: tContent('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -217,6 +215,30 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
   { name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+  {
+    name: tContent('variants.items.withLabel.name'),
+    description: tContent('variants.items.withLabel.description'),
+    useWhen: tContent('variants.items.withLabel.use'),
+    code: codeCompWithLabel,
+  },
+  {
+    name: tContent('variants.items.withCheckboxItems.name'),
+    description: tContent('variants.items.withCheckboxItems.description'),
+    useWhen: tContent('variants.items.withCheckboxItems.use'),
+    code: codeCompCheckbox,
+  },
+  {
+    name: tContent('variants.items.withRadioGroup.name'),
+    description: tContent('variants.items.withRadioGroup.description'),
+    useWhen: tContent('variants.items.withRadioGroup.use'),
+    code: codeCompRadio,
+  },
+  {
+    name: tContent('variants.items.withShortcuts.name'),
+    description: tContent('variants.items.withShortcuts.description'),
+    useWhen: tContent('variants.items.withShortcuts.use'),
+    code: codeCompShortcuts,
+  },
 ]);
 
 // ─── Compositions ─────────────────────────────────────────────────────────────
@@ -287,33 +309,6 @@ const compShowName = ref(true);
 const compShowEmail = ref(true);
 const compShowRole = ref(false);
 const compTheme = ref('system');
-
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.withLabel.name'),
-    description: tContent('variants.compositions.withLabel.description'),
-    useWhen: tContent('variants.compositions.withLabel.use'),
-    code: codeCompWithLabel,
-  },
-  {
-    name: tContent('variants.compositions.withCheckboxItems.name'),
-    description: tContent('variants.compositions.withCheckboxItems.description'),
-    useWhen: tContent('variants.compositions.withCheckboxItems.use'),
-    code: codeCompCheckbox,
-  },
-  {
-    name: tContent('variants.compositions.withRadioGroup.name'),
-    description: tContent('variants.compositions.withRadioGroup.description'),
-    useWhen: tContent('variants.compositions.withRadioGroup.use'),
-    code: codeCompRadio,
-  },
-  {
-    name: tContent('variants.compositions.withShortcuts.name'),
-    description: tContent('variants.compositions.withShortcuts.description'),
-    useWhen: tContent('variants.compositions.withShortcuts.use'),
-    code: codeCompShortcuts,
-  },
-]);
 
 const stateItems = computed(() => [
   { label: tContent('states.items.closed'),   trigger: '—',           behavior: stripHtml(tContent('states.descriptions.closed'))   },
@@ -634,9 +629,12 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
       :items="variantItems"
+      use-when-label="Quando usar"
+      component-slug="dropdown-menu"
     >
       <template #variant-preview-0>
         <div
@@ -680,16 +678,7 @@ const a11yCritCols = computed(() => ({
           </DropdownMenu>
         </div>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      use-when-label="Quando usar"
-      component-slug="dropdown-menu"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-2>
         <div
           style="contain: layout; min-height: 240px;"
           class="nds-w-full"
@@ -721,7 +710,7 @@ const a11yCritCols = computed(() => ({
           </DropdownMenu>
         </div>
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-3>
         <div
           style="contain: layout; min-height: 200px;"
           class="nds-w-full"
@@ -756,7 +745,7 @@ const a11yCritCols = computed(() => ({
           </DropdownMenu>
         </div>
       </template>
-      <template #variant-preview-2>
+      <template #variant-preview-4>
         <div
           style="contain: layout; min-height: 200px;"
           class="nds-w-full"
@@ -793,7 +782,7 @@ const a11yCritCols = computed(() => ({
           </DropdownMenu>
         </div>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-5>
         <div
           style="contain: layout; min-height: 220px;"
           class="nds-w-full"

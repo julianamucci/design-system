@@ -14,7 +14,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -217,6 +216,12 @@ const variantItems = computed(() => [
     description: stripHtml(tContent('variants.items.controlled')),
     code: codeControlled,
   },
+  {
+    name: tContent('variants.items.customButton.name'),
+    description: tContent('variants.items.customButton.description'),
+    useWhen: tContent('variants.items.customButton.use'),
+    code: codeCustomButton,
+  },
 ]);
 
 const codeCustomButton = `<Collapsible class="nds-w-full nds-max-w-sm">
@@ -271,12 +276,6 @@ const codeRichContent = `<Collapsible class="nds-w-full nds-max-w-sm">
 </Collapsible>`;
 
 const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.customButton.name'),
-    description: tContent('variants.compositions.customButton.description'),
-    useWhen: tContent('variants.compositions.customButton.use'),
-    code: codeCustomButton,
-  },
   {
     name: tContent('variants.compositions.iconTrigger.name'),
     description: tContent('variants.compositions.iconTrigger.description'),
@@ -735,8 +734,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Modos) ──────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="collapsible"
     >
@@ -786,16 +787,7 @@ const visualTestItems = computed(() => [
           </CollapsibleContent>
         </Collapsible>
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="collapsible"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-2>
         <Collapsible class="nds-w-full nds-max-w-sm">
           <CollapsibleTrigger
             class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
@@ -814,7 +806,16 @@ const visualTestItems = computed(() => [
           </CollapsibleContent>
         </Collapsible>
       </template>
-      <template #variant-preview-1>
+    </DocsCompositions>
+
+    <!-- ── Composições ────────────────────────────────────────────── -->
+    <DocsCompositions
+      :title="tContent('variants.compositionsTitle')"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="collapsible"
+      :items="compositionItems"
+    >
+      <template #variant-preview-0>
         <Collapsible class="nds-w-full nds-max-w-sm">
           <CollapsibleTrigger
             class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
@@ -841,7 +842,7 @@ const visualTestItems = computed(() => [
           </CollapsibleContent>
         </Collapsible>
       </template>
-      <template #variant-preview-2>
+      <template #variant-preview-1>
         <Collapsible class="nds-w-full nds-max-w-sm">
           <CollapsibleTrigger
             class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"
@@ -872,7 +873,7 @@ const visualTestItems = computed(() => [
           </CollapsibleContent>
         </Collapsible>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <Collapsible class="nds-w-full nds-max-w-sm">
           <CollapsibleTrigger
             class="nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent"

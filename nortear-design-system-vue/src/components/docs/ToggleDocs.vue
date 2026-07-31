@@ -14,7 +14,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -204,6 +203,12 @@ const variantItems = computed(() => [
   { name: stripHtml(tContent('variants.items.default')),   description: stripHtml(tContent('variants.styles.default')),   code: codeDefault   },
   { name: stripHtml(tContent('variants.items.outline')),   description: stripHtml(tContent('variants.styles.outline')),   code: codeOutline   },
   { name: stripHtml(tContent('variants.items.withLabel')), description: stripHtml(tContent('variants.styles.withLabel')), code: codeWithLabel },
+  {
+    name: tContent('variants.items.sizes.name'),
+    description: tContent('variants.items.sizes.description'),
+    useWhen: tContent('variants.items.sizes.use'),
+    code: codeSizes,
+  },
 ]);
 
 const codeToolbar = `<div role="group" aria-label="Formatação de texto" class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-spacing="xs">
@@ -238,12 +243,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.toolbar.description'),
     useWhen: tContent('variants.compositions.toolbar.use'),
     code: codeToolbar,
-  },
-  {
-    name: tContent('variants.compositions.sizes.name'),
-    description: tContent('variants.compositions.sizes.description'),
-    useWhen: tContent('variants.compositions.sizes.use'),
-    code: codeSizes,
   },
   {
     name: tContent('variants.compositions.filterList.name'),
@@ -581,8 +580,10 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
+      :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="toggle"
     >
@@ -610,7 +611,43 @@ const visualTestItems = computed(() => [
           Mostrar ocultos
         </Toggle>
       </template>
-    </DocsVariants>
+      <template #variant-preview-3>
+        <div
+          class="nds-cluster"
+          data-spacing="sm"
+        >
+          <Toggle
+            variant="outline"
+            size="sm"
+            aria-label="Negrito (sm)"
+          >
+            <Bold
+              class="nds-icon"
+              aria-hidden="true"
+            />
+          </Toggle>
+          <Toggle
+            variant="outline"
+            aria-label="Negrito (default)"
+          >
+            <Bold
+              class="nds-icon"
+              aria-hidden="true"
+            />
+          </Toggle>
+          <Toggle
+            variant="outline"
+            size="lg"
+            aria-label="Negrito (lg)"
+          >
+            <Bold
+              class="nds-icon"
+              aria-hidden="true"
+            />
+          </Toggle>
+        </div>
+      </template>
+    </DocsCompositions>
 
     <!-- ── Composições ──────────────────────────────────────────────── -->
     <DocsCompositions
@@ -650,42 +687,6 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div
-          class="nds-cluster"
-          data-spacing="sm"
-        >
-          <Toggle
-            variant="outline"
-            size="sm"
-            aria-label="Negrito (sm)"
-          >
-            <Bold
-              class="nds-icon"
-              aria-hidden="true"
-            />
-          </Toggle>
-          <Toggle
-            variant="outline"
-            aria-label="Negrito (default)"
-          >
-            <Bold
-              class="nds-icon"
-              aria-hidden="true"
-            />
-          </Toggle>
-          <Toggle
-            variant="outline"
-            size="lg"
-            aria-label="Negrito (lg)"
-          >
-            <Bold
-              class="nds-icon"
-              aria-hidden="true"
-            />
-          </Toggle>
-        </div>
-      </template>
-      <template #variant-preview-2>
         <div
           class="nds-stack"
           data-spacing="sm"

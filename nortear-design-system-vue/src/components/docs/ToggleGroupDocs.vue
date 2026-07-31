@@ -274,18 +274,6 @@ const codeViewMode = `<ToggleGroup type="single" variant="outline" default-value
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeDisabledItem = `<ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">
-  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
-    <AlignLeft aria-hidden="true" />
-  </ToggleGroupItem>
-  <ToggleGroupItem value="center" :disabled="true" aria-label="Centralizar (indisponível)">
-    <AlignCenter aria-hidden="true" />
-  </ToggleGroupItem>
-  <ToggleGroupItem value="right" aria-label="Alinhar à direita">
-    <AlignRight aria-hidden="true" />
-  </ToggleGroupItem>
-</ToggleGroup>`;
-
 const codeFilterWithText = `<div class="nds-stack" data-spacing="sm" style="width: 18rem">
   <span>Filtros de exibição</span>
   <ToggleGroup type="multiple" variant="outline" :default-value="['compact']" aria-label="Filtros de exibição">
@@ -314,12 +302,6 @@ const compositionItems = computed(() => [
     code: codeViewMode,
   },
   {
-    name: tContent('variants.compositions.disabledItem.name'),
-    description: tContent('variants.compositions.disabledItem.description'),
-    useWhen: tContent('variants.compositions.disabledItem.use'),
-    code: codeDisabledItem,
-  },
-  {
     name: tContent('variants.compositions.filterWithText.name'),
     description: tContent('variants.compositions.filterWithText.description'),
     useWhen: tContent('variants.compositions.filterWithText.use'),
@@ -339,6 +321,7 @@ const stateItems = computed(() => [
   { label: tContent('states.items.hover'),    trigger: '—', behavior: tContent('states.descriptions.hover')    },
   { label: tContent('states.items.focus'),    trigger: '—', behavior: tContent('states.descriptions.focus')    },
   { label: tContent('states.items.disabled'), trigger: '—', behavior: tContent('states.descriptions.disabled') },
+  { label: tContent('states.disabledItem.label'), trigger: tContent('states.disabledItem.trigger'), behavior: stripHtml(tContent('states.disabledItem.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -911,34 +894,6 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #variant-preview-2>
-        <ToggleGroup
-          type="single"
-          variant="outline"
-          default-value="left"
-          aria-label="Alinhamento do texto"
-        >
-          <ToggleGroupItem
-            value="left"
-            aria-label="Alinhar à esquerda"
-          >
-            <AlignLeft aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="center"
-            :disabled="true"
-            aria-label="Centralizar (indisponível)"
-          >
-            <AlignCenter aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="right"
-            aria-label="Alinhar à direita"
-          >
-            <AlignRight aria-hidden="true" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </template>
-      <template #variant-preview-3>
         <div
           class="nds-stack"
           data-spacing="sm"

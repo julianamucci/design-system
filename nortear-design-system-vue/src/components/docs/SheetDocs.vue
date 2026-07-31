@@ -279,27 +279,6 @@ const codeCompSecondaryNav = `<Sheet>
   </SheetContent>
 </Sheet>`;
 
-const codeCompLongScroll = `<Sheet>
-  <SheetTrigger as-child>
-    <Button variant="outline">Ler termos</Button>
-  </SheetTrigger>
-  <SheetContent side="right">
-    <SheetHeader>
-      <SheetTitle>Termos de uso</SheetTitle>
-      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-    </SheetHeader>
-    <div class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-      <!-- parágrafos longos — body rola, footer fixo -->
-    </div>
-    <SheetFooter>
-      <SheetClose as-child>
-        <Button variant="outline">Cancelar</Button>
-      </SheetClose>
-      <Button>Aceitar termos</Button>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.advancedFilters.name'),
@@ -313,12 +292,6 @@ const compositionItems = computed(() => [
     useWhen: tContent('variants.compositions.secondaryNavigation.use'),
     code: codeCompSecondaryNav,
   },
-  {
-    name: tContent('variants.compositions.longScrollBody.name'),
-    description: tContent('variants.compositions.longScrollBody.description'),
-    useWhen: tContent('variants.compositions.longScrollBody.use'),
-    code: codeCompLongScroll,
-  },
 ]);
 
 const stateItems = computed(() => [
@@ -326,6 +299,7 @@ const stateItems = computed(() => [
   { label: tContent('states.items.open'),           trigger: '—', behavior: stripHtml(tContent('states.descriptions.open'))           },
   { label: tContent('states.items.transitioning'),  trigger: '—', behavior: stripHtml(tContent('states.descriptions.transitioning')) },
   { label: tContent('states.items.focused'),        trigger: '—', behavior: stripHtml(tContent('states.descriptions.focused'))       },
+  { label: tContent('states.longScrollBody.label'), trigger: stripHtml(tContent('states.longScrollBody.trigger')), behavior: stripHtml(tContent('states.longScrollBody.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -781,41 +755,6 @@ const a11yCritCols = computed(() => ({
                   style="padding: 0.5rem 0.75rem;"
                 >Configurações</a>
               </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </template>
-      <template #variant-preview-2>
-        <div style="contain: layout">
-          <Sheet
-            default-open
-            :modal="false"
-          >
-            <SheetContent side="right">
-              <SheetHeader>
-                <SheetTitle>Termos de uso</SheetTitle>
-                <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-              </SheetHeader>
-              <div
-                class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground nds-overflow-y"
-                data-spacing="sm"
-                style="max-height: 16rem;"
-              >
-                <p
-                  v-for="i in 12"
-                  :key="i"
-                >
-                  Parágrafo {{ i }}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.
-                </p>
-              </div>
-              <SheetFooter>
-                <SheetClose as-child>
-                  <Button variant="outline">
-                    Cancelar
-                  </Button>
-                </SheetClose>
-                <Button>Aceitar termos</Button>
-              </SheetFooter>
             </SheetContent>
           </Sheet>
         </div>

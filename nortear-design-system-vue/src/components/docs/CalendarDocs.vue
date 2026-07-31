@@ -21,7 +21,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -91,7 +90,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -272,27 +270,24 @@ const codeDisabledPast = `<Calendar
   :is-date-disabled="disablePastDates"
 />`;
 
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.inlineBordered.name'),
-    description: tContent('variants.compositions.inlineBordered.description'),
-    useWhen: tContent('variants.compositions.inlineBordered.use'),
-    code: codeInlineBordered,
-  },
-  {
-    name: tContent('variants.compositions.disabledPast.name'),
-    description: tContent('variants.compositions.disabledPast.description'),
-    useWhen: tContent('variants.compositions.disabledPast.use'),
-    code: codeDisabledPast,
-  },
-]);
-
 const variantItems = computed(() => [
   { name: 'single',          description: stripHtml(tContent('variants.items.single')),          code: codeSingle         },
   { name: 'multiple',        description: stripHtml(tContent('variants.items.multiple')),        code: codeMultiple       },
   { name: 'range',           description: stripHtml(tContent('variants.items.range')),           code: codeRange          },
   { name: 'layout=dropdown', description: stripHtml(tContent('variants.items.captionDropdown')), code: codeLayoutDropdown },
   { name: 'numberOfMonths',  description: stripHtml(tContent('variants.items.numberOfMonths')),  code: codeNumberOfMonths },
+  {
+    name: tContent('variants.items.inlineBordered.name'),
+    description: tContent('variants.items.inlineBordered.description'),
+    useWhen: tContent('variants.items.inlineBordered.use'),
+    code: codeInlineBordered,
+  },
+  {
+    name: tContent('variants.items.disabledPast.name'),
+    description: tContent('variants.items.disabledPast.description'),
+    useWhen: tContent('variants.items.disabledPast.use'),
+    code: codeDisabledPast,
+  },
 ]);
 
 const stateItems = computed(() => [
@@ -559,8 +554,11 @@ const visualTestItems = computed(() => [
     />
 
     <!-- ── Variantes (Modos e Layouts) ────────────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.visualTitle') || 'Modos e Layouts'"
+      :use-when-label="tNav('common.useWhen')"
+      component-slug="calendar"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -606,16 +604,7 @@ const visualTestItems = computed(() => [
           class="nds-rounded-md nds-border-default"
         />
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="calendar"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-5>
         <Calendar
           v-model="demoSelectedSingle"
           locale="pt-BR"
@@ -623,7 +612,7 @@ const visualTestItems = computed(() => [
           class="nds-rounded-md nds-border-default"
         />
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-6>
         <Calendar
           v-model="demoSelectedSingle"
           locale="pt-BR"

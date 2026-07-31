@@ -15,7 +15,6 @@ import DocsAnatomy       from '@/components/docs/shared/sections/DocsAnatomy.vue
 import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.vue';
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
-import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
 import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
@@ -211,7 +210,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')       },
       { id: 'variantes',    label: tNav('nav.variants')     },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')       },
       { id: 'propriedades', label: tNav('nav.props')        },
       { id: 'tokens',       label: tNav('nav.tokens')       },
@@ -323,36 +321,33 @@ const variantItems = computed(() => [
   { name: 'data',   description: tContent('variants.items.data'),   code: variantSnippet('json') },
   { name: 'shell',  description: tContent('variants.items.shell'),  code: variantSnippet('bash') },
   { name: 'text',   description: tContent('variants.items.text'),   code: variantSnippet('txt')  },
-]);
-
-// `trackId` é a chave estável do evento — `name` aqui é texto traduzido, e sem
-// ela o mesmo toggle sairia com um id por idioma.
-const compositionItems = computed(() => [
+  // `trackId` é a chave estável do evento — `name` aqui é texto traduzido, e sem
+  // ela o mesmo toggle sairia com um id por idioma.
   {
-    name: tContent('variants.compositions.withTitle.name'),
-    description: tContent('variants.compositions.withTitle.description'),
-    useWhen: tContent('variants.compositions.withTitle.use'),
+    name: tContent('variants.items.withTitle.name'),
+    description: tContent('variants.items.withTitle.description'),
+    useWhen: tContent('variants.items.withTitle.use'),
     trackId: 'with-title',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  title="lista.ts"\n/>`,
   },
   {
-    name: tContent('variants.compositions.withoutNumbers.name'),
-    description: tContent('variants.compositions.withoutNumbers.description'),
-    useWhen: tContent('variants.compositions.withoutNumbers.use'),
+    name: tContent('variants.items.withoutNumbers.name'),
+    description: tContent('variants.items.withoutNumbers.description'),
+    useWhen: tContent('variants.items.withoutNumbers.use'),
     trackId: 'without-numbers',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  :show-line-numbers="false"\n/>`,
   },
   {
-    name: tContent('variants.compositions.highlighted.name'),
-    description: tContent('variants.compositions.highlighted.description'),
-    useWhen: tContent('variants.compositions.highlighted.use'),
+    name: tContent('variants.items.highlighted.name'),
+    description: tContent('variants.items.highlighted.description'),
+    useWhen: tContent('variants.items.highlighted.use'),
     trackId: 'highlighted',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  :highlight-lines="[2]"\n/>`,
   },
   {
-    name: tContent('variants.compositions.withFooter.name'),
-    description: tContent('variants.compositions.withFooter.description'),
-    useWhen: tContent('variants.compositions.withFooter.use'),
+    name: tContent('variants.items.withFooter.name'),
+    description: tContent('variants.items.withFooter.description'),
+    useWhen: tContent('variants.items.withFooter.use'),
     trackId: 'with-footer',
     code: `<CodeBlock\n  :code="source"\n  language="ts"\n  footer="A ação de copiar leva apenas o código."\n/>`,
   },
@@ -657,9 +652,11 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes (linguagens suportadas) ──────────────────────── -->
-    <DocsVariants
+    <DocsCompositions
+      id="variantes"
       :title="tContent('variants.title')"
       :note="tContent('variants.note')"
+      :use-when-label="tNav('common.useWhen')"
       component-slug="code-block"
       :items="variantItems"
     >
@@ -729,16 +726,7 @@ const a11yCritCols = computed(() => ({
           data-track-id="code-block:variantes:text"
         />
       </template>
-    </DocsVariants>
-
-    <!-- ── Composições ────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="code-block"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
+      <template #variant-preview-6>
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
@@ -746,10 +734,10 @@ const a11yCritCols = computed(() => ({
           language="ts"
           :code="compositionCode"
           data-track="code"
-          data-track-id="code-block:composicoes:with-title"
+          data-track-id="code-block:variantes:with-title"
         />
       </template>
-      <template #variant-preview-1>
+      <template #variant-preview-7>
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
@@ -757,10 +745,10 @@ const a11yCritCols = computed(() => ({
           :code="compositionCode"
           :show-line-numbers="false"
           data-track="code"
-          data-track-id="code-block:composicoes:without-numbers"
+          data-track-id="code-block:variantes:without-numbers"
         />
       </template>
-      <template #variant-preview-2>
+      <template #variant-preview-8>
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
@@ -768,10 +756,10 @@ const a11yCritCols = computed(() => ({
           :code="compositionCode"
           :highlight-lines="[2]"
           data-track="code"
-          data-track-id="code-block:composicoes:highlighted"
+          data-track-id="code-block:variantes:highlighted"
         />
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-9>
         <CodeBlock
           v-bind="copyLabels"
           class="nds-w-full"
@@ -779,7 +767,7 @@ const a11yCritCols = computed(() => ({
           :code="compositionCode"
           :footer="tContent('demonstration.labels.footer')"
           data-track="code"
-          data-track-id="code-block:composicoes:with-footer"
+          data-track-id="code-block:variantes:with-footer"
         />
       </template>
     </DocsCompositions>
