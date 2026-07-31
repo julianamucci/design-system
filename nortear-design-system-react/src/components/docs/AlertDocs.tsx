@@ -197,7 +197,10 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
 }
 
 // AlertTitle
-interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
+interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  /** Elemento heading a renderizar (h1..h6). @default "h5" */
+  as?: React.ElementType;
+}
 
 // AlertDescription
 interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}`;
@@ -220,22 +223,22 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             <div className="nds-w-full nds-stack" data-spacing="sm">
               <Alert>
                 <Info aria-hidden="true" />
-                <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                <AlertTitle as="h3">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
               </Alert>
               <Alert variant="destructive">
                 <AlertCircle aria-hidden="true" />
-                <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
+                <AlertTitle as="h3">{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
               </Alert>
               <Alert variant="success">
                 <CheckCircle2 aria-hidden="true" />
-                <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
+                <AlertTitle as="h3">{tContent("demonstration.labels.successTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
               </Alert>
               <Alert variant="warning">
                 <TriangleAlert aria-hidden="true" />
-                <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
+                <AlertTitle as="h3">{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
               </Alert>
             </div>
@@ -344,7 +347,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 doPreview: (
                   <Alert>
                     <Info aria-hidden="true" />
-                    <AlertTitle>Erro ao salvar</AlertTitle>
+                    <AlertTitle as="h3">Erro ao salvar</AlertTitle>
                     <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
                   </Alert>
                 ),
@@ -362,13 +365,13 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 doPreview: (
                   <Alert variant="destructive">
                     <AlertCircle aria-hidden="true" />
-                    <AlertTitle>Erro ao salvar</AlertTitle>
+                    <AlertTitle as="h3">Erro ao salvar</AlertTitle>
                     <AlertDescription>Verifique sua conexão.</AlertDescription>
                   </Alert>
                 ),
                 dontPreview: (
                   <Alert variant="destructive">
-                    <AlertTitle>Erro ao salvar</AlertTitle>
+                    <AlertTitle as="h3">Erro ao salvar</AlertTitle>
                     <AlertDescription>Verifique sua conexão.</AlertDescription>
                   </Alert>
                 ),
@@ -401,7 +404,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert className="nds-w-full">
                     <Info aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -413,7 +416,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert variant="destructive" className="nds-w-full">
                     <AlertCircle aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.errorTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -425,7 +428,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert variant="success" className="nds-w-full">
                     <CheckCircle2 aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.successTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -437,7 +440,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert variant="warning" className="nds-w-full">
                     <TriangleAlert aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.warningTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.warningTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -449,7 +452,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert variant="info" className="nds-w-full">
                     <Info aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -473,7 +476,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     }
                   >
                     <CheckCircle2 aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.successTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.successTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -506,7 +509,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert className="nds-w-full">
                     <Info aria-hidden="true" />
-                    <AlertTitle>{tContent("demonstration.labels.infoTitle")}</AlertTitle>
+                    <AlertTitle as="h3">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                     <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
                   </Alert>
                 ),
@@ -519,7 +522,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 preview: (
                   <Alert className="nds-w-full">
                     <Info aria-hidden="true" />
-                    <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+                    <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
                     <AlertDescription className="nds-cluster" data-align="center" data-justify="between" style={{ marginTop: "var(--spacing-1)" }}>
                       <span>Salve seu trabalho para não perder as alterações.</span>
                       <Button size="sm" variant="outline">Salvar agora</Button>
@@ -635,6 +638,13 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                   description: tContent("props.table.description"),
                 },
                 items: [
+                  {
+                    name: "as",
+                    type: "React.ElementType",
+                    defaultValue: '"h5"',
+                    required: "Não",
+                    description: stripHtml(tContent("props.table.titleAs")),
+                  },
                   {
                     name: "className",
                     type: "string",

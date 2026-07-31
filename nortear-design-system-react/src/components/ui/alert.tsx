@@ -71,12 +71,22 @@ function Alert({
   )
 }
 
-function AlertTitle({ className, ...props }: React.ComponentProps<"h5">) {
+function AlertTitle({
+  className,
+  as: As = "h5",
+  ...props
+}: React.ComponentProps<"h5"> & {
+  /**
+   * Elemento heading a renderizar. Default `h5`. Passe o nível (`h1`..`h6`)
+   * que preserva a hierarquia de headings da página onde o Alert está.
+   */
+  as?: React.ElementType
+}) {
   return (
-    // <h5>/<section>: mesma marcação nas 4 stacks e a que o alert.css documenta
-    // (seletores .nds-alert > h1..h6 e .nds-alert > section). <div> perdia a
-    // semântica de cabeçalho e de landmark da descrição.
-    <h5
+    // heading/<section>: mesma marcação nas 4 stacks e a que o alert.css
+    // documenta (seletores .nds-alert > h1..h6 e .nds-alert > section). <div>
+    // perdia a semântica de cabeçalho e de landmark da descrição.
+    <As
       data-slot="alert-title"
       className={cn("nds-alert-title", className)}
       {...props}
