@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 import {
   Table,
   TableHeader,
@@ -31,6 +32,10 @@ export interface DocsPropsProps {
   extensibilityNotes?: string;
   /** Snippet de extensibilidade, renderizado abaixo das observações. */
   extensibilityCode?: string;
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
 function PropsTable({ def }: { def: DocsPropsTableDef }) {
@@ -65,7 +70,7 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
   );
 }
 
-export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode }: DocsPropsProps) {
+export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'tsx', copyLabel, copiedLabel }: DocsPropsProps) {
   return (
     <section id="propriedades">
       <h2 className="nds-section-title">{title}</h2>
@@ -74,9 +79,13 @@ export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, ex
           <PropsTable key={i} def={def} />
         ))}
         {interfaceCode && (
-          <Card className="nds-code-block nds-shadow-none">
-            <code className="nds-whitespace-pre">{interfaceCode}</code>
-          </Card>
+          <CodeBlock
+            code={interfaceCode}
+            language={language}
+            showLineNumbers={false}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+          />
         )}
         {extensibilityTitle && (
           <div className="nds-stack" data-spacing="sm">
@@ -88,9 +97,13 @@ export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, ex
               />
             )}
             {extensibilityCode && (
-              <Card className="nds-code-block nds-shadow-none">
-                <code className="nds-whitespace-pre">{extensibilityCode}</code>
-              </Card>
+              <CodeBlock
+                code={extensibilityCode}
+                language={language}
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+              />
             )}
           </div>
         )}

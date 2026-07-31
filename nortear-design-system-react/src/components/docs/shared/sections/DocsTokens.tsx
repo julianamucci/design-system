@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 import {
   Table,
   TableHeader,
@@ -20,9 +21,13 @@ export interface DocsTokensProps {
   items: DocsTokenItem[];
   customizationTitle?: string;
   customizationCode?: string;
+  /** Linguagem do snippet de customização, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
-export function DocsTokens({ title, cols, items, customizationTitle, customizationCode }: DocsTokensProps) {
+export function DocsTokens({ title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: DocsTokensProps) {
   return (
     <section id="tokens">
       <h2 className="nds-section-title">{title}</h2>
@@ -51,9 +56,13 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
           <div className="nds-stack" data-spacing="sm">
             <h3 className="nds-text-base nds-font-semibold">{customizationTitle}</h3>
             {customizationCode && (
-              <pre className="nds-code-block">
-                <code>{customizationCode}</code>
-              </pre>
+              <CodeBlock
+                code={customizationCode}
+                language={language}
+                showLineNumbers={false}
+                copyLabel={copyLabel}
+                copiedLabel={copiedLabel}
+              />
             )}
           </div>
         )}

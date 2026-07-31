@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 
 export interface DocsImportProps {
   title: string;
@@ -9,31 +9,66 @@ export interface DocsImportProps {
   tertiaryCode?: string;
   tertiaryDescription?: string;
   /**
-   * Slug do componente para tracking GA4 (ex.: "alert"). Informativo — o snippet
-   * renderizado atualmente é apenas um bloco `<code>` estático, sem botão de
-   * "copiar". Caso uma futura iteração adicione um botão, ele deverá receber
-   * `data-track="code"` + `data-track-id="{slug}:code:import-primary"` (ou
-   * `import-secondary`) + `data-track-label="Copiar import"`.
+   * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, a raiz
+   * dos blocos primário e secundário recebe `data-track="code"` +
+   * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
+   * `data-track-label="Copiar import"`. O observer garante que só o clique no
+   * botão de copiar do CodeBlock conta como `docs_code_copy`.
    */
   componentSlug?: string;
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
-export function DocsImport({ title, description, code, secondaryCode, secondaryDescription, tertiaryCode, tertiaryDescription }: DocsImportProps) {
+export function DocsImport({
+  title,
+  description,
+  code,
+  secondaryCode,
+  secondaryDescription,
+  tertiaryCode,
+  tertiaryDescription,
+  componentSlug,
+  language = 'tsx',
+  copyLabel,
+  copiedLabel,
+}: DocsImportProps) {
+  const track = (id: string) =>
+    componentSlug
+      ? {
+          'data-track': 'code',
+          'data-track-id': `${componentSlug}:code:${id}`,
+          'data-track-label': 'Copiar import',
+        }
+      : {};
   return (
     <section id="importacao">
       <h2 className="nds-section-title">{title}</h2>
       {description && <p className="nds-text-body nds-mb-4">{description}</p>}
-      <Card className="nds-code-block nds-shadow-none">
-        <code className="nds-whitespace-pre">{code}</code>
-      </Card>
+      <CodeBlock
+        code={code}
+        language={language}
+        showLineNumbers={false}
+        copyLabel={copyLabel}
+        copiedLabel={copiedLabel}
+        {...track('import-primary')}
+      />
       {secondaryCode && (
         <>
           {secondaryDescription && (
             <p className="nds-text-body nds-mt-4 nds-mb-4">{secondaryDescription}</p>
           )}
-          <Card className="nds-code-block nds-mt-2 nds-shadow-none">
-            <code className="nds-whitespace-pre">{secondaryCode}</code>
-          </Card>
+          <CodeBlock
+            code={secondaryCode}
+            language={language}
+            showLineNumbers={false}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            className="nds-mt-2"
+            {...track('import-secondary')}
+          />
         </>
       )}
       {tertiaryCode && (
@@ -41,9 +76,14 @@ export function DocsImport({ title, description, code, secondaryCode, secondaryD
           {tertiaryDescription && (
             <p className="nds-text-body nds-mt-4 nds-mb-4">{tertiaryDescription}</p>
           )}
-          <Card className="nds-code-block nds-mt-2 nds-shadow-none">
-            <code className="nds-whitespace-pre">{tertiaryCode}</code>
-          </Card>
+          <CodeBlock
+            code={tertiaryCode}
+            language={language}
+            showLineNumbers={false}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+            className="nds-mt-2"
+          />
         </>
       )}
     </section>

@@ -1,5 +1,5 @@
 import { ComponentDemo } from '@/components/ComponentDemo';
-import { Card } from '@/components/ui/card';
+import { CodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
 export interface DocsAnatomyProps {
@@ -7,9 +7,21 @@ export interface DocsAnatomyProps {
   items: string[];
   structureCode: string;
   structureLabel?: string;
+  /** Linguagem do snippet de estrutura, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
-export function DocsAnatomy({ title, items, structureCode, structureLabel }: DocsAnatomyProps) {
+export function DocsAnatomy({
+  title,
+  items,
+  structureCode,
+  structureLabel,
+  language = 'tsx',
+  copyLabel,
+  copiedLabel,
+}: DocsAnatomyProps) {
   return (
     <section id="anatomia">
       <h2 className="nds-section-title">{title}</h2>
@@ -25,12 +37,18 @@ export function DocsAnatomy({ title, items, structureCode, structureLabel }: Doc
               </li>
             ))}
           </ol>
-          <Card className="nds-bg-muted-soft nds-border-soft nds-shadow-none nds-p-4 nds-overflow-x">
+          <div>
             {structureLabel && (
               <p className="nds-text-caption nds-text-muted-foreground nds-mb-2">{structureLabel}</p>
             )}
-            <pre className="nds-font-mono nds-text-body nds-whitespace-pre">{structureCode}</pre>
-          </Card>
+            <CodeBlock
+              code={structureCode}
+              language={language}
+              showLineNumbers={false}
+              copyLabel={copyLabel}
+              copiedLabel={copiedLabel}
+            />
+          </div>
         </div>
       </ComponentDemo>
     </section>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { CodeBlock } from '@/components/ui/code-block';
 
 export interface DocsVariantItem {
   name: string;
@@ -28,9 +29,21 @@ export interface DocsVariantsProps {
    * Se ausente, `data-track-id` é omitido e o observer ignora o click.
    */
   componentSlug?: string;
+  /** Linguagem dos snippets, repassada ao CodeBlock. */
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
 }
 
-function VariantCard({ item, componentSlug }: { item: DocsVariantItem; componentSlug?: string }) {
+interface VariantCardProps {
+  item: DocsVariantItem;
+  componentSlug?: string;
+  language?: string;
+  copyLabel?: string;
+  copiedLabel?: string;
+}
+
+function VariantCard({ item, componentSlug, language, copyLabel, copiedLabel }: VariantCardProps) {
   const [open, setOpen] = useState(false);
   const trackId = componentSlug ? `${componentSlug}:code:${item.trackId ?? item.name}` : undefined;
   return (
@@ -60,9 +73,14 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
             {open ? 'Ocultar código' : 'Ver código'}
           </Button>
           {open && (
-            <pre className="nds-code-block nds-mt-2">
-              <code>{item.code}</code>
-            </pre>
+            <CodeBlock
+              code={item.code}
+              language={language}
+              showLineNumbers={false}
+              copyLabel={copyLabel}
+              copiedLabel={copiedLabel}
+              className="nds-mt-2"
+            />
           )}
         </div>
       )}
@@ -70,7 +88,7 @@ function VariantCard({ item, componentSlug }: { item: DocsVariantItem; component
   );
 }
 
-export function DocsVariants({ title, items, id = "variantes", note, componentSlug }: DocsVariantsProps) {
+export function DocsVariants({ title, items, id = "variantes", note, componentSlug, language = 'tsx', copyLabel, copiedLabel }: DocsVariantsProps) {
   return (
     <section id={id}>
       <h2 className="nds-section-title">{title}</h2>
@@ -82,7 +100,14 @@ export function DocsVariants({ title, items, id = "variantes", note, componentSl
       )}
       <div className="nds-stack" data-spacing="md">
         {items.map((item, i) => (
-          <VariantCard key={i} item={item} componentSlug={componentSlug} />
+          <VariantCard
+            key={i}
+            item={item}
+            componentSlug={componentSlug}
+            language={language}
+            copyLabel={copyLabel}
+            copiedLabel={copiedLabel}
+          />
         ))}
       </div>
     </section>
