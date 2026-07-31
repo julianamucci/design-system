@@ -14,7 +14,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -61,7 +60,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -448,9 +446,11 @@ export function CodeBlockDocs() {
       />
 
       {/* ── Variantes (linguagens suportadas) ─────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
         note={tContent("variants.note")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug={SLUG}
         items={[
           {
@@ -555,22 +555,13 @@ export function CodeBlockDocs() {
               />
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug={SLUG}
-        items={[
           {
             // trackId, e não `name`: o nome vem traduzido e o mesmo evento sairia
             // com um valor por idioma.
             trackId: "with-title",
-            name: tContent("variants.compositions.withTitle.name"),
-            description: tContent("variants.compositions.withTitle.description"),
-            useWhen: tContent("variants.compositions.withTitle.use"),
+            name: tContent("variants.items.withTitle.name"),
+            description: tContent("variants.items.withTitle.description"),
+            useWhen: tContent("variants.items.withTitle.use"),
             code: `<CodeBlock\n  code={source}\n  language="ts"\n  title="lista.ts"\n/>`,
             preview: (
               <CodeBlock
@@ -581,15 +572,15 @@ export function CodeBlockDocs() {
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
                 data-track="code"
-                data-track-id="code-block:composicoes:with-title"
+                data-track-id="code-block:variantes:with-title"
               />
             ),
           },
           {
             trackId: "without-numbers",
-            name: tContent("variants.compositions.withoutNumbers.name"),
-            description: tContent("variants.compositions.withoutNumbers.description"),
-            useWhen: tContent("variants.compositions.withoutNumbers.use"),
+            name: tContent("variants.items.withoutNumbers.name"),
+            description: tContent("variants.items.withoutNumbers.description"),
+            useWhen: tContent("variants.items.withoutNumbers.use"),
             code: `<CodeBlock\n  code={source}\n  language="ts"\n  showLineNumbers={false}\n/>`,
             preview: (
               <CodeBlock
@@ -600,15 +591,15 @@ export function CodeBlockDocs() {
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
                 data-track="code"
-                data-track-id="code-block:composicoes:without-numbers"
+                data-track-id="code-block:variantes:without-numbers"
               />
             ),
           },
           {
             trackId: "highlighted",
-            name: tContent("variants.compositions.highlighted.name"),
-            description: tContent("variants.compositions.highlighted.description"),
-            useWhen: tContent("variants.compositions.highlighted.use"),
+            name: tContent("variants.items.highlighted.name"),
+            description: tContent("variants.items.highlighted.description"),
+            useWhen: tContent("variants.items.highlighted.use"),
             code: `<CodeBlock\n  code={source}\n  language="ts"\n  highlightLines={[2]}\n/>`,
             preview: (
               <CodeBlock
@@ -619,15 +610,15 @@ export function CodeBlockDocs() {
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
                 data-track="code"
-                data-track-id="code-block:composicoes:highlighted"
+                data-track-id="code-block:variantes:highlighted"
               />
             ),
           },
           {
             trackId: "with-footer",
-            name: tContent("variants.compositions.withFooter.name"),
-            description: tContent("variants.compositions.withFooter.description"),
-            useWhen: tContent("variants.compositions.withFooter.use"),
+            name: tContent("variants.items.withFooter.name"),
+            description: tContent("variants.items.withFooter.description"),
+            useWhen: tContent("variants.items.withFooter.use"),
             code: `<CodeBlock\n  code={source}\n  language="ts"\n  footer="A ação de copiar leva apenas o código."\n/>`,
             preview: (
               <CodeBlock
@@ -638,7 +629,7 @@ export function CodeBlockDocs() {
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
                 data-track="code"
-                data-track-id="code-block:composicoes:with-footer"
+                data-track-id="code-block:variantes:with-footer"
               />
             ),
           },

@@ -24,7 +24,6 @@ import {
   DocsWhenToUse,
   DocsDoDont,
   DocsImport,
-  DocsVariants,
   DocsStates,
   DocsCompositions,
   DocsProps,
@@ -65,7 +64,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
-      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -581,8 +579,10 @@ type PaginationDirectionalProps =
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="pagination"
         items={[
           {
@@ -638,19 +638,10 @@ type PaginationDirectionalProps =
               </Pagination>
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="pagination"
-        items={[
           {
-            name: tContent("variants.compositions.simple.name"),
-            description: tContent("variants.compositions.simple.description"),
-            useWhen: tContent("variants.compositions.simple.use"),
+            name: tContent("variants.items.simple.name"),
+            description: tContent("variants.items.simple.description"),
+            useWhen: tContent("variants.items.simple.use"),
             code: `<Pagination>
   <PaginationContent>
     <PaginationItem>
@@ -696,9 +687,9 @@ type PaginationDirectionalProps =
             ),
           },
           {
-            name: tContent("variants.compositions.withEllipsis.name"),
-            description: tContent("variants.compositions.withEllipsis.description"),
-            useWhen: tContent("variants.compositions.withEllipsis.use"),
+            name: tContent("variants.items.withEllipsis.name"),
+            description: tContent("variants.items.withEllipsis.description"),
+            useWhen: tContent("variants.items.withEllipsis.use"),
             code: `<Pagination>
   <PaginationContent>
     <PaginationItem><PaginationPrevious href="#" text="${lblPrev}" /></PaginationItem>
@@ -747,55 +738,9 @@ type PaginationDirectionalProps =
             ),
           },
           {
-            name: tContent("variants.compositions.lastPage.name"),
-            description: tContent("variants.compositions.lastPage.description"),
-            useWhen: tContent("variants.compositions.lastPage.use"),
-            code: `<Pagination>
-  <PaginationContent>
-    <PaginationItem><PaginationPrevious href="#" text="${lblPrev}" /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">9</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#" isActive>10</PaginationLink></PaginationItem>
-    <PaginationItem>
-      <PaginationNext href="#" text="${lblNext}" aria-disabled tabIndex={-1} />
-    </PaginationItem>
-  </PaginationContent>
-</Pagination>`,
-            preview: (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" text={lblPrev} />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 1`}>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" aria-label={`${lblPage} 9`}>9</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive aria-label={`${lblPage} 10`}>10</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      text={lblNext}
-                      aria-disabled
-                      tabIndex={-1}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.interactive.name"),
-            description: tContent("variants.compositions.interactive.description"),
-            useWhen: tContent("variants.compositions.interactive.use"),
+            name: tContent("variants.items.interactive.name"),
+            description: tContent("variants.items.interactive.description"),
+            useWhen: tContent("variants.items.interactive.use"),
             code: `const [current, setCurrent] = useState(3);
 const total = 8;
 
@@ -923,6 +868,11 @@ const total = 8;
             label: tContent("states.items.focus"),
             trigger: ":focus-visible",
             behavior: stripHtml(tContent("states.descriptions.focus")),
+          },
+          {
+            label: tContent("states.lastPage.label"),
+            trigger: stripHtml(tContent("states.lastPage.trigger")),
+            behavior: stripHtml(tContent("states.lastPage.behavior")),
           },
         ]}
       />

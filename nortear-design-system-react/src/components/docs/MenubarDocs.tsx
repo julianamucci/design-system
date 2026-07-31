@@ -29,7 +29,6 @@ import { DocsAnatomy } from "@/components/docs/shared/sections/DocsAnatomy";
 import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
@@ -69,7 +68,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
-      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -486,8 +484,10 @@ interface MenubarItemProps {
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="menubar"
         items={[
           {
@@ -510,19 +510,10 @@ interface MenubarItemProps {
               </div>
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="menubar"
-        items={[
           {
-            name: tContent("variants.compositions.withShortcuts.name"),
-            description: tContent("variants.compositions.withShortcuts.description"),
-            useWhen: tContent("variants.compositions.withShortcuts.use"),
+            name: tContent("variants.items.withShortcuts.name"),
+            description: tContent("variants.items.withShortcuts.description"),
+            useWhen: tContent("variants.items.withShortcuts.use"),
             code: `<Menubar>
   <MenubarMenu>
     <MenubarTrigger>Editar</MenubarTrigger>
@@ -561,9 +552,9 @@ interface MenubarItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.withCheckbox.name"),
-            description: tContent("variants.compositions.withCheckbox.description"),
-            useWhen: tContent("variants.compositions.withCheckbox.use"),
+            name: tContent("variants.items.withCheckbox.name"),
+            description: tContent("variants.items.withCheckbox.description"),
+            useWhen: tContent("variants.items.withCheckbox.use"),
             code: `<Menubar>
   <MenubarMenu>
     <MenubarTrigger>Exibir</MenubarTrigger>
@@ -602,9 +593,9 @@ interface MenubarItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.withRadio.name"),
-            description: tContent("variants.compositions.withRadio.description"),
-            useWhen: tContent("variants.compositions.withRadio.use"),
+            name: tContent("variants.items.withRadio.name"),
+            description: tContent("variants.items.withRadio.description"),
+            useWhen: tContent("variants.items.withRadio.use"),
             code: `<Menubar>
   <MenubarMenu>
     <MenubarTrigger>Tema</MenubarTrigger>
@@ -635,9 +626,9 @@ interface MenubarItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.editorComplete.name"),
-            description: tContent("variants.compositions.editorComplete.description"),
-            useWhen: tContent("variants.compositions.editorComplete.use"),
+            name: tContent("variants.items.editorComplete.name"),
+            description: tContent("variants.items.editorComplete.description"),
+            useWhen: tContent("variants.items.editorComplete.use"),
             code: `<Menubar>
   <MenubarMenu>
     <MenubarTrigger>Arquivo</MenubarTrigger>

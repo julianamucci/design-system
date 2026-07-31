@@ -22,7 +22,6 @@ import { DocsAnatomy } from "@/components/docs/shared/sections/DocsAnatomy";
 import { DocsWhenToUse } from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont } from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport } from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants } from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates } from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps } from "@/components/docs/shared/sections/DocsProps";
@@ -62,7 +61,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao", label: t("nav.import") },
       { id: "variantes", label: t("nav.variants") },
-      { id: "composicoes", label: t("nav.compositions") },
       { id: "estados", label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens", label: t("nav.tokens") },
@@ -530,8 +528,10 @@ interface NavigationMenuLinkProps
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="navigation-menu"
         items={[
           {
@@ -554,19 +554,10 @@ interface NavigationMenuLinkProps
               </div>
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="navigation-menu"
-        items={[
           {
-            name: tContent("variants.compositions.linkSimples.name"),
-            description: tContent("variants.compositions.linkSimples.description"),
-            useWhen: tContent("variants.compositions.linkSimples.use"),
+            name: tContent("variants.items.linkSimples.name"),
+            description: tContent("variants.items.linkSimples.description"),
+            useWhen: tContent("variants.items.linkSimples.use"),
             code: `<NavigationMenu aria-label="${ariaLabelMain}">
   <NavigationMenuList>
     <NavigationMenuItem>
@@ -599,9 +590,9 @@ interface NavigationMenuLinkProps
             ),
           },
           {
-            name: tContent("variants.compositions.comDropdown.name"),
-            description: tContent("variants.compositions.comDropdown.description"),
-            useWhen: tContent("variants.compositions.comDropdown.use"),
+            name: tContent("variants.items.comDropdown.name"),
+            description: tContent("variants.items.comDropdown.description"),
+            useWhen: tContent("variants.items.comDropdown.use"),
             code: `<NavigationMenu aria-label="${ariaLabelMain}">
   <NavigationMenuList>
     <NavigationMenuItem>
@@ -644,9 +635,9 @@ interface NavigationMenuLinkProps
             ),
           },
           {
-            name: tContent("variants.compositions.megaMenuGrid.name"),
-            description: tContent("variants.compositions.megaMenuGrid.description"),
-            useWhen: tContent("variants.compositions.megaMenuGrid.use"),
+            name: tContent("variants.items.megaMenuGrid.name"),
+            description: tContent("variants.items.megaMenuGrid.description"),
+            useWhen: tContent("variants.items.megaMenuGrid.use"),
             code: `<NavigationMenu aria-label="${ariaLabelMain}">
   <NavigationMenuList>
     <NavigationMenuItem value="solucoes">
@@ -724,9 +715,9 @@ interface NavigationMenuLinkProps
             ),
           },
           {
-            name: tContent("variants.compositions.comCardDestacado.name"),
-            description: tContent("variants.compositions.comCardDestacado.description"),
-            useWhen: tContent("variants.compositions.comCardDestacado.use"),
+            name: tContent("variants.items.comCardDestacado.name"),
+            description: tContent("variants.items.comCardDestacado.description"),
+            useWhen: tContent("variants.items.comCardDestacado.use"),
             code: `<NavigationMenu aria-label="${ariaLabelMain}">
   <NavigationMenuList>
     <NavigationMenuItem value="recursos">

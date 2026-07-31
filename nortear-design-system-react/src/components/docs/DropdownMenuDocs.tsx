@@ -30,7 +30,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -70,7 +69,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -497,8 +495,10 @@ interface DropdownMenuItemProps {
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="dropdown-menu"
         items={[
           {
@@ -521,19 +521,10 @@ interface DropdownMenuItemProps {
               </div>
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="dropdown-menu"
-        items={[
           {
-            name: tContent("variants.compositions.withLabel.name"),
-            description: tContent("variants.compositions.withLabel.description"),
-            useWhen: tContent("variants.compositions.withLabel.use"),
+            name: tContent("variants.items.withLabel.name"),
+            description: tContent("variants.items.withLabel.description"),
+            useWhen: tContent("variants.items.withLabel.use"),
             code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="outline">Conta</Button>
@@ -568,9 +559,9 @@ interface DropdownMenuItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.withCheckboxItems.name"),
-            description: tContent("variants.compositions.withCheckboxItems.description"),
-            useWhen: tContent("variants.compositions.withCheckboxItems.use"),
+            name: tContent("variants.items.withCheckboxItems.name"),
+            description: tContent("variants.items.withCheckboxItems.description"),
+            useWhen: tContent("variants.items.withCheckboxItems.use"),
             code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="outline">Colunas</Button>
@@ -620,9 +611,9 @@ interface DropdownMenuItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.withRadioGroup.name"),
-            description: tContent("variants.compositions.withRadioGroup.description"),
-            useWhen: tContent("variants.compositions.withRadioGroup.use"),
+            name: tContent("variants.items.withRadioGroup.name"),
+            description: tContent("variants.items.withRadioGroup.description"),
+            useWhen: tContent("variants.items.withRadioGroup.use"),
             code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="outline">Tema</Button>
@@ -655,9 +646,9 @@ interface DropdownMenuItemProps {
             ),
           },
           {
-            name: tContent("variants.compositions.withShortcuts.name"),
-            description: tContent("variants.compositions.withShortcuts.description"),
-            useWhen: tContent("variants.compositions.withShortcuts.use"),
+            name: tContent("variants.items.withShortcuts.name"),
+            description: tContent("variants.items.withShortcuts.description"),
+            useWhen: tContent("variants.items.withShortcuts.use"),
             code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="outline">Editar</Button>

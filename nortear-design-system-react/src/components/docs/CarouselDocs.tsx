@@ -22,7 +22,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -565,8 +564,10 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="carousel"
         items={[
           {
@@ -640,6 +641,43 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
                     <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
+                      <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious aria-label={previousLabel} />
+                <CarouselNext aria-label={nextLabel} />
+              </Carousel>
+            ),
+          },
+          {
+            name: tContent("variants.items.autoplay.name"),
+            description: tContent("variants.items.autoplay.description"),
+            useWhen: tContent("variants.items.autoplay.use"),
+            code: `import Autoplay from "embla-carousel-autoplay";
+
+<Carousel
+  opts={{ loop: true }}
+  plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+  aria-label="Destaques"
+>
+  <CarouselContent>
+    {highlights.map((h, i) => (
+      <CarouselItem key={i}>{h}</CarouselItem>
+    ))}
+  </CarouselContent>
+  <CarouselPrevious aria-label="Item anterior" />
+  <CarouselNext aria-label="Próximo item" />
+</Carousel>`,
+            preview: (
+              <Carousel
+                className="nds-w-full nds-max-w-md"
+                opts={{ loop: true }}
+                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+              >
+                <CarouselContent>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <CarouselItem key={i}>
                       <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
                     </CarouselItem>
                   ))}
@@ -785,43 +823,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                           <p className="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
                         </CardContent>
                       </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious aria-label={previousLabel} />
-                <CarouselNext aria-label={nextLabel} />
-              </Carousel>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.autoplay.name"),
-            description: tContent("variants.compositions.autoplay.description"),
-            useWhen: tContent("variants.compositions.autoplay.use"),
-            code: `import Autoplay from "embla-carousel-autoplay";
-
-<Carousel
-  opts={{ loop: true }}
-  plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
-  aria-label="Destaques"
->
-  <CarouselContent>
-    {highlights.map((h, i) => (
-      <CarouselItem key={i}>{h}</CarouselItem>
-    ))}
-  </CarouselContent>
-  <CarouselPrevious aria-label="Item anterior" />
-  <CarouselNext aria-label="Próximo item" />
-</Carousel>`,
-            preview: (
-              <Carousel
-                className="nds-w-full nds-max-w-md"
-                opts={{ loop: true }}
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
-              >
-                <CarouselContent>
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <CarouselItem key={i}>
-                      <SlideCard label={`${tContent("demonstration.labels.slide")} ${i + 1}`} />
                     </CarouselItem>
                   ))}
                 </CarouselContent>

@@ -16,7 +16,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -518,8 +517,10 @@ interface SliderProps {
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="slider"
         items={[
           {
@@ -563,6 +564,20 @@ interface SliderProps {
               </div>
             ),
           },
+          {
+            name: tContent("variants.items.brightness.name"),
+            description: tContent("variants.items.brightness.description"),
+            useWhen: tContent("variants.items.brightness.use"),
+            code: `<Slider
+  value={value}
+  onValueChange={setValue}
+  min={0}
+  max={100}
+  step={5}
+  aria-label="Brilho"
+/>`,
+            preview: <BrightnessCompDemo />,
+          },
         ]}
       />
 
@@ -592,20 +607,6 @@ interface SliderProps {
   />
 </div>`,
             preview: <VolumeDemo label="Volume" />,
-          },
-          {
-            name: tContent("variants.compositions.brightness.name"),
-            description: tContent("variants.compositions.brightness.description"),
-            useWhen: tContent("variants.compositions.brightness.use"),
-            code: `<Slider
-  value={value}
-  onValueChange={setValue}
-  min={0}
-  max={100}
-  step={5}
-  aria-label="Brilho"
-/>`,
-            preview: <BrightnessCompDemo />,
           },
           {
             name: tContent("variants.compositions.form.name"),

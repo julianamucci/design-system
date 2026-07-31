@@ -17,6 +17,8 @@ export interface DocsCompositionsProps {
   componentSlug?: string;
   /** Id da seção. Default: 'composicoes'. */
   id?: string;
+  /** Nota introdutória da seção — repassada a DocsVariants. */
+  note?: string;
 }
 
 /**
@@ -31,6 +33,7 @@ export function DocsCompositions({
   useWhenLabel = 'Quando usar:',
   componentSlug,
   id = 'composicoes',
+  note,
 }: DocsCompositionsProps) {
   const variantItems: DocsVariantItem[] = items.map(item => {
     if (!item.useWhen) return item;
@@ -46,6 +49,7 @@ export function DocsCompositions({
     <DocsVariants
       id={id}
       title={title}
+      note={note}
       items={variantItems}
       componentSlug={componentSlug}
     />

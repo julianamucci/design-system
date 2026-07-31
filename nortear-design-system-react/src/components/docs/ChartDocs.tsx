@@ -21,7 +21,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -408,8 +407,10 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       />
 
       {/* ── Variantes (Tipos) ─────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="chart"
         items={[
           {
@@ -460,6 +461,35 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                />
             ),
           },
+          {
+            name: tContent("variants.items.smallInline.name"),
+            description: tContent("variants.items.smallInline.description"),
+            useWhen: tContent("variants.items.smallInline.use"),
+            code: `<div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
+  <div>
+    <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
+    <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
+  </div>
+  <ChartContainer
+    option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
+    style={{ height: "48px", width: "120px" }}
+    aria-label="Tendência de acessos nos últimos 6 meses"
+   />
+</div>`,
+            preview: (
+              <div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
+                <div>
+                  <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
+                  <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
+                </div>
+                <ChartContainer
+                  option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
+                  style={{ height: "48px", width: "120px" }}
+                  aria-label="Tendência de acessos nos últimos 6 meses"
+                 />
+              </div>
+            ),
+          },
         ]}
       />
 
@@ -500,75 +530,6 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
               </Card>
             ),
           },
-          {
-            name: tContent("variants.compositions.multiSeriesWithLegend.name"),
-            description: tContent("variants.compositions.multiSeriesWithLegend.description"),
-            useWhen: tContent("variants.compositions.multiSeriesWithLegend.use"),
-            code: `<ChartContainer
-  option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-  className="nds-w-full" style={{ height: "240px" }}
-  aria-label="Gráfico multi-séries: Desktop e Mobile"
- />`,
-            preview: (
-              <ChartContainer
-                option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="nds-w-full" style={{ height: "240px" }}
-                aria-label="Gráfico multi-séries: Desktop e Mobile"
-               />
-            ),
-          },
-          {
-            name: tContent("variants.compositions.smallInline.name"),
-            description: tContent("variants.compositions.smallInline.description"),
-            useWhen: tContent("variants.compositions.smallInline.use"),
-            code: `<div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
-  <div>
-    <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
-    <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
-  </div>
-  <ChartContainer
-    option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-    style={{ height: "48px", width: "120px" }}
-    aria-label="Tendência de acessos nos últimos 6 meses"
-   />
-</div>`,
-            preview: (
-              <div className="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" data-align="center" style={{ width: "fit-content" }}>
-                <div>
-                  <p className="nds-text-caption nds-text-muted-foreground">Acessos</p>
-                  <p className="nds-font-semibold" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>1.224</p>
-                </div>
-                <ChartContainer
-                  option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-                  style={{ height: "48px", width: "120px" }}
-                  aria-label="Tendência de acessos nos últimos 6 meses"
-                 />
-              </div>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withEmptyState.name"),
-            description: tContent("variants.compositions.withEmptyState.description"),
-            useWhen: tContent("variants.compositions.withEmptyState.use"),
-            code: `{data.length === 0 ? (
-  <div
-    role="status"
-    className="nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style={{ height: "200px", border: "1px dashed var(--border)" }}
-  >
-    Nenhum dado disponível para o período selecionado.
-  </div>
-) : (
-  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} className="nds-w-full" style={{ height: "200px" }} aria-label="..." />
-)}`,
-            preview: (
-              <div
-                role="status"
-                className="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style={{ height: "200px", border: "1px dashed var(--border)" }}
-              >
-                Nenhum dado disponível para o período selecionado.
-              </div>
-            ),
-          },
         ]}
       />
 
@@ -600,6 +561,16 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             label: tContent("states.multiSeries.label"),
             trigger: stripHtml(tContent("states.multiSeries.trigger")),
             behavior: stripHtml(tContent("states.multiSeries.behavior")),
+          },
+          {
+            label: tContent("states.withEmptyState.label"),
+            trigger: stripHtml(tContent("states.withEmptyState.trigger")),
+            behavior: stripHtml(tContent("states.withEmptyState.behavior")),
+          },
+          {
+            label: tContent("states.multiSeriesWithLegend.label"),
+            trigger: stripHtml(tContent("states.multiSeriesWithLegend.trigger")),
+            behavior: stripHtml(tContent("states.multiSeriesWithLegend.behavior")),
           },
         ]}
       />

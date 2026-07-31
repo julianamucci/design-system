@@ -344,8 +344,11 @@ import { Plus } from "lucide-react";`;
           />
 
           {/* ── Variantes ─────────────────────────────────────────────── */}
-          <DocsVariants
+          <DocsCompositions
+            id="variantes"
             title={tContent("variants.title")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="button"
             items={[
               {
                 name: "default",
@@ -382,6 +385,17 @@ import { Plus } from "lucide-react";`;
                 description: stripHtml(tContent("variants.items.link")),
                 code: codeLink,
                 preview: <Button variant="link">{tContent("demonstration.labels.link")}</Button>,
+              },
+              {
+                name: tContent("variants.items.asLink.name"),
+                description: tContent("variants.items.asLink.description"),
+                useWhen: tContent("variants.items.asLink.use"),
+                code: `<Button render={<a href="/docs" />} variant="link">\n  Ver documentação\n</Button>`,
+                preview: (
+                  <Button render={<a href="#docs" />} variant="link">
+                    Ver documentação
+                  </Button>
+                ),
               },
             ]}
           />
@@ -493,17 +507,6 @@ import { Plus } from "lucide-react";`;
                     <Button variant="outline">Cancelar</Button>
                     <Button>Confirmar</Button>
                   </div>
-                ),
-              },
-              {
-                name: tContent("variants.compositions.asLink.name"),
-                description: tContent("variants.compositions.asLink.description"),
-                useWhen: tContent("variants.compositions.asLink.use"),
-                code: `<Button render={<a href="/docs" />} variant="link">\n  Ver documentação\n</Button>`,
-                preview: (
-                  <Button render={<a href="#docs" />} variant="link">
-                    Ver documentação
-                  </Button>
                 ),
               },
             ]}

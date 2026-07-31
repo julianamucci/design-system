@@ -25,7 +25,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -428,8 +427,10 @@ interface DrawerProps {
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="drawer"
         items={[
           {
@@ -470,6 +471,65 @@ interface DrawerProps {
               <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
                 direction=&quot;right&quot;
               </div>
+            ),
+          },
+          {
+            name: tContent("variants.items.withScroll.name"),
+            description: tContent("variants.items.withScroll.description"),
+            useWhen: tContent("variants.items.withScroll.use"),
+            code: `<Drawer>
+  <DrawerTrigger asChild>
+    <Button variant="outline">Ler termos</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Termos de uso</DrawerTitle>
+      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+    </DrawerHeader>
+    <div className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" style={{ maxHeight: '16rem' }}>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <p key={i}>
+          Parágrafo {i + 1}: termos longos para garantir scroll interno.
+        </p>
+      ))}
+    </div>
+    <DrawerFooter>
+      <Button>Aceitar termos</Button>
+      <DrawerClose asChild>
+        <Button variant="outline">Cancelar</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+            preview: (
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="outline">Ler termos</Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>Termos de uso</DrawerTitle>
+                    <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+                  </DrawerHeader>
+                  <div
+                    className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
+                    data-spacing="sm"
+                    style={{ maxHeight: "16rem" }}
+                  >
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <p key={i}>
+                        Parágrafo {i + 1}: termos longos para garantir scroll interno.
+                      </p>
+                    ))}
+                  </div>
+                  <DrawerFooter>
+                    <Button>Aceitar termos</Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">Cancelar</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
             ),
           },
         ]}
@@ -579,65 +639,6 @@ interface DrawerProps {
                   </DrawerHeader>
                   <DrawerFooter>
                     <Button variant="destructive">Remover</Button>
-                    <DrawerClose asChild>
-                      <Button variant="outline">Cancelar</Button>
-                    </DrawerClose>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.withScroll.name"),
-            description: tContent("variants.compositions.withScroll.description"),
-            useWhen: tContent("variants.compositions.withScroll.use"),
-            code: `<Drawer>
-  <DrawerTrigger asChild>
-    <Button variant="outline">Ler termos</Button>
-  </DrawerTrigger>
-  <DrawerContent>
-    <DrawerHeader>
-      <DrawerTitle>Termos de uso</DrawerTitle>
-      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
-    </DrawerHeader>
-    <div className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" style={{ maxHeight: '16rem' }}>
-      {Array.from({ length: 12 }).map((_, i) => (
-        <p key={i}>
-          Parágrafo {i + 1}: termos longos para garantir scroll interno.
-        </p>
-      ))}
-    </div>
-    <DrawerFooter>
-      <Button>Aceitar termos</Button>
-      <DrawerClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`,
-            preview: (
-              <Drawer>
-                <DrawerTrigger asChild>
-                  <Button variant="outline">Ler termos</Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle>Termos de uso</DrawerTitle>
-                    <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
-                  </DrawerHeader>
-                  <div
-                    className="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4"
-                    data-spacing="sm"
-                    style={{ maxHeight: "16rem" }}
-                  >
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <p key={i}>
-                        Parágrafo {i + 1}: termos longos para garantir scroll interno.
-                      </p>
-                    ))}
-                  </div>
-                  <DrawerFooter>
-                    <Button>Aceitar termos</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>

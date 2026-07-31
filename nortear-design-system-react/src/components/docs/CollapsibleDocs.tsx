@@ -20,7 +20,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -481,8 +480,10 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       />
 
       {/* ── Variantes (Modos) ─────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="collapsible"
         items={[
           {
@@ -516,19 +517,10 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
             code: codeControlled,
             preview: <ControlledDemo tContent={tContent} />,
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="collapsible"
-        items={[
           {
-            name: tContent("variants.compositions.customButton.name"),
-            description: tContent("variants.compositions.customButton.description"),
-            useWhen: tContent("variants.compositions.customButton.use"),
+            name: tContent("variants.items.customButton.name"),
+            description: tContent("variants.items.customButton.description"),
+            useWhen: tContent("variants.items.customButton.use"),
             code: `<Collapsible className="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger asChild>
     <Button variant="outline">Exibir opções avançadas</Button>
@@ -552,6 +544,15 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
               </Collapsible>
             ),
           },
+        ]}
+      />
+
+      {/* ── Composições ───────────────────────────────────────────── */}
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="collapsible"
+        items={[
           {
             name: tContent("variants.compositions.iconTrigger.name"),
             description: tContent("variants.compositions.iconTrigger.description"),

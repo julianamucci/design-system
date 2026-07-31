@@ -47,7 +47,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -814,8 +813,11 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="sidebar"
         items={[
           {
             name: `variant="sidebar"`,
@@ -852,6 +854,48 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             description: tContent("variants.right"),
             code: `<Sidebar side="right">{/* sidebar na direita */}</Sidebar>`,
             preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" side="right" defaultOpen={true} />,
+          },
+          {
+            name: tContent("variants.items.withSubMenu.name"),
+            description: tContent("variants.items.withSubMenu.description"),
+            useWhen: tContent("variants.items.withSubMenu.use"),
+            code: `function ComponentsItem() {
+  const [open, setOpen] = useState(false);
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        aria-expanded={open}
+        onClick={() => setOpen(v => !v)}
+      >
+        <Blocks aria-hidden="true" />
+        <span>Componentes</span>
+        <ChevronDown aria-hidden="true" className={open ? "rotate-180" : ""} />
+      </SidebarMenuButton>
+      {open && (
+        <SidebarMenuSub>
+          <SidebarMenuSubItem>
+            <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
+          </SidebarMenuSubItem>
+          {/* ... */}
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuItem>
+  );
+}`,
+            preview: <PreviewWithSubMenu />,
+          },
+          {
+            name: tContent("variants.items.withBadges.name"),
+            description: tContent("variants.items.withBadges.description"),
+            useWhen: tContent("variants.items.withBadges.use"),
+            code: `<SidebarMenuItem>
+  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
+    <Bell aria-hidden="true" />
+    <span>Notificações</span>
+  </SidebarMenuButton>
+  <SidebarMenuBadge>12</SidebarMenuBadge>
+</SidebarMenuItem>`,
+            preview: <PreviewWithBadges />,
           },
         ]}
       />
@@ -903,35 +947,6 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             preview: <PreviewWithGroups />,
           },
           {
-            name: tContent("variants.compositions.withSubMenu.name"),
-            description: tContent("variants.compositions.withSubMenu.description"),
-            useWhen: tContent("variants.compositions.withSubMenu.use"),
-            code: `function ComponentsItem() {
-  const [open, setOpen] = useState(false);
-  return (
-    <SidebarMenuItem>
-      <SidebarMenuButton
-        aria-expanded={open}
-        onClick={() => setOpen(v => !v)}
-      >
-        <Blocks aria-hidden="true" />
-        <span>Componentes</span>
-        <ChevronDown aria-hidden="true" className={open ? "rotate-180" : ""} />
-      </SidebarMenuButton>
-      {open && (
-        <SidebarMenuSub>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          {/* ... */}
-        </SidebarMenuSub>
-      )}
-    </SidebarMenuItem>
-  );
-}`,
-            preview: <PreviewWithSubMenu />,
-          },
-          {
             name: tContent("variants.compositions.withSearch.name"),
             description: tContent("variants.compositions.withSearch.description"),
             useWhen: tContent("variants.compositions.withSearch.use"),
@@ -948,19 +963,6 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
   </div>
 </SidebarHeader>`,
             preview: <PreviewWithSearch />,
-          },
-          {
-            name: tContent("variants.compositions.withBadges.name"),
-            description: tContent("variants.compositions.withBadges.description"),
-            useWhen: tContent("variants.compositions.withBadges.use"),
-            code: `<SidebarMenuItem>
-  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
-    <Bell aria-hidden="true" />
-    <span>Notificações</span>
-  </SidebarMenuButton>
-  <SidebarMenuBadge>12</SidebarMenuBadge>
-</SidebarMenuItem>`,
-            preview: <PreviewWithBadges />,
           },
         ]}
       />

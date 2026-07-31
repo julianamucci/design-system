@@ -636,49 +636,6 @@ export function SheetDocs() {
               </div>
             ),
           },
-          {
-            name: tContent("variants.compositions.longScrollBody.name"),
-            description: tContent("variants.compositions.longScrollBody.description"),
-            useWhen: tContent("variants.compositions.longScrollBody.use"),
-            code: `<Sheet>
-  <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
-  <SheetContent side="right">
-    <SheetHeader>
-      <SheetTitle>Termos de uso</SheetTitle>
-      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-    </SheetHeader>
-    <div className="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-      {/* parágrafos longos — body rola, footer fixo */}
-    </div>
-    <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-      <Button>Aceitar termos</Button>
-    </SheetFooter>
-  </SheetContent>
-</Sheet>`,
-            preview: (
-              <div style={{ contain: "layout" }}>
-                <Sheet>
-                  <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
-                  <SheetContent side="right">
-                    <SheetHeader>
-                      <SheetTitle>Termos de uso</SheetTitle>
-                      <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-                    </SheetHeader>
-                    <div className="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-                      {Array.from({ length: 12 }).map((_, i) => (
-                        <p key={i}>Parágrafo {i + 1}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
-                      ))}
-                    </div>
-                    <SheetFooter>
-                      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-                      <Button>Aceitar termos</Button>
-                    </SheetFooter>
-                  </SheetContent>
-                </Sheet>
-              </div>
-            ),
-          },
         ]}
       />
 
@@ -709,6 +666,11 @@ export function SheetDocs() {
             label: tContent("states.items.focused"),
             trigger: ':focus-visible',
             behavior: stripHtml(tContent("states.descriptions.focused")),
+          },
+          {
+            label: tContent("states.longScrollBody.label"),
+            trigger: stripHtml(tContent("states.longScrollBody.trigger")),
+            behavior: stripHtml(tContent("states.longScrollBody.behavior")),
           },
         ]}
       />

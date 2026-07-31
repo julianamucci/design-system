@@ -15,7 +15,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -432,8 +431,11 @@ import { Bold } from "lucide-react";`;
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="toggle"
         items={[
           {
             name: tContent("variants.items.default"),
@@ -464,6 +466,35 @@ import { Bold } from "lucide-react";`;
                 <Eye aria-hidden="true" />
                 Mostrar ocultos
               </Toggle>
+            ),
+          },
+          {
+            name: tContent("variants.items.sizes.name"),
+            description: tContent("variants.items.sizes.description"),
+            useWhen: tContent("variants.items.sizes.use"),
+            code: `<div className="nds-cluster" data-spacing="sm">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
+    <Bold className="nds-icon" />
+  </Toggle>
+  <Toggle variant="outline" size="default" aria-label="Negrito (default)">
+    <Bold className="nds-icon" />
+  </Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
+    <Bold className="nds-icon" />
+  </Toggle>
+</div>`,
+            preview: (
+              <div className="nds-cluster" data-spacing="sm">
+                <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
+                  <Bold className="nds-icon" />
+                </Toggle>
+                <Toggle variant="outline" size="default" aria-label="Negrito (default)">
+                  <Bold className="nds-icon" />
+                </Toggle>
+                <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
+                  <Bold className="nds-icon" />
+                </Toggle>
+              </div>
             ),
           },
         ]}
@@ -500,35 +531,6 @@ import { Bold } from "lucide-react";`;
                 </Toggle>
                 <Toggle aria-label="Sublinhado">
                   <Underline className="nds-icon" />
-                </Toggle>
-              </div>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.sizes.name"),
-            description: tContent("variants.compositions.sizes.description"),
-            useWhen: tContent("variants.compositions.sizes.use"),
-            code: `<div className="nds-cluster" data-spacing="sm">
-  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
-    <Bold className="nds-icon" />
-  </Toggle>
-  <Toggle variant="outline" size="default" aria-label="Negrito (default)">
-    <Bold className="nds-icon" />
-  </Toggle>
-  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
-    <Bold className="nds-icon" />
-  </Toggle>
-</div>`,
-            preview: (
-              <div className="nds-cluster" data-spacing="sm">
-                <Toggle variant="outline" size="sm" aria-label="Negrito (sm)">
-                  <Bold className="nds-icon" />
-                </Toggle>
-                <Toggle variant="outline" size="default" aria-label="Negrito (default)">
-                  <Bold className="nds-icon" />
-                </Toggle>
-                <Toggle variant="outline" size="lg" aria-label="Negrito (lg)">
-                  <Bold className="nds-icon" />
                 </Toggle>
               </div>
             ),

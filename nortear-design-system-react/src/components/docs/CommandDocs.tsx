@@ -42,7 +42,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -82,7 +81,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -776,9 +774,12 @@ interface CommandDialogProps
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
         note={tContent("variants.note")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="command"
         items={[
           {
             name: "inline",
@@ -844,19 +845,10 @@ interface CommandDialogProps
               />
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ──────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="command"
-        items={[
           {
-            name: tContent("variants.compositions.withGroups.name"),
-            description: tContent("variants.compositions.withGroups.description"),
-            useWhen: tContent("variants.compositions.withGroups.use"),
+            name: tContent("variants.items.withGroups.name"),
+            description: tContent("variants.items.withGroups.description"),
+            useWhen: tContent("variants.items.withGroups.use"),
             code: `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
@@ -898,100 +890,6 @@ interface CommandDialogProps
               </div>
             ),
           },
-          {
-            name: tContent("variants.compositions.withDisabled.name"),
-            description: tContent("variants.compositions.withDisabled.description"),
-            useWhen: tContent("variants.compositions.withDisabled.use"),
-            code: `<Command>
-  <CommandInput placeholder="Buscar..." />
-  <CommandList>
-    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
-    <CommandGroup heading="Componentes">
-      <CommandItem value="button">Button</CommandItem>
-      <CommandItem value="input" disabled>Input (em breve)</CommandItem>
-      <CommandItem value="badge">Badge</CommandItem>
-      <CommandItem value="select" disabled>Select (em breve)</CommandItem>
-    </CommandGroup>
-    <CommandSeparator />
-    <CommandGroup heading="Utilitários">
-      <CommandItem value="cn">cn()</CommandItem>
-      <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
-    </CommandGroup>
-  </CommandList>
-</Command>`,
-            preview: (
-              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
-                <Command>
-                  <CommandInput placeholder="Buscar..." />
-                  <CommandList>
-                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
-                    <CommandGroup heading="Componentes">
-                      <CommandItem value="button">Button</CommandItem>
-                      <CommandItem value="input" disabled>Input (em breve)</CommandItem>
-                      <CommandItem value="badge">Badge</CommandItem>
-                      <CommandItem value="select" disabled>Select (em breve)</CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
-                    <CommandGroup heading="Utilitários">
-                      <CommandItem value="cn">cn()</CommandItem>
-                      <CommandItem value="clsx" disabled>clsx() (depreciado)</CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </div>
-            ),
-          },
-          {
-            name: tContent("variants.compositions.longList.name"),
-            description: tContent("variants.compositions.longList.description"),
-            useWhen: tContent("variants.compositions.longList.use"),
-            code: `const items = [
-  "Accordion","Alert","AlertDialog","AspectRatio","Avatar",
-  "Badge","Breadcrumb","Button","Calendar","Card",
-  "Carousel","Chart","Checkbox","Collapsible","Command",
-  "ContextMenu","DataTable","DatePicker","Dialog","Drawer",
-  "DropdownMenu","Form","HoverCard","Input","InputOTP",
-  "Label","Menubar","NavigationMenu","Pagination","Popover",
-];
-
-<Command>
-  <CommandInput placeholder="Buscar componente..." />
-  <CommandList>
-    <CommandEmpty>${labels.emptyMessage}</CommandEmpty>
-    <CommandGroup heading="Componentes">
-      {items.map((label) => (
-        <CommandItem key={label} value={label.toLowerCase()}>
-          {label}
-        </CommandItem>
-      ))}
-    </CommandGroup>
-  </CommandList>
-</Command>`,
-            preview: (
-              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
-                <Command>
-                  <CommandInput placeholder="Buscar componente..." />
-                  <CommandList>
-                    <CommandEmpty>{labels.emptyMessage}</CommandEmpty>
-                    <CommandGroup heading="Componentes">
-                      {[
-                        "Accordion","Alert","AlertDialog","AspectRatio","Avatar",
-                        "Badge","Breadcrumb","Button","Calendar","Card",
-                        "Carousel","Chart","Checkbox","Collapsible","Command",
-                        "ContextMenu","DataTable","DatePicker","Dialog","Drawer",
-                        "DropdownMenu","Form","HoverCard","Input","InputOTP",
-                        "Label","Menubar","NavigationMenu","Pagination","Popover",
-                      ].map((label) => (
-                        <CommandItem key={label} value={label.toLowerCase()}>
-                          {label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </div>
-            ),
-          },
         ]}
       />
 
@@ -1023,6 +921,16 @@ interface CommandDialogProps
             label: tContent("states.loading.label"),
             trigger: stripHtml(tContent("states.loading.trigger")),
             behavior: tContent("states.loading.behavior"),
+          },
+          {
+            label: tContent("states.withDisabled.label"),
+            trigger: stripHtml(tContent("states.withDisabled.trigger")),
+            behavior: stripHtml(tContent("states.withDisabled.behavior")),
+          },
+          {
+            label: tContent("states.longList.label"),
+            trigger: stripHtml(tContent("states.longList.trigger")),
+            behavior: stripHtml(tContent("states.longList.behavior")),
           },
         ]}
       />

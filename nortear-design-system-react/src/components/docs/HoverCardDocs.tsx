@@ -20,7 +20,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -60,7 +59,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -453,8 +451,10 @@ interface HoverCardContentProps {
       <DocsImport title={tContent("import.title")} code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="hover-card"
         items={[
           {
@@ -477,19 +477,10 @@ interface HoverCardContentProps {
               </div>
             ),
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="hover-card"
-        items={[
           {
-            name: tContent("variants.compositions.userProfile.name"),
-            description: tContent("variants.compositions.userProfile.description"),
-            useWhen: tContent("variants.compositions.userProfile.use"),
+            name: tContent("variants.items.userProfile.name"),
+            description: tContent("variants.items.userProfile.description"),
+            useWhen: tContent("variants.items.userProfile.use"),
             code: `<HoverCard openDelay={500} closeDelay={200}>
   <HoverCardTrigger asChild>
     <a href="/users/joana">@joana</a>
@@ -530,9 +521,9 @@ interface HoverCardContentProps {
             ),
           },
           {
-            name: tContent("variants.compositions.linkPreview.name"),
-            description: tContent("variants.compositions.linkPreview.description"),
-            useWhen: tContent("variants.compositions.linkPreview.use"),
+            name: tContent("variants.items.linkPreview.name"),
+            description: tContent("variants.items.linkPreview.description"),
+            useWhen: tContent("variants.items.linkPreview.use"),
             code: `<HoverCard openDelay={500} closeDelay={200}>
   <HoverCardTrigger asChild>
     <a href="https://design-system.dev">design-system.dev</a>
@@ -567,9 +558,9 @@ interface HoverCardContentProps {
             ),
           },
           {
-            name: tContent("variants.compositions.definitionTooltip.name"),
-            description: tContent("variants.compositions.definitionTooltip.description"),
-            useWhen: tContent("variants.compositions.definitionTooltip.use"),
+            name: tContent("variants.items.definitionTooltip.name"),
+            description: tContent("variants.items.definitionTooltip.description"),
+            useWhen: tContent("variants.items.definitionTooltip.use"),
             code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger asChild>
     <button
@@ -610,9 +601,9 @@ interface HoverCardContentProps {
             ),
           },
           {
-            name: tContent("variants.compositions.metricExplainer.name"),
-            description: tContent("variants.compositions.metricExplainer.description"),
-            useWhen: tContent("variants.compositions.metricExplainer.use"),
+            name: tContent("variants.items.metricExplainer.name"),
+            description: tContent("variants.items.metricExplainer.description"),
+            useWhen: tContent("variants.items.metricExplainer.use"),
             code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger asChild>
     <button

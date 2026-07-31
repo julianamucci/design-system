@@ -21,7 +21,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions } from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -377,8 +376,11 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
           />
 
           {/* ── Variantes ─────────────────────────────────────────────── */}
-          <DocsVariants
+          <DocsCompositions
+            id="variantes"
             title={tContent("variants.title")}
+            useWhenLabel={tNav("common.useWhen")}
+            componentSlug="alert"
             items={[
               {
                 name: "default",
@@ -439,6 +441,18 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                   </Alert>
                 ),
               },
+              {
+                name: tContent("variants.items.compact.name"),
+                description: tContent("variants.items.compact.description"),
+                useWhen: tContent("variants.items.compact.use"),
+                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
+                preview: (
+                  <Alert variant="destructive" className="nds-w-full">
+                    <AlertCircle aria-hidden="true" />
+                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
+                  </Alert>
+                ),
+              },
             ]}
           />
 
@@ -474,18 +488,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                       <span>Salve seu trabalho para não perder as alterações.</span>
                       <Button size="sm" variant="outline">Salvar agora</Button>
                     </AlertDescription>
-                  </Alert>
-                ),
-              },
-              {
-                name: tContent("variants.compositions.compact.name"),
-                description: tContent("variants.compositions.compact.description"),
-                useWhen: tContent("variants.compositions.compact.use"),
-                code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
-                preview: (
-                  <Alert variant="destructive" className="nds-w-full">
-                    <AlertCircle aria-hidden="true" />
-                    <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
                   </Alert>
                 ),
               },

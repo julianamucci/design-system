@@ -22,7 +22,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -440,8 +439,10 @@ interface TooltipContentProps {
         <DocsImport title={tContent("import.title")} code={codeImport} />
 
         {/* ── Variantes ─────────────────────────────────────────────── */}
-        <DocsVariants
+        <DocsCompositions
+          id="variantes"
           title={tContent("variants.title")}
+          useWhenLabel={tNav("common.useWhen")}
           componentSlug="tooltip"
           items={[
             {
@@ -503,6 +504,39 @@ interface TooltipContentProps {
                       : "Cria um link público com permissão de leitura — qualquer pessoa com o link pode visualizar."}
                   </TooltipContent>
                 </Tooltip>
+              ),
+            },
+            {
+              name: tContent("variants.items.positioningSides.name"),
+              description: tContent("variants.items.positioningSides.description"),
+              useWhen: tContent("variants.items.positioningSides.use"),
+              code: `<div className="nds-grid nds-w-full" style={{ placeItems: "center", gap: "2rem" }}>
+  {(["top", "right", "bottom", "left"] as const).map((side) => (
+    <Tooltip key={side}>
+      <TooltipTrigger
+        render={(props) => (
+          <Button {...props} variant="outline">{side}</Button>
+        )}
+      />
+      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+    </Tooltip>
+  ))}
+</div>`,
+              preview: (
+                <div className="nds-grid nds-w-full" style={{ contain: "layout", minHeight: 140, placeItems: "center", gap: "2rem" }}>
+                  {(["top", "right", "bottom", "left"] as const).map((side) => (
+                    <Tooltip key={side}>
+                      <TooltipTrigger
+                        render={(props) => (
+                          <Button {...props} variant="outline">
+                            {side.charAt(0).toUpperCase() + side.slice(1)}
+                          </Button>
+                        )}
+                      />
+                      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
+                    </Tooltip>
+                  ))}
+                </div>
               ),
             },
           ]}
@@ -670,39 +704,6 @@ interface TooltipContentProps {
                     </Tooltip>
                   </div>
                   <p className="nds-font-semibold" style={{ fontSize: '1.5rem', lineHeight: '2rem' }}>1.8s</p>
-                </div>
-              ),
-            },
-            {
-              name: tContent("variants.compositions.positioningSides.name"),
-              description: tContent("variants.compositions.positioningSides.description"),
-              useWhen: tContent("variants.compositions.positioningSides.use"),
-              code: `<div className="nds-grid nds-w-full" style={{ placeItems: "center", gap: "2rem" }}>
-  {(["top", "right", "bottom", "left"] as const).map((side) => (
-    <Tooltip key={side}>
-      <TooltipTrigger
-        render={(props) => (
-          <Button {...props} variant="outline">{side}</Button>
-        )}
-      />
-      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
-    </Tooltip>
-  ))}
-</div>`,
-              preview: (
-                <div className="nds-grid nds-w-full" style={{ contain: "layout", minHeight: 140, placeItems: "center", gap: "2rem" }}>
-                  {(["top", "right", "bottom", "left"] as const).map((side) => (
-                    <Tooltip key={side}>
-                      <TooltipTrigger
-                        render={(props) => (
-                          <Button {...props} variant="outline">
-                            {side.charAt(0).toUpperCase() + side.slice(1)}
-                          </Button>
-                        )}
-                      />
-                      <TooltipContent side={side}>Tooltip {side}</TooltipContent>
-                    </Tooltip>
-                  ))}
                 </div>
               ),
             },

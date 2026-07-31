@@ -604,25 +604,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             ),
           },
           {
-            name: tContent("variants.compositions.disabledItem.name"),
-            description: tContent("variants.compositions.disabledItem.description"),
-            useWhen: tContent("variants.compositions.disabledItem.use"),
-            code: `<ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">\n  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">\n    <AlignLeft aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">\n    <AlignCenter aria-hidden="true" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value="right" aria-label="Alinhar à direita">\n    <AlignRight aria-hidden="true" />\n  </ToggleGroupItem>\n</ToggleGroup>`,
-            preview: (
-              <ToggleGroup type="single" variant="outline" defaultValue="left" aria-label="Alinhamento do texto">
-                <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
-                  <AlignLeft aria-hidden="true" />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">
-                  <AlignCenter aria-hidden="true" />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="right" aria-label="Alinhar à direita">
-                  <AlignRight aria-hidden="true" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-            ),
-          },
-          {
             name: tContent("variants.compositions.filterWithText.name"),
             description: tContent("variants.compositions.filterWithText.description"),
             useWhen: tContent("variants.compositions.filterWithText.use"),
@@ -679,6 +660,11 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             label: tContent("states.items.disabled"),
             trigger: "disabled prop",
             behavior: stripHtml(tContent("states.descriptions.disabled")),
+          },
+          {
+            label: tContent("states.disabledItem.label"),
+            trigger: stripHtml(tContent("states.disabledItem.trigger")),
+            behavior: stripHtml(tContent("states.disabledItem.behavior")),
           },
         ]}
       />

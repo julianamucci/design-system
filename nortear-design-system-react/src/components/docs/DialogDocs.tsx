@@ -26,7 +26,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -564,8 +563,11 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         secondaryCode={codeImportWithScroll}
       />
 
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="dialog"
         items={[
           {
             name: "default",
@@ -695,18 +697,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               </Dialog>
             ),
           },
-        ]}
-      />
-
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="dialog"
-        items={[
           {
-            name: tContent("variants.compositions.confirmEmail.name"),
-            description: tContent("variants.compositions.confirmEmail.description"),
-            useWhen: tContent("variants.compositions.confirmEmail.use"),
+            name: tContent("variants.items.confirmEmail.name"),
+            description: tContent("variants.items.confirmEmail.description"),
+            useWhen: tContent("variants.items.confirmEmail.use"),
             code: `<Dialog>
   <DialogTrigger asChild>
     <Button>Enviar link</Button>
@@ -750,6 +744,14 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               </Dialog>
             ),
           },
+        ]}
+      />
+
+      <DocsCompositions
+        title={tContent("variants.compositionsTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="dialog"
+        items={[
           {
             name: tContent("variants.compositions.mediaPreview.name"),
             description: tContent("variants.compositions.mediaPreview.description"),

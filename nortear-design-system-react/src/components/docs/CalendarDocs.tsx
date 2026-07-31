@@ -15,7 +15,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -55,7 +54,6 @@ const getNavGroups = (t: (key: string) => string) => [
     sections: [
       { id: "importacao",   label: t("nav.import") },
       { id: "variantes",    label: t("nav.variants") },
-      { id: "composicoes",  label: t("nav.compositions") },
       { id: "estados",      label: t("nav.states") },
       { id: "propriedades", label: t("nav.props") },
       { id: "tokens",       label: t("nav.tokens") },
@@ -459,8 +457,11 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       />
 
       {/* ── Variantes (Modos e Layouts) ───────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.visualTitle")}
+        useWhenLabel={tNav("common.useWhen")}
+        componentSlug="calendar"
         items={[
           {
             name: "single",
@@ -498,19 +499,10 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             code: codeNumberOfMonths,
             preview: previewNumberOfMonths,
           },
-        ]}
-      />
-
-      {/* ── Composições ───────────────────────────────────────────── */}
-      <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
-        useWhenLabel={tNav("common.useWhen")}
-        componentSlug="calendar"
-        items={[
           {
-            name: tContent("variants.compositions.inlineBordered.name"),
-            description: tContent("variants.compositions.inlineBordered.description"),
-            useWhen: tContent("variants.compositions.inlineBordered.use"),
+            name: tContent("variants.items.inlineBordered.name"),
+            description: tContent("variants.items.inlineBordered.description"),
+            useWhen: tContent("variants.items.inlineBordered.use"),
             code: `<Calendar
   mode="single"
   selected={date}
@@ -529,9 +521,9 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             ),
           },
           {
-            name: tContent("variants.compositions.disabledPast.name"),
-            description: tContent("variants.compositions.disabledPast.description"),
-            useWhen: tContent("variants.compositions.disabledPast.use"),
+            name: tContent("variants.items.disabledPast.name"),
+            description: tContent("variants.items.disabledPast.description"),
+            useWhen: tContent("variants.items.disabledPast.use"),
             code: `<Calendar
   mode="single"
   selected={date}

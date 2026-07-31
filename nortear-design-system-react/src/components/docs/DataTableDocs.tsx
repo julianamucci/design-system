@@ -15,7 +15,6 @@ import { DocsAnatomy }       from "@/components/docs/shared/sections/DocsAnatomy
 import { DocsWhenToUse }     from "@/components/docs/shared/sections/DocsWhenToUse";
 import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont";
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
-import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsCompositions }  from "@/components/docs/shared/sections/DocsCompositions";
 import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
@@ -527,9 +526,11 @@ declare module "@tanstack/react-table" {
       />
 
       {/* ── Recursos (Variants) ───────────────────────────────────── */}
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={tContent("variants.title")}
         note={stripHtml(tContent("variants.note"))}
+        useWhenLabel={tNav("common.useWhen")}
         componentSlug="data-table"
         items={[
           {
@@ -610,6 +611,36 @@ declare module "@tanstack/react-table" {
               />
             ),
           },
+          {
+            name: tContent("variants.items.editableSheet.name"),
+            description: tContent("variants.items.editableSheet.description"),
+            useWhen: tContent("variants.items.editableSheet.use"),
+            code: codeEdit,
+            preview: PreviewBasic,
+          },
+          {
+            name: tContent("variants.items.virtualizedLog.name"),
+            description: tContent("variants.items.virtualizedLog.description"),
+            useWhen: tContent("variants.items.virtualizedLog.use"),
+            code: codeVirtual,
+            preview: (
+              <DataTable<Invoice>
+                columns={demoColumns}
+                data={sampleInvoices}
+                virtualized
+                maxHeight="180px"
+                enableGlobalFilter={false}
+                enableColumnVisibility={false}
+              />
+            ),
+          },
+          {
+            name: tContent("variants.items.pinnedKey.name"),
+            description: tContent("variants.items.pinnedKey.description"),
+            useWhen: tContent("variants.items.pinnedKey.use"),
+            code: codePin,
+            preview: PreviewBasic,
+          },
         ]}
       />
 
@@ -634,36 +665,6 @@ declare module "@tanstack/react-table" {
                 enablePagination={false}
               />
             ),
-          },
-          {
-            name: tContent("variants.compositions.editableSheet.name"),
-            description: tContent("variants.compositions.editableSheet.description"),
-            useWhen: tContent("variants.compositions.editableSheet.use"),
-            code: codeEdit,
-            preview: PreviewBasic,
-          },
-          {
-            name: tContent("variants.compositions.virtualizedLog.name"),
-            description: tContent("variants.compositions.virtualizedLog.description"),
-            useWhen: tContent("variants.compositions.virtualizedLog.use"),
-            code: codeVirtual,
-            preview: (
-              <DataTable<Invoice>
-                columns={demoColumns}
-                data={sampleInvoices}
-                virtualized
-                maxHeight="180px"
-                enableGlobalFilter={false}
-                enableColumnVisibility={false}
-              />
-            ),
-          },
-          {
-            name: tContent("variants.compositions.pinnedKey.name"),
-            description: tContent("variants.compositions.pinnedKey.description"),
-            useWhen: tContent("variants.compositions.pinnedKey.use"),
-            code: codePin,
-            preview: PreviewBasic,
           },
         ]}
       />
