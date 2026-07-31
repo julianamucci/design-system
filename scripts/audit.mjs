@@ -931,6 +931,72 @@ function auditTaxonomy(slug) {
   return violations;
 }
 
+/**
+ * Chave de i18n que não resolve.
+ *
+ * `t()` devolve a PRÓPRIA CHAVE quando não encontra, então a página renderiza
+ * "analytics.table.event" como se fosse texto — nos 3 idiomas, sem erro de
+ * build, sem erro de tipo, sem quebrar teste. E o idioma `|| 'Evento'` que
+ * costuma acompanhar é dead code: chave é string truthy, o fallback nunca roda.
+ *
+ * Só checa chaves LITERAIS. Template (`testes.item${i}.action`) fica de fora.
+ */
+function auditI18nKeys(slug) {
+  const violations = [];
+
+  const flatten = (obj, prefix = '', out = new Set()) => {
+    for (const [k, v] of Object.entries(obj ?? {})) {
+      const key = prefix ? `${prefix}.${k}` : k;
+      out.add(key);
+      if (v && typeof v === 'object') flatten(v, key, out);
+    }
+    return out;
+  };
+
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(contentFile)) return violations;
+  const contentKeys = flatten(JSON.parse(readFile(contentFile) || '{}')['pt-BR']);
+
+  for (const stack of STACKS) {
+    const uiFile = join(ROOT, `nortear-design-system-${stack}`, 'src', 'i18n', 'ui.json');
+    const uiKeys = existsSync(uiFile)
+      ? flatten(JSON.parse(readFile(uiFile) || '{}')['pt-BR'])
+      : new Set();
+
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+
+      // tNav/tUi leem ui.json; t/tContent/tStore leem o conteúdo do componente.
+      const alvos = [
+        [/\bt(?:Nav|Ui)\(\s*['"]([a-zA-Z0-9_.]+)['"]/g, uiKeys, 'ui.json'],
+        [/\$?t(?:Content|Store)?\(\s*['"]([a-zA-Z0-9_.]+)['"]/g, contentKeys, 'translations.json'],
+      ];
+
+      for (const [rx, conhecidas, fonte] of alvos) {
+        const faltando = new Set();
+        for (const m of content.matchAll(rx)) {
+          const key = m[1];
+          if (!key.includes('.') || conhecidas.has(key)) continue;
+          // tNav e t coexistem no mesmo arquivo; só acusa se não estiver em nenhum.
+          if (uiKeys.has(key) || contentKeys.has(key)) continue;
+          faltando.add(key);
+        }
+        for (const key of faltando) {
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: relative(ROOT, file), rule: 'unresolved_i18n_key',
+            message: `"${key}" não existe em ${fonte} — a página renderiza a própria chave como texto`,
+          });
+        }
+      }
+    }
+  }
+
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
   // A seção é obrigatória se, e só se, existir a chave correspondente no
@@ -1155,6 +1221,7 @@ function runAudit(slug, category) {
     ...auditAnalytics(slug),
     ...auditQuality(slug),
     ...auditTaxonomy(slug),
+    ...auditI18nKeys(slug),
   ];
 }
 

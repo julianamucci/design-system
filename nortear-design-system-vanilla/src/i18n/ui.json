@@ -41,7 +41,19 @@
       "howToVerify": "Como verificar",
       "useWhen": "Quando usar:",
       "copy": "Copiar código",
-      "copied": "Copiado!"
+      "copied": "Copiado!",
+      "stateName": "Estado",
+      "stateTrigger": "Quando ocorre",
+      "stateBehavior": "Comportamento",
+      "event": "Evento",
+      "eventTrigger": "Quando dispara",
+      "payload": "Payload",
+      "keyboard": "Teclado",
+      "keyboardNav": "Navegação por teclado",
+      "yes": "Sim",
+      "no": "Não",
+      "token": "Token",
+      "cssClass": "Classe"
     }
   },
   "en": {
@@ -86,7 +98,19 @@
       "howToVerify": "How to verify",
       "useWhen": "When to use:",
       "copy": "Copy code",
-      "copied": "Copied!"
+      "copied": "Copied!",
+      "stateName": "State",
+      "stateTrigger": "When it happens",
+      "stateBehavior": "Behavior",
+      "event": "Event",
+      "eventTrigger": "When it fires",
+      "payload": "Payload",
+      "keyboard": "Keyboard",
+      "keyboardNav": "Keyboard navigation",
+      "yes": "Yes",
+      "no": "No",
+      "token": "Token",
+      "cssClass": "Class"
     }
   },
   "es": {
@@ -131,7 +155,19 @@
       "howToVerify": "Cómo verificar",
       "useWhen": "Cuándo usar:",
       "copy": "Copiar código",
-      "copied": "¡Copiado!"
+      "copied": "¡Copiado!",
+      "stateName": "Estado",
+      "stateTrigger": "Cuándo ocurre",
+      "stateBehavior": "Comportamiento",
+      "event": "Evento",
+      "eventTrigger": "Cuándo se dispara",
+      "payload": "Payload",
+      "keyboard": "Teclado",
+      "keyboardNav": "Navegación por teclado",
+      "yes": "Sí",
+      "no": "No",
+      "token": "Token",
+      "cssClass": "Clase"
     }
   }
 }
