@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const waitOpen = async () => {
-  const body = within(document.body);
   await waitFor(
     async () => {
       const tip = await waitForPortal('tooltip');
@@ -43,7 +42,6 @@ const baseArgs = {
 };
 
 export const Default: Story = {
-  name: 'Default',
   args: {
     ...baseArgs,
     variant: 'default',

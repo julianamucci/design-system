@@ -31,7 +31,6 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
 }
 
 export const Vazio: Story = {
-  name: 'Vazio',
   args: {
     maxLength: 6,
     defaultValue: '',
@@ -70,7 +69,6 @@ export const Completo: Story = {
 };
 
 export const Desabilitado: Story = {
-  name: 'Desabilitado',
   args: {
     maxLength: 6,
     disabled: true,

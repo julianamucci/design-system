@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
   import {
     InputOTP,
     InputOTPGroup,
@@ -46,17 +45,12 @@
     variant = 'default',
   }: Props = $props();
 
-  let value = $state(untrack(() => defaultValue));
+  let value = $derived(defaultValue);
 
   // Re-create the component when key inputs change so defaultValue/maxLength/pattern can update
   const renderKey = $derived(
     `${maxLength}-${disabled}-${autoFocus}-${defaultValue}-${hasError}-${pattern ?? 'none'}-${inputmode}-${variant}`
   );
-
-  $effect(() => {
-    // sync value when defaultValue changes
-    value = defaultValue;
-  });
 
   const showSeparator = $derived(variant === 'withSeparator');
   const showLabel = $derived(

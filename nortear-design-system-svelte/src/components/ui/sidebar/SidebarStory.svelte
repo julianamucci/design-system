@@ -49,7 +49,7 @@
             <SidebarGroupLabel>Navegação</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {#each navItems as item}
+                {#each navItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}

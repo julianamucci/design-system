@@ -31,7 +31,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ComInput: Story = {
-  name: 'Com Input',
   render: () => ({
     Component: LabelWithInputStory,
     props: {},
@@ -55,7 +54,6 @@ export const ComInput: Story = {
 };
 
 export const ComCheckbox: Story = {
-  name: 'Com Checkbox',
   render: () => ({
     Component: LabelWithCheckboxStory,
     props: {},

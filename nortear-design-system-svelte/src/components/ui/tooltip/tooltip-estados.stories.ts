@@ -37,7 +37,6 @@ const waitForClose = async () => {
 };
 
 export const Fechado: Story = {
-  name: 'Fechado',
   args: {
     defaultOpen: false,
     delayDuration: 200,
@@ -67,7 +66,6 @@ export const Aberto: Story = {
     contentText: 'Salvar (Ctrl+S)',
   },
   play: async () => {
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip', { timeout: 2000 });
     await expect(tip).toBeVisible();
   },
@@ -85,7 +83,6 @@ export const FocoTeclado: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /salvar/i });
     trigger.focus();
     const tip = await waitForPortal('tooltip', { timeout: 1500 });
@@ -104,7 +101,6 @@ export const Controlado: Story = {
     contentText: 'Salvar (Ctrl+S)',
   },
   play: async () => {
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip', { timeout: 2000 });
     await expect(tip).toBeVisible();
 

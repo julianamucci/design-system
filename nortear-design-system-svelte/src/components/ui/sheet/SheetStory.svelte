@@ -79,7 +79,7 @@
             </form>
           {:else if variant === 'withScrollContent'}
             <div class="max-h-[60vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 14 }) as _, i}
+              {#each Array.from({ length: 14 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
             </div>
@@ -138,7 +138,7 @@
             </form>
           {:else if variant === 'withScrollContent'}
             <div class="max-h-[60vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 14 }) as _, i}
+              {#each Array.from({ length: 14 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
             </div>

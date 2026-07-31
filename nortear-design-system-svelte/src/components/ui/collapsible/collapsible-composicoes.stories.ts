@@ -26,7 +26,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ComButton: Story = {
-  name: 'Com Button',
   render: () => ({
     Component: CollapsibleComButtonStory,
     props: {},

@@ -83,7 +83,6 @@ export const File: Story = {
     props: { type: 'file', 'aria-label': 'Selecionar arquivo' },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Input de arquivo renderizado com data-slot', async () => {
       const input = canvasElement.querySelector('[data-slot="input"]') as HTMLInputElement;
       await expect(input).toBeInTheDocument();

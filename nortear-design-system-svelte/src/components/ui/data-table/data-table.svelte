@@ -482,7 +482,7 @@
                         class="nds-data-table-filter-select"
                       >
                         <option value="">Todos</option>
-                        {#each filterMeta.options ?? [] as opt}
+                        {#each filterMeta.options ?? [] as opt (opt)}
                           <option value={opt}>{opt}</option>
                         {/each}
                       </select>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
 const meta = {
@@ -31,7 +31,6 @@ export const WithDescription: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Container do story renderizado', async () => {
       await expect(canvasElement).toBeInTheDocument();
     });
@@ -49,7 +48,6 @@ export const WithAction: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Container do story renderizado', async () => {
       await expect(canvasElement).toBeInTheDocument();
     });
@@ -64,7 +62,6 @@ export const WithPromise: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Container do story renderizado', async () => {
       await expect(canvasElement).toBeInTheDocument();
     });
@@ -81,7 +78,6 @@ export const Persistent: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     await step('Container do story renderizado', async () => {
       await expect(canvasElement).toBeInTheDocument();
     });

@@ -55,7 +55,6 @@ export const Aberto: Story = {
     docs: { description: { story: 'Drawer aberto via defaultOpen=true. Captura visual no Chromatic.' } },
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
@@ -116,7 +115,6 @@ export const NaoDismissible: Story = {
     docs: { description: { story: 'dismissible=false — ESC, swipe e clique no overlay não fecham. Apenas o botão de ação dispensa.' } },
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
   },

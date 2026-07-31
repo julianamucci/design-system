@@ -27,7 +27,6 @@ type Story = StoryObj<typeof meta>;
 // ── Com Shortcut ─────────────────────────────────────────────────────────────
 
 export const ComShortcut: Story = {
-  name: 'Com Shortcut',
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'shortcut' },
@@ -49,13 +48,11 @@ export const ComShortcut: Story = {
 // ── Com Checkbox ─────────────────────────────────────────────────────────────
 
 export const ComCheckbox: Story = {
-  name: 'Com Checkbox',
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'checkbox' },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Trigger está visível', async () => {
       const trigger = canvasElement.querySelector('[data-slot="context-menu-trigger"]');
@@ -67,13 +64,11 @@ export const ComCheckbox: Story = {
 // ── Com Radio Group ───────────────────────────────────────────────────────────
 
 export const ComRadioGroup: Story = {
-  name: 'Com Radio Group',
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'radio' },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
 
     await step('Trigger está visível', async () => {
       const trigger = canvasElement.querySelector('[data-slot="context-menu-trigger"]');
@@ -85,7 +80,6 @@ export const ComRadioGroup: Story = {
 // ── Com Submenu ───────────────────────────────────────────────────────────────
 
 export const ComSubmenu: Story = {
-  name: 'Com Submenu',
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'submenu' },

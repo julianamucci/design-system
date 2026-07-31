@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 async function expectMenuOpen() {
-  const body = within(document.body);
   const menu = await waitForPortal('menu');
   await expect(menu).toBeVisible();
   return menu;
@@ -44,7 +43,6 @@ export const ComShortcuts: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const shortcuts = menu.querySelectorAll('[data-slot="menubar-shortcut"]');
     await expect(shortcuts.length).toBeGreaterThanOrEqual(2);
@@ -85,7 +83,6 @@ export const ComCheckboxItems: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const checkboxes = within(menu).getAllByRole('menuitemcheckbox');
     await expect(checkboxes.length).toBeGreaterThanOrEqual(2);
@@ -106,7 +103,6 @@ export const ComRadioGroup: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const radios = within(menu).getAllByRole('menuitemradio');
     await expect(radios.length).toBeGreaterThanOrEqual(2);

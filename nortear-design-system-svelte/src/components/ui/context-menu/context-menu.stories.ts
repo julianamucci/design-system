@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
-import { Root as ContextMenu } from './index';
 import ContextMenuStory from './ContextMenuStory.svelte';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 const meta = {
   title: 'UI/ContextMenu',
-  component: ContextMenu,
+  component: ContextMenuStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
@@ -42,9 +41,9 @@ export const Playground: Story = {
   render: (args) => ({
     Component: ContextMenuStory,
     props: {
-      triggerLabel: (args as any).triggerLabel ?? 'Clique com o botão direito aqui',
-      showDestructive: (args as any).showDestructive ?? true,
-      showShortcuts: (args as any).showShortcuts ?? true,
+      triggerLabel: args.triggerLabel ?? 'Clique com o botão direito aqui',
+      showDestructive: args.showDestructive ?? true,
+      showShortcuts: args.showShortcuts ?? true,
     },
   }),
   play: async ({ canvasElement, step }) => {

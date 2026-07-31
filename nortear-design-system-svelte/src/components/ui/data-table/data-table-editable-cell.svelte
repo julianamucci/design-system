@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
   import { Input } from '@/components/ui/input';
 
   const {
@@ -13,12 +12,8 @@
     onCommit: (value: unknown) => void;
   } = $props();
 
-  let value = $state<string>(untrack(() => (initial == null ? '' : String(initial))));
+  let value = $derived(initial == null ? '' : String(initial));
   let editing = $state(false);
-
-  $effect(() => {
-    value = initial == null ? '' : String(initial);
-  });
 
   function commit() {
     const isNumber = typeof initial === 'number';

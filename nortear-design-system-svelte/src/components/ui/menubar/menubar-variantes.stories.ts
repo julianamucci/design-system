@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 async function expectMenuOpen() {
-  const body = within(document.body);
   const menu = await waitForPortal('menu');
   await expect(menu).toBeVisible();
   return menu;

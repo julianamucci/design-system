@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Fechado: Story = {
-  name: 'Fechado',
   args: {
     defaultOpen: false,
     openDelay: 700,
@@ -51,8 +50,7 @@ export const Aberto: Story = {
     variant: 'userProfile',
     triggerLabel: '@joana',
   },
-  play: async ({ canvasElement }) => {
-    const body = within(document.body);
+  play: async () => {
     const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('data-state', 'open');
@@ -68,7 +66,7 @@ export const Controlado: Story = {
     variant: 'userProfile',
     triggerLabel: '@joana',
   },
-  play: async ({ canvasElement }) => {
+  play: async () => {
     const body = within(document.body);
     const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();

@@ -68,6 +68,7 @@
 </script>
 
 {#if href}
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- regra do router SvelteKit; projeto roda Storybook sem router e o href externo é validado por isSafeUrl (guideline 09) -->
 	<a
 		bind:this={ref}
 		data-slot="button"
@@ -80,6 +81,7 @@
 	>
 		{@render children?.()}
 	</a>
+	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 {:else}
 	<button
 		bind:this={ref}

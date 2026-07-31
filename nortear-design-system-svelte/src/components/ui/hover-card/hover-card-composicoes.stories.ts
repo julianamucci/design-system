@@ -30,7 +30,6 @@ const baseArgs = {
 } as const;
 
 const waitOpen = async () => {
-  const body = within(document.body);
   await waitFor(
     async () => {
       const dialog = await waitForPortal('dialog');

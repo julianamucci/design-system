@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { within, expect, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 
 const meta = {
@@ -39,7 +39,6 @@ export const Default: Story = {
     cancelLabel: 'Cancelar',
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');

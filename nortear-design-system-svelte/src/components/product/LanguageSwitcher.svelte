@@ -19,7 +19,7 @@
 </script>
 
 <div class="nds-lang-switcher" role="group" aria-label="Idioma">
-  {#each locales as lang}
+  {#each locales as lang (lang.value)}
     <button
       type="button"
       class="nds-lang-switcher-button"

@@ -61,7 +61,6 @@ export const EstadoCarregando: Story = {
 };
 
 export const ItemDesabilitado: Story = {
-  name: 'Item Desabilitado',
   render: () => ({
     Component: CommandEstadoDisabledStory,
     props: {},

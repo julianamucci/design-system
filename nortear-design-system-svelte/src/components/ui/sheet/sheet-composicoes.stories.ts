@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 
 const meta = {
@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 async function expectOpen() {
-  const body = within(document.body);
   const dialog = await waitForPortal('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute('aria-modal', 'true');

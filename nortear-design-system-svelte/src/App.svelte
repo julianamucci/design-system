@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, type Component } from 'svelte';
   import Moon from '@lucide/svelte/icons/moon';
   import Sun from '@lucide/svelte/icons/sun';
   import Home from '@lucide/svelte/icons/house';
@@ -17,7 +17,7 @@
 
   // ─── Lazy-loaded docs ───────────────────────────────────────────────────────
 
-  const lazyDocs: Record<string, () => Promise<{ default: any }>> = {
+  const lazyDocs: Record<string, () => Promise<{ default: Component }>> = {
     'alert':  () => import('./components/docs/AlertDocs.svelte'),
     'icons':  () => import('./components/docs/IconsDocs.svelte'),
   };
@@ -30,7 +30,7 @@
     { group: 'Fundamentos', icon: Database,     id: 'icons', label: 'Icons'  },
   ];
 
-  let CurrentDoc = $state<{ default: any } | null>(null);
+  let CurrentDoc = $state<{ default: Component } | null>(null);
   let loadingDoc = $state(false);
 
   async function loadDoc(id: string | null) {
@@ -108,12 +108,12 @@
 
     <!-- Nav -->
     <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
-      {#each Object.entries(groups) as [groupName, items]}
+      {#each Object.entries(groups) as [groupName, items] (groupName)}
         <div>
           <p class="mb-1 px-2 text-xs font-semibold nds-uppercase nds-tracking-wide nds-text-muted-foreground">
             {groupName}
           </p>
-          {#each items as item}
+          {#each items as item (item.id)}
             <button
               onclick={() => navigate(item.id)}
               class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm nds-transition-colors {activeComponent === item.id ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground' : 'text-sidebar-foreground nds-hover-bg-sidebar-accent-50'}"

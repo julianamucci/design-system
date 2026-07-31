@@ -121,10 +121,8 @@
       {:else if variant === 'withIcon'}
         {#each options as opt (opt.value)}
           <SelectItem value={opt.value} label={opt.label}>
-            {#snippet children()}
-              <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
-              <span>{opt.label}</span>
-            {/snippet}
+            <MapPinIcon class="nds-size-4 nds-text-muted-foreground" />
+            <span>{opt.label}</span>
           </SelectItem>
         {/each}
       {:else}

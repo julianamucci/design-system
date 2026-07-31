@@ -49,7 +49,7 @@
   </Avatar>
 {:else if variant === 'group'}
   <div class="nds-cluster -space-x-2" role="group" aria-label="Participantes">
-    {#each groupImages as item}
+    {#each groupImages as item (item.initials)}
       <Avatar class={`ring-2 ring-background ${sizeClass}`}>
         {#if item.src}
           <AvatarImage src={item.src} alt={item.alt} />

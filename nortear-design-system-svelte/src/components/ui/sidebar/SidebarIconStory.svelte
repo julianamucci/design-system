@@ -44,7 +44,7 @@
             <SidebarGroupLabel class="group-data-[collapsible=icon]:hidden">Navegação</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {#each navItems as item}
+                {#each navItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}

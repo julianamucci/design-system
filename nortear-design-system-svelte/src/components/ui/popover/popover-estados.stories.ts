@@ -59,7 +59,6 @@ export const Open: Story = {
     cancelLabel: 'Cancelar',
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('data-state', 'open');
@@ -85,7 +84,6 @@ export const SideTop: Story = {
     description: 'Ajuste a aparência do conteúdo da página.',
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog', { timeout: 2000 });
     await expect(dialog).toBeVisible();
   },

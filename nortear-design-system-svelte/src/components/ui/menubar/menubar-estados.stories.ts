@@ -57,7 +57,6 @@ export const Aberto: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
@@ -77,7 +76,6 @@ export const ItemDesabilitado: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const disabledItem = menu.querySelector('[data-disabled]');
     await expect(disabledItem).not.toBeNull();
@@ -98,7 +96,6 @@ export const CheckboxChecked: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const checkboxes = within(menu).getAllByRole('menuitemcheckbox');
     const checked = checkboxes.find((c) => c.getAttribute('aria-checked') === 'true');

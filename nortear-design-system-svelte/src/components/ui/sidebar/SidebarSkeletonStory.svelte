@@ -29,7 +29,7 @@
             <SidebarGroupLabel>Carregando...</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {#each [1, 2, 3, 4, 5] as i}
+                {#each [1, 2, 3, 4, 5] as i (i)}
                   <SidebarMenuItem>
                     <SidebarMenuSkeleton showIcon={true} />
                   </SidebarMenuItem>

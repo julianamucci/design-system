@@ -23,7 +23,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ComLabel: Story = {
-  name: 'Com Label',
   args: {
     maxLength: 6,
     label: 'Código de verificação',
@@ -36,7 +35,6 @@ export const ComLabel: Story = {
 };
 
 export const ComHelpText: Story = {
-  name: 'Com Help Text',
   args: {
     maxLength: 6,
     label: 'Código de verificação',
@@ -50,7 +48,6 @@ export const ComHelpText: Story = {
 };
 
 export const ComErrorMessage: Story = {
-  name: 'Com Error Message',
   args: {
     maxLength: 6,
     hasError: true,
@@ -70,7 +67,6 @@ export const ComErrorMessage: Story = {
 };
 
 export const ComResendButton: Story = {
-  name: 'Com Resend Button',
   args: {
     maxLength: 6,
     label: 'Código de verificação',

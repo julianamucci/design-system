@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
 const meta = {
@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const waitOpen = async () => {
-  const body = within(document.body);
   const dialog = await waitForPortal('dialog', { timeout: 2000 });
   await expect(dialog).toBeVisible();
 };

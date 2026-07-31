@@ -71,7 +71,7 @@
                   {#if componentsOpen}
                     <div transition:slide={{ duration: 150 }}>
                       <SidebarMenuSub>
-                        {#each subItems as sub}
+                        {#each subItems as sub (sub.label)}
                           <SidebarMenuSubItem>
                             <SidebarMenuSubButton
                               isActive={sub.isActive}

@@ -57,7 +57,6 @@ export const Open: Story = {
     docs: { description: { story: 'Sheet aberto via bind:open. Captura visual no Chromatic.' } },
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');

@@ -43,7 +43,7 @@
         onchange={(e) => table.setPageSize(Number((e.currentTarget as HTMLSelectElement).value))}
         class="nds-data-table-page-size-select"
       >
-        {#each pageSizeOptions as opt}
+        {#each pageSizeOptions as opt (opt)}
           <option value={opt}>{opt}</option>
         {/each}
       </select>

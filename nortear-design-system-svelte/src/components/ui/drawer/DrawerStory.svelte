@@ -85,7 +85,7 @@
             </div>
           {:else if variant === 'withScroll'}
             <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 12 }) as _, i}
+              {#each Array.from({ length: 12 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
               {/each}
             </div>
@@ -139,7 +139,7 @@
             </div>
           {:else if variant === 'withScroll'}
             <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 12 }) as _, i}
+              {#each Array.from({ length: 12 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
               {/each}
             </div>

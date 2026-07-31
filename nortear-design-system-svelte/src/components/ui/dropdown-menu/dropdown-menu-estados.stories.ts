@@ -73,7 +73,6 @@ export const Aberto: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     await expect(menu).toBeVisible();
   },
@@ -94,7 +93,6 @@ export const Controlado: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
 
     await step('Click no trigger abre menu controlado', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
@@ -125,7 +123,6 @@ export const ItemDesabilitado: Story = {
     },
   },
   play: async () => {
-    const body = within(document.body);
     const menu = await waitForPortal('menu');
     const disabledItem = menu.querySelector('[data-disabled]');
     await expect(disabledItem).not.toBeNull();

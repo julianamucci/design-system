@@ -27,7 +27,6 @@ type Story = StoryObj<typeof meta>;
 // ── Item Disabled ─────────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  name: 'Item Disabled',
   render: () => ({
     Component: ContextMenuEstadoStory,
     props: { estado: 'disabled' },
@@ -50,7 +49,6 @@ export const ItemDisabled: Story = {
 // ── Item Inset ────────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
-  name: 'Item Inset',
   render: () => ({
     Component: ContextMenuEstadoStory,
     props: { estado: 'inset' },

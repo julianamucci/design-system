@@ -50,7 +50,7 @@
             <SidebarGroupLabel>Principal</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {#each mainNavItems as item}
+                {#each mainNavItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
@@ -73,7 +73,7 @@
             <SidebarGroupLabel>Conta</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {#each secondaryNavItems as item}
+                {#each secondaryNavItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}

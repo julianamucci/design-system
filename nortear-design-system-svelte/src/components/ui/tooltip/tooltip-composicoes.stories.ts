@@ -31,7 +31,6 @@ const baseArgs = {
 };
 
 const waitOpen = async () => {
-  const body = within(document.body);
   await waitFor(
     async () => {
       const tip = await waitForPortal('tooltip');
@@ -70,7 +69,6 @@ export const SideTop: Story = {
   },
   play: async () => {
     await waitOpen();
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'top');
   },
@@ -88,7 +86,6 @@ export const SideBottom: Story = {
   },
   play: async () => {
     await waitOpen();
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'bottom');
   },
@@ -106,7 +103,6 @@ export const SideLeft: Story = {
   },
   play: async () => {
     await waitOpen();
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'left');
   },
@@ -124,7 +120,6 @@ export const SideRight: Story = {
   },
   play: async () => {
     await waitOpen();
-    const body = within(document.body);
     const tip = await waitForPortal('tooltip');
     await expect(tip).toHaveAttribute('data-side', 'right');
   },

@@ -7,6 +7,7 @@
     CarouselNext,
   } from './index';
   import Autoplay from 'embla-carousel-autoplay';
+  import type { CarouselAPI } from './context.js';
 
   type Variant = 'single' | 'multi' | 'autoplay' | 'vertical' | 'gallery' | 'withDots';
   type Orientation = 'horizontal' | 'vertical';
@@ -48,11 +49,11 @@
   }: Props = $props();
 
   // API exposed via setApi — used for dots
-  let api = $state<any>(undefined);
+  let api = $state<CarouselAPI | undefined>(undefined);
   let selectedIndex = $state(0);
   let scrollSnaps = $state<number[]>([]);
 
-  function setApi(a: any) {
+  function setApi(a: CarouselAPI | undefined) {
     api = a;
     if (!a) return;
     scrollSnaps = a.scrollSnapList();
@@ -118,7 +119,7 @@
     class="" style="position: relative"
   >
     <CarouselContent class={variant === 'vertical' ? 'h-[260px]' : ''}>
-      {#each slides as slide, i}
+      {#each slides as slide, i (i)}
         <CarouselItem class={effectiveBasis}>
           {#if variant === 'gallery' && slide.src}
             <div class="nds-p-1">
@@ -149,7 +150,7 @@
 
   {#if variant === 'withDots'}
     <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação do carrossel">
-      {#each scrollSnaps as _, i}
+      {#each scrollSnaps as _, i (i)}
         <button
           type="button"
           role="tab"

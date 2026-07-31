@@ -57,7 +57,6 @@ export const Open: Story = {
     cancelLabel: 'Cancelar',
   },
   play: async () => {
-    const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');

@@ -12,7 +12,7 @@
 </script>
 
 <div class="nds-grid nds-w-full max-w-4xl nds-sm-grid-3" data-spacing="md" data-cols="2">
-  {#each items as item}
+  {#each items as item (item.src)}
     <AspectRatio ratio={4 / 3}>
       <img src={item.src} alt={item.alt} loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover" />
     </AspectRatio>

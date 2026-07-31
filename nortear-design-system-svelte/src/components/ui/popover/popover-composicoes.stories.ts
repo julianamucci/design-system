@@ -24,7 +24,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const waitOpen = async () => {
-  const body = within(document.body);
   const dialog = await waitForPortal('dialog', { timeout: 2000 });
   await expect(dialog).toBeVisible();
 };

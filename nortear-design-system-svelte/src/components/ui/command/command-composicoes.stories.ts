@@ -28,7 +28,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ComGrupos: Story = {
-  name: 'Com Grupos',
   render: () => ({
     Component: CommandComposicaoGruposStory,
     props: {},
@@ -52,7 +51,6 @@ export const ComGrupos: Story = {
 };
 
 export const ComShortcuts: Story = {
-  name: 'Com Shortcuts',
   render: () => ({
     Component: CommandComposicaoShortcutsStory,
     props: {},
@@ -84,7 +82,6 @@ export const ComLinkItem: Story = {
 };
 
 export const CommandPalette: Story = {
-  name: 'Command Palette',
   render: () => ({
     Component: CommandComposicaoPaletteStory,
     props: {},
