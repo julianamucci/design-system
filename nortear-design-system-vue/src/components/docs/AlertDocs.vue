@@ -128,7 +128,7 @@ import { Info } from "lucide-vue-next";`;
 
 const codeDefault = `<Alert>
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h3">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -136,7 +136,7 @@ const codeDefault = `<Alert>
 
 const codeDestructive = `<Alert variant="destructive">
   <AlertCircle aria-hidden="true" />
-  <AlertTitle>Erro ao salvar</AlertTitle>
+  <AlertTitle as="h3">Erro ao salvar</AlertTitle>
   <AlertDescription>
     Não foi possível salvar. Verifique sua conexão e tente novamente.
   </AlertDescription>
@@ -144,7 +144,7 @@ const codeDestructive = `<Alert variant="destructive">
 
 const codeSuccess = `<Alert variant="success">
   <CheckCircle2 aria-hidden="true" />
-  <AlertTitle>Perfil atualizado</AlertTitle>
+  <AlertTitle as="h3">Perfil atualizado</AlertTitle>
   <AlertDescription>
     Suas informações foram salvas com sucesso.
   </AlertDescription>
@@ -152,7 +152,7 @@ const codeSuccess = `<Alert variant="success">
 
 const codeWarning = `<Alert variant="warning">
   <TriangleAlert aria-hidden="true" />
-  <AlertTitle>Assinatura expirando</AlertTitle>
+  <AlertTitle as="h3">Assinatura expirando</AlertTitle>
   <AlertDescription>
     Sua assinatura expira em 3 dias. Renove para evitar interrupções.
   </AlertDescription>
@@ -160,7 +160,7 @@ const codeWarning = `<Alert variant="warning">
 
 const codeInfo = `<Alert variant="info">
   <Info aria-hidden="true" />
-  <AlertTitle>Dica</AlertTitle>
+  <AlertTitle as="h3">Dica</AlertTitle>
   <AlertDescription>
     Você pode personalizar os atalhos de teclado nas configurações.
   </AlertDescription>
@@ -175,7 +175,7 @@ const codeWithoutTitle = `<Alert>
 
 const codeDismissible = `<Alert dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
   <Info aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
+  <AlertTitle as="h3">Atenção</AlertTitle>
   <AlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </AlertDescription>
@@ -191,6 +191,12 @@ interface AlertProps {
 
 // Emits
 // @dismiss — disparado uma única vez ao acionar o botão de fechar
+
+// AlertTitle
+interface AlertTitleProps {
+  as?: string;    // nível do heading (h1–h6) — padrão: 'h5'
+  class?: string;
+}
 
 // AlertTitle / AlertDescription aceitam atributos HTML nativos`;
 
@@ -228,13 +234,13 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withIcon.name'),
     description: tContent('variants.compositions.withIcon.description'),
     useWhen: tContent('variants.compositions.withIcon.use'),
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Informação</AlertTitle>\n  <AlertDescription>Ícone SVG posicionado automaticamente.</AlertDescription>\n</Alert>`,
   },
   {
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
   },
 ]);
 
@@ -262,6 +268,11 @@ const alertPropItems = computed(() => [
 
 const slotPropItems = computed(() => [
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
+]);
+
+const alertTitlePropItems = computed(() => [
+  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: stripHtml(tContent('props.table.titleAs')) },
+  ...slotPropItems.value,
 ]);
 
 const tokenRows = computed(() => [
@@ -361,22 +372,30 @@ const visualTestItems = computed(() => [
       >
         <Alert>
           <Info aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.infoTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.errorTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
         <Alert variant="success">
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.successTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
         <Alert variant="warning">
           <TriangleAlert aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.warningTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
         </Alert>
       </div>
@@ -432,7 +451,9 @@ const visualTestItems = computed(() => [
       <template #do-preview-0>
         <Alert>
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">
+            Erro ao salvar
+          </AlertTitle>
           <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
         </Alert>
       </template>
@@ -442,13 +463,17 @@ const visualTestItems = computed(() => [
       <template #do-preview-1>
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">
+            Erro ao salvar
+          </AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
       </template>
       <template #dont-preview-1>
         <Alert variant="destructive">
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">
+            Erro ao salvar
+          </AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
       </template>
@@ -474,7 +499,9 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.infoTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -484,7 +511,9 @@ const visualTestItems = computed(() => [
           class="nds-w-full"
         >
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.errorTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.errorTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -494,7 +523,9 @@ const visualTestItems = computed(() => [
           class="nds-w-full"
         >
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.successTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.successTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -504,7 +535,9 @@ const visualTestItems = computed(() => [
           class="nds-w-full"
         >
           <TriangleAlert aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.warningTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.warningTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -514,7 +547,9 @@ const visualTestItems = computed(() => [
           class="nds-w-full"
         >
           <Info aria-hidden="true" />
-          <AlertTitle>Dica</AlertTitle>
+          <AlertTitle as="h3">
+            Dica
+          </AlertTitle>
           <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
         </Alert>
       </template>
@@ -531,7 +566,9 @@ const visualTestItems = computed(() => [
           @dismiss="onDemoDismiss"
         >
           <Info aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.infoTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
@@ -547,14 +584,18 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>{{ tContent('demonstration.labels.infoTitle') }}</AlertTitle>
+          <AlertTitle as="h3">
+            {{ tContent('demonstration.labels.infoTitle') }}
+          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
       </template>
       <template #variant-preview-1>
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+          <AlertTitle as="h3">
+            Sessão expira em 5 minutos
+          </AlertTitle>
           <AlertDescription
             class="nds-cluster"
             data-align="center"
@@ -585,7 +626,7 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.alertTitle'), cols: propCols, items: alertPropItems },
-        { title: tContent('props.alertTitleTitle'), cols: propCols, items: slotPropItems },
+        { title: tContent('props.alertTitleTitle'), cols: propCols, items: alertTitlePropItems },
         { title: tContent('props.alertDescTitle'), cols: propCols, items: slotPropItems },
       ]"
       :interface-code="interfaceCode"
