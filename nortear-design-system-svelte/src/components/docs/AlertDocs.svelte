@@ -166,6 +166,13 @@ interface AlertProps {
   dismissLabel?: string;       // aria-label do botão ('Fechar alerta')
 }
 
+// AlertTitle
+interface AlertTitleProps {
+  as?: string;                 // nível do heading (h1..h6), default 'h5'
+  class?: string;
+  children?: Snippet;
+}
+
 // AlertTitle / AlertDescription aceitam atributos HTML nativos via spread`;
 </script>
 
@@ -184,22 +191,22 @@ interface AlertProps {
         <div class="nds-w-full nds-stack" data-spacing="sm">
           <Alert>
             <Info aria-hidden="true" />
-            <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+            <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
           </Alert>
           <Alert variant="destructive">
             <AlertCircle aria-hidden="true" />
-            <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+            <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
           </Alert>
           <Alert variant="success">
             <CheckCircle2 aria-hidden="true" />
-            <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
+            <AlertTitle as="h3">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
           </Alert>
           <Alert variant="warning">
             <TriangleAlert aria-hidden="true" />
-            <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
+            <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
           </Alert>
         </div>
@@ -304,7 +311,7 @@ interface AlertProps {
       {#snippet doPair1()}
         <Alert>
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
           <AlertDescription>Não foi possível salvar. Verifique sua conexão.</AlertDescription>
         </Alert>
       {/snippet}
@@ -314,13 +321,13 @@ interface AlertProps {
       {#snippet doPair2()}
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet dontPair2()}
         <Alert variant="destructive">
-          <AlertTitle>Erro ao salvar</AlertTitle>
+          <AlertTitle as="h3">Erro ao salvar</AlertTitle>
           <AlertDescription>Verifique sua conexão.</AlertDescription>
         </Alert>
       {/snippet}
@@ -354,35 +361,35 @@ interface AlertProps {
       {#snippet variantDefault()}
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantDestructive()}
         <Alert variant="destructive" class="nds-w-full">
           <AlertCircle aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantSuccess()}
         <Alert variant="success" class="nds-w-full">
           <CheckCircle2 aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.successTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantWarning()}
         <Alert variant="warning" class="nds-w-full">
           <TriangleAlert aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet variantInfo()}
         <Alert variant="info" class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>Dica</AlertTitle>
+          <AlertTitle as="h3">Dica</AlertTitle>
           <AlertDescription>Você pode fixar seus filtros favoritos para acessá-los mais rápido.</AlertDescription>
         </Alert>
       {/snippet}
@@ -393,7 +400,7 @@ interface AlertProps {
           onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'dismissible', location: 'docs_demo' })}
         >
           <Info aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
@@ -429,14 +436,14 @@ interface AlertProps {
       {#snippet compWithIcon()}
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
+          <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
       {#snippet compWithAction()}
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
-          <AlertTitle>Sessão expira em 5 minutos</AlertTitle>
+          <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
           <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button size="sm" variant="outline">Salvar agora</Button>
@@ -493,6 +500,7 @@ interface AlertProps {
               description: $tStore('props.table.description'),
             },
             items: [
+              { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: stripHtml($tStore('props.table.titleAs')) },
               { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: $tStore('props.table.children') },
             ],
           },

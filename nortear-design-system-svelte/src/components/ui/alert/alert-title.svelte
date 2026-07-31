@@ -5,12 +5,19 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		/**
+		 * Nível do heading do título. Default `h5` (compatibilidade). Passe o
+		 * nível que preserva a hierarquia de headings da página onde o Alert
+		 * está (ex.: `h3` sob uma seção `h2`).
+		 */
+		as = "h5",
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLHeadingElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & { as?: string } = $props();
 </script>
 
-<h5
+<svelte:element
+	this={as}
 	bind:this={ref}
 	data-slot="alert-title"
 	class={cn(
@@ -20,4 +27,4 @@
 	{...restProps}
 >
 	{@render children?.()}
-</h5>
+</svelte:element>

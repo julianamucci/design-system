@@ -111,6 +111,11 @@ export const Playground: Story = {
       await expect(canvas.getByText('Atenção')).toBeVisible();
     });
 
+    await step('AlertTitle é H5 por padrão', async () => {
+      const title = canvas.getByText('Atenção');
+      await expect(title.tagName).toBe('H5');
+    });
+
     await step('AlertDescription é renderizado corretamente', async () => {
       await expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible();
     });
