@@ -25,12 +25,15 @@
     useWhenLabel = 'Quando usar:',
     componentSlug,
     id = 'composicoes',
+    note,
   }: {
     title: string;
     items: DocsCompositionItem[];
     useWhenLabel?: string;
     componentSlug?: string;
     id?: string;
+    /** Nota introdutória da seção (HTML inline permitido) — repassada ao DocsVariants. */
+    note?: string;
   } = $props();
 
   // Transforma cada item adicionando o useWhen ao description (HTML).
@@ -46,4 +49,4 @@
   );
 </script>
 
-<DocsVariants {id} {title} items={variantItems} {componentSlug} />
+<DocsVariants {id} {title} {note} items={variantItems} {componentSlug} />

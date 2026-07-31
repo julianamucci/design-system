@@ -27,7 +27,6 @@ import uiTranslations from '@/i18n/ui.json';
   import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.svelte';
   import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.svelte';
   import DocsImport        from '@/components/docs/shared/sections/DocsImport.svelte';
-  import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.svelte';
   import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.svelte';
   import DocsStates        from '@/components/docs/shared/sections/DocsStates.svelte';
   import DocsProps         from '@/components/docs/shared/sections/DocsProps.svelte';
@@ -75,7 +74,6 @@ import uiTranslations from '@/i18n/ui.json';
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -348,17 +346,6 @@ interface CommandLoadingProps {
   children?: Snippet;
 }`;
 
-  // ─── Compositions ──────────────────────────────────────────────────────────
-
-  const longListItems = [
-    'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-    'Badge','Breadcrumb','Button','Calendar','Card',
-    'Carousel','Chart','Checkbox','Collapsible','Command',
-    'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
-    'DropdownMenu','Form','HoverCard','Input','InputOTP',
-    'Label','Menubar','NavigationMenu','Pagination','Popover',
-  ];
-
   const codeCompWithGroups = `<Command.Root>
   <Command.Input placeholder="Buscar componente..." />
   <Command.List>
@@ -378,47 +365,6 @@ interface CommandLoadingProps {
   </Command.List>
 </Command.Root>`;
 
-  const codeCompWithDisabled = `<Command.Root>
-  <Command.Input placeholder="Buscar..." />
-  <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
-    <Command.Group heading="Componentes">
-      <Command.Item value="button">Button</Command.Item>
-      <Command.Item value="input" disabled>Input (em breve)</Command.Item>
-      <Command.Item value="badge">Badge</Command.Item>
-      <Command.Item value="select" disabled>Select (em breve)</Command.Item>
-    </Command.Group>
-    <Command.Separator />
-    <Command.Group heading="Utilitários">
-      <Command.Item value="cn">cn()</Command.Item>
-      <Command.Item value="clsx" disabled>clsx() (depreciado)</Command.Item>
-    </Command.Group>
-  </Command.List>
-</Command.Root>`;
-
-  const codeCompLongList = `<script lang="ts">
-  import * as Command from "@/components/ui/command";
-  const items = [
-    'Accordion','Alert','AlertDialog','AspectRatio','Avatar',
-    'Badge','Breadcrumb','Button','Calendar','Card',
-    'Carousel','Chart','Checkbox','Collapsible','Command',
-    'ContextMenu','DataTable','DatePicker','Dialog','Drawer',
-    'DropdownMenu','Form','HoverCard','Input','InputOTP',
-    'Label','Menubar','NavigationMenu','Pagination','Popover',
-  ];
-<\/script>
-
-<Command.Root>
-  <Command.Input placeholder="Buscar componente..." />
-  <Command.List>
-    <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
-    <Command.Group heading="Componentes">
-      {#each items as label}
-        <Command.Item value={label.toLowerCase()}>{label}</Command.Item>
-      {/each}
-    </Command.Group>
-  </Command.List>
-</Command.Root>`;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="command">
@@ -680,12 +626,22 @@ interface CommandLoadingProps {
   />
 
   <!-- ── Variantes ────────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="command"
     items={[
       { name: 'inline',   description: stripHtml($tStore('variants.items.inline')),   code: codeVariantInline,   preview: variantInline   },
       { name: 'combobox', description: stripHtml($tStore('variants.items.combobox')), code: codeVariantCombobox, preview: variantCombobox },
       { name: 'palette',  description: stripHtml($tStore('variants.items.palette')),  code: codeVariantPalette,  preview: variantPalette  },
+      {
+        name: $tStore('variants.items.withGroups.name'),
+        description: $tStore('variants.items.withGroups.description'),
+        useWhen: $tStore('variants.items.withGroups.use'),
+        code: codeCompWithGroups,
+        preview: variantWithGroups,
+      },
     ]}
   />
 
@@ -751,37 +707,7 @@ interface CommandLoadingProps {
     </div>
   {/snippet}
 
-  <!-- ── Composições ──────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="command"
-    items={[
-      {
-        name: $tStore('variants.compositions.withGroups.name'),
-        description: $tStore('variants.compositions.withGroups.description'),
-        useWhen: $tStore('variants.compositions.withGroups.use'),
-        code: codeCompWithGroups,
-        preview: compWithGroups,
-      },
-      {
-        name: $tStore('variants.compositions.withDisabled.name'),
-        description: $tStore('variants.compositions.withDisabled.description'),
-        useWhen: $tStore('variants.compositions.withDisabled.use'),
-        code: codeCompWithDisabled,
-        preview: compWithDisabled,
-      },
-      {
-        name: $tStore('variants.compositions.longList.name'),
-        description: $tStore('variants.compositions.longList.description'),
-        useWhen: $tStore('variants.compositions.longList.use'),
-        code: codeCompLongList,
-        preview: compLongList,
-      },
-    ]}
-  />
-
-  {#snippet compWithGroups()}
+  {#snippet variantWithGroups()}
     <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
       <Command.Root>
         <Command.Input placeholder="Buscar componente..." />
@@ -804,43 +730,6 @@ interface CommandLoadingProps {
     </div>
   {/snippet}
 
-  {#snippet compWithDisabled()}
-    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
-      <Command.Root>
-        <Command.Input placeholder="Buscar..." />
-        <Command.List>
-          <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-          <Command.Group heading="Componentes">
-            <Command.Item value="button">Button</Command.Item>
-            <Command.Item value="input" disabled>Input (em breve)</Command.Item>
-            <Command.Item value="badge">Badge</Command.Item>
-            <Command.Item value="select" disabled>Select (em breve)</Command.Item>
-          </Command.Group>
-          <Command.Separator />
-          <Command.Group heading="Utilitários">
-            <Command.Item value="cn">cn()</Command.Item>
-            <Command.Item value="clsx" disabled>clsx() (depreciado)</Command.Item>
-          </Command.Group>
-        </Command.List>
-      </Command.Root>
-    </div>
-  {/snippet}
-
-  {#snippet compLongList()}
-    <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-shadow-md">
-      <Command.Root>
-        <Command.Input placeholder="Buscar componente..." />
-        <Command.List>
-          <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-          <Command.Group heading="Componentes">
-            {#each longListItems as label}
-              <Command.Item value={label.toLowerCase()}>{label}</Command.Item>
-            {/each}
-          </Command.Group>
-        </Command.List>
-      </Command.Root>
-    </div>
-  {/snippet}
 
   <!-- ── Estados ──────────────────────────────────────────────────── -->
   <DocsStates
@@ -855,6 +744,8 @@ interface CommandLoadingProps {
       { label: $tStore('states.selected.label'), trigger: stripHtml($tStore('states.selected.trigger')), behavior: $tStore('states.selected.behavior') },
       { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.trigger')), behavior: $tStore('states.disabled.behavior') },
       { label: $tStore('states.loading.label'),  trigger: stripHtml($tStore('states.loading.trigger')),  behavior: $tStore('states.loading.behavior')  },
+      { label: $tStore('states.withDisabled.label'), trigger: stripHtml($tStore('states.withDisabled.trigger')), behavior: stripHtml($tStore('states.withDisabled.behavior')) },
+      { label: $tStore('states.longList.label'),     trigger: stripHtml($tStore('states.longList.trigger')),     behavior: stripHtml($tStore('states.longList.behavior'))     },
     ]}
   />
 

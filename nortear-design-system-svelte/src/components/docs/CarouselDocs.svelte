@@ -15,7 +15,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -562,13 +562,23 @@ interface CarouselNavProps extends ButtonProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="carousel"
     items={[
       { name: 'horizontal', description: stripHtml($tStore('variants.items.horizontal')), code: codeHorizontal, preview: variantHorizontal },
       { name: 'vertical',   description: stripHtml($tStore('variants.items.vertical')),   code: codeVertical,   preview: variantVertical   },
       { name: 'single',     description: stripHtml($tStore('variants.items.single')),     code: codeSingle,     preview: variantSingle     },
       { name: 'multi',      description: stripHtml($tStore('variants.items.multi')),      code: codeMulti,      preview: variantMulti      },
+      {
+        name: $tStore('variants.items.autoplay.name'),
+        description: $tStore('variants.items.autoplay.description'),
+        useWhen: $tStore('variants.items.autoplay.use'),
+        code: codeCompositionAutoplay,
+        preview: variantAutoplay,
+      },
     ]}
   />
 
@@ -648,6 +658,29 @@ interface CarouselNavProps extends ButtonProps {
       </Carousel>
     </div>
   {/snippet}
+  {#snippet variantAutoplay()}
+    <div class="nds-w-full" style="max-width: 280px">
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+        aria-label="Destaques"
+      >
+        <CarouselContent>
+          {#each [1, 2, 3, 4] as i}
+            <CarouselItem>
+              <div class="nds-p-1">
+                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                  {i}
+                </div>
+              </div>
+            </CarouselItem>
+          {/each}
+        </CarouselContent>
+        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
+        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
+      </Carousel>
+    </div>
+  {/snippet}
 
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
@@ -668,13 +701,6 @@ interface CarouselNavProps extends ButtonProps {
         useWhen: $tStore('variants.compositions.gallery.use'),
         code: codeCompositionGallery,
         preview: compGallery,
-      },
-      {
-        name: $tStore('variants.compositions.autoplay.name'),
-        description: $tStore('variants.compositions.autoplay.description'),
-        useWhen: $tStore('variants.compositions.autoplay.use'),
-        code: codeCompositionAutoplay,
-        preview: compAutoplay,
       },
     ]}
   />
@@ -725,30 +751,6 @@ interface CarouselNavProps extends ButtonProps {
                 <div style="padding: 0.75rem">
                   <h3 class="nds-text-body nds-font-semibold">{photo.title}</h3>
                   <p class="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
-                </div>
-              </div>
-            </CarouselItem>
-          {/each}
-        </CarouselContent>
-        <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
-        <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
-      </Carousel>
-    </div>
-  {/snippet}
-
-  {#snippet compAutoplay()}
-    <div class="nds-w-full" style="max-width: 280px">
-      <Carousel
-        opts={{ loop: true }}
-        plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
-        aria-label="Destaques"
-      >
-        <CarouselContent>
-          {#each [1, 2, 3, 4] as i}
-            <CarouselItem>
-              <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
-                  {i}
                 </div>
               </div>
             </CarouselItem>

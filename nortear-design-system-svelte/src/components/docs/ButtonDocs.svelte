@@ -308,8 +308,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       />
 
       <!-- ── Variantes ──────────────────────────────────────────────── -->
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={$tStore('variants.title')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="button"
         items={[
           { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: codeDefault,     preview: variantDefault     },
           { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
@@ -317,6 +320,13 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           { name: 'secondary',   description: stripHtml($tStore('variants.items.secondary')),   code: codeSecondary,   preview: variantSecondary   },
           { name: 'ghost',       description: stripHtml($tStore('variants.items.ghost')),       code: codeGhost,       preview: variantGhost       },
           { name: 'link',        description: stripHtml($tStore('variants.items.link')),        code: codeLink,        preview: variantLink        },
+          {
+            name: $tStore('variants.items.asLink.name'),
+            description: $tStore('variants.items.asLink.description'),
+            useWhen: $tStore('variants.items.asLink.use'),
+            code: `<a href="/docs" class={buttonVariants({ variant: 'link' })}>\n  Ver documentação\n</a>`,
+            preview: variantAsLink,
+          },
         ]}
       />
 
@@ -337,6 +347,9 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
       {#snippet variantLink()}
         <Button variant="link">{$tStore('demonstration.labels.link')}</Button>
+      {/snippet}
+      {#snippet variantAsLink()}
+        <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
       {/snippet}
 
       <!-- ── Tamanhos ───────────────────────────────────────────────── -->
@@ -412,13 +425,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             code: `<div class="nds-cluster" data-spacing="sm">\n  <Button variant="outline">Cancelar</Button>\n  <Button>Confirmar</Button>\n</div>`,
             preview: compActionPair,
           },
-          {
-            name: $tStore('variants.compositions.asLink.name'),
-            description: $tStore('variants.compositions.asLink.description'),
-            useWhen: $tStore('variants.compositions.asLink.use'),
-            code: `<a href="/docs" class={buttonVariants({ variant: 'link' })}>\n  Ver documentação\n</a>`,
-            preview: compAsLink,
-          },
         ]}
       />
 
@@ -445,9 +451,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           <Button variant="outline">Cancelar</Button>
           <Button>Confirmar</Button>
         </div>
-      {/snippet}
-      {#snippet compAsLink()}
-        <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
       {/snippet}
 
       <!-- ── Estados ────────────────────────────────────────────────── -->

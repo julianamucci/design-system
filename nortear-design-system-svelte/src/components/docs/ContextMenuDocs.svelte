@@ -12,7 +12,6 @@
   import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.svelte';
   import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.svelte';
   import DocsImport        from '@/components/docs/shared/sections/DocsImport.svelte';
-  import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.svelte';
   import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.svelte';
   import DocsStates        from '@/components/docs/shared/sections/DocsStates.svelte';
   import DocsProps         from '@/components/docs/shared/sections/DocsProps.svelte';
@@ -63,7 +62,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -543,8 +541,11 @@ interface ContextMenuRadioGroupProps {
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="context-menu"
     items={[
       { name: 'default',      description: stripHtml($tStore('variants.items.default')),      code: codeDefault,           preview: variantDefault      },
       { name: 'destructive',  description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,       preview: variantDestructive  },
@@ -552,6 +553,34 @@ interface ContextMenuRadioGroupProps {
       { name: 'RadioItem',    description: stripHtml($tStore('variants.radioItem')),          code: codeVariantRadio,      preview: variantRadio        },
       { name: 'SubTrigger',   description: stripHtml($tStore('variants.subTrigger')),         code: codeVariantSubTrigger, preview: variantSubTrigger   },
       { name: 'Label + Inset',description: stripHtml($tStore('variants.label')),             code: codeVariantLabel,      preview: variantLabel        },
+      {
+        name: $tStore('variants.items.withCheckbox.name'),
+        description: $tStore('variants.items.withCheckbox.description'),
+        useWhen: $tStore('variants.items.withCheckbox.use'),
+        code: codeCompCheckbox,
+        preview: variantWithCheckbox,
+      },
+      {
+        name: $tStore('variants.items.withRadio.name'),
+        description: $tStore('variants.items.withRadio.description'),
+        useWhen: $tStore('variants.items.withRadio.use'),
+        code: codeCompRadio,
+        preview: variantWithRadio,
+      },
+      {
+        name: $tStore('variants.items.withSubmenu.name'),
+        description: $tStore('variants.items.withSubmenu.description'),
+        useWhen: $tStore('variants.items.withSubmenu.use'),
+        code: codeCompSubmenu,
+        preview: variantWithSubmenu,
+      },
+      {
+        name: $tStore('variants.items.withShortcuts.name'),
+        description: $tStore('variants.items.withShortcuts.description'),
+        useWhen: $tStore('variants.items.withShortcuts.use'),
+        code: codeCompShortcuts,
+        preview: variantWithShortcuts,
+      },
     ]}
   />
 
@@ -650,44 +679,7 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
 
-  <!-- ── Composições ───────────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="context-menu"
-    items={[
-      {
-        name: $tStore('variants.compositions.withCheckbox.name'),
-        description: $tStore('variants.compositions.withCheckbox.description'),
-        useWhen: $tStore('variants.compositions.withCheckbox.use'),
-        code: codeCompCheckbox,
-        preview: compCheckboxPreview,
-      },
-      {
-        name: $tStore('variants.compositions.withRadio.name'),
-        description: $tStore('variants.compositions.withRadio.description'),
-        useWhen: $tStore('variants.compositions.withRadio.use'),
-        code: codeCompRadio,
-        preview: compRadioPreview,
-      },
-      {
-        name: $tStore('variants.compositions.withSubmenu.name'),
-        description: $tStore('variants.compositions.withSubmenu.description'),
-        useWhen: $tStore('variants.compositions.withSubmenu.use'),
-        code: codeCompSubmenu,
-        preview: compSubmenuPreview,
-      },
-      {
-        name: $tStore('variants.compositions.withShortcuts.name'),
-        description: $tStore('variants.compositions.withShortcuts.description'),
-        useWhen: $tStore('variants.compositions.withShortcuts.use'),
-        code: codeCompShortcuts,
-        preview: compShortcutsPreview,
-      },
-    ]}
-  />
-
-  {#snippet compCheckboxPreview()}
+  {#snippet variantWithCheckbox()}
     <ContextMenu.Root>
       <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
@@ -712,7 +704,7 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
 
-  {#snippet compRadioPreview()}
+  {#snippet variantWithRadio()}
     <ContextMenu.Root>
       <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
@@ -730,7 +722,7 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
 
-  {#snippet compSubmenuPreview()}
+  {#snippet variantWithSubmenu()}
     <ContextMenu.Root>
       <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}
@@ -749,7 +741,7 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
 
-  {#snippet compShortcutsPreview()}
+  {#snippet variantWithShortcuts()}
     <ContextMenu.Root>
       <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
         {$tStore('demonstration.labels.triggerLabel')}

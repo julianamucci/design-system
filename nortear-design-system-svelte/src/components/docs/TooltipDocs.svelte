@@ -20,7 +20,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -436,12 +436,33 @@ interface TooltipTriggerProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="tooltip"
     items={[
       { name: $tStore('variants.items.default'),      description: stripHtml($tStore('variants.styles.default')),      code: codeDefault,      preview: variantDefault      },
       { name: $tStore('variants.items.withShortcut'), description: stripHtml($tStore('variants.styles.withShortcut')), code: codeWithShortcut, preview: variantWithShortcut },
       { name: $tStore('variants.items.longText'),     description: stripHtml($tStore('variants.styles.longText')),     code: codeLongText,     preview: variantLongText     },
+      {
+        name: $tStore('variants.items.positioningSides.name'),
+        description: $tStore('variants.items.positioningSides.description'),
+        useWhen: $tStore('variants.items.positioningSides.use'),
+        code: `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
+  {#each ['top','right','bottom','left'] as s}
+    <Tooltip>
+      <TooltipTrigger>
+        {#snippet child({ props })}
+          <Button variant="outline" {...props}>{s}</Button>
+        {/snippet}
+      </TooltipTrigger>
+      <TooltipContent side={s}>Tooltip {s}</TooltipContent>
+    </Tooltip>
+  {/each}
+</div>`,
+        preview: variantPositioningSides,
+      },
     ]}
   />
 
@@ -566,24 +587,6 @@ interface TooltipTriggerProps {
 </div>`,
         preview: compMetric,
       },
-      {
-        name: $tStore('variants.compositions.positioningSides.name'),
-        description: $tStore('variants.compositions.positioningSides.description'),
-        useWhen: $tStore('variants.compositions.positioningSides.use'),
-        code: `<div class="nds-grid nds-w-full" style="place-items: center; gap: 2rem">
-  {#each ['top','right','bottom','left'] as s}
-    <Tooltip>
-      <TooltipTrigger>
-        {#snippet child({ props })}
-          <Button variant="outline" {...props}>{s}</Button>
-        {/snippet}
-      </TooltipTrigger>
-      <TooltipContent side={s}>Tooltip {s}</TooltipContent>
-    </Tooltip>
-  {/each}
-</div>`,
-        preview: compSides,
-      },
     ]}
   />
 
@@ -657,7 +660,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
 
-  {#snippet compSides()}
+  {#snippet variantPositioningSides()}
     <TooltipProvider delayDuration={0}>
       <div class="nds-grid nds-w-full" style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;">
         <Tooltip>

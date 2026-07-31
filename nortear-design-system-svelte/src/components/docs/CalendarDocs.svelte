@@ -10,7 +10,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -53,7 +53,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -355,13 +354,37 @@ interface CalendarProps {
   />
 
   <!-- ── Modos e Layouts (Variants) ─────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.visualTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="calendar"
     items={[
       { name: 'type="single"',              description: stripHtml($tStore('variants.items.single')),          code: codeSingle,          preview: variantSingle          },
       { name: 'type="multiple"',            description: stripHtml($tStore('variants.items.multiple')),        code: codeMultiple,        preview: variantMultiple        },
       { name: 'captionLayout="dropdown"',   description: stripHtml($tStore('variants.items.captionDropdown')), code: codeCaptionDropdown, preview: variantCaptionDropdown },
       { name: 'numberOfMonths={2}',         description: stripHtml($tStore('variants.items.numberOfMonths')),  code: codeTwoMonths,       preview: variantTwoMonths       },
+      {
+        name: $tStore('variants.items.inlineBordered.name'),
+        description: $tStore('variants.items.inlineBordered.description'),
+        useWhen: $tStore('variants.items.inlineBordered.use'),
+        code: `<div class="nds-rounded-md nds-border-default">
+  <Calendar type="single" bind:value locale="pt-BR" />
+</div>`,
+        preview: variantInlineBordered,
+      },
+      {
+        name: $tStore('variants.items.disabledPast.name'),
+        description: $tStore('variants.items.disabledPast.description'),
+        useWhen: $tStore('variants.items.disabledPast.use'),
+        code: `<Calendar
+  type="single"
+  bind:value
+  locale="pt-BR"
+  isDateDisabled={(d) => d.compare(today(getLocalTimeZone())) < 0}
+/>`,
+        preview: variantDisabledPast,
+      },
     ]}
   />
 
@@ -377,43 +400,12 @@ interface CalendarProps {
   {#snippet variantTwoMonths()}
     <CalendarStory variant="twoMonths" locale={previewLocale} />
   {/snippet}
-
-  <!-- ── Composições ─────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="calendar"
-    items={[
-      {
-        name: $tStore('variants.compositions.inlineBordered.name'),
-        description: $tStore('variants.compositions.inlineBordered.description'),
-        useWhen: $tStore('variants.compositions.inlineBordered.use'),
-        code: `<div class="nds-rounded-md nds-border-default">
-  <Calendar type="single" bind:value locale="pt-BR" />
-</div>`,
-        preview: compInline,
-      },
-      {
-        name: $tStore('variants.compositions.disabledPast.name'),
-        description: $tStore('variants.compositions.disabledPast.description'),
-        useWhen: $tStore('variants.compositions.disabledPast.use'),
-        code: `<Calendar
-  type="single"
-  bind:value
-  locale="pt-BR"
-  isDateDisabled={(d) => d.compare(today(getLocalTimeZone())) < 0}
-/>`,
-        preview: compDisabledPast,
-      },
-    ]}
-  />
-
-  {#snippet compInline()}
+  {#snippet variantInlineBordered()}
     <div class="nds-rounded-md nds-border-default">
       <CalendarStory variant="single" locale={previewLocale} />
     </div>
   {/snippet}
-  {#snippet compDisabledPast()}
+  {#snippet variantDisabledPast()}
     <CalendarStory variant="disabled" locale={previewLocale} />
   {/snippet}
 

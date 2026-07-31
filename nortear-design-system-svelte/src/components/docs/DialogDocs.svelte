@@ -18,7 +18,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -474,9 +474,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
     note={stripHtml($tStore('variants.note'))}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="dialog"
     items={[
       { name: 'default',               description: stripHtml($tStore('variants.items.default')),               code: codeDefault,     preview: variantDefault     },
       { name: 'withForm',              description: stripHtml($tStore('variants.items.withForm')),              code: codeWithForm,    preview: variantWithForm    },
@@ -484,6 +487,26 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { name: 'noFooter',              description: stripHtml($tStore('variants.items.noFooter')),              code: codeNoFooter,    preview: variantNoFooter    },
       { name: 'withDestructiveAction', description: stripHtml($tStore('variants.items.withDestructiveAction')), code: codeDestructive, preview: variantDestructive },
       { name: 'customCloseInFooter',   description: stripHtml($tStore('variants.items.customCloseInFooter')),   code: codeNoCloseBtn,  preview: variantNoClose     },
+      {
+        name: $tStore('variants.items.confirmEmail.name'),
+        description: $tStore('variants.items.confirmEmail.description'),
+        useWhen: $tStore('variants.items.confirmEmail.use'),
+        code: `<Dialog>
+  <DialogTrigger>...</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirmar e-mail</DialogTitle>
+      <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+    </DialogHeader>
+    <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
+    <DialogFooter>
+      <DialogClose>...</DialogClose>
+      <Button>Enviar link</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`,
+        preview: variantConfirmEmail,
+      },
     ]}
   />
 
@@ -589,32 +612,29 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Dialog>
   {/snippet}
 
+  {#snippet variantConfirmEmail()}
+    <Dialog open>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Confirmar e-mail</DialogTitle>
+          <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
+        </DialogHeader>
+        <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
+        <DialogFooter>
+          <DialogClose>
+            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+          </DialogClose>
+          <Button>Enviar link</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  {/snippet}
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
     title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="dialog"
     items={[
-      {
-        name: $tStore('variants.compositions.confirmEmail.name'),
-        description: $tStore('variants.compositions.confirmEmail.description'),
-        useWhen: $tStore('variants.compositions.confirmEmail.use'),
-        code: `<Dialog>
-  <DialogTrigger>...</DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Confirmar e-mail</DialogTitle>
-      <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
-    </DialogHeader>
-    <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
-    <DialogFooter>
-      <DialogClose>...</DialogClose>
-      <Button>Enviar link</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>`,
-        preview: compConfirmEmail,
-      },
       {
         name: $tStore('variants.compositions.mediaPreview.name'),
         description: $tStore('variants.compositions.mediaPreview.description'),
@@ -636,23 +656,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     ]}
   />
 
-  {#snippet compConfirmEmail()}
-    <Dialog open>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirmar e-mail</DialogTitle>
-          <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
-        </DialogHeader>
-        <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-          </DialogClose>
-          <Button>Enviar link</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  {/snippet}
   {#snippet compMediaPreview()}
     <Dialog open>
       <DialogContent>

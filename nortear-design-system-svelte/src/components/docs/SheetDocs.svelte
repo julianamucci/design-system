@@ -596,26 +596,6 @@ interface TriggerProps {
 </SheetContent>`,
         preview: compSecondaryNav,
       },
-      {
-        name: $tStore('variants.compositions.longScrollBody.name'),
-        description: $tStore('variants.compositions.longScrollBody.description'),
-        useWhen: $tStore('variants.compositions.longScrollBody.use'),
-        code: `<SheetContent side="right">
-  <SheetHeader>
-    <SheetTitle>Termos de uso</SheetTitle>
-    <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-  </SheetHeader>
-  <div class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-    {#each Array(12) as _, i}
-      <p>Parágrafo {i + 1}: termos longos…</p>
-    {/each}
-  </div>
-  <SheetFooter>
-    <Button>Aceitar termos</Button>
-  </SheetFooter>
-</SheetContent>`,
-        preview: compLongScroll,
-      },
     ]}
   />
 
@@ -657,30 +637,6 @@ interface TriggerProps {
     </div>
   {/snippet}
 
-  {#snippet compLongScroll()}
-    <div style="contain: layout">
-      <Sheet open>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Termos de uso</SheetTitle>
-            <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
-          </SheetHeader>
-          <div class="nds-stack nds-px-4 nds-text-body nds-text-muted-foreground nds-overflow-y" data-spacing="sm" style="max-height: 16rem;">
-            {#each Array(12) as _, i}
-              <p>Parágrafo {i + 1}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.</p>
-            {/each}
-          </div>
-          <SheetFooter>
-            <SheetClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-            </SheetClose>
-            <Button>Aceitar termos</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </div>
-  {/snippet}
-
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
     title={$tStore('states.title')}
@@ -694,6 +650,7 @@ interface TriggerProps {
       { label: $tStore('states.items.open'),           trigger: 'click trigger',       behavior: stripHtml($tStore('states.descriptions.open'))           },
       { label: $tStore('states.items.transitioning'),  trigger: 'open ↔ closed',       behavior: stripHtml($tStore('states.descriptions.transitioning')) },
       { label: $tStore('states.items.focused'),        trigger: 'Tab',                 behavior: stripHtml($tStore('states.descriptions.focused'))        },
+      { label: $tStore('states.longScrollBody.label'), trigger: stripHtml($tStore('states.longScrollBody.trigger')), behavior: stripHtml($tStore('states.longScrollBody.behavior')) },
     ]}
   />
 

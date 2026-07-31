@@ -48,7 +48,6 @@ import uiTranslations from '@/i18n/ui.json';
   import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.svelte';
   import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.svelte';
   import DocsImport        from '@/components/docs/shared/sections/DocsImport.svelte';
-  import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.svelte';
   import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.svelte';
   import DocsStates        from '@/components/docs/shared/sections/DocsStates.svelte';
   import DocsProps         from '@/components/docs/shared/sections/DocsProps.svelte';
@@ -584,8 +583,11 @@ interface SidebarMenuButtonProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="sidebar"
     items={[
       { name: 'sidebar',    description: $tStore('variants.sidebar'),    code: codeVariantSidebar,   preview: variantSidebar   },
       { name: 'floating',   description: $tStore('variants.floating'),   code: codeVariantFloating,  preview: variantFloating  },
@@ -593,6 +595,43 @@ interface SidebarMenuButtonProps {
       { name: 'icon',       description: $tStore('variants.icon'),       code: codeCollapsibleIcon,  preview: variantIcon      },
       { name: 'none',       description: $tStore('variants.none'),       code: codeCollapsibleNone,  preview: variantNone      },
       { name: 'right',      description: $tStore('variants.right'),      code: codeSideRight,        preview: variantRight     },
+      {
+        name: $tStore('variants.items.withSubMenu.name'),
+        description: $tStore('variants.items.withSubMenu.description'),
+        useWhen: $tStore('variants.items.withSubMenu.use'),
+        code: `<script>
+  let open = $state(false);
+</script>
+
+<SidebarMenuItem>
+  <SidebarMenuButton aria-expanded={open} onclick={() => open = !open}>
+    <Blocks aria-hidden="true" />
+    <span>Componentes</span>
+    <ChevronDown aria-hidden="true" class={open ? 'rotate-180' : ''} />
+  </SidebarMenuButton>
+  {#if open}
+    <SidebarMenuSub>
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+    </SidebarMenuSub>
+  {/if}
+</SidebarMenuItem>`,
+        preview: variantWithSubMenu,
+      },
+      {
+        name: $tStore('variants.items.withBadges.name'),
+        description: $tStore('variants.items.withBadges.description'),
+        useWhen: $tStore('variants.items.withBadges.use'),
+        code: `<SidebarMenuItem>
+  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
+    <Bell aria-hidden="true" />
+    <span>Notificações</span>
+  </SidebarMenuButton>
+  <SidebarMenuBadge>12</SidebarMenuBadge>
+</SidebarMenuItem>`,
+        preview: variantWithBadges,
+      },
     ]}
   />
 
@@ -821,30 +860,6 @@ interface SidebarMenuButtonProps {
         preview: compWithGroups,
       },
       {
-        name: $tStore('variants.compositions.withSubMenu.name'),
-        description: $tStore('variants.compositions.withSubMenu.description'),
-        useWhen: $tStore('variants.compositions.withSubMenu.use'),
-        code: `<script>
-  let open = $state(false);
-</script>
-
-<SidebarMenuItem>
-  <SidebarMenuButton aria-expanded={open} onclick={() => open = !open}>
-    <Blocks aria-hidden="true" />
-    <span>Componentes</span>
-    <ChevronDown aria-hidden="true" class={open ? 'rotate-180' : ''} />
-  </SidebarMenuButton>
-  {#if open}
-    <SidebarMenuSub>
-      <SidebarMenuSubItem>
-        <SidebarMenuSubButton>Alert</SidebarMenuSubButton>
-      </SidebarMenuSubItem>
-    </SidebarMenuSub>
-  {/if}
-</SidebarMenuItem>`,
-        preview: compWithSubMenu,
-      },
-      {
         name: $tStore('variants.compositions.withSearch.name'),
         description: $tStore('variants.compositions.withSearch.description'),
         useWhen: $tStore('variants.compositions.withSearch.use'),
@@ -861,19 +876,6 @@ interface SidebarMenuButtonProps {
   </div>
 </SidebarHeader>`,
         preview: compWithSearch,
-      },
-      {
-        name: $tStore('variants.compositions.withBadges.name'),
-        description: $tStore('variants.compositions.withBadges.description'),
-        useWhen: $tStore('variants.compositions.withBadges.use'),
-        code: `<SidebarMenuItem>
-  <SidebarMenuButton aria-label="Notificações (12 não lidas)">
-    <Bell aria-hidden="true" />
-    <span>Notificações</span>
-  </SidebarMenuButton>
-  <SidebarMenuBadge>12</SidebarMenuBadge>
-</SidebarMenuItem>`,
-        preview: compWithBadges,
       },
     ]}
   />
@@ -942,7 +944,7 @@ interface SidebarMenuButtonProps {
     </div>
   {/snippet}
 
-  {#snippet compWithSubMenu()}
+  {#snippet variantWithSubMenu()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">
@@ -1049,7 +1051,7 @@ interface SidebarMenuButtonProps {
     </div>
   {/snippet}
 
-  {#snippet compWithBadges()}
+  {#snippet variantWithBadges()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
         <nav aria-label="Navegação principal">

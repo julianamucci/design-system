@@ -9,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -51,6 +51,7 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')   },
         { id: 'variantes',    label: tNav('nav.variants') },
+        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')   },
         { id: 'propriedades', label: tNav('nav.props')    },
         { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -307,8 +308,11 @@ const columns: DataTableColumn<Invoice>[] = [
   />
 
   <!-- ── Recursos (Variantes) ───────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="data-table"
     items={[
       { name: 'enableGlobalFilter',    description: stripHtml($tStore('variants.items.globalFilter')),   code: '<DataTable enableGlobalFilter />',     preview: noPreview },
       { name: 'enableColumnFilters',   description: stripHtml($tStore('variants.items.columnFilters')),  code: '<DataTable enableColumnFilters />',    preview: noPreview },
@@ -320,6 +324,43 @@ const columns: DataTableColumn<Invoice>[] = [
       { name: 'enablePagination',      description: stripHtml($tStore('variants.items.pagination')),     code: '<DataTable enablePagination />',       preview: noPreview },
       { name: 'meta.editable',         description: stripHtml($tStore('variants.items.edit')),           code: 'meta: { editable: true }',             preview: noPreview },
       { name: 'virtualized',           description: stripHtml($tStore('variants.items.virtual')),        code: '<DataTable virtualized maxHeight="480px" />', preview: noPreview },
+      {
+        name: $tStore('variants.items.editableSheet.name'),
+        description: $tStore('variants.items.editableSheet.description'),
+        useWhen: $tStore('variants.items.editableSheet.use'),
+        code: '<DataTable {columns} {data} enableColumnFilters enablePagination={false} onCellEdit={handleCellEdit} />',
+        preview: noPreview,
+      },
+      {
+        name: $tStore('variants.items.virtualizedLog.name'),
+        description: $tStore('variants.items.virtualizedLog.description'),
+        useWhen: $tStore('variants.items.virtualizedLog.use'),
+        code: '<DataTable {columns} {data} virtualized maxHeight="480px" enablePagination={false} />',
+        preview: noPreview,
+      },
+      {
+        name: $tStore('variants.items.pinnedKey.name'),
+        description: $tStore('variants.items.pinnedKey.description'),
+        useWhen: $tStore('variants.items.pinnedKey.use'),
+        code: '<DataTable {columns} {data} enableColumnPinning />',
+        preview: noPreview,
+      },
+    ]}
+  />
+
+  <!-- ── Composições ────────────────────────────────────────────── -->
+  <DocsCompositions
+    title={$tStore('variants.compositionsTitle')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="data-table"
+    items={[
+      {
+        name: $tStore('variants.compositions.selectionWithActions.name'),
+        description: $tStore('variants.compositions.selectionWithActions.description'),
+        useWhen: $tStore('variants.compositions.selectionWithActions.use'),
+        code: '<DataTable {columns} {data} enableRowSelection onTableReady={(table) => (selection = table)} />',
+        preview: noPreview,
+      },
     ]}
   />
 

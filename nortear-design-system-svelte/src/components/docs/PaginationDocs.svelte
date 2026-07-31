@@ -17,7 +17,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -68,7 +68,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -430,12 +429,83 @@ interface PaginationDirectionalProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="pagination"
     items={[
       { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
       { name: $tStore('variants.items.active'),      description: stripHtml($tStore('variants.styles.active')),      code: codeActive,      preview: variantActive      },
       { name: $tStore('variants.items.directional'), description: stripHtml($tStore('variants.styles.directional')), code: codeDirectional, preview: variantDirectional },
+      {
+        name: $tStore('variants.items.simple.name'),
+        description: $tStore('variants.items.simple.description'),
+        useWhen: $tStore('variants.items.simple.use'),
+        code: `<Pagination count={50} perPage={10} page={1}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type !== 'ellipsis'}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+        preview: variantSimple,
+      },
+      {
+        name: $tStore('variants.items.withEllipsis.name'),
+        description: $tStore('variants.items.withEllipsis.description'),
+        useWhen: $tStore('variants.items.withEllipsis.use'),
+        code: `<Pagination count={120} perPage={10} page={6} siblingCount={1}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type === 'ellipsis'}
+            <PaginationEllipsis />
+          {:else}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>`,
+        preview: variantWithEllipsis,
+      },
+      {
+        name: $tStore('variants.items.interactive.name'),
+        description: $tStore('variants.items.interactive.description'),
+        useWhen: $tStore('variants.items.interactive.use'),
+        code: `let current = $state(3);
+
+<Pagination count={80} perPage={10} bind:page={current}>
+  {#snippet children({ pages, currentPage })}
+    <PaginationContent>
+      <PaginationItem><PaginationPrevious /></PaginationItem>
+      {#each pages as p (p.key)}
+        <PaginationItem>
+          {#if p.type !== 'ellipsis'}
+            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
+          {/if}
+        </PaginationItem>
+      {/each}
+      <PaginationItem><PaginationNext /></PaginationItem>
+    </PaginationContent>
+  {/snippet}
+</Pagination>
+<p>Página atual: {current}</p>`,
+        preview: variantInteractive,
+      },
     ]}
   />
 
@@ -486,105 +556,8 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
 
-  <!-- ── Composições ──────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="pagination"
-    items={[
-      {
-        name: $tStore('variants.compositions.simple.name'),
-        description: $tStore('variants.compositions.simple.description'),
-        useWhen: $tStore('variants.compositions.simple.use'),
-        code: `<Pagination count={50} perPage={10} page={1}>
-  {#snippet children({ pages, currentPage })}
-    <PaginationContent>
-      <PaginationItem><PaginationPrevious /></PaginationItem>
-      {#each pages as p (p.key)}
-        <PaginationItem>
-          {#if p.type !== 'ellipsis'}
-            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
-          {/if}
-        </PaginationItem>
-      {/each}
-      <PaginationItem><PaginationNext /></PaginationItem>
-    </PaginationContent>
-  {/snippet}
-</Pagination>`,
-        preview: compSimple,
-      },
-      {
-        name: $tStore('variants.compositions.withEllipsis.name'),
-        description: $tStore('variants.compositions.withEllipsis.description'),
-        useWhen: $tStore('variants.compositions.withEllipsis.use'),
-        code: `<Pagination count={120} perPage={10} page={6} siblingCount={1}>
-  {#snippet children({ pages, currentPage })}
-    <PaginationContent>
-      <PaginationItem><PaginationPrevious /></PaginationItem>
-      {#each pages as p (p.key)}
-        <PaginationItem>
-          {#if p.type === 'ellipsis'}
-            <PaginationEllipsis />
-          {:else}
-            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
-          {/if}
-        </PaginationItem>
-      {/each}
-      <PaginationItem><PaginationNext /></PaginationItem>
-    </PaginationContent>
-  {/snippet}
-</Pagination>`,
-        preview: compWithEllipsis,
-      },
-      {
-        name: $tStore('variants.compositions.lastPage.name'),
-        description: $tStore('variants.compositions.lastPage.description'),
-        useWhen: $tStore('variants.compositions.lastPage.use'),
-        code: `<Pagination count={100} perPage={10} page={10}>
-  {#snippet children({ pages, currentPage })}
-    <PaginationContent>
-      <PaginationItem><PaginationPrevious /></PaginationItem>
-      {#each pages as p (p.key)}
-        <PaginationItem>
-          {#if p.type !== 'ellipsis'}
-            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
-          {/if}
-        </PaginationItem>
-      {/each}
-      <PaginationItem><PaginationNext /></PaginationItem>
-    </PaginationContent>
-  {/snippet}
-</Pagination>`,
-        preview: compLastPage,
-      },
-      {
-        name: $tStore('variants.compositions.interactive.name'),
-        description: $tStore('variants.compositions.interactive.description'),
-        useWhen: $tStore('variants.compositions.interactive.use'),
-        code: `let current = $state(3);
 
-<Pagination count={80} perPage={10} bind:page={current}>
-  {#snippet children({ pages, currentPage })}
-    <PaginationContent>
-      <PaginationItem><PaginationPrevious /></PaginationItem>
-      {#each pages as p (p.key)}
-        <PaginationItem>
-          {#if p.type !== 'ellipsis'}
-            <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
-          {/if}
-        </PaginationItem>
-      {/each}
-      <PaginationItem><PaginationNext /></PaginationItem>
-    </PaginationContent>
-  {/snippet}
-</Pagination>
-<p>Página atual: {current}</p>`,
-        preview: compInteractive,
-      },
-    ]}
-  />
-
-  {#snippet compSimple()}
+  {#snippet variantSimple()}
     <Pagination count={50} perPage={10} page={1}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
@@ -601,7 +574,7 @@ interface PaginationDirectionalProps {
       {/snippet}
     </Pagination>
   {/snippet}
-  {#snippet compWithEllipsis()}
+  {#snippet variantWithEllipsis()}
     <Pagination count={120} perPage={10} page={6} siblingCount={1}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
@@ -620,26 +593,7 @@ interface PaginationDirectionalProps {
       {/snippet}
     </Pagination>
   {/snippet}
-  {#snippet compLastPage()}
-    <Pagination count={100} perPage={10} page={10}>
-      {#snippet children({ pages, currentPage })}
-        <PaginationContent>
-          <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
-          {#each pages as p (p.key)}
-            <PaginationItem>
-              {#if p.type === 'ellipsis'}
-                <PaginationEllipsis />
-              {:else}
-                <PaginationLink page={p} isActive={currentPage === p.value}>{p.value}</PaginationLink>
-              {/if}
-            </PaginationItem>
-          {/each}
-          <PaginationItem><PaginationNext aria-label="Próxima" /></PaginationItem>
-        </PaginationContent>
-      {/snippet}
-    </Pagination>
-  {/snippet}
-  {#snippet compInteractive()}
+  {#snippet variantInteractive()}
     <div class="nds-stack nds-w-full" data-spacing="sm" data-align="center">
       <Pagination count={80} perPage={10} bind:page={interactiveCurrent}>
         {#snippet children({ pages, currentPage })}
@@ -676,6 +630,7 @@ interface PaginationDirectionalProps {
       { label: $tStore('states.items.active'),   trigger: 'isActive=true',                     behavior: stripHtml($tStore('states.descriptions.active'))   },
       { label: $tStore('states.items.disabled'), trigger: 'page === 1 (Previous) / last (Next)', behavior: stripHtml($tStore('states.descriptions.disabled')) },
       { label: $tStore('states.items.focus'),    trigger: 'Tab',                               behavior: stripHtml($tStore('states.descriptions.focus'))    },
+      { label: $tStore('states.lastPage.label'), trigger: stripHtml($tStore('states.lastPage.trigger')), behavior: stripHtml($tStore('states.lastPage.behavior')) },
     ]}
   />
 

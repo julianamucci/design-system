@@ -8,7 +8,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -184,7 +184,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tNav('nav.import')       },
         { id: 'variantes',    label: tNav('nav.variants')     },
-        { id: 'composicoes',  label: tNav('nav.compositions') },
         { id: 'estados',      label: tNav('nav.states')       },
         { id: 'propriedades', label: tNav('nav.props')        },
         { id: 'tokens',       label: tNav('nav.tokens')       },
@@ -379,17 +378,17 @@ render(items, total);`;
   <CodeBlock class="nds-w-full" language="txt" code={langText} showLineNumbers={false} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:variantes:text" />
 {/snippet}
 
-{#snippet compWithTitle()}
-  <CodeBlock class="nds-w-full" title="lista.ts" language="ts" code={compositionCode} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:composicoes:with-title" />
+{#snippet variantWithTitle()}
+  <CodeBlock class="nds-w-full" title="lista.ts" language="ts" code={compositionCode} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:variantes:with-title" />
 {/snippet}
-{#snippet compWithoutNumbers()}
-  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} showLineNumbers={false} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:composicoes:without-numbers" />
+{#snippet variantWithoutNumbers()}
+  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} showLineNumbers={false} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:variantes:without-numbers" />
 {/snippet}
-{#snippet compHighlighted()}
-  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} highlightLines={[2]} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:composicoes:highlighted" />
+{#snippet variantHighlighted()}
+  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} highlightLines={[2]} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:variantes:highlighted" />
 {/snippet}
-{#snippet compWithFooter()}
-  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} footer={$tStore('demonstration.labels.footer')} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:composicoes:with-footer" />
+{#snippet variantWithFooter()}
+  <CodeBlock class="nds-w-full" language="ts" code={compositionCode} footer={$tStore('demonstration.labels.footer')} {copyLabel} {copiedLabel} data-track="code" data-track-id="code-block:variantes:with-footer" />
 {/snippet}
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="code-block">
@@ -577,9 +576,11 @@ render(items, total);`;
       />
 
       <!-- ── Variantes (linguagens suportadas) ──────────────────────── -->
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={$tStore('variants.title')}
         note={$tStore('variants.note')}
+        useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="code-block"
         items={[
           { name: 'script', description: $tStore('variants.items.script'), code: '<CodeBlock code={source} language="tsx" showLineNumbers={false} />',  preview: asSnippet(langScriptPreview) },
@@ -588,46 +589,37 @@ render(items, total);`;
           { name: 'data',   description: $tStore('variants.items.data'),   code: '<CodeBlock code={source} language="json" showLineNumbers={false} />', preview: asSnippet(langDataPreview)   },
           { name: 'shell',  description: $tStore('variants.items.shell'),  code: '<CodeBlock code={source} language="bash" showLineNumbers={false} />', preview: asSnippet(langShellPreview)  },
           { name: 'text',   description: $tStore('variants.items.text'),   code: '<CodeBlock code={source} language="txt" showLineNumbers={false} />',  preview: asSnippet(langTextPreview)   },
-        ]}
-      />
-
-      <!-- ── Composições ────────────────────────────────────────────── -->
-      <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
-        useWhenLabel={$tNavStore('common.useWhen')}
-        componentSlug="code-block"
-        items={[
           {
-            name: $tStore('variants.compositions.withTitle.name'),
-            description: $tStore('variants.compositions.withTitle.description'),
-            useWhen: $tStore('variants.compositions.withTitle.use'),
+            name: $tStore('variants.items.withTitle.name'),
+            description: $tStore('variants.items.withTitle.description'),
+            useWhen: $tStore('variants.items.withTitle.use'),
             trackId: 'with-title',
             code: '<CodeBlock code={source} language="ts" title="lista.ts" />',
-            preview: asSnippet(compWithTitle),
+            preview: asSnippet(variantWithTitle),
           },
           {
-            name: $tStore('variants.compositions.withoutNumbers.name'),
-            description: $tStore('variants.compositions.withoutNumbers.description'),
-            useWhen: $tStore('variants.compositions.withoutNumbers.use'),
+            name: $tStore('variants.items.withoutNumbers.name'),
+            description: $tStore('variants.items.withoutNumbers.description'),
+            useWhen: $tStore('variants.items.withoutNumbers.use'),
             trackId: 'without-numbers',
             code: '<CodeBlock code={source} language="ts" showLineNumbers={false} />',
-            preview: asSnippet(compWithoutNumbers),
+            preview: asSnippet(variantWithoutNumbers),
           },
           {
-            name: $tStore('variants.compositions.highlighted.name'),
-            description: $tStore('variants.compositions.highlighted.description'),
-            useWhen: $tStore('variants.compositions.highlighted.use'),
+            name: $tStore('variants.items.highlighted.name'),
+            description: $tStore('variants.items.highlighted.description'),
+            useWhen: $tStore('variants.items.highlighted.use'),
             trackId: 'highlighted',
             code: '<CodeBlock code={source} language="ts" highlightLines={[2]} />',
-            preview: asSnippet(compHighlighted),
+            preview: asSnippet(variantHighlighted),
           },
           {
-            name: $tStore('variants.compositions.withFooter.name'),
-            description: $tStore('variants.compositions.withFooter.description'),
-            useWhen: $tStore('variants.compositions.withFooter.use'),
+            name: $tStore('variants.items.withFooter.name'),
+            description: $tStore('variants.items.withFooter.description'),
+            useWhen: $tStore('variants.items.withFooter.use'),
             trackId: 'with-footer',
             code: '<CodeBlock code={source} language="ts" footer="A ação de copiar leva apenas o código." />',
-            preview: asSnippet(compWithFooter),
+            preview: asSnippet(variantWithFooter),
           },
         ]}
       />

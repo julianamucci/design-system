@@ -14,7 +14,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -65,7 +65,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')        },
         { id: 'variantes',    label: tContent('nav.variants')      },
-        { id: 'composicoes',  label: tContent('nav.compositions')  },
         { id: 'estados',      label: tContent('nav.states')        },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -405,35 +404,18 @@ interface HoverCardContentProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
-    title={$tStore('variants.title')}
-    items={[
-      { name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
-      { name: $tStore('variants.items.withDelay'), description: stripHtml($tStore('variants.styles.withDelay')), code: codeWithDelay, preview: variantWithDelay },
-    ]}
-  />
-
-  {#snippet variantDefault()}
-    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
-      openDelay=700 / closeDelay=300
-    </div>
-  {/snippet}
-  {#snippet variantWithDelay()}
-    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
-      openDelay=500 / closeDelay=200
-    </div>
-  {/snippet}
-
-  <!-- ── Composições ─────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
+    id="variantes"
+    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="hover-card"
     items={[
+      { name: $tStore('variants.items.default'),   description: stripHtml($tStore('variants.styles.default')),   code: codeDefault,   preview: variantDefault   },
+      { name: $tStore('variants.items.withDelay'), description: stripHtml($tStore('variants.styles.withDelay')), code: codeWithDelay, preview: variantWithDelay },
       {
-        name: $tStore('variants.compositions.userProfile.name'),
-        description: $tStore('variants.compositions.userProfile.description'),
-        useWhen: $tStore('variants.compositions.userProfile.use'),
+        name: $tStore('variants.items.userProfile.name'),
+        description: $tStore('variants.items.userProfile.description'),
+        useWhen: $tStore('variants.items.userProfile.use'),
         code: `<HoverCard openDelay={500} closeDelay={200}>
   <HoverCardTrigger>
     {#snippet child({ props })}
@@ -453,12 +435,12 @@ interface HoverCardContentProps {
     </div>
   </HoverCardContent>
 </HoverCard>`,
-        preview: compUserProfile,
+        preview: variantUserProfile,
       },
       {
-        name: $tStore('variants.compositions.linkPreview.name'),
-        description: $tStore('variants.compositions.linkPreview.description'),
-        useWhen: $tStore('variants.compositions.linkPreview.use'),
+        name: $tStore('variants.items.linkPreview.name'),
+        description: $tStore('variants.items.linkPreview.description'),
+        useWhen: $tStore('variants.items.linkPreview.use'),
         code: `<HoverCard openDelay={500} closeDelay={200}>
   <HoverCardTrigger>
     {#snippet child({ props })}
@@ -475,12 +457,12 @@ interface HoverCardContentProps {
     </div>
   </HoverCardContent>
 </HoverCard>`,
-        preview: compLinkPreview,
+        preview: variantLinkPreview,
       },
       {
-        name: $tStore('variants.compositions.definitionTooltip.name'),
-        description: $tStore('variants.compositions.definitionTooltip.description'),
-        useWhen: $tStore('variants.compositions.definitionTooltip.use'),
+        name: $tStore('variants.items.definitionTooltip.name'),
+        description: $tStore('variants.items.definitionTooltip.description'),
+        useWhen: $tStore('variants.items.definitionTooltip.use'),
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
@@ -496,12 +478,12 @@ interface HoverCardContentProps {
     </p>
   </HoverCardContent>
 </HoverCard>`,
-        preview: compDefinition,
+        preview: variantDefinitionTooltip,
       },
       {
-        name: $tStore('variants.compositions.metricExplainer.name'),
-        description: $tStore('variants.compositions.metricExplainer.description'),
-        useWhen: $tStore('variants.compositions.metricExplainer.use'),
+        name: $tStore('variants.items.metricExplainer.name'),
+        description: $tStore('variants.items.metricExplainer.description'),
+        useWhen: $tStore('variants.items.metricExplainer.use'),
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
@@ -520,12 +502,24 @@ interface HoverCardContentProps {
     </p>
   </HoverCardContent>
 </HoverCard>`,
-        preview: compMetric,
+        preview: variantMetricExplainer,
       },
     ]}
   />
 
-  {#snippet compUserProfile()}
+  {#snippet variantDefault()}
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
+      openDelay=700 / closeDelay=300
+    </div>
+  {/snippet}
+  {#snippet variantWithDelay()}
+    <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
+      openDelay=500 / closeDelay=200
+    </div>
+  {/snippet}
+
+
+  {#snippet variantUserProfile()}
     <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
@@ -549,7 +543,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
 
-  {#snippet compLinkPreview()}
+  {#snippet variantLinkPreview()}
     <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
@@ -570,7 +564,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
 
-  {#snippet compDefinition()}
+  {#snippet variantDefinitionTooltip()}
     <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
@@ -595,7 +589,7 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
 
-  {#snippet compMetric()}
+  {#snippet variantMetricExplainer()}
     <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>

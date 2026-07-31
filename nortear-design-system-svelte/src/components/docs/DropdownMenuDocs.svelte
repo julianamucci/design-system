@@ -24,7 +24,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -75,7 +75,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants') },
-        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')   },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -482,11 +481,108 @@ interface DropdownMenuRadioGroupProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="dropdown-menu"
     items={[
       { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
       { name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
+      {
+        name: $tStore('variants.items.withLabel.name'),
+        description: $tStore('variants.items.withLabel.description'),
+        useWhen: $tStore('variants.items.withLabel.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Conta</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Conta</DropdownMenuLabel>
+    <DropdownMenuItem>Perfil</DropdownMenuItem>
+    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+    <DropdownMenuItem>Documentação</DropdownMenuItem>
+    <DropdownMenuItem>Sair</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: variantWithLabel,
+      },
+      {
+        name: $tStore('variants.items.withCheckboxItems.name'),
+        description: $tStore('variants.items.withCheckboxItems.description'),
+        useWhen: $tStore('variants.items.withCheckboxItems.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Colunas</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+    <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem bind:checked={showRole}>Cargo</DropdownMenuCheckboxItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: variantWithCheckboxItems,
+      },
+      {
+        name: $tStore('variants.items.withRadioGroup.name'),
+        description: $tStore('variants.items.withRadioGroup.description'),
+        useWhen: $tStore('variants.items.withRadioGroup.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Tema</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+    <DropdownMenuRadioGroup bind:value={theme}>
+      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: variantWithRadioGroup,
+      },
+      {
+        name: $tStore('variants.items.withShortcuts.name'),
+        description: $tStore('variants.items.withShortcuts.description'),
+        useWhen: $tStore('variants.items.withShortcuts.use'),
+        code: `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Editar</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>
+      Desfazer
+      <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Refazer
+      <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>
+      Copiar
+      <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
+      Colar
+      <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`,
+        preview: variantWithShortcuts,
+      },
     ]}
   />
 
@@ -523,110 +619,8 @@ interface DropdownMenuRadioGroupProps {
     </div>
   {/snippet}
 
-  <!-- ── Composições ────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="dropdown-menu"
-    items={[
-      {
-        name: $tStore('variants.compositions.withLabel.name'),
-        description: $tStore('variants.compositions.withLabel.description'),
-        useWhen: $tStore('variants.compositions.withLabel.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Conta</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuItem>Configurações</DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-    <DropdownMenuItem>Documentação</DropdownMenuItem>
-    <DropdownMenuItem>Sair</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`,
-        preview: compWithLabel,
-      },
-      {
-        name: $tStore('variants.compositions.withCheckboxItems.name'),
-        description: $tStore('variants.compositions.withCheckboxItems.description'),
-        useWhen: $tStore('variants.compositions.withCheckboxItems.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Colunas</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-    <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem bind:checked={showRole}>Cargo</DropdownMenuCheckboxItem>
-  </DropdownMenuContent>
-</DropdownMenu>`,
-        preview: compCheckbox,
-      },
-      {
-        name: $tStore('variants.compositions.withRadioGroup.name'),
-        description: $tStore('variants.compositions.withRadioGroup.description'),
-        useWhen: $tStore('variants.compositions.withRadioGroup.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Tema</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-    <DropdownMenuRadioGroup bind:value={theme}>
-      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
-    </DropdownMenuRadioGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`,
-        preview: compRadio,
-      },
-      {
-        name: $tStore('variants.compositions.withShortcuts.name'),
-        description: $tStore('variants.compositions.withShortcuts.description'),
-        useWhen: $tStore('variants.compositions.withShortcuts.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Editar</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>
-      Desfazer
-      <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuItem>
-      Refazer
-      <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
-      Copiar
-      <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuItem>
-      Colar
-      <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`,
-        preview: compShortcuts,
-      },
-    ]}
-  />
 
-  {#snippet compWithLabel()}
+  {#snippet variantWithLabel()}
     <div style="contain: layout; min-height: 240px;">
       <DropdownMenu defaultOpen={true}>
         <DropdownMenuTrigger>
@@ -647,7 +641,7 @@ interface DropdownMenuRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compCheckbox()}
+  {#snippet variantWithCheckboxItems()}
     <div style="contain: layout; min-height: 200px;">
       <DropdownMenu defaultOpen={true}>
         <DropdownMenuTrigger>
@@ -680,7 +674,7 @@ interface DropdownMenuRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compRadio()}
+  {#snippet variantWithRadioGroup()}
     <div style="contain: layout; min-height: 200px;">
       <DropdownMenu defaultOpen={true}>
         <DropdownMenuTrigger>
@@ -700,7 +694,7 @@ interface DropdownMenuRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compShortcuts()}
+  {#snippet variantWithShortcuts()}
     <div style="contain: layout; min-height: 220px;">
       <DropdownMenu defaultOpen={true}>
         <DropdownMenuTrigger>

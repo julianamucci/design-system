@@ -116,7 +116,6 @@
   // Compositions previews
   let compAlign = $state<string>('left');
   let compView = $state<string>('grid');
-  let compDisabled = $state<string>('left');
   let compFilter = $state<string[]>(['compact']);
 
   // Do/Don't
@@ -566,17 +565,6 @@ interface ToggleGroupItemProps {
         preview: compViewMode,
       },
       {
-        name: $tStore('variants.compositions.disabledItem.name'),
-        description: $tStore('variants.compositions.disabledItem.description'),
-        useWhen: $tStore('variants.compositions.disabledItem.use'),
-        code: `<ToggleGroup type="single" variant="outline" value="left" aria-label="Alinhamento do texto">
-  <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
-  <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
-  <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
-</ToggleGroup>`,
-        preview: compDisabledItem,
-      },
-      {
         name: $tStore('variants.compositions.filterWithText.name'),
         description: $tStore('variants.compositions.filterWithText.description'),
         useWhen: $tStore('variants.compositions.filterWithText.use'),
@@ -619,20 +607,6 @@ interface ToggleGroupItemProps {
     </ToggleGroup>
   {/snippet}
 
-  {#snippet compDisabledItem()}
-    <ToggleGroup type="single" variant="outline" bind:value={compDisabled} aria-label="Alinhamento do texto">
-      <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
-        <AlignLeft aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="center" disabled aria-label="Centralizar (indisponível)">
-        <AlignCenter aria-hidden="true" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="right" aria-label="Alinhar à direita">
-        <AlignRight aria-hidden="true" />
-      </ToggleGroupItem>
-    </ToggleGroup>
-  {/snippet}
-
   {#snippet compFilterWithText()}
     <div class="nds-stack" data-spacing="sm" data-align="start">
       <p class="nds-text-body nds-font-medium">Filtros de exibição</p>
@@ -663,6 +637,7 @@ interface ToggleGroupItemProps {
       { label: $tStore('states.items.hover'),    trigger: ':hover',               behavior: stripHtml($tStore('states.descriptions.hover')) },
       { label: $tStore('states.items.focus'),    trigger: ':focus-visible',       behavior: stripHtml($tStore('states.descriptions.focus')) },
       { label: $tStore('states.items.disabled'), trigger: 'disabled',             behavior: stripHtml($tStore('states.descriptions.disabled')) },
+      { label: $tStore('states.disabledItem.label'), trigger: stripHtml($tStore('states.disabledItem.trigger')), behavior: stripHtml($tStore('states.disabledItem.behavior')) },
     ]}
   />
 

@@ -19,7 +19,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -464,13 +464,46 @@ interface TriggerProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="drawer"
     items={[
       { name: $tStore('variants.items.bottom'), description: $tStore('variants.styles.bottom'), code: codeBottom, preview: variantBottom },
       { name: $tStore('variants.items.top'),    description: $tStore('variants.styles.top'),    code: codeTop,    preview: variantTop    },
       { name: $tStore('variants.items.left'),   description: $tStore('variants.styles.left'),   code: codeLeft,   preview: variantLeft   },
       { name: $tStore('variants.items.right'),  description: $tStore('variants.styles.right'),  code: codeRight,  preview: variantRight  },
+      {
+        name: $tStore('variants.items.withScroll.name'),
+        description: $tStore('variants.items.withScroll.description'),
+        useWhen: $tStore('variants.items.withScroll.use'),
+        code: `<Drawer>
+  <DrawerTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>Ler termos</Button>
+    {/snippet}
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Termos de uso</DrawerTitle>
+      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+    </DrawerHeader>
+    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+      {#each Array.from({ length: 12 }) as _, i}
+        <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+      {/each}
+    </div>
+    <DrawerFooter>
+      <Button>Aceitar termos</Button>
+      <DrawerClose>
+        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`,
+        preview: variantWithScroll,
+      },
     ]}
   />
 
@@ -547,6 +580,30 @@ interface TriggerProps {
     </div>
   {/snippet}
 
+  {#snippet variantWithScroll()}
+    <div style="contain: layout">
+      <Drawer defaultOpen={true}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Termos de uso</DrawerTitle>
+            <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
+          </DrawerHeader>
+          <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
+            {#each Array.from({ length: 12 }) as _, i}
+              <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+            {/each}
+          </div>
+          <DrawerFooter>
+            <Button>Aceitar termos</Button>
+            <DrawerClose>
+              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  {/snippet}
+
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
     title={$tStore('variants.compositionsTitle')}
@@ -613,36 +670,6 @@ interface TriggerProps {
 </Drawer>`,
         preview: compWithConfirmation,
       },
-      {
-        name: $tStore('variants.compositions.withScroll.name'),
-        description: $tStore('variants.compositions.withScroll.description'),
-        useWhen: $tStore('variants.compositions.withScroll.use'),
-        code: `<Drawer>
-  <DrawerTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Ler termos</Button>
-    {/snippet}
-  </DrawerTrigger>
-  <DrawerContent>
-    <DrawerHeader>
-      <DrawerTitle>Termos de uso</DrawerTitle>
-      <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
-    </DrawerHeader>
-    <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
-      {#each Array.from({ length: 12 }) as _, i}
-        <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
-      {/each}
-    </div>
-    <DrawerFooter>
-      <Button>Aceitar termos</Button>
-      <DrawerClose>
-        {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`,
-        preview: compWithScroll,
-      },
     ]}
   />
 
@@ -692,30 +719,6 @@ interface TriggerProps {
       </Drawer>
     </div>
   {/snippet}
-  {#snippet compWithScroll()}
-    <div style="contain: layout">
-      <Drawer defaultOpen={true}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Termos de uso</DrawerTitle>
-            <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
-          </DrawerHeader>
-          <div class="nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y nds-px-4" data-spacing="sm" style="max-height: 16rem">
-            {#each Array.from({ length: 12 }) as _, i}
-              <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
-            {/each}
-          </div>
-          <DrawerFooter>
-            <Button>Aceitar termos</Button>
-            <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  {/snippet}
-
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
     title={$tStore('states.title')}

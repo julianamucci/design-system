@@ -9,7 +9,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -392,14 +392,30 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
     note={$tStore('variants.note')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="chart"
     items={[
       { name: 'Bar',   description: stripHtml($tStore('variants.items.bar')),  code: codeBar,  preview: variantBar  },
       { name: 'Linha', description: stripHtml($tStore('variants.items.line')), code: codeLine, preview: variantLine },
       { name: 'Area',  description: stripHtml($tStore('variants.items.area')), code: codeArea, preview: variantArea },
       { name: 'Pie',   description: stripHtml($tStore('variants.items.pie')),  code: codePie,  preview: variantPie  },
+      {
+        name: $tStore('variants.items.smallInline.name'),
+        description: $tStore('variants.items.smallInline.description'),
+        useWhen: $tStore('variants.items.smallInline.use'),
+        code: `<div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
+  <div>
+    <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
+    <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
+  </div>
+  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} style="height: 48px; width: 120px" aria-label="Tendência de acessos" />
+</div>`,
+        preview: variantSmallInline,
+      },
     ]}
   />
 
@@ -431,6 +447,19 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       aria-label="Gráfico de pizza: distribuição por dispositivo"
     />
   {/snippet}
+  {#snippet variantSmallInline()}
+    <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
+      <div>
+        <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
+        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
+      </div>
+      <ChartContainer
+        option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
+        style="height: 48px; width: 120px"
+        aria-label="Tendência de acessos nos últimos 6 meses"
+       />
+    </div>
+  {/snippet}
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
@@ -452,39 +481,6 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
 </Card>`,
         preview: compInCard,
       },
-      {
-        name: $tStore('variants.compositions.multiSeriesWithLegend.name'),
-        description: $tStore('variants.compositions.multiSeriesWithLegend.description'),
-        useWhen: $tStore('variants.compositions.multiSeriesWithLegend.use'),
-        code: `<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="Gráfico multi-séries: Desktop e Mobile" />`,
-        preview: compMultiSeries,
-      },
-      {
-        name: $tStore('variants.compositions.smallInline.name'),
-        description: $tStore('variants.compositions.smallInline.description'),
-        useWhen: $tStore('variants.compositions.smallInline.use'),
-        code: `<div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
-  <div>
-    <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
-    <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
-  </div>
-  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} style="height: 48px; width: 120px" aria-label="Tendência de acessos" />
-</div>`,
-        preview: compSmallInline,
-      },
-      {
-        name: $tStore('variants.compositions.withEmptyState.name'),
-        description: $tStore('variants.compositions.withEmptyState.description'),
-        useWhen: $tStore('variants.compositions.withEmptyState.use'),
-        code: `{#if data.length === 0}
-  <div role="status" class="nds-cluster nds-w-full nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center" style="height: 200px; align-items: center; border: 1px dashed var(--border)">
-    Nenhum dado disponível para o período selecionado.
-  </div>
-{:else}
-  <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="..." />
-{/if}`,
-        preview: compEmptyState,
-      },
     ]}
   />
 
@@ -503,37 +499,6 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     </Card>
   {/snippet}
 
-  {#snippet compMultiSeries()}
-    <ChartContainer
-      option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="nds-w-full nds-max-w-md" style="height: 200px"
-      aria-label="Gráfico multi-séries: Desktop e Mobile"
-     />
-  {/snippet}
-
-  {#snippet compSmallInline()}
-    <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="md" style="width: fit-content">
-      <div>
-        <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
-        <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
-      </div>
-      <ChartContainer
-        option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-        style="height: 48px; width: 120px"
-        aria-label="Tendência de acessos nos últimos 6 meses"
-       />
-    </div>
-  {/snippet}
-
-  {#snippet compEmptyState()}
-    <div
-      role="status"
-      class="nds-cluster nds-w-full nds-max-w-sm nds-rounded-md nds-text-body nds-text-muted-foreground" data-justify="center"
-      style="height: 200px; align-items: center; border: 1px dashed var(--border)"
-    >
-      Nenhum dado disponível para o período selecionado.
-    </div>
-  {/snippet}
 
   <!-- ── Estados ───────────────────────────────────────────────── -->
   <DocsStates
@@ -548,6 +513,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       { label: $tStore('states.loading.label'),      trigger: stripHtml($tStore('states.loading.trigger')),      behavior: stripHtml($tStore('states.loading.behavior'))      },
       { label: $tStore('states.singleSeries.label'), trigger: stripHtml($tStore('states.singleSeries.trigger')), behavior: stripHtml($tStore('states.singleSeries.behavior')) },
       { label: $tStore('states.multiSeries.label'),  trigger: stripHtml($tStore('states.multiSeries.trigger')),  behavior: stripHtml($tStore('states.multiSeries.behavior'))  },
+      { label: $tStore('states.withEmptyState.label'),        trigger: stripHtml($tStore('states.withEmptyState.trigger')),        behavior: stripHtml($tStore('states.withEmptyState.behavior'))        },
+      { label: $tStore('states.multiSeriesWithLegend.label'), trigger: stripHtml($tStore('states.multiSeriesWithLegend.trigger')), behavior: stripHtml($tStore('states.multiSeriesWithLegend.behavior')) },
     ]}
   />
 

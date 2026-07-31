@@ -10,7 +10,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -407,12 +407,22 @@ interface SliderProps {
   <DocsImport title={$tStore('import.title')} code={codeImport} />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="slider"
     items={[
       { name: $tStore('variants.items.single'),   description: stripHtml($tStore('variants.styles.single')),   code: codeSingle,   preview: variantSingle   },
       { name: $tStore('variants.items.range'),    description: stripHtml($tStore('variants.styles.range')),    code: codeRange,    preview: variantRange    },
       { name: $tStore('variants.items.vertical'), description: stripHtml($tStore('variants.styles.vertical')), code: codeVertical, preview: variantVertical },
+      {
+        name: $tStore('variants.items.brightness.name'),
+        description: $tStore('variants.items.brightness.description'),
+        useWhen: $tStore('variants.items.brightness.use'),
+        code: codeCompBrightness,
+        preview: variantBrightness,
+      },
     ]}
   />
 
@@ -446,13 +456,6 @@ interface SliderProps {
         preview: compVolumePreview,
       },
       {
-        name: $tStore('variants.compositions.brightness.name'),
-        description: $tStore('variants.compositions.brightness.description'),
-        useWhen: $tStore('variants.compositions.brightness.use'),
-        code: codeCompBrightness,
-        preview: compBrightnessPreview,
-      },
-      {
         name: $tStore('variants.compositions.form.name'),
         description: $tStore('variants.compositions.form.description'),
         useWhen: $tStore('variants.compositions.form.use'),
@@ -472,7 +475,7 @@ interface SliderProps {
     </div>
   {/snippet}
 
-  {#snippet compBrightnessPreview()}
+  {#snippet variantBrightness()}
     <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
       <div class="nds-cluster" data-justify="between">
         <Label>Brilho</Label>

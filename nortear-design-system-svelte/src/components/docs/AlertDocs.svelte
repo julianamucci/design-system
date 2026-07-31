@@ -13,7 +13,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -329,14 +329,24 @@ interface AlertProps {
       />
 
       <!-- ── Variantes ──────────────────────────────────────────────── -->
-      <DocsVariants
+      <DocsCompositions
+        id="variantes"
         title={$tStore('variants.title')}
+        useWhenLabel={$tNavStore('common.useWhen')}
+        componentSlug="alert"
         items={[
           { name: 'default',     description: $tStore('variants.items.default'),                 code: codeDefault,      preview: variantDefault      },
           { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,  preview: variantDestructive  },
           { name: 'success',     description: stripHtml($tStore('variants.items.success')),      code: codeSuccess,      preview: variantSuccess      },
           { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),      code: codeWarning,      preview: variantWarning      },
           { name: $tStore('states.withoutTitle.label'), description: $tStore('states.withoutTitle.behavior'), code: codeWithoutTitle, preview: variantWithoutTitle },
+          {
+            name: $tStore('variants.items.compact.name'),
+            description: $tStore('variants.items.compact.description'),
+            useWhen: $tStore('variants.items.compact.use'),
+            code: `<Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
+            preview: variantCompact,
+          },
         ]}
       />
 
@@ -374,6 +384,12 @@ interface AlertProps {
           <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
         </Alert>
       {/snippet}
+      {#snippet variantCompact()}
+        <Alert variant="destructive" class="nds-w-full">
+          <AlertCircle aria-hidden="true" />
+          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
+        </Alert>
+      {/snippet}
 
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
@@ -395,13 +411,6 @@ interface AlertProps {
             code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
             preview: compWithAction,
           },
-          {
-            name: $tStore('variants.compositions.compact.name'),
-            description: $tStore('variants.compositions.compact.description'),
-            useWhen: $tStore('variants.compositions.compact.use'),
-            code: `<Alert variant="destructive"><AlertCircle aria-hidden="true" /><AlertDescription>Formulário incompleto.</AlertDescription></Alert>`,
-            preview: compCompact,
-          },
         ]}
       />
 
@@ -420,12 +429,6 @@ interface AlertProps {
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button size="sm" variant="outline">Salvar agora</Button>
           </AlertDescription>
-        </Alert>
-      {/snippet}
-      {#snippet compCompact()}
-        <Alert variant="destructive" class="nds-w-full">
-          <AlertCircle aria-hidden="true" />
-          <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
         </Alert>
       {/snippet}
 

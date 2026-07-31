@@ -14,7 +14,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -409,8 +409,10 @@ interface ToggleProps {
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="toggle"
     items={[
       {
@@ -430,6 +432,17 @@ interface ToggleProps {
         description: stripHtml($tStore('variants.styles.withLabel')),
         code: codeWithLabel,
         preview: variantWithLabel,
+      },
+      {
+        name: $tStore('variants.items.sizes.name'),
+        description: $tStore('variants.items.sizes.description'),
+        useWhen: $tStore('variants.items.sizes.use'),
+        code: `<div class="nds-cluster" data-spacing="sm">
+  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
+  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
+</div>`,
+        preview: variantSizes,
       },
     ]}
   />
@@ -471,17 +484,6 @@ interface ToggleProps {
         preview: compToolbar,
       },
       {
-        name: $tStore('variants.compositions.sizes.name'),
-        description: $tStore('variants.compositions.sizes.description'),
-        useWhen: $tStore('variants.compositions.sizes.use'),
-        code: `<div class="nds-cluster" data-spacing="sm">
-  <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
-  <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>
-  <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold aria-hidden="true" /></Toggle>
-</div>`,
-        preview: compSizes,
-      },
-      {
         name: $tStore('variants.compositions.filterList.name'),
         description: $tStore('variants.compositions.filterList.description'),
         useWhen: $tStore('variants.compositions.filterList.use'),
@@ -505,7 +507,7 @@ interface ToggleProps {
     </div>
   {/snippet}
 
-  {#snippet compSizes()}
+  {#snippet variantSizes()}
     <div class="nds-cluster" data-spacing="sm">
       <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold aria-hidden="true" /></Toggle>
       <Toggle variant="outline" aria-label="Negrito (default)"><Bold aria-hidden="true" /></Toggle>

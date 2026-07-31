@@ -16,7 +16,6 @@
     DocsWhenToUse,
     DocsDoDont,
     DocsImport,
-    DocsVariants,
     DocsCompositions,
     DocsStates,
     DocsProps,
@@ -412,8 +411,10 @@ interface CollapsibleContentProps {
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="collapsible"
     items={[
       {
@@ -427,6 +428,24 @@ interface CollapsibleContentProps {
         description: stripHtml($tStore('variants.items.controlled')),
         code: codeControlled,
         preview: variantControlled,
+      },
+      {
+        name: $tStore('variants.items.customButton.name'),
+        description: $tStore('variants.items.customButton.description'),
+        useWhen: $tStore('variants.items.customButton.use'),
+        code: `<Collapsible class="nds-w-full nds-max-w-sm">
+  <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
+    Exibir opções avançadas
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+      <p>Primeira opção avançada.</p>
+      <p>Segunda opção avançada.</p>
+      <p>Terceira opção avançada.</p>
+    </div>
+  </CollapsibleContent>
+</Collapsible>`,
+        preview: variantCustomButton,
       },
     ]}
   />
@@ -471,30 +490,29 @@ interface CollapsibleContentProps {
     </Collapsible>
   {/snippet}
 
+  {#snippet variantCustomButton()}
+    <Collapsible class="nds-w-full nds-max-w-sm">
+      <CollapsibleTrigger
+        class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex"
+      >
+        Exibir opções avançadas
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
+          <p>Primeira opção avançada disponível.</p>
+          <p>Segunda opção avançada disponível.</p>
+          <p>Terceira opção avançada disponível.</p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  {/snippet}
+
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
     title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="collapsible"
     items={[
-      {
-        name: $tStore('variants.compositions.customButton.name'),
-        description: $tStore('variants.compositions.customButton.description'),
-        useWhen: $tStore('variants.compositions.customButton.use'),
-        code: `<Collapsible class="nds-w-full nds-max-w-sm">
-  <CollapsibleTrigger class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex">
-    Exibir opções avançadas
-  </CollapsibleTrigger>
-  <CollapsibleContent>
-    <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
-      <p>Primeira opção avançada.</p>
-      <p>Segunda opção avançada.</p>
-      <p>Terceira opção avançada.</p>
-    </div>
-  </CollapsibleContent>
-</Collapsible>`,
-        preview: compCustomButton,
-      },
       {
         name: $tStore('variants.compositions.iconTrigger.name'),
         description: $tStore('variants.compositions.iconTrigger.description'),
@@ -554,23 +572,6 @@ interface CollapsibleContentProps {
       },
     ]}
   />
-
-  {#snippet compCustomButton()}
-    <Collapsible class="nds-w-full nds-max-w-sm">
-      <CollapsibleTrigger
-        class="nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-spacing="sm" style="display: inline-flex"
-      >
-        Exibir opções avançadas
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
-          <p>Primeira opção avançada disponível.</p>
-          <p>Segunda opção avançada disponível.</p>
-          <p>Terceira opção avançada disponível.</p>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  {/snippet}
 
   {#snippet compIconTrigger()}
     <Collapsible class="nds-w-full">

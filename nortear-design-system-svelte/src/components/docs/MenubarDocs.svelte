@@ -24,7 +24,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -75,7 +75,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants')     },
-        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')       },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -502,11 +501,99 @@ interface MenubarRadioGroupProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="menubar"
     items={[
       { name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
       { name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
+      {
+        name: $tStore('variants.items.withShortcuts.name'),
+        description: $tStore('variants.items.withShortcuts.description'),
+        useWhen: $tStore('variants.items.withShortcuts.use'),
+        code: `<Menubar defaultValue="edit">
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
+      <MenubarSeparator />
+      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
+      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+        preview: variantWithShortcuts,
+      },
+      {
+        name: $tStore('variants.items.withCheckbox.name'),
+        description: $tStore('variants.items.withCheckbox.description'),
+        useWhen: $tStore('variants.items.withCheckbox.use'),
+        code: `<Menubar defaultValue="view">
+  <MenubarMenu value="view">
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarCheckboxItem bind:checked={showSidebar}>Sidebar</MenubarCheckboxItem>
+      <MenubarCheckboxItem bind:checked={showGrid}>Grid</MenubarCheckboxItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+        preview: variantWithCheckbox,
+      },
+      {
+        name: $tStore('variants.items.withRadio.name'),
+        description: $tStore('variants.items.withRadio.description'),
+        useWhen: $tStore('variants.items.withRadio.use'),
+        code: `<Menubar defaultValue="theme">
+  <MenubarMenu value="theme">
+    <MenubarTrigger>Tema</MenubarTrigger>
+    <MenubarContent>
+      <MenubarRadioGroup bind:value={theme}>
+        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
+        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
+        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
+      </MenubarRadioGroup>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+        preview: variantWithRadio,
+      },
+      {
+        name: $tStore('variants.items.editorComplete.name'),
+        description: $tStore('variants.items.editorComplete.description'),
+        useWhen: $tStore('variants.items.editorComplete.use'),
+        code: `<Menubar>
+  <MenubarMenu value="file">
+    <MenubarTrigger>Arquivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="edit">
+    <MenubarTrigger>Editar</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="view">
+    <MenubarTrigger>Exibir</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu value="help">
+    <MenubarTrigger>Ajuda</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Sobre</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`,
+        preview: variantEditorComplete,
+      },
     ]}
   />
 
@@ -539,101 +626,8 @@ interface MenubarRadioGroupProps {
     </div>
   {/snippet}
 
-  <!-- ── Composições ────────────────────────────────────────────── -->
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="menubar"
-    items={[
-      {
-        name: $tStore('variants.compositions.withShortcuts.name'),
-        description: $tStore('variants.compositions.withShortcuts.description'),
-        useWhen: $tStore('variants.compositions.withShortcuts.use'),
-        code: `<Menubar defaultValue="edit">
-  <MenubarMenu value="edit">
-    <MenubarTrigger>Editar</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem>Copiar <MenubarShortcut>⌘C</MenubarShortcut></MenubarItem>
-      <MenubarItem>Colar <MenubarShortcut>⌘V</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`,
-        preview: compWithShortcuts,
-      },
-      {
-        name: $tStore('variants.compositions.withCheckbox.name'),
-        description: $tStore('variants.compositions.withCheckbox.description'),
-        useWhen: $tStore('variants.compositions.withCheckbox.use'),
-        code: `<Menubar defaultValue="view">
-  <MenubarMenu value="view">
-    <MenubarTrigger>Exibir</MenubarTrigger>
-    <MenubarContent>
-      <MenubarCheckboxItem bind:checked={showSidebar}>Sidebar</MenubarCheckboxItem>
-      <MenubarCheckboxItem bind:checked={showGrid}>Grid</MenubarCheckboxItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`,
-        preview: compWithCheckbox,
-      },
-      {
-        name: $tStore('variants.compositions.withRadio.name'),
-        description: $tStore('variants.compositions.withRadio.description'),
-        useWhen: $tStore('variants.compositions.withRadio.use'),
-        code: `<Menubar defaultValue="theme">
-  <MenubarMenu value="theme">
-    <MenubarTrigger>Tema</MenubarTrigger>
-    <MenubarContent>
-      <MenubarRadioGroup bind:value={theme}>
-        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
-        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
-        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
-      </MenubarRadioGroup>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`,
-        preview: compWithRadio,
-      },
-      {
-        name: $tStore('variants.compositions.editorComplete.name'),
-        description: $tStore('variants.compositions.editorComplete.description'),
-        useWhen: $tStore('variants.compositions.editorComplete.use'),
-        code: `<Menubar>
-  <MenubarMenu value="file">
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir... <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
-      <MenubarItem>Salvar <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="edit">
-    <MenubarTrigger>Editar</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="view">
-    <MenubarTrigger>Exibir</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="help">
-    <MenubarTrigger>Ajuda</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Sobre</MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`,
-        preview: compEditorComplete,
-      },
-    ]}
-  />
 
-  {#snippet compWithShortcuts()}
+  {#snippet variantWithShortcuts()}
     <div style="contain: layout">
       <Menubar defaultValue="edit">
         <MenubarMenu value="edit">
@@ -650,7 +644,7 @@ interface MenubarRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compWithCheckbox()}
+  {#snippet variantWithCheckbox()}
     <div style="contain: layout">
       <Menubar defaultValue="view">
         <MenubarMenu value="view">
@@ -664,7 +658,7 @@ interface MenubarRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compWithRadio()}
+  {#snippet variantWithRadio()}
     <div style="contain: layout">
       <Menubar defaultValue="theme">
         <MenubarMenu value="theme">
@@ -681,7 +675,7 @@ interface MenubarRadioGroupProps {
     </div>
   {/snippet}
 
-  {#snippet compEditorComplete()}
+  {#snippet variantEditorComplete()}
     <div style="contain: layout">
       <Menubar>
         <MenubarMenu value="file">

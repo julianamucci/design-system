@@ -16,7 +16,7 @@
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
-    DocsImport, DocsVariants, DocsCompositions, DocsStates, DocsProps, DocsTokens,
+    DocsImport, DocsCompositions, DocsStates, DocsProps, DocsTokens,
     DocsAccessibility, DocsRelated, DocsNotes, DocsAnalytics, DocsTestes,
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
@@ -67,7 +67,6 @@
       { label: tNav('nav.techRef'), sections: [
         { id: 'importacao',   label: tContent('nav.import')   },
         { id: 'variantes',    label: tContent('nav.variants')     },
-        { id: 'composicoes',  label: tContent('nav.compositions') },
         { id: 'estados',      label: tContent('nav.states')       },
         { id: 'propriedades', label: tContent('nav.props')    },
         { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -404,11 +403,101 @@ interface NavigationMenuLinkProps {
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
-  <DocsVariants
+  <DocsCompositions
+    id="variantes"
     title={$tStore('variants.title')}
+    useWhenLabel={$tNavStore('common.useWhen')}
+    componentSlug="navigation-menu"
     items={[
       { name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: codeHorizontal, preview: variantHorizontal },
       { name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: codeVertical,   preview: variantVertical   },
+      {
+        name: $tStore('variants.items.linkSimples.name'),
+        description: $tStore('variants.items.linkSimples.description'),
+        useWhen: $tStore('variants.items.linkSimples.use'),
+        code: `<NavigationMenuRoot aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="home"><NavigationMenuLink href="/">Início</NavigationMenuLink></NavigationMenuItem>
+    <NavigationMenuItem value="precos"><NavigationMenuLink href="/precos">Preços</NavigationMenuLink></NavigationMenuItem>
+    <NavigationMenuItem value="contato"><NavigationMenuLink href="/contato">Contato</NavigationMenuLink></NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenuRoot>`,
+        preview: variantLinkSimples,
+      },
+      {
+        name: $tStore('variants.items.comDropdown.name'),
+        description: $tStore('variants.items.comDropdown.description'),
+        useWhen: $tStore('variants.items.comDropdown.use'),
+        code: `<NavigationMenuRoot aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="home"><NavigationMenuLink href="/">Início</NavigationMenuLink></NavigationMenuItem>
+    <NavigationMenuItem value="produtos">
+      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 240px">
+          <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
+          <li><NavigationMenuLink href="/produtos/comparar">Comparar planos</NavigationMenuLink></li>
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenuRoot>`,
+        preview: variantComDropdown,
+      },
+      {
+        name: $tStore('variants.items.megaMenuGrid.name'),
+        description: $tStore('variants.items.megaMenuGrid.description'),
+        useWhen: $tStore('variants.items.megaMenuGrid.use'),
+        code: `<NavigationMenuRoot aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="solucoes">
+      <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 560px">
+          <li>
+            <NavigationMenuLink href="/solucoes/marketing">
+              <div class="nds-text-body nds-font-medium">Para Marketing</div>
+              <p class="nds-text-caption nds-text-muted-foreground">Automação, leads e campanhas.</p>
+            </NavigationMenuLink>
+          </li>
+          <!-- ...mais 5 itens -->
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenuRoot>`,
+        preview: variantMegaMenuGrid,
+      },
+      {
+        name: $tStore('variants.items.comCardDestacado.name'),
+        description: $tStore('variants.items.comCardDestacado.description'),
+        useWhen: $tStore('variants.items.comCardDestacado.use'),
+        code: `<NavigationMenuRoot aria-label="Navegação principal">
+  <NavigationMenuList>
+    <NavigationMenuItem value="recursos">
+      <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <div class="nds-cluster nds-p-4" data-spacing="md" style="width: 560px">
+          <a href="/quickstart" class="nds-stack nds-rounded-md nds-p-4" style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))">
+            <div class="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
+            <p class="nds-mt-2 nds-text-body nds-leading-tight">
+              Crie sua primeira integração com nosso quickstart.
+            </p>
+          </a>
+          <ul class="nds-stack nds-flex-1" data-spacing="xs">
+            <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
+            <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
+          </ul>
+        </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenuRoot>`,
+        preview: variantComCardDestacado,
+      },
     ]}
   />
 
@@ -448,7 +537,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
-  {#snippet compLinkSimples()}
+  {#snippet variantLinkSimples()}
     <div style="contain: layout; min-height: 200px;" class="nds-cluster nds-w-full" data-justify="center">
       <NavigationMenuRoot delayDuration={80} aria-label="Navegação principal">
         <NavigationMenuList>
@@ -460,7 +549,7 @@ interface NavigationMenuLinkProps {
     </div>
   {/snippet}
 
-  {#snippet compComDropdown()}
+  {#snippet variantComDropdown()}
     <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
       <NavigationMenuRoot delayDuration={80} defaultValue="produtos" aria-label="Navegação principal">
         <NavigationMenuList>
@@ -481,7 +570,7 @@ interface NavigationMenuLinkProps {
     </div>
   {/snippet}
 
-  {#snippet compMegaMenuGrid()}
+  {#snippet variantMegaMenuGrid()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
       <NavigationMenuRoot delayDuration={80} defaultValue="solucoes" aria-label="Navegação principal">
         <NavigationMenuList>
@@ -503,7 +592,7 @@ interface NavigationMenuLinkProps {
     </div>
   {/snippet}
 
-  {#snippet compComCardDestacado()}
+  {#snippet variantComCardDestacado()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
       <NavigationMenuRoot delayDuration={80} defaultValue="recursos" aria-label="Navegação principal">
         <NavigationMenuList>
@@ -530,100 +619,6 @@ interface NavigationMenuLinkProps {
     </div>
   {/snippet}
 
-  <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
-    useWhenLabel={$tNavStore('common.useWhen')}
-    componentSlug="navigation-menu"
-    items={[
-      {
-        name: $tStore('variants.compositions.linkSimples.name'),
-        description: $tStore('variants.compositions.linkSimples.description'),
-        useWhen: $tStore('variants.compositions.linkSimples.use'),
-        code: `<NavigationMenuRoot aria-label="Navegação principal">
-  <NavigationMenuList>
-    <NavigationMenuItem value="home"><NavigationMenuLink href="/">Início</NavigationMenuLink></NavigationMenuItem>
-    <NavigationMenuItem value="precos"><NavigationMenuLink href="/precos">Preços</NavigationMenuLink></NavigationMenuItem>
-    <NavigationMenuItem value="contato"><NavigationMenuLink href="/contato">Contato</NavigationMenuLink></NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenuRoot>`,
-        preview: compLinkSimples,
-      },
-      {
-        name: $tStore('variants.compositions.comDropdown.name'),
-        description: $tStore('variants.compositions.comDropdown.description'),
-        useWhen: $tStore('variants.compositions.comDropdown.use'),
-        code: `<NavigationMenuRoot aria-label="Navegação principal">
-  <NavigationMenuList>
-    <NavigationMenuItem value="home"><NavigationMenuLink href="/">Início</NavigationMenuLink></NavigationMenuItem>
-    <NavigationMenuItem value="produtos">
-      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <ul class="nds-grid nds-p-2" data-spacing="xs" style="width: 240px">
-          <li><NavigationMenuLink href="/produtos/inicial">Plano Inicial</NavigationMenuLink></li>
-          <li><NavigationMenuLink href="/produtos/profissional">Plano Profissional</NavigationMenuLink></li>
-          <li><NavigationMenuLink href="/produtos/empresarial">Plano Empresarial</NavigationMenuLink></li>
-          <li><NavigationMenuLink href="/produtos/comparar">Comparar planos</NavigationMenuLink></li>
-        </ul>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenuRoot>`,
-        preview: compComDropdown,
-      },
-      {
-        name: $tStore('variants.compositions.megaMenuGrid.name'),
-        description: $tStore('variants.compositions.megaMenuGrid.description'),
-        useWhen: $tStore('variants.compositions.megaMenuGrid.use'),
-        code: `<NavigationMenuRoot aria-label="Navegação principal">
-  <NavigationMenuList>
-    <NavigationMenuItem value="solucoes">
-      <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <ul class="nds-grid nds-p-4" data-cols="2" data-spacing="sm" style="width: 560px">
-          <li>
-            <NavigationMenuLink href="/solucoes/marketing">
-              <div class="nds-text-body nds-font-medium">Para Marketing</div>
-              <p class="nds-text-caption nds-text-muted-foreground">Automação, leads e campanhas.</p>
-            </NavigationMenuLink>
-          </li>
-          <!-- ...mais 5 itens -->
-        </ul>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenuRoot>`,
-        preview: compMegaMenuGrid,
-      },
-      {
-        name: $tStore('variants.compositions.comCardDestacado.name'),
-        description: $tStore('variants.compositions.comCardDestacado.description'),
-        useWhen: $tStore('variants.compositions.comCardDestacado.use'),
-        code: `<NavigationMenuRoot aria-label="Navegação principal">
-  <NavigationMenuList>
-    <NavigationMenuItem value="recursos">
-      <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
-      <NavigationMenuContent>
-        <div class="nds-cluster nds-p-4" data-spacing="md" style="width: 560px">
-          <a href="/quickstart" class="nds-stack nds-rounded-md nds-p-4" style="width: 220px; justify-content: flex-end; text-decoration: none; background: linear-gradient(to bottom, hsl(var(--muted)), hsl(var(--accent)))">
-            <div class="nds-text-base nds-font-semibold nds-leading-tight">Comece em 5 minutos</div>
-            <p class="nds-mt-2 nds-text-body nds-leading-tight">
-              Crie sua primeira integração com nosso quickstart.
-            </p>
-          </a>
-          <ul class="nds-stack nds-flex-1" data-spacing="xs">
-            <li><NavigationMenuLink href="/docs">Documentação</NavigationMenuLink></li>
-            <li><NavigationMenuLink href="/tutoriais">Tutoriais</NavigationMenuLink></li>
-            <li><NavigationMenuLink href="/comunidade">Comunidade</NavigationMenuLink></li>
-          </ul>
-        </div>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  </NavigationMenuList>
-</NavigationMenuRoot>`,
-        preview: compComCardDestacado,
-      },
-    ]}
-  />
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
