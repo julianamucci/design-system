@@ -23,7 +23,7 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          {#each items as item (item.label)}
+          {#each items as item, i (i)}
             <TableRow class="nds-border-b nds-hover-bg-muted-faint">
               <TableCell class="nds-p-2 nds-font-medium">{item.label}</TableCell>
               <TableCell class="nds-p-2 nds-text-muted-foreground">{item.trigger}</TableCell>

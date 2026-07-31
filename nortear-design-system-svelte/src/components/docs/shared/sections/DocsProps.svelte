@@ -47,7 +47,7 @@
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {#each def.items as item (item.name)}
+                {#each def.items as item, i (i)}
                   <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                     <TableCell class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
                     <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>

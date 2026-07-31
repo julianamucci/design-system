@@ -30,7 +30,7 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            {#each items as item (item.token)}
+            {#each items as item, i (i)}
               <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                 <TableCell class="nds-p-2 nds-font-mono nds-text-primary">{item.token}</TableCell>
                 <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.value}</TableCell>

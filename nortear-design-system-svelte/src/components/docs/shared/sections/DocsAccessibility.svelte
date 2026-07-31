@@ -27,7 +27,7 @@
     <div>
       <h3 class="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
       <div class="nds-grid" data-cols="2" data-spacing="sm">
-        {#each keyboardItems as item (item.key)}
+        {#each keyboardItems as item, i (i)}
           <Card class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4" data-spacing="sm" data-align="start">
               <kbd class="nds-kbd">
                 {item.key}

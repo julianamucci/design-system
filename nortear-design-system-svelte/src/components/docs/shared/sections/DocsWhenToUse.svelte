@@ -41,7 +41,7 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            {#each scenarios.items as item (item.s)}
+            {#each scenarios.items as item, i (i)}
               <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                 <TableCell class="nds-p-2">{item.s}</TableCell>
                 <TableCell class="nds-p-2 nds-font-medium nds-text-primary">{item.u}</TableCell>

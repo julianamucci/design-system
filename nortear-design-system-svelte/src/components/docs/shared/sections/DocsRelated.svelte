@@ -26,7 +26,7 @@
 <section id="relacionados">
   <h2 class="nds-section-title">{title}</h2>
   <div class="nds-grid" data-cols="2" data-spacing="md">
-    {#each items as item (item.path)}
+    {#each items as item, i (i)}
       <!-- Card clicável com aparência do button outline (border + bg + hover accent).
            Implementado como classe própria .nds-related-card em vez de usar
            .nds-button-outline porque o layout difere (vertical, multi-linha,
