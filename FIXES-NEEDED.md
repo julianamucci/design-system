@@ -109,3 +109,51 @@ reservatório mais antigo do padrão morto que regenerava as stories erradas.
   verdes, e foi só por fumaça manual que o heading-order apareceu). As OUTRAS
   47 docs pages nunca passaram por axe: o Alert zerou, o resto é incógnita.
   Candidato: story de fumaça por componente ou visita de docs no test-runner.
+
+## Fumaça das docs pages — react (2026-07-31)
+
+`docs-smoke.stories.tsx` no runner: 63 páginas, 41 limpas (axe = portão),
+21 em `a11y.test: 'todo'`, 1 com a11y desligado só na story (icons — abaixo),
+0 fora. Crash real encontrado e CORRIGIDO:
+DropdownMenuDocs usava `DropdownMenuLabel` (Base UI `Menu.GroupLabel`) fora de
+`DropdownMenuGroup`/`DropdownMenuRadioGroup` — as previews `defaultOpen`
+derrubavam a página inteira no mount.
+
+Dívida axe catalogada (rule ids por página, modo todo — visível no painel a11y):
+
+| Página | Rules |
+| --- | --- |
+| accordion | landmark-unique |
+| alert-dialog | nested-interactive, target-size |
+| avatar | aria-prohibited-attr |
+| breadcrumb | landmark-unique |
+| calendar | landmark-unique, scope-attr-valid |
+| carousel | landmark-unique |
+| checkbox | target-size |
+| collapsible | nested-interactive, target-size |
+| command | aria-required-children, button-name, color-contrast |
+| dropdown-menu | aria-hidden-focus |
+| icons | color-contrast — CASO À PARTE: o catálogo inteiro do lucide (~1600 ícones, sem virtualização) faz o axe estourar 60s de timeout; a story está com `a11y: { disable: true }` em vez de 'todo'. Virtualizar/paginar o grid destrava o axe |
+| menubar | aria-required-children |
+| navigation-menu | aria-hidden-focus, landmark-unique |
+| pagination | landmark-unique |
+| radio-group | aria-toggle-field-name |
+| resizable | scrollable-region-focusable |
+| select | color-contrast, select-name |
+| sidebar | landmark-no-duplicate-main, landmark-unique |
+| skeleton | aria-prohibited-attr |
+| sonner | landmark-unique |
+| switch | aria-toggle-field-name |
+| textarea | label |
+
+Top 3 rules: landmark-unique (8 páginas), target-size (3), color-contrast (3).
+
+Nota de contrato: as 16 páginas Foundations (FoundationPage/ThemeColors/Icons)
+renderizam `<section>` SEM `id` — a play da fumaça usa `querySelector('section')`
+em vez de `section[id]` para não dar falso vermelho em página que monta bem.
+Dar `id` às seções de Foundations (âncoras) é melhoria futura cross-stack.
+
+Infra: `testTimeout: 60000` no projeto storybook do vite.config.ts — docs
+pages inteiras sob axe estouravam os 15s default com os 4 runners em paralelo
+(e um timeout no meio da suíte vazava landmarks pra story seguinte: o
+`landmark-no-duplicate-banner` fantasma do input-otp era isso).

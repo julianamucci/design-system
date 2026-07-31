@@ -49,6 +49,9 @@ export default defineConfig({
       })],
       test: {
         name: 'storybook',
+        // Docs pages inteiras passam por axe após a play (suíte de fumaça);
+        // páginas pesadas (Icons, Input) estouravam os 15s default sob carga.
+        testTimeout: 60000,
         browser: {
           enabled: true,
           headless: true,

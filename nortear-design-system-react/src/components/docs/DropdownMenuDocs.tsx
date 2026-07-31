@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
@@ -151,6 +152,7 @@ export function DropdownMenuDocs() {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuItem,
   DropdownMenuCheckboxItem,
@@ -234,9 +236,11 @@ interface DropdownMenuItemProps {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel>Conta</DropdownMenuLabel>
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Configurações</DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Conta</DropdownMenuLabel>
+                  <DropdownMenuItem>Perfil</DropdownMenuItem>
+                  <DropdownMenuItem>Configurações</DropdownMenuItem>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
               </DropdownMenuContent>
@@ -519,13 +523,17 @@ interface DropdownMenuItemProps {
     <Button variant="outline">Conta</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Conta</DropdownMenuLabel>
+      <DropdownMenuItem>Perfil</DropdownMenuItem>
+      <DropdownMenuItem>Configurações</DropdownMenuItem>
+    </DropdownMenuGroup>
     <DropdownMenuSeparator />
-    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-    <DropdownMenuItem>Documentação</DropdownMenuItem>
-    <DropdownMenuItem>Sair</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+      <DropdownMenuItem>Documentação</DropdownMenuItem>
+      <DropdownMenuItem>Sair</DropdownMenuItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
@@ -535,13 +543,17 @@ interface DropdownMenuItemProps {
                     <Button variant="outline" size="sm">Conta</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start">
-                    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-                    <DropdownMenuItem>Perfil</DropdownMenuItem>
-                    <DropdownMenuItem>Configurações</DropdownMenuItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Conta</DropdownMenuLabel>
+                      <DropdownMenuItem>Perfil</DropdownMenuItem>
+                      <DropdownMenuItem>Configurações</DropdownMenuItem>
+                    </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-                    <DropdownMenuItem>Documentação</DropdownMenuItem>
-                    <DropdownMenuItem>Sair</DropdownMenuItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+                      <DropdownMenuItem>Documentação</DropdownMenuItem>
+                      <DropdownMenuItem>Sair</DropdownMenuItem>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -556,16 +568,18 @@ interface DropdownMenuItemProps {
     <Button variant="outline">Colunas</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-    <DropdownMenuCheckboxItem checked={showName} onCheckedChange={setShowName}>
-      Nome
-    </DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem checked={showEmail} onCheckedChange={setShowEmail}>
-      E-mail
-    </DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem checked={showRole} onCheckedChange={setShowRole}>
-      Cargo
-    </DropdownMenuCheckboxItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+      <DropdownMenuCheckboxItem checked={showName} onCheckedChange={setShowName}>
+        Nome
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem checked={showEmail} onCheckedChange={setShowEmail}>
+        E-mail
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem checked={showRole} onCheckedChange={setShowRole}>
+        Cargo
+      </DropdownMenuCheckboxItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`,
             preview: (
@@ -575,25 +589,27 @@ interface DropdownMenuItemProps {
                     <Button variant="outline" size="sm">Colunas</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start">
-                    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-                    <DropdownMenuCheckboxItem
-                      checked={showName}
-                      onCheckedChange={setShowName}
-                    >
-                      Nome
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showEmail}
-                      onCheckedChange={setShowEmail}
-                    >
-                      E-mail
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showRole}
-                      onCheckedChange={setShowRole}
-                    >
-                      Cargo
-                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+                      <DropdownMenuCheckboxItem
+                        checked={showName}
+                        onCheckedChange={setShowName}
+                      >
+                        Nome
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={showEmail}
+                        onCheckedChange={setShowEmail}
+                      >
+                        E-mail
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={showRole}
+                        onCheckedChange={setShowRole}
+                      >
+                        Cargo
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -608,8 +624,8 @@ interface DropdownMenuItemProps {
     <Button variant="outline">Tema</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
     <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+      <DropdownMenuLabel>Aparência</DropdownMenuLabel>
       <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
@@ -623,8 +639,8 @@ interface DropdownMenuItemProps {
                     <Button variant="outline" size="sm">Tema</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start">
-                    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
                     <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                      <DropdownMenuLabel>Aparência</DropdownMenuLabel>
                       <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
