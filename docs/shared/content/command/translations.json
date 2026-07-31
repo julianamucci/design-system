@@ -160,11 +160,6 @@
         "trigger": "Implementar via <code>CommandLoading</code> do cmdk ou spinner no <code>CommandList</code>",
         "behavior": "Indicador de carregamento exibido enquanto resultados remotos chegam"
       },
-      "withDisabled": {
-        "label": "Com itens desabilitados",
-        "trigger": "Item marcado como desabilitado",
-        "behavior": "Mistura itens habilitados e itens com <code>disabled</code>. Os desabilitados continuam visíveis e indexados pelo filtro, mas não recebem foco nem disparam <code>onSelect</code>."
-      },
       "longList": {
         "label": "Lista longa (scroll)",
         "trigger": "20 ou mais itens na lista",
@@ -547,11 +542,6 @@
         "trigger": "Implement via cmdk's <code>CommandLoading</code> or a spinner in <code>CommandList</code>",
         "behavior": "Loading indicator displayed while remote results are fetched"
       },
-      "withDisabled": {
-        "label": "With disabled items",
-        "trigger": "Item marked as disabled",
-        "behavior": "Mixes enabled items and items with <code>disabled</code>. Disabled items remain visible and indexed by the filter, but do not receive focus or fire <code>onSelect</code>."
-      },
       "longList": {
         "label": "Long list (scroll)",
         "trigger": "20 or more items in the list",
@@ -933,11 +923,6 @@
         "label": "Cargando",
         "trigger": "Implementar vía <code>CommandLoading</code> de cmdk o spinner en <code>CommandList</code>",
         "behavior": "Indicador de carga mostrado mientras llegan resultados remotos"
-      },
-      "withDisabled": {
-        "label": "Con ítems deshabilitados",
-        "trigger": "Ítem marcado como deshabilitado",
-        "behavior": "Mezcla ítems habilitados y ítems con <code>disabled</code>. Los deshabilitados siguen visibles e indexados por el filtro, pero no reciben foco ni disparan <code>onSelect</code>."
       },
       "longList": {
         "label": "Lista larga (scroll)",

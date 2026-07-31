@@ -123,30 +123,6 @@
     "variants": {
       "title": "Variantes",
       "note": "O Input não tem variantes via prop. A aparência muda conforme o <code>type</code> e o estado (disabled, aria-invalid). O <code>InputGroup</code> é o padrão para inputs com addons.",
-      "types": {
-        "title": "Tipos disponíveis",
-        "text": "Texto livre. Default quando <code>type</code> não é especificado.",
-        "email": "Email. Teclado mobile com '@'. Validação de formato pelo browser.",
-        "password": "Senha. Caracteres mascarados. Botão nativo de exibir/ocultar em alguns browsers.",
-        "number": "Numérico. Aceita apenas dígitos, vírgula e ponto. Setas de incremento nativas.",
-        "tel": "Telefone. Teclado numérico em mobile. Sem validação de formato nativa.",
-        "url": "URL. Teclado mobile com '/' e '.com'. Validação de formato pelo browser.",
-        "search": "Busca. Botão de limpar nativo em alguns browsers. Use com botão de submit sr-only.",
-        "date": "Data. Seletor nativo do browser. Valor em formato ISO (YYYY-MM-DD).",
-        "file": "Arquivo. Abre seletor de arquivo nativo. Estilização limitada pela plataforma."
-      },
-      "inputGroup": {
-        "title": "InputGroup — Composição com addons",
-        "description": "O <code>InputGroup</code> é um componente separado que envolve o Input para adicionar prefixos, sufixos, ícones e botões internos.",
-        "subcomponents": {
-          "inputGroup": "<strong>InputGroup</strong> — container com <code>role=\"group\"</code>. Gerencia foco, borda e estados.",
-          "inputGroupAddon": "<strong>InputGroupAddon</strong> — container de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
-          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro do InputGroup (sem borda própria).",
-          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado com tamanho reduzido para uso interno.",
-          "inputGroupText": "<strong>InputGroupText</strong> — Texto ou ícone decorativo dentro do addon.",
-          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro do InputGroup."
-        }
-      },
       "compositionsTitle": "Composições",
       "compositions": {
         "withLabel": {
@@ -168,6 +144,32 @@
           "name": "Com prefixo",
           "description": "Input dentro de um wrapper bordado contendo um span de prefixo (ex.: <code>https://</code>, <code>R$</code>) + input sem borda própria. Foco visual no wrapper inteiro via <code>focus-within</code>.",
           "use": "URLs, valores monetários, identificadores com prefixo fixo (ex.: <code>@</code> para handles)."
+        }
+      },
+      "items": {
+        "types": {
+          "title": "Tipos disponíveis",
+          "text": "Texto livre. Default quando <code>type</code> não é especificado.",
+          "email": "Email. Teclado mobile com '@'. Validação de formato pelo browser.",
+          "password": "Senha. Caracteres mascarados. Botão nativo de exibir/ocultar em alguns browsers.",
+          "number": "Numérico. Aceita apenas dígitos, vírgula e ponto. Setas de incremento nativas.",
+          "tel": "Telefone. Teclado numérico em mobile. Sem validação de formato nativa.",
+          "url": "URL. Teclado mobile com '/' e '.com'. Validação de formato pelo browser.",
+          "search": "Busca. Botão de limpar nativo em alguns browsers. Use com botão de submit sr-only.",
+          "date": "Data. Seletor nativo do browser. Valor em formato ISO (YYYY-MM-DD).",
+          "file": "Arquivo. Abre seletor de arquivo nativo. Estilização limitada pela plataforma."
+        },
+        "inputGroup": {
+          "title": "InputGroup — Composição com addons",
+          "description": "O <code>InputGroup</code> é um componente separado que envolve o Input para adicionar prefixos, sufixos, ícones e botões internos.",
+          "subcomponents": {
+            "inputGroup": "<strong>InputGroup</strong> — container com <code>role=\"group\"</code>. Gerencia foco, borda e estados.",
+            "inputGroupAddon": "<strong>InputGroupAddon</strong> — container de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+            "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro do InputGroup (sem borda própria).",
+            "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado com tamanho reduzido para uso interno.",
+            "inputGroupText": "<strong>InputGroupText</strong> — Texto ou ícone decorativo dentro do addon.",
+            "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro do InputGroup."
+          }
         }
       }
     },
@@ -545,30 +547,6 @@
     "variants": {
       "title": "Variants",
       "note": "Input has no variants via prop. Appearance changes based on <code>type</code> and state (disabled, aria-invalid). <code>InputGroup</code> is the standard for inputs with addons.",
-      "types": {
-        "title": "Available types",
-        "text": "Free text. Default when <code>type</code> is not specified.",
-        "email": "Email. Mobile keyboard with '@'. Format validation by browser.",
-        "password": "Password. Masked characters. Native show/hide button in some browsers.",
-        "number": "Numeric. Accepts digits, comma and period only. Native increment arrows.",
-        "tel": "Phone. Numeric keyboard on mobile. No native format validation.",
-        "url": "URL. Mobile keyboard with '/' and '.com'. Format validation by browser.",
-        "search": "Search. Native clear button in some browsers. Use with sr-only submit button.",
-        "date": "Date. Native browser date picker. Value in ISO format (YYYY-MM-DD).",
-        "file": "File. Opens native file picker. Limited styling by platform."
-      },
-      "inputGroup": {
-        "title": "InputGroup — Composition with addons",
-        "description": "The <code>InputGroup</code> is a separate component that wraps Input to add prefixes, suffixes, icons and internal buttons.",
-        "subcomponents": {
-          "inputGroup": "<strong>InputGroup</strong> — container with <code>role=\"group\"</code>. Manages focus, border and states.",
-          "inputGroupAddon": "<strong>InputGroupAddon</strong> — addon container. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
-          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adapted for use inside InputGroup (no own border).",
-          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adapted with reduced size for internal use.",
-          "inputGroupText": "<strong>InputGroupText</strong> — Decorative text or icon inside the addon.",
-          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adapted for use inside InputGroup."
-        }
-      },
       "compositionsTitle": "Compositions",
       "compositions": {
         "withLabel": {
@@ -590,6 +568,32 @@
           "name": "With prefix",
           "description": "Input inside a bordered wrapper containing a prefix span (e.g., <code>https://</code>, <code>$</code>) + borderless input. Visual focus on the whole wrapper via <code>focus-within</code>.",
           "use": "URLs, currency values, identifiers with a fixed prefix (e.g., <code>@</code> for handles)."
+        }
+      },
+      "items": {
+        "types": {
+          "title": "Available types",
+          "text": "Free text. Default when <code>type</code> is not specified.",
+          "email": "Email. Mobile keyboard with '@'. Format validation by browser.",
+          "password": "Password. Masked characters. Native show/hide button in some browsers.",
+          "number": "Numeric. Accepts digits, comma and period only. Native increment arrows.",
+          "tel": "Phone. Numeric keyboard on mobile. No native format validation.",
+          "url": "URL. Mobile keyboard with '/' and '.com'. Format validation by browser.",
+          "search": "Search. Native clear button in some browsers. Use with sr-only submit button.",
+          "date": "Date. Native browser date picker. Value in ISO format (YYYY-MM-DD).",
+          "file": "File. Opens native file picker. Limited styling by platform."
+        },
+        "inputGroup": {
+          "title": "InputGroup — Composition with addons",
+          "description": "The <code>InputGroup</code> is a separate component that wraps Input to add prefixes, suffixes, icons and internal buttons.",
+          "subcomponents": {
+            "inputGroup": "<strong>InputGroup</strong> — container with <code>role=\"group\"</code>. Manages focus, border and states.",
+            "inputGroupAddon": "<strong>InputGroupAddon</strong> — addon container. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+            "inputGroupInput": "<strong>InputGroupInput</strong> — Input adapted for use inside InputGroup (no own border).",
+            "inputGroupButton": "<strong>InputGroupButton</strong> — Button adapted with reduced size for internal use.",
+            "inputGroupText": "<strong>InputGroupText</strong> — Decorative text or icon inside the addon.",
+            "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adapted for use inside InputGroup."
+          }
         }
       }
     },
@@ -967,30 +971,6 @@
     "variants": {
       "title": "Variantes",
       "note": "El Input no tiene variantes vía prop. La apariencia cambia según el <code>type</code> y el estado (disabled, aria-invalid). El <code>InputGroup</code> es el estándar para inputs con addons.",
-      "types": {
-        "title": "Tipos disponibles",
-        "text": "Texto libre. Por defecto cuando <code>type</code> no se especifica.",
-        "email": "Email. Teclado mobile con '@'. Validación de formato por el browser.",
-        "password": "Contraseña. Caracteres enmascarados. Botón nativo de mostrar/ocultar en algunos browsers.",
-        "number": "Numérico. Acepta solo dígitos, coma y punto. Flechas de incremento nativas.",
-        "tel": "Teléfono. Teclado numérico en mobile. Sin validación de formato nativa.",
-        "url": "URL. Teclado mobile con '/' y '.com'. Validación de formato por el browser.",
-        "search": "Búsqueda. Botón de limpiar nativo en algunos browsers. Usar con botón submit sr-only.",
-        "date": "Fecha. Selector nativo del browser. Valor en formato ISO (YYYY-MM-DD).",
-        "file": "Archivo. Abre selector de archivo nativo. Estilización limitada por plataforma."
-      },
-      "inputGroup": {
-        "title": "InputGroup — Composición con addons",
-        "description": "El <code>InputGroup</code> es un componente separado que envuelve al Input para agregar prefijos, sufijos, íconos y botones internos.",
-        "subcomponents": {
-          "inputGroup": "<strong>InputGroup</strong> — contenedor con <code>role=\"group\"</code>. Gestiona foco, borde y estados.",
-          "inputGroupAddon": "<strong>InputGroupAddon</strong> — contenedor de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
-          "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro del InputGroup (sin borde propio).",
-          "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado con tamaño reducido para uso interno.",
-          "inputGroupText": "<strong>InputGroupText</strong> — Texto o ícono decorativo dentro del addon.",
-          "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro del InputGroup."
-        }
-      },
       "compositionsTitle": "Composiciones",
       "compositions": {
         "withLabel": {
@@ -1012,6 +992,32 @@
           "name": "Con prefijo",
           "description": "Input dentro de un wrapper bordeado con span de prefijo (ej.: <code>https://</code>, <code>$</code>) + input sin borde propio. Foco visual en todo el wrapper vía <code>focus-within</code>.",
           "use": "URLs, valores monetarios, identificadores con prefijo fijo (ej.: <code>@</code> para handles)."
+        }
+      },
+      "items": {
+        "types": {
+          "title": "Tipos disponibles",
+          "text": "Texto libre. Por defecto cuando <code>type</code> no se especifica.",
+          "email": "Email. Teclado mobile con '@'. Validación de formato por el browser.",
+          "password": "Contraseña. Caracteres enmascarados. Botón nativo de mostrar/ocultar en algunos browsers.",
+          "number": "Numérico. Acepta solo dígitos, coma y punto. Flechas de incremento nativas.",
+          "tel": "Teléfono. Teclado numérico en mobile. Sin validación de formato nativa.",
+          "url": "URL. Teclado mobile con '/' y '.com'. Validación de formato por el browser.",
+          "search": "Búsqueda. Botón de limpiar nativo en algunos browsers. Usar con botón submit sr-only.",
+          "date": "Fecha. Selector nativo del browser. Valor en formato ISO (YYYY-MM-DD).",
+          "file": "Archivo. Abre selector de archivo nativo. Estilización limitada por plataforma."
+        },
+        "inputGroup": {
+          "title": "InputGroup — Composición con addons",
+          "description": "El <code>InputGroup</code> es un componente separado que envuelve al Input para agregar prefijos, sufijos, íconos y botones internos.",
+          "subcomponents": {
+            "inputGroup": "<strong>InputGroup</strong> — contenedor con <code>role=\"group\"</code>. Gestiona foco, borde y estados.",
+            "inputGroupAddon": "<strong>InputGroupAddon</strong> — contenedor de addon. Prop <code>align</code>: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>.",
+            "inputGroupInput": "<strong>InputGroupInput</strong> — Input adaptado para uso dentro del InputGroup (sin borde propio).",
+            "inputGroupButton": "<strong>InputGroupButton</strong> — Button adaptado con tamaño reducido para uso interno.",
+            "inputGroupText": "<strong>InputGroupText</strong> — Texto o ícono decorativo dentro del addon.",
+            "inputGroupTextarea": "<strong>InputGroupTextarea</strong> — Textarea adaptada para uso dentro del InputGroup."
+          }
         }
       }
     },

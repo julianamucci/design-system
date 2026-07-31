@@ -185,16 +185,6 @@
         "label": "Clicável",
         "trigger": "Envolver o Card em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code>",
         "behavior": "Herda comportamento de link/botão; adicione <code>aria-label</code> com o título e <code>focus-visible:ring</code>"
-      },
-      "withImage": {
-        "label": "Com imagem",
-        "trigger": "<code>&lt;img&gt;</code> como primeiro ou último filho direto",
-        "behavior": "Imagem encaixa com <code>rounded-t/b-(--radius-card)</code>; padding do topo/fundo é removido automaticamente"
-      },
-      "withFooter": {
-        "label": "Com footer",
-        "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card remove o padding inferior; footer ganha borda superior e fundo soft (<code>--muted</code>)"
       }
     },
     "props": {
@@ -606,16 +596,6 @@
         "label": "Clickable",
         "trigger": "Wrap the Card in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code>",
         "behavior": "Inherits link/button behavior; add <code>aria-label</code> with the title and <code>focus-visible:ring</code>"
-      },
-      "withImage": {
-        "label": "With image",
-        "trigger": "<code>&lt;img&gt;</code> as first or last direct child",
-        "behavior": "Image fits with <code>rounded-t/b-(--radius-card)</code>; top/bottom padding is removed automatically"
-      },
-      "withFooter": {
-        "label": "With footer",
-        "trigger": "Include <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card removes its bottom padding; footer gains top border and soft background (<code>--muted</code>)"
       }
     },
     "props": {
@@ -1027,16 +1007,6 @@
         "label": "Clicable",
         "trigger": "Envolver el Card en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code>",
         "behavior": "Hereda el comportamiento de link/botón; agrega <code>aria-label</code> con el título y <code>focus-visible:ring</code>"
-      },
-      "withImage": {
-        "label": "Con imagen",
-        "trigger": "<code>&lt;img&gt;</code> como primer o último hijo directo",
-        "behavior": "La imagen encaja con <code>rounded-t/b-(--radius-card)</code>; el padding superior/inferior se elimina automáticamente"
-      },
-      "withFooter": {
-        "label": "Con footer",
-        "trigger": "Incluir <code>&lt;CardFooter&gt;</code>",
-        "behavior": "Card elimina su padding inferior; el footer gana borde superior y fondo soft (<code>--muted</code>)"
       }
     },
     "props": {

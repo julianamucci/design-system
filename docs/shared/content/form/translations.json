@@ -147,11 +147,6 @@
           "name": "Com descrição",
           "description": "Label + controle + parágrafo de apoio em <code>--muted-foreground</code> abaixo. Esclarece formato, política ou uso.",
           "use": "Quando o label sozinho não explica o formato esperado (política de senha, máscara, exemplos)."
-        },
-        "withError": {
-          "name": "Com mensagem de erro",
-          "description": "Label + controle (com <code>aria-invalid</code>) + parágrafo em <code>--destructive</code> com <code>aria-live=\"polite\"</code>.",
-          "use": "Validação síncrona ou após submit. A mensagem deve apontar o problema e sugerir a correção."
         }
       }
     },
@@ -167,11 +162,6 @@
         "trigger": "Sem props adicionais",
         "behavior": "Label em <code>--foreground</code>, controle em estado padrão, sem descrição nem erro"
       },
-      "withDescription": {
-        "label": "Com descrição",
-        "trigger": "Prop <code>description</code>",
-        "behavior": "Parágrafo de apoio em <code>--muted-foreground</code> abaixo do controle"
-      },
       "withError": {
         "label": "Com erro",
         "trigger": "Prop <code>error</code>",
@@ -181,11 +171,6 @@
         "label": "Desabilitado",
         "trigger": "Controle com <code>disabled</code>",
         "behavior": "O controle interno fica desabilitado; o label permanece visível mas o conjunto não é interativo"
-      },
-      "fieldset": {
-        "label": "Fieldset",
-        "trigger": "Uso de <code>createFieldset</code>",
-        "behavior": "<code>&lt;fieldset&gt;</code> com gap de 16px entre filhos e <code>&lt;legend&gt;</code> em <code>--foreground</code>"
       }
     },
     "props": {
@@ -513,11 +498,6 @@
           "name": "With description",
           "description": "Label + control + helper paragraph in <code>--muted-foreground</code> below. Clarifies format, policy or usage.",
           "use": "When the label alone doesn't explain the expected format (password policy, mask, examples)."
-        },
-        "withError": {
-          "name": "With error message",
-          "description": "Label + control (with <code>aria-invalid</code>) + paragraph in <code>--destructive</code> with <code>aria-live=\"polite\"</code>.",
-          "use": "Sync or post-submit validation. The message should point out the problem and suggest a fix."
         }
       }
     },
@@ -533,11 +513,6 @@
         "trigger": "No additional props",
         "behavior": "Label in <code>--foreground</code>, control in default state, no description or error"
       },
-      "withDescription": {
-        "label": "With description",
-        "trigger": "Prop <code>description</code>",
-        "behavior": "Helper paragraph in <code>--muted-foreground</code> below the control"
-      },
       "withError": {
         "label": "With error",
         "trigger": "Prop <code>error</code>",
@@ -547,11 +522,6 @@
         "label": "Disabled",
         "trigger": "Control with <code>disabled</code>",
         "behavior": "Inner control becomes disabled; label remains visible but the set is not interactive"
-      },
-      "fieldset": {
-        "label": "Fieldset",
-        "trigger": "Use of <code>createFieldset</code>",
-        "behavior": "<code>&lt;fieldset&gt;</code> with 16px gap between children and <code>&lt;legend&gt;</code> in <code>--foreground</code>"
       }
     },
     "props": {
@@ -879,11 +849,6 @@
           "name": "Con descripción",
           "description": "Label + control + párrafo de apoyo en <code>--muted-foreground</code> debajo. Aclara formato, política o uso.",
           "use": "Cuando el label por sí solo no explica el formato esperado (política de contraseña, máscara, ejemplos)."
-        },
-        "withError": {
-          "name": "Con mensaje de error",
-          "description": "Label + control (con <code>aria-invalid</code>) + párrafo en <code>--destructive</code> con <code>aria-live=\"polite\"</code>.",
-          "use": "Validación sincrónica o tras envío. El mensaje debe señalar el problema y sugerir la corrección."
         }
       }
     },
@@ -899,11 +864,6 @@
         "trigger": "Sin props adicionales",
         "behavior": "Label en <code>--foreground</code>, control en estado predeterminado, sin descripción ni error"
       },
-      "withDescription": {
-        "label": "Con descripción",
-        "trigger": "Prop <code>description</code>",
-        "behavior": "Párrafo de apoyo en <code>--muted-foreground</code> debajo del control"
-      },
       "withError": {
         "label": "Con error",
         "trigger": "Prop <code>error</code>",
@@ -913,11 +873,6 @@
         "label": "Deshabilitado",
         "trigger": "Control con <code>disabled</code>",
         "behavior": "El control interno queda deshabilitado; el label permanece visible pero el conjunto no es interactivo"
-      },
-      "fieldset": {
-        "label": "Fieldset",
-        "trigger": "Uso de <code>createFieldset</code>",
-        "behavior": "<code>&lt;fieldset&gt;</code> con gap de 16px entre hijos y <code>&lt;legend&gt;</code> en <code>--foreground</code>"
       }
     },
     "props": {

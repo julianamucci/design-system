@@ -171,26 +171,6 @@
         "trigger": "Como ativar",
         "behavior": "Comportamento"
       },
-      "single": {
-        "label": "Item único",
-        "trigger": "<code>CarouselItem</code> sem <code>basis-*</code>",
-        "behavior": "Cada slide ocupa 100% do viewport. Ideal para galeria de imagens"
-      },
-      "multi": {
-        "label": "Múltiplos itens",
-        "trigger": "<code>CarouselItem</code> com <code>basis-1/2</code> ou <code>basis-1/3</code>",
-        "behavior": "Exibe 2 ou 3 itens por vez. Use breakpoints (<code>md:basis-1/2</code>) para responsividade"
-      },
-      "autoplay": {
-        "label": "Autoplay",
-        "trigger": "Plugin <code>embla-carousel-autoplay</code> em <code>plugins</code>",
-        "behavior": "Avanço automático a cada N ms. Combine com <code>loop: true</code> e <code>stopOnInteraction: true</code>"
-      },
-      "vertical": {
-        "label": "Vertical",
-        "trigger": "<code>orientation=\"vertical\"</code>",
-        "behavior": "Slides empilhados. Requer altura fixa. Botões posicionados acima e abaixo do viewport"
-      },
       "disabled": {
         "label": "Extremo (início/fim)",
         "trigger": "Sem <code>loop: true</code>, no primeiro ou último item",
@@ -594,26 +574,6 @@
         "trigger": "How to activate",
         "behavior": "Behavior"
       },
-      "single": {
-        "label": "Single item",
-        "trigger": "<code>CarouselItem</code> without <code>basis-*</code>",
-        "behavior": "Each slide fills 100% of the viewport. Ideal for image galleries"
-      },
-      "multi": {
-        "label": "Multiple items",
-        "trigger": "<code>CarouselItem</code> with <code>basis-1/2</code> or <code>basis-1/3</code>",
-        "behavior": "Shows 2 or 3 items at once. Use breakpoints (<code>md:basis-1/2</code>) for responsiveness"
-      },
-      "autoplay": {
-        "label": "Autoplay",
-        "trigger": "<code>embla-carousel-autoplay</code> plugin in <code>plugins</code>",
-        "behavior": "Auto-advances every N ms. Combine with <code>loop: true</code> and <code>stopOnInteraction: true</code>"
-      },
-      "vertical": {
-        "label": "Vertical",
-        "trigger": "<code>orientation=\"vertical\"</code>",
-        "behavior": "Slides stack. Requires fixed height. Buttons positioned above and below the viewport"
-      },
       "disabled": {
         "label": "Edge (start/end)",
         "trigger": "No <code>loop: true</code>, at first or last item",
@@ -1016,26 +976,6 @@
         "state": "Configuración",
         "trigger": "Cómo activar",
         "behavior": "Comportamiento"
-      },
-      "single": {
-        "label": "Ítem único",
-        "trigger": "<code>CarouselItem</code> sin <code>basis-*</code>",
-        "behavior": "Cada slide ocupa el 100% del viewport. Ideal para galería de imágenes"
-      },
-      "multi": {
-        "label": "Múltiples ítems",
-        "trigger": "<code>CarouselItem</code> con <code>basis-1/2</code> o <code>basis-1/3</code>",
-        "behavior": "Muestra 2 o 3 ítems a la vez. Usa breakpoints (<code>md:basis-1/2</code>) para responsividad"
-      },
-      "autoplay": {
-        "label": "Autoplay",
-        "trigger": "Plugin <code>embla-carousel-autoplay</code> en <code>plugins</code>",
-        "behavior": "Avance automático cada N ms. Combina con <code>loop: true</code> y <code>stopOnInteraction: true</code>"
-      },
-      "vertical": {
-        "label": "Vertical",
-        "trigger": "<code>orientation=\"vertical\"</code>",
-        "behavior": "Slides apilados. Requiere altura fija. Botones posicionados arriba y abajo del viewport"
       },
       "disabled": {
         "label": "Extremo (inicio/fin)",

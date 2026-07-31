@@ -137,7 +137,6 @@
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra preenchida proporcionalmente.",
-        "indeterminate": "<code>value={null}</code> — barra animada sem fim definido, para duração desconhecida.",
         "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> acima da trilha."
       }
     },
@@ -536,7 +535,6 @@
       },
       "styles": {
         "determinate": "Numeric value 0–100 — bar filled proportionally.",
-        "indeterminate": "<code>value={null}</code> — animated bar without defined end, for unknown duration.",
         "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> above the track."
       }
     },
@@ -935,7 +933,6 @@
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra llena proporcionalmente.",
-        "indeterminate": "<code>value={null}</code> — barra animada sin fin definido, para duración desconocida.",
         "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> sobre la pista."
       }
     },

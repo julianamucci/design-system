@@ -124,22 +124,6 @@
     },
     "variants": {
       "title": "Variantes",
-      "single": {
-        "label": "Single (padrão)",
-        "description": "Apenas um item aberto por vez; permite fechar o item ativo clicando nele. Ideal para FAQ."
-      },
-      "multiple": {
-        "label": "Multiple",
-        "description": "Múltiplos itens podem estar abertos simultaneamente. Ideal para especificações e configurações comparáveis."
-      },
-      "controlled": {
-        "label": "Controlado",
-        "description": "Estado gerenciado externamente via <code>value</code> e callback de mudança. Útil para sincronizar com URL ou outro estado."
-      },
-      "defaultOpen": {
-        "label": "Com item padrão aberto",
-        "description": "Prop <code>defaultValue</code> abre um item por padrão sem modo controlado. Comum em documentação e onboarding."
-      },
       "compositionsTitle": "Composições",
       "compositions": {
         "iconTrigger": {
@@ -161,6 +145,24 @@
           "name": "FAQ",
           "description": "Padrão canônico de Perguntas Frequentes: heading <code>h2</code> acima do accordion, perguntas interrogativas completas no trigger, respostas objetivas em 2–3 linhas no content.",
           "use": "Páginas de ajuda, suporte ao usuário, dúvidas comuns em onboarding."
+        }
+      },
+      "items": {
+        "single": {
+          "label": "Single (padrão)",
+          "description": "Apenas um item aberto por vez; permite fechar o item ativo clicando nele. Ideal para FAQ."
+        },
+        "multiple": {
+          "label": "Multiple",
+          "description": "Múltiplos itens podem estar abertos simultaneamente. Ideal para especificações e configurações comparáveis."
+        },
+        "controlled": {
+          "label": "Controlado",
+          "description": "Estado gerenciado externamente via <code>value</code> e callback de mudança. Útil para sincronizar com URL ou outro estado."
+        },
+        "defaultOpen": {
+          "label": "Com item padrão aberto",
+          "description": "Prop <code>defaultValue</code> abre um item por padrão sem modo controlado. Comum em documentação e onboarding."
         }
       }
     },
@@ -693,22 +695,6 @@
     },
     "variants": {
       "title": "Variants",
-      "single": {
-        "label": "Single (default)",
-        "description": "Only one item open at a time; allows closing the active item by clicking it. Ideal for FAQ."
-      },
-      "multiple": {
-        "label": "Multiple",
-        "description": "Multiple items can be open simultaneously. Ideal for specs and comparable settings."
-      },
-      "controlled": {
-        "label": "Controlled",
-        "description": "State managed externally via <code>value</code> and a change callback. Useful for syncing with URL or other state."
-      },
-      "defaultOpen": {
-        "label": "With default open item",
-        "description": "<code>defaultValue</code> prop opens an item by default without controlled mode. Common in documentation and onboarding."
-      },
       "compositionsTitle": "Compositions",
       "compositions": {
         "iconTrigger": {
@@ -730,6 +716,24 @@
           "name": "FAQ",
           "description": "Canonical Frequently Asked Questions pattern: <code>h2</code> heading above the accordion, complete interrogative questions in the trigger, objective 2–3 line answers in the content.",
           "use": "Help pages, user support, common onboarding questions."
+        }
+      },
+      "items": {
+        "single": {
+          "label": "Single (default)",
+          "description": "Only one item open at a time; allows closing the active item by clicking it. Ideal for FAQ."
+        },
+        "multiple": {
+          "label": "Multiple",
+          "description": "Multiple items can be open simultaneously. Ideal for specs and comparable settings."
+        },
+        "controlled": {
+          "label": "Controlled",
+          "description": "State managed externally via <code>value</code> and a change callback. Useful for syncing with URL or other state."
+        },
+        "defaultOpen": {
+          "label": "With default open item",
+          "description": "<code>defaultValue</code> prop opens an item by default without controlled mode. Common in documentation and onboarding."
         }
       }
     },
@@ -1262,22 +1266,6 @@
     },
     "variants": {
       "title": "Variantes",
-      "single": {
-        "label": "Single (predeterminado)",
-        "description": "Solo un ítem abierto a la vez; permite cerrar el ítem activo haciendo clic en él. Ideal para FAQ."
-      },
-      "multiple": {
-        "label": "Multiple",
-        "description": "Múltiples ítems pueden estar abiertos simultáneamente. Ideal para especificaciones y configuraciones comparables."
-      },
-      "controlled": {
-        "label": "Controlado",
-        "description": "Estado gestionado externamente vía <code>value</code> y callback de cambio. Útil para sincronizar con URL u otro estado."
-      },
-      "defaultOpen": {
-        "label": "Con ítem abierto por defecto",
-        "description": "La prop <code>defaultValue</code> abre un ítem por defecto sin modo controlado. Común en documentación y onboarding."
-      },
       "compositionsTitle": "Composiciones",
       "compositions": {
         "iconTrigger": {
@@ -1299,6 +1287,24 @@
           "name": "FAQ",
           "description": "Patrón canónico de Preguntas Frecuentes: encabezado <code>h2</code> sobre el accordion, preguntas interrogativas completas en el trigger, respuestas objetivas en 2–3 líneas en el content.",
           "use": "Páginas de ayuda, soporte al usuario, preguntas comunes en onboarding."
+        }
+      },
+      "items": {
+        "single": {
+          "label": "Single (predeterminado)",
+          "description": "Solo un ítem abierto a la vez; permite cerrar el ítem activo haciendo clic en él. Ideal para FAQ."
+        },
+        "multiple": {
+          "label": "Multiple",
+          "description": "Múltiples ítems pueden estar abiertos simultáneamente. Ideal para especificaciones y configuraciones comparables."
+        },
+        "controlled": {
+          "label": "Controlado",
+          "description": "Estado gestionado externamente vía <code>value</code> y callback de cambio. Útil para sincronizar con URL u otro estado."
+        },
+        "defaultOpen": {
+          "label": "Con ítem abierto por defecto",
+          "description": "La prop <code>defaultValue</code> abre un ítem por defecto sin modo controlado. Común en documentación y onboarding."
         }
       }
     },

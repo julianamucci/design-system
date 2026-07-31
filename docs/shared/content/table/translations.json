@@ -160,26 +160,6 @@
     },
     "variants": {
       "title": "Padrões de Uso",
-      "basic": {
-        "label": "Básica",
-        "description": "Tabela com caption, cabeçalho e corpo. Padrão mínimo funcional com scroll horizontal automático via container <code>overflow-x-auto</code> interno."
-      },
-      "withFooter": {
-        "label": "Com rodapé",
-        "description": "Adicione <code>TableFooter</code> para exibir totais, médias ou sumários. Recebe <code>bg-muted/50</code> automaticamente para diferenciação visual."
-      },
-      "withSrOnlyCaption": {
-        "label": "Caption sr-only",
-        "description": "Quando o título da tabela já está visível na página, use <code>TableCaption</code> com <code>className=\"sr-only\"</code> para manter acessibilidade sem duplicar visualmente."
-      },
-      "withInlineActions": {
-        "label": "Ações por linha",
-        "description": "Adicione uma coluna de ações com <code>Button variant=\"ghost\"</code> ou <code>DropdownMenu</code>. O <code>aria-label</code> deve incluir o identificador da linha: \"Ações para fatura #INV-001\"."
-      },
-      "withEmptyState": {
-        "label": "Estado vazio",
-        "description": "Quando não há dados, renderize uma <code>TableRow</code> com <code>TableCell colSpan</code> cobrindo todas as colunas e mensagem centralizada em <code>text-muted-foreground</code>."
-      },
       "compositionsTitle": "Composições",
       "compositions": {
         "filterableToolbar": {
@@ -201,6 +181,28 @@
           "name": "Com paginação",
           "description": "<code>Table</code> seguido pelo componente <code>Pagination</code> alinhado à direita. A paginação fica fora da <code>Table</code> e exibe um subconjunto dos dados por vez.",
           "use": "Listagens com mais de 20 linhas — evita scroll vertical excessivo e mantém o tempo de renderização baixo."
+        }
+      },
+      "items": {
+        "basic": {
+          "label": "Básica",
+          "description": "Tabela com caption, cabeçalho e corpo. Padrão mínimo funcional com scroll horizontal automático via container <code>overflow-x-auto</code> interno."
+        },
+        "withFooter": {
+          "label": "Com rodapé",
+          "description": "Adicione <code>TableFooter</code> para exibir totais, médias ou sumários. Recebe <code>bg-muted/50</code> automaticamente para diferenciação visual."
+        },
+        "withSrOnlyCaption": {
+          "label": "Caption sr-only",
+          "description": "Quando o título da tabela já está visível na página, use <code>TableCaption</code> com <code>className=\"sr-only\"</code> para manter acessibilidade sem duplicar visualmente."
+        },
+        "withInlineActions": {
+          "label": "Ações por linha",
+          "description": "Adicione uma coluna de ações com <code>Button variant=\"ghost\"</code> ou <code>DropdownMenu</code>. O <code>aria-label</code> deve incluir o identificador da linha: \"Ações para fatura #INV-001\"."
+        },
+        "withEmptyState": {
+          "label": "Estado vazio",
+          "description": "Quando não há dados, renderize uma <code>TableRow</code> com <code>TableCell colSpan</code> cobrindo todas as colunas e mensagem centralizada em <code>text-muted-foreground</code>."
         }
       }
     },
@@ -602,26 +604,6 @@
     },
     "variants": {
       "title": "Usage Patterns",
-      "basic": {
-        "label": "Basic",
-        "description": "Table with caption, header, and body. Minimum functional pattern with automatic horizontal scroll via internal <code>overflow-x-auto</code> container."
-      },
-      "withFooter": {
-        "label": "With footer",
-        "description": "Add <code>TableFooter</code> to display totals, averages, or summaries. Automatically receives <code>bg-muted/50</code> for visual differentiation."
-      },
-      "withSrOnlyCaption": {
-        "label": "sr-only caption",
-        "description": "When the table title is already visible on the page, use <code>TableCaption</code> with <code>className=\"sr-only\"</code> to maintain accessibility without visual duplication."
-      },
-      "withInlineActions": {
-        "label": "Row actions",
-        "description": "Add an action column with <code>Button variant=\"ghost\"</code> or <code>DropdownMenu</code>. The <code>aria-label</code> must include the row identifier: \"Actions for invoice #INV-001\"."
-      },
-      "withEmptyState": {
-        "label": "Empty state",
-        "description": "When there is no data, render a <code>TableRow</code> with <code>TableCell colSpan</code> covering all columns and a centered message in <code>text-muted-foreground</code>."
-      },
       "compositionsTitle": "Compositions",
       "compositions": {
         "filterableToolbar": {
@@ -643,6 +625,28 @@
           "name": "With pagination",
           "description": "<code>Table</code> followed by the <code>Pagination</code> component aligned to the right. Pagination sits outside the <code>Table</code> and displays a subset of the data at a time.",
           "use": "Listings with more than 20 rows — avoids excessive vertical scroll and keeps render time low."
+        }
+      },
+      "items": {
+        "basic": {
+          "label": "Basic",
+          "description": "Table with caption, header, and body. Minimum functional pattern with automatic horizontal scroll via internal <code>overflow-x-auto</code> container."
+        },
+        "withFooter": {
+          "label": "With footer",
+          "description": "Add <code>TableFooter</code> to display totals, averages, or summaries. Automatically receives <code>bg-muted/50</code> for visual differentiation."
+        },
+        "withSrOnlyCaption": {
+          "label": "sr-only caption",
+          "description": "When the table title is already visible on the page, use <code>TableCaption</code> with <code>className=\"sr-only\"</code> to maintain accessibility without visual duplication."
+        },
+        "withInlineActions": {
+          "label": "Row actions",
+          "description": "Add an action column with <code>Button variant=\"ghost\"</code> or <code>DropdownMenu</code>. The <code>aria-label</code> must include the row identifier: \"Actions for invoice #INV-001\"."
+        },
+        "withEmptyState": {
+          "label": "Empty state",
+          "description": "When there is no data, render a <code>TableRow</code> with <code>TableCell colSpan</code> covering all columns and a centered message in <code>text-muted-foreground</code>."
         }
       }
     },
@@ -1044,26 +1048,6 @@
     },
     "variants": {
       "title": "Patrones de Uso",
-      "basic": {
-        "label": "Básico",
-        "description": "Tabla con caption, encabezado y cuerpo. Patrón mínimo funcional con scroll horizontal automático via contenedor <code>overflow-x-auto</code> interno."
-      },
-      "withFooter": {
-        "label": "Con pie de tabla",
-        "description": "Agrega <code>TableFooter</code> para mostrar totales, promedios o sumarios. Recibe <code>bg-muted/50</code> automáticamente para diferenciación visual."
-      },
-      "withSrOnlyCaption": {
-        "label": "Caption sr-only",
-        "description": "Cuando el título de la tabla ya es visible en la página, usa <code>TableCaption</code> con <code>className=\"sr-only\"</code> para mantener accesibilidad sin duplicar visualmente."
-      },
-      "withInlineActions": {
-        "label": "Acciones por fila",
-        "description": "Agrega una columna de acciones con <code>Button variant=\"ghost\"</code> o <code>DropdownMenu</code>. El <code>aria-label</code> debe incluir el identificador de la fila: \"Acciones para la factura #INV-001\"."
-      },
-      "withEmptyState": {
-        "label": "Estado vacío",
-        "description": "Cuando no hay datos, renderiza una <code>TableRow</code> con <code>TableCell colSpan</code> cubriendo todas las columnas y un mensaje centrado en <code>text-muted-foreground</code>."
-      },
       "compositionsTitle": "Composiciones",
       "compositions": {
         "filterableToolbar": {
@@ -1085,6 +1069,28 @@
           "name": "Con paginación",
           "description": "<code>Table</code> seguido por el componente <code>Pagination</code> alineado a la derecha. La paginación está fuera del <code>Table</code> y muestra un subconjunto de datos a la vez.",
           "use": "Listados con más de 20 filas — evita scroll vertical excesivo y mantiene bajo el tiempo de renderizado."
+        }
+      },
+      "items": {
+        "basic": {
+          "label": "Básico",
+          "description": "Tabla con caption, encabezado y cuerpo. Patrón mínimo funcional con scroll horizontal automático via contenedor <code>overflow-x-auto</code> interno."
+        },
+        "withFooter": {
+          "label": "Con pie de tabla",
+          "description": "Agrega <code>TableFooter</code> para mostrar totales, promedios o sumarios. Recibe <code>bg-muted/50</code> automáticamente para diferenciación visual."
+        },
+        "withSrOnlyCaption": {
+          "label": "Caption sr-only",
+          "description": "Cuando el título de la tabla ya es visible en la página, usa <code>TableCaption</code> con <code>className=\"sr-only\"</code> para mantener accesibilidad sin duplicar visualmente."
+        },
+        "withInlineActions": {
+          "label": "Acciones por fila",
+          "description": "Agrega una columna de acciones con <code>Button variant=\"ghost\"</code> o <code>DropdownMenu</code>. El <code>aria-label</code> debe incluir el identificador de la fila: \"Acciones para la factura #INV-001\"."
+        },
+        "withEmptyState": {
+          "label": "Estado vacío",
+          "description": "Cuando no hay datos, renderiza una <code>TableRow</code> con <code>TableCell colSpan</code> cubriendo todas las columnas y un mensaje centrado en <code>text-muted-foreground</code>."
         }
       }
     },

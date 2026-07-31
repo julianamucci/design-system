@@ -158,16 +158,6 @@
         "trigger": "Sequência de <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
         "behavior": "Lista horizontal com separadores <code>ChevronRight</code>; último item em <code>BreadcrumbPage</code>"
       },
-      "withEllipsis": {
-        "label": "Com ellipsis",
-        "trigger": "Inserir <code>BreadcrumbEllipsis</code> entre níveis intermediários",
-        "behavior": "Oculta níveis do meio com ícone <code>MoreHorizontal</code>; abre <code>DropdownMenu</code> ao clicar"
-      },
-      "customSeparator": {
-        "label": "Separador customizado",
-        "trigger": "Passar ícone ou texto como <code>children</code> de <code>BreadcrumbSeparator</code>",
-        "behavior": "Substitui o <code>ChevronRight</code> padrão; mantém <code>aria-hidden=\"true\"</code>"
-      },
       "asChildLink": {
         "label": "Link customizado",
         "trigger": "Compor com elemento filho em <code>BreadcrumbLink</code> (via prop apropriada de cada stack)",
@@ -553,16 +543,6 @@
         "trigger": "Sequence of <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
         "behavior": "Horizontal list with <code>ChevronRight</code> separators; last item as <code>BreadcrumbPage</code>"
       },
-      "withEllipsis": {
-        "label": "With ellipsis",
-        "trigger": "Insert <code>BreadcrumbEllipsis</code> between intermediate levels",
-        "behavior": "Hides middle levels with <code>MoreHorizontal</code> icon; opens <code>DropdownMenu</code> on click"
-      },
-      "customSeparator": {
-        "label": "Custom separator",
-        "trigger": "Pass icon or text as <code>children</code> of <code>BreadcrumbSeparator</code>",
-        "behavior": "Replaces the default <code>ChevronRight</code>; keeps <code>aria-hidden=\"true\"</code>"
-      },
       "asChildLink": {
         "label": "Custom link",
         "trigger": "Compose with child element on <code>BreadcrumbLink</code> (via each stack's appropriate prop)",
@@ -947,16 +927,6 @@
         "label": "Simple",
         "trigger": "Secuencia de <code>BreadcrumbItem</code> + <code>BreadcrumbSeparator</code>",
         "behavior": "Lista horizontal con separadores <code>ChevronRight</code>; último ítem como <code>BreadcrumbPage</code>"
-      },
-      "withEllipsis": {
-        "label": "Con ellipsis",
-        "trigger": "Insertar <code>BreadcrumbEllipsis</code> entre niveles intermedios",
-        "behavior": "Oculta niveles del medio con <code>MoreHorizontal</code>; abre <code>DropdownMenu</code> al hacer clic"
-      },
-      "customSeparator": {
-        "label": "Separador personalizado",
-        "trigger": "Pasar ícono o texto como <code>children</code> de <code>BreadcrumbSeparator</code>",
-        "behavior": "Sustituye el <code>ChevronRight</code> predeterminado; mantiene <code>aria-hidden=\"true\"</code>"
       },
       "asChildLink": {
         "label": "Enlace personalizado",

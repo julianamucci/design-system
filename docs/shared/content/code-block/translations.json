@@ -196,11 +196,6 @@
         "trigger": "Desativar a numeração de linha",
         "behavior": "A coluna some e o código ganha o recuo equivalente, sem colar na borda"
       },
-      "highlighted": {
-        "label": "Com destaque",
-        "trigger": "Informar linhas ou intervalos, começando em 1",
-        "behavior": "As linhas indicadas recebem fundo e barra de acento; as demais seguem no fundo padrão"
-      },
       "scrolling": {
         "label": "Com scroll",
         "trigger": "Código mais alto ou mais largo que a caixa",
@@ -777,11 +772,6 @@
         "trigger": "Turn line numbering off",
         "behavior": "The column disappears and the code gains an equivalent indent instead of hugging the border"
       },
-      "highlighted": {
-        "label": "With highlighting",
-        "trigger": "Declare lines or ranges, starting at 1",
-        "behavior": "The listed lines get a background and an accent bar; the rest keep the default surface"
-      },
       "scrolling": {
         "label": "With scrolling",
         "trigger": "Code taller or wider than the box",
@@ -1357,11 +1347,6 @@
         "label": "Sin numeración",
         "trigger": "Desactivar la numeración de línea",
         "behavior": "La columna desaparece y el código gana la sangría equivalente, sin pegarse al borde"
-      },
-      "highlighted": {
-        "label": "Con destaque",
-        "trigger": "Indicar líneas o intervalos, empezando en 1",
-        "behavior": "Las líneas indicadas reciben fondo y barra de acento; las demás siguen con la superficie predeterminada"
       },
       "scrolling": {
         "label": "Con scroll",

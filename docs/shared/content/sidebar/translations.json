@@ -125,17 +125,6 @@
     },
     "variants": {
       "title": "Variantes",
-      "variantProp": "Prop variant",
-      "collapsibleProp": "Modo de recolhimento",
-      "sideProp": "Prop side",
-      "sidebar": "Sidebar padrão colada na borda da viewport. Empurra o conteúdo ao expandir (push mode).",
-      "floating": "Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.",
-      "inset": "Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.",
-      "offcanvas": "Sidebar desliza para fora da viewport ao recolher. Comportamento padrão e recomendado.",
-      "icon": "Sidebar reduz para largura de ícone (3rem). Labels ocultados; tooltips exibidos ao hover.",
-      "none": "Sidebar sempre visível, sem possibilidade de recolher. Use em dashboards fixos.",
-      "left": "Sidebar posicionada na esquerda (padrão). Compatível com LTR.",
-      "right": "Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.",
       "compositionsTitle": "Composições",
       "compositions": {
         "withGroups": {
@@ -159,7 +148,18 @@
           "name": "Com badges de contagem",
           "description": "<code>SidebarMenuBadge</code> sobreposto ao item para indicar contadores (notificações, pendências). O badge é decorativo — o número não deve ser a única forma de comunicar o estado.",
           "use": "Notificações em \"Caixa de entrada\", pendências em \"Tarefas\". Para informações críticas, complemente com <code>aria-label</code> contextual no botão."
-        }
+        },
+        "variantProp": "Prop variant",
+        "collapsibleProp": "Modo de recolhimento",
+        "sideProp": "Prop side",
+        "sidebar": "Sidebar padrão colada na borda da viewport. Empurra o conteúdo ao expandir (push mode).",
+        "floating": "Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.",
+        "inset": "Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.",
+        "offcanvas": "Sidebar desliza para fora da viewport ao recolher. Comportamento padrão e recomendado.",
+        "icon": "Sidebar reduz para largura de ícone (3rem). Labels ocultados; tooltips exibidos ao hover.",
+        "none": "Sidebar sempre visível, sem possibilidade de recolher. Use em dashboards fixos.",
+        "left": "Sidebar posicionada na esquerda (padrão). Compatível com LTR.",
+        "right": "Sidebar posicionada na direita. Use em painéis de detalhes ou contexto."
       }
     },
     "states": {
@@ -596,17 +596,6 @@
     },
     "variants": {
       "title": "Variants",
-      "variantProp": "variant prop",
-      "collapsibleProp": "Collapse mode",
-      "sideProp": "side prop",
-      "sidebar": "Default sidebar attached to the viewport edge. Pushes content when expanded (push mode).",
-      "floating": "Sidebar with rounded border and shadow, floating over a small padding. Does not push content.",
-      "inset": "Sidebar integrated into the layout with the content in a rounded adjacent container.",
-      "offcanvas": "Sidebar slides out of the viewport when collapsed. Default and recommended behavior.",
-      "icon": "Sidebar reduces to icon width (3rem). Labels hidden; tooltips shown on hover.",
-      "none": "Sidebar always visible, cannot be collapsed. Use in fixed dashboards.",
-      "left": "Sidebar positioned on the left (default). Compatible with LTR.",
-      "right": "Sidebar positioned on the right. Use for detail or context panels.",
       "compositionsTitle": "Compositions",
       "compositions": {
         "withGroups": {
@@ -630,7 +619,18 @@
           "name": "With count badges",
           "description": "<code>SidebarMenuBadge</code> overlaid on the item to indicate counters (notifications, pending items). The badge is decorative — the number must not be the only way to convey state.",
           "use": "Notifications in \"Inbox\", pending tasks. For critical info, complement with a contextual <code>aria-label</code> on the button."
-        }
+        },
+        "variantProp": "variant prop",
+        "collapsibleProp": "Collapse mode",
+        "sideProp": "side prop",
+        "sidebar": "Default sidebar attached to the viewport edge. Pushes content when expanded (push mode).",
+        "floating": "Sidebar with rounded border and shadow, floating over a small padding. Does not push content.",
+        "inset": "Sidebar integrated into the layout with the content in a rounded adjacent container.",
+        "offcanvas": "Sidebar slides out of the viewport when collapsed. Default and recommended behavior.",
+        "icon": "Sidebar reduces to icon width (3rem). Labels hidden; tooltips shown on hover.",
+        "none": "Sidebar always visible, cannot be collapsed. Use in fixed dashboards.",
+        "left": "Sidebar positioned on the left (default). Compatible with LTR.",
+        "right": "Sidebar positioned on the right. Use for detail or context panels."
       }
     },
     "states": {
@@ -1067,17 +1067,6 @@
     },
     "variants": {
       "title": "Variantes",
-      "variantProp": "Prop variant",
-      "collapsibleProp": "Modo de colapso",
-      "sideProp": "Prop side",
-      "sidebar": "Sidebar estándar pegada al borde del viewport. Empuja el contenido al expandir (push mode).",
-      "floating": "Sidebar con borde redondeado y sombra, flotando sobre un pequeño padding. No empuja el contenido.",
-      "inset": "Sidebar integrada al layout con el contenido en un contenedor redondeado adyacente.",
-      "offcanvas": "Sidebar desliza fuera del viewport al colapsar. Comportamiento predeterminado y recomendado.",
-      "icon": "Sidebar reduce a ancho de ícono (3rem). Labels ocultos; tooltips al hacer hover.",
-      "none": "Sidebar siempre visible, sin posibilidad de colapsar. Usar en dashboards fijos.",
-      "left": "Sidebar posicionada a la izquierda (predeterminado). Compatible con LTR.",
-      "right": "Sidebar posicionada a la derecha. Usar para paneles de detalle o contexto.",
       "compositionsTitle": "Composiciones",
       "compositions": {
         "withGroups": {
@@ -1101,7 +1090,18 @@
           "name": "Con badges de conteo",
           "description": "<code>SidebarMenuBadge</code> superpuesto al ítem para indicar contadores (notificaciones, pendientes). El badge es decorativo — el número no debe ser la única forma de comunicar el estado.",
           "use": "Notificaciones en \"Bandeja de entrada\", pendientes en \"Tareas\". Para información crítica, complementa con <code>aria-label</code> contextual en el botón."
-        }
+        },
+        "variantProp": "Prop variant",
+        "collapsibleProp": "Modo de colapso",
+        "sideProp": "Prop side",
+        "sidebar": "Sidebar estándar pegada al borde del viewport. Empuja el contenido al expandir (push mode).",
+        "floating": "Sidebar con borde redondeado y sombra, flotando sobre un pequeño padding. No empuja el contenido.",
+        "inset": "Sidebar integrada al layout con el contenido en un contenedor redondeado adyacente.",
+        "offcanvas": "Sidebar desliza fuera del viewport al colapsar. Comportamiento predeterminado y recomendado.",
+        "icon": "Sidebar reduce a ancho de ícono (3rem). Labels ocultos; tooltips al hacer hover.",
+        "none": "Sidebar siempre visible, sin posibilidad de colapsar. Usar en dashboards fijos.",
+        "left": "Sidebar posicionada a la izquierda (predeterminado). Compatible con LTR.",
+        "right": "Sidebar posicionada a la derecha. Usar para paneles de detalle o contexto."
       }
     },
     "states": {

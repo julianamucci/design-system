@@ -95,9 +95,11 @@
     "variants": {
       "title": "Variantes",
       "note": "O Label não possui variantes nativas — é unstyled por padrão (font-medium, text-sm, leading-none). Comportamentos visuais de required e disabled são aplicados pelo código consumidor via className ou pelo estado do campo associado.",
-      "default": {
-        "label": "Padrão",
-        "description": "Texto com <code>font-medium text-sm leading-none</code>. Sem variante de cor — herda do tema."
+      "items": {
+        "default": {
+          "label": "Padrão",
+          "description": "Texto com <code>font-medium text-sm leading-none</code>. Sem variante de cor — herda do tema."
+        }
       }
     },
     "states": {
@@ -366,9 +368,11 @@
     "variants": {
       "title": "Variants",
       "note": "Label has no native variants — it is unstyled by default (font-medium, text-sm, leading-none). Required and disabled visual behaviors are applied by the consumer via className or by the associated field state.",
-      "default": {
-        "label": "Default",
-        "description": "Text with <code>font-medium text-sm leading-none</code>. No color variant — inherits from the theme."
+      "items": {
+        "default": {
+          "label": "Default",
+          "description": "Text with <code>font-medium text-sm leading-none</code>. No color variant — inherits from the theme."
+        }
       }
     },
     "states": {
@@ -637,9 +641,11 @@
     "variants": {
       "title": "Variantes",
       "note": "El Label no tiene variantes nativas — es unstyled por defecto (font-medium, text-sm, leading-none). Los comportamientos visuales de required y disabled los aplica el código consumidor via className o el estado del campo asociado.",
-      "default": {
-        "label": "Predeterminado",
-        "description": "Texto con <code>font-medium text-sm leading-none</code>. Sin variante de color — hereda del tema."
+      "items": {
+        "default": {
+          "label": "Predeterminado",
+          "description": "Texto con <code>font-medium text-sm leading-none</code>. Sin variante de color — hereda del tema."
+        }
       }
     },
     "states": {

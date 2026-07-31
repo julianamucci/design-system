@@ -154,7 +154,6 @@
       },
       "styles": {
         "default": "Link de página inativo — <code>variant=\"ghost\"</code>, fundo transparente.",
-        "active": "Página atual — <code>variant=\"outline\"</code>, borda e <code>aria-current=\"page\"</code>.",
         "directional": "Previous e Next — link com ícone e label visíveis a partir de <code>sm</code>."
       }
     },
@@ -575,7 +574,6 @@
       },
       "styles": {
         "default": "Inactive page link — <code>variant=\"ghost\"</code>, transparent background.",
-        "active": "Current page — <code>variant=\"outline\"</code>, border and <code>aria-current=\"page\"</code>.",
         "directional": "Previous and Next — link with icon and label visible from <code>sm</code>."
       }
     },
@@ -996,7 +994,6 @@
       },
       "styles": {
         "default": "Link de página inactivo — <code>variant=\"ghost\"</code>, fondo transparente.",
-        "active": "Página actual — <code>variant=\"outline\"</code>, borde y <code>aria-current=\"page\"</code>.",
         "directional": "Previous y Next — link con icono y etiqueta visibles desde <code>sm</code>."
       }
     },

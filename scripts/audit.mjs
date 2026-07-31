@@ -900,10 +900,14 @@ function auditTaxonomy(slug) {
   }
 
   // 3. Mesma chave em duas seções do mesmo componente.
+  // "default" colide sempre — a variante visual padrão e o estado inicial são
+  // coisas diferentes, e ambas legítimas. Sem essa exceção a regra acusava 6
+  // componentes por um par que não é duplicata.
+  const GENERICAS = new Set(['default']);
   const norm = (k) => k.toLowerCase().replace(/^(with|without|as)/, '').replace(/[^a-z0-9]/g, '');
   const mapa = new Map();
-  for (const k of keysOf(variants.items ?? {})) mapa.set(norm(k), `variants.items.${k}`);
-  for (const k of keysOf(variants.styles ?? {})) mapa.set(norm(k), `variants.styles.${k}`);
+  for (const k of keysOf(variants.items ?? {})) { if (!GENERICAS.has(k)) mapa.set(norm(k), `variants.items.${k}`); }
+  for (const k of keysOf(variants.styles ?? {})) { if (!GENERICAS.has(k)) mapa.set(norm(k), `variants.styles.${k}`); }
   for (const k of keysOf(states)) {
     const n = norm(k);
     if (mapa.has(n)) push('duplicate_across_sections', 'medium',

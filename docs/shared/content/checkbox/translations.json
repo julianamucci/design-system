@@ -109,8 +109,6 @@
       "note": "Checkbox não possui variantes <code>cva</code>. As composições visuais abaixo representam os estados e padrões de uso mais comuns.",
       "items": {
         "default": "Estado desmarcado padrão. Borda <code>--input</code>, fundo transparente. Pronto para interação.",
-        "checked": "Estado marcado. Fundo <code>--primary</code>, ícone <code>CheckIcon</code> em <code>--primary-foreground</code>.",
-        "indeterminate": "Seleção parcial de grupo. Fundo <code>--primary</code>, ícone <code>MinusIcon</code>. Disponível apenas no Svelte via prop <code>indeterminate</code>.",
         "withLabel": "Checkbox + Label lado a lado. Par obrigatório — sempre usar <code>htmlFor</code>/<code>id</code> para associação.",
         "withDescription": "Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada."
       },
@@ -495,8 +493,6 @@
       "note": "Checkbox has no <code>cva</code> variants. The visual compositions below represent the most common states and usage patterns.",
       "items": {
         "default": "Default unchecked state. <code>--input</code> border, transparent background. Ready for interaction.",
-        "checked": "Checked state. <code>--primary</code> background, <code>CheckIcon</code> in <code>--primary-foreground</code>.",
-        "indeterminate": "Partial group selection. <code>--primary</code> background, <code>MinusIcon</code>. Available only in Svelte via the <code>indeterminate</code> prop.",
         "withLabel": "Checkbox + Label side by side. Required pair — always use <code>htmlFor</code>/<code>id</code> for association.",
         "withDescription": "Checkbox + Label + helper text below. For additional context about the selected option."
       },
@@ -881,8 +877,6 @@
       "note": "Checkbox no tiene variantes <code>cva</code>. Las composiciones visuales a continuación representan los estados y patrones de uso más comunes.",
       "items": {
         "default": "Estado desmarcado por defecto. Borde <code>--input</code>, fondo transparente. Listo para interacción.",
-        "checked": "Estado marcado. Fondo <code>--primary</code>, ícono <code>CheckIcon</code> en <code>--primary-foreground</code>.",
-        "indeterminate": "Selección parcial de grupo. Fondo <code>--primary</code>, ícono <code>MinusIcon</code>. Disponible solo en Svelte vía prop <code>indeterminate</code>.",
         "withLabel": "Checkbox + Label uno al lado del otro. Par obligatorio — siempre usar <code>htmlFor</code>/<code>id</code> para la asociación.",
         "withDescription": "Checkbox + Label + texto auxiliar abajo. Para contexto adicional sobre la opción seleccionada."
       },
