@@ -876,8 +876,12 @@ function auditTaxonomy(slug) {
   // 1. Variantes soltas como irmãs de `variants` em vez de sob `items`.
   //    O inventário do /product só enxerga items/styles — nessa forma, ele
   //    reporta zero variantes e ninguém percebe.
+  // Vale mesmo quando `items` existe: vários componentes têm as DUAS formas ao
+  // mesmo tempo, e a versão anterior desta regra (`soltas && !items`) deixava
+  // esse caso passar — foi assim que o context-menu manteve 4 chaves soltas
+  // invisíveis para o inventário do /product.
   const soltas = keysOf(variants);
-  if (soltas.length && !variants.items) {
+  if (soltas.length) {
     push('variants_form', 'medium',
       `variantes fora de variants.items (${soltas.join(', ')}) — ver guideline 14 §Forma dos dados`);
   }

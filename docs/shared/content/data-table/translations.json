@@ -167,10 +167,7 @@
         "visibility": "Menu para esconder e exibir colunas. Disponível na toolbar por padrão; desligue com <code>enableColumnVisibility={false}</code>.",
         "resize": "Handle lateral em cada cabeçalho para arrastar e ajustar largura. Ative com <code>enableColumnResizing</code> e defina <code>size</code> inicial na column def.",
         "reorder": "Drag handle no cabeçalho para reordenar colunas. Ative com <code>enableColumnOrdering</code>.",
-        "pin": "Fixar coluna à esquerda ou direita via menu de colunas. Use posição <code>sticky</code>. Ative com <code>enableColumnPinning</code>.",
         "pagination": "Rodapé com contagem, seletor de tamanho e navegação por página. Ativa por padrão; tamanhos via <code>pageSizeOptions</code>.",
-        "edit": "Edição inline célula a célula. Marque <code>meta.editable</code> na column def e implemente <code>onCellEdit</code> para persistir o valor.",
-        "virtual": "Virtualização de linhas para datasets grandes. Renderiza apenas o intervalo visível. Ative com <code>virtualized</code> e defina <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Modo planilha (edição inline)",
           "description": "Combine edição inline em várias colunas, sem paginação e com filtro por coluna para criar uma experiência próxima de planilha. O componente não mantém estado dos dados — o <code>onCellEdit</code> atualiza o array fonte externamente.",
@@ -656,10 +653,7 @@
         "visibility": "Menu to hide and show columns. Available in the toolbar by default; disable with <code>enableColumnVisibility={false}</code>.",
         "resize": "Side handle on each header to drag and adjust width. Enable with <code>enableColumnResizing</code> and set initial <code>size</code> on the column def.",
         "reorder": "Drag handle on the header to reorder columns. Enable with <code>enableColumnOrdering</code>.",
-        "pin": "Pin column to the left or right via the columns menu. Uses <code>sticky</code> positioning. Enable with <code>enableColumnPinning</code>.",
         "pagination": "Footer with count, page-size selector, and page navigation. On by default; sizes via <code>pageSizeOptions</code>.",
-        "edit": "Per-cell inline editing. Mark <code>meta.editable</code> on the column def and implement <code>onCellEdit</code> to persist the value.",
-        "virtual": "Row virtualization for large datasets. Renders only the visible range. Enable with <code>virtualized</code> and set <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Spreadsheet mode (inline edit)",
           "description": "Combine inline editing on several columns, no pagination, and per-column filters to create a spreadsheet-like experience. The component does not hold data state — <code>onCellEdit</code> updates the source array externally.",
@@ -1145,10 +1139,7 @@
         "visibility": "Menú para ocultar y mostrar columnas. Disponible en la toolbar por defecto; desactiva con <code>enableColumnVisibility={false}</code>.",
         "resize": "Handle lateral en cada cabecera para arrastrar y ajustar ancho. Activa con <code>enableColumnResizing</code> y define <code>size</code> inicial en la column def.",
         "reorder": "Drag handle en la cabecera para reordenar columnas. Activa con <code>enableColumnOrdering</code>.",
-        "pin": "Fija columna a la izquierda o derecha vía el menú de columnas. Usa posición <code>sticky</code>. Activa con <code>enableColumnPinning</code>.",
         "pagination": "Pie con conteo, selector de tamaño y navegación por página. Activa por defecto; tamaños vía <code>pageSizeOptions</code>.",
-        "edit": "Edición inline celda a celda. Marca <code>meta.editable</code> en la column def e implementa <code>onCellEdit</code> para persistir el valor.",
-        "virtual": "Virtualización de filas para datasets grandes. Renderiza solo el rango visible. Activa con <code>virtualized</code> y define <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Modo planilla (edición inline)",
           "description": "Combina edición inline en varias columnas, sin paginación y con filtro por columna para crear una experiencia tipo planilla. El componente no mantiene estado de datos — el <code>onCellEdit</code> actualiza el array fuente externamente.",

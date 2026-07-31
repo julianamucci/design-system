@@ -141,14 +141,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponíveis",
-      "note": "O Button tem 6 variantes nativas definidas em <code>buttonVariants</code>. Cada variante comunica uma intenção diferente de ação — escolha com base na hierarquia visual e na severidade da ação.",
+      "note": "O Button tem variantes nativas definidas em <code>buttonVariants</code>. Cada variante comunica uma intenção diferente de ação — escolha com base na hierarquia visual e na severidade da ação.",
       "items": {
         "default": "Ação primária do fluxo. Fundo <code>primary</code>, texto <code>primary-foreground</code>.",
         "destructive": "Ações irreversíveis ou críticas (excluir, cancelar assinatura). Fundo <code>destructive</code>.",
         "outline": "Ação secundária com destaque. Borda visível, fundo transparente, hover com <code>accent</code>.",
         "secondary": "Ação secundária neutra. Fundo <code>secondary</code>, menos proeminente que <code>outline</code>.",
         "ghost": "Ação discreta em toolbars e menus. Sem borda, hover com <code>accent</code>.",
-        "link": "Ação com aparência de link textual. Usado raramente — prefira compor com elemento filho <code>&lt;a&gt;</code>.",
         "asLink": {
           "name": "Como link",
           "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes via <code>btnClass()</code>. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
@@ -583,14 +582,13 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Available Variants",
-      "note": "Button has 6 native variants defined in <code>buttonVariants</code>. Each variant communicates a different action intent — choose based on visual hierarchy and action severity.",
+      "note": "Button has native variants defined in <code>buttonVariants</code>. Each variant communicates a different action intent — choose based on visual hierarchy and action severity.",
       "items": {
         "default": "Primary action of the flow. <code>primary</code> background, <code>primary-foreground</code> text.",
         "destructive": "Irreversible or critical actions (delete, cancel subscription). <code>destructive</code> background.",
         "outline": "Secondary action with emphasis. Visible border, transparent background, hover with <code>accent</code>.",
         "secondary": "Neutral secondary action. <code>secondary</code> background, less prominent than <code>outline</code>.",
         "ghost": "Discreet action in toolbars and menus. No border, hover with <code>accent</code>.",
-        "link": "Action with text link appearance. Used rarely — prefer composing with child <code>&lt;a&gt;</code>.",
         "asLink": {
           "name": "As link",
           "description": "<code>&lt;a&gt;</code> element receiving the classes via <code>btnClass()</code>. Preserves native link semantics (href, target, browser navigation) with button appearance.",
@@ -1025,14 +1023,13 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Variantes Disponibles",
-      "note": "Button tiene 6 variantes nativas definidas en <code>buttonVariants</code>. Cada variante comunica una intención diferente de acción — elige según la jerarquía visual y la severidad de la acción.",
+      "note": "Button tiene variantes nativas definidas en <code>buttonVariants</code>. Cada variante comunica una intención diferente de acción — elige según la jerarquía visual y la severidad de la acción.",
       "items": {
         "default": "Acción primaria del flujo. Fondo <code>primary</code>, texto <code>primary-foreground</code>.",
         "destructive": "Acciones irreversibles o críticas (eliminar, cancelar suscripción). Fondo <code>destructive</code>.",
         "outline": "Acción secundaria con énfasis. Borde visible, fondo transparente, hover con <code>accent</code>.",
         "secondary": "Acción secundaria neutra. Fondo <code>secondary</code>, menos prominente que <code>outline</code>.",
         "ghost": "Acción discreta en toolbars y menús. Sin borde, hover con <code>accent</code>.",
-        "link": "Acción con apariencia de enlace textual. Se usa poco — prefiere componer con hijo <code>&lt;a&gt;</code>.",
         "asLink": {
           "name": "Como link",
           "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases vía <code>btnClass()</code>. Preserva la semántica nativa de link (href, target, navegación del navegador) con apariencia de botón.",
