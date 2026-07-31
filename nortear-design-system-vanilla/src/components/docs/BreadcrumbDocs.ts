@@ -483,16 +483,6 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
               behavior: stripHtml(t('states.simple.behavior')),
             },
             {
-              label: t('states.withEllipsis.label'),
-              trigger: stripHtml(t('states.withEllipsis.trigger')),
-              behavior: stripHtml(t('states.withEllipsis.behavior')),
-            },
-            {
-              label: t('states.customSeparator.label'),
-              trigger: stripHtml(t('states.customSeparator.trigger')),
-              behavior: stripHtml(t('states.customSeparator.behavior')),
-            },
-            {
               label: t('states.asChildLink.label'),
               trigger: stripHtml(t('states.asChildLink.trigger')),
               behavior: stripHtml(t('states.asChildLink.behavior')),

@@ -381,16 +381,6 @@ label.textContent = 'Aceito os termos e condições';`,
               }),
             },
             {
-              name: 'checked',
-              description: stripHtml(t('variants.items.checked')),
-              code: `createCheckbox({ checked: true });`,
-              previewFactory: () => buildCheckboxWithLabel({
-                checked: true,
-                id: 'v-checked',
-                labelText: t('demonstration.labels.newsletter'),
-              }),
-            },
-            {
               name: 'withLabel',
               description: stripHtml(t('variants.items.withLabel')),
               code: `const id = 'termos';\nconst cb = createCheckbox({ id });\nconst label = document.createElement('label');\nlabel.htmlFor = id;\nlabel.textContent = 'Aceito os termos e condições';`,

@@ -342,14 +342,6 @@ export function createPaginationDocs(): HTMLElement {
   onPageChange: (page) => console.log('page', page),
 });`;
 
-        const codeActive = `// 'active' não é prop — o factory aplica aria-current="page"
-// + classe no link cujo número === current.
-const nav = createPagination({
-  total: 5,
-  current: 3, // <- página atual recebe estilo "active"
-  onPageChange: (page) => console.log('page', page),
-});`;
-
         const codeDirectional = `// Previous/Next são montados quando showPrevNext=true (padrão).
 const nav = createPagination({
   total: 10,
@@ -377,24 +369,6 @@ const nav = createPagination({
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
                 wrap.appendChild(buildDemoPagination(5, 2));
-                return wrap;
-              },
-            },
-            {
-              name: t('variants.items.active'),
-              description: stripHtml(t('variants.styles.active')),
-              code: codeActive,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
-                const pag = buildDemoPagination(5, 3);
-                // realça visualmente o link aria-current="page" com border-outline para parity de variant
-                const current = pag.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-                if (current) current.classList.add('nds-border-default');
-                wrap.appendChild(pag);
                 return wrap;
               },
             },

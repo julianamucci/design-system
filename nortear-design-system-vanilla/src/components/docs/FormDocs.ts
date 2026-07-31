@@ -348,15 +348,6 @@ export function createFormDocs(): HTMLElement {
           `  description: 'Usaremos apenas para contato.',\n` +
           `});`;
 
-        const codeWithError =
-          `const input = createInput({ type: 'password', placeholder: '••••••••' });\n` +
-          `input.setAttribute('aria-invalid', 'true');\n` +
-          `const field = createFormField({\n` +
-          `  label: 'Senha',\n` +
-          `  input,\n` +
-          `  error: 'A senha precisa ter pelo menos 8 caracteres.',\n` +
-          `});`;
-
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
@@ -407,22 +398,6 @@ export function createFormDocs(): HTMLElement {
                 description: 'Usaremos apenas para contato.',
               }),
             },
-            {
-              name: t('variants.items.withError.name'),
-              trackId: 'withError',
-              description: t('variants.items.withError.description'),
-              useWhen: t('variants.items.withError.use'),
-              code: codeWithError,
-              previewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: '••••••••' });
-                inp.setAttribute('aria-invalid', 'true');
-                return createFormField({
-                  label: 'Senha',
-                  input: inp,
-                  error: 'A senha precisa ter pelo menos 8 caracteres.',
-                });
-              },
-            },
           ],
         });
       }
@@ -469,10 +444,8 @@ export function createFormDocs(): HTMLElement {
           },
           items: [
             { label: t('states.default.label'),         trigger: stripHtml(t('states.default.trigger')),         behavior: t('states.default.behavior') },
-            { label: t('states.withDescription.label'), trigger: stripHtml(t('states.withDescription.trigger')), behavior: t('states.withDescription.behavior') },
             { label: t('states.withError.label'),       trigger: stripHtml(t('states.withError.trigger')),       behavior: t('states.withError.behavior') },
             { label: t('states.disabled.label'),        trigger: stripHtml(t('states.disabled.trigger')),        behavior: t('states.disabled.behavior') },
-            { label: t('states.fieldset.label'),        trigger: stripHtml(t('states.fieldset.trigger')),        behavior: t('states.fieldset.behavior') },
           ],
         });
 

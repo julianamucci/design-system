@@ -494,11 +494,6 @@ wrap.appendChild(
               behavior: t('states.loading.behavior'),
             },
             {
-              label:    t('states.withDisabled.label'),
-              trigger:  stripHtml(t('states.withDisabled.trigger')),
-              behavior: t('states.withDisabled.behavior'),
-            },
-            {
               label:    t('states.longList.label'),
               trigger:  stripHtml(t('states.longList.trigger')),
               behavior: t('states.longList.behavior'),

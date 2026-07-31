@@ -400,31 +400,31 @@ export function createInputDocs(): HTMLElement {
           items: [
             {
               name: 'text',
-              description: stripHtml(t('variants.types.text')),
+              description: stripHtml(t('variants.items.types.text')),
               code: codeText,
               previewFactory: () => createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
             },
             {
               name: 'email',
-              description: stripHtml(t('variants.types.email')),
+              description: stripHtml(t('variants.items.types.email')),
               code: codeEmail,
               previewFactory: () => createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
             },
             {
               name: 'password',
-              description: stripHtml(t('variants.types.password')),
+              description: stripHtml(t('variants.items.types.password')),
               code: codePassword,
               previewFactory: () => createInput({ type: 'password', placeholder: '••••••••' }),
             },
             {
               name: 'number',
-              description: stripHtml(t('variants.types.number')),
+              description: stripHtml(t('variants.items.types.number')),
               code: codeNumber,
               previewFactory: () => createInput({ type: 'number', placeholder: '0' }),
             },
             {
               name: 'file',
-              description: stripHtml(t('variants.types.file')),
+              description: stripHtml(t('variants.items.types.file')),
               code: codeFile,
               previewFactory: () => createInput({ type: 'file' }),
             },

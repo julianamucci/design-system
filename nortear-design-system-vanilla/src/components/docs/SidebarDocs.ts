@@ -702,19 +702,19 @@ export function createSidebarDocs(): HTMLElement {
           items: [
             {
               name: 'sidebar',
-              description: stripHtml(t('variants.sidebar')),
+              description: stripHtml(t('variants.items.sidebar')),
               code: codeSidebar,
               previewFactory: () => buildMiniSidebar({ variant: 'sidebar' }),
             },
             {
               name: 'floating',
-              description: stripHtml(t('variants.floating')),
+              description: stripHtml(t('variants.items.floating')),
               code: codeFloating,
               previewFactory: () => buildMiniSidebar({ variant: 'floating' }),
             },
             {
               name: 'inset',
-              description: stripHtml(t('variants.inset')),
+              description: stripHtml(t('variants.items.inset')),
               code: codeInset,
               previewFactory: () => buildMiniSidebar({ variant: 'inset' }),
             },

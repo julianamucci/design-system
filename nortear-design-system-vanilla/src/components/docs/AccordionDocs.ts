@@ -317,8 +317,8 @@ export function createAccordionDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
-              name: t('variants.single.label'),
-              description: stripHtml(t('variants.single.description')),
+              name: t('variants.items.single.label'),
+              description: stripHtml(t('variants.items.single.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
                 type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
@@ -329,8 +329,8 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
-              name: t('variants.multiple.label'),
-              description: stripHtml(t('variants.multiple.description')),
+              name: t('variants.items.multiple.label'),
+              description: stripHtml(t('variants.items.multiple.description')),
               code: codeMultiple,
               previewFactory: () => createAccordion({
                 type: 'multiple', class: 'nds-max-w-sm nds-text-body',
@@ -341,8 +341,8 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
-              name: t('variants.controlled.label'),
-              description: stripHtml(t('variants.controlled.description')),
+              name: t('variants.items.controlled.label'),
+              description: stripHtml(t('variants.items.controlled.description')),
               code: codeControlled,
               previewFactory: () => createAccordion({
                 type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
@@ -353,8 +353,8 @@ export function createAccordionDocs(): HTMLElement {
               }),
             },
             {
-              name: t('variants.defaultOpen.label'),
-              description: stripHtml(t('variants.defaultOpen.description')),
+              name: t('variants.items.defaultOpen.label'),
+              description: stripHtml(t('variants.items.defaultOpen.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
                 type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',

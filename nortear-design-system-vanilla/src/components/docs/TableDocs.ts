@@ -390,8 +390,8 @@ export function createTableDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
-              name: t('variants.basic.label'),
-              description: DOMPurify.sanitize(t('variants.basic.description')),
+              name: t('variants.items.basic.label'),
+              description: DOMPurify.sanitize(t('variants.items.basic.description')),
               code: codeBasica,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -419,8 +419,8 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
-              name: t('variants.withFooter.label'),
-              description: DOMPurify.sanitize(t('variants.withFooter.description')),
+              name: t('variants.items.withFooter.label'),
+              description: DOMPurify.sanitize(t('variants.items.withFooter.description')),
               code: codeRodape,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -456,8 +456,8 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
-              name: t('variants.withSrOnlyCaption.label'),
-              description: DOMPurify.sanitize(t('variants.withSrOnlyCaption.description')),
+              name: t('variants.items.withSrOnlyCaption.label'),
+              description: DOMPurify.sanitize(t('variants.items.withSrOnlyCaption.description')),
               code: codeSrOnly,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
@@ -485,8 +485,8 @@ export function createTableDocs(): HTMLElement {
               },
             },
             {
-              name: t('variants.withInlineActions.label'),
-              description: DOMPurify.sanitize(t('variants.withInlineActions.description')),
+              name: t('variants.items.withInlineActions.label'),
+              description: DOMPurify.sanitize(t('variants.items.withInlineActions.description')),
               code: codeAcoes,
               previewFactory: () => {
                 const { wrapper, table } = createTable();

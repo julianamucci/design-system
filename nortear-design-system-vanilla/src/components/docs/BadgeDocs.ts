@@ -501,10 +501,7 @@ export function createBadgeDocs(): HTMLElement {
             behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.withIcon.label'),    trigger: stripHtml(t('states.withIcon.trigger')),    behavior: stripHtml(t('states.withIcon.behavior'))    },
             { label: t('states.countBadge.label'),  trigger: stripHtml(t('states.countBadge.trigger')),  behavior: stripHtml(t('states.countBadge.behavior'))  },
-            { label: t('states.asLink.label'),      trigger: stripHtml(t('states.asLink.trigger')),      behavior: stripHtml(t('states.asLink.behavior'))      },
-            { label: t('states.asTrigger.label'),   trigger: stripHtml(t('states.asTrigger.trigger')),   behavior: stripHtml(t('states.asTrigger.behavior'))   },
           ],
         });
 

@@ -319,8 +319,8 @@ export function createLabelDocs(): HTMLElement {
           title: t('variants.title'),
           items: [
             {
-              name: t('variants.default.label'),
-              description: DOMPurify.sanitize(t('variants.default.description')),
+              name: t('variants.items.default.label'),
+              description: DOMPurify.sanitize(t('variants.items.default.description')),
               code: codeDefault,
               previewFactory: () => buildLabelWithInput('Nome completo', 'var-default-input'),
             },
@@ -422,7 +422,7 @@ export function createLabelDocs(): HTMLElement {
             t('accessibility.item3'),
             t('accessibility.item4'),
           ],
-          keyboardTitle: t('accessibility.keyboard.title'),
+          keyboardTitle: tNav('common.keyboardNav'),
           keyboardItems: [
             { key: 'Tab',  description: t('accessibility.keyboard.tab') },
             { key: '—',    description: t('accessibility.keyboard.noKeyboard') },
@@ -455,9 +455,9 @@ export function createLabelDocs(): HTMLElement {
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {

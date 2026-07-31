@@ -585,16 +585,6 @@ card.append(img, header);`;
               trigger: stripHtml(t('states.interactive.trigger')),
               behavior: stripHtml(t('states.interactive.behavior')),
             },
-            {
-              label: t('states.withImage.label'),
-              trigger: stripHtml(t('states.withImage.trigger')),
-              behavior: stripHtml(t('states.withImage.behavior')),
-            },
-            {
-              label: t('states.withFooter.label'),
-              trigger: stripHtml(t('states.withFooter.trigger')),
-              behavior: stripHtml(t('states.withFooter.behavior')),
-            },
           ],
         });
 

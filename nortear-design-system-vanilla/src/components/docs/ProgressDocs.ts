@@ -404,15 +404,6 @@ export function createProgressDocs(): HTMLElement {
         const codeDeterminate =
           `const bar = createProgress({ value: 42 });\n` +
           `bar.setAttribute('aria-label', 'Progresso do upload');`;
-        const codeIndeterminate =
-          `// DIVERGÊNCIA Nortear: factory não suporta value=null nativamente.\n` +
-          `// Remova aria-valuenow e anime o indicador via classe utilitária.\n` +
-          `const bar = createProgress({ value: 0 });\n` +
-          `bar.setAttribute('aria-label', 'Processando…');\n` +
-          `bar.removeAttribute('aria-valuenow');\n` +
-          `const ind = bar.firstElementChild as HTMLElement;\n` +
-          `ind.style.width = '33.3333%';\n` +
-          `ind.classList.add('animate-indeterminate');`;
         const codeWithLabel =
           `// DIVERGÊNCIA Nortear: factory não expõe ProgressLabel/ProgressValue.\n` +
           `// Componha manualmente com DOM nativo acima da barra.\n` +
@@ -429,12 +420,6 @@ export function createProgressDocs(): HTMLElement {
               description: DOMPurify.sanitize(t('variants.styles.determinate')),
               code: codeDeterminate,
               previewFactory: () => buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
-            },
-            {
-              name: t('variants.items.indeterminate'),
-              description: DOMPurify.sanitize(t('variants.styles.indeterminate')),
-              code: codeIndeterminate,
-              previewFactory: () => buildIndeterminate(t('demonstration.labels.indeterminate')),
             },
             {
               name: t('variants.items.withLabel'),
