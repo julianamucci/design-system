@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/dropdown-menu/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -39,6 +40,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -402,9 +404,9 @@ const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
 })));
 
 const a11yCritCols = computed(() => ({
-  criterion: 'Critério',
+  criterion: tNav('common.criterion'),
   level: 'WCAG',
-  how: 'Como verificar',
+  how: tNav('common.howToVerify'),
 }));
 </script>
 
@@ -898,7 +900,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
-        cols: { action: 'Ação', result: 'Resultado esperado', priority: 'Prioridade' },
+        cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
         items: functionalTestItems,
       }"
       :accessibility="{
@@ -908,7 +910,7 @@ const a11yCritCols = computed(() => ({
       }"
       :visual="{
         title: tContent('testes.visual.title'),
-        cols: { story: 'Story', priority: 'Prioridade' },
+        cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
         items: visualTestItems,
       }"
     />

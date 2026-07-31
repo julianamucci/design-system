@@ -41,7 +41,10 @@
       "howToVerify": "Como verificar",
       "useWhen": "Quando usar:",
       "copy": "Copiar código",
-      "copied": "Copiado!"
+      "copied": "Copiado!",
+      "stateName": "Estado",
+      "stateTrigger": "Quando ocorre",
+      "stateBehavior": "Comportamento"
     }
   },
   "en": {
@@ -86,7 +89,10 @@
       "howToVerify": "How to verify",
       "useWhen": "When to use:",
       "copy": "Copy code",
-      "copied": "Copied!"
+      "copied": "Copied!",
+      "stateName": "State",
+      "stateTrigger": "When it happens",
+      "stateBehavior": "Behavior"
     }
   },
   "es": {
@@ -131,7 +137,10 @@
       "howToVerify": "Cómo verificar",
       "useWhen": "Cuándo usar:",
       "copy": "Copiar código",
-      "copied": "¡Copiado!"
+      "copied": "¡Copiado!",
+      "stateName": "Estado",
+      "stateTrigger": "Cuándo ocurre",
+      "stateBehavior": "Comportamiento"
     }
   }
 }

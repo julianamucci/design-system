@@ -265,14 +265,9 @@ const compositionItems = computed(() => [
 ]);
 
 const stateCols = computed(() => ({
-  state: locale.value === 'en' ? 'State' : 'Estado',
-  trigger: locale.value === 'en' ? 'Trigger' : locale.value === 'es' ? 'Disparador' : 'Disparo',
-  behavior:
-    locale.value === 'en'
-      ? 'Behavior'
-      : locale.value === 'es'
-      ? 'Comportamiento'
-      : 'Comportamento',
+  state: tNav('common.stateName'),
+  trigger: tNav('common.stateTrigger'),
+  behavior: tNav('common.stateBehavior'),
 }));
 
 const stateItems = computed(() => [

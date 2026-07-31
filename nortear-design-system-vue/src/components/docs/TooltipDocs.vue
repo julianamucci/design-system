@@ -391,9 +391,9 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
 })));
 
 const a11yCritCols = computed(() => ({
-  criterion: 'Critério',
+  criterion: tNav('common.criterion'),
   level: 'WCAG',
-  how: 'Como verificar',
+  how: tNav('common.howToVerify'),
 }));
 </script>
 
@@ -979,7 +979,7 @@ const a11yCritCols = computed(() => ({
         :title="tContent('testes.title')"
         :functional="{
           title: tContent('testes.functional.title'),
-          cols: { action: 'Ação', result: 'Resultado esperado', priority: 'Prioridade' },
+          cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },
           items: functionalTestItems,
         }"
         :accessibility="{
@@ -989,7 +989,7 @@ const a11yCritCols = computed(() => ({
         }"
         :visual="{
           title: tContent('testes.visual.title'),
-          cols: { story: 'Story', priority: 'Prioridade' },
+          cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
           items: visualTestItems,
         }"
       />

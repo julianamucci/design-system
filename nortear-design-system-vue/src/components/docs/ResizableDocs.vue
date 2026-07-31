@@ -927,7 +927,7 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.title'),
-        trigger: 'Trigger',
+        trigger: tNav('common.stateTrigger'),
         behavior: tContent('props.table.description'),
       }"
       :items="stateItems"

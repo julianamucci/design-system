@@ -790,9 +790,9 @@ const visualTestItems = computed(() => [
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: 'Estado',
-        trigger: 'Trigger',
-        behavior: 'Comportamento',
+        state: tNav('common.stateName'),
+        trigger: tNav('common.stateTrigger'),
+        behavior: tNav('common.stateBehavior'),
       }"
       :items="stateItems"
     />

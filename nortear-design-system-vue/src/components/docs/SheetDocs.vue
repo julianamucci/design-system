@@ -765,7 +765,7 @@ const a11yCritCols = computed(() => ({
     <DocsStates
       :title="tContent('states.title')"
       :cols="{
-        state: tNav('common.state'),
+        state: tNav('common.stateName'),
         trigger: tNav('common.userAction'),
         behavior: tNav('common.expectedResult'),
       }"
