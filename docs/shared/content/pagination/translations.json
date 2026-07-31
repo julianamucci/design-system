@@ -135,15 +135,7 @@
       "items": {
         "default": "Default",
         "active": "Active",
-        "directional": "Directional"
-      },
-      "styles": {
-        "default": "Link de página inativo — <code>variant=\"ghost\"</code>, fundo transparente.",
-        "active": "Página atual — <code>variant=\"outline\"</code>, borda e <code>aria-current=\"page\"</code>.",
-        "directional": "Previous e Next — link com ícone e label visíveis a partir de <code>sm</code>."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "directional": "Directional",
         "simple": {
           "name": "Simples (≤ 7 páginas)",
           "description": "Total pequeno (até 7 páginas) — exibe todos os números sequencialmente, sem ellipsis. Prev/Next no início e fim do bloco.",
@@ -154,16 +146,16 @@
           "description": "Páginas distantes da atual são colapsadas em \"…\" — sempre mostra primeira, última, página atual e vizinhas (current ± 1).",
           "use": "Listagens longas (relatórios, registros históricos, catálogos). Mantém o controle visualmente compacto independente do total."
         },
-        "lastPage": {
-          "name": "Última página (Next desabilitado)",
-          "description": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> + opacidade reduzida + <code>pointer-events: none</code>. Mesmo padrão para Prev quando <code>current === 1</code>.",
-          "use": "Estado natural de navegação nos extremos. Não esconda os botões — apenas desabilite para preservar consistência espacial."
-        },
         "interactive": {
           "name": "Interativo (estado externo)",
           "description": "Em SPAs, o estado <code>current</code> vive no componente pai. Cada <code>onPageChange</code> dispara um re-render que substitui o nav inteiro com os novos valores.",
           "use": "Apps reais com listas paginadas. Sincronize o estado com a URL (<code>?page=3</code>) para suportar deep-link e botão voltar."
         }
+      },
+      "styles": {
+        "default": "Link de página inativo — <code>variant=\"ghost\"</code>, fundo transparente.",
+        "active": "Página atual — <code>variant=\"outline\"</code>, borda e <code>aria-current=\"page\"</code>.",
+        "directional": "Previous e Next — link com ícone e label visíveis a partir de <code>sm</code>."
       }
     },
     "states": {
@@ -181,6 +173,11 @@
         "active": "Página atual — borda visível e <code>aria-current=\"page\"</code>.",
         "disabled": "Previous na primeira página ou Next na última — <code>opacity-50</code> e <code>pointer-events-none</code>.",
         "focus": "Anel de foco visível com <code>ring-2 ring-ring</code>."
+      },
+      "lastPage": {
+        "label": "Última página (Next desabilitado)",
+        "trigger": "Página atual é a última",
+        "behavior": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> + opacidade reduzida + <code>pointer-events: none</code>. Mesmo padrão para Prev quando <code>current === 1</code>."
       }
     },
     "props": {
@@ -543,15 +540,7 @@
       "items": {
         "default": "Default",
         "active": "Active",
-        "directional": "Directional"
-      },
-      "styles": {
-        "default": "Inactive page link — <code>variant=\"ghost\"</code>, transparent background.",
-        "active": "Current page — <code>variant=\"outline\"</code>, border and <code>aria-current=\"page\"</code>.",
-        "directional": "Previous and Next — link with icon and label visible from <code>sm</code>."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "directional": "Directional",
         "simple": {
           "name": "Simple (≤ 7 pages)",
           "description": "Small total (up to 7 pages) — shows every number sequentially, no ellipsis. Prev/Next at the start and end of the block.",
@@ -562,16 +551,16 @@
           "description": "Pages far from the current one collapse into \"…\" — always shows first, last, current and neighbors (current ± 1).",
           "use": "Long listings (reports, historical records, catalogs). Keeps the control visually compact regardless of total."
         },
-        "lastPage": {
-          "name": "Last page (Next disabled)",
-          "description": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> + reduced opacity + <code>pointer-events: none</code>. Same pattern for Prev when <code>current === 1</code>.",
-          "use": "Natural navigation state at the extremes. Don't hide the buttons — just disable them to preserve spatial consistency."
-        },
         "interactive": {
           "name": "Interactive (external state)",
           "description": "In SPAs, the <code>current</code> state lives in the parent component. Each <code>onPageChange</code> triggers a re-render that replaces the entire nav with new values.",
           "use": "Real apps with paginated lists. Sync state with the URL (<code>?page=3</code>) to support deep-link and back button."
         }
+      },
+      "styles": {
+        "default": "Inactive page link — <code>variant=\"ghost\"</code>, transparent background.",
+        "active": "Current page — <code>variant=\"outline\"</code>, border and <code>aria-current=\"page\"</code>.",
+        "directional": "Previous and Next — link with icon and label visible from <code>sm</code>."
       }
     },
     "states": {
@@ -589,6 +578,11 @@
         "active": "Current page — visible border and <code>aria-current=\"page\"</code>.",
         "disabled": "Previous on the first page or Next on the last — <code>opacity-50</code> and <code>pointer-events-none</code>.",
         "focus": "Visible focus ring with <code>ring-2 ring-ring</code>."
+      },
+      "lastPage": {
+        "label": "Last page (Next disabled)",
+        "trigger": "Current page is the last",
+        "behavior": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> + reduced opacity + <code>pointer-events: none</code>. Same pattern for Prev when <code>current === 1</code>."
       }
     },
     "props": {
@@ -951,15 +945,7 @@
       "items": {
         "default": "Default",
         "active": "Active",
-        "directional": "Directional"
-      },
-      "styles": {
-        "default": "Link de página inactivo — <code>variant=\"ghost\"</code>, fondo transparente.",
-        "active": "Página actual — <code>variant=\"outline\"</code>, borde y <code>aria-current=\"page\"</code>.",
-        "directional": "Previous y Next — link con icono y etiqueta visibles desde <code>sm</code>."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "directional": "Directional",
         "simple": {
           "name": "Simple (≤ 7 páginas)",
           "description": "Total pequeño (hasta 7 páginas) — muestra todos los números secuencialmente, sin ellipsis. Prev/Next al inicio y al fin del bloque.",
@@ -970,16 +956,16 @@
           "description": "Páginas lejos de la actual se colapsan en \"…\" — siempre muestra primera, última, página actual y vecinas (current ± 1).",
           "use": "Listados largos (reportes, registros históricos, catálogos). Mantiene el control visualmente compacto sin importar el total."
         },
-        "lastPage": {
-          "name": "Última página (Next deshabilitado)",
-          "description": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> + opacidad reducida + <code>pointer-events: none</code>. Mismo patrón para Prev cuando <code>current === 1</code>.",
-          "use": "Estado natural de navegación en los extremos. No ocultes los botones — solo deshabilítalos para preservar consistencia espacial."
-        },
         "interactive": {
           "name": "Interactivo (estado externo)",
           "description": "En SPAs, el estado <code>current</code> vive en el componente padre. Cada <code>onPageChange</code> dispara un re-render que reemplaza el nav entero con los nuevos valores.",
           "use": "Apps reales con listas paginadas. Sincroniza el estado con la URL (<code>?page=3</code>) para soportar deep-link y botón atrás."
         }
+      },
+      "styles": {
+        "default": "Link de página inactivo — <code>variant=\"ghost\"</code>, fondo transparente.",
+        "active": "Página actual — <code>variant=\"outline\"</code>, borde y <code>aria-current=\"page\"</code>.",
+        "directional": "Previous y Next — link con icono y etiqueta visibles desde <code>sm</code>."
       }
     },
     "states": {
@@ -997,6 +983,11 @@
         "active": "Página actual — borde visible y <code>aria-current=\"page\"</code>.",
         "disabled": "Previous en la primera página o Next en la última — <code>opacity-50</code> y <code>pointer-events-none</code>.",
         "focus": "Anillo de foco visible con <code>ring-2 ring-ring</code>."
+      },
+      "lastPage": {
+        "label": "Última página (Next deshabilitado)",
+        "trigger": "La página actual es la última",
+        "behavior": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> + opacidad reducida + <code>pointer-events: none</code>. Mismo patrón para Prev cuando <code>current === 1</code>."
       }
     },
     "props": {

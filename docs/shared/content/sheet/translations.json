@@ -172,11 +172,6 @@
           "name": "Navegação secundária",
           "description": "Painel <code>side=\"left\"</code> com lista de links como conteúdo principal. Substitui menus permanentes em layouts compactos.",
           "use": "Menus de área administrativa, navegação entre seções secundárias do app, drill-down de hierarquias profundas que não cabem no header."
-        },
-        "longScrollBody": {
-          "name": "Body com scroll interno",
-          "description": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo.",
-          "use": "Conteúdo extenso onde o usuário precisa ler/preencher sem perder as ações primárias de vista — termos de uso, formulários de cadastro detalhado, configurações com muitas seções."
         }
       }
     },
@@ -193,6 +188,11 @@
         "open": "Aberto — <code>data-state=\"open\"</code>, foco move ao primeiro elemento focável.",
         "transitioning": "Animação de entrada/saída — <code>translate-x/y</code> conforme <code>side</code>.",
         "focused": "Elemento interno focado — anel <code>ring-2 ring-ring</code>."
+      },
+      "longScrollBody": {
+        "label": "Body com scroll interno",
+        "trigger": "Conteúdo excede a altura do painel",
+        "behavior": "Painel <code>side=\"right\"</code> com corpo longo (termos de uso, formulário extenso) que rola internamente enquanto o footer permanece fixo."
       }
     },
     "props": {
@@ -615,11 +615,6 @@
           "name": "Secondary navigation",
           "description": "<code>side=\"left\"</code> panel with a list of links as main content. Replaces permanent menus in compact layouts.",
           "use": "Admin area menus, navigation between secondary app sections, drill-down for deep hierarchies that don't fit in the header."
-        },
-        "longScrollBody": {
-          "name": "Body with internal scroll",
-          "description": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed.",
-          "use": "Extensive content where the user needs to read/fill in without losing sight of primary actions — terms of use, detailed signup forms, settings with many sections."
         }
       }
     },
@@ -636,6 +631,11 @@
         "open": "Open — <code>data-state=\"open\"</code>, focus moves to first focusable element.",
         "transitioning": "Enter/exit animation — <code>translate-x/y</code> based on <code>side</code>.",
         "focused": "Internal element focused — <code>ring-2 ring-ring</code>."
+      },
+      "longScrollBody": {
+        "label": "Body with internal scroll",
+        "trigger": "Content exceeds the panel height",
+        "behavior": "<code>side=\"right\"</code> panel with long body content (terms of use, lengthy form) that scrolls internally while the footer stays fixed."
       }
     },
     "props": {
@@ -1058,11 +1058,6 @@
           "name": "Navegación secundaria",
           "description": "Panel <code>side=\"left\"</code> con lista de enlaces como contenido principal. Sustituye menús permanentes en layouts compactos.",
           "use": "Menús de área administrativa, navegación entre secciones secundarias del app, drill-down de jerarquías profundas que no caben en el header."
-        },
-        "longScrollBody": {
-          "name": "Body con scroll interno",
-          "description": "Panel <code>side=\"right\"</code> con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo.",
-          "use": "Contenido extenso donde el usuario necesita leer/rellenar sin perder de vista las acciones primarias — términos de uso, formularios de registro detallado, configuraciones con muchas secciones."
         }
       }
     },
@@ -1079,6 +1074,11 @@
         "open": "Abierto — <code>data-state=\"open\"</code>, el foco va al primer elemento focalizable.",
         "transitioning": "Animación de entrada/salida — <code>translate-x/y</code> según <code>side</code>.",
         "focused": "Elemento interno enfocado — <code>ring-2 ring-ring</code>."
+      },
+      "longScrollBody": {
+        "label": "Body con scroll interno",
+        "trigger": "El contenido excede la altura del panel",
+        "behavior": "Panel <code>side=\"right\"</code> con cuerpo largo (términos de uso, formulario extenso) que hace scroll internamente mientras el footer permanece fijo."
       }
     },
     "props": {

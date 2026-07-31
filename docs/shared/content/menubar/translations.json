@@ -142,14 +142,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Item neutro com hover <code>bg-accent</code>; padrão para a maioria das ações.",
-        "destructive": "Item de ação irreversível com <code>text-destructive</code> e <code>bg-destructive/10</code> no hover."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menu com shortcuts",
           "description": "Menu com items que exibem atalhos de teclado à direita via <code>Shortcut</code>. O texto fica alinhado à esquerda e o atalho à direita com cor <code>muted-foreground</code>.",
@@ -170,6 +163,10 @@
           "description": "Barra com 4 menus categorizados (Arquivo, Editar, Exibir, Ajuda) cobrindo as ações típicas de uma aplicação desktop, com separators, shortcuts e labels de grupo.",
           "use": "Aplicações estilo desktop (editores de texto/imagem, IDEs, design tools) onde o usuário espera o padrão clássico de menus categorizados no topo."
         }
+      },
+      "styles": {
+        "default": "Item neutro com hover <code>bg-accent</code>; padrão para a maioria das ações.",
+        "destructive": "Item de ação irreversível com <code>text-destructive</code> e <code>bg-destructive/10</code> no hover."
       }
     },
     "states": {
@@ -596,14 +593,7 @@
       "title": "Variants",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Neutral item with <code>bg-accent</code> hover; default for most actions.",
-        "destructive": "Irreversible action item with <code>text-destructive</code> and <code>bg-destructive/10</code> on hover."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menu with shortcuts",
           "description": "Menu with items that display keyboard shortcuts on the right via <code>Shortcut</code>. The label aligns left while the shortcut sits on the right with <code>muted-foreground</code> color.",
@@ -624,6 +614,10 @@
           "description": "Bar with 4 categorized menus (File, Edit, View, Help) covering the typical actions of a desktop application, with separators, shortcuts and group labels.",
           "use": "Desktop-style applications (text/image editors, IDEs, design tools) where the user expects the classic pattern of categorized top menus."
         }
+      },
+      "styles": {
+        "default": "Neutral item with <code>bg-accent</code> hover; default for most actions.",
+        "destructive": "Irreversible action item with <code>text-destructive</code> and <code>bg-destructive/10</code> on hover."
       }
     },
     "states": {
@@ -1050,14 +1044,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Item neutro con hover <code>bg-accent</code>; predeterminado para la mayoría de las acciones.",
-        "destructive": "Item de acción irreversible con <code>text-destructive</code> y <code>bg-destructive/10</code> en hover."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menú con shortcuts",
           "description": "Menú con items que muestran atajos de teclado a la derecha vía <code>Shortcut</code>. El texto se alinea a la izquierda y el atajo a la derecha con color <code>muted-foreground</code>.",
@@ -1078,6 +1065,10 @@
           "description": "Barra con 4 menús categorizados (Archivo, Editar, Ver, Ayuda) que cubre las acciones típicas de una aplicación desktop, con separators, shortcuts y labels de grupo.",
           "use": "Aplicaciones estilo desktop (editores de texto/imagen, IDEs, design tools) donde el usuario espera el patrón clásico de menús categorizados arriba."
         }
+      },
+      "styles": {
+        "default": "Item neutro con hover <code>bg-accent</code>; predeterminado para la mayoría de las acciones.",
+        "destructive": "Item de acción irreversible con <code>text-destructive</code> y <code>bg-destructive/10</code> en hover."
       }
     },
     "states": {

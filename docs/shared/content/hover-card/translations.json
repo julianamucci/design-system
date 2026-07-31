@@ -130,14 +130,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "withDelay": "Com delay customizado"
-      },
-      "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
-        "withDelay": "Customizar via <code>openDelay</code> e <code>closeDelay</code> em ms; usar 300-500ms para previews ricos, 700ms+ para conteúdo opcional."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "withDelay": "Com delay customizado",
         "userProfile": {
           "name": "Perfil de usuário",
           "description": "Trigger em <code>@username</code> revela cartão com avatar, nome, papel e métrica curta (ex.: seguidores). O link permanece navegável por clique e por teclado.",
@@ -158,6 +151,10 @@
           "description": "Valor numérico (ex.: <code>LCP 1.8s</code>) dispara cartão com nome completo da métrica, valor com cor semântica e descrição dos limiares (bom/ruim).",
           "use": "Dashboards e relatórios com KPIs, indicadores de performance e métricas técnicas que precisam de contexto sem poluir a visualização principal."
         }
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
+        "withDelay": "Customizar via <code>openDelay</code> e <code>closeDelay</code> em ms; usar 300-500ms para previews ricos, 700ms+ para conteúdo opcional."
       }
     },
     "states": {
@@ -553,14 +550,7 @@
       "title": "Variants",
       "items": {
         "default": "Default",
-        "withDelay": "With custom delay"
-      },
-      "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, <code>shadow-md</code>.",
-        "withDelay": "Customize via <code>openDelay</code> and <code>closeDelay</code> in ms; use 300-500ms for rich previews, 700ms+ for optional content."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "withDelay": "With custom delay",
         "userProfile": {
           "name": "User profile",
           "description": "Trigger on <code>@username</code> reveals a card with avatar, name, role and a short metric (e.g. followers). The link stays navigable by click and keyboard.",
@@ -581,6 +571,10 @@
           "description": "Numeric value (e.g. <code>LCP 1.8s</code>) triggers a card with the full metric name, the value with semantic color, and the threshold description (good/poor).",
           "use": "Dashboards and reports with KPIs, performance indicators and technical metrics that need context without cluttering the main visualization."
         }
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, <code>shadow-md</code>.",
+        "withDelay": "Customize via <code>openDelay</code> and <code>closeDelay</code> in ms; use 300-500ms for rich previews, 700ms+ for optional content."
       }
     },
     "states": {
@@ -976,14 +970,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "withDelay": "Con delay personalizado"
-      },
-      "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
-        "withDelay": "Personaliza vía <code>openDelay</code> y <code>closeDelay</code> en ms; usa 300-500ms para previews ricos, 700ms+ para contenido opcional."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "withDelay": "Con delay personalizado",
         "userProfile": {
           "name": "Perfil de usuario",
           "description": "Trigger en <code>@username</code> revela una tarjeta con avatar, nombre, rol y una métrica corta (ej.: seguidores). El enlace sigue siendo navegable por clic y por teclado.",
@@ -1004,6 +991,10 @@
           "description": "Valor numérico (ej.: <code>LCP 1.8s</code>) dispara una tarjeta con el nombre completo de la métrica, el valor con color semántico y la descripción de los umbrales (bueno/malo).",
           "use": "Dashboards y reportes con KPIs, indicadores de rendimiento y métricas técnicas que necesitan contexto sin saturar la visualización principal."
         }
+      },
+      "styles": {
+        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
+        "withDelay": "Personaliza vía <code>openDelay</code> y <code>closeDelay</code> en ms; usa 300-500ms para previews ricos, 700ms+ para contenido opcional."
       }
     },
     "states": {

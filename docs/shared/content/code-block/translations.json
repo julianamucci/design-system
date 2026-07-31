@@ -146,10 +146,7 @@
         "styles": "Folhas de estilo. Regras de arroba, seletores, propriedades, custom properties e unidades.",
         "data": "Dados estruturados. Chaves separadas dos valores, com números e literais em cores distintas.",
         "shell": "Linhas de comando. Comandos conhecidos, flags, strings e comentários.",
-        "text": "Sem classificação. Destino de qualquer valor não reconhecido: o trecho aparece monoespaçado e sem cor."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "text": "Sem classificação. Destino de qualquer valor não reconhecido: o trecho aparece monoespaçado e sem cor.",
         "withTitle": {
           "name": "Com rótulo no header",
           "description": "Header com o nome do arquivo à esquerda e a ação de copiar à direita. Rótulo longo trunca em vez de empurrar o botão para fora.",
@@ -730,10 +727,7 @@
         "styles": "Stylesheets. At-rules, selectors, properties, custom properties, and units.",
         "data": "Structured data. Keys separated from values, with numbers and literals in distinct colors.",
         "shell": "Command lines. Known commands, flags, strings, and comments.",
-        "text": "No classification. Destination of any unrecognized value: the snippet renders monospaced and colorless."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "text": "No classification. Destination of any unrecognized value: the snippet renders monospaced and colorless.",
         "withTitle": {
           "name": "With header label",
           "description": "Header with the file name on the left and the copy action on the right. A long label truncates instead of pushing the button out.",
@@ -1314,10 +1308,7 @@
         "styles": "Hojas de estilo. Reglas de arroba, selectores, propiedades, custom properties y unidades.",
         "data": "Datos estructurados. Claves separadas de los valores, con números y literales en colores distintos.",
         "shell": "Líneas de comando. Comandos conocidos, flags, strings y comentarios.",
-        "text": "Sin clasificación. Destino de cualquier valor no reconocido: el fragmento aparece monoespaciado y sin color."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "text": "Sin clasificación. Destino de cualquier valor no reconocido: el fragmento aparece monoespaciado y sin color.",
         "withTitle": {
           "name": "Con etiqueta en el header",
           "description": "Header con el nombre del archivo a la izquierda y la acción de copiar a la derecha. Una etiqueta larga se trunca en vez de empujar el botón fuera.",

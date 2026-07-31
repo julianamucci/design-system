@@ -60,8 +60,15 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
     // componente. Não repita entre seções — 22% desta seção era duplicata.
     "variants": {
       "title": "Variantes",                    // título livre ("Modos", "Linguagens"…)
-      "items": { "<key>": { "name": "...", "description": "...", "use": "..." } },
-      "sizes": { "<key>": { "name": "...", "description": "...", "use": "..." } },
+      // Duas formas convivem. String é o legado (42 componentes) e só carrega a
+      // descrição — o rótulo do card fica hardcoded na docs page, fora do i18n.
+      // Objeto é a forma preferida: rotula e explica quando usar, nos 3 idiomas.
+      // Componente novo usa objeto.
+      "items": {
+        "<keyLegado>": "Descrição da variante",
+        "<key>": { "name": "...", "description": "...", "use": "..." }
+      },
+      "sizes": { "<key>": "Descrição do tamanho" },
       "compositionsTitle": "Composições",
       // Toda composição NOMEIA na description com o que o componente é combinado.
       "compositions": { "<key>": { "name": "...", "description": "...", "use": "..." } }

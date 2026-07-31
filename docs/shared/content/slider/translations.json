@@ -134,7 +134,12 @@
       "items": {
         "single": "Single",
         "range": "Range",
-        "vertical": "Vertical"
+        "vertical": "Vertical",
+        "brightness": {
+          "name": "Ajuste com step grande",
+          "description": "Slider single com <code>step={5}</code> — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.",
+          "use": "Configurações onde o usuário não precisa de precisão (brilho de tela, zoom em incrementos fixos). Combine com <code>aria-live</code> para anunciar o salto."
+        }
       },
       "styles": {
         "single": "Um único thumb — <code>value={[50]}</code>, controla um valor.",
@@ -147,11 +152,6 @@
           "name": "Controle de volume",
           "description": "Slider single com valor exibido em <code>%</code> ao lado do label. O texto do valor usa <code>aria-live=\"polite\"</code> para anunciar mudanças em tempo real.",
           "use": "Controles de mídia, brilho, opacidade ou qualquer ajuste contínuo com unidade percentual. Sempre exiba o valor numérico próximo ao slider."
-        },
-        "brightness": {
-          "name": "Ajuste com step grande",
-          "description": "Slider single com <code>step={5}</code> — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.",
-          "use": "Configurações onde o usuário não precisa de precisão (brilho de tela, zoom em incrementos fixos). Combine com <code>aria-live</code> para anunciar o salto."
         },
         "form": {
           "name": "Em formulário com debounce",
@@ -570,7 +570,12 @@
       "items": {
         "single": "Single",
         "range": "Range",
-        "vertical": "Vertical"
+        "vertical": "Vertical",
+        "brightness": {
+          "name": "Large step adjustment",
+          "description": "Single slider with <code>step={5}</code> — discrete granularity to avoid tiny movements when fine tuning is unnecessary.",
+          "use": "Settings where the user doesn't need precision (screen brightness, zoom in fixed increments). Combine with <code>aria-live</code> to announce each jump."
+        }
       },
       "styles": {
         "single": "Single thumb — <code>value={[50]}</code>, controls one value.",
@@ -583,11 +588,6 @@
           "name": "Volume control",
           "description": "Single slider with value shown as <code>%</code> next to the label. The value text uses <code>aria-live=\"polite\"</code> to announce changes in real time.",
           "use": "Media controls, brightness, opacity or any continuous adjustment with a percent unit. Always display the numeric value near the slider."
-        },
-        "brightness": {
-          "name": "Large step adjustment",
-          "description": "Single slider with <code>step={5}</code> — discrete granularity to avoid tiny movements when fine tuning is unnecessary.",
-          "use": "Settings where the user doesn't need precision (screen brightness, zoom in fixed increments). Combine with <code>aria-live</code> to announce each jump."
         },
         "form": {
           "name": "In form with debounce",
@@ -1006,7 +1006,12 @@
       "items": {
         "single": "Single",
         "range": "Range",
-        "vertical": "Vertical"
+        "vertical": "Vertical",
+        "brightness": {
+          "name": "Ajuste con step grande",
+          "description": "Slider single con <code>step={5}</code> — granularidad discreta para evitar movimientos minúsculos cuando el ajuste fino no importa.",
+          "use": "Configuraciones donde el usuario no necesita precisión (brillo de pantalla, zoom en incrementos fijos). Combina con <code>aria-live</code> para anunciar el salto."
+        }
       },
       "styles": {
         "single": "Un único thumb — <code>value={[50]}</code>, controla un valor.",
@@ -1019,11 +1024,6 @@
           "name": "Control de volumen",
           "description": "Slider single con el valor mostrado en <code>%</code> al lado del label. El texto del valor usa <code>aria-live=\"polite\"</code> para anunciar cambios en tiempo real.",
           "use": "Controles de medios, brillo, opacidad o cualquier ajuste continuo con unidad porcentual. Siempre muestra el valor numérico cerca del slider."
-        },
-        "brightness": {
-          "name": "Ajuste con step grande",
-          "description": "Slider single con <code>step={5}</code> — granularidad discreta para evitar movimientos minúsculos cuando el ajuste fino no importa.",
-          "use": "Configuraciones donde el usuario no necesita precisión (brillo de pantalla, zoom en incrementos fijos). Combina con <code>aria-live</code> para anunciar el salto."
         },
         "form": {
           "name": "En formulario con debounce",

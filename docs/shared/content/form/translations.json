@@ -131,6 +131,13 @@
       "note": "O Form não tem variantes via prop. Sua aparência depende dos elementos opcionais (description, error) e do controle envolvido.",
       "compositionsTitle": "Composições",
       "compositions": {
+        "fieldset": {
+          "name": "Fieldset com legend",
+          "description": "Agrupamento semântico de campos relacionados via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap padrão de 16px entre campos internos.",
+          "use": "Endereço, dados pessoais, preferências — qualquer conjunto de 2+ campos com rótulo de grupo."
+        }
+      },
+      "items": {
         "labelOnly": {
           "name": "Label + controle",
           "description": "Combinação mínima: label associado ao controle via <code>htmlFor</code>/<code>id</code>. Sem texto de apoio nem erro.",
@@ -145,11 +152,6 @@
           "name": "Com mensagem de erro",
           "description": "Label + controle (com <code>aria-invalid</code>) + parágrafo em <code>--destructive</code> com <code>aria-live=\"polite\"</code>.",
           "use": "Validação síncrona ou após submit. A mensagem deve apontar o problema e sugerir a correção."
-        },
-        "fieldset": {
-          "name": "Fieldset com legend",
-          "description": "Agrupamento semântico de campos relacionados via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap padrão de 16px entre campos internos.",
-          "use": "Endereço, dados pessoais, preferências — qualquer conjunto de 2+ campos com rótulo de grupo."
         }
       }
     },
@@ -495,6 +497,13 @@
       "note": "Form has no variants via prop. Its appearance depends on optional elements (description, error) and the wrapped control.",
       "compositionsTitle": "Compositions",
       "compositions": {
+        "fieldset": {
+          "name": "Fieldset with legend",
+          "description": "Semantic grouping of related fields via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Default gap of 16px between inner fields.",
+          "use": "Address, personal data, preferences — any set of 2+ fields needing a group label."
+        }
+      },
+      "items": {
         "labelOnly": {
           "name": "Label + control",
           "description": "Minimal combination: label associated with the control via <code>htmlFor</code>/<code>id</code>. No helper text or error.",
@@ -509,11 +518,6 @@
           "name": "With error message",
           "description": "Label + control (with <code>aria-invalid</code>) + paragraph in <code>--destructive</code> with <code>aria-live=\"polite\"</code>.",
           "use": "Sync or post-submit validation. The message should point out the problem and suggest a fix."
-        },
-        "fieldset": {
-          "name": "Fieldset with legend",
-          "description": "Semantic grouping of related fields via <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Default gap of 16px between inner fields.",
-          "use": "Address, personal data, preferences — any set of 2+ fields needing a group label."
         }
       }
     },
@@ -859,6 +863,13 @@
       "note": "El Form no tiene variantes vía prop. Su apariencia depende de los elementos opcionales (description, error) y del control envuelto.",
       "compositionsTitle": "Composiciones",
       "compositions": {
+        "fieldset": {
+          "name": "Fieldset con legend",
+          "description": "Agrupamiento semántico de campos relacionados vía <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap por defecto de 16px entre campos internos.",
+          "use": "Dirección, datos personales, preferencias — cualquier conjunto de 2+ campos con rótulo de grupo."
+        }
+      },
+      "items": {
         "labelOnly": {
           "name": "Label + control",
           "description": "Combinación mínima: label asociado al control vía <code>htmlFor</code>/<code>id</code>. Sin texto de apoyo ni error.",
@@ -873,11 +884,6 @@
           "name": "Con mensaje de error",
           "description": "Label + control (con <code>aria-invalid</code>) + párrafo en <code>--destructive</code> con <code>aria-live=\"polite\"</code>.",
           "use": "Validación sincrónica o tras envío. El mensaje debe señalar el problema y sugerir la corrección."
-        },
-        "fieldset": {
-          "name": "Fieldset con legend",
-          "description": "Agrupamiento semántico de campos relacionados vía <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. Gap por defecto de 16px entre campos internos.",
-          "use": "Dirección, datos personales, preferencias — cualquier conjunto de 2+ campos con rótulo de grupo."
         }
       }
     },

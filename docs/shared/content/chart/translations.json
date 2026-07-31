@@ -151,7 +151,12 @@
         "bar": "Comparação entre categorias discretas. Use <code>buildBarOption({ data })</code>. Mais claro para dados não contínuos.",
         "line": "Tendência contínua ao longo do tempo. Use <code>buildLineOption({ data })</code>. Ideal para séries temporais.",
         "area": "Tendência com ênfase no volume acumulado. Use <code>buildAreaOption({ data })</code>. Variante visual do line.",
-        "pie": "Proporção de partes em relação ao todo. Use <code>buildPieOption({ data })</code>. Limite a 5–6 fatias para legibilidade."
+        "pie": "Proporção de partes em relação ao todo. Use <code>buildPieOption({ data })</code>. Limite a 5–6 fatias para legibilidade.",
+        "smallInline": {
+          "name": "Mini gráfico inline",
+          "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
+          "use": "Cartões de métrica com indicador de tendência, listas densas, células de tabela em que o sparkline complementa o valor numérico principal."
+        }
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -159,21 +164,6 @@
           "name": "Chart dentro de Card",
           "description": "Gráfico envolto por <code>Card</code> com título e descrição no <code>CardHeader</code> e o gráfico no <code>CardContent</code>. Padrão recomendado para destacar contexto e atribuição temporal dos dados.",
           "use": "Dashboards e relatórios em que o gráfico precisa de título visível, descrição do recorte temporal e moldura semântica para agrupar com outros KPIs."
-        },
-        "multiSeriesWithLegend": {
-          "name": "Multi-séries com legenda",
-          "description": "Duas ou mais séries comparativas com legenda automática — cada série usa um token <code>--chart-*</code> distinto e o <code>aria-label</code> descreve as séries por nome, não apenas por cor.",
-          "use": "Comparações entre categorias (ex.: Desktop vs Mobile). Sempre que houver mais de uma série, a legenda aparece sozinha e o <code>aria-label</code> deve nominar as séries (WCAG 1.4.1)."
-        },
-        "smallInline": {
-          "name": "Mini gráfico inline",
-          "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
-          "use": "Cartões de métrica com indicador de tendência, listas densas, células de tabela em que o sparkline complementa o valor numérico principal."
-        },
-        "withEmptyState": {
-          "name": "Com estado vazio",
-          "description": "Quando o array de séries está vazio, o container exibe a mensagem padrão \"No data\" do ECharts. Para customizar, substitua o container por uma mensagem completa orientando a próxima ação.",
-          "use": "Páginas filtráveis em que o recorte pode ficar sem dados. A mensagem substitui o gráfico no mesmo container para preservar o layout."
         }
       }
     },
@@ -203,6 +193,16 @@
         "label": "Multi-séries",
         "trigger": "Mais de uma série na configuração",
         "behavior": "Legenda visível por padrão. Cada série usa um token de cor distinto (<code>--chart-1</code> a <code>--chart-5</code>) na ordem em que aparece."
+      },
+      "withEmptyState": {
+        "label": "Com estado vazio",
+        "trigger": "Array de séries vazio",
+        "behavior": "Quando o array de séries está vazio, o container exibe a mensagem padrão \"No data\" do ECharts. Para customizar, substitua o container por uma mensagem completa orientando a próxima ação."
+      },
+      "multiSeriesWithLegend": {
+        "label": "Multi-séries com legenda",
+        "trigger": "Duas ou mais séries nos dados",
+        "behavior": "Duas ou mais séries comparativas com legenda automática — cada série usa um token <code>--chart-*</code> distinto e o <code>aria-label</code> descreve as séries por nome, não apenas por cor."
       }
     },
     "props": {
@@ -570,7 +570,12 @@
         "bar": "Comparison across discrete categories. Use <code>buildBarOption({ data })</code>. Best for non-continuous data.",
         "line": "Continuous trend over time. Use <code>buildLineOption({ data })</code>. Ideal for time series.",
         "area": "Trend with emphasis on cumulative volume. Use <code>buildAreaOption({ data })</code>. Visual variant of line.",
-        "pie": "Proportion of parts relative to a whole. Use <code>buildPieOption({ data })</code>. Limit to 5–6 slices for readability."
+        "pie": "Proportion of parts relative to a whole. Use <code>buildPieOption({ data })</code>. Limit to 5–6 slices for readability.",
+        "smallInline": {
+          "name": "Small inline chart",
+          "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
+          "use": "Metric cards with a trend indicator, dense lists, table cells where a sparkline complements the main numeric value."
+        }
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -578,21 +583,6 @@
           "name": "Chart inside Card",
           "description": "Chart wrapped by a <code>Card</code> with title and description in <code>CardHeader</code> and the chart in <code>CardContent</code>. Recommended pattern to surface context and time framing.",
           "use": "Dashboards and reports where the chart needs a visible title, a description of the time range, and a semantic frame to group with other KPIs."
-        },
-        "multiSeriesWithLegend": {
-          "name": "Multi-series with legend",
-          "description": "Two or more comparative series with an automatic legend — each series uses a distinct <code>--chart-*</code> token and the <code>aria-label</code> names them, not just their color.",
-          "use": "Cross-category comparisons (e.g. Desktop vs Mobile). Whenever there is more than one series, the legend appears automatically and the <code>aria-label</code> should name them (WCAG 1.4.1)."
-        },
-        "smallInline": {
-          "name": "Small inline chart",
-          "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
-          "use": "Metric cards with a trend indicator, dense lists, table cells where a sparkline complements the main numeric value."
-        },
-        "withEmptyState": {
-          "name": "With empty state",
-          "description": "When the series array is empty, the container shows the default \"No data\" message. To customize, replace the container with a complete sentence guiding the next action.",
-          "use": "Filterable pages where the current selection may have no data. The message replaces the chart inside the same container to preserve the layout."
         }
       }
     },
@@ -622,6 +612,16 @@
         "label": "Multi-series",
         "trigger": "More than one series in the configuration",
         "behavior": "Legend visible by default. Each series uses a distinct color token (<code>--chart-1</code> to <code>--chart-5</code>) in the order it appears."
+      },
+      "withEmptyState": {
+        "label": "With empty state",
+        "trigger": "Empty series array",
+        "behavior": "When the series array is empty, the container shows the default \"No data\" message. To customize, replace the container with a complete sentence guiding the next action."
+      },
+      "multiSeriesWithLegend": {
+        "label": "Multi-series with legend",
+        "trigger": "Two or more series in the data",
+        "behavior": "Two or more comparative series with an automatic legend — each series uses a distinct <code>--chart-*</code> token and the <code>aria-label</code> names them, not just their color."
       }
     },
     "props": {
@@ -989,7 +989,12 @@
         "bar": "Comparación entre categorías discretas. Usa <code>buildBarOption({ data })</code>. Más claro para datos no continuos.",
         "line": "Tendencia continua en el tiempo. Usa <code>buildLineOption({ data })</code>. Ideal para series temporales.",
         "area": "Tendencia con énfasis en el volumen acumulado. Usa <code>buildAreaOption({ data })</code>. Variante visual del line.",
-        "pie": "Proporción de partes en relación al todo. Usa <code>buildPieOption({ data })</code>. Limita a 5–6 secciones para legibilidad."
+        "pie": "Proporción de partes en relación al todo. Usa <code>buildPieOption({ data })</code>. Limita a 5–6 secciones para legibilidad.",
+        "smallInline": {
+          "name": "Mini gráfico inline",
+          "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
+          "use": "Tarjetas de métrica con indicador de tendencia, listas densas, celdas de tabla donde el sparkline complementa el valor numérico principal."
+        }
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -997,21 +1002,6 @@
           "name": "Chart dentro de Card",
           "description": "Gráfico envuelto por <code>Card</code> con título y descripción en <code>CardHeader</code> y el gráfico en <code>CardContent</code>. Patrón recomendado para resaltar contexto y atribución temporal de los datos.",
           "use": "Dashboards y reportes donde el gráfico necesita título visible, descripción del recorte temporal y marco semántico para agrupar con otros KPIs."
-        },
-        "multiSeriesWithLegend": {
-          "name": "Multi-series con leyenda",
-          "description": "Dos o más series comparativas con leyenda automática — cada serie usa un token <code>--chart-*</code> distinto y el <code>aria-label</code> describe las series por nombre, no solo por color.",
-          "use": "Comparaciones entre categorías (ej.: Desktop vs Mobile). Siempre que haya más de una serie, la leyenda aparece sola y el <code>aria-label</code> debe nombrarlas (WCAG 1.4.1)."
-        },
-        "smallInline": {
-          "name": "Mini gráfico inline",
-          "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
-          "use": "Tarjetas de métrica con indicador de tendencia, listas densas, celdas de tabla donde el sparkline complementa el valor numérico principal."
-        },
-        "withEmptyState": {
-          "name": "Con estado vacío",
-          "description": "Cuando el array de series está vacío, el container muestra el mensaje \"No data\" por defecto. Para customizar, reemplaza el container con un mensaje completo que oriente la próxima acción.",
-          "use": "Páginas filtrables donde el recorte puede quedar sin datos. El mensaje reemplaza el gráfico en el mismo container para preservar el layout."
         }
       }
     },
@@ -1041,6 +1031,16 @@
         "label": "Multi-series",
         "trigger": "Más de una serie en la configuración",
         "behavior": "Leyenda visible por defecto. Cada serie usa un token de color distinto (<code>--chart-1</code> a <code>--chart-5</code>) en el orden en que aparece."
+      },
+      "withEmptyState": {
+        "label": "Con estado vacío",
+        "trigger": "Array de series vacío",
+        "behavior": "Cuando el array de series está vacío, el container muestra el mensaje \"No data\" por defecto. Para customizar, reemplaza el container con un mensaje completo que oriente la próxima acción."
+      },
+      "multiSeriesWithLegend": {
+        "label": "Multi-series con leyenda",
+        "trigger": "Dos o más series en los datos",
+        "behavior": "Dos o más series comparativas con leyenda automática — cada serie usa un token <code>--chart-*</code> distinto y el <code>aria-label</code> describe las series por nombre, no solo por color."
       }
     },
     "props": {

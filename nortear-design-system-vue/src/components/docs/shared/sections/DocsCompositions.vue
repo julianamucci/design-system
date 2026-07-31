@@ -25,6 +25,13 @@ const props = withDefaults(defineProps<{
   useWhenLabel?: string;
   /** Slug do componente para tracking GA4 dos toggles de código. */
   componentSlug?: string;
+  /**
+   * Parágrafo de introdução da seção. Declarado explicitamente porque o
+   * fallthrough de atributos entregaria a `note` ao DocsVariants por acidente:
+   * bastaria um `inheritAttrs: false` ou um segundo nó raiz aqui para o texto
+   * sumir da página sem erro nenhum. As outras 3 stacks declaram.
+   */
+  note?: string;
   /** Id da seção. Default: 'composicoes'. */
   id?: string;
 }>(), {
@@ -50,6 +57,7 @@ const slots = useSlots();
   <DocsVariants
     :id="props.id"
     :title="props.title"
+    :note="props.note"
     :items="variantItems"
     :component-slug="props.componentSlug"
   >

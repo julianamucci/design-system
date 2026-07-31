@@ -143,15 +143,17 @@
           "description": "Múltiplos <code>SidebarGroup</code> separados por <code>SidebarSeparator</code>, cada um com seu <code>SidebarGroupLabel</code>. Itens combinam ícone, label e badge opcional.",
           "use": "Apps com áreas distintas (ex.: \"Principal\" vs. \"Conta\") onde a separação visual facilita a varredura. Mantenha grupos enxutos (3-5 itens) para evitar fadiga."
         },
-        "withSubMenu": {
-          "name": "Com sub-menu",
-          "description": "Item expansível que revela <code>SidebarMenuSub</code> com subitens aninhados e linha de referência visual. O botão pai expõe <code>aria-expanded</code> e gira a chevron ao alternar.",
-          "use": "Categorias com múltiplas páginas filhas (ex.: \"Componentes\" → Alert, Button, Card). Evite mais de um nível de aninhamento — para hierarquias profundas, use roteamento dedicado."
-        },
         "withSearch": {
           "name": "Com busca no header",
           "description": "Campo <code>SidebarInput</code> dentro do <code>SidebarHeader</code> para filtrar itens da navegação. Use <code>type=\"search\"</code> e ícone decorativo com <code>aria-hidden=\"true\"</code>.",
           "use": "Sidebars longas (>15 itens) ou navegação dinâmica onde o usuário precisa localizar uma seção rapidamente. Não substitui a busca global do app."
+        }
+      },
+      "items": {
+        "withSubMenu": {
+          "name": "Com sub-menu",
+          "description": "Item expansível que revela <code>SidebarMenuSub</code> com subitens aninhados e linha de referência visual. O botão pai expõe <code>aria-expanded</code> e gira a chevron ao alternar.",
+          "use": "Categorias com múltiplas páginas filhas (ex.: \"Componentes\" → Alert, Button, Card). Evite mais de um nível de aninhamento — para hierarquias profundas, use roteamento dedicado."
         },
         "withBadges": {
           "name": "Com badges de contagem",
@@ -612,15 +614,17 @@
           "description": "Multiple <code>SidebarGroup</code>s separated by <code>SidebarSeparator</code>, each with its own <code>SidebarGroupLabel</code>. Items combine icon, label, and optional badge.",
           "use": "Apps with distinct areas (e.g. \"Main\" vs. \"Account\") where visual separation aids scanning. Keep groups small (3-5 items) to avoid fatigue."
         },
-        "withSubMenu": {
-          "name": "With sub-menu",
-          "description": "Expandable menu item that reveals <code>SidebarMenuSub</code> with nested sub-items and a visual reference line. The parent button exposes <code>aria-expanded</code> and rotates the chevron on toggle.",
-          "use": "Categories with multiple child pages (e.g. \"Components\" → Alert, Button, Card). Avoid more than one nesting level — for deep hierarchies, use dedicated routing."
-        },
         "withSearch": {
           "name": "With header search",
           "description": "<code>SidebarInput</code> field inside the <code>SidebarHeader</code> to filter navigation items. Use <code>type=\"search\"</code> and a decorative icon with <code>aria-hidden=\"true\"</code>.",
           "use": "Long sidebars (>15 items) or dynamic navigation where the user needs to locate a section quickly. Does not replace the app's global search."
+        }
+      },
+      "items": {
+        "withSubMenu": {
+          "name": "With sub-menu",
+          "description": "Expandable menu item that reveals <code>SidebarMenuSub</code> with nested sub-items and a visual reference line. The parent button exposes <code>aria-expanded</code> and rotates the chevron on toggle.",
+          "use": "Categories with multiple child pages (e.g. \"Components\" → Alert, Button, Card). Avoid more than one nesting level — for deep hierarchies, use dedicated routing."
         },
         "withBadges": {
           "name": "With count badges",
@@ -1081,15 +1085,17 @@
           "description": "Múltiples <code>SidebarGroup</code> separados por <code>SidebarSeparator</code>, cada uno con su <code>SidebarGroupLabel</code>. Los ítems combinan ícono, label y badge opcional.",
           "use": "Apps con áreas distintas (ej.: \"Principal\" vs. \"Cuenta\") donde la separación visual facilita el escaneo. Mantén los grupos pequeños (3-5 ítems) para evitar fatiga."
         },
-        "withSubMenu": {
-          "name": "Con sub-menú",
-          "description": "Ítem expandible que revela <code>SidebarMenuSub</code> con subítems anidados y línea de referencia visual. El botón padre expone <code>aria-expanded</code> y gira el chevron al alternar.",
-          "use": "Categorías con múltiples páginas hijas (ej.: \"Componentes\" → Alert, Button, Card). Evita más de un nivel de anidamiento — para jerarquías profundas, usa enrutamiento dedicado."
-        },
         "withSearch": {
           "name": "Con búsqueda en el header",
           "description": "Campo <code>SidebarInput</code> dentro del <code>SidebarHeader</code> para filtrar ítems de navegación. Usa <code>type=\"search\"</code> y un ícono decorativo con <code>aria-hidden=\"true\"</code>.",
           "use": "Sidebars largos (>15 ítems) o navegación dinámica donde el usuario necesita ubicar una sección rápidamente. No reemplaza la búsqueda global de la app."
+        }
+      },
+      "items": {
+        "withSubMenu": {
+          "name": "Con sub-menú",
+          "description": "Ítem expandible que revela <code>SidebarMenuSub</code> con subítems anidados y línea de referencia visual. El botón padre expone <code>aria-expanded</code> y gira el chevron al alternar.",
+          "use": "Categorías con múltiples páginas hijas (ej.: \"Componentes\" → Alert, Button, Card). Evita más de un nivel de anidamiento — para jerarquías profundas, usa enrutamiento dedicado."
         },
         "withBadges": {
           "name": "Con badges de conteo",

@@ -142,14 +142,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Item neutro com hover <code>bg-accent</code> e foco visível.",
-        "destructive": "Item de ação irreversível com cor <code>text-destructive</code> e fundo <code>bg-destructive/10</code> no hover."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "destructive": "Destructive",
         "withLabel": {
           "name": "Com Label",
           "description": "Menu agrupado por seções: <code>Label</code> rotula cada grupo (papel <code>presentation</code>) e <code>Separator</code> divide blocos. Útil quando há contextos distintos no mesmo menu.",
@@ -170,6 +163,10 @@
           "description": "Item exibe atalho de teclado alinhado à direita via elemento com <code>aria-hidden=\"true\"</code>. O atalho é apenas visual — registre o handler real no consumidor.",
           "use": "Menus de edição (Desfazer/Copiar/Colar), comandos rápidos em apps desktop-like onde o usuário deve aprender os atalhos."
         }
+      },
+      "styles": {
+        "default": "Item neutro com hover <code>bg-accent</code> e foco visível.",
+        "destructive": "Item de ação irreversível com cor <code>text-destructive</code> e fundo <code>bg-destructive/10</code> no hover."
       }
     },
     "states": {
@@ -588,14 +585,7 @@
       "title": "Variants",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Neutral item with <code>bg-accent</code> hover and visible focus.",
-        "destructive": "Irreversible action item with <code>text-destructive</code> color and <code>bg-destructive/10</code> background on hover."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "destructive": "Destructive",
         "withLabel": {
           "name": "With Label",
           "description": "Menu grouped by sections: <code>Label</code> titles each group (role <code>presentation</code>) and <code>Separator</code> divides blocks. Useful when distinct contexts share the same menu.",
@@ -616,6 +606,10 @@
           "description": "Item shows a keyboard shortcut aligned to the right via an element with <code>aria-hidden=\"true\"</code>. The shortcut is visual only — register the actual handler in the consumer.",
           "use": "Edit menus (Undo/Copy/Paste), quick commands in desktop-like apps where users should learn the shortcuts."
         }
+      },
+      "styles": {
+        "default": "Neutral item with <code>bg-accent</code> hover and visible focus.",
+        "destructive": "Irreversible action item with <code>text-destructive</code> color and <code>bg-destructive/10</code> background on hover."
       }
     },
     "states": {
@@ -1034,14 +1028,7 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "destructive": "Destructive"
-      },
-      "styles": {
-        "default": "Item neutro con hover <code>bg-accent</code> y foco visible.",
-        "destructive": "Item de acción irreversible con color <code>text-destructive</code> y fondo <code>bg-destructive/10</code> en hover."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "destructive": "Destructive",
         "withLabel": {
           "name": "Con Label",
           "description": "Menú agrupado por secciones: <code>Label</code> titula cada grupo (rol <code>presentation</code>) y <code>Separator</code> divide bloques. Útil cuando hay contextos distintos en el mismo menú.",
@@ -1062,6 +1049,10 @@
           "description": "Item muestra atajo de teclado alineado a la derecha vía elemento con <code>aria-hidden=\"true\"</code>. El atajo es solo visual — registra el handler real en el consumidor.",
           "use": "Menús de edición (Deshacer/Copiar/Pegar), comandos rápidos en apps tipo desktop donde el usuario debe aprender los atajos."
         }
+      },
+      "styles": {
+        "default": "Item neutro con hover <code>bg-accent</code> y foco visible.",
+        "destructive": "Item de acción irreversible con color <code>text-destructive</code> y fondo <code>bg-destructive/10</code> en hover."
       }
     },
     "states": {

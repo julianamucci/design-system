@@ -141,14 +141,7 @@
       "title": "Variantes",
       "items": {
         "horizontal": "Horizontal (padrão)",
-        "vertical": "Vertical"
-      },
-      "styles": {
-        "horizontal": "Lista horizontal de items; padrão para header de site. Triggers e Content posicionados acima/abaixo.",
-        "vertical": "Lista vertical (orientation=vertical); usado em sidebars ou mobile drawers. Content abre lateralmente."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "vertical": "Vertical",
         "linkSimples": {
           "name": "Link simples",
           "description": "Lista de <code>NavigationMenuLink</code> diretos, sem <code>NavigationMenuTrigger</code> nem <code>NavigationMenuContent</code>. Cada item navega imediatamente ao clique.",
@@ -169,6 +162,10 @@
           "description": "<code>NavigationMenuContent</code> dividido em duas regiões: um card hero (CTA visual com gradiente, título e descrição) e uma lista lateral de links secundários.",
           "use": "Quando há uma ação prioritária (\"Comece agora\", quickstart) que deve ofuscar visualmente os links de apoio. Use o card para 1 destino principal e a coluna lateral para 3 a 5 complementares."
         }
+      },
+      "styles": {
+        "horizontal": "Lista horizontal de items; padrão para header de site. Triggers e Content posicionados acima/abaixo.",
+        "vertical": "Lista vertical (orientation=vertical); usado em sidebars ou mobile drawers. Content abre lateralmente."
       }
     },
     "states": {
@@ -582,14 +579,7 @@
       "title": "Variants",
       "items": {
         "horizontal": "Horizontal (default)",
-        "vertical": "Vertical"
-      },
-      "styles": {
-        "horizontal": "Horizontal list of items; default for site headers. Triggers and Content positioned above/below.",
-        "vertical": "Vertical list (orientation=vertical); used in sidebars or mobile drawers. Content opens to the side."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "vertical": "Vertical",
         "linkSimples": {
           "name": "Simple link",
           "description": "List of direct <code>NavigationMenuLink</code> items, with no <code>NavigationMenuTrigger</code> or <code>NavigationMenuContent</code>. Each item navigates immediately on click.",
@@ -610,6 +600,10 @@
           "description": "<code>NavigationMenuContent</code> split into two regions: a hero card (visual CTA with gradient, title and description) and a side list of secondary links.",
           "use": "When there's a priority action (\"Get started\", quickstart) that should visually outshine the supporting links. Use the card for 1 main destination and the side column for 3 to 5 complements."
         }
+      },
+      "styles": {
+        "horizontal": "Horizontal list of items; default for site headers. Triggers and Content positioned above/below.",
+        "vertical": "Vertical list (orientation=vertical); used in sidebars or mobile drawers. Content opens to the side."
       }
     },
     "states": {
@@ -1023,14 +1017,7 @@
       "title": "Variantes",
       "items": {
         "horizontal": "Horizontal (predeterminado)",
-        "vertical": "Vertical"
-      },
-      "styles": {
-        "horizontal": "Lista horizontal de items; predeterminado para header de sitio. Triggers y Content posicionados arriba/abajo.",
-        "vertical": "Lista vertical (orientation=vertical); usado en sidebars o mobile drawers. Content abre lateralmente."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "vertical": "Vertical",
         "linkSimples": {
           "name": "Enlace simple",
           "description": "Lista de <code>NavigationMenuLink</code> directos, sin <code>NavigationMenuTrigger</code> ni <code>NavigationMenuContent</code>. Cada item navega inmediatamente al hacer clic.",
@@ -1051,6 +1038,10 @@
           "description": "<code>NavigationMenuContent</code> dividido en dos regiones: una tarjeta hero (CTA visual con gradiente, título y descripción) y una lista lateral de enlaces secundarios.",
           "use": "Cuando hay una acción prioritaria (\"Empieza ahora\", quickstart) que debe destacar visualmente sobre los enlaces de apoyo. Usa la tarjeta para 1 destino principal y la columna lateral para 3 a 5 complementos."
         }
+      },
+      "styles": {
+        "horizontal": "Lista horizontal de items; predeterminado para header de sitio. Triggers y Content posicionados arriba/abajo.",
+        "vertical": "Lista vertical (orientation=vertical); usado en sidebars o mobile drawers. Content abre lateralmente."
       }
     },
     "states": {

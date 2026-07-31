@@ -118,14 +118,7 @@
       "note": "O <code>ContextMenuItem</code> tem 2 variantes via prop <code>variant</code>. Os demais subcomponentes não possuem variante de prop.",
       "items": {
         "default": "Item de ação padrão. Foco com <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Ação destrutiva irreversível (ex: excluir). Texto vermelho com <code>text-destructive</code>; foco com <code>bg-destructive/10</code>."
-      },
-      "checkboxItem": "Item com indicador de marcação (CheckIcon). Estado controlado via prop <code>checked</code>.",
-      "radioItem": "Item de seleção exclusiva dentro de um <code>ContextMenuRadioGroup</code>.",
-      "subTrigger": "Abre submenu ao focar ou clicar; exibe ChevronRightIcon automaticamente à direita.",
-      "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone.",
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "destructive": "Ação destrutiva irreversível (ex: excluir). Texto vermelho com <code>text-destructive</code>; foco com <code>bg-destructive/10</code>.",
         "withCheckbox": {
           "name": "Menu com checkboxes",
           "description": "Grupo de <code>CheckboxItem</code> sob um <code>Label</code> (ex.: \"Aparência\"). Cada item mantém estado booleano independente — múltiplas opções podem coexistir.",
@@ -146,7 +139,11 @@
           "description": "Itens combinando label + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é puramente visual (<code>aria-hidden</code>) — o atalho real precisa ser registrado por um listener global.",
           "use": "Ações que já possuem atalho global na aplicação (⌘E, ⌘D, ⌫). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
         }
-      }
+      },
+      "checkboxItem": "Item com indicador de marcação (CheckIcon). Estado controlado via prop <code>checked</code>.",
+      "radioItem": "Item de seleção exclusiva dentro de um <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Abre submenu ao focar ou clicar; exibe ChevronRightIcon automaticamente à direita.",
+      "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
     },
     "states": {
       "title": "Estados",
@@ -555,14 +552,7 @@
       "note": "<code>ContextMenuItem</code> has 2 variants via the <code>variant</code> prop. Other subcomponents have no variant prop.",
       "items": {
         "default": "Standard action item. Focus state: <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Irreversible destructive action (e.g., delete). Red text with <code>text-destructive</code>; focus with <code>bg-destructive/10</code>."
-      },
-      "checkboxItem": "Item with check indicator (CheckIcon). State controlled via the <code>checked</code> prop.",
-      "radioItem": "Exclusive selection item inside a <code>ContextMenuRadioGroup</code>.",
-      "subTrigger": "Opens a submenu on focus or click; automatically displays ChevronRightIcon on the right.",
-      "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items.",
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "destructive": "Irreversible destructive action (e.g., delete). Red text with <code>text-destructive</code>; focus with <code>bg-destructive/10</code>.",
         "withCheckbox": {
           "name": "Menu with checkboxes",
           "description": "Group of <code>CheckboxItem</code> under a <code>Label</code> (e.g., \"Appearance\"). Each item holds an independent boolean state — multiple options can coexist.",
@@ -583,7 +573,11 @@
           "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is purely visual (<code>aria-hidden</code>) — the actual shortcut must be wired via a global listener.",
           "use": "Actions that already have a global app shortcut (⌘E, ⌘D, ⌫). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
         }
-      }
+      },
+      "checkboxItem": "Item with check indicator (CheckIcon). State controlled via the <code>checked</code> prop.",
+      "radioItem": "Exclusive selection item inside a <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Opens a submenu on focus or click; automatically displays ChevronRightIcon on the right.",
+      "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
     },
     "states": {
       "title": "States",
@@ -992,14 +986,7 @@
       "note": "<code>ContextMenuItem</code> tiene 2 variantes vía la prop <code>variant</code>. Los demás subcomponentes no tienen prop de variante.",
       "items": {
         "default": "Ítem de acción estándar. Estado de foco: <code>bg-accent text-accent-foreground</code>.",
-        "destructive": "Acción destructiva irreversible (ej: eliminar). Texto rojo con <code>text-destructive</code>; foco con <code>bg-destructive/10</code>."
-      },
-      "checkboxItem": "Ítem con indicador de marca (CheckIcon). Estado controlado vía la prop <code>checked</code>.",
-      "radioItem": "Ítem de selección exclusiva dentro de un <code>ContextMenuRadioGroup</code>.",
-      "subTrigger": "Abre submenú al enfocar o clicar; muestra ChevronRightIcon automáticamente a la derecha.",
-      "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono.",
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "destructive": "Acción destructiva irreversible (ej: eliminar). Texto rojo con <code>text-destructive</code>; foco con <code>bg-destructive/10</code>.",
         "withCheckbox": {
           "name": "Menú con checkboxes",
           "description": "Grupo de <code>CheckboxItem</code> bajo un <code>Label</code> (ej.: \"Apariencia\"). Cada ítem mantiene un estado booleano independiente — múltiples opciones pueden coexistir.",
@@ -1020,7 +1007,11 @@
           "description": "Ítems que combinan label + <code>Shortcut</code> alineado a la derecha. <code>Shortcut</code> es puramente visual (<code>aria-hidden</code>) — el atajo real debe registrarse mediante un listener global.",
           "use": "Acciones que ya tienen atajo global en la aplicación (⌘E, ⌘D, ⌫). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
         }
-      }
+      },
+      "checkboxItem": "Ítem con indicador de marca (CheckIcon). Estado controlado vía la prop <code>checked</code>.",
+      "radioItem": "Ítem de selección exclusiva dentro de un <code>ContextMenuRadioGroup</code>.",
+      "subTrigger": "Abre submenú al enfocar o clicar; muestra ChevronRightIcon automáticamente a la derecha.",
+      "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
     },
     "states": {
       "title": "Estados",

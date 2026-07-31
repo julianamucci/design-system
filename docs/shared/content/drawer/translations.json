@@ -143,7 +143,12 @@
         "bottom": "Bottom",
         "top": "Top",
         "left": "Left",
-        "right": "Right"
+        "right": "Right",
+        "withScroll": {
+          "name": "Com conteúdo rolável",
+          "description": "Drawer cujo body usa <code>overflow-y-auto</code> e altura máxima, permitindo rolagem interna sem expandir o painel. Header e footer permanecem fixos.",
+          "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível em elementos interativos dentro da área rolável."
+        }
       },
       "styles": {
         "bottom": "Padrão mobile-first com handle de drag visível; entra por baixo, max-height 80vh, rounded-t-xl.",
@@ -162,11 +167,6 @@
           "name": "Com confirmação destrutiva",
           "description": "Drawer com mensagem curta e par de ações (cancelar + ação destrutiva). A action principal usa a variante <code>destructive</code> para reforçar a consequência.",
           "use": "Confirmações reversíveis ou de baixo risco em mobile. Para ações realmente bloqueantes/críticas, prefira <code>AlertDialog</code> com <code>role=\"alertdialog\"</code>."
-        },
-        "withScroll": {
-          "name": "Com conteúdo rolável",
-          "description": "Drawer cujo body usa <code>overflow-y-auto</code> e altura máxima, permitindo rolagem interna sem expandir o painel. Header e footer permanecem fixos.",
-          "use": "Termos de uso, listas longas e detalhes que excedem a altura visível do painel. Garanta foco visível em elementos interativos dentro da área rolável."
         }
       }
     },
@@ -567,7 +567,12 @@
         "bottom": "Bottom",
         "top": "Top",
         "left": "Left",
-        "right": "Right"
+        "right": "Right",
+        "withScroll": {
+          "name": "With scrollable content",
+          "description": "Drawer whose body uses <code>overflow-y-auto</code> and a max-height, allowing internal scroll without expanding the panel. Header and footer stay fixed.",
+          "use": "Terms of use, long lists, and details that exceed the panel's visible height. Ensure visible focus on interactive elements inside the scrollable area."
+        }
       },
       "styles": {
         "bottom": "Mobile-first default with visible drag handle; enters from below, max-height 80vh, rounded-t-xl.",
@@ -586,11 +591,6 @@
           "name": "With destructive confirmation",
           "description": "Drawer with a short message and a pair of actions (cancel + destructive action). The primary action uses the <code>destructive</code> variant to reinforce the consequence.",
           "use": "Reversible or low-risk confirmations on mobile. For truly blocking/critical actions, prefer <code>AlertDialog</code> with <code>role=\"alertdialog\"</code>."
-        },
-        "withScroll": {
-          "name": "With scrollable content",
-          "description": "Drawer whose body uses <code>overflow-y-auto</code> and a max-height, allowing internal scroll without expanding the panel. Header and footer stay fixed.",
-          "use": "Terms of use, long lists, and details that exceed the panel's visible height. Ensure visible focus on interactive elements inside the scrollable area."
         }
       }
     },
@@ -991,7 +991,12 @@
         "bottom": "Bottom",
         "top": "Top",
         "left": "Left",
-        "right": "Right"
+        "right": "Right",
+        "withScroll": {
+          "name": "Con contenido desplazable",
+          "description": "Drawer cuyo body usa <code>overflow-y-auto</code> y una max-height, permitiendo scroll interno sin expandir el panel. Header y footer permanecen fijos.",
+          "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Garantiza foco visible en elementos interactivos dentro del área desplazable."
+        }
       },
       "styles": {
         "bottom": "Predeterminado mobile-first con handle de drag visible; entra desde abajo, max-height 80vh, rounded-t-xl.",
@@ -1010,11 +1015,6 @@
           "name": "Con confirmación destructiva",
           "description": "Drawer con un mensaje corto y un par de acciones (cancelar + acción destructiva). La acción principal usa la variante <code>destructive</code> para reforzar la consecuencia.",
           "use": "Confirmaciones reversibles o de bajo riesgo en mobile. Para acciones realmente bloqueantes/críticas, prefiere <code>AlertDialog</code> con <code>role=\"alertdialog\"</code>."
-        },
-        "withScroll": {
-          "name": "Con contenido desplazable",
-          "description": "Drawer cuyo body usa <code>overflow-y-auto</code> y una max-height, permitiendo scroll interno sin expandir el panel. Header y footer permanecen fijos.",
-          "use": "Términos de uso, listas largas y detalles que exceden la altura visible del panel. Garantiza foco visible en elementos interactivos dentro del área desplazable."
         }
       }
     },

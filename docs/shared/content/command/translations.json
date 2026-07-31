@@ -125,24 +125,11 @@
       "items": {
         "inline": "Renderizado diretamente na página. Use para busca local ou combobox embutido em formulários.",
         "combobox": "Command dentro de um <code>Popover</code>. Substituto do Select com busca integrada para listas longas.",
-        "palette": "Command dentro de <code>CommandDialog</code>. Ativado por atalho global (Cmd+K) para acesso rápido a ações da aplicação."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "palette": "Command dentro de <code>CommandDialog</code>. Ativado por atalho global (Cmd+K) para acesso rápido a ações da aplicação.",
         "withGroups": {
           "name": "Com grupos",
           "description": "Itens organizados em múltiplos <code>CommandGroup</code> com <code>heading</code> distinto e separadores entre eles. O filtro fuzzy continua atravessando todos os grupos.",
           "use": "Quando os itens pertencem a categorias claras (ex.: Componentes vs. Utilitários). Use separador entre grupos e omita o heading apenas quando houver um único grupo."
-        },
-        "withDisabled": {
-          "name": "Com itens desabilitados",
-          "description": "Mistura itens habilitados e itens com <code>disabled</code>. Os desabilitados continuam visíveis e indexados pelo filtro, mas não recebem foco nem disparam <code>onSelect</code>.",
-          "use": "Para sinalizar itens em breve, em manutenção ou indisponíveis no contexto atual sem removê-los da lista — preservando o aprendizado sobre as opções existentes."
-        },
-        "longList": {
-          "name": "Lista longa (scroll)",
-          "description": "Lista com 20 ou mais itens dentro do <code>CommandList</code>, que tem <code>max-h-72</code> e rola verticalmente. O filtro reduz a lista conforme o usuário digita.",
-          "use": "Quando o catálogo de opções ultrapassa o que cabe na tela e a busca por texto é o principal mecanismo de navegação. Sempre exiba <code>CommandEmpty</code> para o estado sem correspondências."
         }
       }
     },
@@ -172,6 +159,16 @@
         "label": "Carregando",
         "trigger": "Implementar via <code>CommandLoading</code> do cmdk ou spinner no <code>CommandList</code>",
         "behavior": "Indicador de carregamento exibido enquanto resultados remotos chegam"
+      },
+      "withDisabled": {
+        "label": "Com itens desabilitados",
+        "trigger": "Item marcado como desabilitado",
+        "behavior": "Mistura itens habilitados e itens com <code>disabled</code>. Os desabilitados continuam visíveis e indexados pelo filtro, mas não recebem foco nem disparam <code>onSelect</code>."
+      },
+      "longList": {
+        "label": "Lista longa (scroll)",
+        "trigger": "20 ou mais itens na lista",
+        "behavior": "Lista com 20 ou mais itens dentro do <code>CommandList</code>, que tem <code>max-h-72</code> e rola verticalmente. O filtro reduz a lista conforme o usuário digita."
       }
     },
     "props": {
@@ -515,24 +512,11 @@
       "items": {
         "inline": "Rendered directly on the page. Use for local search or combobox embedded in forms.",
         "combobox": "Command inside a <code>Popover</code>. Replaces Select with built-in search for long lists.",
-        "palette": "Command inside <code>CommandDialog</code>. Triggered by a global shortcut (Cmd+K) for quick access to application actions."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "palette": "Command inside <code>CommandDialog</code>. Triggered by a global shortcut (Cmd+K) for quick access to application actions.",
         "withGroups": {
           "name": "With groups",
           "description": "Items organized into multiple <code>CommandGroup</code> blocks with distinct <code>heading</code> and separators between them. The fuzzy filter still spans all groups.",
           "use": "When items belong to clear categories (e.g., Components vs. Utilities). Use a separator between groups and omit the heading only when there is a single group."
-        },
-        "withDisabled": {
-          "name": "With disabled items",
-          "description": "Mixes enabled items and items with <code>disabled</code>. Disabled items remain visible and indexed by the filter, but do not receive focus or fire <code>onSelect</code>.",
-          "use": "To signal items that are coming soon, under maintenance, or unavailable in the current context without removing them from the list — preserving discoverability of existing options."
-        },
-        "longList": {
-          "name": "Long list (scroll)",
-          "description": "List with 20+ items inside <code>CommandList</code>, which has <code>max-h-72</code> and scrolls vertically. The filter reduces the list as the user types.",
-          "use": "When the option catalog exceeds what fits on screen and text search is the primary navigation mechanism. Always render <code>CommandEmpty</code> for the no-match state."
         }
       }
     },
@@ -562,6 +546,16 @@
         "label": "Loading",
         "trigger": "Implement via cmdk's <code>CommandLoading</code> or a spinner in <code>CommandList</code>",
         "behavior": "Loading indicator displayed while remote results are fetched"
+      },
+      "withDisabled": {
+        "label": "With disabled items",
+        "trigger": "Item marked as disabled",
+        "behavior": "Mixes enabled items and items with <code>disabled</code>. Disabled items remain visible and indexed by the filter, but do not receive focus or fire <code>onSelect</code>."
+      },
+      "longList": {
+        "label": "Long list (scroll)",
+        "trigger": "20 or more items in the list",
+        "behavior": "List with 20+ items inside <code>CommandList</code>, which has <code>max-h-72</code> and scrolls vertically. The filter reduces the list as the user types."
       }
     },
     "props": {
@@ -905,24 +899,11 @@
       "items": {
         "inline": "Renderizado directamente en la página. Usar para búsqueda local o combobox integrado en formularios.",
         "combobox": "Command dentro de un <code>Popover</code>. Reemplaza el Select con búsqueda integrada para listas largas.",
-        "palette": "Command dentro de <code>CommandDialog</code>. Activado por atajo global (Cmd+K) para acceso rápido a acciones de la aplicación."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "palette": "Command dentro de <code>CommandDialog</code>. Activado por atajo global (Cmd+K) para acceso rápido a acciones de la aplicación.",
         "withGroups": {
           "name": "Con grupos",
           "description": "Ítems organizados en múltiples <code>CommandGroup</code> con <code>heading</code> distinto y separadores entre ellos. El filtro fuzzy sigue atravesando todos los grupos.",
           "use": "Cuando los ítems pertenecen a categorías claras (ej.: Componentes vs. Utilidades). Usa separador entre grupos y omite el heading solo cuando hay un único grupo."
-        },
-        "withDisabled": {
-          "name": "Con ítems deshabilitados",
-          "description": "Mezcla ítems habilitados y ítems con <code>disabled</code>. Los deshabilitados siguen visibles e indexados por el filtro, pero no reciben foco ni disparan <code>onSelect</code>.",
-          "use": "Para señalar ítems próximamente, en mantenimiento o no disponibles en el contexto actual sin quitarlos de la lista — preservando el descubrimiento de las opciones existentes."
-        },
-        "longList": {
-          "name": "Lista larga (scroll)",
-          "description": "Lista con 20 o más ítems dentro de <code>CommandList</code>, que tiene <code>max-h-72</code> y hace scroll vertical. El filtro reduce la lista a medida que el usuario escribe.",
-          "use": "Cuando el catálogo de opciones supera lo que cabe en pantalla y la búsqueda por texto es el mecanismo principal de navegación. Muestra siempre <code>CommandEmpty</code> para el estado sin coincidencias."
         }
       }
     },
@@ -952,6 +933,16 @@
         "label": "Cargando",
         "trigger": "Implementar vía <code>CommandLoading</code> de cmdk o spinner en <code>CommandList</code>",
         "behavior": "Indicador de carga mostrado mientras llegan resultados remotos"
+      },
+      "withDisabled": {
+        "label": "Con ítems deshabilitados",
+        "trigger": "Ítem marcado como deshabilitado",
+        "behavior": "Mezcla ítems habilitados y ítems con <code>disabled</code>. Los deshabilitados siguen visibles e indexados por el filtro, pero no reciben foco ni disparan <code>onSelect</code>."
+      },
+      "longList": {
+        "label": "Lista larga (scroll)",
+        "trigger": "20 o más ítems en la lista",
+        "behavior": "Lista con 20 o más ítems dentro de <code>CommandList</code>, que tiene <code>max-h-72</code> y hace scroll vertical. El filtro reduce la lista a medida que el usuario escribe."
       }
     },
     "props": {

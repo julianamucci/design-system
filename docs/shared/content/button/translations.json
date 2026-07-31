@@ -148,7 +148,12 @@
         "outline": "Ação secundária com destaque. Borda visível, fundo transparente, hover com <code>accent</code>.",
         "secondary": "Ação secundária neutra. Fundo <code>secondary</code>, menos proeminente que <code>outline</code>.",
         "ghost": "Ação discreta em toolbars e menus. Sem borda, hover com <code>accent</code>.",
-        "link": "Ação com aparência de link textual. Usado raramente — prefira compor com elemento filho <code>&lt;a&gt;</code>."
+        "link": "Ação com aparência de link textual. Usado raramente — prefira compor com elemento filho <code>&lt;a&gt;</code>.",
+        "asLink": {
+          "name": "Como link",
+          "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes via <code>btnClass()</code>. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
+          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa."
+        }
       },
       "sizesTitle": "Tamanhos",
       "sizes": {
@@ -180,11 +185,6 @@
           "name": "Par de ações",
           "description": "Combinação canônica: variante <code>outline</code> (ação secundária / cancelar) à esquerda, <code>default</code> (ação primária / confirmar) à direita. Convenção ocidental — primária sempre na posição final.",
           "use": "Diálogos de confirmação, formulários com botão de cancelar, footers de modal. Mantenha ordem consistente em todo o sistema."
-        },
-        "asLink": {
-          "name": "Como link",
-          "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes via <code>btnClass()</code>. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
-          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa."
         }
       }
     },
@@ -590,7 +590,12 @@
         "outline": "Secondary action with emphasis. Visible border, transparent background, hover with <code>accent</code>.",
         "secondary": "Neutral secondary action. <code>secondary</code> background, less prominent than <code>outline</code>.",
         "ghost": "Discreet action in toolbars and menus. No border, hover with <code>accent</code>.",
-        "link": "Action with text link appearance. Used rarely — prefer composing with child <code>&lt;a&gt;</code>."
+        "link": "Action with text link appearance. Used rarely — prefer composing with child <code>&lt;a&gt;</code>.",
+        "asLink": {
+          "name": "As link",
+          "description": "<code>&lt;a&gt;</code> element receiving the classes via <code>btnClass()</code>. Preserves native link semantics (href, target, browser navigation) with button appearance.",
+          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility."
+        }
       },
       "sizesTitle": "Sizes",
       "sizes": {
@@ -622,11 +627,6 @@
           "name": "Action pair",
           "description": "Canonical combination: <code>outline</code> variant (secondary / cancel) on the left, <code>default</code> (primary / confirm) on the right. Western convention — primary always in the final position.",
           "use": "Confirmation dialogs, forms with cancel button, modal footers. Keep the order consistent across the whole system."
-        },
-        "asLink": {
-          "name": "As link",
-          "description": "<code>&lt;a&gt;</code> element receiving the classes via <code>btnClass()</code>. Preserves native link semantics (href, target, browser navigation) with button appearance.",
-          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility."
         }
       }
     },
@@ -1032,7 +1032,12 @@
         "outline": "Acción secundaria con énfasis. Borde visible, fondo transparente, hover con <code>accent</code>.",
         "secondary": "Acción secundaria neutra. Fondo <code>secondary</code>, menos prominente que <code>outline</code>.",
         "ghost": "Acción discreta en toolbars y menús. Sin borde, hover con <code>accent</code>.",
-        "link": "Acción con apariencia de enlace textual. Se usa poco — prefiere componer con hijo <code>&lt;a&gt;</code>."
+        "link": "Acción con apariencia de enlace textual. Se usa poco — prefiere componer con hijo <code>&lt;a&gt;</code>.",
+        "asLink": {
+          "name": "Como link",
+          "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases vía <code>btnClass()</code>. Preserva la semántica nativa de link (href, target, navegación del navegador) con apariencia de botón.",
+          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa."
+        }
       },
       "sizesTitle": "Tamaños",
       "sizes": {
@@ -1064,11 +1069,6 @@
           "name": "Par de acciones",
           "description": "Combinación canónica: variante <code>outline</code> (acción secundaria / cancelar) a la izquierda, <code>default</code> (acción primaria / confirmar) a la derecha. Convención occidental — primaria siempre en la posición final.",
           "use": "Diálogos de confirmación, formularios con botón de cancelar, footers de modal. Mantén el orden consistente en todo el sistema."
-        },
-        "asLink": {
-          "name": "Como link",
-          "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases vía <code>btnClass()</code>. Preserva la semántica nativa de link (href, target, navegación del navegador) con apariencia de botón.",
-          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa."
         }
       }
     },

@@ -165,15 +165,15 @@
         "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos. Em Vue, use <code>DialogScrollContent</code>.",
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
-        "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações.",
         "confirmEmail": {
           "name": "Confirmação de e-mail",
           "description": "Body curto com mensagem informativa + footer com ação primária neutra. Confirma uma operação reversível antes de disparar o efeito real (envio, agendamento, geração).",
           "use": "Confirmar envio de link, mensagem ou convite. O usuário pode revisar o endereço/destinatário antes de prosseguir e cancelar sem consequência."
-        },
+        }
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
         "mediaPreview": {
           "name": "Pré-visualização de mídia",
           "description": "Body com mídia em destaque (imagem, vídeo, capa) e botão Close visível, sem footer de ações. A única intenção é \"ver\", não \"fazer\".",
@@ -616,15 +616,15 @@
         "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed. In Vue, use <code>DialogScrollContent</code>.",
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
-        "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions.",
         "confirmEmail": {
           "name": "Email confirmation",
           "description": "Short informational body + footer with a neutral primary action. Confirms a reversible operation before triggering the real effect (send, schedule, generate).",
           "use": "Confirm sending a link, message, or invite. The user can review the address/recipient before proceeding and cancel without consequence."
-        },
+        }
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
         "mediaPreview": {
           "name": "Media preview",
           "description": "Body with highlighted media (image, video, cover) and visible Close button, no actions footer. The only intent is to \"view\", not to \"do\".",
@@ -1067,15 +1067,15 @@
         "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos. En Vue, usa <code>DialogScrollContent</code>.",
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
-        "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones.",
         "confirmEmail": {
           "name": "Confirmación de e-mail",
           "description": "Body corto con mensaje informativo + footer con acción primaria neutra. Confirma una operación reversible antes de disparar el efecto real (envío, programación, generación).",
           "use": "Confirmar el envío de un enlace, mensaje o invitación. El usuario puede revisar la dirección/destinatario antes de continuar y cancelar sin consecuencia."
-        },
+        }
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
         "mediaPreview": {
           "name": "Previsualización de media",
           "description": "Body con media destacada (imagen, video, portada) y botón Close visible, sin footer de acciones. La única intención es \"ver\", no \"hacer\".",

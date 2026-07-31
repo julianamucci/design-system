@@ -112,15 +112,15 @@
       "note": "O Collapsible não tem variantes visuais nativas. A aparência é definida pelo conteúdo e pelas classes do trigger e painel. Os dois modos de operação são <code>controlado</code> e <code>não-controlado</code>.",
       "items": {
         "controlled": "Modo controlado: estado externo combinado com callback de mudança. Use quando o estado influencia outros elementos da UI ou precisa ser sincronizado externamente.",
-        "uncontrolled": "Modo não-controlado: <code>defaultOpen</code>. Use quando a seção é independente e o estado interno é suficiente."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
+        "uncontrolled": "Modo não-controlado: <code>defaultOpen</code>. Use quando a seção é independente e o estado interno é suficiente.",
         "customButton": {
           "name": "Com botão customizado",
           "description": "Trigger passado como <code>HTMLButtonElement</code> totalmente estilizado pelo consumidor. O Collapsible apenas adiciona <code>aria-expanded</code>, <code>aria-controls</code> e <code>data-state</code>.",
           "use": "Quando o trigger precisa de visual específico (ex.: botão outlined com hover de accent). Mantém total liberdade visual."
-        },
+        }
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
         "iconTrigger": {
           "name": "Com ícone no trigger",
           "description": "Ícone SVG antes do label dentro do trigger (ex.: <code>Filter</code>, <code>Settings</code>). Marque o ícone com <code>aria-hidden=\"true\"</code> — o texto descreve a ação.",
@@ -493,15 +493,15 @@
       "note": "Collapsible has no native visual variants. Appearance is defined by content and trigger/panel classes. The two operation modes are <code>controlled</code> and <code>uncontrolled</code>.",
       "items": {
         "controlled": "Controlled mode: external state combined with a change callback. Use when the state affects other UI elements or needs external synchronization.",
-        "uncontrolled": "Uncontrolled mode: <code>defaultOpen</code>. Use when the section is independent and internal state is sufficient."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
+        "uncontrolled": "Uncontrolled mode: <code>defaultOpen</code>. Use when the section is independent and internal state is sufficient.",
         "customButton": {
           "name": "With custom button",
           "description": "Trigger passed as a fully consumer-styled <code>HTMLButtonElement</code>. The Collapsible only adds <code>aria-expanded</code>, <code>aria-controls</code>, and <code>data-state</code>.",
           "use": "When the trigger needs specific styling (e.g., outlined button with accent hover). Full visual freedom retained."
-        },
+        }
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
         "iconTrigger": {
           "name": "With icon in trigger",
           "description": "SVG icon before the label inside the trigger (e.g., <code>Filter</code>, <code>Settings</code>). Mark the icon with <code>aria-hidden=\"true\"</code> — the text describes the action.",
@@ -874,15 +874,15 @@
       "note": "Collapsible no tiene variantes visuales nativas. La apariencia la definen el contenido y las clases del trigger y del panel. Los dos modos de operación son <code>controlado</code> y <code>no controlado</code>.",
       "items": {
         "controlled": "Modo controlado: estado externo combinado con un callback de cambio. Úsalo cuando el estado afecta otros elementos de la UI o necesita sincronizarse externamente.",
-        "uncontrolled": "Modo no controlado: <code>defaultOpen</code>. Úsalo cuando la sección es independiente y el estado interno es suficiente."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
+        "uncontrolled": "Modo no controlado: <code>defaultOpen</code>. Úsalo cuando la sección es independiente y el estado interno es suficiente.",
         "customButton": {
           "name": "Con botón personalizado",
           "description": "Trigger pasado como <code>HTMLButtonElement</code> totalmente estilizado por el consumidor. El Collapsible solo agrega <code>aria-expanded</code>, <code>aria-controls</code> y <code>data-state</code>.",
           "use": "Cuando el trigger necesita un estilo específico (ej.: botón outlined con hover de accent). Mantiene total libertad visual."
-        },
+        }
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
         "iconTrigger": {
           "name": "Con ícono en el trigger",
           "description": "Ícono SVG antes del label dentro del trigger (ej.: <code>Filter</code>, <code>Settings</code>). Marca el ícono con <code>aria-hidden=\"true\"</code> — el texto describe la acción.",

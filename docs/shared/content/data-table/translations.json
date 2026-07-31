@@ -170,15 +170,7 @@
         "pin": "Fixar coluna à esquerda ou direita via menu de colunas. Use posição <code>sticky</code>. Ative com <code>enableColumnPinning</code>.",
         "pagination": "Rodapé com contagem, seletor de tamanho e navegação por página. Ativa por padrão; tamanhos via <code>pageSizeOptions</code>.",
         "edit": "Edição inline célula a célula. Marque <code>meta.editable</code> na column def e implemente <code>onCellEdit</code> para persistir o valor.",
-        "virtual": "Virtualização de linhas para datasets grandes. Renderiza apenas o intervalo visível. Ative com <code>virtualized</code> e defina <code>maxHeight</code>."
-      },
-      "compositionsTitle": "Composições",
-      "compositions": {
-        "selectionWithActions": {
-          "name": "Seleção em lote com ações",
-          "description": "Ative seleção de linhas e use o callback <code>onTableReady</code> para acessar <code>table.getSelectedRowModel()</code> e disparar ações em massa (exportar, excluir, marcar como pago) numa toolbar acima ou via menu contextual.",
-          "use": "Listas administrativas onde o usuário precisa aplicar a mesma ação a várias linhas — operações em lote são o caso de uso clássico de seleção."
-        },
+        "virtual": "Virtualização de linhas para datasets grandes. Renderiza apenas o intervalo visível. Ative com <code>virtualized</code> e defina <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Modo planilha (edição inline)",
           "description": "Combine edição inline em várias colunas, sem paginação e com filtro por coluna para criar uma experiência próxima de planilha. O componente não mantém estado dos dados — o <code>onCellEdit</code> atualiza o array fonte externamente.",
@@ -193,6 +185,14 @@
           "name": "Coluna-chave fixada",
           "description": "Fixe a coluna-chave (ID, nome, código) à esquerda enquanto o usuário rola horizontalmente entre muitas colunas de dados. A coluna fixa permanece visível com posição <code>sticky</code>.",
           "use": "Tabelas largas com muitas métricas onde o usuário precisa de uma referência visual constante (linha de produto, conta, pessoa) durante o scroll horizontal."
+        }
+      },
+      "compositionsTitle": "Composições",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Seleção em lote com ações",
+          "description": "Ative seleção de linhas e use o callback <code>onTableReady</code> para acessar <code>table.getSelectedRowModel()</code> e disparar ações em massa (exportar, excluir, marcar como pago) numa toolbar acima ou via menu contextual.",
+          "use": "Listas administrativas onde o usuário precisa aplicar a mesma ação a várias linhas — operações em lote são o caso de uso clássico de seleção."
         }
       }
     },
@@ -659,15 +659,7 @@
         "pin": "Pin column to the left or right via the columns menu. Uses <code>sticky</code> positioning. Enable with <code>enableColumnPinning</code>.",
         "pagination": "Footer with count, page-size selector, and page navigation. On by default; sizes via <code>pageSizeOptions</code>.",
         "edit": "Per-cell inline editing. Mark <code>meta.editable</code> on the column def and implement <code>onCellEdit</code> to persist the value.",
-        "virtual": "Row virtualization for large datasets. Renders only the visible range. Enable with <code>virtualized</code> and set <code>maxHeight</code>."
-      },
-      "compositionsTitle": "Compositions",
-      "compositions": {
-        "selectionWithActions": {
-          "name": "Bulk selection with actions",
-          "description": "Enable row selection and use the <code>onTableReady</code> callback to access <code>table.getSelectedRowModel()</code> and dispatch bulk actions (export, delete, mark as paid) in a toolbar above or via a context menu.",
-          "use": "Admin lists where the user needs to apply the same action to multiple rows — bulk operations are the classic use case for selection."
-        },
+        "virtual": "Row virtualization for large datasets. Renders only the visible range. Enable with <code>virtualized</code> and set <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Spreadsheet mode (inline edit)",
           "description": "Combine inline editing on several columns, no pagination, and per-column filters to create a spreadsheet-like experience. The component does not hold data state — <code>onCellEdit</code> updates the source array externally.",
@@ -682,6 +674,14 @@
           "name": "Pinned key column",
           "description": "Pin the key column (ID, name, code) to the left while the user scrolls horizontally across many data columns. The pinned column stays visible via <code>sticky</code> positioning.",
           "use": "Wide tables with many metrics where the user needs a constant visual reference (product line, account, person) during horizontal scroll."
+        }
+      },
+      "compositionsTitle": "Compositions",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Bulk selection with actions",
+          "description": "Enable row selection and use the <code>onTableReady</code> callback to access <code>table.getSelectedRowModel()</code> and dispatch bulk actions (export, delete, mark as paid) in a toolbar above or via a context menu.",
+          "use": "Admin lists where the user needs to apply the same action to multiple rows — bulk operations are the classic use case for selection."
         }
       }
     },
@@ -1148,15 +1148,7 @@
         "pin": "Fija columna a la izquierda o derecha vía el menú de columnas. Usa posición <code>sticky</code>. Activa con <code>enableColumnPinning</code>.",
         "pagination": "Pie con conteo, selector de tamaño y navegación por página. Activa por defecto; tamaños vía <code>pageSizeOptions</code>.",
         "edit": "Edición inline celda a celda. Marca <code>meta.editable</code> en la column def e implementa <code>onCellEdit</code> para persistir el valor.",
-        "virtual": "Virtualización de filas para datasets grandes. Renderiza solo el rango visible. Activa con <code>virtualized</code> y define <code>maxHeight</code>."
-      },
-      "compositionsTitle": "Composiciones",
-      "compositions": {
-        "selectionWithActions": {
-          "name": "Selección en lote con acciones",
-          "description": "Activa selección de filas y usa el callback <code>onTableReady</code> para acceder a <code>table.getSelectedRowModel()</code> y disparar acciones en masa (exportar, eliminar, marcar como pagado) en una toolbar superior o vía menú contextual.",
-          "use": "Listas administrativas donde el usuario necesita aplicar la misma acción a varias filas — las operaciones en lote son el caso clásico de selección."
-        },
+        "virtual": "Virtualización de filas para datasets grandes. Renderiza solo el rango visible. Activa con <code>virtualized</code> y define <code>maxHeight</code>.",
         "editableSheet": {
           "name": "Modo planilla (edición inline)",
           "description": "Combina edición inline en varias columnas, sin paginación y con filtro por columna para crear una experiencia tipo planilla. El componente no mantiene estado de datos — el <code>onCellEdit</code> actualiza el array fuente externamente.",
@@ -1171,6 +1163,14 @@
           "name": "Columna-clave fijada",
           "description": "Fija la columna-clave (ID, nombre, código) a la izquierda mientras el usuario hace scroll horizontal entre muchas columnas de datos. La columna fija permanece visible con posición <code>sticky</code>.",
           "use": "Tablas anchas con muchas métricas donde el usuario necesita una referencia visual constante (línea de producto, cuenta, persona) durante el scroll horizontal."
+        }
+      },
+      "compositionsTitle": "Composiciones",
+      "compositions": {
+        "selectionWithActions": {
+          "name": "Selección en lote con acciones",
+          "description": "Activa selección de filas y usa el callback <code>onTableReady</code> para acceder a <code>table.getSelectedRowModel()</code> y disparar acciones en masa (exportar, eliminar, marcar como pagado) en una toolbar superior o vía menú contextual.",
+          "use": "Listas administrativas donde el usuario necesita aplicar la misma acción a varias filas — las operaciones en lote son el caso clásico de selección."
         }
       }
     },
