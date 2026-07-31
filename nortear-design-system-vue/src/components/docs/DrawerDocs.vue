@@ -295,25 +295,6 @@ const codeCompWithScroll = `<Drawer>
   </DrawerContent>
 </Drawer>`;
 
-const codeCompRightPanel = `<Drawer direction="right">
-  <DrawerTrigger as-child>
-    <Button variant="outline">Abrir filtros</Button>
-  </DrawerTrigger>
-  <DrawerContent class="nds-max-w-md">
-    <DrawerHeader>
-      <DrawerTitle>Filtros</DrawerTitle>
-      <DrawerDescription>Refine os resultados.</DrawerDescription>
-    </DrawerHeader>
-    <div class="nds-px-4 nds-text-body nds-text-muted-foreground">Conteúdo dos filtros…</div>
-    <DrawerFooter>
-      <Button>Aplicar</Button>
-      <DrawerClose as-child>
-        <Button variant="outline">Cancelar</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.withForm.name'),
@@ -332,12 +313,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withScroll.description'),
     useWhen: tContent('variants.compositions.withScroll.use'),
     code: codeCompWithScroll,
-  },
-  {
-    name: tContent('variants.compositions.rightPanel.name'),
-    description: tContent('variants.compositions.rightPanel.description'),
-    useWhen: tContent('variants.compositions.rightPanel.use'),
-    code: codeCompRightPanel,
   },
 ]);
 
@@ -886,37 +861,6 @@ const a11yCritCols = computed(() => ({
               </div>
               <DrawerFooter>
                 <Button>Aceitar termos</Button>
-                <DrawerClose as-child>
-                  <Button variant="outline">
-                    Cancelar
-                  </Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
-        </div>
-      </template>
-      <template #variant-preview-3>
-        <div
-          style="contain: layout"
-          class="nds-w-full"
-        >
-          <Drawer direction="right">
-            <DrawerTrigger as-child>
-              <Button variant="outline">
-                Abrir filtros
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent class="nds-max-w-md">
-              <DrawerHeader>
-                <DrawerTitle>Filtros</DrawerTitle>
-                <DrawerDescription>Refine os resultados.</DrawerDescription>
-              </DrawerHeader>
-              <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
-                Conteúdo dos filtros…
-              </div>
-              <DrawerFooter>
-                <Button>Aplicar</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
                     Cancelar

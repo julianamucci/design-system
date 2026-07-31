@@ -263,18 +263,6 @@ const codeAlignmentBar = `<ToggleGroup type="single" variant="outline" default-v
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeFormattingBar = `<ToggleGroup type="multiple" variant="outline" :default-value="['bold']" aria-label="Formatação">
-  <ToggleGroupItem value="bold" aria-label="Negrito">
-    <Bold aria-hidden="true" />
-  </ToggleGroupItem>
-  <ToggleGroupItem value="italic" aria-label="Itálico">
-    <Italic aria-hidden="true" />
-  </ToggleGroupItem>
-  <ToggleGroupItem value="underline" aria-label="Sublinhado">
-    <Underline aria-hidden="true" />
-  </ToggleGroupItem>
-</ToggleGroup>`;
-
 const codeViewMode = `<ToggleGroup type="single" variant="outline" default-value="grid" orientation="vertical" aria-label="Modo de visualização">
   <ToggleGroupItem value="grid">
     <LayoutGrid aria-hidden="true" />
@@ -318,12 +306,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.alignmentBar.description'),
     useWhen: tContent('variants.compositions.alignmentBar.use'),
     code: codeAlignmentBar,
-  },
-  {
-    name: tContent('variants.compositions.formattingBar.name'),
-    description: tContent('variants.compositions.formattingBar.description'),
-    useWhen: tContent('variants.compositions.formattingBar.use'),
-    code: codeFormattingBar,
   },
   {
     name: tContent('variants.compositions.viewMode.name'),
@@ -914,33 +896,6 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <ToggleGroup
-          type="multiple"
-          variant="outline"
-          :default-value="['bold']"
-          aria-label="Formatação"
-        >
-          <ToggleGroupItem
-            value="bold"
-            aria-label="Negrito"
-          >
-            <Bold aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="italic"
-            aria-label="Itálico"
-          >
-            <Italic aria-hidden="true" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="underline"
-            aria-label="Sublinhado"
-          >
-            <Underline aria-hidden="true" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </template>
-      <template #variant-preview-2>
-        <ToggleGroup
           type="single"
           variant="outline"
           default-value="grid"
@@ -955,7 +910,7 @@ const visualTestItems = computed(() => [
           </ToggleGroupItem>
         </ToggleGroup>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <ToggleGroup
           type="single"
           variant="outline"
@@ -983,7 +938,7 @@ const visualTestItems = computed(() => [
           </ToggleGroupItem>
         </ToggleGroup>
       </template>
-      <template #variant-preview-4>
+      <template #variant-preview-3>
         <div
           class="nds-stack"
           data-spacing="sm"

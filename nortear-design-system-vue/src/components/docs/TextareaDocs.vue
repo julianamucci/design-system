@@ -85,7 +85,6 @@ const demoBio = ref('');
 const demoMax = 500;
 
 // Compositions demo state
-const compCounterValue = ref('');
 const compFormValue = ref('');
 const compFormResult = ref('');
 function handleCompFormSubmit() {
@@ -250,12 +249,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withHint.description'),
     useWhen: tContent('variants.compositions.withHint.use'),
     code: `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n  <Label for="ta-hint">Descrição</Label>\n  <Textarea\n    id="ta-hint"\n    class="nds-resize-y nds-min-h-30"\n    placeholder="ex: Descreva o produto..."\n  />\n  <p class="nds-text-caption nds-text-muted-foreground">\n    Descreva o produto com clareza, destacando os principais atributos.\n  </p>\n</div>`,
-  },
-  {
-    name: tContent('variants.compositions.withCounter.name'),
-    description: tContent('variants.compositions.withCounter.description'),
-    useWhen: tContent('variants.compositions.withCounter.use'),
-    code: `<script setup>\nimport { ref } from 'vue';\nconst value = ref('');\n<\/script>\n\n<template>\n  <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">\n    <Label for="ta-counter">Descrição</Label>\n    <Textarea\n      id="ta-counter"\n      v-model="value"\n      :maxlength="500"\n      class="nds-resize-y nds-min-h-30"\n      placeholder="ex: Descreva o produto..."\n    />\n    <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between" data-align="start" data-spacing="sm">\n      <span>Descreva com clareza.</span>\n      <span\n        class="nds-tabular-nums nds-shrink-0"\n        aria-live="polite"\n        :aria-label="\`\${value.length} de 500 caracteres usados\`"\n      >\n        {{ value.length }}/500\n      </span>\n    </div>\n  </div>\n</template>`,
   },
   {
     name: tContent('variants.compositions.withError.name'),
@@ -745,41 +738,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- 2: withCounter -->
+      <!-- 2: withError -->
       <template #variant-preview-2>
-        <div
-          class="nds-stack nds-w-full nds-max-w-md"
-          data-spacing="xs"
-        >
-          <Label :for="'ta-counter'">Descrição</Label>
-          <Textarea
-            id="ta-counter"
-            :model-value="compCounterValue"
-            :maxlength="500"
-            class="nds-resize-y nds-min-h-30"
-            placeholder="ex: Descreva o produto..."
-            @update:model-value="(v) => compCounterValue = String(v)"
-          />
-          <div
-            class="nds-cluster nds-text-caption nds-text-muted-foreground"
-            data-justify="between"
-            data-align="start"
-            data-spacing="sm"
-          >
-            <span>Descreva com clareza.</span>
-            <span
-              class="nds-tabular-nums nds-shrink-0"
-              aria-live="polite"
-              :aria-label="`${compCounterValue.length} de 500 caracteres usados`"
-            >
-              {{ compCounterValue.length }}/500
-            </span>
-          </div>
-        </div>
-      </template>
-
-      <!-- 3: withError -->
-      <template #variant-preview-3>
         <div
           class="nds-stack nds-w-full nds-max-w-md"
           data-spacing="xs"
@@ -801,8 +761,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- 4: inForm -->
-      <template #variant-preview-4>
+      <!-- 3: inForm -->
+      <template #variant-preview-3>
         <form
           class="nds-stack nds-w-full nds-max-w-md"
           data-spacing="md"

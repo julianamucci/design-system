@@ -244,18 +244,6 @@ const variantItems = computed(() => [
 
 const compositionItems = computed(() => [
   {
-    name: tContent('variants.compositions.withLabel.name'),
-    description: stripHtml(tContent('variants.compositions.withLabel.description')),
-    useWhen: stripHtml(tContent('variants.compositions.withLabel.use')),
-    code: `<div class="nds-cluster" data-spacing="xs">\n  <Checkbox id="cb-tos" />\n  <Label for="cb-tos" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">\n    Aceito os termos e condições\n  </Label>\n</div>`,
-  },
-  {
-    name: tContent('variants.compositions.withDescription.name'),
-    description: stripHtml(tContent('variants.compositions.withDescription.description')),
-    useWhen: stripHtml(tContent('variants.compositions.withDescription.use')),
-    code: `<div class="nds-cluster" data-spacing="xs" data-align="start">\n  <Checkbox id="cb-newsletter" style="margin-top: 0.125rem" />\n  <div class="nds-stack" data-spacing="xs">\n    <Label for="cb-newsletter">Receber novidades por email</Label>\n    <p class="nds-text-body">\n      Enviaremos atualizações sobre novos recursos e melhorias do produto.\n    </p>\n  </div>\n</div>`,
-  },
-  {
     name: tContent('variants.compositions.fieldset.name'),
     description: stripHtml(tContent('variants.compositions.fieldset.description')),
     useWhen: stripHtml(tContent('variants.compositions.fieldset.use')),
@@ -740,47 +728,8 @@ const visualTestItems = computed(() => [
       component-slug="checkbox"
       :items="compositionItems"
     >
-      <!-- 0: withLabel -->
+      <!-- 0: fieldset -->
       <template #variant-preview-0>
-        <div
-          class="nds-cluster"
-          data-spacing="xs"
-        >
-          <Checkbox id="cb-tos" />
-          <Label
-            for="cb-tos"
-            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
-          >
-            Aceito os termos e condições
-          </Label>
-        </div>
-      </template>
-
-      <!-- 1: withDescription -->
-      <template #variant-preview-1>
-        <div
-          class="nds-cluster"
-          data-spacing="xs"
-          data-align="start"
-        >
-          <Checkbox
-            id="cb-newsletter"
-            style="margin-top: 0.125rem"
-          />
-          <div
-            class="nds-stack"
-            data-spacing="xs"
-          >
-            <Label for="cb-newsletter">Receber novidades por email</Label>
-            <p class="nds-text-body">
-              Enviaremos atualizações sobre novos recursos e melhorias do produto.
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <!-- 2: fieldset -->
-      <template #variant-preview-2>
         <fieldset
           class="nds-border-default nds-rounded-lg nds-p-4 nds-stack"
           data-spacing="sm"
@@ -813,8 +762,8 @@ const visualTestItems = computed(() => [
         </fieldset>
       </template>
 
-      <!-- 3: selectAll -->
-      <template #variant-preview-3>
+      <!-- 1: selectAll -->
+      <template #variant-preview-1>
         <div
           class="nds-stack"
           data-spacing="sm"
@@ -872,8 +821,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- 4: inList -->
-      <template #variant-preview-4>
+      <!-- 2: inList -->
+      <template #variant-preview-2>
         <div
           class="nds-stack"
           data-spacing="xs"

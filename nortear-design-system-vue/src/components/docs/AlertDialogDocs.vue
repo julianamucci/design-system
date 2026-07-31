@@ -27,7 +27,6 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
-import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -96,7 +95,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tContent('nav.import')   },
       { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tContent('nav.states')   },
       { id: 'propriedades', label: tContent('nav.props')    },
       { id: 'tokens',       label: tContent('nav.tokens')   },
@@ -262,59 +260,6 @@ const variantItems = computed(() => [
     name: 'default',
     description: stripHtml(tContent('variants.items.default')),
     code: codeDefault,
-  },
-]);
-
-const codeCompositionDestructive = `<AlertDialog>
-  <AlertDialogTrigger as-child>
-    <Button variant="destructive">Excluir conta</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
-      <AlertDialogDescription>
-        Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="nds-bg-destructive">
-        Excluir conta
-      </AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>`;
-
-const codeCompositionNeutral = `<AlertDialog>
-  <AlertDialogTrigger as-child>
-    <Button>Publicar agora</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
-      <AlertDialogDescription>
-        Ao publicar, o conteúdo fica visível para todos os usuários.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Voltar</AlertDialogCancel>
-      <AlertDialogAction>Publicar</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>`;
-
-const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.destructive.name'),
-    description: tContent('variants.compositions.destructive.description'),
-    useWhen: tContent('variants.compositions.destructive.use'),
-    code: codeCompositionDestructive,
-  },
-  {
-    name: tContent('variants.compositions.neutral.name'),
-    description: tContent('variants.compositions.neutral.description'),
-    useWhen: tContent('variants.compositions.neutral.use'),
-    code: codeCompositionNeutral,
   },
 ]);
 
@@ -699,49 +644,6 @@ const a11yCritCols = computed(() => ({
         </AlertDialog>
       </template>
     </DocsVariants>
-
-    <!-- ── Composições ──────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="alert-dialog"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive">
-                Excluir conta
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </template>
-      <template #variant-preview-1>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Ao publicar, o conteúdo fica visível para todos os usuários.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Voltar</AlertDialogCancel>
-              <AlertDialogAction>Publicar</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </template>
-    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────── -->
     <DocsStates

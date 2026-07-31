@@ -298,20 +298,6 @@ import Autoplay from "embla-carousel-autoplay";
   </Carousel>
 </template>`;
 
-const codeCompositionMultiResponsive = `<Carousel class="nds-w-full" style="max-width: 42rem" aria-label="Cards de produto">
-  <CarouselContent>
-    <CarouselItem
-      v-for="p in products"
-      :key="p.id"
-      class="nds-md-basis-half nds-lg-basis-third"
-    >
-      <Card>{{ p.name }}</Card>
-    </CarouselItem>
-  </CarouselContent>
-  <CarouselPrevious aria-label="Item anterior" />
-  <CarouselNext aria-label="Próximo item" />
-</Carousel>`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.withDots.name'),
@@ -330,12 +316,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.autoplay.description'),
     useWhen: tContent('variants.compositions.autoplay.use'),
     code: codeCompositionAutoplay,
-  },
-  {
-    name: tContent('variants.compositions.multiResponsive.name'),
-    description: tContent('variants.compositions.multiResponsive.description'),
-    useWhen: tContent('variants.compositions.multiResponsive.use'),
-    code: codeCompositionMultiResponsive,
   },
 ]);
 
@@ -1014,40 +994,6 @@ function onDemoInit(payload: any) {
                   <span
                     class="nds-font-semibold nds-text-foreground"
                     style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
-            <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
-          </Carousel>
-        </div>
-      </template>
-      <template #variant-preview-3>
-        <div
-          class="nds-w-full nds-cluster"
-          data-justify="center"
-          data-align="center"
-        >
-          <Carousel
-            class="nds-w-full nds-max-w-md"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
-          >
-            <CarouselContent>
-              <CarouselItem
-                v-for="n in [1, 2, 3, 4, 5, 6]"
-                :key="n"
-                class="nds-md-basis-half nds-lg-basis-third"
-              >
-                <Card
-                  class="nds-cluster nds-p-4"
-                  data-align="center"
-                  data-justify="center"
-                  style="aspect-ratio: 1 / 1"
-                >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.25rem"
                   >{{ n }}</span>
                 </Card>
               </CarouselItem>

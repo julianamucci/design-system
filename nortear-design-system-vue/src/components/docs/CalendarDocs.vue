@@ -272,13 +272,6 @@ const codeDisabledPast = `<Calendar
   :is-date-disabled="disablePastDates"
 />`;
 
-const codeRangeTwoMonths = `<RangeCalendar
-  v-model="range"
-  locale="pt-BR"
-  :number-of-months="2"
-  class="nds-rounded-md nds-border-default"
-/>`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.inlineBordered.name'),
@@ -291,12 +284,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.disabledPast.description'),
     useWhen: tContent('variants.compositions.disabledPast.use'),
     code: codeDisabledPast,
-  },
-  {
-    name: tContent('variants.compositions.rangeTwoMonths.name'),
-    description: tContent('variants.compositions.rangeTwoMonths.description'),
-    useWhen: tContent('variants.compositions.rangeTwoMonths.use'),
-    code: codeRangeTwoMonths,
   },
 ]);
 
@@ -642,15 +629,6 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :is-date-disabled="disablePastDates"
-          class="nds-rounded-md nds-border-default"
-        />
-      </template>
-      <template #variant-preview-2>
-        <RangeCalendar
-          :default-value="{ start: demoRangeStart, end: demoRangeEnd }"
-          locale="pt-BR"
-          :placeholder="demoAnchor"
-          :number-of-months="2"
           class="nds-rounded-md nds-border-default"
         />
       </template>

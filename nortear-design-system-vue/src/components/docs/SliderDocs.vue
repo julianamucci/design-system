@@ -151,7 +151,6 @@ function handleDemoSliderCommit(fieldName: string, value: number[], min: number,
 // Composições
 const compVolume = ref<number[]>([50]);
 const compBrightness = ref<number[]>([75]);
-const compPrice = ref<number[]>([100, 400]);
 const compFormVolume = ref<number[]>([60]);
 const compFormCommitted = ref<number>(60);
 function onCompFormSubmit(e: Event) {
@@ -294,21 +293,6 @@ const codeCompBrightness = `<Slider
   aria-label="Brilho"
 />`;
 
-const codeCompPrice = `<script setup lang="ts">
-import { ref } from "vue";
-const range = ref<number[]>([100, 400]);
-<\/script>
-
-<template>
-  <Slider
-    v-model="range"
-    :min="0"
-    :max="1000"
-    :step="10"
-    aria-label="Faixa de preço"
-  />
-</template>`;
-
 const codeCompForm = `<form aria-label="Configurações de áudio" @submit.prevent="onSubmit">
   <Label>Volume</Label>
   <Slider
@@ -337,12 +321,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.brightness.description'),
     useWhen: tContent('variants.compositions.brightness.use'),
     code: codeCompBrightness,
-  },
-  {
-    name: tContent('variants.compositions.priceRange.name'),
-    description: tContent('variants.compositions.priceRange.description'),
-    useWhen: tContent('variants.compositions.priceRange.use'),
-    code: codeCompPrice,
   },
   {
     name: tContent('variants.compositions.form.name'),
@@ -863,35 +841,6 @@ const visualTestItems = computed(() => [
       </template>
 
       <template #variant-preview-2>
-        <div
-          class="nds-stack"
-          data-spacing="sm"
-          style="width: 18rem;"
-        >
-          <div
-            class="nds-cluster"
-            data-justify="between"
-          >
-            <Label>Faixa de preço</Label>
-            <span
-              aria-live="polite"
-              class="nds-text-body"
-              style="font-variant-numeric: tabular-nums;"
-            >
-              R$ {{ compPrice[0] }} — R$ {{ compPrice[1] }}
-            </span>
-          </div>
-          <Slider
-            v-model="compPrice"
-            :min="0"
-            :max="1000"
-            :step="10"
-            aria-label="Faixa de preço"
-          />
-        </div>
-      </template>
-
-      <template #variant-preview-3>
         <form
           aria-label="Configurações de áudio"
           class="nds-stack"

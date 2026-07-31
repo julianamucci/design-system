@@ -257,28 +257,6 @@ const codeBadgeTrigger = `<Tabs default-value="inbox" class="nds-w-full" style="
   <TabsContent value="trash">Lixeira</TabsContent>
 </Tabs>`;
 
-const codeVerticalComp = `<Tabs default-value="profile" orientation="vertical" class="nds-w-full nds-cluster" style="max-width: 42rem">
-  <TabsList class="nds-stack nds-shrink-0" style="height: auto; align-items: stretch; min-width: 10rem" aria-label="Configurações">
-    <TabsTrigger value="profile">Perfil</TabsTrigger>
-    <TabsTrigger value="account">Conta</TabsTrigger>
-    <TabsTrigger value="security">Segurança</TabsTrigger>
-  </TabsList>
-  <TabsContent value="profile">Perfil</TabsContent>
-  <TabsContent value="account">Conta</TabsContent>
-  <TabsContent value="security">Segurança</TabsContent>
-</Tabs>`;
-
-const codeLineSubNav = `<Tabs default-value="all" class="nds-w-full">
-  <TabsList variant="line" class="nds-border-b nds-bg-transparent nds-w-full" style="border-radius: 0; justify-content: flex-start" aria-label="Filtros de listagem">
-    <TabsTrigger value="all">Tudo</TabsTrigger>
-    <TabsTrigger value="active">Ativos</TabsTrigger>
-    <TabsTrigger value="archived">Arquivados</TabsTrigger>
-  </TabsList>
-  <TabsContent value="all">Tudo</TabsContent>
-  <TabsContent value="active">Ativos</TabsContent>
-  <TabsContent value="archived">Arquivados</TabsContent>
-</Tabs>`;
-
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.iconTrigger.name'),
@@ -291,18 +269,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.badgeTrigger.description'),
     useWhen: tContent('variants.compositions.badgeTrigger.use'),
     code: codeBadgeTrigger,
-  },
-  {
-    name: tContent('variants.compositions.vertical.name'),
-    description: tContent('variants.compositions.vertical.description'),
-    useWhen: tContent('variants.compositions.vertical.use'),
-    code: codeVerticalComp,
-  },
-  {
-    name: tContent('variants.compositions.lineSubNav.name'),
-    description: tContent('variants.compositions.lineSubNav.description'),
-    useWhen: tContent('variants.compositions.lineSubNav.use'),
-    code: codeLineSubNav,
   },
 ]);
 
@@ -981,120 +947,6 @@ function handleTabChange(value: string) {
               <p class="nds-text-body">
                 Caixas de mensagem, listas com contadores, abas que apresentam recursos beta.
               </p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </template>
-
-      <template #variant-preview-2>
-        <Tabs
-          default-value="profile"
-          orientation="vertical"
-          class="nds-w-full nds-cluster"
-          style="max-width: 42rem"
-        >
-          <TabsList
-            class="nds-stack nds-shrink-0"
-            style="height: auto; align-items: stretch; min-width: 10rem"
-            aria-label="Configurações"
-          >
-            <TabsTrigger value="profile">
-              Perfil
-            </TabsTrigger>
-            <TabsTrigger value="account">
-              Conta
-            </TabsTrigger>
-            <TabsTrigger value="security">
-              Segurança
-            </TabsTrigger>
-          </TabsList>
-          <div class="nds-flex-1">
-            <TabsContent value="profile">
-              <div
-                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
-                data-spacing="sm"
-              >
-                <h3 class="nds-text-body nds-font-semibold">
-                  Perfil
-                </h3>
-                <p class="nds-text-body">
-                  Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
-                </p>
-              </div>
-            </TabsContent>
-            <TabsContent value="account">
-              <div
-                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
-                data-spacing="sm"
-              >
-                <h3 class="nds-text-body nds-font-semibold">
-                  Conta
-                </h3>
-                <p class="nds-text-body">
-                  Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
-                </p>
-              </div>
-            </TabsContent>
-            <TabsContent value="security">
-              <div
-                class="nds-p-4 nds-rounded-md nds-border-default nds-bg-card nds-stack"
-                data-spacing="sm"
-              >
-                <h3 class="nds-text-body nds-font-semibold">
-                  Segurança
-                </h3>
-                <p class="nds-text-body">
-                  Configurações longas com muitas categorias (5+), painéis administrativos. Em telas estreitas, prefira o layout horizontal.
-                </p>
-              </div>
-            </TabsContent>
-          </div>
-        </Tabs>
-      </template>
-
-      <template #variant-preview-3>
-        <Tabs
-          default-value="all"
-          class="nds-w-full"
-        >
-          <TabsList
-            variant="line"
-            class="nds-border-b nds-bg-transparent nds-w-full"
-            style="border-radius: 0; justify-content: flex-start"
-            aria-label="Filtros de listagem"
-          >
-            <TabsTrigger value="all">
-              Tudo
-            </TabsTrigger>
-            <TabsTrigger value="active">
-              Ativos
-            </TabsTrigger>
-            <TabsTrigger value="archived">
-              Arquivados
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="all"
-            style="padding-top: 0.75rem"
-          >
-            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
-              Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
-            </div>
-          </TabsContent>
-          <TabsContent
-            value="active"
-            style="padding-top: 0.75rem"
-          >
-            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
-              Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
-            </div>
-          </TabsContent>
-          <TabsContent
-            value="archived"
-            style="padding-top: 0.75rem"
-          >
-            <div class="nds-text-body nds-text-muted-foreground nds-p-2 nds-rounded-md nds-border-default nds-bg-card">
-              Filtros de listagem (Tudo / Ativos / Arquivados), sub-seções dentro de uma página onde o estilo default competiria com outros containers.
             </div>
           </TabsContent>
         </Tabs>

@@ -25,7 +25,6 @@ import DocsWhenToUse     from '@/components/docs/shared/sections/DocsWhenToUse.v
 import DocsDoDont        from '@/components/docs/shared/sections/DocsDoDont.vue';
 import DocsImport        from '@/components/docs/shared/sections/DocsImport.vue';
 import DocsVariants      from '@/components/docs/shared/sections/DocsVariants.vue';
-import DocsCompositions  from '@/components/docs/shared/sections/DocsCompositions.vue';
 import DocsStates        from '@/components/docs/shared/sections/DocsStates.vue';
 import DocsProps         from '@/components/docs/shared/sections/DocsProps.vue';
 import DocsTokens        from '@/components/docs/shared/sections/DocsTokens.vue';
@@ -94,7 +93,6 @@ const navGroups = computed(() => [
     sections: [
       { id: 'importacao',   label: tNav('nav.import')   },
       { id: 'variantes',    label: tNav('nav.variants') },
-      { id: 'composicoes',  label: tNav('nav.compositions') },
       { id: 'estados',      label: tNav('nav.states')   },
       { id: 'propriedades', label: tNav('nav.props')    },
       { id: 'tokens',       label: tNav('nav.tokens')   },
@@ -269,89 +267,6 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item5'),
   tContent('anatomy.item6'),
   tContent('anatomy.item7'),
-]);
-
-const codeCompDefault = `<Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/">Início</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/componentes">Componentes</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>`;
-
-const codeCompWithEllipsis = `<Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/">Início</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbEllipsis />
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/componentes">Componentes</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>`;
-
-const codeCompCustomSeparator = `<Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/">Início</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator>/</BreadcrumbSeparator>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/componentes">Componentes</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator>/</BreadcrumbSeparator>
-    <BreadcrumbItem>
-      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>`;
-
-const codeCompResponsive = `<Breadcrumb>
-  <BreadcrumbList>
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/">Início</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbEllipsis />
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/guia">Guia</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbLink href="/componentes">Componentes</BreadcrumbLink>
-    </BreadcrumbItem>
-    <BreadcrumbSeparator />
-    <BreadcrumbItem>
-      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-    </BreadcrumbItem>
-  </BreadcrumbList>
-</Breadcrumb>`;
-
-const compositionItems = computed(() => [
-  { name: stripHtml(tContent('variants.compositions.default.name')),         description: stripHtml(tContent('variants.compositions.default.description')),         use: stripHtml(tContent('variants.compositions.default.use')),         code: codeCompDefault         },
-  { name: stripHtml(tContent('variants.compositions.withEllipsis.name')),    description: stripHtml(tContent('variants.compositions.withEllipsis.description')),    use: stripHtml(tContent('variants.compositions.withEllipsis.use')),    code: codeCompWithEllipsis    },
-  { name: stripHtml(tContent('variants.compositions.customSeparator.name')), description: stripHtml(tContent('variants.compositions.customSeparator.description')), use: stripHtml(tContent('variants.compositions.customSeparator.use')), code: codeCompCustomSeparator },
-  { name: stripHtml(tContent('variants.compositions.responsive.name')),      description: stripHtml(tContent('variants.compositions.responsive.description')),      use: stripHtml(tContent('variants.compositions.responsive.use')),      code: codeCompResponsive      },
 ]);
 
 const variantItems = computed(() => [
@@ -838,113 +753,6 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
     </DocsVariants>
-
-    <!-- ── Composições ─────────────────────────────────────────────── -->
-    <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
-      :use-when-label="tNav('common.useWhen')"
-      component-slug="breadcrumb"
-      :items="compositionItems"
-    >
-      <template #variant-preview-0>
-        <Breadcrumb class="nds-w-full">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.home') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.components') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{{ tContent('demonstration.labels.breadcrumb') }}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </template>
-      <template #variant-preview-1>
-        <Breadcrumb class="nds-w-full">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.home') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbEllipsis />
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.components') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{{ tContent('demonstration.labels.breadcrumb') }}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </template>
-      <template #variant-preview-2>
-        <Breadcrumb class="nds-w-full">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.home') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>/</BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.components') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>/</BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>{{ tContent('demonstration.labels.breadcrumb') }}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </template>
-      <template #variant-preview-3>
-        <Breadcrumb class="nds-w-full">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.home') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbEllipsis />
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.guide') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                {{ tContent('demonstration.labels.components') }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{{ tContent('demonstration.labels.breadcrumb') }}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </template>
-    </DocsCompositions>
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates

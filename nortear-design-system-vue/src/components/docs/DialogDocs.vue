@@ -302,30 +302,6 @@ const codeCompositionConfirmEmail = `<Dialog>
   </DialogContent>
 </Dialog>`;
 
-const codeCompositionProfileEdit = `<Dialog>
-  <DialogTrigger as-child>
-    <Button variant="outline">Editar perfil</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Editar perfil</DialogTitle>
-      <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
-    </DialogHeader>
-    <form class="nds-stack" data-spacing="sm">
-      <Label for="name">Nome de exibição</Label>
-      <Input id="name" model-value="Maria Souza" />
-      <Label for="role">Função</Label>
-      <Input id="role" model-value="Designer" />
-    </form>
-    <DialogFooter>
-      <DialogClose as-child>
-        <Button variant="outline">Cancelar</Button>
-      </DialogClose>
-      <Button>Salvar alterações</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>`;
-
 const codeCompositionMediaPreview = `<Dialog>
   <DialogTrigger as-child>
     <Button variant="outline">Pré-visualizar</Button>
@@ -347,12 +323,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.confirmEmail.description'),
     useWhen: tContent('variants.compositions.confirmEmail.use'),
     code: codeCompositionConfirmEmail,
-  },
-  {
-    name: tContent('variants.compositions.profileEdit.name'),
-    description: tContent('variants.compositions.profileEdit.description'),
-    useWhen: tContent('variants.compositions.profileEdit.use'),
-    code: codeCompositionProfileEdit,
   },
   {
     name: tContent('variants.compositions.mediaPreview.name'),
@@ -866,49 +836,6 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-1>
-        <Dialog default-open>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
-              <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
-            </DialogHeader>
-            <form
-              class="nds-stack"
-              data-spacing="sm"
-            >
-              <div
-                class="nds-stack"
-                data-spacing="xs"
-              >
-                <Label for="docs-comp-name">Nome de exibição</Label>
-                <Input
-                  id="docs-comp-name"
-                  model-value="Maria Souza"
-                />
-              </div>
-              <div
-                class="nds-stack"
-                data-spacing="xs"
-              >
-                <Label for="docs-comp-role">Função</Label>
-                <Input
-                  id="docs-comp-role"
-                  model-value="Designer"
-                />
-              </div>
-            </form>
-            <DialogFooter>
-              <DialogClose as-child>
-                <Button variant="outline">
-                  Cancelar
-                </Button>
-              </DialogClose>
-              <Button>Salvar alterações</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </template>
-      <template #variant-preview-2>
         <Dialog default-open>
           <DialogContent>
             <DialogHeader>

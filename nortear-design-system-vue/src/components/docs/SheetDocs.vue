@@ -279,23 +279,6 @@ const codeCompSecondaryNav = `<Sheet>
   </SheetContent>
 </Sheet>`;
 
-const codeCompMobileActions = `<Sheet>
-  <SheetTrigger as-child>
-    <Button variant="outline">Mais opções</Button>
-  </SheetTrigger>
-  <SheetContent side="bottom">
-    <SheetHeader>
-      <SheetTitle>Ações rápidas</SheetTitle>
-      <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-    </SheetHeader>
-    <div class="nds-grid nds-px-4 nds-text-body" data-cols="3" data-spacing="sm">
-      <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Compartilhar</button>
-      <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Editar</button>
-      <button type="button" class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent" data-spacing="xs" style="align-items: center; padding: 0.75rem;">Excluir</button>
-    </div>
-  </SheetContent>
-</Sheet>`;
-
 const codeCompLongScroll = `<Sheet>
   <SheetTrigger as-child>
     <Button variant="outline">Ler termos</Button>
@@ -329,12 +312,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.secondaryNavigation.description'),
     useWhen: tContent('variants.compositions.secondaryNavigation.use'),
     code: codeCompSecondaryNav,
-  },
-  {
-    name: tContent('variants.compositions.mobileActions.name'),
-    description: tContent('variants.compositions.mobileActions.description'),
-    useWhen: tContent('variants.compositions.mobileActions.use'),
-    code: codeCompMobileActions,
   },
   {
     name: tContent('variants.compositions.longScrollBody.name'),
@@ -809,51 +786,6 @@ const a11yCritCols = computed(() => ({
         </div>
       </template>
       <template #variant-preview-2>
-        <div style="contain: layout">
-          <Sheet
-            default-open
-            :modal="false"
-          >
-            <SheetContent side="bottom">
-              <SheetHeader>
-                <SheetTitle>Ações rápidas</SheetTitle>
-                <SheetDescription>Escolha o que fazer com este item.</SheetDescription>
-              </SheetHeader>
-              <div
-                class="nds-grid nds-px-4 nds-text-body"
-                data-cols="3"
-                data-spacing="sm"
-              >
-                <button
-                  type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
-                  data-spacing="xs"
-                  style="align-items: center; padding: 0.75rem;"
-                >
-                  Compartilhar
-                </button>
-                <button
-                  type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
-                  data-spacing="xs"
-                  style="align-items: center; padding: 0.75rem;"
-                >
-                  Editar
-                </button>
-                <button
-                  type="button"
-                  class="nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent"
-                  data-spacing="xs"
-                  style="align-items: center; padding: 0.75rem;"
-                >
-                  Excluir
-                </button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </template>
-      <template #variant-preview-3>
         <div style="contain: layout">
           <Sheet
             default-open

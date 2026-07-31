@@ -5,7 +5,7 @@ import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
+import { Plus, Trash2, ChevronRight } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
@@ -211,12 +211,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.destructiveWithIcon.description'),
     useWhen: tContent('variants.compositions.destructiveWithIcon.use'),
     code: `<Button variant="destructive">\n  <Trash2 aria-hidden="true" />\n  Excluir\n</Button>`,
-  },
-  {
-    name: tContent('variants.compositions.iconOnly.name'),
-    description: tContent('variants.compositions.iconOnly.description'),
-    useWhen: tContent('variants.compositions.iconOnly.use'),
-    code: `<Button size="icon" aria-label="Baixar arquivo">\n  <Download aria-hidden="true" />\n</Button>`,
   },
   {
     name: tContent('variants.compositions.actionPair.name'),
@@ -599,14 +593,6 @@ function handleDemoClick(variant: string) {
         </Button>
       </template>
       <template #variant-preview-3>
-        <Button
-          size="icon"
-          aria-label="Baixar arquivo"
-        >
-          <Download aria-hidden="true" />
-        </Button>
-      </template>
-      <template #variant-preview-4>
         <div
           class="nds-cluster"
           data-spacing="sm"
@@ -617,7 +603,7 @@ function handleDemoClick(variant: string) {
           <Button>Confirmar</Button>
         </div>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-4>
         <Button
           as="a"
           href="#docs"

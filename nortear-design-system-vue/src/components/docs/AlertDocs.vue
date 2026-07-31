@@ -221,12 +221,6 @@ const compositionItems = computed(() => [
     useWhen: tContent('variants.compositions.compact.use'),
     code: `<Alert variant="destructive">\n  <AlertCircle aria-hidden="true" />\n  <AlertDescription>Formulário incompleto.</AlertDescription>\n</Alert>`,
   },
-  {
-    name: tContent('variants.compositions.multipleTypes.name'),
-    description: tContent('variants.compositions.multipleTypes.description'),
-    useWhen: tContent('variants.compositions.multipleTypes.use'),
-    code: `<div class="nds-stack" data-spacing="sm">\n  <Alert>\n    <Info aria-hidden="true" />\n    <AlertTitle>Informação</AlertTitle>\n    <AlertDescription>Mensagem informativa e neutra.</AlertDescription>\n  </Alert>\n  <Alert variant="destructive">\n    <AlertCircle aria-hidden="true" />\n    <AlertTitle>Erro</AlertTitle>\n    <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>\n  </Alert>\n  <Alert variant="success">\n    <CheckCircle2 aria-hidden="true" />\n    <AlertTitle>Sucesso</AlertTitle>\n    <AlertDescription>Ação concluída com sucesso.</AlertDescription>\n  </Alert>\n  <Alert variant="warning">\n    <TriangleAlert aria-hidden="true" />\n    <AlertTitle>Aviso</AlertTitle>\n    <AlertDescription>Aviso que requer atenção.</AlertDescription>\n  </Alert>\n</div>`,
-  },
 ]);
 
 const stateItems = computed(() => [
@@ -533,33 +527,6 @@ const visualTestItems = computed(() => [
           <AlertCircle aria-hidden="true" />
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
-      </template>
-      <template #variant-preview-3>
-        <div
-          class="nds-stack nds-w-full"
-          data-spacing="sm"
-        >
-          <Alert>
-            <Info aria-hidden="true" />
-            <AlertTitle>Informação</AlertTitle>
-            <AlertDescription>Mensagem informativa e neutra.</AlertDescription>
-          </Alert>
-          <Alert variant="destructive">
-            <AlertCircle aria-hidden="true" />
-            <AlertTitle>Erro</AlertTitle>
-            <AlertDescription>Erro crítico que bloqueia o fluxo.</AlertDescription>
-          </Alert>
-          <Alert variant="success">
-            <CheckCircle2 aria-hidden="true" />
-            <AlertTitle>Sucesso</AlertTitle>
-            <AlertDescription>Ação concluída com sucesso.</AlertDescription>
-          </Alert>
-          <Alert variant="warning">
-            <TriangleAlert aria-hidden="true" />
-            <AlertTitle>Aviso</AlertTitle>
-            <AlertDescription>Aviso que requer atenção.</AlertDescription>
-          </Alert>
-        </div>
       </template>
     </DocsCompositions>
 

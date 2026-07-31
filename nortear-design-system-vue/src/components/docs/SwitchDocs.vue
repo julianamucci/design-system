@@ -219,16 +219,6 @@ const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
   </Label>
 </div>`;
 
-const codeCompWithDescription = `<div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style="width: 20rem;">
-  <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
-    <Label for="sw-marketing">Emails de marketing</Label>
-    <p class="nds-text-body">
-      Receba novidades e promoções da plataforma.
-    </p>
-  </div>
-  <Switch id="sw-marketing" :checked="true" />
-</div>`;
-
 const codeCompSettingsList = `<div class="nds-stack" data-spacing="sm" style="width: 24rem;">
   <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
   <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
@@ -268,12 +258,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.withLabel.description'),
     useWhen: tContent('variants.compositions.withLabel.use'),
     code: codeCompWithLabel,
-  },
-  {
-    name: tContent('variants.compositions.withDescription.name'),
-    description: tContent('variants.compositions.withDescription.description'),
-    useWhen: tContent('variants.compositions.withDescription.use'),
-    code: codeCompWithDescription,
   },
   {
     name: tContent('variants.compositions.settingsList.name'),
@@ -713,32 +697,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- withDescription -->
-      <template #variant-preview-1>
-        <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
-          data-justify="between"
-          style="width: 20rem;"
-        >
-          <div
-            class="nds-stack"
-            data-spacing="xs"
-            style="padding-right: var(--spacing-2);"
-          >
-            <Label :for="'sw-marketing'">Emails de marketing</Label>
-            <p class="nds-text-body">
-              Receba novidades e promoções da plataforma.
-            </p>
-          </div>
-          <Switch
-            id="sw-marketing"
-            :model-value="true"
-          />
-        </div>
-      </template>
-
       <!-- settingsList -->
-      <template #variant-preview-2>
+      <template #variant-preview-1>
         <div
           class="nds-stack"
           data-spacing="sm"
@@ -802,7 +762,7 @@ const visualTestItems = computed(() => [
       </template>
 
       <!-- inForm -->
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <form
           class="nds-stack nds-w-sm"
           data-spacing="sm"

@@ -212,11 +212,6 @@ const codeToolbar = `<div role="group" aria-label="Formatação de texto" class=
   <Toggle aria-label="Sublinhado"><Underline class="nds-icon" aria-hidden="true" /></Toggle>
 </div>`;
 
-const codeFilterWithLabel = `<Toggle variant="outline">
-  <Eye class="nds-icon" aria-hidden="true" />
-  Mostrar ocultos
-</Toggle>`;
-
 const codeSizes = `<div class="nds-cluster" data-spacing="sm">
   <Toggle variant="outline" size="sm" aria-label="Negrito (sm)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
   <Toggle variant="outline" aria-label="Negrito (default)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
@@ -243,12 +238,6 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.toolbar.description'),
     useWhen: tContent('variants.compositions.toolbar.use'),
     code: codeToolbar,
-  },
-  {
-    name: tContent('variants.compositions.filterWithLabel.name'),
-    description: tContent('variants.compositions.filterWithLabel.description'),
-    useWhen: tContent('variants.compositions.filterWithLabel.use'),
-    code: codeFilterWithLabel,
   },
   {
     name: tContent('variants.compositions.sizes.name'),
@@ -661,15 +650,6 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <Toggle variant="outline">
-          <Eye
-            class="nds-icon"
-            aria-hidden="true"
-          />
-          Mostrar ocultos
-        </Toggle>
-      </template>
-      <template #variant-preview-2>
         <div
           class="nds-cluster"
           data-spacing="sm"
@@ -705,7 +685,7 @@ const visualTestItems = computed(() => [
           </Toggle>
         </div>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <div
           class="nds-stack"
           data-spacing="sm"

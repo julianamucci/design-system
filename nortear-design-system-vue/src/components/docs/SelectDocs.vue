@@ -251,42 +251,6 @@ const variantItems = computed(() => [
   { name: tContent('variants.items.withIcon'),   description: stripHtml(tContent('variants.styles.withIcon')),   code: codeWithIcon   },
 ]);
 
-const codeCompStates = `<div class="nds-stack nds-w-sm" data-spacing="sm">
-  <Label for="state">Estado</Label>
-  <Select>
-    <SelectTrigger id="state" aria-label="Estado">
-      <SelectValue placeholder="Selecione..." />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="sp">São Paulo</SelectItem>
-      <SelectItem value="rj">Rio de Janeiro</SelectItem>
-      <SelectItem value="mg">Minas Gerais</SelectItem>
-      <SelectItem value="rs">Rio Grande do Sul</SelectItem>
-    </SelectContent>
-  </Select>
-</div>`;
-
-const codeCompRegionGroups = `<div class="nds-stack nds-w-sm" data-spacing="sm">
-  <Label for="region">Região</Label>
-  <Select>
-    <SelectTrigger id="region" aria-label="Região">
-      <SelectValue placeholder="Selecione..." />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectGroup>
-        <SelectLabel>Sudeste</SelectLabel>
-        <SelectItem value="sp">São Paulo</SelectItem>
-        <SelectItem value="rj">Rio de Janeiro</SelectItem>
-      </SelectGroup>
-      <SelectGroup>
-        <SelectLabel>Sul</SelectLabel>
-        <SelectItem value="rs">Rio Grande do Sul</SelectItem>
-        <SelectItem value="sc">Santa Catarina</SelectItem>
-      </SelectGroup>
-    </SelectContent>
-  </Select>
-</div>`;
-
 const codeCompInForm = `<form
   class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg" data-spacing="md"
   @submit.prevent="(e) => {
@@ -311,18 +275,6 @@ const codeCompInForm = `<form
 </form>`;
 
 const compositionItems = computed(() => [
-  {
-    name: tContent('variants.compositions.states.name'),
-    description: tContent('variants.compositions.states.description'),
-    useWhen: tContent('variants.compositions.states.use'),
-    code: codeCompStates,
-  },
-  {
-    name: tContent('variants.compositions.regionGroups.name'),
-    description: tContent('variants.compositions.regionGroups.description'),
-    useWhen: tContent('variants.compositions.regionGroups.use'),
-    code: codeCompRegionGroups,
-  },
   {
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
@@ -886,85 +838,6 @@ const visualTestItems = computed(() => [
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <div
-          class="nds-stack nds-w-sm"
-          data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative"
-        >
-          <Label for="comp-state">{{ tContent('demonstration.labels.stateLabel') }}</Label>
-          <Select>
-            <SelectTrigger
-              id="comp-state"
-              :aria-label="tContent('demonstration.labels.stateLabel')"
-            >
-              <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sp">
-                {{ tContent('demonstration.labels.sp') }}
-              </SelectItem>
-              <SelectItem value="rj">
-                {{ tContent('demonstration.labels.rj') }}
-              </SelectItem>
-              <SelectItem value="mg">
-                {{ tContent('demonstration.labels.mg') }}
-              </SelectItem>
-              <SelectItem value="rs">
-                {{ tContent('demonstration.labels.rs') }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </template>
-
-      <template #variant-preview-1>
-        <div
-          class="nds-stack nds-w-sm"
-          data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative"
-        >
-          <Label for="comp-region">{{ tContent('demonstration.labels.regionLabel') }}</Label>
-          <Select>
-            <SelectTrigger
-              id="comp-region"
-              :aria-label="tContent('demonstration.labels.regionLabel')"
-            >
-              <SelectValue :placeholder="tContent('demonstration.labels.placeholder')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>{{ tContent('demonstration.labels.groupSoutheast') }}</SelectLabel>
-                <SelectItem value="comp-sp">
-                  {{ tContent('demonstration.labels.sp') }}
-                </SelectItem>
-                <SelectItem value="comp-rj">
-                  {{ tContent('demonstration.labels.rj') }}
-                </SelectItem>
-                <SelectItem value="comp-mg">
-                  {{ tContent('demonstration.labels.mg') }}
-                </SelectItem>
-                <SelectItem value="comp-es">
-                  {{ tContent('demonstration.labels.es') }}
-                </SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>{{ tContent('demonstration.labels.groupSouth') }}</SelectLabel>
-                <SelectItem value="comp-rs">
-                  {{ tContent('demonstration.labels.rs') }}
-                </SelectItem>
-                <SelectItem value="comp-sc">
-                  {{ tContent('demonstration.labels.sc') }}
-                </SelectItem>
-                <SelectItem value="comp-pr">
-                  {{ tContent('demonstration.labels.pr') }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </template>
-
-      <template #variant-preview-2>
         <form
           class="nds-stack nds-w-sm nds-p-4 nds-border-default nds-rounded-lg"
           data-spacing="md"
