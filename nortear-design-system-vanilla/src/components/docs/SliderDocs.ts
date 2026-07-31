@@ -680,16 +680,16 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: tNav('common.stateName'),
-            trigger: tNav('common.stateTrigger'),
-            behavior: tNav('common.stateBehavior'),
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                                  behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.hover'),    trigger: 'Pointer sobre o thumb',              behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.focus'),    trigger: 'Tab — foco via teclado',             behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.active'),   trigger: 'Durante o arrasto',                  behavior: stripHtml(t('states.descriptions.active'))   },
-            { label: t('states.items.disabled'), trigger: 'disabled === true',                  behavior: stripHtml(t('states.descriptions.disabled')) },
+            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
           ],
         });
 

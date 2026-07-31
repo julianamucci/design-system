@@ -624,23 +624,20 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.closed'),     trigger: 'estado inicial',           behavior: stripHtml(t('states.descriptions.closed'))     },
-            { label: t('states.items.open'),       trigger: 'mouseenter no trigger',    behavior: stripHtml(t('states.descriptions.open'))       },
-            { label: t('states.items.controlled'), trigger: 'onOpenChange callback',    behavior: stripHtml(t('states.descriptions.controlled')) },
+            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),     behavior: stripHtml(t('states.closed.behavior')) },
+            { label: t('states.open.label'),       trigger: t('states.open.trigger'),       behavior: stripHtml(t('states.open.behavior')) },
+            { label: t('states.controlled.label'), trigger: t('states.controlled.trigger'), behavior: stripHtml(t('states.controlled.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createHoverCard(options)
@@ -745,9 +742,9 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {

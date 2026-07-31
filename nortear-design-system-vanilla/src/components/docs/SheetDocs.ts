@@ -516,25 +516,22 @@ createSheet({
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.closed'),        trigger: 'estado inicial',                  behavior: stripHtml(t('states.descriptions.closed'))        },
-            { label: t('states.items.open'),          trigger: 'click no trigger',                behavior: stripHtml(t('states.descriptions.open'))          },
-            { label: t('states.items.transitioning'), trigger: 'animação de entrada/saída',       behavior: stripHtml(t('states.descriptions.transitioning')) },
-            { label: t('states.items.focused'),       trigger: 'tab em elemento interno',         behavior: stripHtml(t('states.descriptions.focused'))       },
-            { label: t('states.longScrollBody.label'), trigger: stripHtml(t('states.longScrollBody.trigger')), behavior: stripHtml(t('states.longScrollBody.behavior')) },
+            { label: t('states.closed.label'),         trigger: t('states.closed.trigger'),         behavior: stripHtml(t('states.closed.behavior')) },
+            { label: t('states.open.label'),           trigger: t('states.open.trigger'),           behavior: stripHtml(t('states.open.behavior')) },
+            { label: t('states.transitioning.label'),  trigger: t('states.transitioning.trigger'),  behavior: stripHtml(t('states.transitioning.behavior')) },
+            { label: t('states.focused.label'),        trigger: t('states.focused.trigger'),        behavior: stripHtml(t('states.focused.behavior')) },
+            { label: t('states.longScrollBody.label'), trigger: t('states.longScrollBody.trigger'), behavior: stripHtml(t('states.longScrollBody.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createSheet(options) — factory custom Nortear

@@ -673,18 +673,18 @@ form.addEventListener('submit', (e) => {
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: tNav('common.stateName'),
-            trigger: tNav('common.stateTrigger'),
-            behavior: tNav('common.stateBehavior'),
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                                   behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.open'),     trigger: 'Click ou Enter no trigger',           behavior: stripHtml(t('states.descriptions.open')) + ' (no Nortear o popup nativo é controlado pelo navegador).' },
-            { label: t('states.items.selected'), trigger: 'Usuário escolhe uma opção',           behavior: stripHtml(t('states.descriptions.selected')) },
-            { label: t('states.items.hover'),    trigger: 'pointer sobre item',                  behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.focus'),    trigger: 'Tab até o trigger',                   behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.disabled'), trigger: 'options.disabled === true',           behavior: stripHtml(t('states.descriptions.disabled')) },
-            { label: t('states.items.invalid'),  trigger: 'aria-invalid="true" no <select>',     behavior: stripHtml(t('states.descriptions.invalid'))  },
+            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
+            { label: t('states.selected.label'), trigger: t('states.selected.trigger'), behavior: stripHtml(t('states.selected.behavior')) },
+            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),  trigger: t('states.invalid.trigger'),  behavior: stripHtml(t('states.invalid.behavior')) },
           ],
         });
 

@@ -534,25 +534,22 @@ row.append(note, btn);`;
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.empty'),      trigger: 'inicial',                 behavior: stripHtml(t('states.descriptions.empty'))    },
-            { label: t('states.items.filling'),    trigger: 'input em slot',           behavior: stripHtml(t('states.descriptions.filling'))  },
-            { label: t('states.items.complete'),   trigger: 'último slot preenchido',  behavior: stripHtml(t('states.descriptions.complete')) },
-            { label: t('states.items.disabled'),   trigger: 'prop disabled=true',      behavior: stripHtml(t('states.descriptions.disabled')) },
-            { label: t('states.items.error'),      trigger: 'aria-invalid=true',       behavior: stripHtml(t('states.descriptions.error'))    },
+            { label: t('states.empty.label'),    trigger: t('states.empty.trigger'),    behavior: stripHtml(t('states.empty.behavior')) },
+            { label: t('states.filling.label'),  trigger: t('states.filling.trigger'),  behavior: stripHtml(t('states.filling.behavior')) },
+            { label: t('states.complete.label'), trigger: t('states.complete.trigger'), behavior: stripHtml(t('states.complete.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.error.label'),    trigger: t('states.error.trigger'),    behavior: stripHtml(t('states.error.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createInputOTP(options)
@@ -656,9 +653,9 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {

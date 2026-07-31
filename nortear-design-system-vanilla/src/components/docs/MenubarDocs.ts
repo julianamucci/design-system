@@ -622,24 +622,21 @@ const panel = bar.querySelector('[role="menu"]');
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.closed'),   trigger: 'estado inicial',          behavior: stripHtml(t('states.descriptions.closed'))   },
-            { label: t('states.items.open'),     trigger: 'click no Trigger',        behavior: stripHtml(t('states.descriptions.open'))     },
-            { label: t('states.items.disabled'), trigger: 'item.disabled=true',      behavior: stripHtml(t('states.descriptions.disabled')) },
-            { label: t('states.items.checked'),  trigger: 'aria-checked="true"',     behavior: stripHtml(t('states.descriptions.checked'))  },
+            { label: t('states.closed.label'),   trigger: t('states.closed.trigger'),   behavior: stripHtml(t('states.closed.behavior')) },
+            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'),  behavior: stripHtml(t('states.checked.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createMenubar(menus, options?)
@@ -758,9 +755,9 @@ export function createMenubar(
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {

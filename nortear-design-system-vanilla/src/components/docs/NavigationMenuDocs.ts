@@ -636,23 +636,20 @@ content.insertBefore(card, content.firstChild);`;
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.closed'), trigger: 'estado inicial',         behavior: stripHtml(t('states.descriptions.closed')) },
-            { label: t('states.items.open'),   trigger: 'click no Trigger',       behavior: stripHtml(t('states.descriptions.open'))   },
-            { label: t('states.items.active'), trigger: 'aria-current="page"',    behavior: stripHtml(t('states.descriptions.active')) },
+            { label: t('states.closed.label'), trigger: t('states.closed.trigger'), behavior: stripHtml(t('states.closed.behavior')) },
+            { label: t('states.open.label'),   trigger: t('states.open.trigger'),   behavior: stripHtml(t('states.open.behavior')) },
+            { label: t('states.active.label'), trigger: t('states.active.trigger'), behavior: stripHtml(t('states.active.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createNavigationMenu(items, options?)
@@ -765,9 +762,9 @@ export function createNavigationMenu(
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {

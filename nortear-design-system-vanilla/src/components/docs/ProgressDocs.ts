@@ -33,6 +33,10 @@ const { t, subscribe } = createTranslation(progressTranslations as Record<string
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, '');
+}
+
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -443,24 +447,21 @@ export function createProgressDocs(): HTMLElement {
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.default'),       trigger: 'value=0',     behavior: DOMPurify.sanitize(t('states.descriptions.default'))       },
-            { label: t('states.items.loading'),       trigger: '0<value<100', behavior: DOMPurify.sanitize(t('states.descriptions.loading'))       },
-            { label: t('states.items.complete'),      trigger: 'value=100',   behavior: DOMPurify.sanitize(t('states.descriptions.complete'))      },
-            { label: t('states.items.indeterminate'), trigger: 'value=null',  behavior: DOMPurify.sanitize(t('states.descriptions.indeterminate')) },
+            { label: t('states.default.label'),       trigger: t('states.default.trigger'),       behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.loading.label'),       trigger: t('states.loading.trigger'),       behavior: stripHtml(t('states.loading.behavior')) },
+            { label: t('states.complete.label'),      trigger: t('states.complete.trigger'),      behavior: stripHtml(t('states.complete.behavior')) },
+            { label: t('states.indeterminate.label'), trigger: t('states.indeterminate.trigger'), behavior: stripHtml(t('states.indeterminate.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createProgress(options)

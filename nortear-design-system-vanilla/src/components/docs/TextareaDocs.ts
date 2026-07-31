@@ -749,17 +749,17 @@ form.dataset.spacing = 'md';
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: tNav('common.stateName'),
-            trigger: tNav('common.stateTrigger'),
-            behavior: tNav('common.stateBehavior'),
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                                       behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.focus'),    trigger: 'Tab ou click no textarea',                behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.filled'),   trigger: 'Usuário digita conteúdo',                 behavior: stripHtml(t('states.descriptions.filled'))   },
-            { label: t('states.items.disabled'), trigger: 'options.disabled === true',               behavior: stripHtml(t('states.descriptions.disabled'))},
-            { label: t('states.items.invalid'),  trigger: 'aria-invalid="true" no textarea',         behavior: stripHtml(t('states.descriptions.invalid')) },
-            { label: t('states.items.readonly'), trigger: 'textarea.readOnly = true',                behavior: stripHtml(t('states.descriptions.readonly')) },
+            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.filled.label'),   trigger: t('states.filled.trigger'),   behavior: stripHtml(t('states.filled.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),  trigger: t('states.invalid.trigger'),  behavior: stripHtml(t('states.invalid.behavior')) },
+            { label: t('states.readonly.label'), trigger: t('states.readonly.trigger'), behavior: stripHtml(t('states.readonly.behavior')) },
           ],
         });
 

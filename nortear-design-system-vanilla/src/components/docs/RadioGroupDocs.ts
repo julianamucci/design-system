@@ -605,17 +605,17 @@ form.addEventListener('submit', (e) => {
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state: tNav('common.stateName'),
-            trigger: tNav('common.stateTrigger'),
-            behavior: tNav('common.stateBehavior'),
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                                       behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.checked'),  trigger: 'value === defaultValue ou click',          behavior: stripHtml(t('states.descriptions.checked'))  },
-            { label: t('states.items.hover'),    trigger: 'pointer sobre o item',                     behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.focus'),    trigger: 'Tab ou navegação por setas',               behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.disabled'), trigger: 'item.disabled === true',                    behavior: stripHtml(t('states.descriptions.disabled')) },
-            { label: t('states.items.invalid'),  trigger: 'aria-invalid="true" no grupo ou item',     behavior: stripHtml(t('states.descriptions.invalid'))  },
+            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'),  behavior: stripHtml(t('states.checked.behavior')) },
+            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),  trigger: t('states.invalid.trigger'),  behavior: stripHtml(t('states.invalid.behavior')) },
           ],
         });
 

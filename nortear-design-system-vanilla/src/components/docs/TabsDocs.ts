@@ -595,24 +595,22 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
         });
       }
 
-      case 'estados': {
-        const stateCols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols: stateCols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                        behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.active'),   trigger: 'Click / Arrow / Home/End', behavior: stripHtml(t('states.descriptions.active'))   },
-            { label: t('states.items.hover'),    trigger: 'Mouse hover',              behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.focus'),    trigger: 'Tab / Arrow',              behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.disabled'), trigger: '—',                        behavior: stripHtml(t('states.descriptions.disabled')) },
+            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
+            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode =

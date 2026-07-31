@@ -399,25 +399,22 @@ const root = createResizablePanel({
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.idle'),     trigger: 'estado inicial',          behavior: stripHtml(t('states.descriptions.idle'))     },
-            { label: t('states.items.hover'),    trigger: 'mouse sobre handle',      behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.dragging'), trigger: 'mousedown + mousemove',   behavior: stripHtml(t('states.descriptions.dragging')) },
-            { label: t('states.items.focus'),    trigger: 'Tab até o handle',        behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.disabled'), trigger: 'data-disabled no handle', behavior: stripHtml(t('states.descriptions.disabled')) },
+            { label: t('states.idle.label'),     trigger: t('states.idle.trigger'),     behavior: stripHtml(t('states.idle.behavior')) },
+            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.dragging.label'), trigger: t('states.dragging.trigger'), behavior: stripHtml(t('states.dragging.behavior')) },
+            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createResizablePanel(options)

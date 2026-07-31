@@ -757,25 +757,23 @@ wrapper.appendChild(group);`,
           ],
         });
 
-      case 'estados': {
-        const stateCols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols: stateCols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: t('states.items.default'),  trigger: '—',                              behavior: stripHtml(t('states.descriptions.default'))  },
-            { label: t('states.items.selected'), trigger: 'click ou Space/Enter',           behavior: stripHtml(t('states.descriptions.selected')) },
-            { label: t('states.items.hover'),    trigger: 'pointer sobre item inativo',     behavior: stripHtml(t('states.descriptions.hover'))    },
-            { label: t('states.items.focus'),    trigger: 'Tab (roving tabindex)',          behavior: stripHtml(t('states.descriptions.focus'))    },
-            { label: t('states.items.disabled'), trigger: 'item.disabled === true',         behavior: stripHtml(t('states.descriptions.disabled')) },
-            { label: t('states.disabledItem.label'), trigger: stripHtml(t('states.disabledItem.trigger')), behavior: stripHtml(t('states.disabledItem.behavior')) },
+            { label: t('states.default.label'),      trigger: t('states.default.trigger'),      behavior: stripHtml(t('states.default.behavior')) },
+            { label: t('states.selected.label'),     trigger: t('states.selected.trigger'),     behavior: stripHtml(t('states.selected.behavior')) },
+            { label: t('states.hover.label'),        trigger: t('states.hover.trigger'),        behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),        trigger: t('states.focus.trigger'),        behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'),     trigger: t('states.disabled.trigger'),     behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.disabledItem.label'), trigger: t('states.disabledItem.trigger'), behavior: stripHtml(t('states.disabledItem.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createToggleGroup(options) — Nortear factory custom

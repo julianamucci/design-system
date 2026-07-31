@@ -479,23 +479,21 @@ export function createScrollAreaDocs(): HTMLElement {
         });
       }
 
-      case 'estados': {
-        const statesCols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols: statesCols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            { label: stripHtml(t('states.items.idle')),      trigger: '—',                       behavior: stripHtml(t('states.descriptions.idle')) },
-            { label: stripHtml(t('states.items.scrolling')), trigger: 'wheel / drag',            behavior: stripHtml(t('states.descriptions.scrolling')) },
-            { label: stripHtml(t('states.items.hover')),     trigger: 'mouseenter scrollbar',    behavior: stripHtml(t('states.descriptions.hover')) },
-            { label: stripHtml(t('states.items.focus')),     trigger: 'Tab',                     behavior: stripHtml(t('states.descriptions.focus')) },
+            { label: t('states.idle.label'),      trigger: t('states.idle.trigger'),      behavior: stripHtml(t('states.idle.behavior')) },
+            { label: t('states.scrolling.label'), trigger: t('states.scrolling.trigger'), behavior: stripHtml(t('states.scrolling.behavior')) },
+            { label: t('states.hover.label'),     trigger: t('states.hover.trigger'),     behavior: stripHtml(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),     trigger: t('states.focus.trigger'),     behavior: stripHtml(t('states.focus.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createScrollArea(options)

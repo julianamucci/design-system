@@ -33,6 +33,10 @@ const { t, subscribe } = createTranslation(separatorTranslations as Record<strin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, '');
+}
+
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -463,30 +467,19 @@ export function createSeparatorDocs(): HTMLElement {
         });
       }
 
-      case 'estados': {
-        const cols = {
-          state: tNav('common.stateName'),
-          trigger: tNav('common.stateTrigger'),
-          behavior: tNav('common.stateBehavior'),
-        };
-
+      case 'estados':
         return createDocsStates({
           title: t('states.title'),
-          cols,
+          cols: {
+            state: t('states.cols.state'),
+            trigger: t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
+          },
           items: [
-            {
-              label: t('states.items.decorative'),
-              trigger: 'decorative={true}',
-              behavior: DOMPurify.sanitize(t('states.descriptions.decorative')),
-            },
-            {
-              label: t('states.items.semantic'),
-              trigger: 'decorative={false}',
-              behavior: DOMPurify.sanitize(t('states.descriptions.semantic')),
-            },
+            { label: t('states.decorative.label'), trigger: t('states.decorative.trigger'), behavior: stripHtml(t('states.decorative.behavior')) },
+            { label: t('states.semantic.label'),   trigger: t('states.semantic.trigger'),   behavior: stripHtml(t('states.semantic.behavior')) },
           ],
         });
-      }
 
       case 'propriedades': {
         const interfaceCode = `// createSeparator(options)
@@ -609,9 +602,9 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('analytics.table.event') || 'Evento',
-            trigger: tNav('analytics.table.trigger') || 'Gatilho',
-            payload: tNav('analytics.table.payload') || 'Payload',
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             {
