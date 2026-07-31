@@ -233,10 +233,10 @@ const stateItems = computed(() => [
 ]);
 
 const modeItems = computed(() => [
-  { name: tContent('variants.single.label'),      description: stripHtml(tContent('variants.single.description')),      code: codeSingle      },
-  { name: tContent('variants.multiple.label'),    description: stripHtml(tContent('variants.multiple.description')),    code: codeMultiple    },
-  { name: tContent('variants.controlled.label'),  description: stripHtml(tContent('variants.controlled.description')),  code: codeControlled  },
-  { name: tContent('variants.defaultOpen.label'), description: stripHtml(tContent('variants.defaultOpen.description')), code: codeSingle      },
+  { name: tContent('variants.items.single.label'),      description: stripHtml(tContent('variants.items.single.description')),      code: codeSingle      },
+  { name: tContent('variants.items.multiple.label'),    description: stripHtml(tContent('variants.items.multiple.description')),    code: codeMultiple    },
+  { name: tContent('variants.items.controlled.label'),  description: stripHtml(tContent('variants.items.controlled.description')),  code: codeControlled  },
+  { name: tContent('variants.items.defaultOpen.label'), description: stripHtml(tContent('variants.items.defaultOpen.description')), code: codeSingle      },
 ]);
 
 const compositionItems = computed(() => [

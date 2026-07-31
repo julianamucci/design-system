@@ -301,11 +301,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: tContent('variants.basic.label'),           description: tContent('variants.basic.description'),           code: codeBasic           },
-  { name: tContent('variants.withFooter.label'),      description: tContent('variants.withFooter.description'),      code: codeWithFooter      },
-  { name: tContent('variants.withSrOnlyCaption.label'), description: tContent('variants.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
-  { name: tContent('variants.withInlineActions.label'), description: tContent('variants.withInlineActions.description'), code: codeWithActions   },
-  { name: tContent('variants.withEmptyState.label'),  description: tContent('variants.withEmptyState.description'),  code: codeEmpty           },
+  { name: tContent('variants.items.basic.label'),           description: tContent('variants.items.basic.description'),           code: codeBasic           },
+  { name: tContent('variants.items.withFooter.label'),      description: tContent('variants.items.withFooter.description'),      code: codeWithFooter      },
+  { name: tContent('variants.items.withSrOnlyCaption.label'), description: tContent('variants.items.withSrOnlyCaption.description'), code: codeWithSrOnlyCaption },
+  { name: tContent('variants.items.withInlineActions.label'), description: tContent('variants.items.withInlineActions.description'), code: codeWithActions   },
+  { name: tContent('variants.items.withEmptyState.label'),  description: tContent('variants.items.withEmptyState.description'),  code: codeEmpty           },
 ]);
 
 const codeCompFilterableToolbar = `<div class="nds-stack" data-spacing="sm">

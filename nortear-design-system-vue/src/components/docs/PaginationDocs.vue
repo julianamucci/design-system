@@ -184,10 +184,6 @@ const codeDefault = `<Pagination :total="50" :items-per-page="10" :default-page=
   </PaginationContent>
 </Pagination>`;
 
-const codeActive = `<PaginationLink :is-active="page === current" :aria-label="\`Ir para página \${page}\`">
-  {{ page }}
-</PaginationLink>`;
-
 const codeDirectional = `<PaginationPrevious />
 <PaginationNext />`;
 
@@ -253,7 +249,6 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   { name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault     },
-  { name: tContent('variants.items.active'),      description: stripHtml(tContent('variants.styles.active')),      code: codeActive      },
   { name: tContent('variants.items.directional'), description: stripHtml(tContent('variants.styles.directional')), code: codeDirectional },
   {
     name: tContent('variants.items.simple.name'),
@@ -730,29 +725,6 @@ const a11yCritCols = computed(() => ({
         <Pagination
           :total="50"
           :items-per-page="10"
-          :default-page="3"
-          class="nds-w-full"
-        >
-          <PaginationContent>
-            <PaginationItem><PaginationLink>1</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink>2</PaginationLink></PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                :is-active="true"
-                :aria-label="`Página atual, 3`"
-              >
-                3
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem><PaginationLink>4</PaginationLink></PaginationItem>
-            <PaginationItem><PaginationLink>5</PaginationLink></PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </template>
-      <template #variant-preview-2>
-        <Pagination
-          :total="50"
-          :items-per-page="10"
           :default-page="2"
           class="nds-w-full"
         >
@@ -770,7 +742,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <Pagination
           :total="50"
           :items-per-page="10"
@@ -811,7 +783,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-      <template #variant-preview-4>
+      <template #variant-preview-3>
         <Pagination
           :total="120"
           :items-per-page="10"
@@ -854,7 +826,7 @@ const a11yCritCols = computed(() => ({
           </PaginationContent>
         </Pagination>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-4>
         <div
           class="nds-stack nds-w-full"
           data-spacing="sm"

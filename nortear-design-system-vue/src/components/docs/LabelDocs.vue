@@ -158,8 +158,8 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   {
-    name: tContent('variants.default.label'),
-    description: stripHtml(tContent('variants.default.description')),
+    name: tContent('variants.items.default.label'),
+    description: stripHtml(tContent('variants.items.default.description')),
     code: codeDefault,
   },
 ]);

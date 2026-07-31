@@ -145,13 +145,6 @@ const codeDefault = `<div class="nds-cluster" data-spacing="xs">
   </label>
 </div>`;
 
-const codeChecked = `<div class="nds-cluster" data-spacing="xs">
-  <Checkbox id="terms" :checked="true" />
-  <label for="terms" class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer">
-    Aceito os termos e condições
-  </label>
-</div>`;
-
 const codeWithLabel = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="newsletter" />
   <label
@@ -237,7 +230,6 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   { name: 'default',         description: stripHtml(tContent('variants.items.default')),         code: codeDefault         },
-  { name: 'checked',         description: stripHtml(tContent('variants.items.checked')),         code: codeChecked         },
   { name: 'withLabel',       description: stripHtml(tContent('variants.items.withLabel')),       code: codeWithLabel       },
   { name: 'withDescription', description: stripHtml(tContent('variants.items.withDescription')), code: codeWithDescription },
 ]);
@@ -657,27 +649,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- checked -->
-      <template #variant-preview-1>
-        <div
-          class="nds-cluster"
-          data-spacing="xs"
-        >
-          <Checkbox
-            id="variant-checked"
-            :checked="true"
-          />
-          <label
-            for="variant-checked"
-            class="nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer"
-          >
-            Aceito os termos e condições
-          </label>
-        </div>
-      </template>
-
       <!-- withLabel -->
-      <template #variant-preview-2>
+      <template #variant-preview-1>
         <div
           class="nds-cluster"
           data-spacing="xs"
@@ -693,7 +666,7 @@ const visualTestItems = computed(() => [
       </template>
 
       <!-- withDescription -->
-      <template #variant-preview-3>
+      <template #variant-preview-2>
         <div
           class="nds-cluster"
           data-spacing="xs"

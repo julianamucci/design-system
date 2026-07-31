@@ -278,8 +278,6 @@ const variantItems = computed(() => [
 
 const stateItems = computed(() => [
   { label: tContent('states.simple.label'),          trigger: stripHtml(tContent('states.simple.trigger')),          behavior: stripHtml(tContent('states.simple.behavior'))          },
-  { label: tContent('states.withEllipsis.label'),    trigger: stripHtml(tContent('states.withEllipsis.trigger')),    behavior: stripHtml(tContent('states.withEllipsis.behavior'))    },
-  { label: tContent('states.customSeparator.label'), trigger: stripHtml(tContent('states.customSeparator.trigger')), behavior: stripHtml(tContent('states.customSeparator.behavior')) },
   { label: tContent('states.asChildLink.label'),     trigger: stripHtml(tContent('states.asChildLink.trigger')),     behavior: stripHtml(tContent('states.asChildLink.behavior'))     },
 ]);
 

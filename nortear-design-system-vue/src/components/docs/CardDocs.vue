@@ -281,8 +281,6 @@ const stateItems = computed(() => [
   { label: tContent('states.default.label'),     trigger: stripHtml(tContent('states.default.trigger')),     behavior: stripHtml(tContent('states.default.behavior'))     },
   { label: tContent('states.small.label'),       trigger: stripHtml(tContent('states.small.trigger')),       behavior: stripHtml(tContent('states.small.behavior'))       },
   { label: tContent('states.interactive.label'), trigger: stripHtml(tContent('states.interactive.trigger')), behavior: stripHtml(tContent('states.interactive.behavior')) },
-  { label: tContent('states.withImage.label'),   trigger: stripHtml(tContent('states.withImage.trigger')),   behavior: stripHtml(tContent('states.withImage.behavior'))   },
-  { label: tContent('states.withFooter.label'),  trigger: stripHtml(tContent('states.withFooter.trigger')),  behavior: stripHtml(tContent('states.withFooter.behavior'))  },
 ]);
 
 const propCols = computed(() => ({

@@ -285,12 +285,12 @@ const codeSideRight = `<Sidebar side="right">
 </Sidebar>`;
 
 const variantItems = computed(() => [
-  { name: 'sidebar',   description: tContent('variants.sidebar'),   code: codeVariantSidebar   },
-  { name: 'floating',  description: tContent('variants.floating'),  code: codeVariantFloating  },
-  { name: 'inset',     description: tContent('variants.inset'),     code: codeVariantInset     },
-  { name: 'icon',      description: tContent('variants.icon'),      code: codeCollapsibleIcon  },
-  { name: 'none',      description: tContent('variants.none'),      code: codeCollapsibleNone  },
-  { name: 'right',     description: tContent('variants.right'),     code: codeSideRight        },
+  { name: 'sidebar',   description: tContent('variants.items.sidebar'),   code: codeVariantSidebar   },
+  { name: 'floating',  description: tContent('variants.items.floating'),  code: codeVariantFloating  },
+  { name: 'inset',     description: tContent('variants.items.inset'),     code: codeVariantInset     },
+  { name: 'icon',      description: tContent('variants.items.icon'),      code: codeCollapsibleIcon  },
+  { name: 'none',      description: tContent('variants.items.none'),      code: codeCollapsibleNone  },
+  { name: 'right',     description: tContent('variants.items.right'),     code: codeSideRight        },
   {
     name: tContent('variants.items.withSubMenu.name'),
     description: tContent('variants.items.withSubMenu.description'),

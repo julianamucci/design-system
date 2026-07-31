@@ -156,12 +156,6 @@ const codeImportBasic = `import { Progress } from "@/components/ui/progress";`;
 
 const codeDeterminate = `<Progress :model-value="50" aria-label="Progresso do upload" />`;
 
-const codeIndeterminate = `<Progress
-  :model-value="null"
-  class="nds-progress-indeterminate-wrap"
-  aria-label="Processando dados"
-/>`;
-
 const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster nds-text-body" data-justify="between">
     <span class="nds-text-foreground">Enviando arquivo</span>
@@ -191,7 +185,6 @@ const anatomyItems = computed(() => [
 
 const variantItems = computed(() => [
   { name: tContent('variants.items.determinate'),   description: stripHtml(tContent('variants.styles.determinate')),   code: codeDeterminate   },
-  { name: tContent('variants.items.indeterminate'), description: stripHtml(tContent('variants.styles.indeterminate')), code: codeIndeterminate },
   { name: tContent('variants.items.withLabel'),     description: stripHtml(tContent('variants.styles.withLabel')),     code: codeWithLabel     },
 ]);
 
@@ -587,15 +580,6 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #variant-preview-1>
-        <div class="nds-w-full">
-          <Progress
-            :model-value="null"
-            class="nds-progress-indeterminate-wrap"
-            aria-label="Processando dados"
-          />
-        </div>
-      </template>
-      <template #variant-preview-2>
         <div
           class="nds-stack nds-w-full"
           data-spacing="xs"

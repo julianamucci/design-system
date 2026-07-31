@@ -390,11 +390,6 @@ const stateItems = computed(() => [
     behavior: tContent('states.loading.behavior'),
   },
   {
-    label: tContent('states.withDisabled.label'),
-    trigger: stripHtml(tContent('states.withDisabled.trigger')),
-    behavior: tContent('states.withDisabled.behavior'),
-  },
-  {
     label: tContent('states.longList.label'),
     trigger: stripHtml(tContent('states.longList.trigger')),
     behavior: tContent('states.longList.behavior'),

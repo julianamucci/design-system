@@ -178,11 +178,11 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { name: 'text',     description: tContent('variants.types.text'),     code: codeDefault   },
-  { name: 'email',    description: tContent('variants.types.email'),    code: codeEmail     },
-  { name: 'password', description: tContent('variants.types.password'), code: codePassword  },
-  { name: 'number',   description: tContent('variants.types.number'),   code: codeNumber    },
-  { name: 'file',     description: tContent('variants.types.file'),     code: codeFile      },
+  { name: 'text',     description: tContent('variants.items.types.text'),     code: codeDefault   },
+  { name: 'email',    description: tContent('variants.items.types.email'),    code: codeEmail     },
+  { name: 'password', description: tContent('variants.items.types.password'), code: codePassword  },
+  { name: 'number',   description: tContent('variants.items.types.number'),   code: codeNumber    },
+  { name: 'file',     description: tContent('variants.items.types.file'),     code: codeFile      },
 ]);
 
 const codeCompWithLabel = `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
