@@ -54,15 +54,24 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
       "pair2": { "do": "...", "dont": "..." }
     },
     "import": { "title": "Importação" },
+    // O que entra em cada uma das três seções: guideline 14-taxonomia-secoes.md.
+    // Resumo: Estado = alcançável sem mudar código; Variante = o autor escolhe,
+    // sem nada de fora; Composição = aparece junto de algo que não é do
+    // componente. Não repita entre seções — 22% desta seção era duplicata.
     "variants": {
-      "title": "Variantes",
-      "items": { "<key>": "Label da variante" },
-      "styles": { "<key>": "Descrição da variante com <code>classes</code>" }
+      "title": "Variantes",                    // título livre ("Modos", "Linguagens"…)
+      "items": { "<key>": { "name": "...", "description": "...", "use": "..." } },
+      "sizes": { "<key>": { "name": "...", "description": "...", "use": "..." } },
+      "compositionsTitle": "Composições",
+      // Toda composição NOMEIA na description com o que o componente é combinado.
+      "compositions": { "<key>": { "name": "...", "description": "...", "use": "..." } }
     },
     "states": {
       "title": "Estados",
-      "items": { "<key>": "Label" },
-      "descriptions": { "<key>": "Descrição com <code>token</code>" }
+      "cols": { "state": "Estado", "trigger": "Como ativar", "behavior": "Comportamento" },
+      // Sempre as 3 chaves. Sem `trigger`, a docs page hardcoda a coluna e o
+      // texto some em en/es.
+      "<key>": { "label": "...", "trigger": "...", "behavior": "..." }
     },
     "props": {
       "title": "Propriedades",

@@ -71,7 +71,7 @@ Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/
 | `<slug>-tamanhos.stories.<ext>` | Uma story por tamanho (se aplicável) |
 | `<slug>-estados.stories.<ext>` | Disabled, Loading, Error — com play functions |
 | `<slug>-composicoes.stories.<ext>` | Com ícone, asChild, em formulário etc. |
-| `<Slug>Docs.<ext>` | Docs page completa com todas as 15 seções |
+| `<Slug>Docs.<ext>` | Docs page completa com todas as 16 seções |
 
 ---
 
@@ -89,7 +89,7 @@ Use `DocsPageLayout` para o layout de duas colunas com sidebar sticky — não m
 
 ---
 
-## Docs Page — Seções Obrigatórias (15)
+## Docs Page — Seções Obrigatórias (16)
 
 Toda docs page renderiza TODAS estas seções com conteúdo real de `translations.json`. **Nunca** use placeholders ("Exemplo aqui.", "Estrutura...").
 
@@ -100,14 +100,21 @@ Toda docs page renderiza TODAS estas seções com conteúdo real de `translation
 5. **Do & Don't** (`id="do-dont"`) — via `DocsDoDont` com previews reais
 6. **Importação** (`id="importacao"`) — blocos de código
 7. **Variantes** (`id="variantes"`) — cards com preview + toggle de código
-8. **Estados** (`id="estados"`) — tabela de estados
-9. **Propriedades** (`id="propriedades"`) — tabelas de props completas
-10. **Tokens** (`id="tokens"`) — tabela de tokens CSS + customização
-11. **Acessibilidade** (`id="acessibilidade"`) — lista + cards de teclado
-12. **Relacionados** (`id="relacionados"`) — grid de cards com links
-13. **Notas** (`id="notas"`) — callouts. **Documentar divergências idiomáticas Vanilla aqui (notes.item1)**
-14. **Analytics** (`id="analytics"`) — tabela de eventos GA4
-15. **Testes** (`id="testes"`) — 3 sub-seções: funcional, acessibilidade, visual
+8. **Composições** (`id="composicoes"`) — via `DocsCompositions`; presente quando
+   o `translations.json` tem `variants.compositions`
+9. **Estados** (`id="estados"`) — tabela de estados
+10. **Propriedades** (`id="propriedades"`) — tabelas de props completas
+11. **Tokens** (`id="tokens"`) — tabela de tokens CSS + customização
+12. **Acessibilidade** (`id="acessibilidade"`) — lista + cards de teclado
+13. **Relacionados** (`id="relacionados"`) — grid de cards com links
+14. **Notas** (`id="notas"`) — callouts. **Documentar divergências idiomáticas Vanilla aqui (notes.item1)**
+15. **Analytics** (`id="analytics"`) — tabela de eventos GA4
+16. **Testes** (`id="testes"`) — 3 sub-seções: funcional, acessibilidade, visual
+
+**O que entra em Variantes, Estados e Composições** é decidido pela guideline
+`docs/shared/guidelines/14-taxonomia-secoes.md` — teste de 3 perguntas, regra de
+não-duplicação, armadilhas. Não invente critério: 22% das composições do repo
+eram duplicata da própria seção Variantes por falta dessa regra.
 
 ---
 
@@ -316,7 +323,7 @@ ciência: <rule> em <file> — <motivo>
 - [ ] `breadcrumb` usa `tContent('category')` — NUNCA hardcode
 - [ ] `track('docs_page_view')` reativo ao locale
 - [ ] `<LanguageSwitcher />` no header
-- [ ] Todas as 15 seções com conteúdo real (sem placeholders)
+- [ ] Todas as 16 seções com conteúdo real (sem placeholders)
 - [ ] `structureCode` lê de `t('anatomy.structureCode')` — NÃO hardcoded
 - [ ] Sub-stories têm play function + `controls.disable: true`
 - [ ] Wrappers com `contain: layout` em previews que abrem portal

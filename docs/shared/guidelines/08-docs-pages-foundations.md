@@ -520,6 +520,11 @@ Os `tags` excluem o stub do sidebar, do autodocs e da suite de testes.
 
 ## 11. Padrão obrigatório para cards da seção "Variantes"
 
+> **O que entra em Variantes, Estados e Composições é decidido pela guideline
+> `14-taxonomia-secoes.md`** — teste de 3 perguntas, regra de não-duplicação e as
+> armadilhas. Esta seção trata só da **forma** dos cards. Se estiver decidindo se
+> uma entrada é variante ou composição, o lugar é a 14.
+
 ### 11.1 Cards de variante visual
 
 Os cards de variante exibem **2 linhas de informação** no rodapé:

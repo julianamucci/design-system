@@ -830,12 +830,119 @@ function auditDeadLibInfra() {
   return violations;
 }
 
+/**
+ * Taxonomia das seções Variantes / Estados / Composições.
+ * Regra em docs/shared/guidelines/14-taxonomia-secoes.md.
+ *
+ * O script confere FORMA e CONSISTÊNCIA; o que entra em cada seção exige
+ * julgamento e fica com o agente. Medido antes destas regras existirem: 22% das
+ * composições do repo eram duplicata da própria seção Variantes.
+ */
+function auditTaxonomy(slug) {
+  const violations = [];
+  const file = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(file)) return violations;
+
+  const json = JSON.parse(readFile(file) || '{}');
+  const pt = json['pt-BR'];
+  if (!pt) return violations;
+
+  const rel = relative(ROOT, file);
+  const push = (rule, severity, message) =>
+    violations.push({ category: 'quality', severity, slug, stack: 'shared', file: rel, rule, message });
+
+  const HEADERS = new Set(['title', 'cols', 'note', 'items', 'styles', 'sizes',
+    'compositions', 'compositionsTitle', 'visualTitle', 'description',
+    'stylesTitle', 'sizesTitle']);
+  // `variants.items` guarda STRING; `compositions` e `states` guardam OBJETO.
+  // Para inventariar chaves, aceite as duas formas — filtrar por objeto aqui
+  // descartava os items inteiros e a comparação de duplicidade nunca rodava.
+  const keysOf = (obj) => Object.keys(obj ?? {}).filter((k) => !HEADERS.has(k));
+  const entries = (obj) => Object.entries(obj ?? {})
+    .filter(([k, v]) => !HEADERS.has(k) && v && typeof v === 'object');
+
+  const variants = pt.variants ?? {};
+  const compositions = variants.compositions ?? {};
+  const states = pt.states ?? {};
+
+  // 1. Variantes soltas como irmãs de `variants` em vez de sob `items`.
+  //    O inventário do /product só enxerga items/styles — nessa forma, ele
+  //    reporta zero variantes e ninguém percebe.
+  const soltas = keysOf(variants);
+  if (soltas.length && !variants.items) {
+    push('variants_form', 'medium',
+      `variantes fora de variants.items (${soltas.join(', ')}) — ver guideline 14 §Forma dos dados`);
+  }
+
+  // 2. Estado sem a forma {label, trigger, behavior}. Sem `trigger`, a docs page
+  //    acaba hardcodando a coluna e o texto some em en/es (caso do accordion).
+  for (const [k, v] of entries(states)) {
+    const faltando = ['label', 'trigger', 'behavior'].filter((f) => typeof v[f] !== 'string');
+    if (faltando.length) {
+      push('state_shape', 'medium',
+        `states.${k} sem ${faltando.join('/')} — a coluna vira texto fixo fora do i18n`);
+    }
+  }
+
+  // 3. Mesma chave em duas seções do mesmo componente.
+  const norm = (k) => k.toLowerCase().replace(/^(with|without|as)/, '').replace(/[^a-z0-9]/g, '');
+  const mapa = new Map();
+  for (const k of keysOf(variants.items ?? {})) mapa.set(norm(k), `variants.items.${k}`);
+  for (const k of keysOf(variants.styles ?? {})) mapa.set(norm(k), `variants.styles.${k}`);
+  for (const k of keysOf(states)) {
+    const n = norm(k);
+    if (mapa.has(n)) push('duplicate_across_sections', 'medium',
+      `states.${k} repete ${mapa.get(n)} — ver guideline 14 §Regra de não-duplicação`);
+    else mapa.set(n, `states.${k}`);
+  }
+  for (const k of keysOf(compositions)) {
+    const n = norm(k);
+    if (mapa.has(n)) push('duplicate_across_sections', 'medium',
+      `variants.compositions.${k} repete ${mapa.get(n)} — ver guideline 14 §Regra de não-duplicação`);
+  }
+
+  // 4. Composição que não nomeia nada externo na description. É o sintoma de
+  //    classificação errada — ou de descrição que não diz com o que compõe.
+  const EXTERNO = /<code>|<img|<a |<fieldset|<span|<label|<button|ícone|icone|lucide|imagem|fieldset|legend/i;
+  const OUTROS = new Set(readdirSync(join(ROOT, 'docs', 'shared', 'content'))
+    .filter((d) => d !== slug)
+    .map((d) => d.split('-').map((x) => x[0].toUpperCase() + x.slice(1)).join('')));
+  for (const [k, v] of entries(compositions)) {
+    const desc = typeof v.description === 'string' ? v.description : '';
+    const citaComponente = [...OUTROS].some((c) => desc.includes(c));
+    if (!EXTERNO.test(desc) && !citaComponente) {
+      push('composition_without_partner', 'low',
+        `variants.compositions.${k} não nomeia com o que compõe — classificação errada ou descrição incompleta (guideline 14)`);
+    }
+  }
+
+  return violations;
+}
+
 function auditQuality(slug) {
   const violations = [];
+  // A seção é obrigatória se, e só se, existir a chave correspondente no
+  // conteúdo: componente sem eixo de variação não tem Variantes, estrutural não
+  // tem Estados. Checado nos dois sentidos logo abaixo.
   const REQUIRED_SECTIONS = [
     'demonstracao', 'anatomia', 'quando-usar', 'do-dont', 'importacao',
-    'variantes', 'estados', 'propriedades', 'tokens', 'acessibilidade',
+    'propriedades', 'tokens', 'acessibilidade',
     'relacionados', 'notas', 'analytics', 'testes',
+  ];
+  const SECTION_HEADERS = new Set(['title', 'cols', 'note', 'items', 'styles',
+    'sizes', 'compositions', 'compositionsTitle', 'visualTitle', 'description',
+    'stylesTitle', 'sizesTitle']);
+  const hasKeys = (node) =>
+    !!node && Object.keys(node).some((k) => !SECTION_HEADERS.has(k));
+
+  const CONDITIONAL_SECTIONS = [
+    // Variantes valem tanto sob `items` quanto como chaves irmãs de `variants`
+    // (forma alternativa que 5 componentes usam). A forma errada é problema de
+    // `variants_form`; aqui só interessa se HÁ conteúdo — senão a mesma causa
+    // sai reportada por duas regras, uma delas com diagnóstico errado.
+    { id: 'variantes', label: 'variants.items', has: (pt) => hasKeys(pt.variants?.items) || hasKeys(pt.variants) },
+    { id: 'composicoes', label: 'variants.compositions', has: (pt) => hasKeys(pt.variants?.compositions) },
+    { id: 'estados', label: 'states', has: (pt) => hasKeys(pt.states) },
   ];
 
   for (const stack of STACKS) {
@@ -845,14 +952,41 @@ function auditQuality(slug) {
       if (!content) continue;
 
       // 1. Seções obrigatórias
+      const hasSection = (id) =>
+        new RegExp(`\\b(id=|id:\\s*)['"\\\`]${id}['"\\\`]`).test(content);
+
       for (const id of REQUIRED_SECTIONS) {
-        const re = new RegExp(`\\b(id=|id:\\s*)['"\\\`]${id}['"\\\`]`);
-        if (!re.test(content)) {
+        if (!hasSection(id)) {
           violations.push({
             category: 'quality', severity: 'medium', slug, stack,
             file: relative(ROOT, file), rule: 'missing_section',
             message: `Seção obrigatória ausente: id="${id}"`,
           });
+        }
+      }
+
+      // 1b. Seções condicionais — o conteúdo manda, nos dois sentidos.
+      const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+      const ptBr = existsSync(contentFile)
+        ? (JSON.parse(readFile(contentFile) || '{}')['pt-BR'] ?? null)
+        : null;
+      if (ptBr) {
+        for (const { id, label, has } of CONDITIONAL_SECTIONS) {
+          const temConteudo = has(ptBr);
+          const temSecao = hasSection(id);
+          if (temConteudo && !temSecao) {
+            violations.push({
+              category: 'quality', severity: 'medium', slug, stack,
+              file: relative(ROOT, file), rule: 'content_without_section',
+              message: `${label} tem conteúdo mas a página não renderiza id="${id}"`,
+            });
+          } else if (!temConteudo && temSecao) {
+            violations.push({
+              category: 'quality', severity: 'medium', slug, stack,
+              file: relative(ROOT, file), rule: 'section_without_content',
+              message: `id="${id}" existe na página mas ${label} está vazio — seção placeholder`,
+            });
+          }
         }
       }
     }
@@ -1008,6 +1142,7 @@ function runAudit(slug, category) {
     ...auditPerformance(slug),
     ...auditAnalytics(slug),
     ...auditQuality(slug),
+    ...auditTaxonomy(slug),
   ];
 }
 
