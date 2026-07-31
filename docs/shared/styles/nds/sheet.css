@@ -95,7 +95,7 @@
 .nds-sheet-title {
   margin: 0;
   font-size: 1.125rem;                             /* 18px — text-lg */
-  font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semi-bold, 600);
   line-height: 1;
   letter-spacing: -0.025em;
   color: hsl(var(--foreground));

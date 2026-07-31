@@ -778,6 +778,28 @@ function auditCssTokenUsage() {
     const lines = content.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')).split('\n');
     const seen = new Set();
 
+    // Token inexistente COM fallback: em geral intencional — exceto quando o
+    // nome é um quase-acerto de um token que existe (--font-weight-semibold vs
+    // --font-weight-semi-bold). Aí é typo: o fallback mascara e a propriedade
+    // fica desconectada do tema para sempre, sem sintoma nenhum.
+    const knownNorm = new Map();
+    for (const t of known) knownNorm.set(t.replace(/-/g, ''), t);
+
+    lines.forEach((line, i) => {
+      for (const m of line.matchAll(/var\(\s*(--[a-z0-9-]+)\s*,/gi)) {
+        const token = m[1].toLowerCase();
+        if (known.has(token) || seen.has(token)) continue;
+        const canonico = knownNorm.get(token.replace(/-/g, ''));
+        if (!canonico) continue;
+        seen.add(token);
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'token_typo_masked_by_fallback',
+          message: `var(${token}, …) — o token não existe; o definido é ${canonico}. O fallback mascara o typo e a propriedade nunca segue o tema`,
+        });
+      }
+    });
+
     lines.forEach((line, i) => {
       // Sem vírgula dentro do var(): com fallback, a ausência é intencional.
       for (const m of line.matchAll(/var\(\s*(--[a-z0-9-]+)\s*\)/gi)) {
