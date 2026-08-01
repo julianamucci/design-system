@@ -78,7 +78,9 @@ function buildCarouselPreview(): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-max-w-md';
   const total = 5;
-  wrap.appendChild(createCarousel({
+  // aria-label distinto por instância (landmark-unique): usa a string que já
+  // intitula visivelmente o bloco onde o preview aparece.
+  const carousel = createCarousel({
     items: buildSlides(total),
     // Nortear: o factory navega apenas via setas (ou Enter/Espaço nelas) —
     onIndexChange: (index, source) => {
@@ -93,7 +95,9 @@ function buildCarouselPreview(): HTMLElement {
         location: 'docs_demo',
       });
     },
-  }));
+  });
+  carousel.setAttribute('aria-label', t('demonstration.title'));
+  wrap.appendChild(carousel);
   return wrap;
 }
 
@@ -294,7 +298,9 @@ export function createCarouselDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
-                wrap.appendChild(createCarousel({ items: buildSlides(3) }));
+                const carousel = createCarousel({ items: buildSlides(3) });
+                carousel.setAttribute('aria-label', stripHtml(t('doDont.pair1.do')));
+                wrap.appendChild(carousel);
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -328,17 +334,19 @@ export function createCarouselDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
-                wrap.appendChild(
-                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 3500 }),
-                );
+                const carousel =
+                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 3500 });
+                carousel.setAttribute('aria-label', stripHtml(t('doDont.pair2.do')));
+                wrap.appendChild(carousel);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
-                wrap.appendChild(
-                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 800 }),
-                );
+                const carousel =
+                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 800 });
+                carousel.setAttribute('aria-label', stripHtml(t('doDont.pair2.dont')));
+                wrap.appendChild(carousel);
                 return wrap;
               },
             },
@@ -379,13 +387,13 @@ const el = createCarousel({ items });`;
         const buildAutoplayPreview = (): HTMLElement => {
           const wrap = document.createElement('div');
           wrap.className = 'nds-w-full nds-max-w-md';
-          wrap.appendChild(
-            createCarousel({
-              items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
-              autoplay: true,
-              autoplayInterval: 4000,
-            }),
-          );
+          const carousel = createCarousel({
+            items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
+            autoplay: true,
+            autoplayInterval: 4000,
+          });
+          carousel.setAttribute('aria-label', stripHtml(t('variants.items.autoplay.name')));
+          wrap.appendChild(carousel);
           return wrap;
         };
 
@@ -410,7 +418,9 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                wrap.appendChild(createCarousel({ items: buildSlides(5) }));
+                const carousel = createCarousel({ items: buildSlides(5) });
+                carousel.setAttribute('aria-label', 'horizontal');
+                wrap.appendChild(carousel);
                 return wrap;
               },
             },
@@ -421,7 +431,9 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                wrap.appendChild(createCarousel({ items: buildSlides(4) }));
+                const carousel = createCarousel({ items: buildSlides(4) });
+                carousel.setAttribute('aria-label', 'vertical');
+                wrap.appendChild(carousel);
                 return wrap;
               },
             },
@@ -432,7 +444,9 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                wrap.appendChild(createCarousel({ items: buildSlides(4) }));
+                const carousel = createCarousel({ items: buildSlides(4) });
+                carousel.setAttribute('aria-label', 'single');
+                wrap.appendChild(carousel);
                 return wrap;
               },
             },
@@ -443,7 +457,9 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                wrap.appendChild(createCarousel({ items: buildSlides(5) }));
+                const carousel = createCarousel({ items: buildSlides(5) });
+                carousel.setAttribute('aria-label', 'multi');
+                wrap.appendChild(carousel);
                 return wrap;
               },
             },
@@ -501,6 +517,8 @@ const carousel = createCarousel({
             },
           });
 
+          carousel.setAttribute('aria-label', stripHtml(t('variants.compositions.withDots.name')));
+
           dots[0].classList.remove('bg-muted-foreground/30');
           dots[0].classList.add('nds-bg-primary');
           dots[0].setAttribute('aria-current', 'true');
@@ -550,7 +568,9 @@ const carousel = createCarousel({
             return card;
           });
 
-          wrap.appendChild(createCarousel({ items }));
+          const carousel = createCarousel({ items });
+          carousel.setAttribute('aria-label', stripHtml(t('variants.compositions.gallery.name')));
+          wrap.appendChild(carousel);
           return wrap;
         };
 

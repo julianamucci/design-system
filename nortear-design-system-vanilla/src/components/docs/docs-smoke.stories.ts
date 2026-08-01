@@ -98,7 +98,10 @@ const play: Story['play'] = async ({ canvasElement }) => {
 
 export const About: Story = { render: () => createAboutDocs(), play };
 export const Accessibility: Story = { render: () => createAccessibilityDocs(), play };
-// axe: landmark-unique — catalogado no FIXES-NEEDED
+// axe: landmark-unique — vem do PRIMITIVO (painel aberto é role="region" rotulado
+// pelo trigger via aria-labelledby; demos repetem o mesmo trigger do conteúdo
+// compartilhado → mesma accessible name). REPORTADO ao orquestrador (categoria 4
+// do lote landmark-unique) — decisão de conteúdo é da dona.
 export const Accordion: Story = {
   render: () => createAccordionDocs(),
   play,
@@ -115,11 +118,9 @@ export const Avatar: Story = {
   parameters: { a11y: { test: 'todo' } },
 };
 export const Badge: Story = { render: () => createBadgeDocs(), play };
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Breadcrumb: Story = {
   render: () => createBreadcrumbDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Button: Story = { render: () => createButtonDocs(), play };
 // axe: color-contrast — catalogado no FIXES-NEEDED
@@ -129,11 +130,9 @@ export const Calendar: Story = {
   parameters: { a11y: { test: 'todo' } },
 };
 export const Card: Story = { render: () => createCardDocs(), play };
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Carousel: Story = {
   render: () => createCarouselDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 // axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
 export const Chart: Story = {
@@ -193,17 +192,13 @@ export const Menubar: Story = {
   parameters: { a11y: { test: 'todo' } },
 };
 export const Motion: Story = { render: () => createMotionDocs(), play };
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const NavigationMenu: Story = {
   render: () => createNavigationMenuDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Pagination: Story = {
   render: () => createPaginationDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Popover: Story = { render: () => createPopoverDocs(), play };
 export const Progress: Story = { render: () => createProgressDocs(), play };

@@ -46,8 +46,8 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function buildDemoPagination(total: number, current: number): HTMLElement {
-  return createPagination({
+function buildDemoPagination(total: number, current: number, label?: string): HTMLElement {
+  const nav = createPagination({
     total,
     current,
     onPageChange: (page) => {
@@ -59,6 +59,10 @@ function buildDemoPagination(total: number, current: number): HTMLElement {
       });
     },
   });
+  // aria-label distinto por instância (landmark-unique): usa a string que já
+  // intitula visivelmente o bloco onde o preview aparece.
+  if (label) nav.setAttribute('aria-label', label);
+  return nav;
 }
 
 // ─── createPaginationDocs ─────────────────────────────────────────────────────
@@ -164,7 +168,7 @@ export function createPaginationDocs(): HTMLElement {
             wrap.className = 'nds-cluster nds-w-full nds-p-2';
             wrap.dataset.justify = 'center';
             wrap.style.minHeight = '120px';
-            wrap.appendChild(buildDemoPagination(10, 3));
+            wrap.appendChild(buildDemoPagination(10, 3, t('demonstration.title')));
             return wrap;
           },
         });
@@ -237,7 +241,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(buildDemoPagination(12, 6));
+                wrap.appendChild(buildDemoPagination(12, 6, stripHtml(t('doDont.pair1.do'))));
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -290,7 +294,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(buildDemoPagination(5, 2));
+                wrap.appendChild(buildDemoPagination(5, 2, stripHtml(t('doDont.pair2.do'))));
                 return wrap;
               },
               dontPreviewFactory: () => {
@@ -368,7 +372,7 @@ const nav = createPagination({
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(buildDemoPagination(5, 2));
+                wrap.appendChild(buildDemoPagination(5, 2, t('variants.items.default')));
                 return wrap;
               },
             },
@@ -382,7 +386,7 @@ const nav = createPagination({
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(buildDemoPagination(10, 1));
+                wrap.appendChild(buildDemoPagination(10, 1, t('variants.items.directional')));
                 return wrap;
               },
             },
@@ -404,12 +408,14 @@ const nav = createPagination({
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(createPagination({
+                const nav = createPagination({
                   total: 5,
                   current: 1,
                   showPrevNext: true,
                   onPageChange: () => {},
-                }));
+                });
+                nav.setAttribute('aria-label', t('variants.items.simple.name'));
+                wrap.appendChild(nav);
                 return wrap;
               },
             },
@@ -431,12 +437,14 @@ const nav = createPagination({
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '80px';
-                wrap.appendChild(createPagination({
+                const nav = createPagination({
                   total: 12,
                   current: 6,
                   showPrevNext: true,
                   onPageChange: () => {},
-                }));
+                });
+                nav.setAttribute('aria-label', t('variants.items.withEllipsis.name'));
+                wrap.appendChild(nav);
                 return wrap;
               },
             },
@@ -487,12 +495,14 @@ const nav = createPagination({
 
                 const rerender = () => {
                   status.textContent = `Página ${current} de ${total}`;
-                  navContainer.replaceChildren(createPagination({
+                  const nav = createPagination({
                     total,
                     current,
                     showPrevNext: true,
                     onPageChange: (page: number) => { current = page; rerender(); },
-                  }));
+                  });
+                  nav.setAttribute('aria-label', t('variants.items.interactive.name'));
+                  navContainer.replaceChildren(nav);
                 };
 
                 wrapper.append(status, navContainer);

@@ -46,7 +46,9 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function buildDemoNav(): HTMLElement {
+// aria-label distinto por instância (landmark-unique): cada call site passa a
+// string que já intitula visivelmente o bloco onde o preview aparece.
+function buildDemoNav(label: string): HTMLElement {
   const nav = createNavigationMenu([
     { label: 'Início', href: '/' },
     {
@@ -67,7 +69,7 @@ function buildDemoNav(): HTMLElement {
     },
     { label: 'Sobre', href: '/sobre' },
   ]);
-  nav.setAttribute('aria-label', 'Navegação principal');
+  nav.setAttribute('aria-label', label);
   return nav;
 }
 
@@ -175,7 +177,7 @@ export function createNavigationMenuDocs(): HTMLElement {
             wrap.dataset.align = 'start';
             wrap.dataset.justify = 'center';
             wrap.style.minHeight = '220px';
-            wrap.appendChild(buildDemoNav());
+            wrap.appendChild(buildDemoNav(t('demonstration.title')));
             return wrap;
           },
         });
@@ -253,7 +255,7 @@ export function createNavigationMenuDocs(): HTMLElement {
                   { label: 'Produtos', href: '/produtos' },
                   { label: 'Sobre',    href: '/sobre' },
                 ]);
-                nav.setAttribute('aria-label', 'Navegação principal');
+                nav.setAttribute('aria-label', stripHtml(t('doDont.pair1.do')));
                 const home = nav.querySelector<HTMLAnchorElement>('a[href="/"]');
                 if (home) {
                   home.setAttribute('aria-current', 'page');
@@ -300,7 +302,7 @@ export function createNavigationMenuDocs(): HTMLElement {
                     ],
                   },
                 ]);
-                nav.setAttribute('aria-label', 'Navegação principal');
+                nav.setAttribute('aria-label', stripHtml(t('doDont.pair2.do')));
                 wrap.appendChild(nav);
                 return wrap;
               },
@@ -365,7 +367,7 @@ if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
             { label: 'Preços',  href: '/precos' },
             { label: 'Contato', href: '/contato' },
           ]);
-          nav.setAttribute('aria-label', 'Navegação principal');
+          nav.setAttribute('aria-label', stripHtml(t('variants.items.linkSimples.name')));
           wrap.appendChild(nav);
           return wrap;
         }
@@ -389,7 +391,7 @@ if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
               ],
             },
           ]);
-          nav.setAttribute('aria-label', 'Navegação principal');
+          nav.setAttribute('aria-label', stripHtml(t('variants.items.comDropdown.name')));
           wrap.appendChild(nav);
           return wrap;
         }
@@ -415,7 +417,7 @@ if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
               ],
             },
           ]);
-          nav.setAttribute('aria-label', 'Navegação principal');
+          nav.setAttribute('aria-label', stripHtml(t('variants.items.megaMenuGrid.name')));
           const content = nav.querySelector<HTMLElement>('[role="menu"]');
           if (content) {
             content.style.minWidth = '560px';
@@ -443,7 +445,7 @@ if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
               ],
             },
           ]);
-          nav.setAttribute('aria-label', 'Navegação principal');
+          nav.setAttribute('aria-label', stripHtml(t('variants.items.comCardDestacado.name')));
           const content = nav.querySelector<HTMLElement>('[role="menu"]');
           if (content) {
             content.style.minWidth = '560px';
@@ -563,7 +565,7 @@ content.insertBefore(card, content.firstChild);`;
                 wrap.dataset.align = 'start';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '140px';
-                wrap.appendChild(buildDemoNav());
+                wrap.appendChild(buildDemoNav(t('variants.items.horizontal')));
                 return wrap;
               },
             },

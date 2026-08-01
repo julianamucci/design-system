@@ -61,8 +61,14 @@ type CrumbDef =
   | { type: 'page'; text: string }
   | { type: 'ellipsis' };
 
-function buildBreadcrumb(crumbs: CrumbDef[], separator: string | HTMLElement = '›'): HTMLElement {
-  const nav = createBreadcrumb();
+function buildBreadcrumb(
+  crumbs: CrumbDef[],
+  separator: string | HTMLElement = '›',
+  label?: string,
+): HTMLElement {
+  // aria-label distinto por instância (landmark-unique): usa a string que já
+  // intitula visivelmente o bloco onde o preview aparece.
+  const nav = createBreadcrumb(label ? { label } : {});
   const list = createBreadcrumbList();
 
   crumbs.forEach((crumb, index) => {
@@ -100,24 +106,32 @@ function buildBreadcrumb(crumbs: CrumbDef[], separator: string | HTMLElement = '
   return nav;
 }
 
-function buildDefaultBreadcrumb(): HTMLElement {
-  return buildBreadcrumb([
-    { type: 'link', text: t('demonstration.labels.home'), href: '#' },
-    { type: 'link', text: t('demonstration.labels.components'), href: '#' },
-    { type: 'page', text: t('demonstration.labels.breadcrumb') },
-  ]);
+function buildDefaultBreadcrumb(label?: string): HTMLElement {
+  return buildBreadcrumb(
+    [
+      { type: 'link', text: t('demonstration.labels.home'), href: '#' },
+      { type: 'link', text: t('demonstration.labels.components'), href: '#' },
+      { type: 'page', text: t('demonstration.labels.breadcrumb') },
+    ],
+    '›',
+    label,
+  );
 }
 
-function buildWithEllipsisBreadcrumb(): HTMLElement {
-  return buildBreadcrumb([
-    { type: 'link', text: t('demonstration.labels.home'), href: '#' },
-    { type: 'ellipsis' },
-    { type: 'link', text: t('demonstration.labels.components'), href: '#' },
-    { type: 'page', text: t('demonstration.labels.breadcrumb') },
-  ]);
+function buildWithEllipsisBreadcrumb(label?: string): HTMLElement {
+  return buildBreadcrumb(
+    [
+      { type: 'link', text: t('demonstration.labels.home'), href: '#' },
+      { type: 'ellipsis' },
+      { type: 'link', text: t('demonstration.labels.components'), href: '#' },
+      { type: 'page', text: t('demonstration.labels.breadcrumb') },
+    ],
+    '›',
+    label,
+  );
 }
 
-function buildCustomSeparatorBreadcrumb(): HTMLElement {
+function buildCustomSeparatorBreadcrumb(label?: string): HTMLElement {
   return buildBreadcrumb(
     [
       { type: 'link', text: t('demonstration.labels.home'), href: '#' },
@@ -125,17 +139,22 @@ function buildCustomSeparatorBreadcrumb(): HTMLElement {
       { type: 'page', text: t('demonstration.labels.breadcrumb') },
     ],
     '/',
+    label,
   );
 }
 
-function buildResponsiveBreadcrumb(): HTMLElement {
-  return buildBreadcrumb([
-    { type: 'link', text: t('demonstration.labels.home'), href: '#' },
-    { type: 'ellipsis' },
-    { type: 'link', text: t('demonstration.labels.guide'), href: '#' },
-    { type: 'link', text: t('demonstration.labels.components'), href: '#' },
-    { type: 'page', text: t('demonstration.labels.breadcrumb') },
-  ]);
+function buildResponsiveBreadcrumb(label?: string): HTMLElement {
+  return buildBreadcrumb(
+    [
+      { type: 'link', text: t('demonstration.labels.home'), href: '#' },
+      { type: 'ellipsis' },
+      { type: 'link', text: t('demonstration.labels.guide'), href: '#' },
+      { type: 'link', text: t('demonstration.labels.components'), href: '#' },
+      { type: 'page', text: t('demonstration.labels.breadcrumb') },
+    ],
+    '›',
+    label,
+  );
 }
 
 // ─── createBreadcrumbDocs ─────────────────────────────────────────────────────
@@ -268,10 +287,12 @@ export function createBreadcrumbDocs(): HTMLElement {
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full';
+            // Três instâncias no mesmo bloco: o título da seção sozinho não
+            // desambigua — sufixo com o nome visível da variante equivalente.
             wrap.append(
-              buildDefaultBreadcrumb(),
-              buildWithEllipsisBreadcrumb(),
-              buildCustomSeparatorBreadcrumb(),
+              buildDefaultBreadcrumb(`${t('demonstration.title')} — default`),
+              buildWithEllipsisBreadcrumb(`${t('demonstration.title')} — withEllipsis`),
+              buildCustomSeparatorBreadcrumb(`${t('demonstration.title')} — customSeparator`),
             );
             return wrap;
           },
@@ -347,29 +368,37 @@ export function createBreadcrumbDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: t('doDont.pair1.do'),
               dontCaption: t('doDont.pair1.dont'),
-              doPreviewFactory: () => buildDefaultBreadcrumb(),
+              doPreviewFactory: () => buildDefaultBreadcrumb(stripHtml(t('doDont.pair1.do'))),
               dontPreviewFactory: () =>
-                buildBreadcrumb([
-                  { type: 'link', text: t('demonstration.labels.home'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.components'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.breadcrumb'), href: '#' },
-                ]),
+                buildBreadcrumb(
+                  [
+                    { type: 'link', text: t('demonstration.labels.home'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.components'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.breadcrumb'), href: '#' },
+                  ],
+                  '›',
+                  stripHtml(t('doDont.pair1.dont')),
+                ),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
-              doPreviewFactory: () => buildWithEllipsisBreadcrumb(),
+              doPreviewFactory: () => buildWithEllipsisBreadcrumb(stripHtml(t('doDont.pair2.do'))),
               dontPreviewFactory: () =>
-                buildBreadcrumb([
-                  { type: 'link', text: t('demonstration.labels.home'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.docs'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.guide'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.navigation'), href: '#' },
-                  { type: 'link', text: t('demonstration.labels.components'), href: '#' },
-                  { type: 'page', text: t('demonstration.labels.breadcrumb') },
-                ]),
+                buildBreadcrumb(
+                  [
+                    { type: 'link', text: t('demonstration.labels.home'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.docs'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.guide'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.navigation'), href: '#' },
+                    { type: 'link', text: t('demonstration.labels.components'), href: '#' },
+                    { type: 'page', text: t('demonstration.labels.breadcrumb') },
+                  ],
+                  '›',
+                  stripHtml(t('doDont.pair2.dont')),
+                ),
             },
           ],
         });
@@ -444,25 +473,25 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
               name: 'default',
               description: stripHtml(t('variants.items.default')),
               code: codeDefault,
-              previewFactory: () => buildDefaultBreadcrumb(),
+              previewFactory: () => buildDefaultBreadcrumb('default'),
             },
             {
               name: 'withEllipsis',
               description: stripHtml(t('variants.items.withEllipsis')),
               code: codeEllipsis,
-              previewFactory: () => buildWithEllipsisBreadcrumb(),
+              previewFactory: () => buildWithEllipsisBreadcrumb('withEllipsis'),
             },
             {
               name: 'customSeparator',
               description: stripHtml(t('variants.items.customSeparator')),
               code: codeCustomSeparator,
-              previewFactory: () => buildCustomSeparatorBreadcrumb(),
+              previewFactory: () => buildCustomSeparatorBreadcrumb('customSeparator'),
             },
             {
               name: 'responsive',
               description: stripHtml(t('variants.items.responsive')),
               code: codeResponsive,
-              previewFactory: () => buildResponsiveBreadcrumb(),
+              previewFactory: () => buildResponsiveBreadcrumb('responsive'),
             },
           ],
         });
