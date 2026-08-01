@@ -139,13 +139,15 @@ export const Playground: Story = {
       // aria-expanded sozinho não prova que o painel apareceu: já houve
       // regressão em que o trigger reportava aberto e o conteúdo ficava
       // colapsado (altura vinda de custom property defasada da lib).
-      // waitFor: a entrada tem fade (opacity 0 → 1), então a asserção precisa
-      // esperar a animação assentar em vez de medir no meio dela.
+      // waitFor: a abertura anima a ALTURA (0fr → 1fr) por --duration-panel, e
+      // medir no meio dela dá altura parcial — zero, no primeiro quadro.
+      // (Antes esperava opacity: 1; o fade saiu quando o padding passou a
+      // colapsar junto, senão o painel travava num piso de 16px.)
       const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
         );
-        if (!el || getComputedStyle(el).opacity !== '1') {
+        if (!el || el.getBoundingClientRect().height === 0) {
           throw new Error('painel aberto ainda não assentou');
         }
         return el;

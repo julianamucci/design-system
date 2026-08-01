@@ -161,7 +161,7 @@ export const Playground: Story = {
         const el = canvasElement.querySelector<HTMLElement>(
           '[data-slot="accordion-content"]:not([hidden]):not([data-state="closed"]):not([data-closed])',
         );
-        if (!el || getComputedStyle(el).opacity !== '1') {
+        if (!el || el.getBoundingClientRect().height === 0) {
           throw new Error('painel aberto ainda não assentou');
         }
         return el;

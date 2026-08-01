@@ -159,9 +159,38 @@
   to   { grid-template-rows: 0fr; }
 }
 
+/*
+ * O padding do corpo anima JUNTO com a altura — e isto não é refinamento, é o
+ * que faz o painel fechar até o fim.
+ *
+ * `min-height: 0` deixa o CONTEÚDO encolher, mas o padding continua contando
+ * na altura mínima do item de grid: com `padding-bottom: 16px` fixo, a linha
+ * batia num piso de 16px. Medido: o fechamento ia de 79px a 16px em ~146ms,
+ * ficava parado os ~155ms restantes da animação e só sumia quando a lib
+ * desmontava o conteúdo — um salto seco de 16px. Era essa a sensação de
+ * "degrau" e de "parar em duas etapas".
+ *
+ * Com o padding indo a zero, a altura chega a 0 de fato (medido: 0.1px aos
+ * 284ms) e o movimento ocupa a duração inteira.
+ */
+@keyframes nds-accordion-body-expand {
+  from { padding-bottom: 0; }
+  to   { padding-bottom: var(--spacing-4); }
+}
+
+@keyframes nds-accordion-body-collapse {
+  from { padding-bottom: var(--spacing-4); }
+  to   { padding-bottom: 0; }
+}
+
 .nds-accordion-content[data-open],
 .nds-accordion-content[data-state="open"] {
   animation: nds-accordion-expand var(--duration-panel) var(--ease-size);
+}
+
+.nds-accordion-content[data-open] > .nds-accordion-content-body,
+.nds-accordion-content[data-state="open"] > .nds-accordion-content-body {
+  animation: nds-accordion-body-expand var(--duration-panel) var(--ease-size);
 }
 
 /* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
@@ -172,6 +201,15 @@
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
   animation: nds-accordion-collapse var(--duration-panel) var(--ease-size);
+}
+
+/* `padding-bottom: 0` é o estado de REPOUSO fechado (sem ele o painel fechado
+   ocupa 16px fantasma); a animação faz a transição a partir dos 16px. */
+.nds-accordion-content[data-closed] > .nds-accordion-content-body,
+.nds-accordion-content[data-ending-style] > .nds-accordion-content-body,
+.nds-accordion-content[data-state="closed"] > .nds-accordion-content-body {
+  padding-bottom: 0;
+  animation: nds-accordion-body-collapse var(--duration-panel) var(--ease-size);
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
@@ -208,7 +246,12 @@
   .nds-accordion-content[data-state="open"],
   .nds-accordion-content[data-closed],
   .nds-accordion-content[data-ending-style],
-  .nds-accordion-content[data-state="closed"] {
+  .nds-accordion-content[data-state="closed"],
+  .nds-accordion-content[data-open] > .nds-accordion-content-body,
+  .nds-accordion-content[data-state="open"] > .nds-accordion-content-body,
+  .nds-accordion-content[data-closed] > .nds-accordion-content-body,
+  .nds-accordion-content[data-ending-style] > .nds-accordion-content-body,
+  .nds-accordion-content[data-state="closed"] > .nds-accordion-content-body {
     animation: none;
   }
 }
