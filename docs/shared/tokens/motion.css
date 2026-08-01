@@ -28,6 +28,7 @@
   --duration-fast:     120ms;    /* hover, focus rings, micro-feedback */
   --duration-base:     200ms;    /* default — opacity, transform pequeno */
   --duration-moderate: 320ms;    /* enter/exit de overlays (toast, popover) */
+  --duration-panel:    300ms;    /* abrir/fechar painel de altura (accordion) */
   --duration-slow:     500ms;    /* layout changes, large transforms */
   --duration-stately:  800ms;    /* mudanças de página, full-screen reveal */
 
@@ -37,11 +38,13 @@
    */
   --ease-linear:   linear;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);     /* default — chega rápido, suaviza */
-  /* Simétrico, sem extremos: acelera e desacelera de leve. Para mudanças de
-     TAMANHO (altura de painel, largura de coluna), onde as curvas fortemente
-     front-loaded fazem o fim virar um arrasto visível e as aceleradoras fazem
-     o fim bater. */
-  --ease-size:     cubic-bezier(0.4, 0, 0.2, 1);
+  /* Para mudanças de TAMANHO (altura de painel, largura de coluna). É o `ease`
+     padrão do CSS escrito por extenso: as curvas do sistema são todas fortes
+     de um lado só — as aceleradoras fazem o fim bater, as desaceleradoras
+     fazem os últimos pixels arrastarem. Nenhuma das duas serve para altura,
+     onde o olho acompanha o percurso inteiro. Valor validado contra a
+     referência de animação adotada para o accordion. */
+  --ease-size:     cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);     /* mais dramático na chegada */
   --ease-entrance: cubic-bezier(0, 0, 0, 1);       /* só easing-out — entrada */
   --ease-exit:     cubic-bezier(0.3, 0, 1, 1);     /* só easing-in — saída */

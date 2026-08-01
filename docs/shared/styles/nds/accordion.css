@@ -137,52 +137,41 @@
  * Animação roda na inserção do elemento, e reka/bits/base-ui adiam a remoção
  * até a animação de saída terminar (usePresence e equivalentes).
  *
- * A opacidade acompanha a altura de propósito. Sem ela, o `overflow: hidden`
- * revela o texto por uma borda dura e cada linha "salta" para dentro assim que
- * há espaço — a animação parece pular degraus. Com o fade, as linhas em
- * revelação parcial também estão translúcidas e a leitura fica contínua.
+ * SÓ ALTURA — sem opacidade. Já houve fade acoplado aqui e ele era a origem
+ * das duas queixas de "degrau": animando junto com a altura na mesma curva, o
+ * conteúdo sumia antes do fim e restava uma caixa vazia encolhendo; segurar o
+ * fade para o final só troca o degrau de lugar. A referência de animação
+ * adotada (`transition: height .3s` sobre `::details-content`, sem opacidade)
+ * confirma: com a altura sozinha e uma curva suave, o clip do `overflow` já
+ * revela e esconde o texto de forma contínua.
+ *
+ * Mesma duração e mesma curva nos dois sentidos, também como a referência —
+ * assimetria entre abrir e fechar é o que fazia o fechamento parecer outro
+ * movimento, e não o inverso da abertura.
  */
 @keyframes nds-accordion-expand {
-  from { grid-template-rows: 0fr; opacity: 0; }
-  to   { grid-template-rows: 1fr; opacity: 1; }
+  from { grid-template-rows: 0fr; }
+  to   { grid-template-rows: 1fr; }
 }
 
-/*
- * O fade do fechamento começa em 40%, não em 0%. Se a opacidade animar junto
- * com a altura na mesma curva, o conteúdo desaparece na primeira metade e o
- * resto do tempo é uma CAIXA VAZIA encolhendo — lido como duas etapas. Segurar
- * a opacidade e fazê-la chegar a zero no mesmo instante que a altura mantém o
- * fechamento como um movimento só. `grid-template-rows` não é declarado no
- * keyframe intermediário de propósito: cada propriedade interpola entre os
- * keyframes que a declaram, então a altura segue contínua de 0 a 100%.
- */
 @keyframes nds-accordion-collapse {
-  0%   { grid-template-rows: 1fr; opacity: 1; }
-  40%  { opacity: 1; }
-  100% { grid-template-rows: 0fr; opacity: 0; }
+  from { grid-template-rows: 1fr; }
+  to   { grid-template-rows: 0fr; }
 }
 
-/* Entrada usa a duração de painel (320ms): 200ms é curto demais para uma
-   mudança de altura com texto, e é aí que o "degrau" fica perceptível. */
 .nds-accordion-content[data-open],
 .nds-accordion-content[data-state="open"] {
-  animation: nds-accordion-expand var(--duration-moderate) var(--ease-entrance);
+  animation: nds-accordion-expand var(--duration-panel) var(--ease-size);
 }
 
 /* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
-   Vanilla usam data-state. O estado final fica 0fr para quem permanece montado.
- *
- * Easing: `--ease-size`, e nenhum dos dois óbvios. `--ease-exit`
- * (cubic-bezier(0.3,0,1,1)) é aceleração pura e chega ao fim na velocidade
- * máxima — o painel batia no item de baixo e parava seco. `--ease-standard`
- * (0.2,0,0,1) é o oposto: cobre quase toda a distância no início e arrasta os
- * últimos pixels, o que reintroduz a sensação de degrau no fim. `--ease-size`
- * é simétrico e sem extremos, que é o que uma mudança de ALTURA pede. */
+   Vanilla usam data-state. O estado final fica 0fr para quem permanece
+   montado. */
 .nds-accordion-content[data-closed],
 .nds-accordion-content[data-ending-style],
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
-  animation: nds-accordion-collapse var(--duration-base) var(--ease-size);
+  animation: nds-accordion-collapse var(--duration-panel) var(--ease-size);
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
