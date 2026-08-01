@@ -90,7 +90,7 @@
 
   const codeImportUsage = `import { Skeleton } from "@/components/ui/skeleton";
 
-<div aria-busy={isLoading} aria-label="Carregando perfil">
+<div role="status" aria-busy={isLoading} aria-label="Carregando perfil">
   <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
   <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 250px" aria-hidden="true" />
 </div>`;
@@ -121,6 +121,7 @@
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
         <div
+          role="status"
           aria-busy="true"
           aria-label={$tStore('demonstration.labels.card')}
           class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
@@ -151,7 +152,7 @@
       <!-- Imagem AspectRatio -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
-        <div aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
+        <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
           <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;">
             <Skeleton class="nds-w-full nds-motion-reduce-none" style="position: absolute; inset: 0; height: 100%" aria-hidden="true" />
           </div>
@@ -161,7 +162,7 @@
       <!-- Parágrafo -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
-        <div aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+        <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
           <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 0.75rem" aria-hidden="true" />
           <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
           <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
@@ -253,19 +254,19 @@
   />
 
   {#snippet doPair1()}
-    <div aria-busy="true" aria-label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+    <div role="status" aria-busy="true" aria-label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
       <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 5rem" aria-hidden="true" />
       <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
       <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div aria-busy="true" aria-label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
+    <div role="status" aria-busy="true" aria-label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
       <Skeleton class="nds-motion-reduce-none" style="height: 1.5rem; width: 60px" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div aria-busy="true" aria-label="Carregando avatar" class="nds-cluster" data-spacing="sm" data-align="center">
+    <div role="status" aria-busy="true" aria-label="Carregando avatar" class="nds-cluster" data-spacing="sm" data-align="center">
       <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2.5rem; width: 2.5rem" aria-hidden="true" />
       <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 120px" aria-hidden="true" />
     </div>
@@ -295,17 +296,17 @@
   />
 
   {#snippet variantRectangle()}
-    <div aria-busy="true" aria-label="Carregando bloco">
+    <div role="status" aria-busy="true" aria-label="Carregando bloco">
       <Skeleton class="nds-motion-reduce-none" style="height: 5rem; width: 16rem" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet variantCircle()}
-    <div aria-busy="true" aria-label="Carregando avatar">
+    <div role="status" aria-busy="true" aria-label="Carregando avatar">
       <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
     </div>
   {/snippet}
   {#snippet variantLine()}
-    <div aria-busy="true" aria-label="Carregando texto">
+    <div role="status" aria-busy="true" aria-label="Carregando texto">
       <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 200px" aria-hidden="true" />
     </div>
   {/snippet}

@@ -107,7 +107,7 @@ import User from '@lucide/svelte/icons/user';`;
 </Avatar>`;
 
   const codeIcon = `<Avatar>
-  <AvatarFallback aria-label="Usuário genérico">
+  <AvatarFallback role="img" aria-label="Usuário genérico">
     <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
   </AvatarFallback>
 </Avatar>`;
@@ -132,6 +132,7 @@ import User from '@lucide/svelte/icons/user';`;
     <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <span
+    role="status"
     aria-label="online"
     class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
   />
@@ -188,7 +189,7 @@ interface AvatarFallbackProps {
       </div>
       <div class="nds-stack" data-spacing="xs" style="align-items: center">
         <Avatar>
-          <AvatarFallback aria-label={$tStore('demonstration.labels.withIcon')}>
+          <AvatarFallback role="img" aria-label={$tStore('demonstration.labels.withIcon')}>
             <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
           </AvatarFallback>
         </Avatar>
@@ -221,6 +222,7 @@ interface AvatarFallbackProps {
             <AvatarFallback>MR</AvatarFallback>
           </Avatar>
           <span
+            role="status"
             aria-label={$tStore('demonstration.labels.statusOnline')}
             class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
           ></span>
@@ -390,7 +392,7 @@ interface AvatarFallbackProps {
   {/snippet}
   {#snippet variantIcon()}
     <Avatar>
-      <AvatarFallback aria-label="Usuário genérico">
+      <AvatarFallback role="img" aria-label="Usuário genérico">
         <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
       </AvatarFallback>
     </Avatar>
@@ -421,6 +423,7 @@ interface AvatarFallbackProps {
         <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <span
+        role="status"
         aria-label="online"
         class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
       ></span>

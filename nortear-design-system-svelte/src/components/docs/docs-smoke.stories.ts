@@ -110,8 +110,9 @@ export const AnalyticsCatalog: Story = { render: page(AnalyticsCatalogDocs), pla
 
 export const AspectRatio: Story = { render: page(AspectRatioDocs), play: mounted };
 
-// axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
-export const Avatar: Story = { render: page(AvatarDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// aria-prohibited-attr RESOLVIDA (2026-08-01): fallback com ícone ganhou
+// role="img" e o dot de status role="status". Axe é portão.
+export const Avatar: Story = { render: page(AvatarDocs), play: mounted };
 
 export const Badge: Story = { render: page(BadgeDocs), play: mounted };
 
@@ -198,8 +199,10 @@ export const Sheet: Story = { render: page(SheetDocs), play: mounted };
 
 export const Sidebar: Story = { render: page(SidebarDocs), play: mounted };
 
-// axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
-export const Skeleton: Story = { render: page(SkeletonDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// aria-prohibited-attr RESOLVIDA (2026-08-01): containers de loading com
+// aria-busy + aria-label ganharam role="status" (mesma decisão do vanilla).
+// Axe é portão.
+export const Skeleton: Story = { render: page(SkeletonDocs), play: mounted };
 
 export const Slider: Story = { render: page(SliderDocs), play: mounted };
 
