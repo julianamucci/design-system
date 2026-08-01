@@ -381,8 +381,51 @@ só falhas; sem provas bidirecionais/canários redundantes.
   AccordionDocs do svelte. Candidato a lote serial próprio: trocar pelo
   snippet `child` (padrão da stack) + alinhar code strings didáticas.
 
-**Placar da dívida axe em `a11y: todo`: 84 (colheita) → 36.**
-Por stack: react 12 · vue 7 · svelte 7 · vanilla 10.
+5. **Sweep final (4 stacks em paralelo, 1 agent por stack)** — `76e26247`
+   react · `8b5492b3` vue · svelte (2 commits) · `f35c5ae2` vanilla ·
+   `4b389ade` alinhamento cross-stack. 19 páginas viraram portão. Padrões que
+   se repetiram e valem como regra:
+   - **Snippet virando DOM real** (3ª e 4ª ocorrência): `extensibilityCode`
+     passado como `extensibilityNotes` (react textarea) e `<input
+     type="range">`/`<textarea>` literais em prosa vanilla — o parser HTML é
+     case-insensitive, então `<Textarea/>` de snippet vira campo real sem
+     rótulo. REGRA: snippet vai por CodeBlock; tag literal em prosa exige
+     escape `&lt;`.
+   - **Elementos com role custom não pegam name-from-content**:
+     `role="radio"/"switch"/"checkbox"/"combobox"` renderizados como
+     `<span>`/`<div>` precisam de `aria-label` — `<label for>` não nomeia
+     elemento não-rotulável.
+   - **`opacity` inline derrubando contraste** (vanilla, 4 páginas): dim
+     decorativo em texto já muted levava a 1.5–3.7:1. Removido; o card
+     semântico já sinaliza o don't.
+   - **Primitivos corrigidos** (todos sem mudança de API/pixel):
+     `calendar.tsx` react (nosso override repassava `scope` para `<td>`),
+     `toggle-group.svelte` (o `role="toolbar"` era letra morta — bits-ui
+     sobrescreve com `role="group"` — e sobrava `aria-orientation` inválido),
+     `Table` nas 4 stacks (`tabindex="0"` no wrapper com overflow).
+
+- [ ] **Divergência cross-stack aberta — `role="toolbar"` no toggle-group**:
+  react declara `role="toolbar"` (`toggle-group.tsx:42`), svelte não tem
+  mais, vanilla (referência) nunca teve. Não há violação de axe no react
+  (usa `data-orientation`), então é divergência de árvore de acessibilidade,
+  não bug. Decidir: alinhar react à referência ou documentar a diferença.
+- [ ] **Cores inertes no vanilla** (latente, achado do sweep):
+  `SidebarDocs` usa `style.color = 'var(--sidebar-foreground)'` e
+  `color-mix(... var(--color-destructive) ...)` — tokens são triplets HSL e
+  `--color-destructive` não existe, então as declarações caem. Corrigir muda
+  pixel; fica para uma passada de cor dedicada. Mesma família do bug
+  `var(--primary-foreground)` sem `hsl()` já corrigido no select.
+
+**Placar da dívida axe em `a11y: todo`: 84 (colheita) → 17** (verificado por
+grep nos 4 arquivos de fumaça, não por soma de reportes).
+Por stack: react 7 · vue 4 · svelte 3 · vanilla 3 (+1 `a11y.disable` no
+Icons react). O que resta é decisão, não varredura: `target-size` (muda
+pixel/primitivo), `aria-required-children/parent` (estrutura de
+command/menubar/context-menu/dropdown), `aria-hidden-focus` (focus guards
+internos do Base UI — recomendação: exceção documentada, não é corrigível do
+nosso lado sem gambiarra).
+
+Histórico anterior ao sweep (para referência): 36 páginas.
 Rules restantes mais frequentes: target-size, aria-required-children/parent,
 aria-hidden-focus (focus guards Base UI — provável exceção documentada),
 aria-toggle-field-name, label, color-contrast (icons/calendar/command),
