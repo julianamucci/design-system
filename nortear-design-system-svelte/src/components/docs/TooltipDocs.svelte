@@ -386,7 +386,9 @@ interface TooltipTriggerProps {
       <Tooltip defaultOpen>
         <TooltipTrigger>
           {#snippet child({ props })}
-            <Button variant="outline" size="icon" {...props}>
+            <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
+                 invisível mantém o botão nomeado para o axe sem mudar o visual. -->
+            <Button variant="outline" size="icon" aria-label={$tStore('demonstration.labels.saveButton')} {...props}>
               <Save aria-hidden="true" class="nds-icon" />
             </Button>
           {/snippet}

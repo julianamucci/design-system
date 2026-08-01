@@ -128,7 +128,10 @@ export const Carousel: Story = { render: page(CarouselDocs), play: mounted };
 
 export const Chart: Story = { render: page(ChartDocs), play: mounted };
 
-// axe: button-name, empty-heading, target-size — catalogado no FIXES-NEEDED
+// axe: target-size — catalogado no FIXES-NEEDED. button-name RESOLVIDA
+// (2026-08-01): variante default (checkbox sem Label visível) ganhou
+// aria-label; empty-heading RESOLVIDA: DocsAccessibility.svelte só renderiza
+// o <h3> do teclado quando keyboardTitle existe (mesmo fix do Vue).
 export const Checkbox: Story = { render: page(CheckboxDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const CodeBlock: Story = { render: page(CodeBlockDocs), play: mounted };
@@ -136,6 +139,12 @@ export const CodeBlock: Story = { render: page(CodeBlockDocs), play: mounted };
 export const Collapsible: Story = { render: page(CollapsibleDocs), play: mounted };
 
 // axe: aria-required-attr, aria-required-children, button-name, nested-interactive, target-size — catalogado no FIXES-NEEDED
+// axe: aria-required-attr (Command.Input do bits-ui sem aria-controls),
+// aria-required-children (Command.Loading role=progressbar dentro do listbox)
+// — catalogado no FIXES-NEEDED. button-name, nested-interactive e target-size
+// RESOLVIDAS (2026-08-01): o asChild inexistente no bits-ui virava <button>
+// wrapper sem nome — trocado pelo snippet child; trigger role="combobox"
+// ganhou aria-label (combobox não aceita name-from-content).
 export const Command: Story = { render: page(CommandDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const ContextMenu: Story = { render: page(ContextMenuDocs), play: mounted };
@@ -181,8 +190,9 @@ export const Popover: Story = { render: page(PopoverDocs), play: mounted, parame
 
 export const Progress: Story = { render: page(ProgressDocs), play: mounted };
 
-// axe: button-name — catalogado no FIXES-NEEDED
-export const RadioGroup: Story = { render: page(RadioGroupDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// button-name RESOLVIDA (2026-08-01): os radios do don't "texto solto"
+// ganharam aria-label (chaves t() existentes). Axe é portão.
+export const RadioGroup: Story = { render: page(RadioGroupDocs), play: mounted };
 
 export const Resizable: Story = { render: page(ResizableDocs), play: mounted };
 
@@ -213,7 +223,8 @@ export const Sonner: Story = { render: page(SonnerDocs), play: mounted };
 
 export const Spacing: Story = { render: page(SpacingDocs), play: mounted };
 
-// axe: button-name, heading-order — catalogado no FIXES-NEEDED
+// axe: heading-order — catalogado no FIXES-NEEDED. button-name RESOLVIDA
+// (2026-08-01): o Switch do don't "texto solto" ganhou aria-label.
 export const Switch: Story = { render: page(SwitchDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const Table: Story = { render: page(TableDocs), play: mounted };
@@ -233,7 +244,8 @@ export const ToggleGroup: Story = { render: page(ToggleGroupDocs), play: mounted
 
 export const ToneOfVoice: Story = { render: page(ToneOfVoiceDocs), play: mounted };
 
-// axe: button-name — catalogado no FIXES-NEEDED
-export const Tooltip: Story = { render: page(TooltipDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// button-name RESOLVIDA (2026-08-01): o botão icon-only do don't ganhou
+// aria-label (string traduzida existente). Axe é portão.
+export const Tooltip: Story = { render: page(TooltipDocs), play: mounted };
 
 export const Typography: Story = { render: page(TypographyDocs), play: mounted };

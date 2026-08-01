@@ -388,7 +388,9 @@ interface SwitchProps {
 
   {#snippet dd2Dont()}
     <div class="nds-cluster" data-spacing="sm">
-      <Switch id="dd2-dont" bind:checked={dd2DontChecked} />
+      <!-- Anti-pattern didático (texto solto, sem <Label for>); aria-label
+           invisível mantém o botão nomeado para o axe sem mudar o visual. -->
+      <Switch id="dd2-dont" bind:checked={dd2DontChecked} aria-label={$tStore('demonstration.labels.darkMode')} />
       <span class="nds-text-body">Modo escuro</span>
     </div>
   {/snippet}

@@ -457,11 +457,13 @@ interface RadioGroupItemProps {
   {#snippet dd1Dont()}
     <RadioGroup bind:value={dd1DontValue} aria-label="Forma de pagamento">
       <div class="nds-cluster" data-spacing="xs">
-        <RadioGroupItem value="cartao" id="dd1-dont-cartao" />
+        <!-- Anti-pattern didático (texto solto, sem <Label for>); aria-label
+             invisível mantém os radios nomeados para o axe sem mudar o visual. -->
+        <RadioGroupItem value="cartao" id="dd1-dont-cartao" aria-label={$tStore('demonstration.labels.card')} />
         <span class="nds-text-body">Cartão de crédito</span>
       </div>
       <div class="nds-cluster" data-spacing="xs">
-        <RadioGroupItem value="pix" id="dd1-dont-pix" />
+        <RadioGroupItem value="pix" id="dd1-dont-pix" aria-label={$tStore('demonstration.labels.pix')} />
         <span class="nds-text-body">Pix</span>
       </div>
     </RadioGroup>

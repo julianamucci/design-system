@@ -433,7 +433,8 @@ import { Label } from "@/components/ui/label";`;
   />
 
   {#snippet variantDefault()}
-    <Checkbox id="var-default" bind:checked={varDefaultChecked} />
+    <!-- Variante sem Label visível — aria-label invisível dá o accessible name. -->
+    <Checkbox id="var-default" bind:checked={varDefaultChecked} aria-label={$tStore('demonstration.labels.acceptTerms')} />
   {/snippet}
 
   {#snippet variantWithLabel()}

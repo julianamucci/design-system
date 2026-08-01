@@ -4,11 +4,11 @@
 
   interface DocsKeyboardItem { key: string; description: string }
 
-  const { title, summary, items, keyboardTitle, keyboardItems }: {
+  const { title, summary, items, keyboardTitle = '', keyboardItems }: {
     title: string;
     summary: string;
     items: string[];
-    keyboardTitle: string;
+    keyboardTitle?: string;
     keyboardItems: DocsKeyboardItem[];
   } = $props();
 </script>
@@ -25,7 +25,11 @@
       </ul>
     </div>
     <div>
-      <h3 class="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
+      <!-- Render condicional (mesmo fix do Vue): keyboardTitle vazio gerava
+           <h3> vazio — axe empty-heading. -->
+      {#if keyboardTitle}
+        <h3 class="nds-text-base nds-font-semibold nds-mb-4">{keyboardTitle}</h3>
+      {/if}
       <div class="nds-grid" data-cols="2" data-spacing="sm">
         {#each keyboardItems as item, i (i)}
           <Card class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4" data-spacing="sm" data-align="start">

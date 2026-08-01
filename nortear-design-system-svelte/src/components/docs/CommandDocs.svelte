@@ -249,10 +249,12 @@ import uiTranslations from '@/i18n/ui.json';
 <\/script>
 
 <Popover bind:open>
-  <PopoverTrigger asChild>
-    <Button variant="outline" role="combobox" aria-expanded={open} class="nds-cluster" data-justify="between" style="width: 14rem">
-      {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
-    </Button>
+  <PopoverTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster" data-justify="between" style="width: 14rem" {...props}>
+        {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
+      </Button>
+    {/snippet}
   </PopoverTrigger>
   <PopoverContent class="nds-p-0" style="width: 14rem">
     <Command.Root>
@@ -645,18 +647,26 @@ interface CommandLoadingProps {
 
   {#snippet variantCombobox()}
     <Popover bind:open={comboboxOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={comboboxOpen}
-          class="nds-cluster"
-          data-justify="between"
-          style="width: 14rem"
-        >
-          {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
-          <ChevronsUpDown class="nds-text-muted-foreground" aria-hidden="true" />
-        </Button>
+      <!-- bits-ui não tem asChild: o padrão é o snippet child (como no Tooltip);
+           asChild virava um <button> wrapper sem nome (button-name +
+           nested-interactive). role="combobox" não aceita name-from-content —
+           aria-label dá o accessible name sem mudar o visual. -->
+      <PopoverTrigger>
+        {#snippet child({ props })}
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={comboboxOpen}
+            aria-label={$tStore('demonstration.labels.selectPlaceholder')}
+            class="nds-cluster"
+            data-justify="between"
+            style="width: 14rem"
+            {...props}
+          >
+            {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
+            <ChevronsUpDown class="nds-text-muted-foreground" aria-hidden="true" />
+          </Button>
+        {/snippet}
       </PopoverTrigger>
       <PopoverContent class="nds-p-0" style="width: 14rem">
         <Command.Root>
