@@ -16,7 +16,7 @@
     "build-storybook:chromatic": "storybook build"
   },
   "dependencies": {
-    "@tanstack/svelte-virtual": "^3.13.34",
+    "@tanstack/svelte-virtual": "^3.13.35",
     "@tanstack/table-core": "^8.21.3",
     "@tanstack/virtual-core": "^3.17.6",
     "class-variance-authority": "^0.7.1",
