@@ -166,7 +166,7 @@ export const Chart: Story = {
 };
 
 export const Checkbox: Story = {
-  // axe: empty-heading, target-size — catalogado no FIXES-NEEDED
+  // axe: target-size — catalogado no FIXES-NEEDED (empty-heading resolvida)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CheckboxDocs }, template: '<CheckboxDocs />' }),
   play: smokePlay,
@@ -183,7 +183,7 @@ export const Collapsible: Story = {
 };
 
 export const Command: Story = {
-  // axe: aria-required-children, button-name, empty-heading — catalogado no FIXES-NEEDED
+  // axe: aria-required-children, button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CommandDocs }, template: '<CommandDocs />' }),
   play: smokePlay,
@@ -264,8 +264,6 @@ export const InputOTP: Story = {
 };
 
 export const Label: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { LabelDocs }, template: '<LabelDocs />' }),
   play: smokePlay,
 };
@@ -303,8 +301,6 @@ export const Progress: Story = {
 };
 
 export const RadioGroup: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { RadioGroupDocs }, template: '<RadioGroupDocs />' }),
   play: smokePlay,
 };
@@ -320,8 +316,6 @@ export const ScrollArea: Story = {
 };
 
 export const Select: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SelectDocs }, template: '<SelectDocs />' }),
   play: smokePlay,
 };
@@ -342,8 +336,6 @@ export const Sheet: Story = {
 };
 
 export const Sidebar: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED (landmark-no-duplicate-main e landmark-unique resolvidas)
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: smokePlay,
 };
@@ -356,8 +348,6 @@ export const Skeleton: Story = {
 };
 
 export const Slider: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SliderDocs }, template: '<SliderDocs />' }),
   play: smokePlay,
 };
@@ -373,7 +363,7 @@ export const Spacing: Story = {
 };
 
 export const Switch: Story = {
-  // axe: button-name, empty-heading — catalogado no FIXES-NEEDED
+  // axe: button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SwitchDocs }, template: '<SwitchDocs />' }),
   play: smokePlay,
@@ -390,8 +380,6 @@ export const Tabs: Story = {
 };
 
 export const Textarea: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { TextareaDocs }, template: '<TextareaDocs />' }),
   play: smokePlay,
 };
@@ -409,14 +397,12 @@ export const ThemeSystem: Story = {
 };
 
 export const Toggle: Story = {
-  // axe: empty-heading — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { ToggleDocs }, template: '<ToggleDocs />' }),
   play: smokePlay,
 };
 
 export const ToggleGroup: Story = {
-  // axe: button-name, empty-heading — catalogado no FIXES-NEEDED
+  // axe: button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { ToggleGroupDocs }, template: '<ToggleGroupDocs />' }),
   play: smokePlay,

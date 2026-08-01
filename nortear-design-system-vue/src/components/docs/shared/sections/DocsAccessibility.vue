@@ -46,7 +46,10 @@ withDefaults(defineProps<{
         </ul>
       </div>
       <div>
-        <h3 class="nds-text-base nds-font-semibold nds-mb-4">
+        <h3
+          v-if="keyboardTitle"
+          class="nds-text-base nds-font-semibold nds-mb-4"
+        >
           {{ keyboardTitle }}
         </h3>
         <div
