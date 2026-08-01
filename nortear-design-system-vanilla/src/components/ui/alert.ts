@@ -17,7 +17,10 @@ const ENTER_FALLBACK_MS = 450; // --duration-spring (400ms) + folga
 
 function runExitAnimation(el: HTMLElement, done: () => void): void {
   let finalizado = false;
-  const finalizar = () => {
+  const finalizar = (event?: Event) => {
+    // animationend borbulha: uma animação de qualquer descendente encerraria a
+    // saída antes da hora. Só o próprio elemento conta.
+    if (event && event.target !== el) return;
     if (finalizado) return;
     finalizado = true;
     window.clearTimeout(timer);
@@ -76,8 +79,12 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     // roda e é removida em seguida — se ficasse, um ambiente que não avança
     // a animação (headless) manteria o alert preso em opacity: 0, invisível.
     el.classList.add('nds-animate-in');
-    const limparEntrada = () => el.classList.remove('nds-animate-in');
-    el.addEventListener('animationend', limparEntrada, { once: true });
+    const limparEntrada = (event?: Event) => {
+      if (event && event.target !== el) return; // animationend borbulha
+      el.classList.remove('nds-animate-in');
+      el.removeEventListener('animationend', limparEntrada);
+    };
+    el.addEventListener('animationend', limparEntrada);
     window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
 
     let dismissed = false;
