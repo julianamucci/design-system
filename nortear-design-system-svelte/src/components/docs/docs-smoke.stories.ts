@@ -188,8 +188,11 @@ export const Resizable: Story = { render: page(ResizableDocs), play: mounted };
 
 export const ScrollArea: Story = { render: page(ScrollAreaDocs), play: mounted };
 
-// axe: color-contrast — catalogado no FIXES-NEEDED
-export const Select: Story = { render: page(SelectDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// color-contrast RESOLVIDA (2026-08-01): o botão "Continuar" da composição
+// usava color: var(--primary-foreground) sem hsl() (declaração inválida →
+// herdava --foreground sobre --primary) — trocado pela classe
+// nds-text-primary-foreground (mesmo padrão do Vue). Axe é portão.
+export const Select: Story = { render: page(SelectDocs), play: mounted };
 
 export const SeoGeo: Story = { render: page(SeoGeoDocs), play: mounted };
 

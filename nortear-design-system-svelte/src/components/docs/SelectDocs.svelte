@@ -726,8 +726,8 @@ interface SelectItemProps {
       </div>
       <button
         type="submit"
-        class="nds-rounded-md nds-bg-primary nds-text-body nds-font-medium"
-        style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-end; padding: 0.375rem 0.75rem; color: var(--primary-foreground);"
+        class="nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium"
+        style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-end; padding: 0.375rem 0.75rem;"
       >
         Continuar
       </button>
