@@ -141,7 +141,7 @@ const codeInitials = `<Avatar>
 </Avatar>`;
 
 const codeIcon = `<Avatar>
-  <AvatarFallback aria-label="Usuário genérico">
+  <AvatarFallback role="img" aria-label="Usuário genérico">
     <User class="nds-icon nds-text-muted-foreground" aria-hidden="true" />
   </AvatarFallback>
 </Avatar>`;
@@ -168,6 +168,7 @@ const codeWithStatus = `<div style="position: relative; display: inline-block">
   <span
     class="nds-rounded-full nds-bg-primary"
     style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
+    role="status"
     aria-label="online"
   />
 </div>`;
@@ -453,7 +454,10 @@ const testesVisual = computed(() => ({
           style="align-items: center"
         >
           <Avatar>
-            <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
+            <AvatarFallback
+              role="img"
+              :aria-label="tContent('demonstration.labels.withIcon')"
+            >
               <User
                 class="nds-icon nds-text-muted-foreground"
                 aria-hidden="true"
@@ -524,6 +528,7 @@ const testesVisual = computed(() => ({
             <span
               class="nds-rounded-full nds-bg-primary"
               style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
+              role="status"
               :aria-label="tContent('demonstration.labels.statusOnline')"
             />
           </div>
@@ -618,7 +623,10 @@ const testesVisual = computed(() => ({
       </template>
       <template #variant-preview-2>
         <Avatar>
-          <AvatarFallback :aria-label="tContent('demonstration.labels.withIcon')">
+          <AvatarFallback
+            role="img"
+            :aria-label="tContent('demonstration.labels.withIcon')"
+          >
             <User
               class="nds-icon nds-text-muted-foreground"
               aria-hidden="true"
@@ -677,6 +685,7 @@ const testesVisual = computed(() => ({
           <span
             class="nds-rounded-full nds-bg-primary"
             style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
+            role="status"
             :aria-label="tContent('demonstration.labels.statusOnline')"
           />
         </div>

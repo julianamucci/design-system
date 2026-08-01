@@ -122,8 +122,8 @@ export const AspectRatio: Story = {
 };
 
 export const Avatar: Story = {
-  // axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // aria-prohibited-attr RESOLVIDA (2026-08-01): fallback com ícone ganhou
+  // role="img" e o dot de status role="status". Axe é portão.
   render: () => ({ components: { AvatarDocs }, template: '<AvatarDocs />' }),
   play: smokePlay,
 };
@@ -341,8 +341,9 @@ export const Sidebar: Story = {
 };
 
 export const Skeleton: Story = {
-  // axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // aria-prohibited-attr RESOLVIDA (2026-08-01): containers de loading com
+  // aria-busy + aria-label ganharam role="status" (mesma decisão do vanilla).
+  // Axe é portão.
   render: () => ({ components: { SkeletonDocs }, template: '<SkeletonDocs />' }),
   play: smokePlay,
 };

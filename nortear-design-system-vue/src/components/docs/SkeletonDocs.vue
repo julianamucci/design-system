@@ -271,6 +271,7 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.card') }}
           </p>
           <div
+            role="status"
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.card')"
             class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
@@ -309,6 +310,7 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.list') }}
           </p>
           <div
+            role="status"
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.list')"
             class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
@@ -354,6 +356,7 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.image') }}
           </p>
           <div
+            role="status"
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.image')"
           >
@@ -376,6 +379,7 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.paragraph') }}
           </p>
           <div
+            role="status"
             aria-busy="true"
             :aria-label="tContent('demonstration.labels.paragraph')"
             class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
@@ -467,6 +471,7 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <div
+          role="status"
           aria-busy="true"
           aria-label="Carregando texto"
           class="nds-w-full nds-stack"
@@ -495,6 +500,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <div
+          role="status"
           aria-busy="true"
           aria-label="Carregando avatar e texto"
           class="nds-cluster nds-w-full"
@@ -544,6 +550,7 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
+          role="status"
           aria-busy="true"
           aria-label="Carregando bloco"
           style="width: 12rem"
@@ -557,6 +564,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <div
+          role="status"
           aria-busy="true"
           aria-label="Carregando avatar"
         >
@@ -569,6 +577,7 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <div
+          role="status"
           aria-busy="true"
           aria-label="Carregando linha de texto"
         >
