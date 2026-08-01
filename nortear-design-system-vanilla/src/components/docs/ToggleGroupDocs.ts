@@ -445,7 +445,8 @@ export function createToggleGroupDocs(): HTMLElement {
         });
 
         const buildDontNoAriaLabel = () => {
-          // Grupo SEM aria-label e items icon-only sem aria-label — anti-pattern
+          // Grupo SEM aria-label — anti-pattern didático do par 2. Os items
+          // mantêm aria-label invisível para não violar button-name no axe.
           const items: ToggleGroupItem[] = [
             { value: 'bold',      children: '' },
             { value: 'italic',    children: '' },
@@ -460,6 +461,11 @@ export function createToggleGroupDocs(): HTMLElement {
             wrap.appendChild(buildLucideSvg(icons[i]));
             btn.appendChild(wrap);
           });
+          applyItemAriaLabels(g, [
+            stripHtml(t('demonstration.labels.bold')),
+            stripHtml(t('demonstration.labels.italic')),
+            stripHtml(t('demonstration.labels.underline')),
+          ]);
           return g;
         };
 

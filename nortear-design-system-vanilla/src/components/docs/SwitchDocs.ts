@@ -367,8 +367,10 @@ export function createSwitchDocs(): HTMLElement {
           const row = document.createElement('div');
           row.className = 'nds-cluster';
           row.dataset.spacing = 'sm';
-          // Switch SEM id e texto solto (sem <label htmlFor>)
-          const sw = createSwitch({ checked: false });
+          // Switch SEM id e texto solto (sem <label htmlFor>) — anti-pattern
+          // didático; aria-label invisível mantém o botão nomeado para o axe
+          // sem mudar o visual.
+          const sw = createSwitch({ checked: false, 'aria-label': t('demonstration.labels.darkMode') });
           const span = document.createElement('span');
           span.textContent = t('demonstration.labels.darkMode');
           span.className = 'nds-text-body nds-font-medium nds-leading-none';

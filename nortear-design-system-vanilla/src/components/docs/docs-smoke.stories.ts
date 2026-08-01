@@ -233,11 +233,11 @@ export const Slider: Story = {
 };
 export const Sonner: Story = { render: () => createSonnerDocs(), play };
 export const Spacing: Story = { render: () => createSpacingDocs(), play };
-// axe: button-name — catalogado no FIXES-NEEDED
+// button-name RESOLVIDA (2026-08-01): o Switch do don't "texto solto" ganhou
+// aria-label via option do factory (string traduzida existente). Axe é portão.
 export const Switch: Story = {
   render: () => createSwitchDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Table: Story = { render: () => createTableDocs(), play };
 export const Tabs: Story = { render: () => createTabsDocs(), play };
@@ -250,11 +250,12 @@ export const Textarea: Story = {
 export const ThemeColors: Story = { render: () => createThemeColorsDocs(), play };
 export const ThemeSystem: Story = { render: () => createThemeSystemDocs(), play };
 export const Toggle: Story = { render: () => createToggleDocs(), play };
-// axe: button-name — catalogado no FIXES-NEEDED
+// button-name RESOLVIDA (2026-08-01): items icon-only do don't ganharam
+// aria-label (applyItemAriaLabels) — o anti-pattern segue no grupo sem
+// aria-label. Axe é portão.
 export const ToggleGroup: Story = {
   render: () => createToggleGroupDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const ToneOfVoice: Story = { render: () => createToneOfVoiceDocs(), play };
 export const Tooltip: Story = { render: () => createTooltipDocs(), play };
