@@ -2,6 +2,36 @@
 
 import { createButton } from './button';
 
+/**
+ * Toca `.nds-animate-out` e só então executa `done`. As classes vivem em
+ * `utilities.css` e servem a qualquer componente que apareça/suma em runtime.
+ *
+ * O timeout NÃO é redundância defensiva genérica: sem ele o alert nunca sai da
+ * tela em dois cenários reais — `prefers-reduced-motion`, onde a animação é
+ * suprimida e `animationend` jamais dispara, e ambiente sem composição de
+ * quadros (Chromium headless dos testes), onde a animação fica presa no
+ * primeiro quadro. Quem vencer a corrida remove o nó; `done` roda uma vez só.
+ */
+const EXIT_FALLBACK_MS = 300;  // --duration-base (200ms) + folga
+const ENTER_FALLBACK_MS = 450; // --duration-spring (400ms) + folga
+
+function runExitAnimation(el: HTMLElement, done: () => void): void {
+  let finalizado = false;
+  const finalizar = () => {
+    if (finalizado) return;
+    finalizado = true;
+    window.clearTimeout(timer);
+    el.removeEventListener('animationend', finalizar);
+    done();
+  };
+
+  // Fechar antes da entrada terminar deixaria as duas classes no elemento.
+  el.classList.remove('nds-animate-in');
+  el.classList.add('nds-animate-out');
+  el.addEventListener('animationend', finalizar);
+  const timer = window.setTimeout(finalizar, EXIT_FALLBACK_MS);
+}
+
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
 export interface AlertOptions {
@@ -42,6 +72,14 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     // O snippet da story vem do outerHTML — a configuração precisa estar no DOM.
     el.dataset.dismissible = 'true';
 
+    // Entrada: a classe é TRANSITÓRIA. Fica no DOM só enquanto a animação
+    // roda e é removida em seguida — se ficasse, um ambiente que não avança
+    // a animação (headless) manteria o alert preso em opacity: 0, invisível.
+    el.classList.add('nds-animate-in');
+    const limparEntrada = () => el.classList.remove('nds-animate-in');
+    el.addEventListener('animationend', limparEntrada, { once: true });
+    window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
+
     let dismissed = false;
     const dismissButton = createButton({
       variant: 'ghost',
@@ -51,8 +89,14 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
       onClick: () => {
         if (dismissed) return;
         dismissed = true;
-        el.remove();
-        onDismiss?.();
+        // Anima a saída antes de remover. NUNCA depender só de animationend:
+        // com prefers-reduced-motion a animação não existe e o evento nunca
+        // dispara; em ambiente que não compõe quadros (Chromium headless) ela
+        // fica presa. O timeout é o que garante que o nó sempre sai.
+        runExitAnimation(el, () => {
+          el.remove();
+          onDismiss?.();
+        });
       },
     });
     dismissButton.dataset.slot = 'alert-dismiss';

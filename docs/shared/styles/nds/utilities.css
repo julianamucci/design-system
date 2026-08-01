@@ -133,6 +133,52 @@
   margin: 0;
 }
 
+/* ── Entrada e saída de conteúdo (reutilizável) ───────────────────────────
+ *
+ * Par genérico para elementos que APARECEM e SOMEM em tempo de execução —
+ * alert dismissible hoje; popover, toast e banner são os próximos candidatos.
+ * Não é específico do alert de propósito: a mesma dupla de classes serve a
+ * qualquer componente, e é aplicada pela stack (a entrada no mount, a saída
+ * antes de remover o nó).
+ *
+ * Movimento espelhado da referência aprovada (spring stiffness 300,
+ * damping 25): opacidade + escala de 0.95, com leve overshoot na entrada via
+ * --ease-spring. A saída NÃO tem overshoot — encolher além do alvo e voltar,
+ * num elemento que está indo embora, lê como soluço.
+ *
+ * Fill-mode assimétrico, e isso é deliberado. A entrada NÃO usa fill: em
+ * ambiente que não compõe quadros (Chromium headless — onde os testes rodam)
+ * a animação fica presa no primeiro quadro, e com `backwards`/`both` o
+ * elemento ficaria em `opacity: 0` para sempre, invisível para o teste e para
+ * quem abrir a página. Sem fill, o pior caso é aparecer sem animar. A saída
+ * usa `forwards` porque precisa do oposto: manter o elemento invisível entre o
+ * fim da animação e a remoção do nó — e lá o JS tem timeout de segurança.
+ */
+@keyframes nds-animate-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes nds-animate-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+.nds-animate-in {
+  animation: nds-animate-in var(--duration-spring) var(--ease-spring);
+}
+
+.nds-animate-out {
+  animation: nds-animate-out var(--duration-base) var(--ease-exit) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-animate-in,
+  .nds-animate-out {
+    animation: none;
+  }
+}
+
 /* ── Animação de rotação (spinners) ──────────────────────────────────────── */
 .nds-animate-spin {
   animation: nds-spin 1s linear infinite;

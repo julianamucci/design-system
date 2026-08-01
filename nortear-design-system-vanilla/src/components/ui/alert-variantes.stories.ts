@@ -143,7 +143,13 @@ export const Dismissible: Story = {
 
     await step('X visível, acessível por rótulo e registrado na raiz', async () => {
       await expect(canvas.getByRole('alert')).toHaveAttribute('data-dismissible', 'true');
-      await expect(canvas.getByRole('button', { name: 'Fechar alerta' })).toBeVisible();
+      // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
+      // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
+      // browser — e no Chromium headless dos testes a animação fica presa no
+      // quadro zero até o timeout de segurança limpar a classe.
+      await waitFor(() =>
+        expect(canvas.getByRole('button', { name: 'Fechar alerta' })).toBeVisible(),
+      );
     });
 
     await step('X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes', async () => {
@@ -158,7 +164,9 @@ export const Dismissible: Story = {
       const alertOriginal = canvas.getByRole('alert');
       await userEvent.click(within(alertOriginal).getByRole('button', { name: 'Fechar alerta' }));
 
-      await expect(alertOriginal).not.toBeInTheDocument();
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só é removido
+      // quando a animação termina — ou no timeout de segurança do primitivo.
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(onDismissClick).toHaveBeenCalledTimes(1);
 
       await waitFor(async () => {
@@ -195,7 +203,9 @@ export const DismissibleTeclado: Story = {
       within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' }).focus();
       await userEvent.keyboard('{Enter}');
 
-      await expect(alertOriginal).not.toBeInTheDocument();
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só é removido
+      // quando a animação termina — ou no timeout de segurança do primitivo.
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(onDismissKeyboard).toHaveBeenCalledTimes(1);
 
       await waitFor(async () => {

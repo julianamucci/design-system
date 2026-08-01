@@ -29,6 +29,10 @@
   --duration-base:     200ms;    /* default — opacity, transform pequeno */
   --duration-moderate: 320ms;    /* enter/exit de overlays (toast, popover) */
   --duration-panel:    300ms;    /* abrir/fechar painel de altura (accordion) */
+  /* Acomodação do spring de referência (stiffness 300, damping 25, mass 1):
+     410ms medidos. Anda em par com --ease-spring — trocar um sem o outro
+     descaracteriza o movimento. */
+  --duration-spring:   400ms;
   --duration-slow:     500ms;    /* layout changes, large transforms */
   --duration-stately:  800ms;    /* mudanças de página, full-screen reveal */
 
@@ -45,6 +49,13 @@
      onde o olho acompanha o percurso inteiro. Valor validado contra a
      referência de animação adotada para o accordion. */
   --ease-size:     cubic-bezier(0.25, 0.1, 0.25, 1);
+  /* Entrada com leve overshoot, para conteúdo que APARECE (alert, popover,
+     toast). Não é um preset escolhido a olho: é o ajuste numérico de
+     spring(stiffness 300, damping 25, mass 1) — 3,1% de erro máximo contra a
+     curva do spring, reproduzindo 2,7% dos 3,8% de overshoot dele. O y do
+     segundo ponto passa de 1 justamente para produzir o overshoot; só o x
+     precisa ficar em [0,1]. Ver scratchpad/fit-spring2.mjs. */
+  --ease-spring:   cubic-bezier(0.365, 0.565, 0.121, 1.163);
   --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);     /* mais dramático na chegada */
   --ease-entrance: cubic-bezier(0, 0, 0, 1);       /* só easing-out — entrada */
   --ease-exit:     cubic-bezier(0.3, 0, 1, 1);     /* só easing-in — saída */
