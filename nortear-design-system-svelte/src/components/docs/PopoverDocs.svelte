@@ -719,6 +719,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <form class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem">
           <input
             type="text"
+            aria-label={$tStore('demonstration.labels.form.name')}
             class="nds-bg-background nds-border-default nds-text-body"
             style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
             value="Maria Silva"

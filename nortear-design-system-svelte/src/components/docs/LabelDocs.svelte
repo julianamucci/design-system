@@ -252,7 +252,9 @@ interface LabelProps {
   {#snippet dontPair1()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label>Nome completo</Label>
-      <Input type="text" />
+      <!-- O don't mantém o Label sem for/id (é o anti-padrão exibido); o
+           aria-label repete o texto visível só para o axe (rule label). -->
+      <Input type="text" aria-label="Nome completo" />
     </div>
   {/snippet}
   {#snippet doPair2()}

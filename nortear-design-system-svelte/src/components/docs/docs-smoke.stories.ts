@@ -174,8 +174,10 @@ export const Input: Story = { render: page(InputDocs), play: mounted };
 
 export const InputOTP: Story = { render: page(InputOTPDocs), play: mounted };
 
-// axe: label — catalogado no FIXES-NEEDED
-export const Label: Story = { render: page(LabelDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// label RESOLVIDA (2026-08-01): o Input do don't "sem associação" ficava sem
+// nome acessível — ganhou aria-label repetindo o texto visível (o anti-padrão
+// exibido, Label sem for/id, continua intacto). Axe é portão.
+export const Label: Story = { render: page(LabelDocs), play: mounted };
 
 export const Menubar: Story = { render: page(MenubarDocs), play: mounted };
 
@@ -185,8 +187,9 @@ export const NavigationMenu: Story = { render: page(NavigationMenuDocs), play: m
 
 export const Pagination: Story = { render: page(PaginationDocs), play: mounted };
 
-// axe: label — catalogado no FIXES-NEEDED
-export const Popover: Story = { render: page(PopoverDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// label RESOLVIDA (2026-08-01): o input do variantForm era o único fora de um
+// <label> envolvente — ganhou aria-label com a chave t() do bloco. Axe é portão.
+export const Popover: Story = { render: page(PopoverDocs), play: mounted };
 
 export const Progress: Story = { render: page(ProgressDocs), play: mounted };
 
@@ -223,9 +226,11 @@ export const Sonner: Story = { render: page(SonnerDocs), play: mounted };
 
 export const Spacing: Story = { render: page(SpacingDocs), play: mounted };
 
-// axe: heading-order — catalogado no FIXES-NEEDED. button-name RESOLVIDA
+// heading-order RESOLVIDA (2026-08-01): a composição "lista de configurações"
+// abria com <h4> logo após o <h2> da seção (pulo de nível) — virou <h3>; o
+// estilo vem das classes, então o pixel não muda. button-name RESOLVIDA
 // (2026-08-01): o Switch do don't "texto solto" ganhou aria-label.
-export const Switch: Story = { render: page(SwitchDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Switch: Story = { render: page(SwitchDocs), play: mounted };
 
 export const Table: Story = { render: page(TableDocs), play: mounted };
 
@@ -239,8 +244,12 @@ export const ThemeSystem: Story = { render: page(ThemeSystemDocs), play: mounted
 
 export const Toggle: Story = { render: page(ToggleDocs), play: mounted };
 
-// axe: aria-allowed-attr — catalogado no FIXES-NEEDED
-export const ToggleGroup: Story = { render: page(ToggleGroupDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+// aria-allowed-attr RESOLVIDA (2026-08-01): o wrapper punha role="toolbar" +
+// aria-orientation na raiz, mas o bits-ui vence no mergeProps e emite
+// role="group" — sobrava aria-orientation num role que não a aceita. As duas
+// linhas saíram (o role já era inerte); orientation segue indo pro primitivo,
+// que expõe data-orientation. Axe é portão.
+export const ToggleGroup: Story = { render: page(ToggleGroupDocs), play: mounted };
 
 export const ToneOfVoice: Story = { render: page(ToneOfVoiceDocs), play: mounted };
 

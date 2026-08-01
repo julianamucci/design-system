@@ -95,8 +95,8 @@ export const Vertical: Story = {
     const canvas = within(canvasElement);
     const group = canvas.getByRole('group');
 
-    await step('aria-orientation=vertical', async () => {
-      await expect(group).toHaveAttribute('aria-orientation', 'vertical');
+    await step('data-orientation=vertical', async () => {
+      await expect(group).toHaveAttribute('data-orientation', 'vertical');
     });
 
     await step('Renderiza 2 itens (Grade/Lista)', async () => {
