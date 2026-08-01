@@ -334,6 +334,41 @@ accordion divergem entre stacks (vanilla usa strings locais "Pergunta 1",
 react usa chaves t()) — candidato para o `/cross-stack accordion` na revisão
 do componente.
 
+## Série serial de dívida axe (2026-08-01) — 3 lotes, 1 agent por vez
+
+Processo novo (ordem da dona): corrigir tudo → testar em bloco 1x → re-corrigir
+só falhas; sem provas bidirecionais/canários redundantes.
+
+1. **empty-heading (vue)** — `aa3d02bc`. Causa única:
+   `DocsAccessibility.vue:49` renderizava o `<h3>` do bloco de teclado
+   incondicionalmente com `keyboardTitle` opcional vazio; `v-if` matou as 11
+   páginas. 7 viraram portão (label, radio-group, select, sidebar, slider,
+   textarea, toggle).
+2. **aria-prohibited-attr (4 stacks)** — `c7a38579` react · `06fe2ee7` vue ·
+   `e31d6d82` svelte · `95642e61` vanilla. `aria-label` em elemento genérico:
+   fallback de avatar com ícone → `role="img"`; dot de status e containers de
+   loading do skeleton → `role="status"` (o vanilla já fazia certo no
+   skeleton); chart rotulado → `role="img"` no call site. Snippets didáticos
+   atualizados para ensinar o padrão. 8 páginas viraram portão.
+3. **select (react/vanilla/svelte)** — `ea279e7a` · `e379fec9` · `cbc748d5`.
+   Dois achados de valor além do axe:
+   - **color-contrast**: `color: var(--primary-foreground)` SEM `hsl()` —
+     declaração inválida (tokens são triplets), texto herdava `--foreground`
+     sobre `--primary` = 1.1:1. Fix: classe `nds-text-primary-foreground`
+     (como o Vue, que já era portão). CANDIDATO A VARREDURA: outros
+     `var(--…)` de cor sem `hsl()` em estilo inline podem existir no repo.
+   - **select-name**: prosa/snippet com `<select>` literal passando por
+     `innerHTML`/`dangerouslySetInnerHTML` virava um `<select>` DOM REAL sem
+     nome (react passava snippet JSX como notes; vanilla, 2 call sites sem
+     escape). Select agora é portão nas 4 stacks.
+
+**Placar da dívida axe em `a11y: todo`: 84 (colheita) → 43.**
+Por stack: react 12 · vue 10 · svelte 9 · vanilla 12.
+Rules restantes mais frequentes: target-size, button-name,
+aria-required-children/parent, aria-hidden-focus (focus guards Base UI),
+aria-toggle-field-name, label, color-contrast (icons/calendar/command),
+nested-interactive, scrollable-region-focusable.
+
 ### Pré-existências confirmadas fora do escopo (provadas com stash)
 
 - react: `aria-hidden-focus` dos focus guards do Base UI em stories `ui/*` +
