@@ -100,13 +100,12 @@ export const Accessibility: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique — categoria 4 (contrato landmark-unique): o painel aberto
-// é region rotulado pelo trigger e demos repetem o mesmo texto compartilhado
-// (demonstration.labels.q1 na demonstração e na variante single) — reportado.
+// landmark-unique RESOLVIDA (2026-08-01, decisão da dona): a variante single
+// usa itens próprios (q2/q3) — a Demonstração abre q1, e dois painéis abertos
+// com a mesma accessible name colidiam. Axe é portão.
 export const Accordion: Story = {
   render: () => <AccordionDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 // axe: nested-interactive, target-size — catalogado no FIXES-NEEDED

@@ -430,14 +430,16 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: stripHtml(tContent("variants.items.single.description")),
                 code: codeSingle,
                 preview: (
+                  // q2/q3 (não q1): a Demonstração já abre q1 — dois painéis
+                  // abertos com a mesma accessible name violam landmark-unique.
                   <Accordion defaultValue={["item-1"]} className="nds-max-w-sm nds-text-body">
                     <AccordionItem value="item-1">
-                      <AccordionTrigger>{tContent("demonstration.labels.q1")}</AccordionTrigger>
-                      <AccordionContent>{tContent("demonstration.labels.a1")}</AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2">
                       <AccordionTrigger>{tContent("demonstration.labels.q2")}</AccordionTrigger>
                       <AccordionContent>{tContent("demonstration.labels.a2")}</AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger>{tContent("demonstration.labels.q3")}</AccordionTrigger>
+                      <AccordionContent>{tContent("demonstration.labels.a3")}</AccordionContent>
                     </AccordionItem>
                   </Accordion>
                 ),
