@@ -440,7 +440,7 @@ const a11yCritCols = computed(() => ({
         style="contain: layout; min-height: 320px;"
       >
         <NavigationMenu
-          aria-label="Navegação principal"
+          :aria-label="tContent('demonstration.title')"
           :delay-duration="80"
         >
           <NavigationMenuList>
@@ -606,7 +606,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="stripHtml(tContent('doDont.pair1.do'))"
             :delay-duration="80"
           >
             <NavigationMenuList>
@@ -633,7 +633,10 @@ const a11yCritCols = computed(() => ({
           class="nds-cluster nds-w-full"
           data-justify="center"
         >
-          <NavigationMenu :delay-duration="80">
+          <NavigationMenu
+            :aria-label="stripHtml(tContent('doDont.pair1.dont'))"
+            :delay-duration="80"
+          >
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink href="#">
@@ -656,7 +659,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="stripHtml(tContent('doDont.pair2.do'))"
             :delay-duration="80"
             default-value="produtos"
           >
@@ -704,7 +707,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="stripHtml(tContent('doDont.pair2.dont'))"
             :delay-duration="80"
             default-value="todos"
           >
@@ -755,7 +758,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="tContent('variants.items.horizontal')"
             :delay-duration="80"
           >
             <NavigationMenuList>
@@ -838,7 +841,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="tContent('variants.items.linkSimples.name')"
             :delay-duration="80"
           >
             <NavigationMenuList>
@@ -868,7 +871,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="tContent('variants.items.comDropdown.name')"
             :delay-duration="80"
             default-value="produtos"
           >
@@ -920,7 +923,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="tContent('variants.items.megaMenuGrid.name')"
             :delay-duration="80"
             default-value="solucoes"
           >
@@ -1002,7 +1005,7 @@ const a11yCritCols = computed(() => ({
           data-justify="center"
         >
           <NavigationMenu
-            aria-label="Navegação principal"
+            :aria-label="tContent('variants.items.comCardDestacado.name')"
             :delay-duration="80"
             default-value="recursos"
           >

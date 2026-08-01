@@ -134,8 +134,6 @@ export const Badge: Story = {
 };
 
 export const Breadcrumb: Story = {
-  // axe: landmark-unique — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { BreadcrumbDocs }, template: '<BreadcrumbDocs />' }),
   play: smokePlay,
 };
@@ -148,8 +146,6 @@ export const Button: Story = {
 };
 
 export const Calendar: Story = {
-  // axe: landmark-unique — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CalendarDocs }, template: '<CalendarDocs />' }),
   play: smokePlay,
 };
@@ -160,8 +156,6 @@ export const Card: Story = {
 };
 
 export const Carousel: Story = {
-  // axe: landmark-unique — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CarouselDocs }, template: '<CarouselDocs />' }),
   play: smokePlay,
 };
@@ -287,15 +281,13 @@ export const Motion: Story = {
 };
 
 export const NavigationMenu: Story = {
-  // axe: aria-hidden-focus, landmark-unique — catalogado no FIXES-NEEDED
+  // axe: aria-hidden-focus — catalogado no FIXES-NEEDED (landmark-unique resolvida)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { NavigationMenuDocs }, template: '<NavigationMenuDocs />' }),
   play: smokePlay,
 };
 
 export const Pagination: Story = {
-  // axe: landmark-unique — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { PaginationDocs }, template: '<PaginationDocs />' }),
   play: smokePlay,
 };
@@ -350,7 +342,7 @@ export const Sheet: Story = {
 };
 
 export const Sidebar: Story = {
-  // axe: empty-heading, landmark-no-duplicate-main, landmark-unique — catalogado no FIXES-NEEDED
+  // axe: empty-heading — catalogado no FIXES-NEEDED (landmark-no-duplicate-main e landmark-unique resolvidas)
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: smokePlay,
@@ -371,8 +363,6 @@ export const Slider: Story = {
 };
 
 export const Sonner: Story = {
-  // axe: landmark-unique — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { SonnerDocs }, template: '<SonnerDocs />' }),
   play: smokePlay,
 };

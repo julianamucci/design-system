@@ -381,10 +381,6 @@ const visualTestItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div style="contain: layout; position: relative; min-height: 120px;">
-        <Toaster
-          position="top-right"
-          :rich-colors="true"
-        />
         <div
           class="nds-cluster"
           data-spacing="sm"
@@ -532,10 +528,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -550,10 +542,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -568,10 +556,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -586,10 +570,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -618,10 +598,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -636,10 +612,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -654,10 +626,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -672,10 +640,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -690,10 +654,6 @@ const visualTestItems = computed(() => [
           style="contain: layout; position: relative; min-height: 80px;"
           class="nds-w-full"
         >
-          <Toaster
-            position="top-right"
-            :rich-colors="true"
-          />
           <Button
             variant="outline"
             size="sm"
@@ -790,4 +750,12 @@ const visualTestItems = computed(() => [
       }"
     />
   </DocsPageLayout>
+
+  <!-- Toaster único da página (a11y: landmark-unique) — vue-sonner enfileira
+       todo toast em TODAS as instâncias montadas; um mount por página evita
+       N regions "Notifications" idênticas. Os demos disparam toasts nele. -->
+  <Toaster
+    position="top-right"
+    :rich-colors="true"
+  />
 </template>

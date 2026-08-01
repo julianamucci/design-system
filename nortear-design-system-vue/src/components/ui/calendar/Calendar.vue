@@ -107,14 +107,17 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     :class="cn('nds-calendar-root', props.class)"
   >
     <CalendarHeader class="pt-0">
-      <nav class="nds-calendar-nav-overlay">
+      <!-- div (não <nav>): paginação de mês não é landmark de navegação — o
+           <nav> sem rótulo repetia um landmark por calendário (landmark-unique);
+           a referência cross-stack (vanilla) também usa div. -->
+      <div class="nds-calendar-nav-overlay">
         <CalendarPrevButton>
           <slot name="calendar-prev-icon" />
         </CalendarPrevButton>
         <CalendarNextButton>
           <slot name="calendar-next-icon" />
         </CalendarNextButton>
-      </nav>
+      </div>
 
       <slot
         name="calendar-heading"

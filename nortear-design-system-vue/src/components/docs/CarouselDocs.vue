@@ -498,7 +498,7 @@ function onDemoInit(payload: any) {
       >
         <Carousel
           class="nds-w-full nds-max-w-sm"
-          :aria-label="tContent('usage.uxWriting.table.caption.good')"
+          :aria-label="tContent('demonstration.title')"
           @init-api="onDemoInit"
           @pointerdown.capture="onDemoNavIntent"
           @keydown.capture="onDemoNavIntent"
@@ -598,7 +598,7 @@ function onDemoInit(payload: any) {
           <Carousel
             class="nds-w-full"
             style="max-width: 200px"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            :aria-label="stripHtml(tContent('doDont.pair1.do'))"
           >
             <CarouselContent>
               <CarouselItem
@@ -632,6 +632,7 @@ function onDemoInit(payload: any) {
           <Carousel
             class="nds-w-full"
             style="max-width: 200px"
+            :aria-label="stripHtml(tContent('doDont.pair1.dont'))"
           >
             <CarouselContent>
               <CarouselItem
@@ -735,7 +736,7 @@ function onDemoInit(payload: any) {
         >
           <Carousel
             class="nds-w-full nds-max-w-xs"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            aria-label="horizontal"
           >
             <CarouselContent>
               <CarouselItem
@@ -770,7 +771,7 @@ function onDemoInit(payload: any) {
             orientation="vertical"
             class="nds-w-full"
             style="max-width: 200px"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            aria-label="vertical"
           >
             <CarouselContent style="height: 200px">
               <CarouselItem
@@ -803,7 +804,7 @@ function onDemoInit(payload: any) {
         >
           <Carousel
             class="nds-w-full nds-max-w-xs"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            aria-label="single"
           >
             <CarouselContent>
               <CarouselItem
@@ -836,7 +837,7 @@ function onDemoInit(payload: any) {
         >
           <Carousel
             class="nds-w-full nds-max-w-md"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            aria-label="multi"
           >
             <CarouselContent>
               <CarouselItem
@@ -871,7 +872,7 @@ function onDemoInit(payload: any) {
           <Carousel
             class="nds-w-full nds-max-w-xs"
             :opts="{ loop: true }"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            :aria-label="tContent('variants.items.autoplay.name')"
           >
             <CarouselContent>
               <CarouselItem
@@ -912,7 +913,7 @@ function onDemoInit(payload: any) {
         >
           <Carousel
             class="nds-w-full"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            :aria-label="tContent('variants.compositions.withDots.name')"
             @init-api="onDotsInit"
           >
             <CarouselContent>
@@ -965,7 +966,7 @@ function onDemoInit(payload: any) {
         >
           <Carousel
             class="nds-w-full nds-max-w-sm"
-            :aria-label="tContent('usage.uxWriting.table.caption.good')"
+            :aria-label="tContent('variants.compositions.gallery.name')"
           >
             <CarouselContent>
               <CarouselItem

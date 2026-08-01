@@ -421,7 +421,7 @@ const visualTestItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div class="nds-w-full">
-        <Breadcrumb>
+        <Breadcrumb :aria-label="tContent('demonstration.title')">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink
@@ -537,7 +537,7 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <Breadcrumb>
+        <Breadcrumb :aria-label="stripHtml(tContent('doDont.pair1.do'))">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -558,7 +558,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #dont-preview-0>
-        <Breadcrumb>
+        <Breadcrumb :aria-label="stripHtml(tContent('doDont.pair1.dont'))">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -581,7 +581,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #do-preview-1>
-        <Breadcrumb>
+        <Breadcrumb :aria-label="stripHtml(tContent('doDont.pair2.do'))">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -606,7 +606,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #dont-preview-1>
-        <Breadcrumb>
+        <Breadcrumb :aria-label="stripHtml(tContent('doDont.pair2.dont'))">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -661,7 +661,10 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <Breadcrumb class="nds-w-full">
+        <Breadcrumb
+          class="nds-w-full"
+          aria-label="default"
+        >
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -682,7 +685,10 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-1>
-        <Breadcrumb class="nds-w-full">
+        <Breadcrumb
+          class="nds-w-full"
+          aria-label="withEllipsis"
+        >
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -707,7 +713,10 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-2>
-        <Breadcrumb class="nds-w-full">
+        <Breadcrumb
+          class="nds-w-full"
+          aria-label="customSeparator"
+        >
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">
@@ -732,7 +741,10 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #variant-preview-3>
-        <Breadcrumb class="nds-w-full">
+        <Breadcrumb
+          class="nds-w-full"
+          aria-label="responsive"
+        >
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">

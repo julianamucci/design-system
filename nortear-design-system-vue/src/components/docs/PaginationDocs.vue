@@ -434,6 +434,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="lg"
       >
         <Pagination
+          :aria-label="tContent('demonstration.title')"
           :total="50"
           :items-per-page="10"
           :default-page="1"
@@ -575,6 +576,7 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <Pagination
+          :aria-label="stripHtml(tContent('doDont.pair1.do'))"
           :total="120"
           :items-per-page="10"
           :default-page="6"
@@ -618,6 +620,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <Pagination
+          :aria-label="stripHtml(tContent('doDont.pair1.dont'))"
           :total="120"
           :items-per-page="10"
           :default-page="6"
@@ -639,6 +642,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <Pagination
+          :aria-label="stripHtml(tContent('doDont.pair2.do'))"
           :total="50"
           :items-per-page="10"
           :default-page="2"
@@ -667,6 +671,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <Pagination
+          :aria-label="stripHtml(tContent('doDont.pair2.dont'))"
           :total="50"
           :items-per-page="10"
           :default-page="2"
@@ -703,6 +708,7 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <Pagination
+          :aria-label="tContent('variants.items.default')"
           :total="50"
           :items-per-page="10"
           :default-page="1"
@@ -723,6 +729,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <Pagination
+          :aria-label="tContent('variants.items.directional')"
           :total="50"
           :items-per-page="10"
           :default-page="2"
@@ -744,6 +751,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <Pagination
+          :aria-label="tContent('variants.items.simple.name')"
           :total="50"
           :items-per-page="10"
           :default-page="1"
@@ -785,6 +793,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <Pagination
+          :aria-label="tContent('variants.items.withEllipsis.name')"
           :total="120"
           :items-per-page="10"
           :default-page="6"
@@ -832,6 +841,7 @@ const a11yCritCols = computed(() => ({
           data-spacing="sm"
         >
           <Pagination
+            :aria-label="tContent('variants.items.interactive.name')"
             :total="80"
             :items-per-page="10"
             :page="compInteractiveCurrent"

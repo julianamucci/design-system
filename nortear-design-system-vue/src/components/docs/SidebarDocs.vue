@@ -720,7 +720,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 180px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav :aria-label="stripHtml(tContent('doDont.pair1.do'))">
               <Sidebar
                 collapsible="none"
                 style="width: 8rem"
@@ -751,12 +751,12 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-do1"
                 class="nds-p-2 nds-text-muted-foreground"
               >
                 Conteúdo
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -834,7 +834,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav aria-label="sidebar">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
@@ -871,13 +871,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v1"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 variant="sidebar"
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -890,7 +890,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav aria-label="floating">
               <Sidebar
                 variant="floating"
                 collapsible="offcanvas"
@@ -927,13 +927,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v2"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 variant="floating"
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -946,7 +946,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav aria-label="inset">
               <Sidebar
                 variant="inset"
                 collapsible="offcanvas"
@@ -983,13 +983,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v3"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 variant="inset"
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -1002,7 +1002,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider :default-open="false">
-            <nav aria-label="Navegação principal">
+            <nav aria-label="icon">
               <Sidebar
                 variant="sidebar"
                 collapsible="icon"
@@ -1045,13 +1045,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v4"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 collapsible="icon"
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -1064,7 +1064,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 200px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav aria-label="none">
               <Sidebar
                 variant="sidebar"
                 collapsible="none"
@@ -1100,13 +1100,13 @@ const compositionItems = computed(() => [
               </Sidebar>
             </nav>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v5"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 collapsible="none"
-              </main>
+              </div>
             </SidebarInset>
           </SidebarProvider>
         </div>
@@ -1120,15 +1120,15 @@ const compositionItems = computed(() => [
         >
           <SidebarProvider>
             <SidebarInset>
-              <main
+              <div
                 id="main-content-v6"
                 class="nds-text-caption nds-text-muted-foreground"
                 style="padding: 0.75rem"
               >
                 side="right"
-              </main>
+              </div>
             </SidebarInset>
-            <nav aria-label="Navegação principal">
+            <nav aria-label="right">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
@@ -1170,7 +1170,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav :aria-label="tContent('variants.items.withSubMenu.name')">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
@@ -1257,7 +1257,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav :aria-label="tContent('variants.items.withBadges.name')">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
@@ -1339,7 +1339,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav :aria-label="tContent('variants.compositions.withGroups.name')">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
@@ -1426,7 +1426,7 @@ const compositionItems = computed(() => [
           style="contain: layout; min-height: 260px; display: flex"
         >
           <SidebarProvider>
-            <nav aria-label="Navegação principal">
+            <nav :aria-label="tContent('variants.compositions.withSearch.name')">
               <Sidebar
                 variant="sidebar"
                 collapsible="offcanvas"
