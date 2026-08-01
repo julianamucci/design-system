@@ -119,10 +119,7 @@ export const Breadcrumb: Story = { render: page(BreadcrumbDocs), play: mounted }
 
 export const Button: Story = { render: page(ButtonDocs), play: mounted };
 
-// axe: landmark-unique — REPORTADO no lote landmark-unique: o <nav class="nds-calendar-nav-overlay">
-// vem de dentro do primitivo (calendar.svelte → Calendar.Nav) sem rótulo e sem hook no call site;
-// fix exige decisão de API do primitivo (arbitragem cross-stack).
-export const Calendar: Story = { render: page(CalendarDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Calendar: Story = { render: page(CalendarDocs), play: mounted };
 
 export const Card: Story = { render: page(CardDocs), play: mounted };
 

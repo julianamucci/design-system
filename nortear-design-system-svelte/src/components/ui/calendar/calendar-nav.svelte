@@ -10,10 +10,13 @@
 	}: WithElementRef<HTMLAttributes<HTMLElement>> = $props();
 </script>
 
-<nav
+<!-- <div>, não <nav>: paginação de mês não é landmark de navegação (referência vanilla:
+     .nds-calendar-nav é <div>); como <nav>, cada calendário na página duplicava um
+     landmark sem rótulo e o axe acusava landmark-unique. Mesma classe, zero pixel. -->
+<div
 	{...restProps}
 	bind:this={ref}
 	class={cn("nds-calendar-nav-overlay", className)}
 >
 	{@render children?.()}
-</nav>
+</div>
