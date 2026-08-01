@@ -37,6 +37,11 @@
    */
   --ease-linear:   linear;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);     /* default — chega rápido, suaviza */
+  /* Simétrico, sem extremos: acelera e desacelera de leve. Para mudanças de
+     TAMANHO (altura de painel, largura de coluna), onde as curvas fortemente
+     front-loaded fazem o fim virar um arrasto visível e as aceleradoras fazem
+     o fim bater. */
+  --ease-size:     cubic-bezier(0.4, 0, 0.2, 1);
   --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);     /* mais dramático na chegada */
   --ease-entrance: cubic-bezier(0, 0, 0, 1);       /* só easing-out — entrada */
   --ease-exit:     cubic-bezier(0.3, 0, 1, 1);     /* só easing-in — saída */

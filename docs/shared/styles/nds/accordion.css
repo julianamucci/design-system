@@ -147,9 +147,19 @@
   to   { grid-template-rows: 1fr; opacity: 1; }
 }
 
+/*
+ * O fade do fechamento começa em 40%, não em 0%. Se a opacidade animar junto
+ * com a altura na mesma curva, o conteúdo desaparece na primeira metade e o
+ * resto do tempo é uma CAIXA VAZIA encolhendo — lido como duas etapas. Segurar
+ * a opacidade e fazê-la chegar a zero no mesmo instante que a altura mantém o
+ * fechamento como um movimento só. `grid-template-rows` não é declarado no
+ * keyframe intermediário de propósito: cada propriedade interpola entre os
+ * keyframes que a declaram, então a altura segue contínua de 0 a 100%.
+ */
 @keyframes nds-accordion-collapse {
-  from { grid-template-rows: 1fr; opacity: 1; }
-  to   { grid-template-rows: 0fr; opacity: 0; }
+  0%   { grid-template-rows: 1fr; opacity: 1; }
+  40%  { opacity: 1; }
+  100% { grid-template-rows: 0fr; opacity: 0; }
 }
 
 /* Entrada usa a duração de painel (320ms): 200ms é curto demais para uma
@@ -162,20 +172,17 @@
 /* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
    Vanilla usam data-state. O estado final fica 0fr para quem permanece montado.
  *
- * Easing de saída NÃO usa `--ease-exit` de propósito. Aquele token é
- * cubic-bezier(0.3, 0, 1, 1) — aceleração pura, que chega ao fim na velocidade
- * MÁXIMA. Serve para elemento que vai embora (some da tela), mas fechar um
- * accordion é acomodar: o painel encosta no item de baixo. Terminando a toda
- * velocidade, a animação parece bater e parar de repente. `--ease-standard`
- * desacelera até zero e o painel assenta.
- *
- * Duração igual à da entrada pelo mesmo motivo documentado acima: mudança de
- * altura com texto precisa de mais que 200ms para não mostrar degrau. */
+ * Easing: `--ease-size`, e nenhum dos dois óbvios. `--ease-exit`
+ * (cubic-bezier(0.3,0,1,1)) é aceleração pura e chega ao fim na velocidade
+ * máxima — o painel batia no item de baixo e parava seco. `--ease-standard`
+ * (0.2,0,0,1) é o oposto: cobre quase toda a distância no início e arrasta os
+ * últimos pixels, o que reintroduz a sensação de degrau no fim. `--ease-size`
+ * é simétrico e sem extremos, que é o que uma mudança de ALTURA pede. */
 .nds-accordion-content[data-closed],
 .nds-accordion-content[data-ending-style],
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
-  animation: nds-accordion-collapse var(--duration-moderate) var(--ease-standard);
+  animation: nds-accordion-collapse var(--duration-base) var(--ease-size);
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */
