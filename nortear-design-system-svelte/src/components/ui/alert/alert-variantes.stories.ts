@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect, fn, userEvent } from 'storybook/test';
+import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
+import AlertDismissivelStory from './AlertDismissivelStory.svelte';
 
 const meta = {
   parameters: {
@@ -113,20 +114,17 @@ export const Info: Story = {
   },
 };
 
+// As duas stories abaixo usam AlertDismissivelStory: fechar remove o alert e
+// remonta um novo em seguida, então o canvas nunca fica vazio (Chromatic
+// fotografava a story vazia). A prova da remoção mede o nó ORIGINAL.
 export const Dismissible: Story = {
   args: {
     dismissible: true,
     onDismiss: fn(),
   },
   render: (args) => ({
-    Component: AlertStory,
+    Component: AlertDismissivelStory,
     props: {
-      variant: 'default',
-      title: 'Atenção',
-      description: 'Suas alterações serão aplicadas na próxima sessão.',
-      showIcon: true,
-      icon: 'info',
-      dismissible: args.dismissible,
       onDismiss: args.onDismiss,
     },
   }),
@@ -140,10 +138,15 @@ export const Dismissible: Story = {
     });
 
     await step('Clique no X remove o alert e dispara o callback uma única vez', async () => {
+      const alertOriginal = canvas.getByRole('alert');
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(dismissButton);
-      await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Um alert novo volta ao canvas — a story não fica vazia', async () => {
+      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
     });
   },
 };
@@ -154,14 +157,8 @@ export const DismissibleTeclado: Story = {
     onDismiss: fn(),
   },
   render: (args) => ({
-    Component: AlertStory,
+    Component: AlertDismissivelStory,
     props: {
-      variant: 'default',
-      title: 'Atenção',
-      description: 'Suas alterações serão aplicadas na próxima sessão.',
-      showIcon: true,
-      icon: 'info',
-      dismissible: args.dismissible,
       onDismiss: args.onDismiss,
     },
   }),
@@ -170,12 +167,17 @@ export const DismissibleTeclado: Story = {
     const canvas = within(canvasElement);
 
     await step('Enter no botão focado remove o alert e dispara o callback uma única vez', async () => {
-      const dismissButton = await canvas.findByRole('button', { name: 'Fechar alerta' });
+      const alertOriginal = await canvas.findByRole('alert');
+      const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       dismissButton.focus();
       await expect(dismissButton).toHaveFocus();
       await userEvent.keyboard('{Enter}');
-      await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    });
+
+    await step('Um alert novo volta ao canvas — a story não fica vazia', async () => {
+      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
     });
   },
 };

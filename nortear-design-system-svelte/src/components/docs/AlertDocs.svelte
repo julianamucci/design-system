@@ -189,25 +189,40 @@ interface AlertTitleProps {
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
         <div class="nds-w-full nds-stack" data-spacing="sm">
+          <!-- default: sem título — só ícone + descrição -->
           <Alert>
             <Info aria-hidden="true" />
-            <AlertTitle as="h3">{$tStore('demonstration.labels.infoTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.infoDesc')}</AlertDescription>
           </Alert>
+          <!-- destructive: com título -->
           <Alert variant="destructive">
             <AlertCircle aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.errorTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.errorDesc')}</AlertDescription>
           </Alert>
-          <Alert variant="success">
+          <!-- success: com título + dismissible -->
+          <Alert
+            variant="success"
+            dismissible
+            onDismiss={() => track('alert_dismiss', { component: 'alert', label: 'demonstration', location: 'docs_demo' })}
+          >
             <CheckCircle2 aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
           </Alert>
+          <!-- warning: com título + ação inline na descrição.
+               As 3 classes ficam no mesmo elemento (nds-cluster nds-alert-description
+               nds-mt-1). alert.css é importado depois de layout.css, então
+               .nds-alert-description vence .nds-cluster no display e o botão cai
+               numa linha abaixo do texto, alinhado ao início — resultado esperado.
+               data-align/data-justify e margem inline seriam no-ops sob grid. -->
           <Alert variant="warning">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
-            <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
+            <AlertDescription class="nds-cluster nds-mt-1">
+              <span>{$tStore('demonstration.labels.warningDesc')}</span>
+              <Button size="sm" variant="outline">{$tStore('demonstration.labels.warningAction')}</Button>
+            </AlertDescription>
           </Alert>
         </div>
       </DocsDemonstration>
