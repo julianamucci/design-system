@@ -845,12 +845,14 @@ export type TextareaOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory Nortear é um wrapper enxuto de `<textarea>` HTML nativo e diverge das libs upstream nos seguintes pontos: ' +
+            // tags escapadas: as notas são renderizadas como HTML — um <textarea>
+            // literal virava campo real sem nome (axe: label)
+            'O factory Nortear é um wrapper enxuto de `&lt;textarea&gt;` HTML nativo e diverge das libs upstream nos seguintes pontos: ' +
             '(1) Não há prop `onChange` — escute `addEventListener("input"|"change", ...)` diretamente no elemento retornado. ' +
             '(2) Não há prop `readOnly` no factory — atribua `textarea.readOnly = true` após criar. ' +
             '(3) Não há prop `maxLength` no factory — atribua `textarea.maxLength = 500` após criar. ' +
             '(4) Não há prop `aria-invalid` no factory — use `textarea.setAttribute("aria-invalid", "true")`. ' +
-            '(5) Todos os atributos HTML nativos do `<textarea>` (autocomplete, spellcheck, wrap, minLength, etc) são aplicáveis via setAttribute() pós-criação.',
+            '(5) Todos os atributos HTML nativos do `&lt;textarea&gt;` (autocomplete, spellcheck, wrap, minLength, etc) são aplicáveis via setAttribute() pós-criação.',
         });
       }
 

@@ -365,8 +365,13 @@ export function createSliderDocs(): HTMLElement {
             unit: '%',
           });
         const buildDontNoValue = () => {
-          // Slider sem label nem texto de valor adjacente — usuário não sabe onde está
-          return createSlider({ min: 0, max: 100, value: 60 });
+          // Slider sem label nem texto de valor adjacente — usuário não sabe onde está.
+          // O anti-padrão é visual: o <input type="range"> interno ainda recebe
+          // aria-label (sem ele o axe acusa `label` na página inteira).
+          const slider = createSlider({ min: 0, max: 100, value: 60 });
+          const input = slider.querySelector('input[type="range"]');
+          input?.setAttribute('aria-label', t('demonstration.labels.volume'));
+          return slider;
         };
         const buildDoAriaLabel = () =>
           buildLabeledSlider({
@@ -538,7 +543,9 @@ input.setAttribute('aria-label', 'Volume');`,
               name: stripHtml(t('variants.items.vertical')),
               description:
                 stripHtml(t('variants.styles.vertical')) +
-                ' Não suportado de forma acessível pelo <input type="range"> nativo — divergência documentada.',
+                // tags escapadas: a descrição é renderizada como HTML — um
+                // <input type="range"> literal virava campo real sem nome (axe: label)
+                ' Não suportado de forma acessível pelo &lt;input type="range"&gt; nativo — divergência documentada.',
               code: `// Não suportado — <input type="range"> nativo não tem orientação vertical acessível.\n// Workaround visual via CSS rotate, mas ARIA não acompanha.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -733,7 +740,7 @@ export type SliderOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory custom é um wrapper de <input type="range"> nativo e diverge das libs upstream nos seguintes pontos: (1) Sem suporte a range (2 thumbs) — `value` é `number`, não `number[]`. Componha 2 sliders adjacentes para selecionar min/max. (2) Sem prop `orientation` — <input type="range"> nativo não suporta orientação vertical acessível; use horizontal. (3) Sem prop `defaultValue` — use `value` (não-controlado por padrão). (4) Sem `onValueCommitted` — `onValueChange` dispara em cada tecla/passo do arrasto; debounce manualmente para evitar spam de analytics. (5) aria-label NÃO é prop — aplique manualmente no <input type="range"> interno após criação. Em todos os outros pontos (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn) o comportamento é equivalente — provido pelo browser via input nativo.',
+            'O factory custom é um wrapper de &lt;input type="range"&gt; nativo e diverge das libs upstream nos seguintes pontos: (1) Sem suporte a range (2 thumbs) — `value` é `number`, não `number[]`. Componha 2 sliders adjacentes para selecionar min/max. (2) Sem prop `orientation` — &lt;input type="range"&gt; nativo não suporta orientação vertical acessível; use horizontal. (3) Sem prop `defaultValue` — use `value` (não-controlado por padrão). (4) Sem `onValueCommitted` — `onValueChange` dispara em cada tecla/passo do arrasto; debounce manualmente para evitar spam de analytics. (5) aria-label NÃO é prop — aplique manualmente no &lt;input type="range"&gt; interno após criação. Em todos os outros pontos (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn) o comportamento é equivalente — provido pelo browser via input nativo.',
         });
       }
 

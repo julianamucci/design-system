@@ -72,6 +72,18 @@ function makeIcon(path: string, size = 16): SVGElement {
   return svg;
 }
 
+/**
+ * `<ul data-sidebar="menu">` — createSidebarMenuItem() devolve um `<li>`, que só é
+ * válido dentro de uma lista (axe: listitem). Mesma classe usada por
+ * createSidebarGroup, então o preview mantém o layout original.
+ */
+function menuList(): HTMLUListElement {
+  const menu = document.createElement('ul');
+  menu.className = 'nds-sidebar-menu';
+  menu.setAttribute('data-sidebar', 'menu');
+  return menu;
+}
+
 const ICON_HOME     = '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>';
 const ICON_LAYOUT   = '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/>';
 const ICON_SETTINGS = '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>';
@@ -367,15 +379,20 @@ export function createSidebarDocs(): HTMLElement {
                 label.style.color = 'color-mix(in srgb, var(--sidebar-foreground) 70%, transparent)';
                 label.textContent = 'SidebarProvider';
                 const item = createSidebarMenuItem({ label: t('demonstration.labels.dashboard'), icon: makeIcon(ICON_HOME), active: true });
+                // <li> só é válido dentro de <ul>/<ol> (axe listitem) — .nds-sidebar-menu
+                // é a mesma lista usada por createSidebarGroup, sem alterar o pixel.
+                const menu = menuList();
+                menu.appendChild(item);
                 wrap.appendChild(label);
-                wrap.appendChild(item);
+                wrap.appendChild(menu);
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-p-2';
                 wrap.dataset.spacing = 'xs';
-                wrap.style.opacity = '0.6';
+                // sem opacity: o dim rebaixava o texto destructive para 3.1:1 —
+                // a borda/cor destructive já marcam o don't (axe: color-contrast)
                 const warning = document.createElement('div');
                 warning.className = 'nds-rounded nds-border-destructive-soft nds-px-2 nds-py-1 nds-text-caption nds-text-destructive';
                 warning.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
@@ -397,7 +414,9 @@ export function createSidebarDocs(): HTMLElement {
                 });
                 const btn = item.querySelector('[data-sidebar="menu-button"]');
                 if (btn) btn.setAttribute('aria-current', 'page');
-                return item;
+                const menu = menuList();
+                menu.appendChild(item);
+                return menu;
               },
               dontPreviewFactory: () => {
                 const item = createSidebarMenuItem({
@@ -413,7 +432,9 @@ export function createSidebarDocs(): HTMLElement {
                   warning.textContent = 'sem aria-label';
                   btn.appendChild(warning);
                 }
-                return item;
+                const menu = menuList();
+                menu.appendChild(item);
+                return menu;
               },
             },
             {
@@ -588,7 +609,9 @@ export function createSidebarDocs(): HTMLElement {
           inner.appendChild(content);
 
           const footer = createSidebarFooter();
-          footer.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+          const footerMenu = menuList();
+          footerMenu.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+          footer.appendChild(footerMenu);
           inner.appendChild(footer);
 
           const inset = document.createElement('div');

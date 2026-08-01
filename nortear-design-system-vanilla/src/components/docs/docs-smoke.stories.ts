@@ -123,11 +123,12 @@ export const Breadcrumb: Story = {
   play,
 };
 export const Button: Story = { render: () => createButtonDocs(), play };
-// axe: color-contrast — catalogado no FIXES-NEEDED
+// color-contrast RESOLVIDA (2026-08-01): o calendário do don't recebia
+// `style.opacity = 0.8` na docs page, o que derrubava os <th> de dia da semana
+// (--muted-foreground) para 3.69:1. Nenhum token compartilhado mudou. Axe é portão.
 export const Calendar: Story = {
   render: () => createCalendarDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Card: Story = { render: () => createCardDocs(), play };
 export const Carousel: Story = {
@@ -140,16 +141,21 @@ export const Chart: Story = {
   render: () => createChartDocs(),
   play,
 };
-// axe: aria-toggle-field-name — catalogado no FIXES-NEEDED
+// aria-toggle-field-name RESOLVIDA (2026-08-01): o checkbox do Nortear é um
+// <div role="checkbox"> — <label htmlFor> não nomeia elemento não-rotulável.
+// Todos os call sites da docs page passam aria-label (mesmo texto do label
+// visível) via option do factory. Axe é portão.
 export const Checkbox: Story = {
   render: () => createCheckboxDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const CodeBlock: Story = { render: () => createCodeBlockDocs(), play };
 export const Collapsible: Story = { render: () => createCollapsibleDocs(), play };
 export const Command: Story = { render: () => createCommandDocs(), play };
-// axe: aria-required-parent, color-contrast — catalogado no FIXES-NEEDED
+// axe: aria-required-parent (lote de estrutura de menus) — catalogado no
+// FIXES-NEEDED. color-contrast RESOLVIDA (2026-08-01): os dois nós vinham de
+// `style.opacity` (0.6 / 0.3) aplicado sobre texto --muted-foreground nos
+// previews de don't; o dim foi removido.
 export const ContextMenu: Story = {
   render: () => createContextMenuDocs(),
   play,
@@ -171,17 +177,18 @@ export const Form: Story = { render: () => createFormDocs(), play };
 export const GettingStarted: Story = { render: () => createGettingStartedDocs(), play };
 export const HoverCard: Story = { render: () => createHoverCardDocs(), play };
 export const I18n: Story = { render: () => createI18nDocs(), play };
-// axe: color-contrast — catalogado no FIXES-NEEDED
+// color-contrast RESOLVIDA (2026-08-01): a contagem de ícones do header somava
+// `style.opacity = 0.7` a --muted-foreground (3.03:1). Axe é portão.
 export const Icons: Story = {
   render: () => createIconsDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
-// axe: label — catalogado no FIXES-NEEDED
+// label RESOLVIDA (2026-08-01): os <label> das demos não tinham htmlFor e os
+// inputs não tinham id; os previews de tipo (sem label visível) ganharam
+// aria-label. Axe é portão.
 export const Input: Story = {
   render: () => createInputDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const InputOTP: Story = { render: () => createInputOTPDocs(), play };
 export const Label: Story = { render: () => createLabelDocs(), play };
@@ -218,18 +225,22 @@ export const Select: Story = {
 export const SeoGeo: Story = { render: () => createSeoGeoDocs(), play };
 export const Separator: Story = { render: () => createSeparatorDocs(), play };
 export const Sheet: Story = { render: () => createSheetDocs(), play };
-// axe: color-contrast, listitem — catalogado no FIXES-NEEDED
+// listitem + color-contrast RESOLVIDAS (2026-08-01): createSidebarMenuItem()
+// devolve <li> e os previews o penduravam direto num <div> — agora vão dentro de
+// <ul data-sidebar="menu">; e o card de don't tinha `style.opacity = 0.6` sobre
+// texto destructive (3.1:1). Axe é portão.
 export const Sidebar: Story = {
   render: () => createSidebarDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Skeleton: Story = { render: () => createSkeletonDocs(), play };
-// axe: label — catalogado no FIXES-NEEDED
+// label RESOLVIDA (2026-08-01): a prosa (variante vertical + divergências)
+// trazia `<input type="range">` literal, que virava campo real sem nome ao ser
+// renderizada como HTML — escapada com &lt;/&gt;; e o slider do don't "sem valor
+// visível" ganhou aria-label no input interno. Axe é portão.
 export const Slider: Story = {
   render: () => createSliderDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Sonner: Story = { render: () => createSonnerDocs(), play };
 export const Spacing: Story = { render: () => createSpacingDocs(), play };
@@ -241,11 +252,12 @@ export const Switch: Story = {
 };
 export const Table: Story = { render: () => createTableDocs(), play };
 export const Tabs: Story = { render: () => createTabsDocs(), play };
-// axe: label — catalogado no FIXES-NEEDED
+// label RESOLVIDA (2026-08-01): a prosa das divergências trazia `<textarea>`
+// literal e virava campo real (sem nome) ao ser renderizada como HTML — mesmo
+// padrão já visto no Select; escapada com &lt;/&gt;. Axe é portão.
 export const Textarea: Story = {
   render: () => createTextareaDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const ThemeColors: Story = { render: () => createThemeColorsDocs(), play };
 export const ThemeSystem: Story = { render: () => createThemeSystemDocs(), play };

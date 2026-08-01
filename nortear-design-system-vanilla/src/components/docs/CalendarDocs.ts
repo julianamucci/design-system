@@ -279,7 +279,10 @@ export function createCalendarDocs(): HTMLElement {
               doPreviewFactory: () =>
                 createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
               dontPreviewFactory: () =>
-                (() => { const c = createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }); c.style.opacity = '0.8'; return c; })(),
+                // sem opacity no calendário: o dim rebaixava os <th> de dia da
+                // semana (muted-foreground) para 3.69:1 — o card destructive-soft
+                // já sinaliza o don't (axe: color-contrast)
+                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
             },
             {
               doLabel: tNav('common.do'),

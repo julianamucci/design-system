@@ -47,6 +47,8 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+let demoInputUid = 0;
+
 function buildDemoInput(opts: {
   type?: string;
   placeholder?: string;
@@ -61,10 +63,14 @@ function buildDemoInput(opts: {
   wrapper.className = 'nds-stack nds-w-full';
   wrapper.dataset.spacing = 'xs';
 
+  // id/htmlFor explícitos: sem o par, o <label> não nomeia o <input> (axe: label).
+  const inputId = `demo-input-${++demoInputUid}`;
+
   if (opts.labelText) {
     const label = document.createElement('label');
     label.className = 'nds-text-body nds-font-medium';
     label.textContent = opts.labelText;
+    label.htmlFor = inputId;
     wrapper.appendChild(label);
   }
 
@@ -72,7 +78,9 @@ function buildDemoInput(opts: {
     type: opts.type ?? 'text',
     placeholder: opts.placeholder,
     disabled: opts.disabled,
+    id: inputId,
   });
+  if (!opts.labelText) input.setAttribute('aria-label', opts.placeholder ?? '');
 
   if (opts.ariaInvalid) {
     input.setAttribute('aria-invalid', 'true');
@@ -302,80 +310,49 @@ export function createInputDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: t('doDont.pair1.do'),
               dontCaption: t('doDont.pair1.dont'),
-              doPreviewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                wrapper.dataset.spacing = 'xs';
-                const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium';
-                label.textContent = 'Email';
-                const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                return wrapper;
-              },
-              dontPreviewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                wrapper.dataset.spacing = 'xs';
-                const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium';
-                label.textContent = 'Email';
-                const input = createInput({ type: 'email', placeholder: 'Digite seu email' });
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                return wrapper;
-              },
+              doPreviewFactory: () => buildDemoInput({
+                type: 'email',
+                labelText: 'Email',
+                placeholder: 'ex: joao@empresa.com',
+              }),
+              dontPreviewFactory: () => buildDemoInput({
+                type: 'email',
+                labelText: 'Email',
+                placeholder: 'Digite seu email',
+              }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: t('doDont.pair2.do'),
               dontCaption: t('doDont.pair2.dont'),
-              doPreviewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                wrapper.dataset.spacing = 'xs';
-                const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium';
-                label.textContent = 'Email';
-                const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                return wrapper;
-              },
-              dontPreviewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                wrapper.dataset.spacing = 'xs';
-                const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium';
-                label.textContent = 'Email';
-                const input = createInput({ type: 'text', placeholder: 'ex: joao@empresa.com' });
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                return wrapper;
-              },
+              doPreviewFactory: () => buildDemoInput({
+                type: 'email',
+                labelText: 'Email',
+                placeholder: 'ex: joao@empresa.com',
+              }),
+              dontPreviewFactory: () => buildDemoInput({
+                type: 'text',
+                labelText: 'Email',
+                placeholder: 'ex: joao@empresa.com',
+              }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: t('doDont.pair3.do'),
               dontCaption: t('doDont.pair3.dont'),
-              doPreviewFactory: () => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack nds-w-full';
-                wrapper.dataset.spacing = 'xs';
-                const label = document.createElement('label');
-                label.className = 'nds-text-body nds-font-medium';
-                label.textContent = 'Nome completo';
-                const input = createInput({ type: 'text', placeholder: 'ex: João da Silva' });
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                return wrapper;
-              },
+              doPreviewFactory: () => buildDemoInput({
+                type: 'text',
+                labelText: 'Nome completo',
+                placeholder: 'ex: João da Silva',
+              }),
               dontPreviewFactory: () => {
-                return createInput({ type: 'text', placeholder: 'Nome completo' });
+                // Anti-padrão proposital (placeholder no lugar do label); o nome
+                // acessível vem do aria-label para não quebrar o axe da página.
+                const input = createInput({ type: 'text', placeholder: 'Nome completo' });
+                input.setAttribute('aria-label', 'Nome completo');
+                return input;
               },
             },
           ],
@@ -395,6 +372,14 @@ export function createInputDocs(): HTMLElement {
         const codeNumber = `const input = createInput({ type: 'number', placeholder: '0' });`;
         const codeFile = `const input = createInput({ type: 'file' });`;
 
+        // Previews de tipo não têm label visível (o card já é o rótulo visual);
+        // o nome acessível vem do aria-label — sem ele o axe acusa `label`.
+        const typePreview = (options: Parameters<typeof createInput>[0], ariaLabel: string) => {
+          const input = createInput(options);
+          input.setAttribute('aria-label', ariaLabel);
+          return input;
+        };
+
         return createDocsVariants({
           title: t('variants.title'),
           items: [
@@ -402,31 +387,47 @@ export function createInputDocs(): HTMLElement {
               name: 'text',
               description: stripHtml(t('variants.items.types.text')),
               code: codeText,
-              previewFactory: () => createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
+              previewFactory: () => typePreview(
+                { type: 'text', placeholder: 'ex: João da Silva' },
+                t('demonstration.labels.defaultLabel'),
+              ),
             },
             {
               name: 'email',
               description: stripHtml(t('variants.items.types.email')),
               code: codeEmail,
-              previewFactory: () => createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' }),
+              previewFactory: () => typePreview(
+                { type: 'email', placeholder: 'ex: joao@empresa.com' },
+                t('demonstration.labels.emailLabel'),
+              ),
             },
             {
               name: 'password',
               description: stripHtml(t('variants.items.types.password')),
               code: codePassword,
-              previewFactory: () => createInput({ type: 'password', placeholder: '••••••••' }),
+              previewFactory: () => typePreview(
+                { type: 'password', placeholder: '••••••••' },
+                t('demonstration.labels.passwordLabel'),
+              ),
             },
             {
               name: 'number',
               description: stripHtml(t('variants.items.types.number')),
               code: codeNumber,
-              previewFactory: () => createInput({ type: 'number', placeholder: '0' }),
+              previewFactory: () => typePreview(
+                { type: 'number', placeholder: '0' },
+                // sem chave de label própria no bloco — usa o nome do tipo do card
+                'number',
+              ),
             },
             {
               name: 'file',
               description: stripHtml(t('variants.items.types.file')),
               code: codeFile,
-              previewFactory: () => createInput({ type: 'file' }),
+              previewFactory: () => typePreview(
+                { type: 'file' },
+                t('demonstration.labels.fileLabel'),
+              ),
             },
           ],
         });

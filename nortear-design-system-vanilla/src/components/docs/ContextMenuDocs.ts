@@ -273,8 +273,9 @@ export function createContextMenuDocs(): HTMLElement {
                 wrap.className = 'nds-cluster nds-p-2 nds-text-body';
                 wrap.dataset.align = 'center';
                 wrap.dataset.justify = 'center';
+                // sem opacity: o dim rebaixava o texto muted da área para 2.52:1
+                // (axe: color-contrast) — a nota abaixo já explica o don't
                 const area = makeTriggerArea(t('demonstration.labels.triggerLabel'));
-                area.style.opacity = '0.6';
                 const note = document.createElement('p');
                 note.className = 'nds-text-caption nds-text-muted-foreground nds-mt-2';
                 note.style.textAlign = 'center';
@@ -380,7 +381,8 @@ export function createContextMenuDocs(): HTMLElement {
                 const hint = document.createElement('p');
                 hint.className = 'nds-text-caption nds-text-muted-foreground';
                 hint.style.textAlign = 'center';
-                hint.style.opacity = '0.3';
+                // sem opacity: 0.3 levava o texto a 1.52:1 (axe: color-contrast);
+                // o próprio texto já comunica a ausência de dica
                 hint.textContent = '(sem dica visual)';
                 wrap.append(area, hint);
                 return wrap;
