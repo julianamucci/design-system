@@ -144,13 +144,20 @@ export const Dismissible: Story = {
     const canvas = within(canvasElement);
 
     await step('Botão de fechar é visível e acessível por rótulo', async () => {
-      const closeButton = canvas.getByRole('button', { name: 'Fechar alerta' });
-      await expect(closeButton).toBeVisible();
+      // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
+      // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
+      // browser — e no Chromium headless dos testes a animação fica presa no
+      // quadro zero até o timeout de segurança limpar a classe.
+      await waitFor(() =>
+        expect(canvas.getByRole('button', { name: 'Fechar alerta' })).toBeVisible(),
+      );
     });
 
     await step('Clique remove o alert original e dispara o emit uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
       await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(dismissSpy).toHaveBeenCalledTimes(1);
     });
@@ -193,6 +200,8 @@ export const DismissibleTeclado: Story = {
       closeButton.focus();
       await expect(closeButton).toHaveFocus();
       await userEvent.keyboard('{Enter}');
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(dismissKeyboardSpy).toHaveBeenCalledTimes(1);
     });
