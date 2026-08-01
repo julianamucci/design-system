@@ -186,6 +186,26 @@ type PaginationDirectionalProps =
     payload: "Payload",
   };
 
+  // ─── Rótulos visíveis das demos (reusados como aria-label — landmark-unique)
+  const demoSimpleLabel =
+    locale === "en"
+      ? "Simple pagination · 5 pages"
+      : locale === "es"
+      ? "Paginación simple · 5 páginas"
+      : "Paginação simples · 5 páginas";
+  const demoEllipsisLabel =
+    locale === "en"
+      ? "Long list with ellipsis · 12 pages"
+      : locale === "es"
+      ? "Lista larga con ellipsis · 12 páginas"
+      : "Lista longa com ellipsis · 12 páginas";
+  const demoLastPageLabel =
+    locale === "en"
+      ? "Last page · Next disabled"
+      : locale === "es"
+      ? "Última página · Next deshabilitado"
+      : "Última página · Next desabilitado";
+
   // ─── Demo state ──────────────────────────────────────────────────────────
   const [page, setPage] = useState(1);
   const [compPage, setCompPage] = useState(3);
@@ -221,13 +241,9 @@ type PaginationDirectionalProps =
           {/* Demo 1 — paginação simples interativa */}
           <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {locale === "en"
-                ? "Simple pagination · 5 pages"
-                : locale === "es"
-                ? "Paginación simple · 5 páginas"
-                : "Paginação simples · 5 páginas"}
+              {demoSimpleLabel}
             </p>
-            <Pagination>
+            <Pagination aria-label={demoSimpleLabel}>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
@@ -275,13 +291,9 @@ type PaginationDirectionalProps =
           {/* Demo 2 — com ellipsis */}
           <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {locale === "en"
-                ? "Long list with ellipsis · 12 pages"
-                : locale === "es"
-                ? "Lista larga con ellipsis · 12 páginas"
-                : "Lista longa com ellipsis · 12 páginas"}
+              {demoEllipsisLabel}
             </p>
-            <Pagination>
+            <Pagination aria-label={demoEllipsisLabel}>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious href="#" text={lblPrev} />
@@ -331,13 +343,9 @@ type PaginationDirectionalProps =
           {/* Demo 3 — última página, Next desabilitado */}
           <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {locale === "en"
-                ? "Last page · Next disabled"
-                : locale === "es"
-                ? "Última página · Next deshabilitado"
-                : "Última página · Next desabilitado"}
+              {demoLastPageLabel}
             </p>
-            <Pagination>
+            <Pagination aria-label={demoLastPageLabel}>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious href="#" text={lblPrev} />
@@ -495,7 +503,7 @@ type PaginationDirectionalProps =
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Pagination>
+              <Pagination aria-label={stripHtml(tContent("doDont.pair1.do"))}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationLink href="#" aria-label={`${lblPage} 1`}>
@@ -537,7 +545,7 @@ type PaginationDirectionalProps =
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Pagination>
+              <Pagination aria-label={stripHtml(tContent("doDont.pair2.do"))}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious href="#" text={lblPrev} />
@@ -574,7 +582,7 @@ type PaginationDirectionalProps =
             description: stripHtml(tContent("variants.styles.default")),
             code: codeDefault,
             preview: (
-              <Pagination>
+              <Pagination aria-label={tContent("variants.items.default")}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationLink href="#" aria-label={`${lblPage} 2`}>
@@ -590,7 +598,7 @@ type PaginationDirectionalProps =
             description: stripHtml(tContent("variants.styles.directional")),
             code: codeDirectional,
             preview: (
-              <Pagination>
+              <Pagination aria-label={tContent("variants.items.directional")}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious href="#" text={lblPrev} />
@@ -622,7 +630,7 @@ type PaginationDirectionalProps =
   </PaginationContent>
 </Pagination>`,
             preview: (
-              <Pagination>
+              <Pagination aria-label={tContent("variants.items.simple.name")}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
@@ -668,7 +676,7 @@ type PaginationDirectionalProps =
   </PaginationContent>
 </Pagination>`,
             preview: (
-              <Pagination>
+              <Pagination aria-label={tContent("variants.items.withEllipsis.name")}>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious href="#" text={lblPrev} />
@@ -743,7 +751,7 @@ const total = 8;
 </Pagination>`,
             preview: (
               <div className="nds-stack nds-w-full" data-spacing="sm" style={{ alignItems: 'center' }}>
-                <Pagination>
+                <Pagination aria-label={tContent("variants.items.interactive.name")}>
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious

@@ -296,8 +296,10 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
       location: "docs_demo",
     });
 
-  const previewDefault = (
-    <Breadcrumb>
+  // Cada instância de demo recebe aria-label único (axe landmark-unique):
+  // o rótulo reusa a string traduzida que já intitula o bloco na seção.
+  const previewDefault = (ariaLabel: string) => (
+    <Breadcrumb aria-label={ariaLabel}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -314,8 +316,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     </Breadcrumb>
   );
 
-  const previewWithEllipsis = (
-    <Breadcrumb>
+  const previewWithEllipsis = (ariaLabel: string) => (
+    <Breadcrumb aria-label={ariaLabel}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -336,8 +338,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     </Breadcrumb>
   );
 
-  const previewCustomSeparator = (
-    <Breadcrumb>
+  const previewCustomSeparator = (ariaLabel: string) => (
+    <Breadcrumb aria-label={ariaLabel}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -358,8 +360,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
     </Breadcrumb>
   );
 
-  const previewResponsive = (
-    <Breadcrumb>
+  const previewResponsive = (ariaLabel: string) => (
+    <Breadcrumb aria-label={ariaLabel}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -415,9 +417,9 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-stack nds-w-full">
-          {previewDefault}
-          {previewWithEllipsis}
-          {previewCustomSeparator}
+          {previewDefault(`${tContent("demonstration.title")} — default`)}
+          {previewWithEllipsis(`${tContent("demonstration.title")} — withEllipsis`)}
+          {previewCustomSeparator(`${tContent("demonstration.title")} — customSeparator`)}
         </div>
       </DocsDemonstration>
 
@@ -522,7 +524,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Breadcrumb>
+              <Breadcrumb aria-label={stripHtml(tContent("doDont.pair1.do"))}>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -539,7 +541,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               </Breadcrumb>
             ),
             dontPreview: (
-              <Breadcrumb>
+              <Breadcrumb aria-label={stripHtml(tContent("doDont.pair1.dont"))}>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -561,9 +563,9 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            doPreview: previewWithEllipsis,
+            doPreview: previewWithEllipsis(stripHtml(tContent("doDont.pair2.do"))),
             dontPreview: (
-              <Breadcrumb>
+              <Breadcrumb aria-label={stripHtml(tContent("doDont.pair2.dont"))}>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -614,25 +616,25 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
             name: "default",
             description: stripHtml(tContent("variants.items.default")),
             code: codeDefault,
-            preview: previewDefault,
+            preview: previewDefault("default"),
           },
           {
             name: "withEllipsis",
             description: stripHtml(tContent("variants.items.withEllipsis")),
             code: codeWithEllipsis,
-            preview: previewWithEllipsis,
+            preview: previewWithEllipsis("withEllipsis"),
           },
           {
             name: "customSeparator",
             description: stripHtml(tContent("variants.items.customSeparator")),
             code: codeCustomSeparator,
-            preview: previewCustomSeparator,
+            preview: previewCustomSeparator("customSeparator"),
           },
           {
             name: "responsive",
             description: stripHtml(tContent("variants.items.responsive")),
             code: codeResponsive,
-            preview: previewResponsive,
+            preview: previewResponsive("responsive"),
           },
         ]}
       />

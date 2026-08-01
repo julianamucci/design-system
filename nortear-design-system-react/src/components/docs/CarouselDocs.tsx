@@ -493,7 +493,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("doDont.pair1.do"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -506,7 +506,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               </Carousel>
             ),
             dontPreview: (
-              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("doDont.pair1.dont"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -523,7 +523,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("doDont.pair2.do"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -536,7 +536,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               </Carousel>
             ),
             dontPreview: (
-              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-sm" aria-label={stripHtml(tContent("doDont.pair2.dont"))}>
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -575,7 +575,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             description: stripHtml(tContent("variants.items.horizontal")),
             code: codeHorizontal,
             preview: (
-              <Carousel className="nds-w-full nds-max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-md" aria-label="horizontal">
                 <CarouselContent>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -596,7 +596,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               <Carousel
                 orientation="vertical"
                 className="nds-w-full nds-max-w-xs"
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                aria-label="vertical"
               >
                 <CarouselContent style={{ height: "200px" }}>
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -615,7 +615,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             description: stripHtml(tContent("variants.items.single")),
             code: codeSingle,
             preview: (
-              <Carousel className="nds-w-full nds-max-w-md" aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}>
+              <Carousel className="nds-w-full nds-max-w-md" aria-label="single">
                 <CarouselContent>
                   {Array.from({ length: 3 }).map((_, i) => (
                     <CarouselItem key={i}>
@@ -636,7 +636,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               <Carousel
                 className="nds-w-full"
                 style={{ maxWidth: "42rem" }}
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                aria-label="multi"
               >
                 <CarouselContent>
                   {Array.from({ length: 6 }).map((_, i) => (
@@ -673,7 +673,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               <Carousel
                 className="nds-w-full nds-max-w-md"
                 opts={{ loop: true }}
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                aria-label={tContent("variants.items.autoplay.name")}
               >
                 <CarouselContent>
                   {Array.from({ length: 4 }).map((_, i) => (
@@ -744,7 +744,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             preview: (
               <DotsCarouselPreview
                 total={5}
-                ariaLabel={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                ariaLabel={tContent("variants.compositions.withDots.name")}
                 previousLabel={previousLabel}
                 nextLabel={nextLabel}
                 slidePrefix={tContent("demonstration.labels.slide")}
@@ -790,7 +790,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             preview: (
               <Carousel
                 className="nds-w-full nds-max-w-md"
-                aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+                aria-label={tContent("variants.compositions.gallery.name")}
               >
                 <CarouselContent>
                   {[

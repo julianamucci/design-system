@@ -195,6 +195,10 @@ interface ToasterProps {
         />
       }
     >
+      {/* Toaster único da página — landmark region "Notifications" não pode
+          duplicar (axe landmark-unique); todas as demos disparam toasts nele. */}
+      <Toaster position="top-right" richColors />
+
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
         title={tContent("demonstration.title")}
@@ -204,7 +208,6 @@ interface ToasterProps {
           style={{ contain: "layout", minHeight: 80, position: "relative" }}
           className="nds-w-full"
         >
-          <Toaster position="top-right" richColors />
           <div className="nds-cluster" data-spacing="sm">
             <Button
               variant="outline"
@@ -380,7 +383,6 @@ interface ToasterProps {
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
                 className="nds-w-full"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   size="sm"
                   variant="outline"
@@ -395,7 +397,6 @@ interface ToasterProps {
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
                 className="nds-w-full"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   size="sm"
                   variant="outline"
@@ -416,7 +417,6 @@ interface ToasterProps {
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
                 className="nds-w-full"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   size="sm"
                   variant="outline"
@@ -440,7 +440,6 @@ interface ToasterProps {
                 style={{ contain: "layout", minHeight: 80, position: "relative" }}
                 className="nds-w-full"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   size="sm"
                   variant="outline"
@@ -477,7 +476,6 @@ interface ToasterProps {
                 className="nds-cluster nds-w-full"
                 data-justify="center"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   variant="outline"
                   size="sm"
@@ -498,7 +496,6 @@ interface ToasterProps {
                 className="nds-cluster nds-w-full"
                 data-justify="center"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   variant="outline"
                   size="sm"
@@ -519,7 +516,6 @@ interface ToasterProps {
                 className="nds-cluster nds-w-full"
                 data-justify="center"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   variant="outline"
                   size="sm"
@@ -540,7 +536,6 @@ interface ToasterProps {
                 className="nds-cluster nds-w-full"
                 data-justify="center"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   variant="outline"
                   size="sm"
@@ -561,7 +556,6 @@ interface ToasterProps {
                 className="nds-cluster nds-w-full"
                 data-justify="center"
               >
-                <Toaster position="top-right" richColors />
                 <Button
                   variant="outline"
                   size="sm"
@@ -590,7 +584,6 @@ interface ToasterProps {
               className="nds-cluster"
               data-align="center"
             >
-              <Toaster position="top-right" richColors />
               <Button
                 variant="outline"
                 size="sm"
@@ -619,7 +612,6 @@ interface ToasterProps {
               className="nds-cluster"
               data-align="center"
             >
-              <Toaster position="top-right" richColors />
               <Button
                 variant="outline"
                 size="sm"
@@ -657,7 +649,6 @@ interface ToasterProps {
               className="nds-cluster"
               data-align="center"
             >
-              <Toaster position="top-right" richColors />
               <Button
                 variant="outline"
                 size="sm"
@@ -691,7 +682,6 @@ interface ToasterProps {
               className="nds-cluster"
               data-align="center"
             >
-              <Toaster position="top-right" richColors />
               <Button
                 variant="outline"
                 size="sm"

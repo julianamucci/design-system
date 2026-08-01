@@ -226,7 +226,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.simpleLink"))}
             </p>
-            <NavigationMenu aria-label={ariaLabelMain}>
+            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.simpleLink"))}`}>
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuLink href="#">Início</NavigationMenuLink>
@@ -246,7 +246,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withDropdown"))}
             </p>
-            <NavigationMenu aria-label={ariaLabelMain} defaultValue="produtos">
+            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withDropdown"))}`} defaultValue="produtos">
               <NavigationMenuList>
                 <NavigationMenuItem value="produtos">
                   <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -279,7 +279,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withGrid"))}
             </p>
-            <NavigationMenu aria-label={ariaLabelMain} defaultValue="solucoes">
+            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withGrid"))}`} defaultValue="solucoes">
               <NavigationMenuList>
                 <NavigationMenuItem value="solucoes">
                   <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
@@ -337,7 +337,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withFeatured"))}
             </p>
-            <NavigationMenu aria-label={ariaLabelMain} defaultValue="recursos">
+            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withFeatured"))}`} defaultValue="recursos">
               <NavigationMenuList>
                 <NavigationMenuItem value="recursos">
                   <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
@@ -563,7 +563,7 @@ interface NavigationMenuLinkProps
 </NavigationMenu>`,
             preview: (
               <div style={wrapperStyle}>
-                <NavigationMenu aria-label={ariaLabelMain}>
+                <NavigationMenu aria-label={tContent("variants.items.linkSimples.name")}>
                   <NavigationMenuList>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="#">Início</NavigationMenuLink>
@@ -603,7 +603,7 @@ interface NavigationMenuLinkProps
 </NavigationMenu>`,
             preview: (
               <div style={wrapperStyle}>
-                <NavigationMenu aria-label={ariaLabelMain} defaultValue="produtos">
+                <NavigationMenu aria-label={tContent("variants.items.comDropdown.name")} defaultValue="produtos">
                   <NavigationMenuList>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="#">Início</NavigationMenuLink>
@@ -654,7 +654,7 @@ interface NavigationMenuLinkProps
 </NavigationMenu>`,
             preview: (
               <div style={{ ...wrapperStyle, minHeight: 320 }}>
-                <NavigationMenu aria-label={ariaLabelMain} defaultValue="solucoes">
+                <NavigationMenu aria-label={tContent("variants.items.megaMenuGrid.name")} defaultValue="solucoes">
                   <NavigationMenuList>
                     <NavigationMenuItem value="solucoes">
                       <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
@@ -732,7 +732,7 @@ interface NavigationMenuLinkProps
 </NavigationMenu>`,
             preview: (
               <div style={{ ...wrapperStyle, minHeight: 320 }}>
-                <NavigationMenu aria-label={ariaLabelMain} defaultValue="recursos">
+                <NavigationMenu aria-label={tContent("variants.items.comCardDestacado.name")} defaultValue="recursos">
                   <NavigationMenuList>
                     <NavigationMenuItem value="recursos">
                       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>

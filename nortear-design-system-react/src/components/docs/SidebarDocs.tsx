@@ -117,11 +117,17 @@ function SidebarDemoPreview({
   collapsible = "offcanvas",
   side = "left",
   defaultOpen = true,
+  navLabel,
+  mainLandmark = false,
 }: {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
   side?: "left" | "right";
   defaultOpen?: boolean;
+  /** Rótulo único da <nav> do demo (axe landmark-unique) — reusa a string que já intitula o bloco. */
+  navLabel: string;
+  /** Só UM demo por página mantém o <main> do SidebarInset (axe landmark-no-duplicate-main). */
+  mainLandmark?: boolean;
 }) {
   // label/destination usam a CHAVE estável do item (não o texto traduzido):
   // mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
@@ -150,7 +156,7 @@ function SidebarDemoPreview({
           toggleSource.current = "keyboard";
         }}
       >
-        <nav aria-label="Navegação principal">
+        <nav aria-label={navLabel}>
           <Sidebar variant={variant} collapsible={collapsible} side={side}>
             <SidebarHeader style={{ padding: "0.75rem" }}>
               <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
@@ -216,12 +222,22 @@ function SidebarDemoPreview({
             </SidebarFooter>
           </Sidebar>
         </nav>
-        <SidebarInset>
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-            <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
-            <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
-          </header>
-        </SidebarInset>
+        {mainLandmark ? (
+          <SidebarInset>
+            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
+              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
+            </header>
+          </SidebarInset>
+        ) : (
+          // Equivalente pixel-idêntico ao SidebarInset sem o landmark <main>
+          <div data-slot="sidebar-inset" className="nds-sidebar-inset">
+            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
+              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
+            </header>
+          </div>
+        )}
       </SidebarProvider>
     </div>
   );
@@ -237,11 +253,11 @@ function CompositionWrap({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PreviewWithGroups() {
+function PreviewWithGroups({ navLabel }: { navLabel: string }) {
   return (
     <CompositionWrap>
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={navLabel}>
           <Sidebar variant="sidebar" collapsible="offcanvas">
             <SidebarHeader style={{ padding: "0.75rem" }}>
               <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
@@ -302,23 +318,23 @@ function PreviewWithGroups() {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset>
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
           <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Dashboard</span>
           </header>
-        </SidebarInset>
+        </div>
       </SidebarProvider>
     </CompositionWrap>
   );
 }
 
-function PreviewWithSubMenu() {
+function PreviewWithSubMenu({ navLabel }: { navLabel: string }) {
   const [open, setOpen] = useState(false);
   return (
     <CompositionWrap>
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={navLabel}>
           <Sidebar variant="sidebar" collapsible="offcanvas">
             <SidebarHeader style={{ padding: "0.75rem" }}>
               <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
@@ -378,22 +394,22 @@ function PreviewWithSubMenu() {
             </SidebarFooter>
           </Sidebar>
         </nav>
-        <SidebarInset>
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
           <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
           </header>
-        </SidebarInset>
+        </div>
       </SidebarProvider>
     </CompositionWrap>
   );
 }
 
-function PreviewWithSearch() {
+function PreviewWithSearch({ navLabel }: { navLabel: string }) {
   return (
     <CompositionWrap>
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={navLabel}>
           <Sidebar variant="sidebar" collapsible="offcanvas">
             <SidebarHeader style={{ gap: "0.5rem", padding: "0.75rem" }}>
               <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>Design System</span>
@@ -440,22 +456,22 @@ function PreviewWithSearch() {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset>
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
           <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Busca no header</span>
           </header>
-        </SidebarInset>
+        </div>
       </SidebarProvider>
     </CompositionWrap>
   );
 }
 
-function PreviewWithBadges() {
+function PreviewWithBadges({ navLabel }: { navLabel: string }) {
   return (
     <CompositionWrap>
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={navLabel}>
           <Sidebar variant="sidebar" collapsible="offcanvas">
             <SidebarHeader style={{ padding: "0.75rem" }}>
               <span className="nds-font-semibold nds-text-caption" style={{ color: "var(--sidebar-foreground)" }}>App</span>
@@ -496,12 +512,12 @@ function PreviewWithBadges() {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset>
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
           <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Inbox</span>
           </header>
-        </SidebarInset>
+        </div>
       </SidebarProvider>
     </CompositionWrap>
   );
@@ -673,7 +689,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} />
+        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={tContent("demonstration.title")} mainLandmark />
       </DocsDemonstration>
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
@@ -756,7 +772,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} />
+              <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={stripHtml(tContent("doDont.pair1.do"))} />
             ),
             dontPreview: (
               <div className="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4" data-align="center" data-justify="center" style={{ minHeight: "200px" }}>
@@ -823,37 +839,37 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             name: `variant="sidebar"`,
             description: tContent("variants.items.sidebar"),
             code: codeVariantSidebar,
-            preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} />,
+            preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={`variant="sidebar"`} />,
           },
           {
             name: `variant="floating"`,
             description: tContent("variants.items.floating"),
             code: codeVariantFloating,
-            preview: <SidebarDemoPreview variant="floating" collapsible="offcanvas" defaultOpen={true} />,
+            preview: <SidebarDemoPreview variant="floating" collapsible="offcanvas" defaultOpen={true} navLabel={`variant="floating"`} />,
           },
           {
             name: `variant="inset"`,
             description: tContent("variants.items.inset"),
             code: codeVariantInset,
-            preview: <SidebarDemoPreview variant="inset" collapsible="offcanvas" defaultOpen={true} />,
+            preview: <SidebarDemoPreview variant="inset" collapsible="offcanvas" defaultOpen={true} navLabel={`variant="inset"`} />,
           },
           {
             name: `collapsible="icon"`,
             description: tContent("variants.items.icon"),
             code: codeCollapsibleIcon,
-            preview: <SidebarDemoPreview variant="sidebar" collapsible="icon" defaultOpen={false} />,
+            preview: <SidebarDemoPreview variant="sidebar" collapsible="icon" defaultOpen={false} navLabel={`collapsible="icon"`} />,
           },
           {
             name: `collapsible="none"`,
             description: tContent("variants.items.none"),
             code: `<Sidebar collapsible="none">{/* sempre visível */}</Sidebar>`,
-            preview: <SidebarDemoPreview variant="sidebar" collapsible="none" defaultOpen={true} />,
+            preview: <SidebarDemoPreview variant="sidebar" collapsible="none" defaultOpen={true} navLabel={`collapsible="none"`} />,
           },
           {
             name: `side="right"`,
             description: tContent("variants.items.right"),
             code: `<Sidebar side="right">{/* sidebar na direita */}</Sidebar>`,
-            preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" side="right" defaultOpen={true} />,
+            preview: <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" side="right" defaultOpen={true} navLabel={`side="right"`} />,
           },
           {
             name: tContent("variants.items.withSubMenu.name"),
@@ -882,7 +898,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     </SidebarMenuItem>
   );
 }`,
-            preview: <PreviewWithSubMenu />,
+            preview: <PreviewWithSubMenu navLabel={tContent("variants.items.withSubMenu.name")} />,
           },
           {
             name: tContent("variants.items.withBadges.name"),
@@ -895,7 +911,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
   </SidebarMenuButton>
   <SidebarMenuBadge>12</SidebarMenuBadge>
 </SidebarMenuItem>`,
-            preview: <PreviewWithBadges />,
+            preview: <PreviewWithBadges navLabel={tContent("variants.items.withBadges.name")} />,
           },
         ]}
       />
@@ -944,7 +960,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     </SidebarGroup>
   </SidebarContent>
 </Sidebar>`,
-            preview: <PreviewWithGroups />,
+            preview: <PreviewWithGroups navLabel={tContent("variants.compositions.withGroups.name")} />,
           },
           {
             name: tContent("variants.compositions.withSearch.name"),
@@ -962,7 +978,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     />
   </div>
 </SidebarHeader>`,
-            preview: <PreviewWithSearch />,
+            preview: <PreviewWithSearch navLabel={tContent("variants.compositions.withSearch.name")} />,
           },
         ]}
       />

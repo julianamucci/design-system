@@ -203,9 +203,13 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
   // ─── Previews ─────────────────────────────────────────────────────────────
 
-  const previewSingle = (
+  // Cada instância recebe labels.labelNav único (axe landmark-unique): o
+  // react-day-picker rotula a <nav> interna com o mesmo texto do locale em
+  // todos os calendários; o override reusa o título que já intitula o bloco.
+  const previewSingle = (navLabel: string) => (
     <Calendar
       mode="single"
+      labels={{ labelNav: () => navLabel }}
       selected={singleDate}
       onSelect={(date) => {
         setSingleDate(date);
@@ -225,6 +229,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewMultiple = (
     <Calendar
       mode="multiple"
+      labels={{ labelNav: () => "multiple" }}
       selected={multipleDates}
       onSelect={setMultipleDates}
       locale={ptBR}
@@ -234,6 +239,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewRange = (
     <Calendar
       mode="range"
+      labels={{ labelNav: () => "range" }}
       selected={range}
       onSelect={setRange as never}
       numberOfMonths={2}
@@ -244,6 +250,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewCaptionDropdown = (
     <Calendar
       mode="single"
+      labels={{ labelNav: () => "captionDropdown" }}
       captionLayout="dropdown"
       selected={singleDate}
       onSelect={setSingleDate}
@@ -254,6 +261,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewWithWeekNumber = (
     <Calendar
       mode="single"
+      labels={{ labelNav: () => "withWeekNumber" }}
       showWeekNumber
       selected={singleDate}
       onSelect={setSingleDate}
@@ -264,6 +272,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewNumberOfMonths = (
     <Calendar
       mode="range"
+      labels={{ labelNav: () => "numberOfMonths" }}
       numberOfMonths={2}
       selected={defaultRange}
       locale={ptBR}
@@ -271,14 +280,26 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   );
 
   const previewDoLocale = (
-    <Calendar mode="single" selected={today} locale={ptBR} />
+    <Calendar
+      mode="single"
+      labels={{ labelNav: () => stripHtml(tContent("doDont.pair1.do")) }}
+      selected={today}
+      locale={ptBR}
+    />
   );
 
-  const previewDontLocale = <Calendar mode="single" selected={today} />;
+  const previewDontLocale = (
+    <Calendar
+      mode="single"
+      labels={{ labelNav: () => stripHtml(tContent("doDont.pair1.dont")) }}
+      selected={today}
+    />
+  );
 
   const previewDoDisabled = (
     <Calendar
       mode="single"
+      labels={{ labelNav: () => stripHtml(tContent("doDont.pair2.do")) }}
       selected={today}
       disabled={{ before: today }}
       locale={ptBR}
@@ -286,7 +307,12 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   );
 
   const previewDontDisabled = (
-    <Calendar mode="single" selected={today} locale={ptBR} />
+    <Calendar
+      mode="single"
+      labels={{ labelNav: () => stripHtml(tContent("doDont.pair2.dont")) }}
+      selected={today}
+      locale={ptBR}
+    />
   );
 
   return (
@@ -305,7 +331,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster nds-w-full" data-justify="center">
-          {previewSingle}
+          {previewSingle(tContent("demonstration.title"))}
         </div>
       </DocsDemonstration>
 
@@ -451,7 +477,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             name: "single",
             description: stripHtml(tContent("variants.items.single")),
             code: codeSingle,
-            preview: previewSingle,
+            preview: previewSingle("single"),
           },
           {
             name: "multiple",
@@ -497,6 +523,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             preview: (
               <Calendar
                 mode="single"
+                labels={{ labelNav: () => tContent("variants.items.inlineBordered.name") }}
                 selected={singleDate}
                 onSelect={setSingleDate}
                 locale={ptBR}
@@ -518,6 +545,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             preview: (
               <Calendar
                 mode="single"
+                labels={{ labelNav: () => tContent("variants.items.disabledPast.name") }}
                 selected={singleDate}
                 onSelect={setSingleDate}
                 disabled={{ before: today }}

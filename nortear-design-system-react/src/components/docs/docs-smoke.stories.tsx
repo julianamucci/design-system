@@ -100,7 +100,9 @@ export const Accessibility: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
+// axe: landmark-unique — categoria 4 (contrato landmark-unique): o painel aberto
+// é region rotulado pelo trigger e demos repetem o mesmo texto compartilhado
+// (demonstration.labels.q1 na demonstração e na variante single) — reportado.
 export const Accordion: Story = {
   render: () => <AccordionDocs />,
   play: mounted,
@@ -141,11 +143,9 @@ export const Badge: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Breadcrumb: Story = {
   render: () => <BreadcrumbDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Button: Story = {
@@ -153,7 +153,7 @@ export const Button: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique, scope-attr-valid — catalogado no FIXES-NEEDED
+// axe: scope-attr-valid — catalogado no FIXES-NEEDED (landmark-unique resolvida)
 export const Calendar: Story = {
   render: () => <CalendarDocs />,
   play: mounted,
@@ -165,11 +165,9 @@ export const Card: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Carousel: Story = {
   render: () => <CarouselDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Chart: Story = {
@@ -294,18 +292,18 @@ export const Motion: Story = {
   play: mounted,
 };
 
-// axe: aria-hidden-focus, landmark-unique — catalogado no FIXES-NEEDED
+// axe: aria-hidden-focus — catalogado no FIXES-NEEDED; landmark-unique restante
+// só no <nav> do popup do Base UI (primitivo, sem rótulo — categoria 4, reportado);
+// as raízes das demos já têm aria-label único.
 export const NavigationMenu: Story = {
   render: () => <NavigationMenuDocs />,
   play: mounted,
   parameters: { a11y: { test: 'todo' } },
 };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Pagination: Story = {
   render: () => <PaginationDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Popover: Story = {
@@ -359,11 +357,9 @@ export const Sheet: Story = {
   play: mounted,
 };
 
-// axe: landmark-no-duplicate-main, landmark-unique — catalogado no FIXES-NEEDED
 export const Sidebar: Story = {
   render: () => <SidebarDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 // axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
@@ -378,11 +374,9 @@ export const Slider: Story = {
   play: mounted,
 };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
 export const Sonner: Story = {
   render: () => <SonnerDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Spacing: Story = {
