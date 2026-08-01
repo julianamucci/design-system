@@ -480,7 +480,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             items: [
               { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
               { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
-              { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos. Equivalente ao asChild no React.' },
+              { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos e a semântica de link.' },
               { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.disabled')) },
               { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml($tStore('props.table.type')) },
               { name: 'onclick',  type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.onClick')) },

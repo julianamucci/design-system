@@ -87,7 +87,7 @@ export const AsLink: Story = {
     Component: ButtonStory,
     props: { variant: 'link', label: 'Ver documentação', href: '#docs' },
   }),
-  parameters: { docs: { description: { story: 'Button renderizado como <a> via prop href — equivalente ao asChild do React. Preserva semântica de link.' } } },
+  parameters: { docs: { description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

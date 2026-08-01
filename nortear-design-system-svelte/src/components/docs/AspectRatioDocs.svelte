@@ -139,7 +139,7 @@
 
   const interfaceCode = `interface AspectRatioProps {
   ratio?: number;
-  asChild?: boolean;
+  child?: Snippet<[{ props: Record<string, unknown> }]>;
   class?: string;
   children?: Snippet;
 }`;
@@ -386,7 +386,7 @@
             items: [
               { name: 'ratio',    type: 'number',  defaultValue: '1',       required: 'Não', description: stripHtml($tStore('props.table.ratio'))     },
               { name: 'children', type: 'Snippet', defaultValue: '—',       required: 'Sim', description: stripHtml($tStore('props.table.children'))  },
-              { name: 'asChild',  type: 'boolean', defaultValue: 'false',   required: 'Não', description: stripHtml($tStore('props.table.asChild'))   },
+              { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.asChild'))   },
               { name: 'class',    type: 'string',  defaultValue: '—',       required: 'Não', description: stripHtml($tStore('props.table.className')) },
             ],
           },
