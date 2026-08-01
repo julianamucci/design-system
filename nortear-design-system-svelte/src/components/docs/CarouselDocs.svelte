@@ -471,7 +471,8 @@ interface CarouselNavProps extends ButtonProps {
 
   {#snippet doPair1()}
     <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
-      <Carousel aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}>
+      <!-- aria-label por instância (legenda do bloco): regions "carousel" repetidas sem rótulo distinto acusam landmark-unique -->
+      <Carousel aria-label={stripHtml($tStore('doDont.pair1.do'))}>
         <CarouselContent>
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
@@ -490,7 +491,7 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
   {#snippet dontPair1()}
     <div class="nds-w-full" style="max-width: 240px; margin-inline: auto">
-      <Carousel>
+      <Carousel aria-label={stripHtml($tStore('doDont.pair1.dont'))}>
         <CarouselContent>
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
@@ -510,7 +511,7 @@ interface CarouselNavProps extends ButtonProps {
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-        aria-label={stripHtml($tStore('usage.uxWriting.table.caption.good'))}
+        aria-label={stripHtml($tStore('doDont.pair2.do'))}
       >
         <CarouselContent>
           {#each [1, 2, 3] as i (i)}
@@ -533,6 +534,7 @@ interface CarouselNavProps extends ButtonProps {
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 800, stopOnInteraction: false })]}
+        aria-label={stripHtml($tStore('doDont.pair2.dont'))}
       >
         <CarouselContent>
           {#each [1, 2, 3] as i (i)}

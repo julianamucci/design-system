@@ -426,7 +426,8 @@ interface SidebarMenuButtonProps {
   {#snippet doPair1()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption" style="contain: layout; min-height: 200px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <!-- aria-label por instância (legenda do bloco): vários <nav> com o mesmo rótulo acusam landmark-unique no axe -->
+        <nav aria-label={stripHtml($tStore('doDont.pair1.do'))}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarContent>
               <SidebarGroup>
@@ -464,7 +465,7 @@ interface SidebarMenuButtonProps {
   {#snippet doPair2()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={stripHtml($tStore('doDont.pair2.do'))}>
           <Sidebar side="left" variant="sidebar" collapsible="icon">
             <SidebarContent>
               <SidebarGroup>
@@ -495,7 +496,7 @@ interface SidebarMenuButtonProps {
   {#snippet dontPair2()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
           <Sidebar side="left" variant="sidebar" collapsible="icon">
             <SidebarContent>
               <SidebarGroup>
@@ -523,7 +524,7 @@ interface SidebarMenuButtonProps {
   {#snippet doPair3()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={stripHtml($tStore('doDont.pair3.do'))}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarContent>
               <SidebarMenu>
@@ -550,7 +551,7 @@ interface SidebarMenuButtonProps {
   {#snippet dontPair3()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={stripHtml($tStore('doDont.pair3.dont'))}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarContent>
               <SidebarMenu>
@@ -602,7 +603,7 @@ interface SidebarMenuButtonProps {
         useWhen: $tStore('variants.items.withSubMenu.use'),
         code: `<script>
   let open = $state(false);
-</script>
+<\/script>
 
 <SidebarMenuItem>
   <SidebarMenuButton aria-expanded={open} onclick={() => open = !open}>
@@ -639,7 +640,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantSidebar()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="sidebar">
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarContent>
               <SidebarGroup>
@@ -670,7 +671,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantFloating()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="floating">
           <Sidebar side="left" variant="floating" collapsible="offcanvas">
             <SidebarContent>
               <SidebarGroup>
@@ -700,7 +701,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantInset()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="inset">
           <Sidebar side="left" variant="inset" collapsible="offcanvas">
             <SidebarContent>
               <SidebarGroup>
@@ -730,7 +731,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantIcon()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={false}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="icon">
           <Sidebar side="left" variant="sidebar" collapsible="icon">
             <SidebarContent>
               <SidebarGroup>
@@ -761,7 +762,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantNone()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 220px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="none">
           <Sidebar side="left" variant="sidebar" collapsible="none">
             <SidebarContent>
               <SidebarGroup>
@@ -794,7 +795,7 @@ interface SidebarMenuButtonProps {
         <SidebarInset style="min-height: 220px; display: flex; align-items: center; justify-content: center">
           <span class="nds-text-caption nds-text-muted-foreground">side="right"</span>
         </SidebarInset>
-        <nav aria-label="Navegação principal">
+        <nav aria-label="right">
           <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
             <SidebarContent>
               <SidebarGroup>
@@ -884,7 +885,7 @@ interface SidebarMenuButtonProps {
   {#snippet compWithGroups()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={$tStore('variants.compositions.withGroups.name')}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">Design System</SidebarHeader>
             <SidebarContent>
@@ -948,7 +949,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantWithSubMenu()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={$tStore('variants.items.withSubMenu.name')}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">Design System</SidebarHeader>
             <SidebarContent>
@@ -1011,7 +1012,7 @@ interface SidebarMenuButtonProps {
   {#snippet compWithSearch()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={$tStore('variants.compositions.withSearch.name')}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarHeader style="gap: 0.5rem; padding: 0.75rem">
               <span class="nds-text-body nds-font-semibold" style="color: var(--sidebar-foreground)">Design System</span>
@@ -1055,7 +1056,7 @@ interface SidebarMenuButtonProps {
   {#snippet variantWithBadges()}
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 260px">
       <SidebarProvider defaultOpen={true}>
-        <nav aria-label="Navegação principal">
+        <nav aria-label={$tStore('variants.items.withBadges.name')}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
             <SidebarHeader class="nds-text-body nds-font-semibold" style="padding: 0.75rem; color: var(--sidebar-foreground)">App</SidebarHeader>
             <SidebarContent>

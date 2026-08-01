@@ -267,7 +267,8 @@ interface BreadcrumbEllipsisProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-w-full">
-      <Breadcrumb>
+      <!-- aria-label por instância: a página monta vários <nav> de breadcrumb; sem rótulo distinto o axe acusa landmark-unique -->
+      <Breadcrumb aria-label={$tStore('demonstration.title')}>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'home', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -391,7 +392,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   {#snippet doPair1()}
-    <Breadcrumb>
+    <Breadcrumb aria-label={stripHtml($tStore('doDont.pair1.do'))}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -408,7 +409,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet dontPair1()}
-    <Breadcrumb>
+    <Breadcrumb aria-label={stripHtml($tStore('doDont.pair1.dont'))}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -425,7 +426,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet doPair2()}
-    <Breadcrumb>
+    <Breadcrumb aria-label={stripHtml($tStore('doDont.pair2.do'))}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -446,7 +447,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet dontPair2()}
-    <Breadcrumb>
+    <Breadcrumb aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -496,7 +497,7 @@ interface BreadcrumbEllipsisProps {
   />
 
   {#snippet variantDefault()}
-    <Breadcrumb class="nds-w-full">
+    <Breadcrumb class="nds-w-full" aria-label="default">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -513,7 +514,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantWithEllipsis()}
-    <Breadcrumb class="nds-w-full">
+    <Breadcrumb class="nds-w-full" aria-label="withEllipsis">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -534,7 +535,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantCustomSeparator()}
-    <Breadcrumb class="nds-w-full">
+    <Breadcrumb class="nds-w-full" aria-label="customSeparator">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -555,7 +556,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet variantResponsive()}
-    <Breadcrumb class="nds-w-full">
+    <Breadcrumb class="nds-w-full" aria-label="responsive">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>

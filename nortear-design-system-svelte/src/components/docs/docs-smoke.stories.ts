@@ -115,18 +115,18 @@ export const Avatar: Story = { render: page(AvatarDocs), play: mounted, paramete
 
 export const Badge: Story = { render: page(BadgeDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const Breadcrumb: Story = { render: page(BreadcrumbDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Breadcrumb: Story = { render: page(BreadcrumbDocs), play: mounted };
 
 export const Button: Story = { render: page(ButtonDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
+// axe: landmark-unique — REPORTADO no lote landmark-unique: o <nav class="nds-calendar-nav-overlay">
+// vem de dentro do primitivo (calendar.svelte → Calendar.Nav) sem rótulo e sem hook no call site;
+// fix exige decisão de API do primitivo (arbitragem cross-stack).
 export const Calendar: Story = { render: page(CalendarDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const Card: Story = { render: page(CardDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const Carousel: Story = { render: page(CarouselDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Carousel: Story = { render: page(CarouselDocs), play: mounted };
 
 export const Chart: Story = { render: page(ChartDocs), play: mounted };
 
@@ -174,11 +174,9 @@ export const Menubar: Story = { render: page(MenubarDocs), play: mounted };
 
 export const Motion: Story = { render: page(MotionDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const NavigationMenu: Story = { render: page(NavigationMenuDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const NavigationMenu: Story = { render: page(NavigationMenuDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const Pagination: Story = { render: page(PaginationDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Pagination: Story = { render: page(PaginationDocs), play: mounted };
 
 // axe: label — catalogado no FIXES-NEEDED
 export const Popover: Story = { render: page(PopoverDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
@@ -201,16 +199,14 @@ export const Separator: Story = { render: page(SeparatorDocs), play: mounted };
 
 export const Sheet: Story = { render: page(SheetDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const Sidebar: Story = { render: page(SidebarDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Sidebar: Story = { render: page(SidebarDocs), play: mounted };
 
 // axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
 export const Skeleton: Story = { render: page(SkeletonDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
 
 export const Slider: Story = { render: page(SliderDocs), play: mounted };
 
-// axe: landmark-unique — catalogado no FIXES-NEEDED
-export const Sonner: Story = { render: page(SonnerDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Sonner: Story = { render: page(SonnerDocs), play: mounted };
 
 export const Spacing: Story = { render: page(SpacingDocs), play: mounted };
 

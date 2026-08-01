@@ -194,7 +194,8 @@ interface PaginationDirectionalProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-      <Pagination count={120} perPage={10} page={6} siblingCount={1} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
+      <!-- aria-label por instância: a página monta vários nav "pagination"; sem rótulo distinto o axe acusa landmark-unique -->
+      <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tStore('demonstration.title')} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
             <PaginationItem>
@@ -326,7 +327,7 @@ interface PaginationDirectionalProps {
   />
 
   {#snippet doPair1()}
-    <Pagination count={120} perPage={10} page={6} siblingCount={1}>
+    <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={stripHtml($tStore('doDont.pair1.do'))}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
@@ -351,7 +352,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet dontPair1()}
-    <Pagination count={150} perPage={10} page={6} siblingCount={20}>
+    <Pagination count={150} perPage={10} page={6} siblingCount={20} aria-label={stripHtml($tStore('doDont.pair1.dont'))}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           {#each pages.slice(0, 10) as p (p.key)}
@@ -368,7 +369,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet doPair2()}
-    <Pagination count={50} perPage={10} page={2}>
+    <Pagination count={50} perPage={10} page={2} aria-label={stripHtml($tStore('doDont.pair2.do'))}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
@@ -391,7 +392,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet dontPair2()}
-    <Pagination count={50} perPage={10} page={2}>
+    <Pagination count={50} perPage={10} page={2} aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem>
@@ -506,7 +507,7 @@ interface PaginationDirectionalProps {
   />
 
   {#snippet variantDefault()}
-    <Pagination count={50} perPage={10} page={1} siblingCount={2}>
+    <Pagination count={50} perPage={10} page={1} siblingCount={2} aria-label={$tStore('variants.items.default')}>
       {#snippet children({ pages })}
         <PaginationContent>
           {#each pages as p (p.key)}
@@ -523,7 +524,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet variantDirectional()}
-    <Pagination count={50} perPage={10} page={2}>
+    <Pagination count={50} perPage={10} page={2} aria-label={$tStore('variants.items.directional')}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious aria-label="Ir para a página anterior" />
@@ -537,7 +538,7 @@ interface PaginationDirectionalProps {
 
 
   {#snippet variantSimple()}
-    <Pagination count={50} perPage={10} page={1}>
+    <Pagination count={50} perPage={10} page={1} aria-label={$tStore('variants.items.simple.name')}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
@@ -554,7 +555,7 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
   {#snippet variantWithEllipsis()}
-    <Pagination count={120} perPage={10} page={6} siblingCount={1}>
+    <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tStore('variants.items.withEllipsis.name')}>
       {#snippet children({ pages, currentPage })}
         <PaginationContent>
           <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>
@@ -574,7 +575,7 @@ interface PaginationDirectionalProps {
   {/snippet}
   {#snippet variantInteractive()}
     <div class="nds-stack nds-w-full" data-spacing="sm" data-align="center">
-      <Pagination count={80} perPage={10} bind:page={interactiveCurrent}>
+      <Pagination count={80} perPage={10} bind:page={interactiveCurrent} aria-label={$tStore('variants.items.interactive.name')}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
             <PaginationItem><PaginationPrevious aria-label="Anterior" /></PaginationItem>

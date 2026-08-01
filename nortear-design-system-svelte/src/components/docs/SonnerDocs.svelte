@@ -206,7 +206,6 @@ toast.promise(promise, {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div style="contain: layout" class="nds-cluster" data-spacing="sm">
-      <Toaster position="top-right" richColors />
       <Button variant="outline" onclick={fireDefault}
         data-track="docs_demo_click"
         data-track-component="sonner"
@@ -386,7 +385,6 @@ toast.promise(promise, {
       <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>
         toast.success
       </Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet dontPair1()}
@@ -394,7 +392,6 @@ toast.promise(promise, {
       <Button variant="outline" onclick={() => toast.error('Erro crítico! O sistema falhou completamente.')}>
         toast.error (erro crítico)
       </Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet doPair2()}
@@ -405,7 +402,6 @@ toast.promise(promise, {
       }}>
         toast.promise
       </Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet dontPair2()}
@@ -413,7 +409,6 @@ toast.promise(promise, {
       <Button variant="outline" onclick={() => toast.error('Campo obrigatório não preenchido.')}>
         toast (erro de campo)
       </Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
 
@@ -440,31 +435,26 @@ toast.promise(promise, {
   {#snippet variantDefault()}
     <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
       <Button variant="outline" onclick={() => toast('Código copiado.')}>Disparar</Button>
-      <Toaster position="top-right" />
     </div>
   {/snippet}
   {#snippet variantSuccess()}
     <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
       <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>Disparar</Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet variantError()}
     <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
       <Button variant="outline" onclick={() => toast.error('Não foi possível salvar. Tente novamente.')}>Disparar</Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet variantWarning()}
     <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
       <Button variant="outline" onclick={() => toast.warning('Sua sessão expira em 5 minutos.')}>Disparar</Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
   {#snippet variantInfo()}
     <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
       <Button variant="outline" onclick={() => toast.info('Nova versão disponível.')}>Disparar</Button>
-      <Toaster position="top-right" richColors />
     </div>
   {/snippet}
 
@@ -637,3 +627,7 @@ toast.promise(promise, {
     }}
   />
 </DocsPageLayout>
+
+<!-- Toaster único da página: um mount por página (todas as demos disparam toasts nele).
+     Vários mounts criavam N regions "Notifications" idênticas → axe landmark-unique. -->
+<Toaster position="top-right" richColors />

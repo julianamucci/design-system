@@ -190,7 +190,8 @@ interface NavigationMenuLinkProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label="Navegação principal">
+      <!-- aria-label por instância: a página monta vários <nav>; com o mesmo rótulo o axe acusa landmark-unique -->
+      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={$tStore('demonstration.title')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
@@ -329,7 +330,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <NavigationMenuRoot delayDuration={80} aria-label="Navegação principal">
+      <NavigationMenuRoot delayDuration={80} aria-label={stripHtml($tStore('doDont.pair1.do'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
@@ -343,7 +344,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <NavigationMenuRoot delayDuration={80}>
+      <NavigationMenuRoot delayDuration={80} aria-label={stripHtml($tStore('doDont.pair1.dont'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -357,7 +358,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label="Navegação principal">
+      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.do'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -376,7 +377,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label="Navegação principal">
+      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -501,7 +502,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantHorizontal()}
     <div style="contain: layout">
-      <NavigationMenuRoot orientation="horizontal" delayDuration={80} aria-label="Navegação principal">
+      <NavigationMenuRoot orientation="horizontal" delayDuration={80} aria-label={$tStore('variants.items.horizontal')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/">Início</NavigationMenuLink>
@@ -537,7 +538,7 @@ interface NavigationMenuLinkProps {
   <!-- ── Composições ──────────────────────────────────────────────── -->
   {#snippet variantLinkSimples()}
     <div style="contain: layout; min-height: 200px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} aria-label="Navegação principal">
+      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.linkSimples.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home"><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
           <NavigationMenuItem value="precos"><NavigationMenuLink href="#">Preços</NavigationMenuLink></NavigationMenuItem>
@@ -549,7 +550,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantComDropdown()}
     <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="produtos" aria-label="Navegação principal">
+      <NavigationMenuRoot delayDuration={80} defaultValue="produtos" aria-label={$tStore('variants.items.comDropdown.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home"><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
           <NavigationMenuItem value="produtos">
@@ -570,7 +571,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantMegaMenuGrid()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="solucoes" aria-label="Navegação principal">
+      <NavigationMenuRoot delayDuration={80} defaultValue="solucoes" aria-label={$tStore('variants.items.megaMenuGrid.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="solucoes">
             <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
@@ -592,7 +593,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantComCardDestacado()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="recursos" aria-label="Navegação principal">
+      <NavigationMenuRoot delayDuration={80} defaultValue="recursos" aria-label={$tStore('variants.items.comCardDestacado.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="recursos">
             <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
