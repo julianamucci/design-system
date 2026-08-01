@@ -139,8 +139,9 @@ export const Breadcrumb: Story = {
 };
 
 export const Button: Story = {
-  // axe: scrollable-region-focusable — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // scrollable-region-focusable RESOLVIDA (2026-08-01): o wrapper de tabela
+  // (.nds-table-wrapper, overflow-x:auto) ganhou tabindex="0" — mesma decisão
+  // do CodeBlock (WCAG 2.1.1). Axe é portão.
   render: () => ({ components: { ButtonDocs }, template: '<ButtonDocs />' }),
   play: smokePlay,
 };
@@ -255,8 +256,9 @@ export const Icons: Story = {
 };
 
 export const Input: Story = {
-  // axe: label — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // label RESOLVIDA (2026-08-01): o input type="file" da seção de tipos não
+  // tem placeholder (única fonte de nome nos demais previews) e ganhou
+  // aria-label com chave t() existente. Axe é portão.
   render: () => ({ components: { InputDocs }, template: '<InputDocs />' }),
   play: smokePlay,
 };
@@ -394,8 +396,9 @@ export const ThemeColors: Story = {
 };
 
 export const ThemeSystem: Story = {
-  // axe: heading-order — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // heading-order RESOLVIDA (2026-08-01): cards de sub-grupo sem h3 acima
+  // (tokens.groups) saltavam de h2 para h4 no FoundationsRenderer; agora o
+  // nível é h3 quando não há título de sub-grupo. Axe é portão.
   render: () => ({ components: { ThemeSystemDocs }, template: '<ThemeSystemDocs />' }),
   play: smokePlay,
 };

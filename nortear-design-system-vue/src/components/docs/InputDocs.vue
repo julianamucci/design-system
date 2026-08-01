@@ -639,7 +639,10 @@ const visualTestItems = computed(() => [
           class="nds-stack nds-w-full"
           data-spacing="xs"
         >
-          <Input type="file" />
+          <Input
+            type="file"
+            :aria-label="tContent('demonstration.labels.fileLabel')"
+          />
         </div>
       </template>
     </DocsVariants>

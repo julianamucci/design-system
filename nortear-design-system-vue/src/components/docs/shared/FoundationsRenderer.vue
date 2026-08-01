@@ -490,9 +490,12 @@ track('docs_page_view', {
                   :key="item.key"
                 >
                   <CardHeader>
+                    <!-- Sem h3 de sub-grupo acima, os cards são o próximo nível
+                         após o h2 da seção → h3 (axe heading-order). A classe de
+                         estilo vem de .nds-card-title — zero mudança visual. -->
                     <CardTitle
                       v-if="itemTitle(item.value)"
-                      as="h4"
+                      :as="subGroup(ex.value)!.title ? 'h4' : 'h3'"
                     >
                       <span v-html="itemTitle(item.value)" />
                     </CardTitle>
