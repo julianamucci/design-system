@@ -664,14 +664,13 @@ interface SelectContentProps {
                 </div>
                 <button
                   type="submit"
-                  className="nds-rounded-md nds-bg-primary nds-text-body nds-font-medium"
+                  className="nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
                     alignSelf: "flex-end",
                     padding: "0.375rem 0.75rem",
-                    color: "var(--primary-foreground)",
                   }}
                 >
                   {locale === "en" ? "Continue" : locale === "es" ? "Continuar" : "Continuar"}
@@ -796,7 +795,7 @@ interface SelectContentProps {
         ]}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
-        extensibilityNotes={tContent("props.extensibilityCode")}
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       {/* ── Tokens ────────────────────────────────────────────────── */}

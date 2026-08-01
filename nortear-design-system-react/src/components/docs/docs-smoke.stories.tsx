@@ -336,11 +336,15 @@ export const ScrollArea: Story = {
   play: mounted,
 };
 
-// axe: color-contrast, select-name — catalogado no FIXES-NEEDED
+// color-contrast + select-name RESOLVIDAS (2026-08-01): o botão "Continuar" da
+// composição usava color: var(--primary-foreground) sem hsl() (declaração
+// inválida → herdava --foreground sobre --primary) — trocado pela classe
+// nds-text-primary-foreground (mesmo padrão do Vue); e o snippet de
+// extensibilidade era passado como extensibilityNotes (innerHTML → <select>
+// real sem nome) em vez de extensibilityCode. Axe é portão.
 export const Select: Story = {
   render: () => <SelectDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const SeoGeo: Story = {
