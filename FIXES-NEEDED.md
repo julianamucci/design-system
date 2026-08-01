@@ -289,3 +289,50 @@ virtualizado/paginado — isso destrava axe nas 4.
 renderizam `<section>` sem `id` nas 4 stacks — a play da fumaça precisou de
 seletor relaxado. Dar `id` às sections de Foundations ganha âncora de
 deep-link de graça e devolve a play estrita `section[id]`.
+
+## Lote landmark-unique — RESOLVIDO em 22 páginas (2026-08-01)
+
+Commits: `c9e9b736` vanilla · `62443ee2` svelte · `9f873e45` vue ·
+`5a735585` react. Páginas em `a11y: todo` (total 4 stacks): 84 → 64 (as
+tabelas por stack acima ficam superadas na família landmark-*).
+
+Canon aplicado (agora regra em `_dev-shared.md` §Landmarks repetidos):
+aria-label por instância = título visível do bloco via t(); Toaster único por
+página; `<main>` só na Demonstração; nav de mês do Calendar não é landmark.
+Provas bidirecionais por stack (pagination/breadcrumb/sonner) — reverter o
+fix faz a rule voltar. Nenhum pixel, nenhum arquivo de `docs/shared/`,
+nenhuma string inventada.
+
+Bônus svelte: `</script>` literal não escapado em template string no
+`SidebarDocs.svelte` quebrava o svelte2tsx de meio arquivo — escapado;
+**svelte-check: 689 → 353 erros (novo baseline)**.
+
+### Restos do lote — precisam de decisão da dona
+
+- [ ] **accordion (react + vanilla; a rigor 4 stacks)** — categoria 4: o
+  painel aberto é `role="region"` com accessible name vinda do TRIGGER
+  (`aria-labelledby`); a Demonstração e a variante "single" repetem a mesma
+  chave `demonstration.labels.q1` de `translations.json` → N regions com o
+  mesmo nome. Corrigir exige diferenciar o texto dos triggers entre blocos no
+  conteúdo compartilhado (3 locales, paridade story↔docs) — ou aceitar a
+  permanência em `todo`. Nota: `aria-label` local no content NÃO resolve
+  (`aria-labelledby` tem precedência na accname).
+- [ ] **navigation-menu popup (react)** — o `NavigationMenuPrimitive.Popup`
+  do Base UI renderiza `<nav>` SEM rótulo; 6 demos `defaultValue` deixam
+  popups abertos que colidem entre si. O vanilla (referência) NÃO rende
+  `<nav>` no popup. Proposta recomendada: `render={<div/>}` no wrapper
+  `navigation-menu.tsx` (alinha com a referência); alternativa: encaminhar
+  rótulo ao Popup. Mudança de primitivo — por isso parou aqui.
+- Calendar svelte (nav→div no wrapper, precedente Vue/canon vanilla):
+  follow-up JÁ despachado, agent em execução.
+
+### Pré-existências confirmadas fora do escopo (provadas com stash)
+
+- react: `aria-hidden-focus` dos focus guards do Base UI em stories `ui/*` +
+  `data-active` em pagination-variantes (6 falhas).
+- vue: 12 falhas em stories de carousel/navigation-menu/sidebar + calendar
+  Playground (`role "grid"` ausente); Motion `color-contrast` 1.02 flaky sob
+  carga (passa isolada).
+- svelte: 15 falhas de interação em stories de pagination/navigation-menu/
+  sidebar (backlog dos 50/180).
+- vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.

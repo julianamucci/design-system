@@ -257,6 +257,26 @@ Todo conteúdo de `translations.json` renderizado como HTML passa por `DOMPurify
 
 **Vanilla: NUNCA `innerHTML` com string interpolada de fonte dinâmica sem sanitize. Preferir `createElement` + `textContent`.**
 
+### Landmarks repetidos em demos — aria-label por instância
+
+Docs pages montam o mesmo componente N vezes. Se o componente É um landmark
+(`<nav>` do breadcrumb/pagination/navigation-menu, `role="region"` do
+carousel, `<main>` do SidebarInset) ou um singleton (`<Toaster>` do sonner),
+instâncias repetidas violam `landmark-unique`/`landmark-no-duplicate-main` no
+axe da fumaça (`docs-smoke`). Regras (lote 2026-08-01):
+
+- **Singleton (Toaster)**: UM mount por página, no nível do layout; demos
+  disparam nele.
+- **Landmark repetido**: cada instância recebe `aria-label` = a string
+  traduzida que **já intitula visivelmente o bloco** (`t('demonstration.title')`,
+  `stripHtml(t('doDont.pairN.do|dont'))`, o `name` da variante). Nunca
+  inventar string nem hardcodar pt-BR. O label vai no elemento landmark do
+  componente, não em wrapper.
+- **`<main>` em demo**: só a Demonstração mantém o elemento real; os demais
+  previews usam `<div>` com as mesmas classes (pixel-idêntico).
+- Paginação interna de mês do Calendar **não é landmark**: o wrapper renderiza
+  `<div class="nds-calendar-nav*">` (canon vanilla), não `<nav>`.
+
 ---
 
 ## Containment para Portais (overlays)
