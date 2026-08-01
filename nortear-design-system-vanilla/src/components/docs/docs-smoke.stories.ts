@@ -205,11 +205,15 @@ export const Progress: Story = { render: () => createProgressDocs(), play };
 export const RadioGroup: Story = { render: () => createRadioGroupDocs(), play };
 export const Resizable: Story = { render: () => createResizableDocs(), play };
 export const ScrollArea: Story = { render: () => createScrollAreaDocs(), play };
-// axe: color-contrast, select-name — catalogado no FIXES-NEEDED
+// color-contrast + select-name RESOLVIDAS (2026-08-01): o botão "Continuar" da
+// composição usava color: var(--primary-foreground) sem hsl() (declaração
+// inválida → herdava --foreground sobre --primary) — trocado pela classe
+// nds-text-primary-foreground; e as prosas com `<select>`/`<option>` literais
+// (NOTA do WithIcon e extensibilityNotes) viravam elementos reais via
+// innerHTML — escapadas com &lt;/&gt;. Axe é portão.
 export const Select: Story = {
   render: () => createSelectDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const SeoGeo: Story = { render: () => createSeoGeoDocs(), play };
 export const Separator: Story = { render: () => createSeparatorDocs(), play };

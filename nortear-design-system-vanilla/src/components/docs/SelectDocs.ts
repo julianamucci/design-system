@@ -553,7 +553,7 @@ select.name = 'state';`,
               name: stripHtml(t('variants.items.withIcon')),
               description:
                 stripHtml(t('variants.styles.withIcon')) +
-                ' NOTA: o factory `createSelect` (Nortear) é um wrapper do `<select>` nativo — o HTML não permite ícones inline em `<option>`. Para essa variante, recomendamos `Combobox` ou um componente custom.',
+                ' NOTA: o factory `createSelect` (Nortear) é um wrapper do `&lt;select&gt;` nativo — o HTML não permite ícones inline em `&lt;option&gt;`. Para essa variante, recomendamos `Combobox` ou um componente custom.',
               code: `// Indisponível com <select> nativo — use Combobox ou implementação custom.`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -654,8 +654,8 @@ form.addEventListener('submit', (e) => {
 
                 const submit = document.createElement('button');
                 submit.type = 'submit';
-                submit.className = 'nds-rounded-md nds-bg-primary nds-text-body nds-font-medium';
-                submit.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;padding:0.375rem 0.75rem;color:var(--primary-foreground);';
+                submit.className = 'nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium';
+                submit.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;padding:0.375rem 0.75rem;';
                 submit.textContent = 'Continuar';
                 form.appendChild(submit);
 
@@ -732,7 +732,7 @@ export type SelectOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory custom é um **wrapper fino do `<select>` HTML nativo** — diverge das libs upstream em vários pontos: (1) é estritamente não-controlado (sem prop `value`); use `defaultValue` + `onValueChange`. (2) Não suporta agrupamento via API — para grupos, monte `<select>` + `<optgroup>` manualmente. (3) Não suporta ícones em `<option>` (limitação do HTML nativo). (4) Não há prop `name` no factory — atribua via `select.name = "..."` no DOM retornado. (5) Não há prop `size` (default/sm) — aplique via `class` do tema. (6) O dropdown é o nativo do navegador: role/aria-expanded/listbox/option são gerenciados automaticamente, **não** documentados via atributos manuais. (7) Sem portal, sem type-ahead customizado (o navegador já oferece) e sem Check icon de seleção (use o highlight nativo do `<option>`).',
+            'O factory custom é um **wrapper fino do `&lt;select&gt;` HTML nativo** — diverge das libs upstream em vários pontos: (1) é estritamente não-controlado (sem prop `value`); use `defaultValue` + `onValueChange`. (2) Não suporta agrupamento via API — para grupos, monte `&lt;select&gt;` + `&lt;optgroup&gt;` manualmente. (3) Não suporta ícones em `&lt;option&gt;` (limitação do HTML nativo). (4) Não há prop `name` no factory — atribua via `select.name = "..."` no DOM retornado. (5) Não há prop `size` (default/sm) — aplique via `class` do tema. (6) O dropdown é o nativo do navegador: role/aria-expanded/listbox/option são gerenciados automaticamente, **não** documentados via atributos manuais. (7) Sem portal, sem type-ahead customizado (o navegador já oferece) e sem Check icon de seleção (use o highlight nativo do `&lt;option&gt;`).',
         });
       }
 
