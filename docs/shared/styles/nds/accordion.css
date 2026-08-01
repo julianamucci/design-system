@@ -161,12 +161,21 @@
 
 /* base-ui marca `data-closed`/`data-ending-style`; reka, bits e a factory
    Vanilla usam data-state. O estado final fica 0fr para quem permanece montado.
-   Saída mais curta que a entrada — fechar não precisa de tanta cerimônia. */
+ *
+ * Easing de saída NÃO usa `--ease-exit` de propósito. Aquele token é
+ * cubic-bezier(0.3, 0, 1, 1) — aceleração pura, que chega ao fim na velocidade
+ * MÁXIMA. Serve para elemento que vai embora (some da tela), mas fechar um
+ * accordion é acomodar: o painel encosta no item de baixo. Terminando a toda
+ * velocidade, a animação parece bater e parar de repente. `--ease-standard`
+ * desacelera até zero e o painel assenta.
+ *
+ * Duração igual à da entrada pelo mesmo motivo documentado acima: mudança de
+ * altura com texto precisa de mais que 200ms para não mostrar degrau. */
 .nds-accordion-content[data-closed],
 .nds-accordion-content[data-ending-style],
 .nds-accordion-content[data-state="closed"] {
   grid-template-rows: 0fr;
-  animation: nds-accordion-collapse var(--duration-base) var(--ease-exit);
+  animation: nds-accordion-collapse var(--duration-moderate) var(--ease-standard);
 }
 
 /* Corpo do content — `min-height: 0` deixa o grid encolher de fato. */

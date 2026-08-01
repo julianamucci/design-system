@@ -28,8 +28,13 @@ export type AccordionOptions = {
 
 // ─── createAccordion ─────────────────────────────────────────────────────────
 
-/** Espelha `--duration-base` (200ms) com folga, para reesconder após a animação. */
-const CLOSE_HIDE_DELAY = 250;
+/**
+ * Espelha `--duration-moderate` (320ms, a duração do collapse em accordion.css)
+ * com folga, para reesconder só DEPOIS da animação. Se este valor ficar abaixo
+ * da duração, o `hidden` corta o fechamento no meio — e o painel some de um
+ * salto em vez de assentar.
+ */
+const CLOSE_HIDE_DELAY = 380;
 
 /**
  * Escopo de id por instância: ids derivados só de `item.value` colidem quando
