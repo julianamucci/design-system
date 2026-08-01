@@ -98,14 +98,13 @@ const play: Story['play'] = async ({ canvasElement }) => {
 
 export const About: Story = { render: () => createAboutDocs(), play };
 export const Accessibility: Story = { render: () => createAccessibilityDocs(), play };
-// axe: landmark-unique — vem do PRIMITIVO (painel aberto é role="region" rotulado
-// pelo trigger via aria-labelledby; demos repetem o mesmo trigger do conteúdo
-// compartilhado → mesma accessible name). REPORTADO ao orquestrador (categoria 4
-// do lote landmark-unique) — decisão de conteúdo é da dona.
+// landmark-unique RESOLVIDA (2026-08-01): a causa real era id duplicado no
+// factory (`accordion-trigger-${value}` sem escopo de instância) — o
+// aria-labelledby resolvia para o 1º id do documento e igualava as accessible
+// names. Ids agora têm escopo por instância; axe é portão.
 export const Accordion: Story = {
   render: () => createAccordionDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Alert: Story = { render: () => createAlertDocs(), play };
 export const AlertDialog: Story = { render: () => createAlertDialogDocs(), play };

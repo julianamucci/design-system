@@ -31,6 +31,14 @@ export type AccordionOptions = {
 /** Espelha `--duration-base` (200ms) com folga, para reesconder após a animação. */
 const CLOSE_HIDE_DELAY = 250;
 
+/**
+ * Escopo de id por instância: ids derivados só de `item.value` colidem quando
+ * a página monta 2+ accordions com os mesmos values (`item-1`…), e o
+ * aria-labelledby dos painéis passa a resolver para o PRIMEIRO id do documento
+ * — accessible name errada em todos os demais (axe: landmark-unique).
+ */
+let accordionInstanceCount = 0;
+
 export function createAccordion(options: AccordionOptions): HTMLElement {
   const { type = 'single', collapsible = true, defaultValue, items, onValueChange } = options;
 
@@ -41,6 +49,8 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     defaultValue !== undefined
       ? new Set(Array.isArray(defaultValue) ? defaultValue : [defaultValue])
       : new Set();
+
+  const instanceId = ++accordionInstanceCount;
 
   const root = document.createElement('div');
   root.dataset.slot = 'accordion';
@@ -145,8 +155,8 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     const headerEl = document.createElement('h3');
     headerEl.className = 'nds-accordion-header';
 
-    const triggerId = `accordion-trigger-${item.value}`;
-    const contentId = `accordion-content-${item.value}`;
+    const triggerId = `accordion-${instanceId}-trigger-${item.value}`;
+    const contentId = `accordion-${instanceId}-content-${item.value}`;
 
     const triggerEl = document.createElement('button');
     triggerEl.type = 'button';
