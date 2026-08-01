@@ -114,7 +114,7 @@ function buildMiniSidebar(opts: {
   const header = createSidebarHeader();
   const logoRow = document.createElement('div');
   logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
+  logoRow.style.color = 'hsl(var(--sidebar-foreground))';
   logoRow.textContent = 'App';
   header.appendChild(logoRow);
   inner.appendChild(header);
@@ -179,7 +179,7 @@ function buildMiniSidebar(opts: {
   const footer = createSidebarFooter();
   const userRow = document.createElement('div');
   userRow.className = 'nds-px-2 nds-py-1 nds-text-caption';
-  userRow.style.color = 'var(--sidebar-foreground)';
+  userRow.style.color = 'hsl(var(--sidebar-foreground))';
   userRow.textContent = t('demonstration.labels.profile');
   footer.appendChild(userRow);
   inner.appendChild(footer);
@@ -376,7 +376,7 @@ export function createSidebarDocs(): HTMLElement {
                 wrap.dataset.spacing = 'xs';
                 const label = document.createElement('div');
                 label.className = 'nds-text-caption nds-px-2';
-                label.style.color = 'color-mix(in srgb, var(--sidebar-foreground) 70%, transparent)';
+                label.style.color = 'hsl(var(--sidebar-foreground) / 0.7)';
                 label.textContent = 'SidebarProvider';
                 const item = createSidebarMenuItem({ label: t('demonstration.labels.dashboard'), icon: makeIcon(ICON_HOME), active: true });
                 // <li> só é válido dentro de <ul>/<ol> (axe listitem) — .nds-sidebar-menu
@@ -394,8 +394,7 @@ export function createSidebarDocs(): HTMLElement {
                 // sem opacity: o dim rebaixava o texto destructive para 3.1:1 —
                 // a borda/cor destructive já marcam o don't (axe: color-contrast)
                 const warning = document.createElement('div');
-                warning.className = 'nds-rounded nds-border-destructive-soft nds-px-2 nds-py-1 nds-text-caption nds-text-destructive';
-                warning.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
+                warning.className = 'nds-rounded nds-border-destructive-soft nds-bg-destructive-soft nds-px-2 nds-py-1 nds-text-caption nds-text-destructive';
                 warning.textContent = 'state = { open: true } // manual';
                 wrap.appendChild(warning);
                 return wrap;
@@ -452,10 +451,9 @@ export function createSidebarDocs(): HTMLElement {
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-destructive-soft nds-text-caption nds-text-destructive';
+                wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-destructive-soft nds-bg-destructive-soft nds-text-caption nds-text-destructive';
                 wrap.dataset.spacing = 'sm';
                 wrap.dataset.align = 'center';
-                wrap.style.background = 'color-mix(in srgb, var(--color-destructive) 10%, transparent)';
                 wrap.innerHTML = DOMPurify.sanitize('<span class="nds-font-mono">block</span><span>SidebarTrigger no desktop</span>');
                 return wrap;
               },
@@ -514,7 +512,7 @@ export function createSidebarDocs(): HTMLElement {
           const header = createSidebarHeader();
           const logoRow = document.createElement('div');
           logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
+  logoRow.style.color = 'hsl(var(--sidebar-foreground))';
           logoRow.textContent = 'Design System';
           header.appendChild(logoRow);
           inner.appendChild(header);
@@ -530,7 +528,7 @@ export function createSidebarDocs(): HTMLElement {
           groupLabel.className = 'nds-cluster nds-shrink-0 nds-rounded-md nds-px-2 nds-text-caption nds-font-medium';
           groupLabel.dataset.align = 'center';
           groupLabel.style.height = '2rem';
-          groupLabel.style.color = 'color-mix(in srgb, var(--sidebar-foreground) 70%, transparent)';
+          groupLabel.style.color = 'hsl(var(--sidebar-foreground) / 0.7)';
           groupLabel.setAttribute('data-sidebar', 'group-label');
           groupLabel.textContent = 'Componentes';
           group.appendChild(groupLabel);
@@ -584,7 +582,7 @@ export function createSidebarDocs(): HTMLElement {
             subBtn.dataset.spacing = 'sm';
             subBtn.dataset.align = 'center';
             subBtn.style.paddingBlock = '0.375rem';
-            subBtn.style.color = 'var(--sidebar-foreground)';
+            subBtn.style.color = 'hsl(var(--sidebar-foreground))';
             subBtn.style.transition = 'background-color .2s, color .2s';
             subBtn.setAttribute('data-sidebar', 'menu-sub-button');
             subBtn.textContent = name;
@@ -647,7 +645,7 @@ export function createSidebarDocs(): HTMLElement {
           const header = createSidebarHeader();
           const logoRow = document.createElement('div');
           logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
+  logoRow.style.color = 'hsl(var(--sidebar-foreground))';
           logoRow.textContent = 'App';
           header.appendChild(logoRow);
           inner.appendChild(header);
@@ -771,7 +769,7 @@ export function createSidebarDocs(): HTMLElement {
           const header = createSidebarHeader();
           const logoRow = document.createElement('div');
           logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
+  logoRow.style.color = 'hsl(var(--sidebar-foreground))';
           logoRow.textContent = 'Design System';
           header.appendChild(logoRow);
           inner.appendChild(header);
@@ -830,7 +828,7 @@ export function createSidebarDocs(): HTMLElement {
           const header = createSidebarHeader();
           const logoRow = document.createElement('div');
           logoRow.className = 'nds-px-2 nds-py-1 nds-text-caption nds-font-semibold';
-  logoRow.style.color = 'var(--sidebar-foreground)';
+  logoRow.style.color = 'hsl(var(--sidebar-foreground))';
           logoRow.textContent = 'Design System';
           header.appendChild(logoRow);
 
@@ -850,7 +848,7 @@ export function createSidebarDocs(): HTMLElement {
           searchInput.style.background = 'var(--sidebar)';
           searchInput.style.paddingBlock = '0.375rem';
           searchInput.style.paddingLeft = '2rem';
-          searchInput.style.color = 'var(--sidebar-foreground)';
+          searchInput.style.color = 'hsl(var(--sidebar-foreground))';
           searchWrapper.appendChild(searchIcon);
           searchWrapper.appendChild(searchInput);
           header.appendChild(searchWrapper);
