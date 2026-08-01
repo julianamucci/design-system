@@ -79,5 +79,54 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
     root.appendChild(btn);
   });
 
+  // ─── Contrato do role="toolbar": roving tabindex + setas ───────────────────
+  // Declarar role="toolbar" promete ao leitor de tela que as setas navegam
+  // entre os controles (WAI-ARIA APG). Sem isto o anúncio é falso: o usuário
+  // ouve "barra de ferramentas" e as setas não fazem nada. Um único item fica
+  // na ordem de tabulação; Tab entra e sai do grupo inteiro.
+  const buttons = (): HTMLButtonElement[] =>
+    Array.from(root.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]'));
+
+  function setRovingTarget(target: HTMLButtonElement): void {
+    buttons().forEach((b) => {
+      b.tabIndex = b === target ? 0 : -1;
+    });
+  }
+
+  function focusAt(index: number): void {
+    const enabled = buttons().filter((b) => !b.disabled);
+    if (enabled.length === 0) return;
+    // Circular: da ponta direita volta para a esquerda, como o composite do React.
+    const next = enabled[(index + enabled.length) % enabled.length];
+    setRovingTarget(next);
+    next.focus();
+  }
+
+  root.addEventListener('keydown', (event) => {
+    const KEYS = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
+    if (!KEYS.includes(event.key)) return;
+    const enabled = buttons().filter((b) => !b.disabled);
+    const current = enabled.indexOf(document.activeElement as HTMLButtonElement);
+    if (current === -1) return;
+
+    event.preventDefault();
+    if (event.key === 'Home') focusAt(0);
+    else if (event.key === 'End') focusAt(enabled.length - 1);
+    else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') focusAt(current + 1);
+    else focusAt(current - 1);
+  });
+
+  // Clicar num item passa a ordem de tabulação para ele — senão o Tab
+  // devolveria o foco a um item diferente do que o usuário acabou de usar.
+  root.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-slot="toggle"]');
+    if (btn && !btn.disabled) setRovingTarget(btn);
+  });
+
+  const initial =
+    buttons().find((b) => !b.disabled && b.getAttribute('aria-pressed') === 'true') ??
+    buttons().find((b) => !b.disabled);
+  if (initial) setRovingTarget(initial);
+
   return root;
 }

@@ -151,5 +151,24 @@ export const Playground: Story = {
       await userEvent.click(center);
       await expect(center).toHaveAttribute('aria-pressed', 'true');
     });
+
+    // O role="toolbar" promete navegação por setas — estes dois passos são o
+    // contrato que torna o anúncio verdadeiro (WAI-ARIA APG).
+    await step('Um único item na ordem de tabulação (roving tabindex)', async () => {
+      const focusable = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
+      await expect(focusable).toHaveLength(1);
+    });
+
+    await step('ArrowRight move o foco e End vai para o último', async () => {
+      const center = canvas.getByRole('button', { name: 'Centralizar' });
+      const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
+      center.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(right).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(canvas.getByRole('button', { name: 'Alinhar à esquerda' })).toHaveFocus();
+      await userEvent.keyboard('{End}');
+      await expect(right).toHaveFocus();
+    });
   },
 };
