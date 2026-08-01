@@ -11,6 +11,9 @@ export function createTable(extraClass?: string): {
 } {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-table-wrapper';
+  // .nds-table-wrapper tem overflow-x: auto — região rolável precisa ser
+  // alcançável por teclado (WCAG 2.1.1 / axe scrollable-region-focusable).
+  wrapper.tabIndex = 0;
 
   const table = document.createElement('table');
   table.className = cls('nds-table', extraClass);
