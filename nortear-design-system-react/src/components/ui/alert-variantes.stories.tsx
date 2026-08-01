@@ -160,21 +160,33 @@ export const Dismissible: Story = {
 
     await step("Botão de fechar visível e acessível por rótulo", async () => {
       const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
-      await expect(dismiss).toBeVisible();
       await expect(dismiss).toHaveAttribute("data-slot", "alert-dismiss");
+      // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
+      // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
+      // browser — e no Chromium headless dos testes a animação fica presa no
+      // quadro zero até o timeout de segurança limpar a classe.
+      await waitFor(() => expect(dismiss).toBeVisible());
     });
 
-    await step("Clique remove o alert original e dispara o callback uma vez", async () => {
+    await step("Clique remove o alert original e a demo remonta", async () => {
       const alertOriginal = canvas.getByRole("alert");
       await userEvent.click(canvas.getByRole("button", { name: "Fechar alerta" }));
-      await expect(alertOriginal).not.toBeInTheDocument();
-      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
+
+      await waitFor(async () => {
+        const remontado = canvas.getByRole("alert");
+        await expect(remontado).not.toBe(alertOriginal);
+        await expect(remontado).toBeVisible();
+      });
     });
 
-    await step("Um alert novo ocupa o lugar — o canvas nunca fica vazio", async () => {
-      await waitFor(async () => {
-        await expect(canvas.getByRole("alert")).toBeVisible();
-      });
+    // Depois da remontagem tudo já assentou: o callback foi disparado uma vez
+    // só, e depois que o nó saiu da tela.
+    await step("Callback disparado uma única vez", async () => {
+      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
   },
 };
@@ -194,20 +206,26 @@ export const DismissibleTeclado: Story = {
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Enter no botão focado remove o alert original e dispara o callback uma vez", async () => {
+    await step("Enter no botão focado remove o alert original e a demo remonta", async () => {
       const alertOriginal = canvas.getByRole("alert");
       const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
       dismiss.focus();
       await expect(dismiss).toHaveFocus();
       await userEvent.keyboard("{Enter}");
-      await expect(alertOriginal).not.toBeInTheDocument();
-      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
+      await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
+
+      await waitFor(async () => {
+        const remontado = canvas.getByRole("alert");
+        await expect(remontado).not.toBe(alertOriginal);
+        await expect(remontado).toBeVisible();
+      });
     });
 
-    await step("Um alert novo ocupa o lugar — o canvas nunca fica vazio", async () => {
-      await waitFor(async () => {
-        await expect(canvas.getByRole("alert")).toBeVisible();
-      });
+    await step("Callback disparado uma única vez", async () => {
+      await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
   },
 };
