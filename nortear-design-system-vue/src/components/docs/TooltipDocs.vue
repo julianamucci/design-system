@@ -578,9 +578,12 @@ const a11yCritCols = computed(() => ({
           >
             <Tooltip>
               <TooltipTrigger as-child>
+                <!-- Anti-pattern didático (tooltip no lugar do rótulo); aria-label
+                     invisível mantém o botão nomeado para o axe sem mudar o visual. -->
                 <Button
                   variant="outline"
                   size="icon"
+                  :aria-label="tContent('demonstration.labels.saveButton')"
                 >
                   <Save aria-hidden="true" />
                 </Button>

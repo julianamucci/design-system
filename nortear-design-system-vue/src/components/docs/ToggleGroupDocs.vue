@@ -732,18 +732,29 @@ const visualTestItems = computed(() => [
         </ToggleGroup>
       </template>
       <template #dont-preview-1>
+        <!-- Anti-pattern didático: o rótulo genérico fica no GRUPO ("Grupo");
+             os items mantêm aria-label invisível para não violar button-name. -->
         <ToggleGroup
           type="single"
           default-value="left"
           aria-label="Grupo"
         >
-          <ToggleGroupItem value="left">
+          <ToggleGroupItem
+            value="left"
+            :aria-label="tContent('demonstration.labels.left')"
+          >
             <AlignLeft aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="center">
+          <ToggleGroupItem
+            value="center"
+            :aria-label="tContent('demonstration.labels.center')"
+          >
             <AlignCenter aria-hidden="true" />
           </ToggleGroupItem>
-          <ToggleGroupItem value="right">
+          <ToggleGroupItem
+            value="right"
+            :aria-label="tContent('demonstration.labels.right')"
+          >
             <AlignRight aria-hidden="true" />
           </ToggleGroupItem>
         </ToggleGroup>

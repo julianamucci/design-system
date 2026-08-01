@@ -585,10 +585,13 @@ const visualTestItems = computed(() => [
           </p>
           <Popover v-model:open="comboboxOpen">
             <PopoverTrigger as-child>
+              <!-- role="combobox" não aceita name-from-content — aria-label dá o
+                   accessible name (axe button-name) sem mudar o visual. -->
               <Button
                 variant="outline"
                 role="combobox"
                 :aria-expanded="comboboxOpen"
+                :aria-label="tContent('demonstration.labels.selectPlaceholder')"
                 class="nds-cluster"
                 data-justify="between"
                 style="width: 14rem"
@@ -857,10 +860,13 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <Popover>
           <PopoverTrigger as-child>
+            <!-- role="combobox" não aceita name-from-content — aria-label dá o
+                 accessible name (axe button-name) sem mudar o visual. -->
             <Button
               variant="outline"
               role="combobox"
               aria-expanded="false"
+              :aria-label="tContent('demonstration.labels.selectPlaceholder')"
               class="nds-cluster"
               data-justify="between"
               style="width: 12rem"

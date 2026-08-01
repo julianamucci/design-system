@@ -183,7 +183,10 @@ export const Collapsible: Story = {
 };
 
 export const Command: Story = {
-  // axe: aria-required-children, button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
+  // axe: aria-required-children (CommandSeparator role=separator dentro do
+  // listbox, 2 nodes) — catalogado no FIXES-NEEDED. button-name RESOLVIDA
+  // (2026-08-01): triggers role="combobox" ganharam aria-label — combobox não
+  // aceita name-from-content. empty-heading já estava resolvida.
   parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { CommandDocs }, template: '<CommandDocs />' }),
   play: smokePlay,
@@ -364,8 +367,8 @@ export const Spacing: Story = {
 };
 
 export const Switch: Story = {
-  // axe: button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
-  parameters: { a11y: { test: 'todo' } },
+  // button-name RESOLVIDA (2026-08-01): o Switch do don't "texto solto" ganhou
+  // aria-label (string traduzida existente). Axe é portão.
   render: () => ({ components: { SwitchDocs }, template: '<SwitchDocs />' }),
   play: smokePlay,
 };
@@ -403,8 +406,9 @@ export const Toggle: Story = {
 };
 
 export const ToggleGroup: Story = {
-  // axe: button-name — catalogado no FIXES-NEEDED (empty-heading resolvida)
-  parameters: { a11y: { test: 'todo' } },
+  // button-name RESOLVIDA (2026-08-01): items icon-only do don't ganharam
+  // aria-label (chaves t() existentes) — o anti-pattern segue no rótulo
+  // genérico do grupo. Axe é portão.
   render: () => ({ components: { ToggleGroupDocs }, template: '<ToggleGroupDocs />' }),
   play: smokePlay,
 };
@@ -415,8 +419,8 @@ export const ToneOfVoice: Story = {
 };
 
 export const Tooltip: Story = {
-  // axe: button-name — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
+  // button-name RESOLVIDA (2026-08-01): o botão icon-only do don't ganhou
+  // aria-label (string traduzida existente). Axe é portão.
   render: () => ({ components: { TooltipDocs }, template: '<TooltipDocs />' }),
   play: smokePlay,
 };

@@ -606,7 +606,9 @@ const visualTestItems = computed(() => [
           class="nds-cluster"
           data-spacing="sm"
         >
-          <Switch />
+          <!-- Anti-pattern didático (texto solto, sem <Label for>); aria-label
+               invisível mantém o botão nomeado para o axe sem mudar o visual. -->
+          <Switch :aria-label="tContent('demonstration.labels.darkMode')" />
           <span class="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
         </div>
       </template>
