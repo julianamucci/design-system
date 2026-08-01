@@ -404,17 +404,28 @@ só falhas; sem provas bidirecionais/canários redundantes.
      sobrescreve com `role="group"` — e sobrava `aria-orientation` inválido),
      `Table` nas 4 stacks (`tabindex="0"` no wrapper com overflow).
 
-- [ ] **Divergência cross-stack aberta — `role="toolbar"` no toggle-group**:
-  react declara `role="toolbar"` (`toggle-group.tsx:42`), svelte não tem
-  mais, vanilla (referência) nunca teve. Não há violação de axe no react
-  (usa `data-orientation`), então é divergência de árvore de acessibilidade,
-  não bug. Decidir: alinhar react à referência ou documentar a diferença.
-- [ ] **Cores inertes no vanilla** (latente, achado do sweep):
-  `SidebarDocs` usa `style.color = 'var(--sidebar-foreground)'` e
-  `color-mix(... var(--color-destructive) ...)` — tokens são triplets HSL e
-  `--color-destructive` não existe, então as declarações caem. Corrigir muda
-  pixel; fica para uma passada de cor dedicada. Mesma família do bug
-  `var(--primary-foreground)` sem `hsl()` já corrigido no select.
+- ~~Divergência `role="toolbar"` no toggle-group~~ — **RESOLVIDO
+  (2026-08-01, decisão da dona: alinhar pelo COMPORTAMENTO, não removendo o
+  role)**. Correção de um erro meu de levantamento: o vanilla **declarava**
+  `role="toolbar"` (via `setAttribute`, que meu grep por `role="toolbar"`
+  não pegou) mas **não implementava** o contrato de teclado do WAI-ARIA APG
+  — o leitor de tela anunciava "barra de ferramentas" e as setas não faziam
+  nada. O react declarava E cumpria (roving tabindex, coberto por story).
+  Vanilla ganhou ArrowLeft/Right/Up/Down + Home/End circulares e roving
+  tabindex, com story cobrindo o contrato.
+  **Lição de método**: "vanilla é a referência" é heurística, não dogma —
+  aqui a referência era justamente quem estava errada, e o grep por
+  `role="toolbar"` não via `setAttribute('role','toolbar')`.
+  - **Resta divergente** (não bloqueia): svelte e vue emitem `role="group"`
+    imposto por bits-ui/reka-ui, embora suas stories testem navegação por
+    setas — o comportamento existe, o que difere é o anúncio. Forçar
+    `toolbar` exigiria renderizar a raiz via snippet `child`/`asChild`:
+    refatoração de primitivo, decisão futura.
+- ~~Cores inertes no vanilla~~ — **RESOLVIDO (2026-08-01)**: `SidebarDocs`
+  passou a usar `hsl(var(--sidebar-foreground)[ / 0.7])` e a classe já
+  existente `.nds-bg-destructive-soft` no lugar do `color-mix` com o token
+  inexistente `--color-destructive`. docs-smoke 64/64 — o axe aprovou o
+  contraste real, sem precisar de ajuste de cor.
 
 **Placar da dívida axe em `a11y: todo`: 84 (colheita) → 17** (verificado por
 grep nos 4 arquivos de fumaça, não por soma de reportes).
