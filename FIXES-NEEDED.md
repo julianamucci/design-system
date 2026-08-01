@@ -362,12 +362,32 @@ só falhas; sem provas bidirecionais/canários redundantes.
      nome (react passava snippet JSX como notes; vanilla, 2 call sites sem
      escape). Select agora é portão nas 4 stacks.
 
-**Placar da dívida axe em `a11y: todo`: 84 (colheita) → 43.**
-Por stack: react 12 · vue 10 · svelte 9 · vanilla 12.
-Rules restantes mais frequentes: target-size, button-name,
-aria-required-children/parent, aria-hidden-focus (focus guards Base UI),
+4. **button-name (4 stacks)** — `56ddc376` vue · `9c4b32cc` svelte ·
+   `2e21eb3a` react · `f61722b6` vanilla. Rótulos via chaves t() existentes
+   dos blocos; rule ZERADA nas 4 stacks. Achados de valor:
+   - **`role="combobox"` não aceita name-from-content** — o texto visível do
+     trigger não conta como nome; todo combobox precisa de aria-label
+     (command nas 4 stacks tinha isso).
+   - **Bug real no svelte: `asChild` NÃO existe no bits-ui** — em
+     `CommandDocs.svelte` o `<PopoverTrigger asChild>` virava
+     `<button aschild="true">` wrapper SEM nome (e gerava nested-interactive
+     + target-size no mesmo node). Trocado pelo snippet `child`.
+   - Bônus: `DocsAccessibility.svelte` tinha o mesmo `<h3>` incondicional do
+     Vue (lote 1) — mesmo fix aplicado.
+
+- [ ] **VARREDURA PENDENTE — `asChild` fantasma no svelte**: o mesmo bug
+  latente (`asChild` inerte virando wrapper `<button>` sem nome) aparece em
+  BreadcrumbDocs, ButtonDocs, AspectRatioDocs, AlertDialogDocs e
+  AccordionDocs do svelte. Candidato a lote serial próprio: trocar pelo
+  snippet `child` (padrão da stack) + alinhar code strings didáticas.
+
+**Placar da dívida axe em `a11y: todo`: 84 (colheita) → 36.**
+Por stack: react 12 · vue 7 · svelte 7 · vanilla 10.
+Rules restantes mais frequentes: target-size, aria-required-children/parent,
+aria-hidden-focus (focus guards Base UI — provável exceção documentada),
 aria-toggle-field-name, label, color-contrast (icons/calendar/command),
-nested-interactive, scrollable-region-focusable.
+nested-interactive, scrollable-region-focusable, scope-attr-valid,
+heading-order, listitem, aria-allowed-attr.
 
 ### Pré-existências confirmadas fora do escopo (provadas com stash)
 
