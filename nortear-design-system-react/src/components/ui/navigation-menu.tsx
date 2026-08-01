@@ -109,7 +109,13 @@ function NavigationMenuPositioner({
         className={cn("nds-navigation-menu-positioner", className)}
         {...props}
       >
-        <NavigationMenuPrimitive.Popup className="nds-navigation-menu-popup">
+        {/* render <div>: o <nav> default do Popup é um landmark sem rótulo que
+            colide no axe (landmark-unique) quando há mais de um popup aberto;
+            o Vanilla (referência) não rende <nav> no popup. */}
+        <NavigationMenuPrimitive.Popup
+          render={<div />}
+          className="nds-navigation-menu-popup"
+        >
           <NavigationMenuPrimitive.Viewport className="nds-navigation-menu-viewport" />
         </NavigationMenuPrimitive.Popup>
       </NavigationMenuPrimitive.Positioner>

@@ -293,8 +293,9 @@ export const Motion: Story = {
 };
 
 // axe: aria-hidden-focus — catalogado no FIXES-NEEDED; landmark-unique restante
-// só no <nav> do popup do Base UI (primitivo, sem rótulo — categoria 4, reportado);
-// as raízes das demos já têm aria-label único.
+// axe: aria-hidden-focus (focus guards do Base UI) — landmark-unique RESOLVIDA
+// (raízes com aria-label único + popup render={<div/>} no primitivo, decisão
+// da dona 2026-08-01; provado em modo portão: só aria-hidden-focus resta).
 export const NavigationMenu: Story = {
   render: () => <NavigationMenuDocs />,
   play: mounted,
