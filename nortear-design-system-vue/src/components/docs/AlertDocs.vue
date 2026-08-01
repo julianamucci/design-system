@@ -229,6 +229,15 @@ function onDemoDismiss() {
   });
 }
 
+// Dismiss do alert de sucesso da seção Demonstração.
+function onDemonstrationDismiss() {
+  track('alert_dismiss', {
+    component: 'alert',
+    label: 'demonstration',
+    location: 'docs_demo',
+  });
+}
+
 const compositionItems = computed(() => [
   {
     name: tContent('variants.compositions.withIcon.name'),
@@ -240,7 +249,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster nds-mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
   },
 ]);
 
@@ -370,13 +379,12 @@ const visualTestItems = computed(() => [
         class="nds-w-full nds-stack"
         data-spacing="sm"
       >
+        <!-- default — sem título: só ícone + descrição -->
         <Alert>
           <Info aria-hidden="true" />
-          <AlertTitle as="h3">
-            {{ tContent('demonstration.labels.infoTitle') }}
-          </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.infoDesc') }}</AlertDescription>
         </Alert>
+        <!-- destructive — título + descrição -->
         <Alert variant="destructive">
           <AlertCircle aria-hidden="true" />
           <AlertTitle as="h3">
@@ -384,19 +392,37 @@ const visualTestItems = computed(() => [
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.errorDesc') }}</AlertDescription>
         </Alert>
-        <Alert variant="success">
+        <!-- success — dismissible: o fechamento emite dismiss -->
+        <Alert
+          variant="success"
+          dismissible
+          @dismiss="onDemonstrationDismiss"
+        >
           <CheckCircle2 aria-hidden="true" />
           <AlertTitle as="h3">
             {{ tContent('demonstration.labels.successTitle') }}
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
+        <!-- warning — ação dentro da descrição (mesmo markup da composição withAction) -->
         <Alert variant="warning">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle as="h3">
             {{ tContent('demonstration.labels.warningTitle') }}
           </AlertTitle>
-          <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
+          <!-- As 3 classes no MESMO elemento: alert.css é importado depois de
+               layout.css, então .nds-alert-description vence .nds-cluster no
+               display e o botão cai na linha abaixo do texto, alinhado ao
+               início — resultado esperado. nds-mt-1 faz o espaçamento. -->
+          <AlertDescription class="nds-cluster nds-mt-1">
+            <span>{{ tContent('demonstration.labels.warningDesc') }}</span>
+            <Button
+              size="sm"
+              variant="outline"
+            >
+              {{ tContent('demonstration.labels.warningAction') }}
+            </Button>
+          </AlertDescription>
         </Alert>
       </div>
     </DocsDemonstration>
@@ -596,12 +622,7 @@ const visualTestItems = computed(() => [
           <AlertTitle as="h3">
             Sessão expira em 5 minutos
           </AlertTitle>
-          <AlertDescription
-            class="nds-cluster"
-            data-align="center"
-            data-justify="between"
-            style="margin-top: var(--spacing-1);"
-          >
+          <AlertDescription class="nds-cluster nds-mt-1">
             <span>Salve seu trabalho para não perder as alterações.</span>
             <Button
               size="sm"
