@@ -405,8 +405,11 @@ import { Label } from "@/components/ui/label";`;
               </div>
             ),
             dontPreview: (
+              // O "don't" é o texto solto em <span> (sem associação clicável);
+              // o aria-label mantém o nome acessível do switch (axe
+              // aria-toggle-field-name) sem alterar o pixel do exemplo.
               <div className="nds-cluster" data-spacing="sm">
-                <Switch id="dodont-2-dont" />
+                <Switch id="dodont-2-dont" aria-label="Modo escuro" />
                 <span className="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
               </div>
             ),

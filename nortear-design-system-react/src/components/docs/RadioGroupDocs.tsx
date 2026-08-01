@@ -485,13 +485,16 @@ interface RadioGroupItemProps {
               </RadioGroup>
             ),
             dontPreview: (
+              // O "don't" é o texto solto em <span> (sem associação clicável);
+              // o aria-label mantém o nome acessível do radio (axe
+              // aria-toggle-field-name) sem alterar o pixel do exemplo.
               <RadioGroup aria-label="Forma de pagamento" defaultValue="pix">
                 <div className="nds-cluster" data-spacing="xs">
-                  <RadioGroupItem value="cartao" id="dd1-dont-cartao" />
+                  <RadioGroupItem value="cartao" id="dd1-dont-cartao" aria-label="Cartão de crédito" />
                   <span className="nds-text-body">Cartão de crédito</span>
                 </div>
                 <div className="nds-cluster" data-spacing="xs">
-                  <RadioGroupItem value="pix" id="dd1-dont-pix" />
+                  <RadioGroupItem value="pix" id="dd1-dont-pix" aria-label="Pix" />
                   <span className="nds-text-body">Pix</span>
                 </div>
               </RadioGroup>

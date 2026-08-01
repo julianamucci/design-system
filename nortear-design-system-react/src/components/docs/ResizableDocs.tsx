@@ -222,6 +222,10 @@ interface PanelResizeHandleProps {
     payload: "Payload",
   };
 
+  // O conteúdo de cada painel leva tabIndex={0}: o react-resizable-panels
+  // renderiza um wrapper interno com overflow:auto que não aceita props, então
+  // é o conteúdo que dá acesso de teclado à região rolável (WCAG 2.1.1) —
+  // mesmo princípio do CodeBlock. Sem isso: axe scrollable-region-focusable.
   const demoBoxStyle: React.CSSProperties = {
     minHeight: 220,
     contain: "layout",
@@ -266,13 +270,13 @@ interface PanelResizeHandleProps {
                 }}
               >
                 <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblSidebar}
                   </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle aria-label={ariaResize} />
                 <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>
-                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblContent}
                   </div>
                 </ResizablePanel>
@@ -302,13 +306,13 @@ interface PanelResizeHandleProps {
                 }}
               >
                 <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblTop}
                   </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle aria-label={ariaResize} />
                 <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblBottom}
                   </div>
                 </ResizablePanel>
@@ -338,7 +342,7 @@ interface PanelResizeHandleProps {
                 }}
               >
                 <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                  <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                     {lblSidebar}
                   </div>
                 </ResizablePanel>
@@ -346,13 +350,13 @@ interface PanelResizeHandleProps {
                 <ResizablePanel defaultSize={75} minSize={50}>
                   <ResizablePanelGroup direction="vertical">
                     <ResizablePanel defaultSize={70} minSize={30}>
-                      <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                      <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                         {lblContent}
                       </div>
                     </ResizablePanel>
                     <ResizableHandle withHandle aria-label={ariaResize} />
                     <ResizablePanel defaultSize={30} minSize={15}>
-                      <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                      <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                         Console
                       </div>
                     </ResizablePanel>
@@ -466,13 +470,13 @@ interface PanelResizeHandleProps {
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={35} minSize={20} maxSize={60}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblSidebar}
                     </div>
                   </ResizablePanel>
                   <ResizableHandle withHandle aria-label={ariaResize} />
                   <ResizablePanel defaultSize={65} minSize={40}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblContent}
                     </div>
                   </ResizablePanel>
@@ -486,13 +490,13 @@ interface PanelResizeHandleProps {
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={35}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblSidebar}
                     </div>
                   </ResizablePanel>
                   <ResizableHandle aria-label="Handle" />
                   <ResizablePanel defaultSize={65}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblContent}
                     </div>
                   </ResizablePanel>
@@ -539,13 +543,13 @@ interface PanelResizeHandleProps {
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblSidebar}
                     </div>
                   </ResizablePanel>
                   <ResizableHandle withHandle aria-label={ariaResize} />
                   <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblContent}
                     </div>
                   </ResizablePanel>
@@ -564,13 +568,13 @@ interface PanelResizeHandleProps {
               >
                 <ResizablePanelGroup direction="vertical">
                   <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblTop}
                     </div>
                   </ResizablePanel>
                   <ResizableHandle withHandle aria-label={ariaResize} />
                   <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblBottom}
                     </div>
                   </ResizablePanel>
@@ -589,7 +593,7 @@ interface PanelResizeHandleProps {
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                    <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                       {lblSidebar}
                     </div>
                   </ResizablePanel>
@@ -597,13 +601,13 @@ interface PanelResizeHandleProps {
                   <ResizablePanel defaultSize={75} minSize={50}>
                     <ResizablePanelGroup direction="vertical">
                       <ResizablePanel defaultSize={70} minSize={30}>
-                        <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                        <div className="nds-cluster nds-w-full nds-text-body nds-font-medium" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                           {lblContent}
                         </div>
                       </ResizablePanel>
                       <ResizableHandle withHandle aria-label={ariaResize} />
                       <ResizablePanel defaultSize={30} minSize={15}>
-                        <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" style={{ height: "100%", padding: "var(--spacing-4)" }}>
+                        <div className="nds-cluster nds-w-full nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabIndex={0} style={{ height: "100%", padding: "var(--spacing-4)" }}>
                           Console
                         </div>
                       </ResizablePanel>

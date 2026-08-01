@@ -153,11 +153,13 @@ export const Button: Story = {
   play: mounted,
 };
 
-// axe: scope-attr-valid — catalogado no FIXES-NEEDED (landmark-unique resolvida)
+// scope-attr-valid RESOLVIDA (2026-08-01): o override de WeekNumber em
+// calendar.tsx renderiza <td> mas repassava o scope="row" que o
+// react-day-picker manda para o <th> dele — scope só vale em <th>, e o
+// role="rowheader" que vem junto já cobre a semântica. Axe é portão.
 export const Calendar: Story = {
   render: () => <CalendarDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Card: Story = {
@@ -320,18 +322,20 @@ export const Progress: Story = {
   play: mounted,
 };
 
-// axe: aria-toggle-field-name — catalogado no FIXES-NEEDED
+// aria-toggle-field-name RESOLVIDA (2026-08-01): o radio do "don't" usa texto
+// solto em <span> (é justamente o erro demonstrado) — ganhou aria-label, que
+// role="radio" em <span> exige quando não há Label associado. Axe é portão.
 export const RadioGroup: Story = {
   render: () => <RadioGroupDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
-// axe: scrollable-region-focusable — catalogado no FIXES-NEEDED
+// scrollable-region-focusable RESOLVIDA (2026-08-01): o wrapper interno de
+// cada painel (overflow:auto do react-resizable-panels, sem passagem de props)
+// passou a ter conteúdo focável — tabIndex={0} no conteúdo do painel do demo.
 export const Resizable: Story = {
   render: () => <ResizableDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const ScrollArea: Story = {
@@ -393,11 +397,12 @@ export const Spacing: Story = {
   play: mounted,
 };
 
-// axe: aria-toggle-field-name — catalogado no FIXES-NEEDED
+// aria-toggle-field-name RESOLVIDA (2026-08-01): o switch do "don't" usa texto
+// solto em <span> (é justamente o erro demonstrado) — ganhou aria-label, que
+// role="switch" em <span> exige quando não há Label associado. Axe é portão.
 export const Switch: Story = {
   render: () => <SwitchDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Table: Story = {
@@ -410,11 +415,12 @@ export const Tabs: Story = {
   play: mounted,
 };
 
-// axe: label — catalogado no FIXES-NEEDED
+// label RESOLVIDA (2026-08-01): o snippet de extensibilidade era passado como
+// extensibilityNotes (innerHTML → o parser vira `<Textarea>` em <textarea>
+// real, sem rótulo) em vez de extensibilityCode — mesmo caso do Select.
 export const Textarea: Story = {
   render: () => <TextareaDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const ThemeColors: Story = {

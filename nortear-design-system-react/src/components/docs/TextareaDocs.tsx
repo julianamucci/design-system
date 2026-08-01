@@ -768,7 +768,10 @@ function Textarea({
         ]}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
-        extensibilityNotes={tContent("props.extensibilityCode")}
+        // O snippet vai como código (CodeBlock). Como `extensibilityNotes` ele
+        // era injetado via innerHTML e o parser HTML transformava `<Textarea>`
+        // em um <textarea> real sem rótulo — axe `label`.
+        extensibilityCode={tContent("props.extensibilityCode")}
       />
 
       {/* ── Tokens ──────────────────────────────────────────────────── */}

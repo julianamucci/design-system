@@ -126,7 +126,10 @@ function Calendar({
         DayButton: ({ ...props }) => (
           <CalendarDayButton locale={locale} {...props} />
         ),
-        WeekNumber: ({ children, ...props }) => {
+        // O react-day-picker manda scope="row" (o default dele é <th>). Aqui a
+        // célula é <td>, e scope só é válido em <th> — axe scope-attr-valid.
+        // role="rowheader" (que vem junto) já garante a semântica de cabeçalho.
+        WeekNumber: ({ children, scope: _scope, ...props }) => {
           return (
             <td {...props}>
               <div className="nds-calendar-week-number-inner">
