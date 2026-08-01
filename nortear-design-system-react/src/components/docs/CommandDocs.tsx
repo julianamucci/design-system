@@ -120,10 +120,13 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
+        {/* role="combobox" não aceita name-from-content — aria-label dá o
+            accessible name (axe button-name) sem mudar o visual. */}
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          aria-label={selectPlaceholder}
           className="nds-cluster" data-justify="between" style={{ width: "12rem" }}
         >
           {value ? DEMO_ITEMS.find((f) => f.value === value)?.label : selectPlaceholder}

@@ -194,7 +194,10 @@ export const Collapsible: Story = {
   parameters: { a11y: { test: 'todo' } },
 };
 
-// axe: aria-required-children, button-name, color-contrast — catalogado no FIXES-NEEDED
+// axe: color-contrast (⌘K riscado do don't, 1.78:1) — catalogado no
+// FIXES-NEEDED. button-name RESOLVIDA (2026-08-01): trigger role="combobox"
+// ganhou aria-label — combobox não aceita name-from-content.
+// aria-required-children não reproduziu no diagnóstico de 2026-08-01.
 export const Command: Story = {
   render: () => <CommandDocs />,
   play: mounted,
