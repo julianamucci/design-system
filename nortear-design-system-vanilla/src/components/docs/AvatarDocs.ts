@@ -94,6 +94,8 @@ function buildInitialsAvatar(className = '', initials = 'JP'): HTMLElement {
 function buildIconAvatar(className = ''): HTMLElement {
   const root = createAvatarRoot({ className });
   const fallback = createAvatarFallback();
+  // role="img" permite aria-label (senão axe aponta aria-prohibited-attr no <span>).
+  fallback.setAttribute('role', 'img');
   fallback.setAttribute('aria-label', stripHtml(t('demonstration.labels.withIcon')));
   fallback.appendChild(buildUserIconSvg());
   root.appendChild(fallback);
@@ -152,6 +154,8 @@ function buildStatusAvatar(): HTMLElement {
   const status = document.createElement('span');
   status.className = 'nds-rounded-full nds-bg-primary';
   status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
+  // role="status" permite aria-label em <span> (senão axe aponta aria-prohibited-attr).
+  status.setAttribute('role', 'status');
   status.setAttribute('aria-label', stripHtml(t('demonstration.labels.statusOnline')));
 
   wrapper.append(avatar, status);
@@ -404,6 +408,7 @@ import { User } from 'lucide';
 
 const root = createAvatarRoot();
 const fallback = createAvatarFallback();
+fallback.setAttribute('role', 'img');
 fallback.setAttribute('aria-label', 'Usuário genérico');
 // ...append a User icon SVG to fallback
 root.appendChild(fallback);`,
@@ -421,6 +426,7 @@ root.appendChild(createAvatarFallback({ text: 'JP' }));`;
 
         const codeIcon = `const root = createAvatarRoot();
 const fallback = createAvatarFallback();
+fallback.setAttribute('role', 'img');
 fallback.setAttribute('aria-label', 'Usuário genérico');
 // ...append User icon SVG
 root.appendChild(fallback);`;
@@ -443,6 +449,7 @@ wrapper.appendChild(createAvatar({ src, alt, fallbackText: 'MR' }));
 const status = document.createElement('span');
 status.className = 'nds-rounded-full nds-bg-primary';
 status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
+status.setAttribute('role', 'status');
 status.setAttribute('aria-label', 'online');
 wrapper.appendChild(status);`;
 

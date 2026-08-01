@@ -110,11 +110,12 @@ export const Alert: Story = { render: () => createAlertDocs(), play };
 export const AlertDialog: Story = { render: () => createAlertDialogDocs(), play };
 export const AnalyticsCatalog: Story = { render: () => createAnalyticsCatalogDocs(), play };
 export const AspectRatio: Story = { render: () => createAspectRatioDocs(), play };
-// axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
+// aria-prohibited-attr RESOLVIDA (2026-08-01): fallback com ícone ganhou
+// role="img" e o dot de status role="status" — aria-label deixou de cair em
+// <span> genérico. Axe é portão.
 export const Avatar: Story = {
   render: () => createAvatarDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 export const Badge: Story = { render: () => createBadgeDocs(), play };
 export const Breadcrumb: Story = {
@@ -133,11 +134,11 @@ export const Carousel: Story = {
   render: () => createCarouselDocs(),
   play,
 };
-// axe: aria-prohibited-attr — catalogado no FIXES-NEEDED
+// aria-prohibited-attr RESOLVIDA (2026-08-01): containers de chart rotulados
+// ganharam role="img" — aria-label deixou de cair em <div> genérico. Axe é portão.
 export const Chart: Story = {
   render: () => createChartDocs(),
   play,
-  parameters: { a11y: { test: 'todo' } },
 };
 // axe: aria-toggle-field-name — catalogado no FIXES-NEEDED
 export const Checkbox: Story = {

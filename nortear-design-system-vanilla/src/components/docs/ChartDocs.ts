@@ -313,6 +313,8 @@ export function createChartDocs(): HTMLElement {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
                 const chart = createChart({ data: chartData, type: 'bar', height: 160 });
+                // role="img" permite aria-label no container (senão axe aponta aria-prohibited-attr).
+                chart.setAttribute('role', 'img');
                 chart.setAttribute('aria-label', 'Gráfico de barras: acessos mensais');
                 wrap.appendChild(chart);
                 return wrap;
@@ -375,6 +377,7 @@ wrap.appendChild(stats);
 
 const spark = createChart({ data: chartData, type: 'line', height: 48 });
 spark.style.width = '120px';
+spark.setAttribute('role', 'img');
 spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
 wrap.appendChild(spark);`;
 
@@ -422,6 +425,8 @@ wrap.appendChild(spark);`;
                 wrap.appendChild(stats);
                 const spark = createChart({ data: chartData, type: 'line', height: 48 });
                 spark.style.width = '120px';
+                // role="img" permite aria-label no container (senão axe aponta aria-prohibited-attr).
+                spark.setAttribute('role', 'img');
                 spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
                 wrap.appendChild(spark);
                 return wrap;
