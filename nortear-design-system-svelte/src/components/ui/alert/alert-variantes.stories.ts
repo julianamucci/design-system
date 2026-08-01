@@ -133,14 +133,22 @@ export const Dismissible: Story = {
     const canvas = within(canvasElement);
 
     await step('Botão de fechar visível e acessível por rótulo', async () => {
-      const dismissButton = await canvas.findByRole('button', { name: 'Fechar alerta' });
-      await expect(dismissButton).toBeVisible();
+      // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
+      // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
+      // browser — e no Chromium headless dos testes a animação fica presa no
+      // quadro zero até o timeout de segurança limpar a classe.
+      await waitFor(async () => {
+        const dismissButton = await canvas.findByRole('button', { name: 'Fechar alerta' });
+        await expect(dismissButton).toBeVisible();
+      });
     });
 
     await step('Clique no X remove o alert e dispara o callback uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(dismissButton);
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
@@ -169,9 +177,15 @@ export const DismissibleTeclado: Story = {
     await step('Enter no botão focado remove o alert e dispara o callback uma única vez', async () => {
       const alertOriginal = await canvas.findByRole('alert');
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
+      // waitFor: o alert entra animado (.nds-animate-in) — medir o botão no
+      // meio da animação é racy, e no headless ela fica presa no quadro zero
+      // até o timeout de segurança limpar a classe.
+      await waitFor(() => expect(dismissButton).toBeVisible());
       dismissButton.focus();
       await expect(dismissButton).toHaveFocus();
       await userEvent.keyboard('{Enter}');
+      // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
+      // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
