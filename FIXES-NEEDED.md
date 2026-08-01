@@ -307,24 +307,32 @@ Bônus svelte: `</script>` literal não escapado em template string no
 `SidebarDocs.svelte` quebrava o svelte2tsx de meio arquivo — escapado;
 **svelte-check: 689 → 353 erros (novo baseline)**.
 
-### Restos do lote — precisam de decisão da dona
+### Restos do lote — RESOLVIDOS (2026-08-01, arbitrados pela dona)
 
-- [ ] **accordion (react + vanilla; a rigor 4 stacks)** — categoria 4: o
-  painel aberto é `role="region"` com accessible name vinda do TRIGGER
-  (`aria-labelledby`); a Demonstração e a variante "single" repetem a mesma
-  chave `demonstration.labels.q1` de `translations.json` → N regions com o
-  mesmo nome. Corrigir exige diferenciar o texto dos triggers entre blocos no
-  conteúdo compartilhado (3 locales, paridade story↔docs) — ou aceitar a
-  permanência em `todo`. Nota: `aria-label` local no content NÃO resolve
-  (`aria-labelledby` tem precedência na accname).
-- [ ] **navigation-menu popup (react)** — o `NavigationMenuPrimitive.Popup`
-  do Base UI renderiza `<nav>` SEM rótulo; 6 demos `defaultValue` deixam
-  popups abertos que colidem entre si. O vanilla (referência) NÃO rende
-  `<nav>` no popup. Proposta recomendada: `render={<div/>}` no wrapper
-  `navigation-menu.tsx` (alinha com a referência); alternativa: encaminhar
-  rótulo ao Popup. Mudança de primitivo — por isso parou aqui.
-- Calendar svelte (nav→div no wrapper, precedente Vue/canon vanilla):
-  follow-up JÁ despachado, agent em execução.
+- ~~accordion~~ — a hipótese "categoria 4" tinha DUAS causas distintas:
+  - **vanilla (`cf45697a`)**: NÃO era conteúdo — bug real de id duplicado no
+    factory (`accordion-trigger-${value}` sem escopo de instância; 3
+    accordions com `item-1` na página → `aria-labelledby` resolvia para o 1º
+    id do documento e igualava as accessible names). Ids agora com escopo por
+    instância. Zero mudança de conteúdo.
+  - **react (`9f8f0de6`)**: colisão real de conteúdo (Demonstração e variante
+    single abriam `q1`). A single usa itens próprios `q2/q3` do pool
+    existente — `translations.json` intocado. Prova bidirecional em ambos.
+  - Vue/Svelte nunca flagaram accordion. Ambas as páginas agora são portão.
+- ~~navigation-menu popup (react)~~ — **`135dbd9d`**: `render={<div/>}` no
+  Popup (wrapper `navigation-menu.tsx`), alinhado à referência vanilla.
+  Provado em modo portão: só resta `aria-hidden-focus` (outro lote).
+- ~~Calendar svelte~~ — **`0ea14661`**: `nav`→`div` no
+  `calendar-nav.svelte` (markup do próprio projeto, não do bits-ui); página
+  virou portão; svelte-check estável em 353.
+
+**Saldo final do lote landmark: 84 → 60 páginas em todo; famílias
+`landmark-unique`/`no-duplicate-main` ZERADAS nas 4 stacks.**
+
+Paridade pendente (pré-existente, fora do lote): os previews de variantes do
+accordion divergem entre stacks (vanilla usa strings locais "Pergunta 1",
+react usa chaves t()) — candidato para o `/cross-stack accordion` na revisão
+do componente.
 
 ### Pré-existências confirmadas fora do escopo (provadas com stash)
 
