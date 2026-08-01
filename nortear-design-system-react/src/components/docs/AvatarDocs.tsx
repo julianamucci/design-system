@@ -145,7 +145,7 @@ import { User } from "lucide-react";`;
 </Avatar>`;
 
   const codeWithIcon = `<Avatar>
-  <AvatarFallback aria-label="Usuário genérico">
+  <AvatarFallback role="img" aria-label="Usuário genérico">
     <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
   </AvatarFallback>
 </Avatar>`;
@@ -171,6 +171,7 @@ import { User } from "lucide-react";`;
     <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
   <span
+    role="status"
     aria-label="online"
     className="nds-rounded-full nds-bg-primary"
     style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
@@ -246,7 +247,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
           <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
             <Avatar>
-              <AvatarFallback aria-label={tContent("demonstration.labels.withIcon")}>
+              <AvatarFallback role="img" aria-label={tContent("demonstration.labels.withIcon")}>
                 <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
               </AvatarFallback>
             </Avatar>
@@ -283,6 +284,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 <AvatarFallback aria-hidden="true">MR</AvatarFallback>
               </Avatar>
               <span
+                role="status"
                 aria-label={tContent("demonstration.labels.statusOnline")}
                 className="nds-rounded-full nds-bg-primary"
                 style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
@@ -477,7 +479,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             code: codeWithIcon,
             preview: (
               <Avatar>
-                <AvatarFallback aria-label="Usuário genérico">
+                <AvatarFallback role="img" aria-label="Usuário genérico">
                   <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
@@ -520,6 +522,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                   <AvatarFallback aria-hidden="true">MR</AvatarFallback>
                 </Avatar>
                 <span
+                  role="status"
                   aria-label="online"
                   className="nds-rounded-full nds-bg-primary"
                   style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}

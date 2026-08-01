@@ -162,6 +162,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               {DOMPurify.sanitize(tContent("demonstration.labels.card"))}
             </p>
             <div
+              role="status"
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
               className="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
@@ -194,6 +195,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               {DOMPurify.sanitize(tContent("demonstration.labels.list"))}
             </p>
             <div
+              role="status"
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
               className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
@@ -229,6 +231,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               {DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             </p>
             <div
+              role="status"
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             >
@@ -248,6 +251,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               {DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
             </p>
             <div
+              role="status"
               aria-busy="true"
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
               className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
@@ -377,6 +381,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div
+                role="status"
                 aria-busy="true"
                 aria-label="Carregando texto"
                 className="nds-w-full nds-stack"
@@ -399,6 +404,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div
+                role="status"
                 aria-busy="true"
                 aria-label="Carregando avatar e texto"
                 className="nds-cluster nds-w-full"
@@ -434,7 +440,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
             preview: (
-              <div aria-busy="true" aria-label="Carregando bloco" style={{ width: "12rem" }}>
+              <div role="status" aria-busy="true" aria-label="Carregando bloco" style={{ width: "12rem" }}>
                 <Skeleton className="nds-motion-reduce-none" style={{ height: "5rem", width: "100%" }} aria-hidden="true" />
               </div>
             ),
@@ -444,7 +450,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.circle")),
             code: codeCircle,
             preview: (
-              <div aria-busy="true" aria-label="Carregando avatar">
+              <div role="status" aria-busy="true" aria-label="Carregando avatar">
                 <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
               </div>
             ),
@@ -454,7 +460,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,
             preview: (
-              <div aria-busy="true" aria-label="Carregando linha de texto">
+              <div role="status" aria-busy="true" aria-label="Carregando linha de texto">
                 <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
               </div>
             ),
