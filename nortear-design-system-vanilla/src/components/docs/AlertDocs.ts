@@ -47,19 +47,57 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+interface BuildAlertOptions {
+  /** Classes extras aplicadas junto de `className`. */
+  extraClass?: string;
+  /** Renderiza o botão X de fechar no canto superior direito. */
+  dismissible?: boolean;
+  onDismiss?: () => void;
+  /** Chave i18n do rótulo da ação — renderiza um botão dentro da descrição. */
+  actionKey?: string;
+  onAction?: () => void;
+}
+
 function buildAlert(
   variant: AlertVariant,
   className: string,
   icon: AlertIconType | null,
   titleKey: string | null,
   descKey: string,
-  extraClass = '',
+  options: BuildAlertOptions = {},
 ): HTMLElement {
-  const el = createAlert({ variant, className: [className, extraClass].filter(Boolean).join(' ') });
+  const { extraClass = '', dismissible = false, onDismiss, actionKey, onAction } = options;
+
+  const el = createAlert({
+    variant,
+    className: [className, extraClass].filter(Boolean).join(' '),
+    dismissible,
+    onDismiss,
+  });
   if (icon) el.appendChild(createAlertIcon(icon));
   // as: 'h3' — as seções da docs page são h2; h3 preserva a hierarquia (axe heading-order).
   if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)), as: 'h3' }));
-  el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
+
+  if (actionKey) {
+    // Ação inline na descrição — mesmo markup que a composição withAction ensina
+    // no `code` desta página (cluster + span + Button sm/outline). Vanilla é a
+    // referência cross-stack: as outras stacks espelham esta estrutura.
+    const desc = document.createElement('div');
+    desc.className = 'nds-cluster nds-alert-description nds-mt-1';
+    const span = document.createElement('span');
+    span.textContent = stripHtml(t(descKey));
+    desc.appendChild(span);
+    desc.appendChild(createButton({
+      size: 'sm',
+      variant: 'outline',
+      label: stripHtml(t(actionKey)),
+      onClick: onAction,
+    }));
+    el.appendChild(desc);
+  } else {
+    el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
+  }
+
   return el;
 }
 
@@ -163,11 +201,23 @@ export function createAlertDocs(): HTMLElement {
             const wrap = document.createElement('div');
             wrap.className = 'nds-w-full nds-stack';
             wrap.dataset.spacing = 'sm';
+            // Cada alert da demo mostra uma capacidade diferente do componente:
+            // default sem título · destructive com título · success dismissível ·
+            // warning com ação inline.
             wrap.append(
-              buildAlert('default', '', 'info', 'demonstration.labels.infoTitle', 'demonstration.labels.infoDesc'),
+              buildAlert('default', '', 'info', null, 'demonstration.labels.infoDesc'),
               buildAlert('destructive', '', 'error', 'demonstration.labels.errorTitle', 'demonstration.labels.errorDesc'),
-              buildAlert('success', '', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc'),
-              buildAlert('warning', '', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc'),
+              buildAlert('success', '', 'success', 'demonstration.labels.successTitle', 'demonstration.labels.successDesc', {
+                dismissible: true,
+                onDismiss: () => track('alert_dismiss', {
+                  component: 'alert',
+                  label: 'demonstration',
+                  location: 'docs_demo',
+                }),
+              }),
+              buildAlert('warning', '', 'warning', 'demonstration.labels.warningTitle', 'demonstration.labels.warningDesc', {
+                actionKey: 'demonstration.labels.warningAction',
+              }),
             );
             return wrap;
           },

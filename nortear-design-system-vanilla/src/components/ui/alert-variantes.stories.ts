@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
-import { within, expect, fn, userEvent } from 'storybook/test';
+import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -105,17 +105,37 @@ export const Info: Story = {
 const onDismissClick = fn();
 const onDismissKeyboard = fn();
 
+// A play FECHA o alert. Se a story renderizasse um alert solto, o canvas
+// terminaria vazio — quem abre a story no Storybook não vê nada e o Chromatic
+// fotografa um quadro em branco. O wrapper remonta um alert novo no onDismiss:
+// o fechamento continua provado (a play mede o nó ORIGINAL, que sai do DOM) e a
+// story nunca acaba sem conteúdo visível.
+function mountRemountingAlert(spy: () => void, build: (onDismiss: () => void) => HTMLElement): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-w-full';
+  const mount = (): void => {
+    wrapper.appendChild(build(() => {
+      spy();
+      mount();
+    }));
+  };
+  mount();
+  return wrapper;
+}
+
 // Duas stories separadas, como nas outras 3 stacks (Dismissible +
 // DismissibleTeclado): mesma matriz de cobertura por nome de story nas 4, e o
 // Chromatic fotografa os mesmos casos.
 export const Dismissible: Story = {
   render: () => {
     onDismissClick.mockClear();
-    const el = createAlert({ variant: 'default', dismissible: true, onDismiss: onDismissClick });
-    el.appendChild(createAlertIcon('info'));
-    el.appendChild(createAlertTitle({ text: 'Preferências salvas' }));
-    el.appendChild(createAlertDescription({ text: 'Você pode fechar este aviso quando quiser.' }));
-    return el;
+    return mountRemountingAlert(onDismissClick, (onDismiss) => {
+      const el = createAlert({ variant: 'default', dismissible: true, onDismiss });
+      el.appendChild(createAlertIcon('info'));
+      el.appendChild(createAlertTitle({ text: 'Preferências salvas' }));
+      el.appendChild(createAlertDescription({ text: 'Você pode fechar este aviso quando quiser.' }));
+      return el;
+    });
   },
 
   play: async ({ canvasElement, step }) => {
@@ -134,10 +154,18 @@ export const Dismissible: Story = {
       await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
     });
 
-    await step('Clique no X remove o alert e dispara o callback uma vez', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
-      await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+    await step('Clique no X remove o alert original, dispara o callback uma vez e a demo remonta', async () => {
+      const alertOriginal = canvas.getByRole('alert');
+      await userEvent.click(within(alertOriginal).getByRole('button', { name: 'Fechar alerta' }));
+
+      await expect(alertOriginal).not.toBeInTheDocument();
       await expect(onDismissClick).toHaveBeenCalledTimes(1);
+
+      await waitFor(async () => {
+        const remontado = canvas.getByRole('alert');
+        await expect(remontado).not.toBe(alertOriginal);
+        await expect(remontado).toBeVisible();
+      });
     });
   },
 };
@@ -145,26 +173,36 @@ export const Dismissible: Story = {
 export const DismissibleTeclado: Story = {
   render: () => {
     onDismissKeyboard.mockClear();
-    const el = createAlert({
-      variant: 'success',
-      dismissible: true,
-      dismissLabel: 'Fechar confirmação',
-      onDismiss: onDismissKeyboard,
+    return mountRemountingAlert(onDismissKeyboard, (onDismiss) => {
+      const el = createAlert({
+        variant: 'success',
+        dismissible: true,
+        dismissLabel: 'Fechar confirmação',
+        onDismiss,
+      });
+      el.appendChild(createAlertIcon('success'));
+      el.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
+      el.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
+      return el;
     });
-    el.appendChild(createAlertIcon('success'));
-    el.appendChild(createAlertTitle({ text: 'Perfil atualizado' }));
-    el.appendChild(createAlertDescription({ text: 'Suas informações foram salvas com sucesso.' }));
-    return el;
   },
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Enter no X focado remove o alert e dispara o callback uma vez', async () => {
-      canvas.getByRole('button', { name: 'Fechar confirmação' }).focus();
+    await step('Enter no X focado remove o alert original, dispara o callback uma vez e a demo remonta', async () => {
+      const alertOriginal = canvas.getByRole('alert');
+      within(alertOriginal).getByRole('button', { name: 'Fechar confirmação' }).focus();
       await userEvent.keyboard('{Enter}');
-      await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+
+      await expect(alertOriginal).not.toBeInTheDocument();
       await expect(onDismissKeyboard).toHaveBeenCalledTimes(1);
+
+      await waitFor(async () => {
+        const remontado = canvas.getByRole('alert');
+        await expect(remontado).not.toBe(alertOriginal);
+        await expect(remontado).toBeVisible();
+      });
     });
   },
 };
