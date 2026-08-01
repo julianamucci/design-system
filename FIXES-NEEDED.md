@@ -448,8 +448,44 @@ heading-order, listitem, aria-allowed-attr.
 - react: `aria-hidden-focus` dos focus guards do Base UI em stories `ui/*` +
   `data-active` em pagination-variantes (6 falhas).
 - vue: 12 falhas em stories de carousel/navigation-menu/sidebar + calendar
-  Playground (`role "grid"` ausente); Motion `color-contrast` 1.02 flaky sob
-  carga (passa isolada).
+  Playground (`role "grid"` ausente).
+- [ ] **vue MotionDocs — `color-contrast` REAL, não flake** (registro
+  corrigido em 2026-08-01): foi anotado antes como "1.02 flaky sob carga,
+  passa isolada". Não passa. Isolada falha rápido e sempre:
+  `.nds-bg-muted-50.nds-rounded-md.nds-py-2:nth-child(5)` com contraste
+  **1.88** (`#bcbcbc` sobre `#fefefe`, 10pt) — precisa de 4.5:1. No run
+  completo aparece disfarçada de timeout de 120s, que foi o que induziu ao
+  diagnóstico errado. Corrigir junto com o lote de cor.
 - svelte: 15 falhas de interação em stories de pagination/navigation-menu/
   sidebar (backlog dos 50/180).
 - vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.
+
+## Lote alert — demo por capacidade + stories dismissible (2026-08-01)
+
+Commits: `711b6c4e` vanilla · `3602dce3` svelte · `b468603b` vue ·
+`f7950616` react (+ chave `demonstration.labels.warningAction` nos 3 locales).
+
+Demo da AlertDocs deixou de repetir o mesmo alert 4×: default sem título,
+destructive com título, success dismissible (emitindo `alert_dismiss` com o
+payload já usado nas Variantes), warning com ação inline.
+
+**As stories Dismissible/DismissibleTeclado "não carregavam" — causa real:**
+a play function FECHAVA o alert e a asserção final era ele ter sumido. Como a
+play roda sozinha ao abrir a story, o canvas ficava VAZIO — e o Chromatic
+fotografava vazio. Agora um alert novo remonta após o fechamento, e a prova
+ficou mais forte: guarda o nó ORIGINAL e assere `not.toBeInTheDocument()`
+(o `queryByRole(...) === null` anterior não distinguia "fechou" de "nunca
+montou").
+
+### Divergências cross-stack abertas (decisão da dona)
+
+- [ ] **Ação do alert: texto × comportamento.** `variants.compositions.
+  withAction.description` diz que a ação fica "alinhada à direita", mas o
+  snippet que a página ensina produz o botão numa LINHA ABAIXO, alinhado ao
+  início — `.nds-alert-description` vence `.nds-cluster` no `display` porque
+  `alert.css` é importado depois de `layout.css`. As 4 stacks foram
+  convergidas para o comportamento real do snippet. Decidir: corrigir o texto
+  (3 locales) ou alinhar o snippet à direita de fato.
+- [ ] **`AlertDescription` do Svelte renderiza `<section>`**, enquanto o
+  vanilla (referência) usa `<div>`. Não há justificativa semântica para
+  `<section>` dentro de um alert. Primitivo — ficou fora do escopo do lote.

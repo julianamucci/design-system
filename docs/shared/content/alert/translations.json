@@ -20,7 +20,8 @@
         "successTitle": "Perfil atualizado",
         "successDesc": "Suas informações foram salvas com sucesso.",
         "warningTitle": "Assinatura expirando",
-        "warningDesc": "Sua assinatura expira em 3 dias. Renove para evitar interrupções."
+        "warningDesc": "Sua assinatura expira em 3 dias. Renove para evitar interrupções.",
+        "warningAction": "Renovar assinatura"
       }
     },
     "anatomy": {
@@ -433,7 +434,8 @@
         "successTitle": "Profile updated",
         "successDesc": "Your information has been saved successfully.",
         "warningTitle": "Subscription expiring",
-        "warningDesc": "Your subscription expires in 3 days. Renew to avoid interruptions."
+        "warningDesc": "Your subscription expires in 3 days. Renew to avoid interruptions.",
+        "warningAction": "Renew subscription"
       }
     },
     "anatomy": {
@@ -846,7 +848,8 @@
         "successTitle": "Perfil actualizado",
         "successDesc": "Tu información se guardó correctamente.",
         "warningTitle": "Suscripción por vencer",
-        "warningDesc": "Tu suscripción vence en 3 días. Renueva para evitar interrupciones."
+        "warningDesc": "Tu suscripción vence en 3 días. Renueva para evitar interrupciones.",
+        "warningAction": "Renovar suscripción"
       }
     },
     "anatomy": {
