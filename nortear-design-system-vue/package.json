@@ -41,7 +41,7 @@
     "vue-echarts": "^8.0.1",
     "vue-input-otp": "^0.3.2",
     "vue-sonner": "^2.0.9",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
