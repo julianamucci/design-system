@@ -220,10 +220,11 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
           <DocsDemonstration title={tContent("demonstration.title")}>
+            {/* Cada alert da demo mostra uma capacidade diferente: sem título,
+                com título, dismissible e com ação. */}
             <div className="nds-w-full nds-stack" data-spacing="sm">
               <Alert>
                 <Info aria-hidden="true" />
-                <AlertTitle as="h3">{tContent("demonstration.labels.infoTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.infoDesc")}</AlertDescription>
               </Alert>
               <Alert variant="destructive">
@@ -231,7 +232,17 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 <AlertTitle as="h3">{tContent("demonstration.labels.errorTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.errorDesc")}</AlertDescription>
               </Alert>
-              <Alert variant="success">
+              <Alert
+                variant="success"
+                dismissible
+                onDismiss={() =>
+                  track("alert_dismiss", {
+                    component: "alert",
+                    label: "demonstration",
+                    location: "docs_demo",
+                  })
+                }
+              >
                 <CheckCircle2 aria-hidden="true" />
                 <AlertTitle as="h3">{tContent("demonstration.labels.successTitle")}</AlertTitle>
                 <AlertDescription>{tContent("demonstration.labels.successDesc")}</AlertDescription>
@@ -239,7 +250,17 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               <Alert variant="warning">
                 <TriangleAlert aria-hidden="true" />
                 <AlertTitle as="h3">{tContent("demonstration.labels.warningTitle")}</AlertTitle>
-                <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
+                {/* Canon cross-stack: as 3 classes no mesmo elemento. alert.css
+                    é importado depois de layout.css, então .nds-alert-description
+                    vence .nds-cluster no display — o botão cai numa linha abaixo
+                    do texto, alinhado ao início. É o resultado esperado; o
+                    espaçamento vem de .nds-mt-1. */}
+                <AlertDescription className="nds-cluster nds-mt-1">
+                  <span>{tContent("demonstration.labels.warningDesc")}</span>
+                  <Button size="sm" variant="outline">
+                    {tContent("demonstration.labels.warningAction")}
+                  </Button>
+                </AlertDescription>
               </Alert>
             </div>
           </DocsDemonstration>
