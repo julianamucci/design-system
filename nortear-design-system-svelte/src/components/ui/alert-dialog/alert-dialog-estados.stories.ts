@@ -74,6 +74,10 @@ export const Open: Story = {
   },
 };
 
+// Spy no escopo do módulo: o `play` precisa asseverar o callback do consumidor,
+// e o objeto de props montado em `render` não é visível dentro do `play`.
+const onConfirmSpy = fn();
+
 export const Confirmed: Story = {
   parameters: {
     docs: {
@@ -83,22 +87,42 @@ export const Confirmed: Story = {
   render: () => ({
     Component: AlertDialogStory,
     props: {
-      open: true,
+      open: false,
+      triggerLabel: 'Excluir item',
       title: 'Confirmar exclusão',
       description: 'Esta ação é permanente.',
+      cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
-      onConfirm: fn(),
+      onConfirm: onConfirmSpy,
     },
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
-    await step('Clique em Excluir dispara o handler', async () => {
-      // bits-ui 2.18: AlertDialogAction não fecha automaticamente — o consumidor
-      // controla o fechamento via `bind:open`. Aqui validamos apenas que o handler
-      // foi disparado e que o dialog permanece íntegro.
+    onConfirmSpy.mockClear();
+
+    await step('Trigger abre o diálogo', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i }));
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).toBeVisible();
+    });
+
+    await step('Clique em Excluir dispara o handler do consumidor', async () => {
       const action = await body.findByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
-      await expect(action).toBeInTheDocument();
+      await waitFor(() => expect(onConfirmSpy).toHaveBeenCalledTimes(1));
+    });
+
+    await step('Confirmar também fecha o diálogo', async () => {
+      // O dialog anima; em Chromium headless as animações de opacity/transform
+      // congelam, então a asserção precisa aceitar tanto a remoção do nó quanto
+      // o estado `closed` durante a saída.
+      await waitFor(() => {
+        const dialog = body.queryByRole('alertdialog');
+        if (dialog && dialog.getAttribute('data-state') !== 'closed') {
+          throw new Error('dialog ainda aberto após confirmar');
+        }
+      });
     });
   },
 };
