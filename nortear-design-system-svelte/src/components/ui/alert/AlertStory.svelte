@@ -12,6 +12,8 @@
 
   interface Props {
     variant?: AlertVariant;
+    /** Semântica de anúncio repassada ao Alert. */
+    role?: 'alert' | 'status' | 'note';
     // `string | null` e `ClassValue` alinham com HTMLAttributes do Alert —
     // sem isso o render das stories acusa Component<Props> incompatível.
     title?: string | null;
@@ -32,6 +34,7 @@
 
   let {
     variant = 'default',
+    role = 'alert',
     title = 'Atenção',
     description = 'Suas alterações serão aplicadas na próxima sessão.',
     showIcon = true,
@@ -48,7 +51,7 @@
   let IconComponent = $derived(ICONS[icon]);
 </script>
 
-<Alert {variant} class={className} {dismissible} {onDismiss} {dismissLabel}>
+<Alert {variant} {role} class={className} {dismissible} {onDismiss} {dismissLabel}>
   {#if showIcon}
     <IconComponent class="nds-icon" aria-hidden="true" />
   {/if}

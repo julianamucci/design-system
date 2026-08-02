@@ -22,6 +22,13 @@ const meta = {
       description: 'Variante semântica do alert.',
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
     },
+    role: {
+      control: 'select',
+      options: ['alert', 'status', 'note'],
+      description:
+        'Semântica de anúncio para leitores de tela. alert (padrão) interrompe e anuncia na hora — use só para mensagem urgente que surge em tempo de execução. status anuncia sem interromper. note não anuncia: é o certo para conteúdo estático já presente ao carregar a página.',
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
+    },
     dismissible: {
       control: 'boolean',
       description: 'Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.',
@@ -50,6 +57,7 @@ const meta = {
   },
   args: {
     variant: 'default',
+    role: 'alert',
     dismissible: false,
     onDismiss: fn(),
   },
@@ -65,16 +73,18 @@ export const Playground: Story = {
   parameters: {
     docs: {
       source: {
-        transform: (_generated: string, ctx: { args?: { variant?: string; dismissible?: boolean } }) => {
+        transform: (_generated: string, ctx: { args?: { variant?: string; role?: string; dismissible?: boolean } }) => {
           const variant = ctx.args?.variant ?? 'default';
           const variantAttr = variant === 'default' ? '' : ` variant="${variant}"`;
+          const role = ctx.args?.role ?? 'alert';
+          const roleAttr = role === 'alert' ? '' : ` role="${role}"`;
           const dismissAttr = ctx.args?.dismissible ? ' dismissible onDismiss={() => console.log("fechado")}' : '';
           return `<script lang="ts">
   import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
   import Info from "@lucide/svelte/icons/info";
 </script>
 
-<Alert${variantAttr}${dismissAttr}>
+<Alert${variantAttr}${roleAttr}${dismissAttr}>
   <Info class="nds-icon" aria-hidden="true" />
   <AlertTitle>Atenção</AlertTitle>
   <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
@@ -87,6 +97,7 @@ export const Playground: Story = {
     Component: AlertStory,
     props: {
       variant: args.variant,
+      role: args.role,
       title: 'Atenção',
       description: 'Suas alterações serão aplicadas na próxima sessão.',
       showIcon: true,
@@ -94,11 +105,14 @@ export const Playground: Story = {
       onDismiss: args.onDismiss,
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    // O control `role` troca a semântica da raiz — as buscas seguem o arg para
+    // a story continuar verde em qualquer configuração do painel.
+    const role = args.role ?? 'alert';
 
     await step('Elemento alert está presente no DOM', async () => {
-      const alert = canvas.getByRole('alert');
+      const alert = canvas.getByRole(role);
       await expect(alert).toBeInTheDocument();
     });
 
@@ -107,7 +121,7 @@ export const Playground: Story = {
     // quadro falha. Sem o control ligado passa de primeira — o waitFor não
     // custa nada e cobre as duas configurações do Playground.
     await step('Alert está visível', async () => {
-      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
+      await waitFor(() => expect(canvas.getByRole(role)).toBeVisible());
     });
 
     await step('AlertTitle é renderizado corretamente', async () => {
@@ -126,7 +140,7 @@ export const Playground: Story = {
     });
 
     await step('Variante default aplica classes corretas', async () => {
-      const alert = canvas.getByRole('alert');
+      const alert = canvas.getByRole(role);
       await expect(alert).toHaveClass('nds-alert');
     });
   },

@@ -39,13 +39,24 @@
 		ref = $bindable(null),
 		class: className,
 		variant = "default",
+		role = "alert",
 		dismissible = false,
 		onDismiss,
 		dismissLabel = "Fechar alerta",
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+	}: WithElementRef<Omit<HTMLAttributes<HTMLDivElement>, "role">> & {
 		variant?: AlertVariant;
+		/**
+		 * Semântica de anúncio do elemento raiz.
+		 *
+		 * `alert` (padrão) é live region ASSERTIVA: o leitor de tela interrompe o
+		 * que estiver fazendo e anuncia na hora — correto só para mensagem urgente
+		 * que SURGE em tempo de execução. `status` é live region polida (anuncia
+		 * sem interromper). `note` não é live region — é o valor certo para alert
+		 * estático, já presente quando a página carrega.
+		 */
+		role?: "alert" | "status" | "note";
 		/** Exibe o botão de fechar; fechar remove o alert da tela. */
 		dismissible?: boolean;
 		/** Callback de fechamento — dispara uma vez ao acionar o botão. */
@@ -120,7 +131,7 @@
 	<div
 		bind:this={ref}
 		data-slot="alert"
-		role="alert"
+		{role}
 		class={cn(alertVariants({ variant }), classeAnimacao, className)}
 		{...restProps}
 	>

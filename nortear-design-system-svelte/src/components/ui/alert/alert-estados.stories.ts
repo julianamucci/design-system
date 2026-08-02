@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
+import AlertSemAnuncioStory from './AlertSemAnuncioStory.svelte';
 
 const meta = {
   parameters: {
@@ -89,6 +90,30 @@ export const SemIcone: Story = {
       const alert = canvas.getByRole('alert');
       const svg = alert.querySelector(':scope > svg');
       await expect(svg).toBeNull();
+    });
+  },
+};
+
+// Alert estático não pode ser live region: com o `role="alert"` padrão o leitor
+// de tela interrompe a leitura e salta para o alert no carregamento da página.
+// `role="note"` remove o anúncio sem mexer no visual — e o default segue `alert`.
+export const SemAnuncio: Story = {
+  render: () => ({
+    Component: AlertSemAnuncioStory,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Alert estático usa role="note" — não é live region', async () => {
+      const nota = canvas.getByRole('note');
+      await expect(nota).toHaveAttribute('role', 'note');
+      await expect(canvas.getByText(/não deve ser anunciado/)).toBeVisible();
+    });
+
+    await step('Sem a prop, o padrão continua role="alert"', async () => {
+      const alerts = canvas.getAllByRole('alert');
+      await expect(alerts).toHaveLength(1);
+      await expect(alerts[0]).toHaveAttribute('role', 'alert');
     });
   },
 };

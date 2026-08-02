@@ -159,6 +159,7 @@ import Info from '@lucide/svelte/icons/info';`;
   const interfaceCode = `// Alert
 interface AlertProps {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  role?: 'alert' | 'status' | 'note'; // semântica de anúncio, default 'alert'
   class?: string;
   children?: Snippet;
   dismissible?: boolean;       // botão de fechar no canto superior direito
@@ -500,6 +501,7 @@ interface AlertTitleProps {
             },
             items: [
               { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
+              { name: 'role',     type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml($tStore('props.table.role')) },
               { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.className'))           },
               { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')            },
               { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: $tStore('props.table.dismissible')  },
