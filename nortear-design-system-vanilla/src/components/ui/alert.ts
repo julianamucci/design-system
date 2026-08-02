@@ -37,8 +37,25 @@ function runExitAnimation(el: HTMLElement, done: () => void): void {
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
+/**
+ * Semântica de anúncio do elemento raiz.
+ *
+ * - `alert`  — live region ASSERTIVA: o leitor de tela interrompe o que estiver
+ *   fazendo e anuncia na hora. Por WAI-ARIA só vale para mensagem urgente que
+ *   **surge em tempo de execução**.
+ * - `status` — live region polida: anuncia sem interromper.
+ * - `note`   — NÃO é live region. É o certo para alert estático, já presente
+ *   quando a página carrega.
+ */
+export type AlertRole = 'alert' | 'status' | 'note';
+
 export interface AlertOptions {
   variant?: AlertVariant;
+  /**
+   * Semântica de anúncio no elemento raiz — default `'alert'`.
+   * Use `'note'` para conteúdo estático (não vira live region).
+   */
+  role?: AlertRole;
   /** Additional CSS classes to append. */
   className?: string;
   /** Renderiza o botão de fechar (X) no canto superior direito. */
@@ -62,10 +79,13 @@ export interface AlertDescriptionOptions {
 }
 
 export function createAlert(options: AlertOptions = {}): HTMLElement {
-  const { variant = 'default', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
+  const { variant = 'default', role = 'alert', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
 
   const el = document.createElement('div');
-  el.setAttribute('role', 'alert');
+  // PATCH: a11y — `role` configurável. Fixo em 'alert' o componente era live
+  // region assertiva mesmo estático, e o leitor de tela pulava para ele no
+  // carregamento (ver PATCHES.md#alert-role).
+  el.setAttribute('role', role);
   el.className = variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`;
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
-import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant } from './alert';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant, type AlertRole } from './alert';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -8,6 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type AlertArgs = {
   variant: AlertVariant;
+  role: AlertRole;
   title: string;
   description: string;
   /** Documentada na aba API Reference; o Playground não a encaminha. */
@@ -32,6 +33,13 @@ const meta: Meta<AlertArgs> = {
       options: ['default', 'destructive', 'success', 'warning', 'info'],
       description: 'Variante semântica do alert.',
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
+    },
+    role: {
+      control: 'select',
+      options: ['alert', 'status', 'note'],
+      description:
+        'Semântica de anúncio para leitores de tela. "alert" interrompe e anuncia na hora — só para mensagem urgente que surge em tempo de execução. "status" anuncia sem interromper. "note" não anuncia: é o certo para conteúdo estático já presente ao carregar a página.',
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
     },
     className: {
       control: false,
@@ -66,6 +74,7 @@ const meta: Meta<AlertArgs> = {
   },
   args: {
     variant:     'default',
+    role:        'alert',
     title:       'Atenção',
     description: 'Suas alterações serão aplicadas na próxima sessão.',
     dismissible: false,
@@ -81,6 +90,7 @@ type Story = StoryObj<AlertArgs>;
 function buildAlert(args: AlertArgs): HTMLElement {
   const alert = createAlert({
     variant: args.variant,
+    role: args.role,
     dismissible: args.dismissible,
     onDismiss: args.onDismiss,
     dismissLabel: args.dismissLabel,
@@ -99,10 +109,11 @@ export const Playground: Story = {
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AlertArgs> }) => {
-          const { variant = 'default', title = '', description = '', dismissible = false } = ctx.args ?? {};
+          const { variant = 'default', role = 'alert', title = '', description = '', dismissible = false } = ctx.args ?? {};
           const icon = variant === 'destructive' ? 'error' : variant === 'default' ? 'info' : variant;
           const opts = [
             variant === 'default' ? '' : `variant: '${variant}'`,
+            role === 'alert' ? '' : `role: '${role}'`,
             dismissible ? `dismissible: true, onDismiss: () => console.log('fechado')` : '',
           ].filter(Boolean).join(', ');
           const variantArg = opts ? `{ ${opts} }` : '';

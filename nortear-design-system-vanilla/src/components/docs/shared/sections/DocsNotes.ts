@@ -36,7 +36,10 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
       wrapper.setAttribute('data-track-id', `${props.componentSlug}:link:notes-${i + 1}`);
     }
 
-    const alert = createAlert({ variant: 'default' });
+    // role 'note': as notas são conteúdo estático, já presente no carregamento.
+    // Com o default 'alert' cada nota virava live region assertiva e o leitor
+    // de tela saltava para esta seção ao abrir a página.
+    const alert = createAlert({ variant: 'default', role: 'note' });
     if (item.title) {
       alert.appendChild(createAlertTitle({ text: item.title }));
     }

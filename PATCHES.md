@@ -531,6 +531,21 @@ A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é in
 
 **Verificação após bump:** n/a (sem upstream no Alert). Se o componente ganhar modo controlado, manter a garantia de `onDismiss` disparar uma única vez por fechamento.
 
+### todas/alert — `role` configurável (`alert` | `status` | `note`) {#alert-role}
+
+- **Arquivos:** `alert.tsx` (react), `alert/index.ts` (vue), `alert.svelte` (svelte), `alert.ts` (vanilla) + `docs/shared/sections/DocsNotes.*` nas 4
+- **Categoria:** a11y
+- **Data:** 2026-08-02
+- **Upstream ref:** — (o Alert não vem de lib primitiva em nenhuma stack; markup próprio sobre o CSS `.nds-*`)
+
+**Antes:** o elemento raiz recebia `role="alert"` **fixo**, sem como desligar.
+
+**Depois:** `role?: 'alert' | 'status' | 'note'`, default `'alert'` — aditivo, nenhum call site existente muda de comportamento. O valor vai direto para o atributo `role` da raiz. `alert` é live region assertiva, `status` é polida, `note` não é live region.
+
+**Motivo:** por WAI-ARIA, `alert` é para mensagem urgente que **surge em tempo de execução**. Com o role fixo, todo Alert estático virava live region assertiva: o `DocsNotes` renderiza Alerts e o NVDA saltava para a seção "Notas de Implementação" no carregamento e ficava preso ali — em 48 docs pages × 4 stacks. Varredura confirmou que essa era a **única** live region das docs pages (zero `aria-live`, zero outro role de live region em `shared/`). O bug vale além das docs: qualquer consumidor do DS com um Alert fixo em tela tinha o mesmo problema. `DocsNotes` passou a usar `role="note"`.
+
+**Verificação após bump:** n/a (sem upstream no Alert). Manter o default em `'alert'` — trocá-lo seria breaking. Story `SemAnuncio` (arquivo de estados do Alert nas 4 stacks) trava as duas pontas: `role="note"` explícito e default `alert` quando a prop é omitida.
+
 ---
 
 ## Patches `node_modules/` (gerenciados via `patch-package`)

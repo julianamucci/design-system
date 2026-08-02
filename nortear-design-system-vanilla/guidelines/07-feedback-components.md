@@ -19,7 +19,7 @@
 **Estrutura**:
 
 ```
-div role="alert"
+div role=(alert | status | note — default alert)
 ├── icon (opcional, aria-hidden, posicionado absolute left)
 └── content (pl-7 quando há icon)
     ├── h5 title (opcional)
@@ -36,14 +36,21 @@ div role="alert"
 | `warning` | Alerta não bloqueante |
 
 **Regras**:
-- `role="alert"` no container raiz
+- O `role` do container raiz é configurável e sai como atributo no elemento — default `alert`
+- Alert que já está na tela quando a página carrega usa `note`: estático não é live region
 - Padding fixo em `--spacing-4`; gap interno em `--spacing-1` entre título e descrição
 - Cor nunca é o único indicador — sempre acompanhar com ícone + texto (WCAG 1.4.1)
 - Description sempre em `--foreground` (ver memória "Containers coloridos: texto corrido sempre foreground")
 - Ícone e título podem usar cor da variante; corpo do texto não
 
 **Acessibilidade**:
-- `role="alert"` (live region implícita)
+
+| `role` | Live region | Quando usar |
+|---|---|---|
+| `alert` (default) | Assertiva — interrompe e anuncia na hora | Mensagem urgente que **surge em tempo de execução** |
+| `status` | Polida — anuncia sem interromper | Atualização não urgente inserida em runtime |
+| `note` | Nenhuma | Alert estático, já presente quando a página carrega |
+
 - Ícone com `aria-hidden="true"`
 - Contraste mínimo 4.5:1 em todo texto
 

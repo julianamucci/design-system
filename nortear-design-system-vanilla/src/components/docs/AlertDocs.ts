@@ -489,6 +489,7 @@ export function createAlertDocs(): HTMLElement {
         const interfaceCode = `// createAlert(options)
 export interface AlertOptions {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  role?: 'alert' | 'status' | 'note';  // semântica de anúncio — default 'alert'
   className?: string;
   dismissible?: boolean;        // botão X no canto superior direito
   onDismiss?: () => void;       // dispara uma vez, ao acionar o X
@@ -518,6 +519,7 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
+                { name: 'role',      type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml(t('props.table.role')) },
                 { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
                 { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: stripHtml(t('props.table.dismissible')) },
                 { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: stripHtml(t('props.table.onDismiss')) },

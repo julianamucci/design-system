@@ -184,6 +184,7 @@ const codeDismissible = `<Alert dismissible dismiss-label="Fechar alerta" @dismi
 const interfaceCode = `// Alert
 interface AlertProps {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  role?: 'alert' | 'status' | 'note';  // semântica de anúncio — padrão: 'alert'
   class?: string;
   dismissible?: boolean;   // exibe o botão de fechar
   dismissLabel?: string;   // rótulo acessível do botão — padrão: 'Fechar alerta'
@@ -272,6 +273,7 @@ const propCols = computed(() => ({
 
 const alertPropItems = computed(() => [
   { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
+  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml(tContent('props.table.role'))                  },
   { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className'))             },
   { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: stripHtml(tContent('props.table.dismissible'))  },
   { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: stripHtml(tContent('props.table.onDismiss'))    },

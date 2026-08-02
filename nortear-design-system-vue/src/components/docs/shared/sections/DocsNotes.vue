@@ -39,7 +39,13 @@ function trackId(i: number): string | undefined {
         data-track="link"
         :data-track-id="trackId(i)"
       >
-        <Alert variant="default">
+        <!-- role="note": as notas já estão na página no carregamento. Com o
+             `alert` padrão cada uma vira live region assertiva e o leitor de
+             tela salta para cá assim que a docs page abre. -->
+        <Alert
+          variant="default"
+          role="note"
+        >
           <AlertTitle v-if="item.title">
             {{ item.title }}
           </AlertTitle>

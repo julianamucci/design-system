@@ -10,11 +10,26 @@ import { alertVariants } from './index'
 const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
   variant?: AlertVariants['variant']
+  /**
+   * Semântica de anúncio da raiz.
+   *
+   * `alert` (padrão) é live region assertiva — o leitor de tela interrompe o
+   * que estiver fazendo e anuncia na hora; só faz sentido para mensagem
+   * urgente que SURGE em tempo de execução. `status` é live region polida.
+   * `note` não é live region: é o valor correto para conteúdo estático já
+   * presente quando a página carrega.
+   *
+   * Declarar `role` como prop também o retira de `$attrs`, então o valor aqui
+   * é o único a chegar na raiz — sem atributo duplicado nem fallthrough
+   * sobrescrevendo a decisão do componente.
+   */
+  role?: 'alert' | 'status' | 'note'
   /** Renderiza o botão de fechar no canto superior direito. */
   dismissible?: boolean
   /** Rótulo acessível do botão de fechar. */
   dismissLabel?: string
 }>(), {
+  role: 'alert',
   dismissible: false,
   dismissLabel: 'Fechar alerta',
 })
@@ -103,7 +118,7 @@ function handleDismiss() {
     ref="root"
     data-slot="alert"
     :class="cn(alertVariants({ variant }), animationClass, props.class)"
-    role="alert"
+    :role="props.role"
   >
     <slot />
     <Button

@@ -21,6 +21,13 @@ const meta = {
       description: 'Variante semântica do alert.',
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
     },
+    role: {
+      control: 'select',
+      options: ['alert', 'status', 'note'],
+      description:
+        'Semântica de anúncio para leitores de tela. alert (padrão) interrompe e anuncia na hora — só para mensagem urgente que surge em tempo de execução. status anuncia sem interromper. note não é live region: use em conteúdo estático já presente ao carregar a página.',
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
+    },
     class: {
       control: false,
       description: 'Classes adicionais no elemento raiz. Esta stack usa class, não className.',
@@ -49,6 +56,7 @@ const meta = {
   },
   args: {
     variant: 'default',
+    role: 'alert',
     dismissible: false,
     onDismiss: fn(),
   },
