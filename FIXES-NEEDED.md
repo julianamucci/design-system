@@ -818,3 +818,54 @@ houve **absorção de commit**: o commit do Vue entrou dentro do commit do
 Vanilla porque os agents compartilham o índice.
 - [ ] Proibir `git stash` nos prompts de agent paralelo; comparar baseline
   copiando o arquivo para o scratchpad.
+
+## Foco na navegação das docs pages — RESOLVIDO (2026-08-02)
+
+`67e09fe5` vanilla · `bcacf3c7` react · `b23ed990` vue · `ea685f3a` svelte.
+
+**Sintomas** (reportados pela dona, com NVDA): (1) "Ir para o conteúdo" não
+leva ao título; (2) Enter num item do menu rola até a seção mas a leitura não
+continua, e o Tab seguinte vai para o próximo item do menu.
+
+**Causa 1 — nenhuma docs page tinha `<main>`.** A sidebar era `<nav>` com
+rótulo, o conteúdo era um `<div>` sem landmark: não havia "conteúdo" para
+alcançar nem nome que dissesse de que página se trata. Agora
+`<main tabindex="-1" aria-labelledby="docs-page-title">`, com o `<h1>` do
+`DocsHeader` ganhando id estável. Ao cair no conteúdo o leitor anuncia
+"principal, <título>". Zero mudança visual (só a tag e dois atributos).
+
+**Causa 2 — o handler do menu só rolava.** `scrollIntoView` sem `focus()`: o
+foco ficava no botão, então o cursor de leitura não se movia e o Tab seguia a
+ordem do DOM a partir do menu. Agora `tabindex="-1"` no alvo (aplicado no
+clique, sem tocar no HTML das seções) + `focus({ preventScroll: true })` — o
+`preventScroll` deixa a rolagem suave acontecer com o foco já movido.
+
+**Efeito colateral previsto e tratado**: o `<main>` novo recriava
+`landmark-no-duplicate-main` na página do Sidebar em react, vue e svelte,
+porque os demos renderizavam `<main>`/`SidebarInset`. Os demos passaram a usar
+`<div>` pixel-idêntico; os snippets continuam ensinando `<SidebarInset>`, que
+é a API correta num app real. O vanilla não tinha o problema (o
+`createSidebarInset` já usava `div`).
+
+**Provas novas** (arquivo `docs-nav-foco.stories.*` por stack, `tags:['!dev']`):
+existe exatamente um `<main>` e ele tem o nome do `<h1>`; clicar num item do
+menu deixa `document.activeElement` DENTRO da seção alvo. O vanilla percorre
+os 16 itens; o react ainda prova que o Tab seguinte cai no conteúdo.
+
+docs-smoke com axe: vanilla 64/64 · react 66/66 (com as provas) · vue 63/63 ·
+svelte 62/62. svelte-check 351 (baseline).
+
+### PENDENTE — as 16 páginas Foundations continuam sem `<main>`
+
+As 4 stacks registraram isso independentemente. Elas não usam
+`DocsPageLayout` nem `DocsNav` (layout próprio em `FoundationPage`/
+`FoundationsRenderer`, sem menu de seções), então o bug 2 não existe lá — mas
+o bug 1 continua: "Ir para o conteúdo" não tem alvo nessas páginas.
+`IconsDocs` e `ThemeColorsDocs` estão na mesma situação.
+- [ ] Segundo passe nas 4 stacks para dar `<main>` nomeado às Foundations.
+
+### Backlog de analytics encontrado no caminho
+
+- [ ] `AccordionDocs` (vue, e provavelmente outras) não passa `componentSlug`
+  ao `DocsPageLayout` — os botões do nav ficam sem `data-track-id`, então a
+  navegação por seção não é rastreada nessas páginas.
