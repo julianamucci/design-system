@@ -11,6 +11,7 @@
     AlertDialogTitle,
     AlertDialogTrigger,
   } from '@/components/ui/alert-dialog';
+  import AlertDialogStory from '@/components/ui/alert-dialog/AlertDialogStory.svelte';
   import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -356,61 +357,54 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     ]}
   />
 
+  <!--
+    Previews mostram o gatilho fechado (AlertDialogStory encapsula trigger +
+    conteúdo). Renderizar com `open` empilharia overlays modais sobre a página
+    inteira assim que a docs page carrega.
+  -->
   {#snippet doPair1()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-          <AlertDialogDescription>Todos os dados serão removidos. Esta ação não pode ser desfeita.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Excluir conta"
+      triggerVariant="destructive"
+      title="Excluir conta"
+      description="Todos os dados serão removidos. Esta ação não pode ser desfeita."
+      cancelLabel="Cancelar"
+      actionLabel="Excluir"
+      tone="destructive"
+    />
   {/snippet}
   {#snippet dontPair1()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-          <AlertDialogDescription>Deseja continuar?</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Não</AlertDialogCancel>
-          <AlertDialogAction>OK</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Excluir"
+      triggerVariant="destructive"
+      title="Tem certeza?"
+      description="Deseja continuar?"
+      cancelLabel="Não"
+      actionLabel="OK"
+      tone="default"
+    />
   {/snippet}
   {#snippet doPair2()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Excluir projeto</AlertDialogTitle>
-          <AlertDialogDescription>O projeto será removido permanentemente.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Excluir projeto"
+      triggerVariant="destructive"
+      title="Excluir projeto"
+      description="O projeto será removido permanentemente."
+      cancelLabel="Cancelar"
+      actionLabel="Excluir"
+      tone="destructive"
+    />
   {/snippet}
   {#snippet dontPair2()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Excluir projeto</AlertDialogTitle>
-          <AlertDialogDescription>O projeto será removido permanentemente.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction>Confirmar</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Excluir projeto"
+      triggerVariant="destructive"
+      title="Excluir projeto"
+      description="O projeto será removido permanentemente."
+      cancelLabel="Cancelar"
+      actionLabel="Confirmar"
+      tone="default"
+    />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -433,32 +427,26 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   />
 
   {#snippet variantDestructive()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-          <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction class="nds-bg-destructive">Excluir</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Excluir conta"
+      triggerVariant="destructive"
+      title="Excluir conta"
+      description="Esta ação não pode ser desfeita."
+      cancelLabel="Cancelar"
+      actionLabel="Excluir"
+      tone="destructive"
+    />
   {/snippet}
   {#snippet variantDefault()}
-    <AlertDialog open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Sair da conta</AlertDialogTitle>
-          <AlertDialogDescription>Você precisará entrar novamente.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction>Sair</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogStory
+      triggerLabel="Sair da conta"
+      triggerVariant="default"
+      title="Sair da conta"
+      description="Você precisará entrar novamente."
+      cancelLabel="Cancelar"
+      actionLabel="Sair"
+      tone="default"
+    />
   {/snippet}
 
   <!-- ── Configurações (States) ─────────────────────────────────── -->
