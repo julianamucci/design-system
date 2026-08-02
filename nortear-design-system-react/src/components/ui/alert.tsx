@@ -66,13 +66,21 @@ const alertVariants = cva("nds-alert", {
 function Alert({
   className,
   variant,
+  role = "alert",
   dismissible = false,
   onDismiss,
   dismissLabel = "Fechar alerta",
   children,
   ...props
-}: React.ComponentProps<"div"> &
+}: Omit<React.ComponentProps<"div">, "role"> &
   VariantProps<typeof alertVariants> & {
+    /**
+     * Semântica de anúncio da raiz. `alert` (default) é live region
+     * ASSERTIVA — só para mensagem urgente que surge em tempo de execução.
+     * `status` é live region polida. `note` NÃO é live region e é o valor
+     * correto para conteúdo estático, já presente quando a página carrega.
+     */
+    role?: "alert" | "status" | "note"
     /** Renderiza o botão de fechar no canto superior direito. */
     dismissible?: boolean
     /** Disparado uma única vez quando o usuário aciona o botão de fechar. */
@@ -123,7 +131,7 @@ function Alert({
     <div
       ref={ref}
       data-slot="alert"
-      role="alert"
+      role={role}
       className={cn(
         alertVariants({ variant }),
         // Fechar antes da entrada terminar deixaria as duas classes no

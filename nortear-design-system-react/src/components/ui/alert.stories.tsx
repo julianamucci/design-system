@@ -21,6 +21,13 @@ const meta = {
       description: "Variante semântica do alert.",
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
     },
+    role: {
+      control: "select",
+      options: ["alert", "status", "note"],
+      description:
+        "Semântica de anúncio para leitores de tela. 'alert' e 'status' são live regions; 'note' não é — use-o para conteúdo estático já presente no carregamento da página.",
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
+    },
     dismissible: {
       control: "boolean",
       description: "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
@@ -50,6 +57,7 @@ const meta = {
   },
   args: {
     variant: "default",
+    role: "alert",
     dismissible: false,
     onDismiss: fn(),
   },

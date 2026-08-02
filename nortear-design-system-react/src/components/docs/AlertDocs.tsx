@@ -186,8 +186,10 @@ import { Info } from "lucide-react";`;
 </Alert>`;
 
   const interfaceCode = `// Alert
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
+interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "role">,
   VariantProps<typeof alertVariants> {
+  /** Semântica de anúncio da raiz. "note" não é live region. @default "alert" */
+  role?: "alert" | "status" | "note";
   /** Exibe o botão de fechar no canto superior direito. */
   dismissible?: boolean;
   /** Disparado uma única vez ao acionar o botão de fechar. */
@@ -615,6 +617,13 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     defaultValue: '"default"',
                     required: "Não",
                     description: stripHtml(tContent("props.table.variant")),
+                  },
+                  {
+                    name: "role",
+                    type: '"alert" | "status" | "note"',
+                    defaultValue: '"alert"',
+                    required: "Não",
+                    description: stripHtml(tContent("props.table.role")),
                   },
                   {
                     name: "className",

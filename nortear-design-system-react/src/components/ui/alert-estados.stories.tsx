@@ -84,6 +84,44 @@ export const SemIcone: Story = {
   },
 };
 
+export const SemAnuncio: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div className="nds-stack" data-spacing="sm">
+      {/* Estático: não deve virar live region. */}
+      <Alert role="note">
+        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <AlertTitle>Nota de implementação</AlertTitle>
+        <AlertDescription>
+          Conteúdo já presente no carregamento — o leitor de tela não é interrompido.
+        </AlertDescription>
+      </Alert>
+      {/* Sem a prop, o default segue sendo a live region assertiva. */}
+      <Alert>
+        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <AlertTitle>Sessão expirada</AlertTitle>
+        <AlertDescription>
+          Mensagem urgente que surge em tempo de execução.
+        </AlertDescription>
+      </Alert>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("role=note não é live region", async () => {
+      const nota = canvas.getByText("Nota de implementação").closest('[data-slot="alert"]');
+      await expect(nota).toHaveAttribute("role", "note");
+    });
+
+    await step("Default continua role=alert", async () => {
+      const padrao = canvas.getByRole("alert");
+      await expect(padrao).toHaveAttribute("role", "alert");
+      await expect(padrao).toHaveTextContent("Sessão expirada");
+    });
+  },
+};
+
 export const InsercaoDinamica: Story = {
   render: () => (
     <div aria-live="polite">
