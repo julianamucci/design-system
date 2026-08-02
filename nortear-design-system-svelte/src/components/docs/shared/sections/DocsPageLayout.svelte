@@ -37,8 +37,18 @@
       <DocsNav groups={navGroups} {activeSection} {componentSlug} />
     </nav>
 
-    <div class="ds-docs nds-stack" data-spacing="2xl">
+    <!-- Landmark de conteúdo: o skip link "Ir para o conteúdo" precisa de um
+         <main> para alcançar. tabindex="-1" permite foco programático sem
+         entrar na ordem de tabulação; aria-labelledby aponta para o <h1> do
+         DocsHeader para o leitor anunciar "principal, <título da página>". -->
+    <main
+      id="docs-main-content"
+      tabindex="-1"
+      aria-labelledby="docs-page-title"
+      class="ds-docs nds-stack"
+      data-spacing="2xl"
+    >
       {@render children?.()}
-    </div>
+    </main>
   </div>
 </div>

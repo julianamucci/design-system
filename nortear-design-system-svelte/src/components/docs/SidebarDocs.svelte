@@ -312,9 +312,14 @@ interface SidebarMenuButtonProps {
             <SidebarTrigger onclick={() => track('sidebar_toggle', { action: demoSidebarOpen ? 'close' : 'open', trigger: 'button' })} />
             <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Dashboard</span>
           </header>
-          <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
+          <!-- Área de conteúdo da demo. Era <main>, mas a docs page inteira já
+               é um <main> (DocsPageLayout) — dois landmarks main no mesmo
+               documento quebram landmark-no-duplicate-main e main aninhado é
+               HTML inválido. As stories isoladas do Sidebar seguem com <main>,
+               ali é o documento todo. -->
+          <div id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
             <p class="nds-text-body">{$tStore('description')}</p>
-          </main>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </div>

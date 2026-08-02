@@ -18,8 +18,20 @@
 
   const { groups, activeSection, componentSlug }: Props = $props();
 
-  function scrollTo(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  /**
+   * Rola até a seção *e* move o foco para ela. Sem o focus() o cursor de
+   * leitura do leitor de tela fica no botão do menu: a leitura não continua a
+   * partir do título da seção e o Tab seguinte volta para o próximo item do
+   * menu. `preventScroll` deixa a rolagem suave acontecer enquanto o foco já
+   * se move; o tabindex="-1" é aplicado no clique para não sujar o HTML das
+   * seções e não entra na ordem de tabulação.
+   */
+  function goToSection(id: string) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.focus({ preventScroll: true });
   }
 </script>
 
@@ -37,7 +49,7 @@
               data-track="nav"
               data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
               data-track-label={section.label}
-              onclick={() => scrollTo(section.id)}
+              onclick={() => goToSection(section.id)}
             >
               {section.label}
             </button>
