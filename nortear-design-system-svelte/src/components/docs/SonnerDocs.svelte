@@ -19,6 +19,17 @@
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(sonnerTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (sonnerTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
+
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
   $effect(() => {
@@ -521,6 +532,8 @@ toast.promise(promise, {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[

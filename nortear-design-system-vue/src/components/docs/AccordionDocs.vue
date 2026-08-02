@@ -324,6 +324,17 @@ const keyboardItems = computed(() => [
   { key: 'End',        description: tContent('accessibility.keyboard.end')       },
 ]);
 
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (accordionTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
+
 const accessibilityItems = computed(() => [
   tContent('accessibility.aria.ariaExpanded'),
   tContent('accessibility.aria.ariaControls'),
@@ -845,6 +856,9 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
       :keyboard-items="keyboardItems"
+      :contrast="tContent('accessibility.contrast')"
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->

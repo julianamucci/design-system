@@ -12,9 +12,27 @@ export interface DocsAccessibilityProps {
   items: string[];
   keyboardTitle: string;
   keyboardItems: DocsKeyboardItem[];
+  /**
+   * Anúncios de leitor de tela. As chaves de `accessibility.screenReader` variam
+   * por componente (`closed/open/disabled`, `onOpen/onClose`, …), então o
+   * container recebe só os valores — quem chama passa `Object.values(...)`.
+   */
+  screenReaderTitle?: string;
+  screenReaderItems?: string[];
+  /** Nota de contraste, quando o componente documenta uma. */
+  contrast?: string;
 }
 
-export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboardItems }: DocsAccessibilityProps) {
+export function DocsAccessibility({
+  title,
+  summary,
+  items,
+  keyboardTitle,
+  keyboardItems,
+  screenReaderTitle,
+  screenReaderItems,
+  contrast,
+}: DocsAccessibilityProps) {
   return (
     <section id="acessibilidade">
       <h2 className="nds-section-title">{title}</h2>
@@ -33,6 +51,12 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
               />
             ))}
           </ul>
+          {contrast && (
+            <p
+              className="nds-text-body nds-leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contrast) }}
+            />
+          )}
         </div>
 
         <div>
@@ -50,6 +74,23 @@ export function DocsAccessibility({ title, summary, items, keyboardTitle, keyboa
             ))}
           </div>
         </div>
+
+        {screenReaderItems && screenReaderItems.length > 0 && (
+          <div>
+            {screenReaderTitle && (
+              <h3 className="nds-text-base nds-font-semibold nds-mb-4">{screenReaderTitle}</h3>
+            )}
+            <ul className="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
+              {screenReaderItems.map((item, i) => (
+                <li
+                  key={i}
+                  className="nds-leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item) }}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
       </Card>
     </section>
   );

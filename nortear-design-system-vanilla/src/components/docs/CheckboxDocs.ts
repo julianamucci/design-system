@@ -30,6 +30,16 @@ import {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (checkboxTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(checkboxTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -753,6 +763,8 @@ export type CheckboxOptions = {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [

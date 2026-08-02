@@ -19,6 +19,17 @@
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(switchTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (switchTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
+
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
   $effect(() => {
@@ -593,6 +604,8 @@ interface SwitchProps {
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[

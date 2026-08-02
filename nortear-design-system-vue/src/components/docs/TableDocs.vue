@@ -53,6 +53,17 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(tableTranslations);
 
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (tableTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function stripHtml(html: string): string {
@@ -1331,6 +1342,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :keyboard-title="tNav('nav.accessibility')"

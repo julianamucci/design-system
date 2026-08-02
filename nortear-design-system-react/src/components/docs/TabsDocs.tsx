@@ -86,6 +86,19 @@ export function TabsDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(tabsTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (tabsTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -837,6 +850,8 @@ interface TabsContentProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6].map((i) =>

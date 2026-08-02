@@ -84,6 +84,19 @@ export function SkeletonDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(skeletonTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (skeletonTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -568,6 +581,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[

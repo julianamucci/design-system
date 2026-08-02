@@ -44,6 +44,17 @@ import commandTranslations from '@shared/content/command/translations.json';
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(commandTranslations);
 
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (commandTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function stripHtml(html: string): string {
@@ -990,6 +1001,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"

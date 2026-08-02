@@ -87,6 +87,16 @@ function buildDemoAccordion(): HTMLElement {
   });
 }
 
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (accordionTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
+
 function getTokenItems(): Array<{ token: string; value: string; description: string }> {
   type AT = typeof accordionTranslations;
   type LK = keyof AT;
@@ -692,6 +702,9 @@ export function createAccordionDocs(): HTMLElement {
             { key: 'Home',      description: t('accessibility.keyboard.home')      },
             { key: 'End',       description: t('accessibility.keyboard.end')       },
           ],
+          contrast: t('accessibility.contrast'),
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
         });
 
       case 'relacionados':

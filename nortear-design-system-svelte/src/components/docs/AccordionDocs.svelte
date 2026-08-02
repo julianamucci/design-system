@@ -176,6 +176,17 @@ type AccordionProps = {
   const ABSENT_PROPS = new Set(['collapsible', 'defaultValue', 'asChild']);
 
   const pick = (m: Loc) => m[$locale] ?? m['pt-BR'];
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (accordionTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
   const no = () => pick({ 'pt-BR': 'Não', en: 'No', es: 'No' });
 
   /** Props que existem no bits-ui e faltam na tabela compartilhada. */
@@ -823,6 +834,9 @@ type AccordionProps = {
           $tStore('accessibility.aria.ariaLabelledBy'),
         ]}
         keyboardTitle={$tStore('accessibility.keyboardTitle')}
+        contrast={$tStore('accessibility.contrast')}
+        screenReaderTitle={$tNavStore('common.screenReader')}
+        screenReaderItems={screenReaderItems}
         keyboardItems={[
           { key: 'Tab',       description: $tStore('accessibility.keyboard.tab')       },
           { key: 'Shift+Tab', description: $tStore('accessibility.keyboard.shiftTab')  },

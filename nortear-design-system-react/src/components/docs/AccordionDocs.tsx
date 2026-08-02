@@ -86,6 +86,19 @@ export function AccordionDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(accordionTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (accordionTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
+
   // Override stack-específico: @base-ui usa `multiple` (boolean), não `type` ("single"|"multiple").
   const rootItemsOverride = useMemo(() => {
     const desc = {
@@ -858,6 +871,9 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               tContent("accessibility.aria.role"),
               tContent("accessibility.aria.ariaLabelledBy"),
             ]}
+            contrast={tContent("accessibility.contrast")}
+            screenReaderTitle={tNav("common.screenReader")}
+            screenReaderItems={screenReaderItems}
             keyboardTitle={tContent("accessibility.keyboardTitle")}
             keyboardItems={[
               { key: "Tab",        description: tContent("accessibility.keyboard.tab") },

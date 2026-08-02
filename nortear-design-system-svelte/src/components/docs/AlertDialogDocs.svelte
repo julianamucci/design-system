@@ -29,6 +29,17 @@
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(alertDialogTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (alertDialogTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
+
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
   $effect(() => {
@@ -545,6 +556,8 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={stripHtml($tStore('accessibility.summary'))}
     items={[

@@ -4,15 +4,24 @@ import { Card } from '@/components/ui/card';
 
 interface DocsKeyboardItem { key: string; description: string }
 
+// As chaves de `accessibility.screenReader` variam por componente
+// (`closed/open/disabled`, `onOpen/onClose`, …), então o container recebe só os
+// valores — quem chama passa `Object.values(...)`.
 withDefaults(defineProps<{
   title: string;
   summary: string;
   items?: string[];
   keyboardTitle?: string;
   keyboardItems: DocsKeyboardItem[];
+  screenReaderTitle?: string;
+  screenReaderItems?: string[];
+  contrast?: string;
 }>(), {
   items: () => [],
   keyboardTitle: '',
+  screenReaderTitle: '',
+  screenReaderItems: () => [],
+  contrast: '',
 });
 </script>
 
@@ -44,6 +53,11 @@ withDefaults(defineProps<{
             v-html="DOMPurify.sanitize(item)"
           />
         </ul>
+        <p
+          v-if="contrast"
+          class="nds-text-body nds-leading-relaxed"
+          v-html="DOMPurify.sanitize(contrast)"
+        />
       </div>
       <div>
         <h3
@@ -74,6 +88,25 @@ withDefaults(defineProps<{
             </div>
           </Card>
         </div>
+      </div>
+      <div v-if="screenReaderItems.length">
+        <h3
+          v-if="screenReaderTitle"
+          class="nds-text-base nds-font-semibold nds-mb-4"
+        >
+          {{ screenReaderTitle }}
+        </h3>
+        <ul
+          class="nds-stack nds-text-body nds-list-disc"
+          data-spacing="sm"
+        >
+          <li
+            v-for="(item, i) in screenReaderItems"
+            :key="i"
+            class="nds-leading-relaxed"
+            v-html="DOMPurify.sanitize(item)"
+          />
+        </ul>
       </div>
     </Card>
   </section>

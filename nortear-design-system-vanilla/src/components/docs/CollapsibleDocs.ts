@@ -29,6 +29,16 @@ import {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (collapsibleTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(collapsibleTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -669,6 +679,8 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Acessibilidade ─────────────────────────────────────────────────
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
