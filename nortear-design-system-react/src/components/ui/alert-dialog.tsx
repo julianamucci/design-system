@@ -161,14 +161,22 @@ function AlertDialogDescription({
   )
 }
 
+// O botão de ação confirma E fecha o diálogo — por isso renderiza via
+// `Close`, igual ao Cancel. `variant`/`size` ficam sem default aqui para
+// herdarem os do Button. O `onClick` do consumidor é mesclado pelo Base UI
+// (roda antes do fechamento), não sobrescrito.
 function AlertDialogAction({
   className,
+  variant,
+  size,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: AlertDialogPrimitive.Close.Props &
+  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
   return (
-    <Button
+    <AlertDialogPrimitive.Close
       data-slot="alert-dialog-action"
       className={cn(className)}
+      render={<Button variant={variant} size={size} />}
       {...props}
     />
   )

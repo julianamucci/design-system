@@ -114,17 +114,23 @@ export const Open: Story = {
   },
 };
 
+// Spy no escopo do módulo: o play precisa inspecionar o mesmo mock que o
+// render entrega ao Action. `beforeEach` zera entre execuções da story.
+const onConfirm = fn();
+
 export const Confirmed: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          "Usuário confirma a ação clicando em Action — handler `onClick` é disparado.",
+          "Usuário confirma a ação clicando em Action — handler `onClick` é disparado e o diálogo fecha.",
       },
     },
   },
+  beforeEach: () => {
+    onConfirm.mockClear();
+  },
   render: () => {
-    const onConfirm = fn();
     return (
       <AlertDialog defaultOpen>
         <AlertDialogTrigger render={<Button variant="destructive" />}>
@@ -158,10 +164,22 @@ export const Confirmed: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step("Ação Confirmar é clicada (handler disparado)", async () => {
+    await step("Confirmar dispara o callback do consumidor", async () => {
       const action = await within(document.body).findByTestId("confirm-action");
       await userEvent.click(action);
-      await expect(action).toBeInTheDocument();
+      await waitFor(() => expect(onConfirm).toHaveBeenCalledTimes(1), {
+        timeout: 1000,
+      });
+    });
+
+    await step("Confirmar também fecha o diálogo", async () => {
+      await waitFor(
+        () =>
+          expect(
+            within(document.body).queryByRole("alertdialog", { hidden: false }),
+          ).not.toBeInTheDocument(),
+        { timeout: 1000 }
+      );
     });
   },
 };
