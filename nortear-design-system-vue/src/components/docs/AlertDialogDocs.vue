@@ -4,18 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
+import AlertDialogDemo from '@/components/docs/AlertDialogDemo.vue';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
 import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
@@ -131,23 +120,11 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   });
 });
 
-// ─── Analytics — demo events ──────────────────────────────────────────────────
+// ─── Demos ────────────────────────────────────────────────────────────────────
+// Todos os previews usam AlertDialogDemo, que renderiza o gatilho fechado. Não
+// usar `default-open` aqui: o AlertDialog é modal e em portal, então um preview
+// aberto cobre a docs page inteira no load.
 
-function handleDemoOpenChange(label: string, open: boolean) {
-  track(open ? 'dialog_open' : 'dialog_close', {
-    component: 'alert_dialog',
-    label,
-    location: 'docs_demo',
-  });
-}
-
-function handleDemoConfirm(label: string) {
-  track('dialog_confirm', {
-    component: 'alert_dialog',
-    label,
-    location: 'docs_demo',
-  });
-}
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import {
@@ -183,7 +160,7 @@ const codeDestructive = `<AlertDialog>
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="nds-bg-destructive">
+      <AlertDialogAction variant="destructive">
         Excluir conta
       </AlertDialogAction>
     </AlertDialogFooter>
@@ -404,46 +381,24 @@ const a11yCritCols = computed(() => ({
         data-spacing="md"
         style="flex-wrap: wrap"
       >
-        <AlertDialog @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.title'), open)">
-          <AlertDialogTrigger as-child>
-            <Button variant="destructive">
-              {{ tContent('demonstration.labels.triggerLabel') }}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{{ tContent('demonstration.labels.title') }}</AlertDialogTitle>
-              <AlertDialogDescription>{{ tContent('demonstration.labels.description') }}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{{ tContent('demonstration.labels.cancel') }}</AlertDialogCancel>
-              <AlertDialogAction
-                class="nds-bg-destructive"
-                @click="handleDemoConfirm(tContent('demonstration.labels.title'))"
-              >
-                {{ tContent('demonstration.labels.action') }}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
+          trigger-variant="destructive"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
+          tone="destructive"
+        />
 
-        <AlertDialog @update:open="(open: boolean) => handleDemoOpenChange(tContent('demonstration.labels.neutralTitle'), open)">
-          <AlertDialogTrigger as-child>
-            <Button>{{ tContent('demonstration.labels.neutralTriggerLabel') }}</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{{ tContent('demonstration.labels.neutralTitle') }}</AlertDialogTitle>
-              <AlertDialogDescription>{{ tContent('demonstration.labels.neutralDescription') }}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{{ tContent('demonstration.labels.cancel') }}</AlertDialogCancel>
-              <AlertDialogAction @click="handleDemoConfirm(tContent('demonstration.labels.neutralTitle'))">
-                {{ tContent('demonstration.labels.neutralAction') }}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          :trigger-label="tContent('demonstration.labels.neutralTriggerLabel')"
+          trigger-variant="default"
+          :title="tContent('demonstration.labels.neutralTitle')"
+          :description="tContent('demonstration.labels.neutralDescription')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.neutralAction')"
+        />
       </div>
     </DocsDemonstration>
 
@@ -527,74 +482,46 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-              <AlertDialogDescription>Todos os dados serão removidos. Esta ação não pode ser desfeita.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive">
-                Excluir
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Excluir conta"
+          trigger-variant="destructive"
+          title="Excluir conta"
+          description="Todos os dados serão removidos. Esta ação não pode ser desfeita."
+          cancel-label="Cancelar"
+          action-label="Excluir"
+          tone="destructive"
+        />
       </template>
       <template #dont-preview-0>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-              <AlertDialogDescription>Deseja continuar?</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Não</AlertDialogCancel>
-              <AlertDialogAction>OK</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Excluir"
+          trigger-variant="destructive"
+          title="Tem certeza?"
+          description="Deseja continuar?"
+          cancel-label="Não"
+          action-label="OK"
+        />
       </template>
       <template #do-preview-1>
-        <AlertDialog default-open>
-          <AlertDialogTrigger as-child>
-            <Button variant="destructive">
-              Excluir
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir projeto</AlertDialogTitle>
-              <AlertDialogDescription>O projeto será removido permanentemente.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive">
-                Excluir
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Excluir"
+          trigger-variant="destructive"
+          title="Excluir projeto"
+          description="O projeto será removido permanentemente."
+          cancel-label="Cancelar"
+          action-label="Excluir"
+          tone="destructive"
+        />
       </template>
       <template #dont-preview-1>
-        <AlertDialog default-open>
-          <AlertDialogTrigger as-child>
-            <Button variant="destructive">
-              Excluir
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir projeto</AlertDialogTitle>
-              <AlertDialogDescription>O projeto será removido permanentemente.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction>Confirmar</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Excluir"
+          trigger-variant="destructive"
+          title="Excluir projeto"
+          description="O projeto será removido permanentemente."
+          cancel-label="Cancelar"
+          action-label="Confirmar"
+        />
       </template>
     </DocsDoDont>
 
@@ -614,34 +541,25 @@ const a11yCritCols = computed(() => ({
       :note="stripHtml(tContent('variants.note'))"
     >
       <template #variant-preview-0>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-              <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction class="nds-bg-destructive">
-                Excluir
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Excluir conta"
+          trigger-variant="destructive"
+          title="Excluir conta"
+          description="Esta ação não pode ser desfeita."
+          cancel-label="Cancelar"
+          action-label="Excluir"
+          tone="destructive"
+        />
       </template>
       <template #variant-preview-1>
-        <AlertDialog default-open>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Sair da conta</AlertDialogTitle>
-              <AlertDialogDescription>Você precisará entrar novamente.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction>Sair</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <AlertDialogDemo
+          trigger-label="Sair da conta"
+          trigger-variant="default"
+          title="Sair da conta"
+          description="Você precisará entrar novamente."
+          cancel-label="Cancelar"
+          action-label="Sair"
+        />
       </template>
     </DocsVariants>
 
