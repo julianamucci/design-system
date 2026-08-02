@@ -20,8 +20,23 @@ export interface DocsNavHandle {
   setActiveSection(id: string | undefined): void;
 }
 
-function scrollTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/**
+ * Leva o usuário até a seção: rola E move o foco.
+ *
+ * Só rolar deixava o foco no botão do menu — o cursor de leitura do leitor de
+ * tela não acompanhava (a leitura não continuava do título da seção) e o Tab
+ * seguinte ia para o próximo item do menu, não para o conteúdo.
+ *
+ * `tabindex="-1"` é aplicado no momento do clique (não exige mexer no HTML de
+ * cada seção) e `focus({ preventScroll: true })` deixa a rolagem suave
+ * acontecer enquanto o foco já se moveu.
+ */
+function goToSection(id: string) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  target.focus({ preventScroll: true });
 }
 
 export function createDocsNav(props: DocsNavProps): DocsNavHandle {
@@ -54,7 +69,7 @@ export function createDocsNav(props: DocsNavProps): DocsNavHandle {
         btn.setAttribute('data-track-id', `${props.componentSlug}:nav:${section.id}`);
       }
       btn.setAttribute('data-track-label', section.label);
-      btn.addEventListener('click', () => scrollTo(section.id));
+      btn.addEventListener('click', () => goToSection(section.id));
 
       buttons.set(section.id, btn);
 

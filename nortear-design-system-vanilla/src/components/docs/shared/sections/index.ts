@@ -1,4 +1,4 @@
-export { createDocsHeader } from './DocsHeader';
+export { createDocsHeader, DOCS_PAGE_TITLE_ID } from './DocsHeader';
 export type { DocsHeaderProps } from './DocsHeader';
 
 export { createDocsDemonstration } from './DocsDemonstration';

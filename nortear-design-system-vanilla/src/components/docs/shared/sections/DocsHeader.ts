@@ -2,6 +2,14 @@ import { createBadge } from '@/components/ui/badge';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import DOMPurify from 'dompurify';
 
+/**
+ * Id determinístico do `<h1>` da docs page. O `<main>` do DocsPageLayout aponta
+ * para ele via `aria-labelledby`, para que o leitor de tela anuncie
+ * "principal, <título da página>" ao chegar no conteúdo (skip link / foco
+ * programático). A docs page é única por iframe — não há colisão de id.
+ */
+export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
+
 export interface DocsHeaderProps {
   title: string;
   description: string;
@@ -35,6 +43,7 @@ export function createDocsHeader(props: DocsHeaderProps): HTMLElement {
   content.dataset.spacing = 'sm';
 
   const h1 = document.createElement('h1');
+  h1.id = DOCS_PAGE_TITLE_ID;
   h1.className = 'nds-text-h1 nds-text-foreground';
   h1.textContent = props.title;
 
