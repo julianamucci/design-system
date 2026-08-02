@@ -449,13 +449,18 @@ heading-order, listitem, aria-allowed-attr.
   `data-active` em pagination-variantes (6 falhas).
 - vue: 12 falhas em stories de carousel/navigation-menu/sidebar + calendar
   Playground (`role "grid"` ausente).
-- [ ] **vue MotionDocs — `color-contrast` REAL, não flake** (registro
-  corrigido em 2026-08-01): foi anotado antes como "1.02 flaky sob carga,
-  passa isolada". Não passa. Isolada falha rápido e sempre:
-  `.nds-bg-muted-50.nds-rounded-md.nds-py-2:nth-child(5)` com contraste
-  **1.88** (`#bcbcbc` sobre `#fefefe`, 10pt) — precisa de 4.5:1. No run
-  completo aparece disfarçada de timeout de 120s, que foi o que induziu ao
-  diagnóstico errado. Corrigir junto com o lote de cor.
+- **vue MotionDocs — `color-contrast`: NÃO é defeito de design.** Diagnóstico
+  final (2026-08-01), depois de duas leituras erradas minhas ("flaky sob
+  carga" e depois "violação real de 1.88"). Os três números medidos (1.01,
+  1.02, 1.88) eram **amostras da mesma animação em pontos diferentes**:
+  `MotionDocs.vue` usa `motion-v` com `initial: { opacity: 0 }`, e em
+  **Chromium headless animações de `opacity`/`transform` não avançam** —
+  ficam presas no quadro inicial. O axe então mede contraste de texto quase
+  invisível. Em browser real os elementos chegam a `opacity: 1` e o contraste
+  é o do token. Mesma causa raiz que obrigou a classe `.nds-animate-in` a ser
+  transitória (ver lote de motion abaixo). Ação correta: fazer a story
+  esperar o fim da animação ou desligar motion na medição do axe — NÃO mexer
+  em cor.
 - svelte: 15 falhas de interação em stories de pagination/navigation-menu/
   sidebar (backlog dos 50/180).
 - vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.
@@ -489,3 +494,43 @@ montou").
 - [ ] **`AlertDescription` do Svelte renderiza `<section>`**, enquanto o
   vanilla (referência) usa `<div>`. Não há justificativa semântica para
   `<section>` dentro de um alert. Primitivo — ficou fora do escopo do lote.
+
+## Motion — classes reutilizáveis de entrada/saída (2026-08-01)
+
+Commits: `eccd694a` (tokens + classes + vanilla) · `f033037a` react ·
+`ae9729f2` svelte · `109f4c6e` vue · `28c8db57` (guard na referência).
+
+Referência aprovada pela dona: animação do popover do animate-ui
+(spring stiffness 300, damping 25). Nenhuma biblioteca entrou.
+
+- `--ease-spring: cubic-bezier(0.365, 0.565, 0.121, 1.163)` — **ajuste
+  numérico**, não escolha visual: erro máximo de 3,1% contra a curva do
+  spring, reproduzindo 2,7% dos 3,8% de overshoot. O otimizador está em
+  `scratchpad/fit-spring2.mjs` e serve para traduzir qualquer outro spring.
+- `--duration-spring: 400ms` — acomodação medida do spring (410ms).
+- `.nds-animate-in` / `.nds-animate-out` em `utilities.css`, genéricas.
+
+### Fato de ambiente que vale para TODA animação daqui em diante
+
+**Em Chromium headless — o ambiente dos testes — animações de `opacity` e
+`transform` não avançam**: ficam presas no quadro zero com
+`playState: "running"` (animações de propriedades de layout, como o
+`grid-template-rows` do accordion, avançam normalmente). Consequências:
+
+1. Classe de animação de entrada tem de ser **transitória** (removida por
+   `animationend` + timeout). Se persistir, o elemento fica invisível para
+   sempre nesse ambiente — reproduzido: as stories dismissible falhavam em
+   `toBeVisible`.
+2. **Nunca depender só de `animationend`** para remover um nó: além do
+   headless, `prefers-reduced-motion` suprime a animação e o evento jamais
+   dispara. Timeout de segurança é obrigatório.
+3. Asserção de visibilidade em elemento que anima precisa de `waitFor` — é
+   racy em qualquer browser, não só no headless.
+4. Explica o falso `color-contrast` do MotionDocs (acima).
+
+### Próximos passos possíveis (não feitos)
+
+- [ ] Dialog (`nds-dialog-zoom-in/out`) e Select (`nds-select-zoom-in/out`)
+  já têm keyframes com exatamente o mesmo desenho (opacidade + escala 0.95).
+  Podem migrar para as classes compartilhadas e eliminar a duplicação.
+- [ ] Documentar as duas classes na foundation page de Motion das 4 stacks.
