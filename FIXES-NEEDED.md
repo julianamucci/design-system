@@ -449,18 +449,19 @@ heading-order, listitem, aria-allowed-attr.
   `data-active` em pagination-variantes (6 falhas).
 - vue: 12 falhas em stories de carousel/navigation-menu/sidebar + calendar
   Playground (`role "grid"` ausente).
-- **vue MotionDocs — `color-contrast`: NÃO é defeito de design.** Diagnóstico
-  final (2026-08-01), depois de duas leituras erradas minhas ("flaky sob
-  carga" e depois "violação real de 1.88"). Os três números medidos (1.01,
-  1.02, 1.88) eram **amostras da mesma animação em pontos diferentes**:
-  `MotionDocs.vue` usa `motion-v` com `initial: { opacity: 0 }`, e em
-  **Chromium headless animações de `opacity`/`transform` não avançam** —
-  ficam presas no quadro inicial. O axe então mede contraste de texto quase
-  invisível. Em browser real os elementos chegam a `opacity: 1` e o contraste
-  é o do token. Mesma causa raiz que obrigou a classe `.nds-animate-in` a ser
-  transitória (ver lote de motion abaixo). Ação correta: fazer a story
-  esperar o fim da animação ou desligar motion na medição do axe — NÃO mexer
-  em cor.
+- **vue MotionDocs — `color-contrast`: NÃO reproduz mais; não há o que
+  corrigir.** Este item mudou de diagnóstico três vezes e as duas primeiras
+  leituras foram minhas e erradas ("flaky sob carga"; depois "violação real
+  de 1.88"). A terceira — que eu também escrevi — atribuía a violação ao
+  congelamento de animação em headless. **Também errada**, e agora com
+  evidência: a story `Motion` do docs-smoke do Vue nunca teve
+  `a11y: { test: 'todo' }`, sempre rodou o axe completo e passa. O motivo
+  técnico é que `motion-v` anima via JS/rAF, que **avança** em headless — o
+  congelamento atinge keyframes CSS, não animação por script. Os números
+  díspares (1.01, 1.02, 1.88) eram amostras de execuções sob carga que não se
+  sustentam. Fechado por ausência de defeito, não por correção.
+  **Lição de método**: três diagnósticos sucessivos sem reproduzir de forma
+  controlada. O correto teria sido isolar a story antes de teorizar.
 - svelte: 15 falhas de interação em stories de pagination/navigation-menu/
   sidebar (backlog dos 50/180).
 - vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.
@@ -651,3 +652,50 @@ fora do DOM (com `waitFor`, por causa do congelamento de animação no headless)
 
 **Chromatic**: o snapshot da story `Confirmed` muda nas 2 stacks — o diálogo
 agora fecha. A cobertura visual do aberto continua na story `Open`.
+
+## Animação do alert-dialog + reduced-motion nos testes (2026-08-02)
+
+`8d0c279c` CSS compartilhado + vanilla · `25e4b0b2` react · `98156a01` vue ·
+`470d53c4` svelte.
+
+Overlay e painel do alert-dialog passam a animar com o mesmo movimento do
+alert dismissible (keyframes `nds-animate-in/out`, tokens `--duration-spring`
+/ `--ease-spring`). O overlay só faz **fade**: escalar um backdrop
+`fixed; inset: 0` encolheria a cortina e mostraria a página nas bordas — a
+escala pertence ao painel, como na referência adotada.
+
+Dois bugs encontrados no caminho:
+- A animação de saída que já existia **nunca rodou em 3 das 4 stacks**: o CSS
+  só tinha `[data-closed]` (convenção do base-ui), e Vue/Svelte/Vanilla usam
+  `data-state`. As três convenções agora estão cobertas.
+- O **Vanilla não emitia atributo de estado nenhum** e removia o nó direto.
+  Passou a emitir `data-state` e a esperar a animação antes de remover (com
+  timeout de segurança); sem animação ativa, remove na hora.
+
+### Infra: `reducedMotion: 'reduce'` no browser dos testes (4 stacks)
+
+`provider: playwright({ contextOptions: { reducedMotion: 'reduce' } })`.
+
+Motivo medido: em Chromium headless animações de **keyframes CSS** de
+`opacity`/`transform` não avançam — ficam presas no quadro zero com
+`playState: "running"`. Diferente do caso do alert (onde a classe era
+transitória e o JS a removia), aqui o `data-state="open"` **persiste**: o
+elemento ficaria invisível para sempre e nenhum `waitFor` resolveria. Emular
+reduced-motion aciona o `@media` que o CSS já tinha, o teste vira
+determinístico e ainda exercita o caminho de quem pede menos movimento.
+
+**Ganho colateral confirmado**: a falha pré-existente
+`react dialog-composicoes > Profile Edit` (input presente mas não visível)
+**sumiu** — era o `nds-dialog-zoom-in` congelado, como suspeitado.
+
+**Onde NÃO ajudou** (medido, não suposto):
+- vue: nada a ganhar — ver item do MotionDocs acima (animação por rAF avança).
+- svelte: o backlog de ~46 falhas em suítes com animação é de outra natureza —
+  26 são `Unable to find` e 15 `Timed out`, ou seja, o elemento não chega a
+  renderizar. Comparação antes/depois idêntica fora do alert-dialog.
+
+- [ ] **Icons sem folga de timeout**: 120s nas 4 stacks, e a página mede
+  ~75–112s sob carga concorrente. Falha de forma intermitente quando várias
+  stacks rodam em paralelo (é o caso do CI). Virtualizar/paginar o grid
+  resolveria de vez — e destravaria também o axe, hoje desligado nessa página
+  no react.
