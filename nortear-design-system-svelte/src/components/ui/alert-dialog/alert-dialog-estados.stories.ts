@@ -84,7 +84,9 @@ export const Open: Story = {
 
     await step('Diálogo renderiza aberto com o conteúdo acessível', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // O painel entra animando (opacity 0 → 1): a asserção espera a animação
+      // concluir, senão roda no primeiro quadro e reprova por opacity: 0.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(dialog).toHaveAccessibleName(/Excluir item permanentemente/i);
     });
 
@@ -94,7 +96,8 @@ export const Open: Story = {
       const overlay = document.querySelector<HTMLElement>('[data-slot="alert-dialog-overlay"]');
       await expect(overlay).toBeInTheDocument();
       await userEvent.click(overlay!);
-      await expect(await body.findByRole('alertdialog')).toBeVisible();
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
     });
   },
 };
@@ -129,7 +132,8 @@ export const Confirmed: Story = {
     await step('Trigger abre o diálogo', async () => {
       await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i }));
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // Entrada animada: espera a opacidade chegar em 1 antes de afirmar visível.
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     await step('Clique em Excluir dispara o handler do consumidor', async () => {
@@ -249,7 +253,8 @@ export const Controlled: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // Entrada animada: espera a opacidade chegar em 1 antes de afirmar visível.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(onOpenChangeSpy).toHaveBeenCalledWith(true);
     });
 

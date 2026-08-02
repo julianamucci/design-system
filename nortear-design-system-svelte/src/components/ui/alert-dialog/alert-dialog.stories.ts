@@ -124,7 +124,9 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // O painel entra animando (opacity 0 → 1). Sem waitFor a asserção roda no
+      // primeiro quadro, quando toBeVisible() ainda reprova por opacity: 0.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 

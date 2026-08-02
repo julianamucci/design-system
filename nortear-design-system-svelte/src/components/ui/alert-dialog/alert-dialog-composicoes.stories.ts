@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
@@ -50,7 +50,9 @@ export const Destrutiva: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // O painel entra animando (opacity 0 → 1); sem waitFor a asserção roda no
+    // primeiro quadro e toBeVisible() reprova por opacity: 0.
+    await waitFor(() => expect(dialog).toBeVisible());
     // Ambos trigger e action têm o mesmo texto; escolher o que está dentro do dialog.
     const actions = await body.findAllByRole('button', { name: /Excluir conta/i });
     const action = actions.find((el) => dialog.contains(el));
@@ -85,9 +87,11 @@ export const Neutra: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // Painel e conteúdo entram animando (opacity 0 → 1); a asserção de
+    // visibilidade só é válida depois que a animação termina.
+    await waitFor(() => expect(dialog).toBeVisible());
     const action = await body.findByRole('button', { name: /^Publicar$/i });
-    await expect(action).toBeVisible();
+    await waitFor(() => expect(action).toBeVisible());
     // O ponto da variante neutra: a confirmação NÃO herda a severidade destrutiva.
     await expect(action).not.toHaveClass('nds-button-destructive');
     await expect(dialog).toHaveAccessibleName(/Publicar este conteúdo/i);
