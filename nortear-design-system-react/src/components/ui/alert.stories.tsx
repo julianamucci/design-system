@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect, fn } from "storybook/test";
+import { within, expect, fn, waitFor } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import { AlertDocs } from "@/components/docs/AlertDocs";
@@ -76,14 +76,16 @@ export const Playground: Story = {
       await expect(alert).toBeInTheDocument();
     });
 
+    // waitFor nas asserções de visibilidade: com o control `dismissible`
+    // ligado, o alert ENTRA animado (opacidade 0 → 1) e medir no primeiro
+    // quadro falha. Sem o control ligado passa de primeira — o waitFor não
+    // custa nada e cobre as duas configurações do Playground.
     await step("Alert está visível", async () => {
-      const alert = canvas.getByRole("alert");
-      await expect(alert).toBeVisible();
+      await waitFor(() => expect(canvas.getByRole("alert")).toBeVisible());
     });
 
     await step("AlertTitle é renderizado corretamente", async () => {
-      const title = canvas.getByText("Atenção");
-      await expect(title).toBeVisible();
+      await waitFor(() => expect(canvas.getByText("Atenção")).toBeVisible());
     });
 
     await step("AlertTitle é H5 por padrão", async () => {
@@ -92,8 +94,9 @@ export const Playground: Story = {
     });
 
     await step("AlertDescription é renderizado corretamente", async () => {
-      const desc = canvas.getByText(/Suas alterações serão aplicadas/);
-      await expect(desc).toBeVisible();
+      await waitFor(() =>
+        expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible(),
+      );
     });
 
     await step("Variante default aplica classes corretas", async () => {

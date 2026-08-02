@@ -5,7 +5,7 @@ import {
   Info,
   TriangleAlert,
 } from "lucide-react";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertTitle, AlertDescription, AlertAction } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -250,17 +250,18 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               <Alert variant="warning">
                 <TriangleAlert aria-hidden="true" />
                 <AlertTitle as="h3">{tContent("demonstration.labels.warningTitle")}</AlertTitle>
-                {/* Canon cross-stack: as 3 classes no mesmo elemento. alert.css
-                    é importado depois de layout.css, então .nds-alert-description
-                    vence .nds-cluster no display — o botão cai numa linha abaixo
-                    do texto, alinhado ao início. É o resultado esperado; o
-                    espaçamento vem de .nds-mt-1. */}
-                <AlertDescription className="nds-cluster nds-mt-1">
-                  <span>{tContent("demonstration.labels.warningDesc")}</span>
+                {/* Slot AlertAction — NÃO botão inline dentro da descrição.
+                    `.nds-alert-action` é `position: absolute` no canto superior
+                    direito (alert.css), que é o "alinhado à direita" que o
+                    conteúdo descreve. Empilhar o botão dentro da descrição o
+                    joga para a linha de baixo, à esquerda: foi assim que a docs
+                    page divergiu da story ComAcao, que sempre usou o slot. */}
+                <AlertDescription>{tContent("demonstration.labels.warningDesc")}</AlertDescription>
+                <AlertAction>
                   <Button size="sm" variant="outline">
                     {tContent("demonstration.labels.warningAction")}
                   </Button>
-                </AlertDescription>
+                </AlertAction>
               </Alert>
             </div>
           </DocsDemonstration>
@@ -539,15 +540,18 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                 name: tContent("variants.compositions.withAction.name"),
                 description: tContent("variants.compositions.withAction.description"),
                 useWhen: tContent("variants.compositions.withAction.use"),
-                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription className="nds-cluster" data-align="center" data-justify="between" style={{ marginTop: "var(--spacing-1)" }}>\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+                // Slot AlertAction, igual à story ComAcao. O markup anterior
+                // empilhava o botão dentro da descrição e ele caía na linha de
+                // baixo — divergia da story e do "alinhado à direita" do texto.
+                code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
                 preview: (
                   <Alert className="nds-w-full">
                     <Info aria-hidden="true" />
                     <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
-                    <AlertDescription className="nds-cluster" data-align="center" data-justify="between" style={{ marginTop: "var(--spacing-1)" }}>
-                      <span>Salve seu trabalho para não perder as alterações.</span>
+                    <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+                    <AlertAction>
                       <Button size="sm" variant="outline">Salvar agora</Button>
-                    </AlertDescription>
+                    </AlertAction>
                   </Alert>
                 ),
               },
