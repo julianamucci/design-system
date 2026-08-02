@@ -662,6 +662,22 @@ function auditStoryQuality(slug) {
     }
   }
 
+  // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
+  // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
+  const idsContrato = contractIds(slug);
+  const contratoResolvido = idsContrato.length > 0 && STACKS.every((stack) => {
+    const { ui } = filesForSlug(slug, stack);
+    const resolvidos = new Set();
+    for (const file of ui.filter((f) => /\.stories\.(ts|tsx)$/.test(f))) {
+      const content = readFile(file);
+      if (!content) continue;
+      const d = declaredCoverage(content);
+      d.covers.forEach((c) => resolvidos.add(c));
+      d.waived.forEach((_m, id) => resolvidos.add(id));
+    }
+    return idsContrato.every((id) => resolvidos.has(id));
+  });
+
   // Mesma story com cobertura desproporcional entre stacks: uma testa de
   // verdade, outra tem placeholder. Foi o sintoma visível das no-op.
   for (const [name, byStack] of Object.entries(coverage)) {
@@ -672,8 +688,15 @@ function auditStoryQuality(slug) {
     // Dois gatilhos. O piso (min<=1) pega placeholder puro. A RAZÃO pega o caso
     // que passou despercebido: um Playground com 12 asserções contra 21 em
     // outra stack — ambos acima do piso, e ainda assim cobertura desigual.
+    //
+    // A razão é SUPRIMIDA quando o componente já tem o contrato de teste
+    // resolvido nas 4 stacks: ali a garantia é o `covers`, e a contagem por
+    // story passa a medir DISTRIBUIÇÃO, não cobertura — o mesmo item pode ser
+    // legitimamente coberto numa story diferente em cada stack (o Escape mora
+    // no Playground em 3 e no Controlled no vanilla). O piso continua valendo:
+    // story sem asserção nenhuma é placeholder, contrato ou não.
     const placeholder = min <= 1 && max >= 3;
-    const desproporcional = max >= 5 && min < max * 0.6;
+    const desproporcional = !contratoResolvido && max >= 5 && min < max * 0.6;
     if (placeholder || desproporcional) {
       const detail = Object.entries(byStack).map(([s, n]) => `${s}:${n}`).join(' ');
       const motivo = placeholder

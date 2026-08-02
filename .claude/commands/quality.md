@@ -153,19 +153,22 @@ e antes de propor mudança no conteúdo compartilhado, confirme se a afirmação
 falsa nas 4 stacks ou se é divergência idiomática de uma lib (aí o texto vira
 API-neutro, não é apagado).
 
-**2e4. Animação nos testes — o CI mente aqui.** O browser dos testes emula
-`prefers-reduced-motion`, então animações não rodam e asserção no primeiro
-quadro passa. **No Storybook a animação roda e a mesma asserção falha** — foi
-assim que stories verdes no CI apareceram com erro no painel Interactions.
+**2e4. Animação nos testes.** O browser dos testes roda COM animação, como o
+Storybook — a emulação de `prefers-reduced-motion` foi removida justamente
+porque deixava o CI verde escondendo asserção racy.
 
-Toda asserção de visibilidade, foco pós-abertura ou remoção em elemento
-animado usa `waitFor`. NÃO envolva o que é síncrono (foco por Tab, restauração
-de foco ao fechar): `waitFor` indiscriminado mascara bug de foco real.
+Asserção de visibilidade, foco pós-abertura ou remoção em elemento animado
+espera a animação. Prefira o helper da stack (`src/lib/wait-for-portal.ts`:
+`waitForPortal` / `waitForPortalGone`), que gateia na **opacidade computada**
+antes de qualquer asserção — resolve a família inteira de overlays em vez de
+caso a caso. Onde não houver portal, `waitFor`.
 
-Para detectar: troque `playwright({ contextOptions: { reducedMotion: 'reduce' } })`
-por `playwright({})` no `vite.config.ts`, rode, e **restaure o arquivo** (não
-commite). O detector para na primeira falha de cada `play` — cubra o resto por
-inspeção.
+NÃO envolva o que é síncrono (foco por Tab, restauração de foco ao fechar):
+`waitFor` indiscriminado mascara bug de foco real.
+
+Cuidado ao concluir "passou": `toBeVisible()` do jest-dom só reprova em
+opacidade **exatamente** 0 — asserção racy costuma passar no vitest e falhar no
+painel Interactions.
 
 **2f0. Cobertura por CONTRATO (é a garantia real)**:
 
