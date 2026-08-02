@@ -117,7 +117,7 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action, def
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
           <AlertDialogAction
-            className="nds-bg-destructive"
+            variant="destructive"
             onClick={() =>
               track("dialog_confirm", {
                 component: "alert_dialog",
@@ -253,7 +253,7 @@ import {
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction className="nds-bg-destructive">
+      <AlertDialogAction variant="destructive">
         Excluir
       </AlertDialogAction>
     </AlertDialogFooter>

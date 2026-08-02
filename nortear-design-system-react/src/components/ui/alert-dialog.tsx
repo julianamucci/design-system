@@ -8,10 +8,31 @@ function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }
 
-type AlertDialogTriggerProps = AlertDialogPrimitive.Trigger.Props & { asChild?: boolean }
-function AlertDialogTrigger({ ...props }: AlertDialogTriggerProps) {
+type AlertDialogTriggerProps = AlertDialogPrimitive.Trigger.Props & {
+  asChild?: boolean
+  children?: React.ReactNode
+}
+function AlertDialogTrigger({
+  asChild,
+  children,
+  ...props
+}: AlertDialogTriggerProps) {
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <AlertDialogPrimitive.Trigger
+        data-slot="alert-dialog-trigger"
+        render={children as React.ReactElement}
+        {...(props as AlertDialogPrimitive.Trigger.Props)}
+      />
+    )
+  }
   return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...(props as AlertDialogPrimitive.Trigger.Props)} />
+    <AlertDialogPrimitive.Trigger
+      data-slot="alert-dialog-trigger"
+      {...(props as AlertDialogPrimitive.Trigger.Props)}
+    >
+      {children}
+    </AlertDialogPrimitive.Trigger>
   )
 }
 

@@ -108,11 +108,9 @@ export const Accordion: Story = {
   play: mounted,
 };
 
-// axe: nested-interactive, target-size — catalogado no FIXES-NEEDED
 export const AlertDialog: Story = {
   render: () => <AlertDialogDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 export const Alert: Story = {
@@ -189,11 +187,9 @@ export const CodeBlock: Story = {
   play: mounted,
 };
 
-// axe: nested-interactive, target-size — catalogado no FIXES-NEEDED
 export const Collapsible: Story = {
   render: () => <CollapsibleDocs />,
   play: mounted,
-  parameters: { a11y: { test: 'todo' } },
 };
 
 // axe: color-contrast (⌘K riscado do don't, 1.78:1) — catalogado no
