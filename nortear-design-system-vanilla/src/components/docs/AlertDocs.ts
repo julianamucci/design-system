@@ -2,7 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertIconType, type AlertVariant } from '@/components/ui/alert';
+import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, createAlertAction, type AlertIconType, type AlertVariant } from '@/components/ui/alert';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import alertTranslations from '@shared/content/alert/translations.json';
@@ -79,21 +79,20 @@ function buildAlert(
   if (titleKey) el.appendChild(createAlertTitle({ text: stripHtml(t(titleKey)), as: 'h3' }));
 
   if (actionKey) {
-    // Ação inline na descrição — mesmo markup que a composição withAction ensina
-    // no `code` desta página (cluster + span + Button sm/outline). Vanilla é a
-    // referência cross-stack: as outras stacks espelham esta estrutura.
-    const desc = document.createElement('div');
-    desc.className = 'nds-cluster nds-alert-description nds-mt-1';
-    const span = document.createElement('span');
-    span.textContent = stripHtml(t(descKey));
-    desc.appendChild(span);
-    desc.appendChild(createButton({
+    // Slot AlertAction — NÃO botão inline dentro da descrição. `.nds-alert-action`
+    // é `position: absolute` no canto superior direito (alert.css), que é o
+    // "alinhado à direita" que o conteúdo descreve. Empilhar o botão dentro da
+    // descrição o joga para a linha de baixo, à esquerda: foi assim que a docs
+    // page divergiu da story ComAcao, que sempre usou o slot.
+    el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
+    const action = createAlertAction();
+    action.appendChild(createButton({
       size: 'sm',
       variant: 'outline',
       label: stripHtml(t(actionKey)),
       onClick: onAction,
     }));
-    el.appendChild(desc);
+    el.appendChild(action);
   } else {
     el.appendChild(createAlertDescription({ text: stripHtml(t(descKey)) }));
   }
@@ -443,32 +442,26 @@ export function createAlertDocs(): HTMLElement {
               name: t('variants.compositions.withAction.name'),
               description: t('variants.compositions.withAction.description'),
               useWhen: t('variants.compositions.withAction.use'),
+              // Slot AlertAction, igual à story ComAcao. O markup anterior
+              // empilhava o botão dentro da descrição e ele caía na linha de
+              // baixo — divergia da story e do "alinhado à direita" do texto.
               code:
                 `const alert = createAlert();\n` +
                 `alert.appendChild(createAlertIcon('info'));\n` +
                 `alert.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos' }));\n` +
+                `alert.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));\n` +
                 `\n` +
-                `const desc = document.createElement('div');\n` +
-                `desc.className = 'nds-cluster nds-alert-description nds-mt-1';\n` +
-                `const span = document.createElement('span');\n` +
-                `span.textContent = 'Salve seu trabalho para não perder as alterações.';\n` +
-                `desc.appendChild(span);\n` +
-                `desc.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));\n` +
-                `alert.appendChild(desc);`,
+                `const action = createAlertAction();\n` +
+                `action.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));\n` +
+                `alert.appendChild(action);`,
               previewFactory: () => {
                 const el = createAlert({ className: 'nds-w-full' });
                 el.appendChild(createAlertIcon('info'));
                 el.appendChild(createAlertTitle({ text: 'Sessão expira em 5 minutos', as: 'h3' }));
-                const desc = document.createElement('div');
-                desc.className = 'nds-alert-description nds-cluster';
-                desc.dataset.align = 'center';
-                desc.dataset.justify = 'between';
-                desc.style.marginTop = 'var(--spacing-1)';
-                const span = document.createElement('span');
-                span.textContent = 'Salve seu trabalho para não perder as alterações.';
-                desc.appendChild(span);
-                desc.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));
-                el.appendChild(desc);
+                el.appendChild(createAlertDescription({ text: 'Salve seu trabalho para não perder as alterações.' }));
+                const action = createAlertAction();
+                action.appendChild(createButton({ size: 'sm', variant: 'outline', label: 'Salvar agora' }));
+                el.appendChild(action);
                 return el;
               },
             },

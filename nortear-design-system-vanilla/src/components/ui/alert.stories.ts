@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, fn } from 'storybook/test';
+import { within, expect, fn, waitFor } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant } from './alert';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -128,12 +128,16 @@ export const Playground: Story = {
       await expect(alert).toBeInTheDocument();
     });
 
+    // waitFor nas asserções de visibilidade: com o control `dismissible`
+    // ligado, o alert ENTRA animado (opacidade 0 → 1) e medir no primeiro
+    // quadro falha. Sem o control ligado passa de primeira — o waitFor não
+    // custa nada e cobre as duas configurações do Playground.
     await step('Alert está visível', async () => {
-      await expect(canvas.getByRole('alert')).toBeVisible();
+      await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
     });
 
     await step('AlertTitle é renderizado corretamente', async () => {
-      await expect(canvas.getByText('Atenção')).toBeVisible();
+      await waitFor(() => expect(canvas.getByText('Atenção')).toBeVisible());
     });
 
     await step('AlertTitle é H5 por default', async () => {
@@ -142,7 +146,9 @@ export const Playground: Story = {
     });
 
     await step('AlertDescription é renderizado corretamente', async () => {
-      await expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible();
+      await waitFor(() =>
+        expect(canvas.getByText(/Suas alterações serão aplicadas/)).toBeVisible(),
+      );
     });
   },
 };
