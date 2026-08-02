@@ -927,3 +927,44 @@ e id de 3 partes em página que NÃO passa slug.
 
 docs-smoke: vanilla 64/64 · react 63/63 · svelte 62/62 · vue 62/63 (Icons por
 timeout sob carga — passa isolada em 64,7s). svelte-check 351 (baseline).
+
+## Stories verdes no CI e vermelhas no Storybook — RESOLVIDO no alert-dialog (2026-08-02)
+
+`04361284` vanilla · `999f2d80` svelte · vue e react abaixo.
+
+**Sintoma** (dona): stories do alert-dialog com erro no painel Interactions,
+enquanto `vitest` dava 10/10 nas 4 stacks.
+
+**Causa**: as `play` afirmavam `toBeVisible()` logo após abrir o diálogo. O
+alert-dialog passou a ter animação de entrada (opacidade 0 → 1 em 400ms); no
+Storybook a asserção roda no primeiro quadro e reprova. No CI não aparece
+porque o browser dos testes emula `prefers-reduced-motion`.
+
+**A emulação que eu adicionei para estabilizar o CI mascarou o defeito.**
+
+Corrigido com `waitFor` nas asserções sensíveis (visibilidade, foco
+pós-abertura, remoção). Afetava as **4** stacks, não 3 — vanilla também tinha,
+só não tinha sido aberta. React já era imune: tem `waitForPortal()`
+(`src/lib/wait-for-portal.ts`), um `waitFor` que espera a opacidade passar de
+0.9 antes de qualquer asserção. É o padrão que as outras 3 deveriam adotar.
+
+### CORREÇÃO DE DIAGNÓSTICO MEU
+
+Eu afirmei aqui e nas skills que "em Chromium headless animações de
+`opacity`/`transform` não avançam, ficam presas no quadro zero". **Errado.**
+Medido no ambiente real (não na sonda sintética que me induziu ao erro): a
+animação avança e completa. Prova — depois do fix com `waitFor`, o detector
+sem reduced-motion passa 10/10 no vue; e o react mediu `getAnimations()`
+rodando e a story concluindo.
+
+O problema nunca foi congelamento: era **asserção racy no quadro zero**.
+Consequência: `waitFor` é a correção certa, e a emulação de reduced-motion é
+instrumento cego — deixa o CI verde escondendo o que o usuário vê.
+
+- [ ] **Decisão pendente: manter ou remover a emulação de reduced-motion.**
+  Medido no vue (com → sem): dialog 2 → 12 falhas · sheet 2 → 2 · popover
+  4 → 4 · tooltip 10 → 10. Ou seja, ela não causa falha; **esconde ~10
+  asserções racy no dialog**. Manter = CI estável e Storybook com erro.
+  Remover = testes batem com o que a dona vê, ao custo de corrigir essas
+  asserções (dialog primeiro). As falhas de sheet/popover/tooltip são do
+  backlog pré-existente do vue, sem relação com animação.

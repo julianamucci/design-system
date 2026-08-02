@@ -153,10 +153,19 @@ e antes de propor mudança no conteúdo compartilhado, confirme se a afirmação
 falsa nas 4 stacks ou se é divergência idiomática de uma lib (aí o texto vira
 API-neutro, não é apagado).
 
-**2e4. Animação nos testes.** O browser dos testes emula
-`prefers-reduced-motion` — animações não rodam. Asserção de visibilidade ou de
-remoção em elemento animado usa `waitFor`; medir no primeiro quadro é racy em
-qualquer browser.
+**2e4. Animação nos testes — o CI mente aqui.** O browser dos testes emula
+`prefers-reduced-motion`, então animações não rodam e asserção no primeiro
+quadro passa. **No Storybook a animação roda e a mesma asserção falha** — foi
+assim que stories verdes no CI apareceram com erro no painel Interactions.
+
+Toda asserção de visibilidade, foco pós-abertura ou remoção em elemento
+animado usa `waitFor`. NÃO envolva o que é síncrono (foco por Tab, restauração
+de foco ao fechar): `waitFor` indiscriminado mascara bug de foco real.
+
+Para detectar: troque `playwright({ contextOptions: { reducedMotion: 'reduce' } })`
+por `playwright({})` no `vite.config.ts`, rode, e **restaure o arquivo** (não
+commite). O detector para na primeira falha de cada `play` — cubra o resto por
+inspeção.
 
 **2f. Cobertura equivalente entre as 4 stacks**:
 Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:

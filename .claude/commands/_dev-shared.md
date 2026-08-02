@@ -344,9 +344,8 @@ Código de exemplo renderizado como HTML (`innerHTML`, `dangerouslySetInnerHTML`
 ## Animação
 
 - **Classe de animação de entrada é TRANSITÓRIA** — remova no `animationend`
-  com timeout de segurança. Em Chromium headless (ambiente dos testes)
-  animações de `opacity`/`transform` não avançam: classe permanente deixa o
-  elemento invisível para sempre.
+  com timeout de segurança. Classe permanente prende o elemento no estado
+  inicial se a animação não completar (aba em background, tab oculta).
 - **Nunca dependa só de `animationend`** para remover nó: com
   `prefers-reduced-motion` o evento não dispara. Timeout é obrigatório, e sem
   animação ativa remova na hora.
