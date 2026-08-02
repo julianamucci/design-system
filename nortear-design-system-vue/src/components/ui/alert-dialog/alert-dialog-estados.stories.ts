@@ -173,6 +173,17 @@ export const Open: Story = {
       const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toBeVisible();
     });
+
+    // O overlay do alertdialog é inerte por decisão de acessibilidade (WAI-ARIA
+    // APG: a decisão precisa ser explícita), então clicar fora NÃO cancela.
+    // O reka-ui faz isso com withModifiers(() => {}, ['prevent']) no
+    // onInteractOutside. Mesma asserção nas 4 stacks.
+    await step('Clique no overlay não fecha o diálogo', async () => {
+      const overlay = document.querySelector<HTMLElement>('[data-slot="alert-dialog-overlay"]');
+      await expect(overlay).toBeInTheDocument();
+      await userEvent.click(overlay!);
+      await expect(await body.findByRole('alertdialog')).toBeVisible();
+    });
   },
 };
 

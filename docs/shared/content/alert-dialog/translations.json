@@ -169,7 +169,7 @@
       "open": {
         "label": "Aberto",
         "trigger": "Clique no trigger ou <code>open={true}</code>",
-        "behavior": "Overlay com backdrop, conteúdo centralizado, focus trap ativo, foco inicial no AlertDialogCancel"
+        "behavior": "Overlay com backdrop, conteúdo centralizado, focus trap ativo; o foco entra no diálogo e o primeiro controle alcançado é o AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmação",
@@ -178,7 +178,7 @@
       },
       "cancelled": {
         "label": "Cancelamento",
-        "trigger": "Clique em <code>AlertDialogCancel</code>, tecla Escape ou clique no overlay",
+        "trigger": "Clique em <code>AlertDialogCancel</code> ou tecla Escape",
         "behavior": "Fecha sem executar ação. Foco retorna ao trigger"
       },
       "controlled": {
@@ -237,7 +237,7 @@
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>AlertDialogTitle</code> e <code>AlertDialogDescription</code>. Ambos são obrigatórios.",
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial no <code>AlertDialogCancel</code> para evitar ação acidental.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
-      "item5": "<strong>Escape</strong> — fecha o diálogo sem executar a ação. Clique no overlay também cancela.",
+      "item5": "<strong>Escape</strong> — fecha o diálogo sem executar a ação. Clique no overlay não fecha: a decisão precisa ser explícita.",
       "item6": "<strong>Contraste</strong> — todos os textos e bordas cumprem 4.5:1 mínimo via tokens do tema.",
       "keyboard": {
         "tab": "Navega entre AlertDialogCancel e AlertDialogAction.",
@@ -250,7 +250,7 @@
         "role": "<code>role=\"alertdialog\"</code> — aplicado automaticamente no AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automaticamente o ID do AlertDialogTitle.",
         "describedby": "<code>aria-describedby</code> — referencia automaticamente o ID do AlertDialogDescription.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indica que o conteúdo fora do diálogo está inativo."
+        "ariaModal": "O conteúdo fora do diálogo fica inativo para leitores de tela e para o teclado enquanto ele está aberto."
       },
       "screenReader": {
         "onOpen": "Ao abrir: leitor anuncia \"diálogo de alerta\" seguido do título e da descrição completos.",
@@ -269,7 +269,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O foco inicial vai para o <code>AlertDialogCancel</code> — comportamento intencional para prevenir confirmação acidental em ações destrutivas.",
+      "tip1": "O primeiro controle alcançado pelo teclado é o <code>AlertDialogCancel</code> — comportamento intencional para prevenir confirmação acidental em ações destrutivas.",
       "tip2": "Não use <code>AlertDialogAction</code> via composição (delegando ao filho) — ele já aplica <code>buttonVariants()</code>. Para mudar estilo, use <code>className</code> diretamente.",
       "tip3": "Para estado controlado, lembre de fechar no <code>onClick</code> do Action antes de executar ação assíncrona — ou aguarde o resultado e mantenha aberto em caso de erro.",
       "tip4": "Evite aninhar AlertDialog dentro de DropdownMenu ou outro Portal — pode causar focus trap conflitante. Prefira fechar o menu antes de abrir o diálogo."
@@ -288,8 +288,8 @@
         "confirmTrigger": "Usuário clica em AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancelamento via Cancel, Escape ou clique no overlay",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancelamento via Cancel ou Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -308,7 +308,7 @@
         "description": "O que deve acontecer em cada interação com o AlertDialog.",
         "item1": {
           "action": "Clique no trigger",
-          "result": "AlertDialogContent aparece com backdrop; foco inicial em AlertDialogCancel",
+          "result": "AlertDialogContent aparece com backdrop; o foco entra no diálogo e o primeiro controle alcançado é o AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -333,7 +333,7 @@
         },
         "item6": {
           "action": "Clique fora do AlertDialogContent (overlay)",
-          "result": "Diálogo fecha sem disparar ação",
+          "result": "Diálogo permanece aberto — a escolha precisa ser explícita",
           "priority": "medium"
         },
         "item7": {
@@ -598,7 +598,7 @@
       "open": {
         "label": "Open",
         "trigger": "Click on trigger or <code>open={true}</code>",
-        "behavior": "Overlay with backdrop, centered content, active focus trap, initial focus on AlertDialogCancel"
+        "behavior": "Overlay with backdrop, centered content, active focus trap; focus moves into the dialog and the first control reached is AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmation",
@@ -607,7 +607,7 @@
       },
       "cancelled": {
         "label": "Cancellation",
-        "trigger": "Click on <code>AlertDialogCancel</code>, Escape key, or click on overlay",
+        "trigger": "Click on <code>AlertDialogCancel</code> or Escape key",
         "behavior": "Closes without executing action. Focus returns to the trigger"
       },
       "controlled": {
@@ -666,7 +666,7 @@
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code>. Both are required.",
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus on <code>AlertDialogCancel</code> to prevent accidental action.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
-      "item5": "<strong>Escape</strong> — closes the dialog without executing the action. Overlay click also cancels.",
+      "item5": "<strong>Escape</strong> — closes the dialog without executing the action. Overlay click does not close it: the decision must be explicit.",
       "item6": "<strong>Contrast</strong> — all text and borders meet the 4.5:1 minimum through theme tokens.",
       "keyboard": {
         "tab": "Navigates between AlertDialogCancel and AlertDialogAction.",
@@ -679,7 +679,7 @@
         "role": "<code>role=\"alertdialog\"</code> — automatically applied to AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — automatically references AlertDialogTitle's ID.",
         "describedby": "<code>aria-describedby</code> — automatically references AlertDialogDescription's ID.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indicates content outside the dialog is inert."
+        "ariaModal": "Content outside the dialog is inert to screen readers and keyboard while it is open."
       },
       "screenReader": {
         "onOpen": "On open: reader announces \"alert dialog\" followed by the full title and description.",
@@ -698,7 +698,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Initial focus goes to <code>AlertDialogCancel</code> — intentional behavior to prevent accidental confirmation of destructive actions.",
+      "tip1": "The first control reached by keyboard is <code>AlertDialogCancel</code> — intentional behavior to prevent accidental confirmation of destructive actions.",
       "tip2": "Don't use <code>AlertDialogAction</code> via composition (delegating to a child) — it already applies <code>buttonVariants()</code>. To change styling, use <code>className</code> directly.",
       "tip3": "In controlled mode, close in the Action's <code>onClick</code> before running an async action — or await the result and keep open on error.",
       "tip4": "Avoid nesting AlertDialog inside DropdownMenu or another Portal — it may cause focus trap conflicts. Close the menu before opening the dialog."
@@ -717,8 +717,8 @@
         "confirmTrigger": "User clicks AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancellation via Cancel, Escape, or overlay click",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancellation via Cancel or Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -737,7 +737,7 @@
         "description": "What should happen for each AlertDialog interaction.",
         "item1": {
           "action": "Click on trigger",
-          "result": "AlertDialogContent appears with backdrop; initial focus on AlertDialogCancel",
+          "result": "AlertDialogContent appears with backdrop; focus moves into the dialog and the first control reached is AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -762,7 +762,7 @@
         },
         "item6": {
           "action": "Click outside AlertDialogContent (overlay)",
-          "result": "Dialog closes without firing action",
+          "result": "Dialog stays open — the choice must be explicit",
           "priority": "medium"
         },
         "item7": {
@@ -1027,7 +1027,7 @@
       "open": {
         "label": "Abierto",
         "trigger": "Clic en el trigger o <code>open={true}</code>",
-        "behavior": "Overlay con backdrop, contenido centrado, focus trap activo, foco inicial en AlertDialogCancel"
+        "behavior": "Overlay con backdrop, contenido centrado, focus trap activo; el foco entra en el diálogo y el primer control alcanzado es AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmación",
@@ -1036,7 +1036,7 @@
       },
       "cancelled": {
         "label": "Cancelación",
-        "trigger": "Clic en <code>AlertDialogCancel</code>, tecla Escape o clic en el overlay",
+        "trigger": "Clic en <code>AlertDialogCancel</code> o tecla Escape",
         "behavior": "Cierra sin ejecutar la acción. El foco vuelve al trigger"
       },
       "controlled": {
@@ -1095,7 +1095,7 @@
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>AlertDialogTitle</code> y <code>AlertDialogDescription</code>. Ambos son obligatorios.",
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. Foco inicial en <code>AlertDialogCancel</code> para evitar acción accidental.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
-      "item5": "<strong>Escape</strong> — cierra el diálogo sin ejecutar la acción. Clic en el overlay también cancela.",
+      "item5": "<strong>Escape</strong> — cierra el diálogo sin ejecutar la acción. El clic en el overlay no lo cierra: la decisión debe ser explícita.",
       "item6": "<strong>Contraste</strong> — todos los textos y bordes cumplen el mínimo 4.5:1 vía tokens del tema.",
       "keyboard": {
         "tab": "Navega entre AlertDialogCancel y AlertDialogAction.",
@@ -1108,7 +1108,7 @@
         "role": "<code>role=\"alertdialog\"</code> — aplicado automáticamente en AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automáticamente el ID de AlertDialogTitle.",
         "describedby": "<code>aria-describedby</code> — referencia automáticamente el ID de AlertDialogDescription.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indica que el contenido fuera del diálogo está inerte."
+        "ariaModal": "El contenido fuera del diálogo queda inactivo para lectores de pantalla y teclado mientras está abierto."
       },
       "screenReader": {
         "onOpen": "Al abrir: el lector anuncia \"diálogo de alerta\" seguido del título y la descripción completos.",
@@ -1127,7 +1127,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El foco inicial va al <code>AlertDialogCancel</code> — comportamiento intencional para prevenir confirmación accidental de acciones destructivas.",
+      "tip1": "El primer control alcanzado por teclado es <code>AlertDialogCancel</code> — comportamiento intencional para prevenir confirmación accidental en acciones destructivas.",
       "tip2": "No uses <code>AlertDialogAction</code> vía composición (delegando al hijo) — ya aplica <code>buttonVariants()</code>. Para cambiar el estilo, usa <code>className</code> directamente.",
       "tip3": "En modo controlado, cierra en el <code>onClick</code> del Action antes de ejecutar una acción asíncrona — o espera el resultado y mantén abierto en caso de error.",
       "tip4": "Evita anidar AlertDialog dentro de DropdownMenu u otro Portal — puede causar conflicto de focus trap. Cierra el menú antes de abrir el diálogo."
@@ -1146,8 +1146,8 @@
         "confirmTrigger": "Usuario clica AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancelación vía Cancel, Escape o clic en el overlay",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancelación vía Cancel o Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -1166,7 +1166,7 @@
         "description": "Lo que debe ocurrir para cada interacción del AlertDialog.",
         "item1": {
           "action": "Clic en el trigger",
-          "result": "AlertDialogContent aparece con backdrop; foco inicial en AlertDialogCancel",
+          "result": "AlertDialogContent aparece con backdrop; el foco entra en el diálogo y el primer control alcanzado es AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -1191,7 +1191,7 @@
         },
         "item6": {
           "action": "Clic fuera de AlertDialogContent (overlay)",
-          "result": "Diálogo cierra sin disparar acción",
+          "result": "El diálogo permanece abierto — la elección debe ser explícita",
           "priority": "medium"
         },
         "item7": {
