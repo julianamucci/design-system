@@ -767,3 +767,54 @@ contradição antes da decisão.
   conteúdo morto: o container `DocsAccessibility` só aceita
   `title/summary/items/keyboardTitle/keyboardItems`. Afeta todas as docs
   pages, não só esta.
+
+## NVDA pulava para "Notas de Implementação" — RESOLVIDO (2026-08-02)
+
+`d38c0bd0` vanilla (+vue absorvido) · `16043e20` svelte · `afeee31d` react ·
+`fe26d0bf` conteúdo compartilhado.
+
+**Sintoma** (reportado pela dona): ao abrir qualquer docs page, o NVDA pula
+para a seção de Notas e fica preso ali.
+
+**Causa**: o `DocsNotes` renderiza `Alert`, e o primitivo marcava
+`role="alert"` FIXO na raiz nas 4 stacks. `role="alert"` é live region
+ASSERTIVA — o leitor de tela interrompe e anuncia no carregamento. Varredura
+confirmou que era a **única** live region das docs pages. Atingia **48 páginas
+× 4 stacks**.
+
+**O erro é semântico e valia além das docs**: por WAI-ARIA, `alert` é para
+mensagem urgente que SURGE em runtime. Qualquer consumidor do DS com um Alert
+estático na tela tinha a mesma interrupção.
+
+**Correção**: Alert ganhou `role?: 'alert' | 'status' | 'note'`, default
+`'alert'` (aditivo — nenhum call site muda de comportamento). `DocsNotes` usa
+`'note'`. Story `SemAnuncio` nas 4 trava o default e o novo caso.
+
+### O que quase deixou a correção invisível
+
+O conteúdo compartilhado afirmava em **8 lugares** que o `role="alert"` é
+automático. Eu corrigi primeiro `accessibility.aria.role` — e **nenhuma das 4
+docs pages consome `accessibility.aria.*`**; elas renderizam
+`accessibility.item1`. Sem a varredura completa, a página continuaria
+ensinando o padrão que causou o bug. Também estava no **SEO**
+(`seo.description`, `seo.aiSummary`), que é o que buscador e IA leem.
+
+**Regra**: ao corrigir texto compartilhado, varrer TODAS as chaves por
+ocorrência literal e conferir quais o container realmente renderiza — chave
+não consumida é correção que não chega ao usuário.
+
+### Achado lateral no Vue
+
+Antes da mudança, `role` NÃO era prop no Vue: um `role` passado pelo consumidor
+caía por fallthrough e **sobrescrevia silenciosamente** o `role="alert"` do
+template. Declarar como prop fechou esse comportamento acidental.
+
+### Hazard de processo — `git stash` com agents paralelos
+
+O agent do React empilhou um stash para provar que uma falha era pré-existente
+e **outro agent removeu a entrada**; as edições sumiram da árvore e da
+`git stash list` (voltaram intactas, por sorte). O stash é global. Também
+houve **absorção de commit**: o commit do Vue entrou dentro do commit do
+Vanilla porque os agents compartilham o índice.
+- [ ] Proibir `git stash` nos prompts de agent paralelo; comparar baseline
+  copiando o arquivo para o scratchpad.
