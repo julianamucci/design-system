@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import { deriveSlugFromUrl } from '@/lib/docs-tracking';
 
 export interface DocsNavSection {
   id: string;
@@ -12,7 +14,11 @@ export interface DocsNavGroup {
 export interface DocsNavProps {
   groups: DocsNavGroup[];
   activeSection?: string;
-  /** Slug do componente (prefixo do `data-track-id` — ex: "alert" → `alert:nav:anatomia`). */
+  /**
+   * Slug do componente (prefixo do `data-track-id` — ex: "alert" →
+   * `alert:nav:anatomia`). Opcional: quando omitido, é derivado do `?id=` do
+   * iframe do Storybook, a mesma derivação que o `mountDocsTracking` usa.
+   */
   componentSlug?: string;
 }
 
@@ -36,6 +42,10 @@ function goToSection(id: string) {
 }
 
 export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) {
+  // A maioria das docs pages não passa o slug; sem fallback o `data-track-id`
+  // ficava ausente e o `docs_nav_click` saía sem componente nem seção.
+  const slug = useMemo(() => componentSlug ?? deriveSlugFromUrl(), [componentSlug]);
+
   return (
     <div className="nds-docs-nav">
       {groups.map((group) => (
@@ -50,7 +60,7 @@ export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) 
                   onClick={() => goToSection(section.id)}
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-track="nav"
-                  data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
+                  data-track-id={`${slug}:nav:${section.id}`}
                   data-track-label={section.label}
                 >
                   {section.label}

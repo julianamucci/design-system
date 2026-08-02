@@ -37,6 +37,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
+import { DOCS_PAGE_TITLE_ID } from './sections/DocsHeader';
 import DOMPurify from 'dompurify';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -417,7 +418,20 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
 
   return (
     <div ref={rootRef} className="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
-      <div className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
+      {/*
+        Landmark de conteúdo das Foundations: estas páginas não passam pelo
+        DocsPageLayout, então ficavam sem <main> e o "Ir para o conteúdo" não
+        alcançava nada. Mesmas classes e mesma posição na árvore do <div>
+        anterior — zero mudança visual. tabindex=-1 permite foco programático
+        sem entrar na ordem de tabulação; aria-labelledby aponta para o <h1>
+        abaixo, então o leitor anuncia "principal, <título da página>".
+      */}
+      <main
+        tabIndex={-1}
+        aria-labelledby={DOCS_PAGE_TITLE_ID}
+        className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
+        data-spacing="xl"
+      >
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <header className="nds-stack nds-pb-8">
           <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
@@ -438,7 +452,7 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
             </div>
           </div>
 
-          <h1 className="nds-text-h1 nds-text-foreground">
+          <h1 id={DOCS_PAGE_TITLE_ID} className="nds-text-h1 nds-text-foreground">
             {t('title')}
           </h1>
 
@@ -454,7 +468,7 @@ export function FoundationPage({ slug, translations, extraSection }: FoundationP
         {sectionKeys.map((key) => (
           <GenericSection key={key} data={dict[key] as Record<string, unknown>} />
         ))}
-      </div>
+      </main>
     </div>
   );
 }

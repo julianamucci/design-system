@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
+import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
 
@@ -90,7 +91,14 @@ export function IconsDocs() {
       className="sb-unstyled nds-flex-1 nds-w-full ds-docs"
       style={{ height: '100%', overflow: 'auto' }}
     >
-      <div
+      {/*
+        Landmark de conteúdo: esta página monta layout próprio (não passa pelo
+        DocsPageLayout), então ficava sem <main>. Mesmas classes, mesmo style e
+        mesma posição na árvore do <div> anterior — zero mudança visual.
+      */}
+      <main
+        tabIndex={-1}
+        aria-labelledby={DOCS_PAGE_TITLE_ID}
         className="nds-p-8 nds-stack"
         data-spacing="xl"
         style={{ maxWidth: '72rem', marginInline: 'auto' }}
@@ -119,7 +127,10 @@ export function IconsDocs() {
             </div>
           </div>
 
-          <h1 className="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+          <h1
+            id={DOCS_PAGE_TITLE_ID}
+            className="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
+          >
             {t('title')}
           </h1>
 
@@ -281,7 +292,7 @@ export function IconsDocs() {
           </ul>
         )}
 
-      </div>
+      </main>
     </div>
   );
 }
