@@ -24,6 +24,16 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ─── Spies ────────────────────────────────────────────────────────────────────
+//
+// No escopo do módulo (e não dentro do `render`) para que as play functions
+// consigam verificar que o handler realmente disparou — dentro do render eles
+// ficam presos ao closure e o teste só consegue observar o DOM.
+
+const onConfirmSpy = fn();
+const onCancelSpy = fn();
+const onOpenChangeSpy = fn();
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 type DemoOptions = {
@@ -115,10 +125,22 @@ export const Open: Story = {
       tone: 'destructive',
       openInitially: true,
     }),
-  play: async () => {
+  play: async ({ step }) => {
     const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+
+    await step('Conteúdo aberto traz título e descrição', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveTextContent('Excluir item permanentemente?');
+      await expect(dialog).toHaveTextContent(
+        'O item será removido de forma definitiva e não poderá ser recuperado.',
+      );
+    });
+
+    await step('Foco inicial no Cancelar', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(within(dialog).getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+    });
   },
 };
 
@@ -136,17 +158,39 @@ export const Confirmed: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
-      onConfirm: fn(),
+      onConfirm: onConfirmSpy,
       openInitially: true,
     }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
-    await step('Clique em Excluir fecha o diálogo', async () => {
+    onConfirmSpy.mockClear();
+
+    await step('Clique em Excluir dispara a ação e fecha o diálogo', async () => {
       // Trigger e action têm rótulo "Excluir" — desambigua via scope do dialog.
       const dialog = await body.findByRole('alertdialog');
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
+      await expect(onConfirmSpy).toHaveBeenCalledTimes(1);
       await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+    });
+
+    await step('Enter no Action confirma pelo teclado e devolve o foco ao trigger', async () => {
+      // Reabre pelo trigger (e não por click() programático) para que o foco
+      // anterior exista e o retorno de foco possa ser verificado.
+      const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
+      await userEvent.click(trigger);
+
+      const dialog = await body.findByRole('alertdialog');
+      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
+      // Foco entra em Cancelar; Tab leva ao Action.
+      await userEvent.tab();
+      await expect(action).toHaveFocus();
+
+      await userEvent.keyboard('{Enter}');
+      await expect(onConfirmSpy).toHaveBeenCalledTimes(2);
+      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await expect(trigger).toHaveFocus();
     });
   },
 };
@@ -165,15 +209,36 @@ export const Cancelled: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
-      onCancel: fn(),
+      onCancel: onCancelSpy,
       openInitially: true,
     }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
-    await step('Clique em Cancelar fecha o diálogo', async () => {
+    onCancelSpy.mockClear();
+    onConfirmSpy.mockClear();
+
+    await step('Clique em Cancelar fecha sem executar a ação', async () => {
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
+      await expect(onCancelSpy).toHaveBeenCalledTimes(1);
+      await expect(onConfirmSpy).not.toHaveBeenCalled();
       await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+    });
+
+    await step('Space no Cancelar focado cancela pelo teclado', async () => {
+      const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
+      await userEvent.click(trigger);
+
+      const dialog = await body.findByRole('alertdialog');
+      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
+      await expect(cancel).toHaveFocus();
+
+      await userEvent.keyboard(' ');
+      await expect(onCancelSpy).toHaveBeenCalledTimes(2);
+      await expect(onConfirmSpy).not.toHaveBeenCalled();
+      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await expect(trigger).toHaveFocus();
     });
   },
 };
@@ -205,7 +270,7 @@ export const Controlled: Story = {
       description: 'Este diálogo é comandado por estado externo.',
       cancelButton: createButton({ variant: 'outline', label: 'Fechar' }),
       actionButton: createButton({ variant: 'destructive', label: 'Confirmar' }),
-      onOpenChange: fn(),
+      onOpenChange: onOpenChangeSpy,
     });
 
     wrapper.append(dialog);
@@ -215,19 +280,25 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    onOpenChangeSpy.mockClear();
 
-    await step('Clique no trigger externo abre o diálogo', async () => {
+    await step('Clique no trigger externo abre o diálogo e reporta a abertura', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toBeVisible();
+      await expect(onOpenChangeSpy).toHaveBeenCalledWith(true);
     });
 
-    await step('Escape fecha o diálogo controlado', async () => {
+    await step('Escape fecha, reporta o fechamento e devolve o foco ao trigger', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
+      await expect(onOpenChangeSpy).toHaveBeenLastCalledWith(false);
+      await expect(
+        canvas.getByRole('button', { name: /Abrir via estado externo/i }),
+      ).toHaveFocus();
     });
   },
 };

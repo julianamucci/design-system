@@ -66,13 +66,11 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
     variant: 'outline',
     label: opts.cancelLabel,
   });
+  // Variante do Button — a mesma que as stories montam. `nds-bg-destructive`
+  // solto pintava só o fundo e deixava o texto no foreground default.
   const actionButton = createButton({
-    variant: 'default',
+    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
     label: opts.actionLabel,
-    class:
-      opts.tone === 'destructive'
-        ? 'nds-bg-destructive'
-        : '',
   });
   cancelButton.addEventListener('click', () => {
     track('dialog_close', {
@@ -386,11 +384,7 @@ import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.withTrigger'),
           secondaryCode: `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
 const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-const actionButton = createButton({
-  variant: 'default',
-  label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
-});
+const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
 
 const dialog = createAlertDialog({
   trigger,
@@ -404,11 +398,7 @@ const dialog = createAlertDialog({
       case 'variantes': {
         const codeDestructive = `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
 const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-const actionButton = createButton({
-  variant: 'default',
-  label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
-});
+const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
 
 createAlertDialog({ trigger, title: 'Excluir conta', description: '...', cancelButton, actionButton });`;
 

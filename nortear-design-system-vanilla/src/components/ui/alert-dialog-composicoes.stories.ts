@@ -111,7 +111,9 @@ export const Neutra: Story = {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /^Publicar$/i });
+    const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
     await expect(action).toBeVisible();
+    // Confirmação não destrutiva: a ação usa a variante default do Button.
+    await expect(action).toHaveClass('nds-button-default');
   },
 };
