@@ -15,6 +15,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 import { getLocale, createTranslation } from '@/lib/i18n';
+import { DOCS_PAGE_TITLE_ID } from './sections/DocsHeader';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import {
@@ -77,11 +78,20 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   root.style.height = '100%';
   root.style.overflow = 'auto';
 
-  const container = document.createElement('div');
+  // Conteúdo: landmark <main> (mesmas classes e mesmo lugar na árvore que o
+  // <div> anterior — zero mudança visual), igual ao DocsPageLayout das docs de
+  // componente. As páginas de Foundations não usam aquele layout e ficariam sem
+  // landmark de conteúdo — o skip link "Ir para o conteúdo" não teria destino.
+  // - tabindex="-1": recebe foco programático sem entrar na ordem de tabulação;
+  // - aria-labelledby → <h1> da página: o leitor de tela anuncia
+  //   "principal, <título da página>" ao chegar aqui.
+  const container = document.createElement('main');
   container.className = 'nds-p-8 nds-stack';
   container.dataset.spacing = 'xl';
   container.style.maxWidth = '72rem';
   container.style.marginInline = 'auto';
+  container.tabIndex = -1;
+  container.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
   root.appendChild(container);
 
   // ── SEO + analytics reativos ─────────────────────────────────────────────
@@ -136,6 +146,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   topRow.append(badgeCategory, badgeType, switcher);
 
   const h1 = document.createElement('h1');
+  h1.id = DOCS_PAGE_TITLE_ID;
   h1.className = 'nds-text-h1 nds-text-foreground';
 
   const desc = document.createElement('p');

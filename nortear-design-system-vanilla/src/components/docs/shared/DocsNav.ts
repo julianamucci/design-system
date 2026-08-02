@@ -1,3 +1,5 @@
+import { deriveSlugFromUrl } from '@/lib/docs-tracking';
+
 export interface DocsNavSection {
   id: string;
   label: string;
@@ -11,7 +13,11 @@ export interface DocsNavGroup {
 export interface DocsNavProps {
   groups: DocsNavGroup[];
   activeSection?: string;
-  /** Slug do componente — usado no data-track-id (ex: "alert" → `alert:nav:anatomia`). */
+  /**
+   * Slug do componente — usado no data-track-id (ex: "alert" → `alert:nav:anatomia`).
+   * Opcional: quando omitido é derivado do `?id=` do iframe do Storybook, o
+   * mesmo fallback que o `mountDocsTracking` já usa.
+   */
   componentSlug?: string;
 }
 
@@ -43,6 +49,13 @@ export function createDocsNav(props: DocsNavProps): DocsNavHandle {
   const root = document.createElement('div');
   root.className = 'nds-docs-nav';
 
+  // A maioria das docs pages não passa `componentSlug` (o prop é opcional por
+  // contrato). Sem fallback, essas páginas ficavam sem `data-track-id` e o
+  // `docs_nav_click` saía com section_id vazio. Reusamos a MESMA derivação do
+  // `mountDocsTracking`, então o `component` do evento e o 1º segmento do id
+  // continuam batendo — sem tocar em nenhuma docs page.
+  const slug = props.componentSlug ?? deriveSlugFromUrl();
+
   const buttons = new Map<string, HTMLButtonElement>();
 
   for (const group of props.groups) {
@@ -65,9 +78,7 @@ export function createDocsNav(props: DocsNavProps): DocsNavHandle {
       btn.className = 'nds-docs-nav-button';
       btn.textContent = section.label;
       btn.setAttribute('data-track', 'nav');
-      if (props.componentSlug) {
-        btn.setAttribute('data-track-id', `${props.componentSlug}:nav:${section.id}`);
-      }
+      btn.setAttribute('data-track-id', `${slug}:nav:${section.id}`);
       btn.setAttribute('data-track-label', section.label);
       btn.addEventListener('click', () => goToSection(section.id));
 

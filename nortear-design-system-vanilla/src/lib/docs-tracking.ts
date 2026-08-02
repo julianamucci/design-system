@@ -24,8 +24,14 @@ export interface MountDocsTrackingOptions {
   componentSlug?: string;
 }
 
-/** Deriva o slug do componente a partir da URL do iframe do Storybook. */
-function deriveSlugFromUrl(): string {
+/**
+ * Deriva o slug do componente a partir da URL do iframe do Storybook.
+ *
+ * Exportado porque o `DocsNav` precisa do MESMO fallback ao montar o
+ * `data-track-id`: o `componentSlug` é opcional por contrato e a maioria das
+ * docs pages não o passa. Sem isso o id do nav ficava ausente nessas páginas.
+ */
+export function deriveSlugFromUrl(): string {
   try {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') ?? params.get('path')?.split('/').pop() ?? '';
@@ -88,9 +94,13 @@ export function mountDocsTracking(
 
     switch (type) {
       case 'nav':
+        // No nav o id é `{component}:nav:{seção de destino}` — o segmento
+        // `section` é literalmente "nav" e o DESTINO está no `element`.
+        // Reportar `section` aqui fazia todo docs_nav_click sair com
+        // section_id:"nav", sem dizer para onde o usuário navegou.
         track('docs_nav_click', {
           component: componentSlug,
-          section_id: section || element,
+          section_id: element || section,
           label,
         });
         break;
