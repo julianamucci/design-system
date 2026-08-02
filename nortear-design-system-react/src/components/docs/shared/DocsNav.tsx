@@ -16,8 +16,23 @@ export interface DocsNavProps {
   componentSlug?: string;
 }
 
-function scrollTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/**
+ * Rola até a seção **e move o foco para ela**.
+ *
+ * Só rolar deixa o foco no botão do menu: o cursor de leitura do leitor de
+ * tela não acompanha (a leitura não continua a partir do título da seção) e o
+ * Tab seguinte volta para o próximo item do menu. O `tabindex="-1"` é aplicado
+ * no momento do clique (não exige mexer no HTML das seções) e o
+ * `preventScroll` deixa a rolagem suave acontecer enquanto o foco já se move.
+ */
+function goToSection(id: string) {
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  target.focus({ preventScroll: true });
 }
 
 export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) {
@@ -32,7 +47,7 @@ export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) 
                 <button
                   type="button"
                   className="nds-docs-nav-button"
-                  onClick={() => scrollTo(section.id)}
+                  onClick={() => goToSection(section.id)}
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-track="nav"
                   data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}

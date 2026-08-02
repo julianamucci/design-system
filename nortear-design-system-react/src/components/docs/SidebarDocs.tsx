@@ -19,7 +19,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -118,7 +117,6 @@ function SidebarDemoPreview({
   side = "left",
   defaultOpen = true,
   navLabel,
-  mainLandmark = false,
 }: {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
@@ -126,8 +124,6 @@ function SidebarDemoPreview({
   defaultOpen?: boolean;
   /** Rótulo único da <nav> do demo (axe landmark-unique) — reusa a string que já intitula o bloco. */
   navLabel: string;
-  /** Só UM demo por página mantém o <main> do SidebarInset (axe landmark-no-duplicate-main). */
-  mainLandmark?: boolean;
 }) {
   // label/destination usam a CHAVE estável do item (não o texto traduzido):
   // mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
@@ -222,22 +218,19 @@ function SidebarDemoPreview({
             </SidebarFooter>
           </Sidebar>
         </nav>
-        {mainLandmark ? (
-          <SidebarInset>
-            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
-              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
-            </header>
-          </SidebarInset>
-        ) : (
-          // Equivalente pixel-idêntico ao SidebarInset sem o landmark <main>
-          <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
-              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
-            </header>
-          </div>
-        )}
+        {/*
+          Equivalente pixel-idêntico ao SidebarInset sem o landmark <main>: o
+          <main> da página é o do DocsPageLayout, e um demo que renderizasse o
+          SidebarInset de verdade recriaria landmark-no-duplicate-main. O
+          snippet de código da doc segue mostrando <SidebarInset>, que é a API
+          correta para uma aplicação real.
+        */}
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+            <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
+            <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
+          </header>
+        </div>
       </SidebarProvider>
     </div>
   );
@@ -689,7 +682,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={tContent("demonstration.title")} mainLandmark />
+        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={tContent("demonstration.title")} />
       </DocsDemonstration>
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
