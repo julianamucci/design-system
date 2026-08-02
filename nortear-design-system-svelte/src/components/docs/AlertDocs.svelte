@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+  import { Alert, AlertTitle, AlertDescription, AlertAction } from '@/components/ui/alert';
   import { Button } from '@/components/ui/button';
   import Info from '@lucide/svelte/icons/info';
   import AlertCircle from '@lucide/svelte/icons/circle-alert';
@@ -210,19 +210,18 @@ interface AlertTitleProps {
             <AlertTitle as="h3">{$tStore('demonstration.labels.successTitle')}</AlertTitle>
             <AlertDescription>{$tStore('demonstration.labels.successDesc')}</AlertDescription>
           </Alert>
-          <!-- warning: com título + ação inline na descrição.
-               As 3 classes ficam no mesmo elemento (nds-cluster nds-alert-description
-               nds-mt-1). alert.css é importado depois de layout.css, então
-               .nds-alert-description vence .nds-cluster no display e o botão cai
-               numa linha abaixo do texto, alinhado ao início — resultado esperado.
-               data-align/data-justify e margem inline seriam no-ops sob grid. -->
+          <!-- warning: com título + ação no slot AlertAction.
+               `.nds-alert-action` é position:absolute no canto superior direito
+               (alert.css) — é o "alinhado à direita" que o conteúdo descreve.
+               Empilhar o botão dentro da descrição o joga para a linha de baixo,
+               à esquerda, divergindo da story ComAcao, que sempre usou o slot. -->
           <Alert variant="warning">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle as="h3">{$tStore('demonstration.labels.warningTitle')}</AlertTitle>
-            <AlertDescription class="nds-cluster nds-mt-1">
-              <span>{$tStore('demonstration.labels.warningDesc')}</span>
+            <AlertDescription>{$tStore('demonstration.labels.warningDesc')}</AlertDescription>
+            <AlertAction>
               <Button size="sm" variant="outline">{$tStore('demonstration.labels.warningAction')}</Button>
-            </AlertDescription>
+            </AlertAction>
           </Alert>
         </div>
       </DocsDemonstration>
@@ -442,7 +441,10 @@ interface AlertTitleProps {
             name: $tStore('variants.compositions.withAction.name'),
             description: $tStore('variants.compositions.withAction.description'),
             useWhen: $tStore('variants.compositions.withAction.use'),
-            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+            // Slot AlertAction, igual à story ComAcao. O markup anterior
+            // empilhava o botão dentro da descrição e ele caía na linha de
+            // baixo — divergia da story e do "alinhado à direita" do texto.
+            code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle>Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
             preview: compWithAction,
           },
         ]}
@@ -459,10 +461,10 @@ interface AlertTitleProps {
         <Alert class="nds-w-full">
           <Info aria-hidden="true" />
           <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>
-          <AlertDescription class="nds-cluster" data-align="center" data-justify="between" style="margin-top: var(--spacing-1);">
-            <span>Salve seu trabalho para não perder as alterações.</span>
+          <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+          <AlertAction>
             <Button size="sm" variant="outline">Salvar agora</Button>
-          </AlertDescription>
+          </AlertAction>
         </Alert>
       {/snippet}
 
