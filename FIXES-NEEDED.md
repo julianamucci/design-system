@@ -968,3 +968,71 @@ instrumento cego — deixa o CI verde escondendo o que o usuário vê.
   Remover = testes batem com o que a dona vê, ao custo de corrigir essas
   asserções (dialog primeiro). As falhas de sheet/popover/tooltip são do
   backlog pré-existente do vue, sem relação com animação.
+
+## Emulação de motion REMOVIDA dos testes (2026-08-02, decisão da dona)
+
+`beedec2e` svelte · `5a55a8c8` react · `ad7ba55d` vanilla · `48c3dead` +
+`0168c78f` vue.
+
+Os testes voltam a rodar com animação, como o Storybook. Verificado por mim
+depois dos 4 agents (o scratchpad compartilhado corrompeu um baseline —
+ver abaixo): **alert-dialog 10/10 e alert 26/26 nas 4**; `dialog` falha 2 no
+vue e 1 no svelte, iguais aos baselines → backlog, não regressão.
+
+### O que fechou o problema NÃO foi remover a emulação
+
+Foi o `wait-for-portal.ts`: um `waitFor` que gateia na **opacidade computada**
+(> 0.9) antes de qualquer asserção, na abertura de todo portal — em vez de
+`findBy*` (que resolve na montagem) ou sleep fixo. React e svelte já tinham; o
+vanilla criou; o vue **tinha mas sem o gate de opacidade**, e por isso
+retornava no meio da animação.
+
+Delta por stack: **vue 10** (todas em `dialog`, fechadas por UMA correção na
+lib — nenhuma story editada) · **react 1** (`dialog > Profile Edit`, a falha
+antiga que a emulação mascarava, agora corrigida na causa) · **svelte 0** ·
+**vanilla 0**.
+
+Melhoria do vue sobre o modelo do react: ele percorre a cadeia de ancestrais
+até o `<body>` e usa a **menor** opacidade — `toBeVisible()` reprova se
+qualquer ancestral estiver em 0, e gatear só no nó deixava brecha com
+overlay + wrappers de portal. Vale portar para as outras 3.
+
+### A emulação estava quebrando um teste
+
+`skeleton > Playground` no svelte depende do pulse, que o reduced-motion
+desligava. Passou a passar.
+
+### Nuance que explica por que o CI não acusava
+
+`toBeVisible()` do jest-dom só reprova em opacidade **exatamente** 0. As
+asserções eram racy de verdade — apareciam no painel Interactions — mas quase
+nunca reprovavam no vitest. Delta zero numa stack não significava ausência de
+risco.
+
+### Paridade do Playground do alert-dialog — vue
+
+12 `expect()` / 7 `step()` → **33 / 10** (react 21/9, vanilla 20/9,
+svelte 18/9). Achado no caminho: os spies `onConfirm`/`onCancel` existiam no
+`setup()` e **nunca eram asseverados** — spies mortos.
+
+- [ ] **Gap do auditor**: `coverage_divergence` compara story a story e não
+  pegou 12 vs 21 no Playground. Reforçar a regra para comparar também o
+  Playground entre stacks.
+
+### BACKLOG GRANDE exposto pela medição
+
+Falhas pré-existentes, sem relação com animação (falham com e sem emulação):
+- **svelte**: 33 das 36 falhas do baseline estão em `tooltip`, `popover` e
+  `drawer` — essas três famílias estão hoje praticamente sem cobertura
+  funcional efetiva.
+- **vue**: tooltip 10, popover 4, dialog 2, sheet 2, drawer 2.
+- **vanilla**: 12, sobretudo `drawer` ("multiple elements with role dialog" —
+  overlay vazando entre stories) e `target-size`.
+- **react**: 8 (tooltip 7 + drawer axe).
+- [ ] Priorizar: `tooltip` e `drawer` são os piores em 3 das 4 stacks.
+
+### Processo
+
+Os 4 agents compartilham o mesmo diretório de scratchpad: um baseline foi
+sobrescrito por outro agent e houve stdout interleaved. Exigir nome de arquivo
+por stack e conferir o cabeçalho `RUN … /<stack>` antes de concluir número.
