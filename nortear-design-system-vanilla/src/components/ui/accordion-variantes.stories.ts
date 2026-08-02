@@ -23,17 +23,19 @@ const FAQ_ITEMS: AccordionOptions['items'] = [
   { value: 'cancel',    trigger: 'Como cancelo minha assinatura?',          content: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
 ];
 
+// Mesmo exemplo do snippet `codeMultiple` da docs page e das demais stacks.
 const SPEC_ITEMS: AccordionOptions['items'] = [
-  { value: 'layout',   trigger: 'Layout e Espaçamento', content: 'Grid de 12 colunas, gutter de 24px, margem lateral mínima de 16px em mobile e 24px em tablet.' },
-  { value: 'cores',    trigger: 'Cores e Tokens',       content: 'Paleta semântica com tokens de background, foreground, primary, secondary, destructive, muted e accent.' },
-  { value: 'tipografia', trigger: 'Tipografia',         content: 'Escala tipográfica de xs (12px) a 4xl (36px). Família padrão: Inter. Peso regular (400) e medium (500).' },
+  { value: 'especificacoes',  trigger: 'Especificações técnicas', content: 'CPU: Intel Core i7-12700, RAM: 16GB DDR5, SSD: 512GB NVMe' },
+  { value: 'compatibilidade', trigger: 'Compatibilidade',         content: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS' },
+  { value: 'garantia',        trigger: 'Garantia e suporte',      content: '24 meses de garantia de fábrica. Suporte técnico 24/7.' },
 ];
 
 // ─── Modos ────────────────────────────────────────────────────────────────────
 
 export const Single: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: FAQ_ITEMS }),
+  render: () => createAccordion({ type: 'single', collapsible: true, defaultValue: 'senha', items: FAQ_ITEMS }),
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
         story: 'Apenas um item pode estar aberto por vez. Abrir um novo fecha o anterior automaticamente.',
@@ -44,12 +46,11 @@ export const Single: Story = {
     const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
 
-    await step('Abre o primeiro item', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+    await step('Item 1 começa aberto via defaultValue', async () => {
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
     });
 
-    await step('Abrir segundo fecha o primeiro', async () => {
+    await step('Abrir item 2 fecha automaticamente o item 1', async () => {
       await userEvent.click(triggers[1]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
@@ -65,6 +66,7 @@ export const Single: Story = {
 export const Multiple: Story = {
   render: () => createAccordion({ type: 'multiple', items: SPEC_ITEMS }),
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story: 'Múltiplos itens podem estar abertos simultaneamente. Use para conteúdo independente que o usuário precisa comparar.',
@@ -100,8 +102,8 @@ export const Controlled: Story = {
     indicator.className = 'nds-text-caption nds-text-muted-foreground';
 
     const setIndicator = (val: string | string[]) => {
-      const display = Array.isArray(val) ? val.join(', ') : val || '(nenhum)';
-      indicator.innerHTML = DOMPurify.sanitize(`Item ativo: <code class="nds-font-mono">${display}</code>`);
+      const display = Array.isArray(val) ? val.join(', ') : val || 'nenhum';
+      indicator.innerHTML = DOMPurify.sanitize(`Item aberto: <code class="nds-font-mono">${display}</code>`);
     };
     setIndicator('item-1');
 
@@ -111,9 +113,8 @@ export const Controlled: Story = {
       defaultValue: 'item-1',
       onValueChange: setIndicator,
       items: [
-        { value: 'item-1', trigger: 'Item 1', content: 'Conteúdo do primeiro item.' },
-        { value: 'item-2', trigger: 'Item 2', content: 'Conteúdo do segundo item.' },
-        { value: 'item-3', trigger: 'Item 3', content: 'Conteúdo do terceiro item.' },
+        { value: 'item-1', trigger: 'Item 1 — controlado', content: 'Estado gerenciado externamente via valor inicial e callback de mudança.' },
+        { value: 'item-2', trigger: 'Item 2 — controlado', content: 'Útil para sincronizar com URL ou outro estado da aplicação.' },
       ],
     });
 
@@ -121,6 +122,7 @@ export const Controlled: Story = {
     return wrapper;
   },
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Modo controlado via onValueChange. O indicador acima mostra o item ativo em tempo real.',
@@ -143,15 +145,21 @@ export const Controlled: Story = {
   },
 };
 
+const DEFAULT_OPEN_ITEMS: AccordionOptions['items'] = [
+  { value: 'item-1', trigger: 'Item aberto por padrão',  content: 'Este item inicia expandido via valor inicial. Não é modo controlado — o estado interno gerencia após a montagem.' },
+  { value: 'item-2', trigger: 'Item fechado por padrão', content: 'Este item inicia colapsado.' },
+];
+
 export const DefaultOpen: Story = {
   render: () =>
     createAccordion({
       type: 'single',
       collapsible: true,
-      defaultValue: 'senha',
-      items: FAQ_ITEMS,
+      defaultValue: 'item-1',
+      items: DEFAULT_OPEN_ITEMS,
     }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Item aberto por padrão via defaultValue. Use para destacar a pergunta mais frequente ou o passo atual de um fluxo.',

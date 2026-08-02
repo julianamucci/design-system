@@ -24,6 +24,11 @@ const FAQ_ITEMS = [
   { value: 'item-3', q: 'Como cancelo minha assinatura?', a: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura.' },
 ];
 
+const DEFAULT_OPEN_ITEMS = [
+  { value: 'item-1', q: 'Item aberto por padrão',  a: 'Este item inicia expandido via valor inicial. Não é modo controlado — o estado interno gerencia após a montagem.' },
+  { value: 'item-2', q: 'Item fechado por padrão', a: 'Este item inicia colapsado.' },
+];
+
 const SPEC_ITEMS = [
   { value: 'especificacoes', q: 'Especificações técnicas', a: 'CPU: Intel Core i7-12700, RAM: 16GB DDR5, SSD: 512GB NVMe' },
   { value: 'compatibilidade', q: 'Compatibilidade', a: 'Windows 11, macOS 14+, Ubuntu 22.04 LTS' },
@@ -36,6 +41,7 @@ export const Single: Story = {
     props: { type: 'single', defaultValue: 'item-1', items: FAQ_ITEMS },
   }),
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
         story: 'Modo single (bits-ui: sempre collapsible). Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
@@ -78,6 +84,7 @@ export const Multiple: Story = {
     props: { type: 'multiple', items: SPEC_ITEMS },
   }),
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
@@ -118,6 +125,7 @@ export const Multiple: Story = {
 export const Controlled: Story = {
   render: () => ({ Component: AccordionControlledStory }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.',
@@ -143,9 +151,10 @@ export const Controlled: Story = {
 export const DefaultOpen: Story = {
   render: () => ({
     Component: AccordionStory,
-    props: { type: 'single', defaultValue: 'item-1', items: FAQ_ITEMS.slice(0, 2) },
+    props: { type: 'single', defaultValue: 'item-1', items: DEFAULT_OPEN_ITEMS },
   }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Prop defaultValue abre um item na montagem sem modo controlado. Use em documentação e onboarding.',

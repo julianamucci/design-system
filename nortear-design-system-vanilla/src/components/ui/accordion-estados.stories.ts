@@ -16,23 +16,32 @@ type Story = StoryObj;
 
 // ─── Items ────────────────────────────────────────────────────────────────────
 
-const BASE_ITEMS: AccordionOptions['items'] = [
-  { value: 'item-1', trigger: 'Informações gerais', content: 'Conteúdo das informações gerais do componente.' },
-  { value: 'item-2', trigger: 'Configuracoes avançadas', content: 'Conteúdo das configurações avançadas disponíveis.' },
-  { value: 'item-3', trigger: 'Suporte e contato', content: 'Entre em contato pelo email suporte@empresa.com.' },
+// Um conjunto por estado, igual às demais stacks — cada story mostra só o que a
+// seção Estados da docs page descreve, sem ruído de itens extras.
+const SINGLE_ITEM: AccordionOptions['items'] = [
+  { value: 'item-1', trigger: 'Item fechado (estado padrão)', content: 'Conteúdo oculto.' },
 ];
 
-const WITH_DISABLED: AccordionOptions['items'] = [
-  { value: 'item-1', trigger: 'Item ativo',      content: 'Este item pode ser expandido normalmente.' },
+const OPEN_ITEM: AccordionOptions['items'] = [
+  { value: 'item-1', trigger: 'Item aberto', content: 'Conteúdo visível. Chevron rotaciona 180°. aria-expanded="true".' },
+];
+
+const DISABLED_ITEMS: AccordionOptions['items'] = [
+  { value: 'item-1', trigger: 'Item habilitado',   content: 'Este item funciona normalmente.' },
   { value: 'item-2', trigger: 'Item desabilitado', content: 'Este conteúdo não pode ser acessado.', disabled: true },
-  { value: 'item-3', trigger: 'Outro item ativo', content: 'Este item também pode ser expandido.' },
+];
+
+const FOCUS_ITEMS: AccordionOptions['items'] = [
+  { value: 'item-1', trigger: 'Navegar com Tab para ver focus ring', content: 'Focus ring visível ao navegar por teclado.' },
+  { value: 'item-2', trigger: 'Segundo item',                        content: 'Tab move o foco para este trigger.' },
 ];
 
 // ─── Estados ──────────────────────────────────────────────────────────────────
 
 export const Fechado: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: BASE_ITEMS }),
+  render: () => createAccordion({ type: 'single', collapsible: true, items: SINGLE_ITEM }),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story: 'Estado padrão: todos os itens fechados. O chevron aponta para baixo.',
@@ -57,9 +66,10 @@ export const Aberto: Story = {
       type: 'single',
       collapsible: true,
       defaultValue: 'item-1',
-      items: BASE_ITEMS,
+      items: OPEN_ITEM,
     }),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story: 'Item expandido. O conteúdo é visível e o chevron rotaciona 180°.',
@@ -77,8 +87,9 @@ export const Aberto: Story = {
 };
 
 export const Disabled: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: WITH_DISABLED }),
+  render: () => createAccordion({ type: 'single', collapsible: true, items: DISABLED_ITEMS }),
   parameters: {
+    covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
       description: {
         story: 'Item desabilitado. Não responde a cliques e tem opacidade reduzida para sinalizar indisponibilidade.',
@@ -101,8 +112,9 @@ export const Disabled: Story = {
 };
 
 export const FocusVisible: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: BASE_ITEMS }),
+  render: () => createAccordion({ type: 'single', collapsible: true, defaultValue: 'item-1', items: FOCUS_ITEMS }),
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story: 'Estado de foco via teclado. Use Tab para navegar entre triggers e verificar o focus ring visível.',

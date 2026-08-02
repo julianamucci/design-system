@@ -60,6 +60,7 @@ export const ComIconeNoTrigger: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story:
@@ -96,7 +97,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Novidades da versão 3.0
-            <Badge variant="default" className="" style={{fontSize: "10px", height: "1rem" }} >Novo</Badge>
+            <Badge variant="default">Novo</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -107,7 +108,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Funcionalidades em beta
-            <Badge variant="secondary" className="" style={{fontSize: "10px", height: "1rem" }} >Beta</Badge>
+            <Badge variant="secondary">Beta</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -117,6 +118,7 @@ export const ComBadgeNoTrigger: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
@@ -183,6 +185,7 @@ export const ConteudoRico: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story:
@@ -217,7 +220,7 @@ export const ConteudoRico: Story = {
 
 export const FAQ: Story = {
   render: () => (
-    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
       <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
       <Accordion>
         {[
@@ -251,6 +254,7 @@ export const FAQ: Story = {
     </div>
   ),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story:

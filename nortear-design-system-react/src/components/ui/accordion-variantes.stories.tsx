@@ -45,6 +45,7 @@ export const Single: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
         story:
@@ -108,6 +109,7 @@ export const Multiple: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story:
@@ -148,7 +150,7 @@ export const Multiple: Story = {
 function ControlledAccordion() {
   const [value, setValue] = useState<string[]>(["item-1"]);
   return (
-    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Item aberto: <code>{value[0] || "nenhum"}</code>
       </p>
@@ -173,6 +175,7 @@ function ControlledAccordion() {
 export const Controlled: Story = {
   render: () => <ControlledAccordion />,
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story:
@@ -220,6 +223,7 @@ export const DefaultOpen: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story:

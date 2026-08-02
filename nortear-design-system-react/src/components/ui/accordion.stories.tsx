@@ -84,6 +84,13 @@ type Story = StoryObj<typeof meta>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item3', 'functional.item6',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
+      'visual.item1',
+    ],
+  },
   render: (args) => (
     <Accordion {...args} defaultValue={["item-1"]} className="nds-max-w-lg">
       <AccordionItem value="item-1">
@@ -133,6 +140,8 @@ export const Playground: Story = {
         () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
         { timeout: 500 }
       );
+      // A aba Actions só se popula se o callback chegar ao componente.
+      await expect(args.onValueChange).toHaveBeenCalled();
     });
 
     await step("Conteúdo aberto fica de fato visível, com altura real", async () => {

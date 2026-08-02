@@ -29,6 +29,7 @@ export const Fechado: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story:
@@ -58,6 +59,7 @@ export const Aberto: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story:
@@ -92,6 +94,7 @@ export const Disabled: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
       description: {
         story:
@@ -128,6 +131,7 @@ export const FocusVisible: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story:

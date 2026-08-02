@@ -48,6 +48,7 @@ export const Single: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
         story: 'Modo single com collapsible. Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
@@ -110,6 +111,7 @@ export const Multiple: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
@@ -154,7 +156,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="nds-w-full nds-max-w-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Item aberto: <code>{{ value || 'nenhum' }}</code>
         </p>
@@ -178,6 +180,7 @@ export const Controlled: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Modo controlado. model-value e @update:model-value gerenciam o estado externamente. O indicador acima mostra o item ativo.',
@@ -220,6 +223,7 @@ export const DefaultOpen: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Prop default-value abre um item na montagem sem modo controlado. Use em documentação e onboarding.',

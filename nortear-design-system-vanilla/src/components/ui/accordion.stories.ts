@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 import { createAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -41,7 +41,7 @@ const meta: Meta<AccordionArgs> = {
     },
     defaultValue: {
       control: false,
-      description: 'Item(ns) aberto(s) inicialmente. O Playground começa com todos fechados.',
+      description: "Item(ns) aberto(s) inicialmente. O Playground fixa 'item-1'.",
       table: { type: { summary: 'string | string[]' } },
     },
     onValueChange: {
@@ -63,6 +63,7 @@ const meta: Meta<AccordionArgs> = {
   args: {
     type: 'single',
     collapsible: true,
+    onValueChange: fn(),
   },
 };
 
@@ -86,6 +87,11 @@ export const Playground: Story = {
   // DOM não é o que o consumidor escreve: ele chama a factory. O snippet passa
   // a ser a chamada real, montada a partir dos args.
   parameters: {
+    covers: [
+      'functional.item1', 'functional.item3', 'functional.item6',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
@@ -98,6 +104,7 @@ export const Playground: Story = {
 const accordion = createAccordion({
   type: '${type}',
   collapsible: ${collapsible},
+  defaultValue: 'item-1',
   items: [
 ${items}
   ],
@@ -112,6 +119,8 @@ document.querySelector('#app')?.append(accordion);`;
     createAccordion({
       type: args.type,
       collapsible: args.collapsible,
+      defaultValue: 'item-1',
+      onValueChange: args.onValueChange,
       items: DEMO_ITEMS,
     }),
   play: async ({ canvasElement, step, args }) => {
@@ -124,21 +133,17 @@ document.querySelector('#app')?.append(accordion);`;
       await expect(root).toHaveAttribute('data-collapsible', String(args.collapsible));
     });
 
-    await step('Todos os triggers estão fechados por padrão', async () => {
-      for (const trigger of triggers) {
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      }
+    await step('Item 1 começa aberto (defaultValue)', async () => {
+      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('Clicar no primeiro trigger abre o item', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
-    });
-
-    await step('No modo single, abrir outro fecha o primeiro', async () => {
+    await step('Clicar no trigger fechado abre o item, e o modo single fecha o anterior', async () => {
       await userEvent.click(triggers[1]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+      // A aba Actions só se popula se o callback chegar à factory.
+      await expect(args.onValueChange).toHaveBeenCalled();
     });
 
     await step('Conteúdo aberto fica de fato visível, com altura real', async () => {
@@ -172,13 +177,17 @@ document.querySelector('#app')?.append(accordion);`;
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
-    await step('Setas movem o foco entre triggers (com loop)', async () => {
+    await step('Setas movem o foco entre triggers (com loop) e Home/End vão às pontas', async () => {
       triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(triggers[1]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
       await expect(triggers[0]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard('{End}');
       await expect(triggers[triggers.length - 1]).toHaveFocus();
     });
 

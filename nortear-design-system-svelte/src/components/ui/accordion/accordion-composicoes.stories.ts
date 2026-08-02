@@ -23,6 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const ComIconeNoTrigger: Story = {
   render: () => ({ Component: AccordionIconStory }),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
@@ -51,6 +52,7 @@ export const ComIconeNoTrigger: Story = {
 export const ComBadgeNoTrigger: Story = {
   render: () => ({ Component: AccordionBadgeStory }),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
@@ -77,6 +79,7 @@ export const ComBadgeNoTrigger: Story = {
 export const ConteudoRico: Story = {
   render: () => ({ Component: AccordionRichStory }),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Svelte. Use para tabelas de dados, parágrafos ou listas estruturadas.',
@@ -105,6 +108,7 @@ export const ConteudoRico: Story = {
 export const FAQ: Story = {
   render: () => ({ Component: AccordionFAQStory }),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',

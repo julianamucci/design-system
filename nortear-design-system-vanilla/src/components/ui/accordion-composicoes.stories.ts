@@ -85,6 +85,7 @@ export const ComIconeNoTrigger: Story = {
     return root;
   },
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
@@ -138,10 +139,7 @@ export const ComBadgeNoTrigger: Story = {
       wrapper.className = 'nds-cluster';
       wrapper.dataset.spacing = 'sm';
       wrapper.textContent = label;
-      const badgeEl = createBadge({ text: badge, variant });
-      badgeEl.style.fontSize = '10px';
-      badgeEl.style.height = '1rem';
-      wrapper.appendChild(badgeEl);
+      wrapper.appendChild(createBadge({ text: badge, variant }));
       span.replaceWith(wrapper);
     });
 
@@ -149,6 +147,7 @@ export const ComBadgeNoTrigger: Story = {
     return root;
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
@@ -216,6 +215,7 @@ export const ConteudoRico: Story = {
     return root;
   },
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story: 'AccordionContent aceita qualquer HTML. Use para tabelas de dados, parágrafos ou listas estruturadas.',
@@ -257,13 +257,14 @@ export const FAQ: Story = {
     wrapper.dataset.spacing = 'sm';
 
     const heading = document.createElement('h2');
-    heading.className = 'nds-text-h4 nds-font-semibold';
+    heading.className = 'nds-text-base nds-font-semibold';
     heading.textContent = 'Perguntas frequentes';
 
     wrapper.append(heading, createAccordion({ type: 'single', collapsible: true, items: FAQ_ITEMS }));
     return wrapper;
   },
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',

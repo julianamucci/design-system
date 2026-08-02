@@ -397,6 +397,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
   <DocsPageLayout
     :nav-groups="navGroups"
     :active-section="activeSection"
+    component-slug="accordion"
   >
     <template #header>
       <DocsHeader

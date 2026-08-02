@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionDocs from '@/components/docs/AccordionDocs.svelte';
@@ -68,6 +68,7 @@ const meta = {
     type: 'single',
     disabled: false,
     loop: true,
+    onValueChange: fn(),
   },
 } satisfies Meta<typeof Accordion>;
 
@@ -84,6 +85,11 @@ export const Playground: Story = {
   // `transform` e não `code`: um snippet fixo deixaria de acompanhar os
   // controls (trocar type para multiple não mudaria nada na caixa de código).
   parameters: {
+    covers: [
+      'functional.item1', 'functional.item3', 'functional.item6',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
@@ -125,6 +131,7 @@ export const Playground: Story = {
       type: args.type,
       disabled: args.disabled,
       loop: args.loop,
+      onValueChange: args.onValueChange,
       defaultValue: 'item-1',
     },
   }),
@@ -149,6 +156,8 @@ export const Playground: Story = {
       const triggers = canvas.getAllByRole('button');
       await userEvent.click(triggers[1]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      // A aba Actions só se popula se o callback chegar ao componente.
+      await expect(args.onValueChange).toHaveBeenCalled();
     });
 
     await step('Conteúdo aberto fica de fato visível, com altura real', async () => {
@@ -189,7 +198,7 @@ export const Playground: Story = {
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
-    await step('Setas movem o foco entre triggers (com loop)', async () => {
+    await step('Setas movem o foco entre triggers (com loop) e Home/End vão às pontas', async () => {
       const triggers = canvas.getAllByRole('button');
       triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');
@@ -197,6 +206,10 @@ export const Playground: Story = {
       await userEvent.keyboard('{ArrowUp}');
       await expect(triggers[0]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard('{End}');
       await expect(triggers[triggers.length - 1]).toHaveFocus();
     });
 

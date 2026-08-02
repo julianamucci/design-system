@@ -63,6 +63,7 @@ export const ComIconeNoTrigger: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
@@ -97,7 +98,7 @@ export const ComBadgeNoTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               Novidades da versão 3.0
-              <Badge variant="default" class="" style="font-size: 10px; height: 1rem">Novo</Badge>
+              <Badge variant="default">Novo</Badge>
             </span>
           </AccordionTrigger>
           <AccordionContent>
@@ -108,7 +109,7 @@ export const ComBadgeNoTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               Funcionalidades em beta
-              <Badge variant="secondary" class="" style="font-size: 10px; height: 1rem">Beta</Badge>
+              <Badge variant="secondary">Beta</Badge>
             </span>
           </AccordionTrigger>
           <AccordionContent>
@@ -119,6 +120,7 @@ export const ComBadgeNoTrigger: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
@@ -184,6 +186,7 @@ export const ConteudoRico: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Vue. Use para tabelas de dados, parágrafos ou listas estruturadas.',
@@ -222,7 +225,7 @@ export const FAQ: Story = {
       return { items };
     },
     template: `
-      <div class="nds-w-full nds-max-w-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
         <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
         <Accordion type="single" :collapsible="true">
           <AccordionItem v-for="item in items" :key="item.value" :value="item.value">
@@ -234,6 +237,7 @@ export const FAQ: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
