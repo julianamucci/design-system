@@ -1,8 +1,16 @@
 // Ignored Build Step (Vercel) — decide se o deploy deve acontecer.
 //
-// Configurar em CADA projeto Vercel (Settings → Git → Ignored Build Step):
-//   node ../scripts/vercel-should-build.mjs
-// (o comando roda no Root Directory do projeto, que é a pasta da stack)
+// O comando vem do `ignoreCommand` no vercel.json de cada stack, NÃO da UI:
+//   "ignoreCommand": "node ../scripts/vercel-should-build.mjs"
+// (roda no Root Directory do projeto, que é a pasta da stack — daí o `../`)
+//
+// Por que no vercel.json e não em Settings → Git → Ignored Build Step: o campo
+// da UI já foi preenchido como `bash node ../scripts/vercel-should-build.mjs`,
+// e o `bash` sobrando faz o shell tentar EXECUTAR O BINÁRIO do node como script
+// ("cannot execute binary file"), derrubando o deploy antes de qualquer build.
+// No arquivo o comando fica versionado, revisável e igual nas 4 stacks.
+// Se o campo da UI ainda tiver algum valor, esvazie-o: o vercel.json prevalece,
+// mas deixar os dois divergentes só confunde quem for depurar depois.
 //
 // Semântica da Vercel: exit 0 = PULA o build · exit 1 = builda.
 //

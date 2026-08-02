@@ -3,6 +3,7 @@
   "buildCommand": "npm run build-storybook",
   "outputDirectory": "storybook-static",
   "installCommand": "npm ci",
+  "ignoreCommand": "node ../scripts/vercel-should-build.mjs",
   "framework": null,
   "build": {
     "env": {
