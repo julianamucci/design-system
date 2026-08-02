@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertAction, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -249,7 +249,10 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.withAction.name'),
     description: tContent('variants.compositions.withAction.description'),
     useWhen: tContent('variants.compositions.withAction.use'),
-    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription class="nds-cluster nds-mt-1">\n    <span>Salve seu trabalho para não perder as alterações.</span>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertDescription>\n</Alert>`,
+    // Slot AlertAction, igual à story ComAcao. O markup anterior empilhava o
+    // botão dentro da descrição e ele caía na linha de baixo, à esquerda —
+    // divergia da story e do "alinhado à direita" do texto.
+    code: `<Alert>\n  <Info aria-hidden="true" />\n  <AlertTitle as="h3">Sessão expira em 5 minutos</AlertTitle>\n  <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>\n  <AlertAction>\n    <Button size="sm" variant="outline">Salvar agora</Button>\n  </AlertAction>\n</Alert>`,
   },
 ]);
 
@@ -404,25 +407,26 @@ const visualTestItems = computed(() => [
           </AlertTitle>
           <AlertDescription>{{ tContent('demonstration.labels.successDesc') }}</AlertDescription>
         </Alert>
-        <!-- warning — ação dentro da descrição (mesmo markup da composição withAction) -->
+        <!-- warning — ação no slot AlertAction (mesmo markup da composição withAction) -->
         <Alert variant="warning">
           <TriangleAlert aria-hidden="true" />
           <AlertTitle as="h3">
             {{ tContent('demonstration.labels.warningTitle') }}
           </AlertTitle>
-          <!-- As 3 classes no MESMO elemento: alert.css é importado depois de
-               layout.css, então .nds-alert-description vence .nds-cluster no
-               display e o botão cai na linha abaixo do texto, alinhado ao
-               início — resultado esperado. nds-mt-1 faz o espaçamento. -->
-          <AlertDescription class="nds-cluster nds-mt-1">
-            <span>{{ tContent('demonstration.labels.warningDesc') }}</span>
+          <!-- Slot AlertAction — NÃO botão inline dentro da descrição.
+               .nds-alert-action é position: absolute no canto superior direito
+               (alert.css), que é o "alinhado à direita" que o conteúdo descreve.
+               Empilhar o botão dentro da descrição o joga para a linha de baixo,
+               à esquerda, divergindo da story ComAcao. -->
+          <AlertDescription>{{ tContent('demonstration.labels.warningDesc') }}</AlertDescription>
+          <AlertAction>
             <Button
               size="sm"
               variant="outline"
             >
               {{ tContent('demonstration.labels.warningAction') }}
             </Button>
-          </AlertDescription>
+          </AlertAction>
         </Alert>
       </div>
     </DocsDemonstration>
@@ -622,15 +626,15 @@ const visualTestItems = computed(() => [
           <AlertTitle as="h3">
             Sessão expira em 5 minutos
           </AlertTitle>
-          <AlertDescription class="nds-cluster nds-mt-1">
-            <span>Salve seu trabalho para não perder as alterações.</span>
+          <AlertDescription>Salve seu trabalho para não perder as alterações.</AlertDescription>
+          <AlertAction>
             <Button
               size="sm"
               variant="outline"
             >
               Salvar agora
             </Button>
-          </AlertDescription>
+          </AlertAction>
         </Alert>
       </template>
     </DocsCompositions>
