@@ -423,6 +423,8 @@ ciência: <rule> em <file> — <motivo>
 - [ ] Todas as 16 seções com conteúdo real (sem placeholders)
 - [ ] `structureCode` lê de `t('anatomy.structureCode')` — NÃO hardcoded
 - [ ] Sub-stories têm play function + `controls.disable: true`
+- [ ] Stories declaram `covers` com os ids de `testes.*` que verificam (e
+      `coversNotApplicable` com motivo, quando o item não se aplica à stack)
 - [ ] Wrappers com `contain: layout` em previews que abrem portal
 - [ ] Trigger sempre `asChild` + `Button`, e a prop é consumida pelo wrapper
 - [ ] `<main tabindex="-1" aria-labelledby>` na docs page — inclusive nos

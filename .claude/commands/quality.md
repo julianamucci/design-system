@@ -167,6 +167,30 @@ por `playwright({})` no `vite.config.ts`, rode, e **restaure o arquivo** (não
 commite). O detector para na primeira falha de cada `play` — cubra o resto por
 inspeção.
 
+**2f0. Cobertura por CONTRATO (é a garantia real)**:
+
+Contagem de asserção é proxy ruim — 12 numa stack e 21 em outra passaram
+despercebidas. A garantia é cada story declarar QUAIS itens de `testes.*` do
+`translations.json` ela verifica:
+
+```ts
+parameters: {
+  covers: ['functional.item2', 'accessibility.item5'],
+  // item que não se aplica à stack: declare o motivo, nunca omita
+  coversNotApplicable: { 'functional.item7': 'a factory não expõe open' },
+}
+```
+
+`audit.mjs` cobra três coisas: `contract_uncovered` (item documentado que
+ninguém verifica), `contract_divergent` (coberto numa stack e não em outra) e
+`contract_unknown_id` (id que não existe — pega typo, que seria cobertura
+fantasma). **É opt-in por componente**: fica calado até a primeira story
+declarar. `node scripts/audit.mjs --contract-status` mostra a adoção.
+
+Ao auditar um componente, **adote o contrato nele** — mapeie o que cada story
+realmente assere, cubra o que faltar e declare o resto com motivo. Declarar o
+que não é verificado é pior que não declarar: o auditor passa a mentir.
+
 **2f. Cobertura equivalente entre as 4 stacks**:
 Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:
 

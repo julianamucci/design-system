@@ -5,6 +5,7 @@
 //   node scripts/audit.mjs <slug> [--json]           // audit de um componente
 //   node scripts/audit.mjs --all [--json]            // audit de todos
 //   node scripts/audit.mjs <slug> --category <cat>   // só 1 categoria
+//   node scripts/audit.mjs --contract-status [--json] // adoção do contrato de teste
 //
 // Saída default: texto legível (pipeline-friendly). --json retorna objeto estruturado
 // compatível com FIXES-NEEDED.md.
@@ -668,12 +669,20 @@ function auditStoryQuality(slug) {
     if (counts.length < 2) continue;
     const min = Math.min(...counts);
     const max = Math.max(...counts);
-    if (min <= 1 && max >= 3) {
+    // Dois gatilhos. O piso (min<=1) pega placeholder puro. A RAZÃO pega o caso
+    // que passou despercebido: um Playground com 12 asserções contra 21 em
+    // outra stack — ambos acima do piso, e ainda assim cobertura desigual.
+    const placeholder = min <= 1 && max >= 3;
+    const desproporcional = max >= 5 && min < max * 0.6;
+    if (placeholder || desproporcional) {
       const detail = Object.entries(byStack).map(([s, n]) => `${s}:${n}`).join(' ');
+      const motivo = placeholder
+        ? 'a de menor contagem provavelmente é placeholder'
+        : `a menor cobre ${Math.round((min / max) * 100)}% da maior`;
       violations.push({
         category: 'quality', severity: 'medium', slug, stack: 'cross-stack',
         file: `stories/${slug}`, rule: 'coverage_divergence',
-        message: `story ${name} tem cobertura desproporcional entre stacks (${detail}) — a de menor contagem provavelmente é placeholder`,
+        message: `story ${name} tem cobertura desproporcional entre stacks (${detail}) — ${motivo}`,
       });
     }
   }
@@ -871,6 +880,158 @@ function auditDeadLibInfra() {
  * julgamento e fica com o agente. Medido antes destas regras existirem: 22% das
  * composições do repo eram duplicata da própria seção Variantes.
  */
+/**
+ * Ids do contrato de teste declarados no conteúdo compartilhado:
+ * `testes.functional.item1`, `testes.accessibility.item3`, `testes.visual.item2`.
+ * É a lista do que TEM de ser verificado — igual para as 4 stacks, porque
+ * descreve comportamento observável de fora, não implementação.
+ */
+function contractIds(slug) {
+  const path = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(path);
+  if (!raw) return [];
+  let json;
+  try { json = JSON.parse(raw); } catch { return []; }
+  const testes = json['pt-BR']?.testes;
+  if (!testes) return [];
+
+  const ids = [];
+  for (const grupo of ['functional', 'accessibility', 'visual']) {
+    for (const key of Object.keys(testes[grupo] ?? {})) {
+      if (/^item\d+$/.test(key)) ids.push(`${grupo}.${key}`);
+    }
+  }
+  return ids;
+}
+
+/** `covers: ['a.item1', 'b.item2']` e `coversNotApplicable: { 'a.item3': '…' }`. */
+function declaredCoverage(content) {
+  const covers = new Set();
+  const waived = new Map();
+
+  for (const m of content.matchAll(/covers\s*:\s*\[([\s\S]*?)\]/g)) {
+    for (const q of m[1].matchAll(/['"]([a-z]+\.item\d+)['"]/g)) covers.add(q[1]);
+  }
+  for (const m of content.matchAll(/coversNotApplicable\s*:\s*\{([\s\S]*?)\}/g)) {
+    for (const q of m[1].matchAll(/['"]([a-z]+\.item\d+)['"]\s*:\s*['"]([^'"]*)['"]/g)) {
+      waived.set(q[1], q[2]);
+    }
+  }
+  return { covers, waived };
+}
+
+/**
+ * Cobertura por CONTRATO, não por contagem de asserção.
+ *
+ * Contagem é proxy ruim: o Playground do alert-dialog tinha 12 asserções numa
+ * stack e 21 em outra, ambas acima de qualquer piso razoável, e a diferença só
+ * apareceu quando a dona olhou a aba Interactions. Aqui cada story declara
+ * QUAIS itens do contrato ela verifica, e a comparação passa a ser entre o que
+ * o conteúdo compartilhado exige e o que cada stack reivindica.
+ *
+ * ADOÇÃO É OPT-IN POR COMPONENTE: enquanto nenhuma story do slug declarar
+ * `covers`, a regra fica calada. Assim a regra entra sem inundar os 48
+ * componentes de violação — cada um passa a ser cobrado quando adota.
+ * Use `--contract-status` para ver quem ainda não adotou.
+ */
+function auditContractCoverage(slug) {
+  const ids = contractIds(slug);
+  if (ids.length === 0) return [];
+
+  const porStack = {};
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    const stories = ui.filter((f) => /.stories.(ts|tsx)$/.test(f));
+    const covers = new Set();
+    const waived = new Map();
+    for (const file of stories) {
+      const content = readFile(file);
+      if (!content) continue;
+      const d = declaredCoverage(content);
+      d.covers.forEach((c) => covers.add(c));
+      d.waived.forEach((motivo, id) => waived.set(id, motivo));
+    }
+    porStack[stack] = { covers, waived };
+  }
+
+  const adotaram = STACKS.filter((s) => porStack[s].covers.size > 0);
+  if (adotaram.length === 0) return [];
+
+  const violations = [];
+  const validos = new Set(ids);
+
+  for (const stack of STACKS) {
+    const { covers, waived } = porStack[stack];
+
+    // Id que não existe no contrato: a declaração não cobre nada e ninguém
+    // percebe. Sem este check, um typo vira cobertura fantasma.
+    for (const id of [...covers, ...waived.keys()]) {
+      if (!validos.has(id)) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_unknown_id',
+          message: `declara cobertura de "${id}", que não existe em testes.* do conteúdo compartilhado`,
+        });
+      }
+    }
+
+    if (covers.size === 0) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: `stories/${slug}`, rule: 'contract_divergent',
+        message: `outras stacks declaram cobertura de contrato e esta não declara nenhuma (${adotaram.join(', ')} adotaram)`,
+      });
+      continue;
+    }
+
+    for (const id of ids) {
+      if (covers.has(id) || waived.has(id)) continue;
+      const outras = STACKS.filter((s) => porStack[s].covers.has(id));
+      violations.push(outras.length > 0
+        ? {
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_divergent',
+          message: `${id} é coberto em ${outras.join(', ')} e não aqui — cubra ou declare coversNotApplicable com o motivo`,
+        }
+        : {
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_uncovered',
+          message: `${id} está documentado em testes.* e nenhuma story o verifica`,
+        });
+    }
+  }
+
+  return violations;
+}
+
+/** Visão de adoção do contrato — fora do audit para não poluir o exit code. */
+function contractStatus() {
+  const dir = join(ROOT, 'docs', 'shared', 'content');
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .map((slug) => {
+      const ids = contractIds(slug);
+      const porStack = STACKS.map((stack) => {
+        const { ui } = filesForSlug(slug, stack);
+    const stories = ui.filter((f) => /.stories.(ts|tsx)$/.test(f));
+        const covers = new Set();
+        const waived = new Set();
+        for (const file of stories) {
+          const content = readFile(file);
+          if (!content) continue;
+          const d = declaredCoverage(content);
+          d.covers.forEach((c) => covers.add(c));
+          d.waived.forEach((_m, id) => waived.add(id));
+        }
+        return { stack, resolvidos: new Set([...covers, ...waived]).size };
+      });
+      return { slug, total: ids.length, porStack };
+    })
+    .filter((r) => r.total > 0);
+}
+
 function auditTaxonomy(slug) {
   const violations = [];
   const file = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
@@ -1261,6 +1422,7 @@ function auditQuality(slug) {
 
   violations.push(...auditStoryQuality(slug));
   violations.push(...auditStoryApiReference(slug));
+  violations.push(...auditContractCoverage(slug));
 
   return violations;
 }
@@ -1317,6 +1479,30 @@ const json = args.includes('--json');
 const all = args.includes('--all');
 const categoryIdx = args.indexOf('--category');
 const category = categoryIdx >= 0 ? args[categoryIdx + 1] : null;
+
+// Adoção do contrato de teste. Fora do audit de propósito: componente que
+// ainda não adotou não é violação, e entrar no exit code quebraria o gate
+// "audit limpo" dos 48 componentes de uma vez.
+if (args.includes('--contract-status')) {
+  const linhas = contractStatus();
+  if (json) {
+    console.log(JSON.stringify(linhas.map((r) => ({
+      slug: r.slug, total: r.total,
+      stacks: Object.fromEntries(r.porStack.map((p) => [p.stack, p.resolvidos])),
+    })), null, 2));
+  } else {
+    const adotados = linhas.filter((r) => r.porStack.some((p) => p.resolvidos > 0));
+    console.log(`# Contrato de teste — adoção\n`);
+    console.log(`${adotados.length} de ${linhas.length} componentes declaram cobertura.\n`);
+    for (const r of linhas) {
+      const detalhe = r.porStack.map((p) => `${p.stack}:${p.resolvidos}/${r.total}`).join('  ');
+      const marca = r.porStack.every((p) => p.resolvidos === r.total) ? '✓'
+        : r.porStack.some((p) => p.resolvidos > 0) ? '~' : ' ';
+      console.log(`${marca} ${r.slug.padEnd(18)} ${detalhe}`);
+    }
+  }
+  process.exit(0);
+}
 const slug = args.find(a => !a.startsWith('--') && a !== category);
 
 if (!slug && !all) {
