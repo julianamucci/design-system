@@ -99,6 +99,9 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
+    // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
+    // a varredura axe (contraste incluído) do estado aberto.
+    covers: ["accessibility.item6", "accessibility.item7"],
     docs: {
       description: {
         story:
@@ -150,6 +153,7 @@ const onConfirm = fn();
 
 export const Confirmed: Story = {
   parameters: {
+    covers: ["functional.item2"],
     docs: {
       description: {
         story:
@@ -214,7 +218,8 @@ export const Confirmed: Story = {
     });
 
     await step("Enter com o Action focado confirma de novo", async () => {
-      await userEvent.click(canvas.getByRole("button", { name: /^Excluir$/i }));
+      const trigger = canvas.getByRole("button", { name: /^Excluir$/i });
+      await userEvent.click(trigger);
       await waitForPortal("alertdialog");
       const action = await within(document.body).findByTestId("confirm-action");
       action.focus();
@@ -224,15 +229,21 @@ export const Confirmed: Story = {
         timeout: 1000,
       });
       await waitForClosed();
+      // functional.item2 fecha o ciclo no trigger: confirmar devolve o foco a
+      // quem abriu, senão o teclado volta pro topo do documento.
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
 
 // Mesmo padrão do Confirmed: o spy precisa sobreviver ao re-render do Base UI.
 const onCancel = fn();
+// Espião da ação destrutiva: cancelar não pode executá-la em momento nenhum.
+const onCancelledAction = fn();
 
 export const Cancelled: Story = {
   parameters: {
+    covers: ["functional.item3"],
     docs: {
       description: {
         story:
@@ -242,6 +253,7 @@ export const Cancelled: Story = {
   },
   beforeEach: () => {
     onCancel.mockClear();
+    onCancelledAction.mockClear();
   },
   render: () => {
     return (
@@ -260,7 +272,7 @@ export const Cancelled: Story = {
             <AlertDialogCancel data-testid="cancel-action" onClick={onCancel}>
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
+            <AlertDialogAction variant="destructive" onClick={onCancelledAction}>
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -278,10 +290,13 @@ export const Cancelled: Story = {
         timeout: 1000,
       });
       await waitForClosed();
+      // O ponto do cancelamento: a ação destrutiva não roda.
+      await expect(onCancelledAction).not.toHaveBeenCalled();
     });
 
     await step("Space com o Cancel focado cancela de novo", async () => {
-      await userEvent.click(canvas.getByRole("button", { name: /^Excluir$/i }));
+      const trigger = canvas.getByRole("button", { name: /^Excluir$/i });
+      await userEvent.click(trigger);
       await waitForPortal("alertdialog");
       const cancel = await within(document.body).findByTestId("cancel-action");
       cancel.focus();
@@ -291,6 +306,9 @@ export const Cancelled: Story = {
         timeout: 1000,
       });
       await waitForClosed();
+      await expect(onCancelledAction).not.toHaveBeenCalled();
+      // functional.item3: cancelar devolve o foco ao trigger que abriu.
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
@@ -300,6 +318,7 @@ const onControlledOpenChange = fn();
 
 export const Controlled: Story = {
   parameters: {
+    covers: ["functional.item7"],
     docs: {
       description: {
         story:

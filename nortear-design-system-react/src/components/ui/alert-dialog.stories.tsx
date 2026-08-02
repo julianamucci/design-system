@@ -86,6 +86,22 @@ type Story = StoryObj<typeof meta>;
 
 // Mesmos rótulos da seção Demonstração / variante destructive da docs page.
 export const Playground: Story = {
+  parameters: {
+    // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
+    // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
+    covers: [
+      "functional.item1",
+      "functional.item4",
+      "functional.item5",
+      "functional.item6",
+      "accessibility.item1",
+      "accessibility.item2",
+      "accessibility.item3",
+      "accessibility.item4",
+      "accessibility.item5",
+      "visual.item1",
+    ],
+  },
   render: (args) => (
     <AlertDialog {...args}>
       <AlertDialogTrigger render={<Button variant="destructive" />}>
@@ -121,6 +137,11 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
+      // O backdrop faz parte do contrato de abertura (functional.item1): sem ele
+      // o fundo continua clicável e a modalidade é só visual.
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).not.toBeNull();
       await waitFor(() => expect(openedWith(true)).toBe(true));
     });
 
@@ -164,6 +185,11 @@ export const Playground: Story = {
       const cancel = within(dialog).getByRole("button", { name: /^Cancelar$/i });
       const action = within(dialog).getByRole("button", { name: /^Excluir$/i });
       const focused = new Set<Element>();
+      // A ordem começa em quem já tem o foco: dependendo da lib o foco inicial
+      // cai no popup (e o primeiro Tab escolhe o controle) ou direto no Cancel.
+      // Os dois caminhos satisfazem functional.item1; o que não pode é o
+      // primeiro controle alcançado ser a ação destrutiva.
+      const ordem: Element[] = [document.activeElement!];
 
       // 4 tabulações: com focus trap ativo o foco só pode alternar entre os
       // dois botões (ou o próprio popup, que tem tabindex -1).
@@ -177,9 +203,15 @@ export const Playground: Story = {
           }
         });
         focused.add(document.activeElement!);
+        ordem.push(document.activeElement!);
       }
       await expect(focused.has(cancel)).toBe(true);
       await expect(focused.has(action)).toBe(true);
+
+      // functional.item1: o primeiro controle alcançado é o Cancel — a saída
+      // segura precede a destrutiva na ordem de tabulação.
+      const primeiroControle = ordem.find((el) => el === cancel || el === action);
+      await expect(primeiroControle).toBe(cancel);
 
       await userEvent.tab({ shift: true });
       await waitFor(() => {

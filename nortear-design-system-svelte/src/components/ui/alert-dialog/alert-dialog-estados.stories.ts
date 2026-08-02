@@ -63,6 +63,9 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
+    // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
+    // a varredura axe (contraste incluído) do estado aberto.
+    covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
       description: {
         story: 'Diálogo aberto com `open`. Captura visual no Chromatic.',
@@ -108,6 +111,7 @@ const onConfirmSpy = fn();
 
 export const Confirmed: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
@@ -172,6 +176,7 @@ const onCancelledConfirmSpy = fn();
 
 export const Cancelled: Story = {
   parameters: {
+    covers: ['functional.item3'],
     docs: {
       description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
     },
@@ -218,6 +223,8 @@ export const Cancelled: Story = {
       await waitFor(() => expect(onCancelSpy).toHaveBeenCalledTimes(2));
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(onCancelledConfirmSpy).not.toHaveBeenCalled();
+      // functional.item3: cancelar devolve o foco ao trigger que abriu.
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
@@ -226,6 +233,7 @@ const onOpenChangeSpy = fn();
 
 export const Controlled: Story = {
   parameters: {
+    covers: ['functional.item7'],
     docs: {
       description: {
         story: 'Abertura controlada por estado externo via `bind:open`.',

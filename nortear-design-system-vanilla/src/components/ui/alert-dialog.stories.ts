@@ -124,6 +124,19 @@ export const Playground: Story = {
   // e não o que o consumidor escreve. Aqui vai a composição real das factories,
   // montada a partir dos args para acompanhar os controls.
   parameters: {
+    // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
+    // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
+    covers: [
+      'functional.item1',
+      'functional.item5',
+      'functional.item6',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'accessibility.item5',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AlertDialogArgs> }) => {
@@ -178,6 +191,11 @@ export const Playground: Story = {
       // está no DOM mas ainda conta como invisível. waitFor passa no primeiro
       // tick quando não há animação, então serve aos dois ambientes.
       await waitFor(() => expect(dialog).toBeVisible());
+      // O backdrop faz parte do contrato de abertura (functional.item1): sem ele
+      // o fundo continua clicável e a modalidade é só visual.
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).not.toBeNull();
       await expect(onOpenChange).toHaveBeenCalledWith(true);
     });
 

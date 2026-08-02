@@ -61,6 +61,7 @@ function buildDemo(opts: Options): HTMLElement {
 
 export const Destrutiva: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
@@ -93,6 +94,7 @@ export const Destrutiva: Story = {
 
 export const Neutra: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
@@ -126,6 +128,7 @@ export const Neutra: Story = {
 // testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
 export const DescricaoLonga: Story = {
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
@@ -167,6 +170,7 @@ export const DescricaoLonga: Story = {
 // (Cancel primeiro no DOM, visualmente abaixo do Action em mobile).
 export const Responsivo: Story = {
   parameters: {
+    covers: ['visual.item5'],
     chromatic: { viewports: [375, 1024] },
     docs: {
       description: {

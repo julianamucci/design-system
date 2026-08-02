@@ -110,6 +110,9 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
+    // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
+    // a varredura axe (contraste incluído) do estado aberto.
+    covers: ['accessibility.item6', 'accessibility.item7'],
     docs: {
       description: {
         story: 'Diálogo aberto programaticamente. Captura visual no Chromatic.',
@@ -151,6 +154,7 @@ export const Open: Story = {
 
 export const Confirmed: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
@@ -204,6 +208,7 @@ export const Confirmed: Story = {
 
 export const Cancelled: Story = {
   parameters: {
+    covers: ['functional.item3'],
     docs: {
       description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
     },
@@ -256,6 +261,15 @@ export const Cancelled: Story = {
 
 export const Controlled: Story = {
   parameters: {
+    covers: ['functional.item4'],
+    // createAlertDialog não recebe `open`: a factory é a dona do estado de
+    // abertura e só o expõe por onOpenChange — não existe prop para o
+    // consumidor renderizar o diálogo já aberto nem para forçar o fechamento.
+    // Esta story é o equivalente possível: trigger externo + callback.
+    coversNotApplicable: {
+      'functional.item7':
+        'createAlertDialog não expõe uma opção open — o estado de abertura vive na factory e só é observável por onOpenChange',
+    },
     docs: {
       description: {
         story: 'Abertura comandada por estado externo — o trigger fica fora do diálogo e o callback de mudança reporta cada transição.',

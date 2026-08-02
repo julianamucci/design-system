@@ -60,6 +60,19 @@ export const Playground: Story = {
   // função compilada (`<wrapper …/>`). O snippet vai explícito, montado a
   // partir dos args para acompanhar os controls.
   parameters: {
+    // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
+    // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
+    covers: [
+      'functional.item1',
+      'functional.item4',
+      'functional.item5',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'accessibility.item5',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: { open?: boolean } }) => {
@@ -127,6 +140,11 @@ export const Playground: Story = {
       // O painel entra animando (opacity 0 → 1). Sem waitFor a asserção roda no
       // primeiro quadro, quando toBeVisible() ainda reprova por opacity: 0.
       await waitFor(() => expect(dialog).toBeVisible());
+      // O backdrop faz parte do contrato de abertura (functional.item1): sem ele
+      // o fundo continua clicável e a modalidade é só visual.
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).not.toBeNull();
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 

@@ -94,6 +94,9 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
+    // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
+    // a varredura axe (contraste incluído) do estado aberto.
+    covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
       description: {
         story: 'Diálogo aberto com `defaultOpen`. Captura visual no Chromatic.',
@@ -192,6 +195,7 @@ export const Open: Story = {
 
 export const Confirmed: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
@@ -202,8 +206,13 @@ export const Confirmed: Story = {
       onConfirmSpy.mockClear();
       return { onConfirm: onConfirmSpy };
     },
+    // O trigger existe para que o retorno de foco ao fechar tenha destino —
+    // parte de functional.item2, não só o callback e o fechamento.
     template: `
       <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">Excluir item</Button>
+        </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
@@ -222,8 +231,12 @@ export const Confirmed: Story = {
       </AlertDialog>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
+    // `hidden: true`: a story nasce aberta, então o trigger já está sob
+    // aria-hidden quando a play começa. Continua sendo o mesmo nó para o foco.
+    const trigger = canvas.getByRole('button', { name: /Excluir item/i, hidden: true });
 
     await step('Diálogo começa aberto', async () => {
       const dialog = await body.findByRole('alertdialog');
@@ -239,10 +252,11 @@ export const Confirmed: Story = {
       await waitFor(() => expect(onConfirmSpy).toHaveBeenCalledTimes(1));
     });
 
-    await step('Confirmar também fecha o diálogo', async () => {
+    await step('Confirmar fecha o diálogo e devolve o foco ao trigger', async () => {
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
@@ -308,6 +322,7 @@ export const Cancelled: Story = {
 
 export const Controlled: Story = {
   parameters: {
+    covers: ['functional.item7'],
     docs: {
       description: {
         story: 'Abertura controlada por estado externo via `open` + `onUpdate:open`.',

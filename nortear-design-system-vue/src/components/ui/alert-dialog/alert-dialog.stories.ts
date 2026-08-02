@@ -68,6 +68,23 @@ const onConfirm = fn();
 const onCancel = fn();
 
 export const Playground: Story = {
+  parameters: {
+    // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
+    // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'functional.item4',
+      'functional.item5',
+      'functional.item6',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'accessibility.item5',
+      'visual.item1',
+    ],
+  },
   render: (args) => ({
     components: {
       AlertDialog,
@@ -131,6 +148,11 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal('alertdialog');
       await expect(dialog).toBeVisible();
+      // O backdrop faz parte do contrato de abertura (functional.item1): sem ele
+      // o fundo continua clicável e a modalidade é só visual.
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).not.toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await waitFor(() => expect(openedWith(true)).toBe(true));
     });
