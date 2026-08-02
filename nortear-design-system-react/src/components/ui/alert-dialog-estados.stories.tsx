@@ -35,6 +35,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Espera o portal do alert dialog sumir (ou ficar com data-state=closed). */
+async function waitForClosed(timeout = 1000) {
+  await waitFor(
+    () => {
+      const dialog = within(document.body).queryByRole("alertdialog");
+      if (dialog && dialog.getAttribute("data-state") !== "closed") {
+        throw new Error("dialog still open");
+      }
+    },
+    { timeout },
+  );
+}
+
 export const Closed: Story = {
   parameters: {
     docs: {
@@ -65,15 +78,22 @@ export const Closed: Story = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: /Excluir item/i });
-    await expect(trigger).toBeVisible();
-    // Base UI pode manter portal no DOM mesmo fechado; checar data-state
-    const dialog = within(document.body).queryByRole("alertdialog");
-    if (dialog) {
-      await expect(dialog).toHaveAttribute("data-state", "closed");
-    }
+
+    await step("Apenas o trigger está visível", async () => {
+      const trigger = canvas.getByRole("button", { name: /Excluir item/i });
+      await expect(trigger).toBeVisible();
+    });
+
+    await step("Nenhum conteúdo do diálogo foi renderizado", async () => {
+      await expect(
+        within(document.body).queryByRole("alertdialog"),
+      ).not.toBeInTheDocument();
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).toBeNull();
+    });
   },
 };
 
@@ -107,10 +127,20 @@ export const Open: Story = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async () => {
-    const dialog = await waitForPortal("alertdialog");
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAccessibleName(/Excluir item/i);
+  play: async ({ step }) => {
+    await step("Diálogo abre já montado e com backdrop", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      await expect(dialog).toBeVisible();
+      await expect(
+        document.querySelector('[data-slot="alert-dialog-overlay"]'),
+      ).not.toBeNull();
+    });
+
+    await step("Nome e descrição acessíveis vêm do Title e da Description", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      await expect(dialog).toHaveAccessibleName(/Excluir item/i);
+      await expect(dialog).toHaveAccessibleDescription(/removido de forma definitiva/i);
+    });
   },
 };
 
@@ -123,7 +153,7 @@ export const Confirmed: Story = {
     docs: {
       description: {
         story:
-          "Usuário confirma a ação clicando em Action — handler `onClick` é disparado e o diálogo fecha.",
+          "Usuário confirma a ação clicando em Action — handler `onClick` é disparado e o diálogo fecha. Enter com o Action focado produz o mesmo resultado.",
       },
     },
   },
@@ -157,7 +187,8 @@ export const Confirmed: Story = {
       </AlertDialog>
     );
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     await step("Diálogo está aberto", async () => {
       const dialog = await waitForPortal("alertdialog");
@@ -181,19 +212,38 @@ export const Confirmed: Story = {
         { timeout: 1000 }
       );
     });
+
+    await step("Enter com o Action focado confirma de novo", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /^Excluir$/i }));
+      await waitForPortal("alertdialog");
+      const action = await within(document.body).findByTestId("confirm-action");
+      action.focus();
+      await expect(action).toHaveFocus();
+      await userEvent.keyboard("{Enter}");
+      await waitFor(() => expect(onConfirm).toHaveBeenCalledTimes(2), {
+        timeout: 1000,
+      });
+      await waitForClosed();
+    });
   },
 };
+
+// Mesmo padrão do Confirmed: o spy precisa sobreviver ao re-render do Base UI.
+const onCancel = fn();
 
 export const Cancelled: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Usuário cancela — diálogo fecha e `onClick` do Cancel é disparado.",
+        story:
+          "Usuário cancela — diálogo fecha e `onClick` do Cancel é disparado. Space com o Cancel focado produz o mesmo resultado.",
       },
     },
   },
+  beforeEach: () => {
+    onCancel.mockClear();
+  },
   render: () => {
-    const onCancel = fn();
     return (
       <AlertDialog defaultOpen>
         <AlertDialogTrigger render={<Button variant="destructive" />}>
@@ -207,7 +257,9 @@ export const Cancelled: Story = {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel data-testid="cancel-action" onClick={onCancel}>
+              Cancelar
+            </AlertDialogCancel>
             <AlertDialogAction variant="destructive">
               Excluir
             </AlertDialogAction>
@@ -216,21 +268,35 @@ export const Cancelled: Story = {
       </AlertDialog>
     );
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-    await step("Cancel é clicado e diálogo fecha", async () => {
+    await step("Cancel é clicado, dispara o callback e o diálogo fecha", async () => {
       const cancel = await waitForPortal("button", { name: /Cancelar/i });
       await userEvent.click(cancel);
-      await waitFor(
-        () =>
-          expect(
-            within(document.body).queryByRole("alertdialog", { hidden: false }),
-          ).not.toBeInTheDocument(),
-        { timeout: 500 }
-      );
+      await waitFor(() => expect(onCancel).toHaveBeenCalledTimes(1), {
+        timeout: 1000,
+      });
+      await waitForClosed();
+    });
+
+    await step("Space com o Cancel focado cancela de novo", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /^Excluir$/i }));
+      await waitForPortal("alertdialog");
+      const cancel = await within(document.body).findByTestId("cancel-action");
+      cancel.focus();
+      await expect(cancel).toHaveFocus();
+      await userEvent.keyboard(" ");
+      await waitFor(() => expect(onCancel).toHaveBeenCalledTimes(2), {
+        timeout: 1000,
+      });
+      await waitForClosed();
     });
   },
 };
+
+// Spy de módulo para provar que o callback de mudança dispara em modo controlado.
+const onControlledOpenChange = fn();
 
 export const Controlled: Story = {
   parameters: {
@@ -241,6 +307,9 @@ export const Controlled: Story = {
       },
     },
   },
+  beforeEach: () => {
+    onControlledOpenChange.mockClear();
+  },
   render: () => {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
@@ -249,7 +318,13 @@ export const Controlled: Story = {
           <Button variant="destructive" onClick={() => setOpen(true)}>
             Abrir via estado externo
           </Button>
-          <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialog
+            open={open}
+            onOpenChange={(next) => {
+              onControlledOpenChange(next);
+              setOpen(next);
+            }}
+          >
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Controlado pelo pai</AlertDialogTitle>
@@ -286,17 +361,10 @@ export const Controlled: Story = {
       await expect(dialog).toBeVisible();
     });
 
-    await step("Escape fecha o diálogo controlado", async () => {
+    await step("Escape fecha o diálogo controlado e notifica o pai", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitFor(
-        () => {
-          const dialog = within(document.body).queryByRole("alertdialog");
-          if (dialog && dialog.getAttribute("data-state") !== "closed") {
-            throw new Error("dialog still open");
-          }
-        },
-        { timeout: 500 }
-      );
+      await waitForClosed(500);
+      await waitFor(() => expect(onControlledOpenChange).toHaveBeenCalledWith(false));
     });
   },
 };

@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composicoes canônicas: confirmação destrutiva e confirmação neutra.",
+          "Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.",
       },
     },
   },
@@ -34,6 +34,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Mesmo exemplo da seção Variantes / destructive da docs page.
 export const Destrutiva: Story = {
   parameters: {
     docs: {
@@ -50,60 +51,199 @@ export const Destrutiva: Story = {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
           <AlertDialogDescription>
-            Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
+            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">
-            Excluir conta
-          </AlertDialogAction>
+          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async () => {
-    const dialog = await waitForPortal("alertdialog");
-    await expect(dialog).toBeVisible();
-    const action = await waitForPortal("button", { name: /Excluir conta/i });
-    await expect(action).toHaveClass("nds-button-destructive");
+  play: async ({ canvasElement, step }) => {
+    await step("Diálogo abre com o conteúdo da variante destrutiva", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
+    });
+
+    await step("Trigger e Action compartilham a variante destructive", async () => {
+      // Com o diálogo aberto o trigger fica sob aria-hidden/inert, fora das
+      // queries por role — buscamos pelo slot.
+      const trigger = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-trigger"]',
+      );
+      const action = await waitForPortal("button", { name: /^Excluir$/i });
+      await expect(trigger).not.toBeNull();
+      await expect(trigger).toHaveTextContent("Excluir conta");
+      await expect(trigger).toHaveClass("nds-button-destructive");
+      await expect(action).toHaveClass("nds-button-destructive");
+    });
+
+    await step("Cancel usa a variante outline (hierarquia secundária)", async () => {
+      const cancel = await waitForPortal("button", { name: /^Cancelar$/i });
+      await expect(cancel).toHaveClass("nds-button-outline");
+    });
   },
 };
 
+// Mesmo exemplo da seção Variantes / default da docs page.
 export const Neutra: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          "Action com tokens padrão do Button. Use para confirmações que não são destrutivas (publicar, enviar, arquivar).",
+          "Action com tokens padrão do Button. Use para confirmações que não são destrutivas (sair, publicar, arquivar).",
       },
     },
   },
   render: () => (
     <AlertDialog defaultOpen>
       <AlertDialogTrigger asChild>
-        <Button>Publicar agora</Button>
+        <Button variant="outline">Sair da conta</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
+          <AlertDialogTitle>Sair da conta</AlertDialogTitle>
           <AlertDialogDescription>
-            Ao publicar, o conteúdo fica visível para todos os usuários. Você poderá editá-lo depois.
+            Você precisará entrar novamente para acessar seus dados.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Voltar</AlertDialogCancel>
-          <AlertDialogAction>Publicar</AlertDialogAction>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction>Sair</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async () => {
-    const dialog = await waitForPortal("alertdialog");
-    await expect(dialog).toBeVisible();
-    const action = await waitForPortal("button", { name: /^Publicar$/i });
-    await expect(action).toBeVisible();
+  play: async ({ step }) => {
+    await step("Diálogo abre com o conteúdo da variante neutra", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAccessibleName(/Sair da conta/i);
+    });
+
+    await step("Action usa a variante default, sem severidade destrutiva", async () => {
+      const action = await waitForPortal("button", { name: /^Sair$/i });
+      await expect(action).toHaveClass("nds-button-default");
+      await expect(action).not.toHaveClass("nds-button-destructive");
+    });
+  },
+};
+
+// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
+export const DescricaoLonga: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.",
+      },
+    },
+  },
+  render: () => (
+    <AlertDialog defaultOpen>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Excluir conta</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+          <AlertDialogDescription>
+            Todos os seus dados, arquivos enviados, integrações ativas e o histórico
+            completo de faturamento serão removidos permanentemente dos nossos
+            servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
+            fica disponível depois da confirmação.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
+  play: async ({ step }) => {
+    await step("Descrição longa continua ligada por aria-describedby", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      );
+      await expect(description).not.toBeNull();
+      await expect(dialog).toHaveAttribute("aria-describedby", description!.id);
+      await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
+    });
+
+    await step("Descrição ocupa mais de uma linha sem estourar o painel", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      )!;
+      const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
+      await expect(description.getBoundingClientRect().height).toBeGreaterThan(
+        lineHeight * 1.5,
+      );
+      await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+    });
+  },
+};
+
+// testes.visual.item5 — layout responsivo. O empilhamento dos botões vem de
+// `flex-direction: column-reverse` abaixo de 40rem (nds/alert-dialog.css), então
+// a captura precisa acontecer numa viewport estreita: daí os viewports do
+// Chromatic. A play verifica a ordem no DOM, que é o que produz o empilhamento
+// (Cancel primeiro no DOM, visualmente abaixo do Action em mobile).
+export const Responsivo: Story = {
+  parameters: {
+    chromatic: { viewports: [375, 1024] },
+    docs: {
+      description: {
+        story:
+          "Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.",
+      },
+    },
+  },
+  render: () => (
+    <AlertDialog defaultOpen>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Excluir conta</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+          <AlertDialogDescription>
+            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
+  play: async ({ step }) => {
+    await step("Footer segue a ordem Cancel → Action no DOM", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const footer = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-footer"]',
+      );
+      await expect(footer).not.toBeNull();
+      await expect(footer).toHaveClass("nds-alert-dialog-footer");
+      const labels = Array.from(footer!.querySelectorAll("button")).map((b) =>
+        b.textContent?.trim(),
+      );
+      await expect(labels).toEqual(["Cancelar", "Excluir"]);
+    });
+
+    await step("Painel respeita a margem lateral em qualquer largura", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const rect = dialog.getBoundingClientRect();
+      await expect(rect.width).toBeLessThanOrEqual(window.innerWidth);
+      await expect(rect.left).toBeGreaterThanOrEqual(0);
+    });
   },
 };
