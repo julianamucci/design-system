@@ -12,11 +12,14 @@ type PopoverTriggerProps = PopoverPrimitive.Trigger.Props & {
   children?: React.ReactNode
 }
 function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
+  // Sem `nativeButton={false}`: todos os call sites passam <Button>, que é um
+  // <button> nativo. Declarar o contrário faz o Base UI logar console.error em
+  // dev e aplicar role="button" + handlers de teclado redundantes. A prop só
+  // cabe quando o render é outro elemento — ver pagination.tsx, que renderiza <a>.
   if (asChild && React.isValidElement(children)) {
     return (
       <PopoverPrimitive.Trigger
         data-slot="popover-trigger"
-        nativeButton={false}
         render={children as React.ReactElement}
         {...(props as PopoverPrimitive.Trigger.Props)}
       />

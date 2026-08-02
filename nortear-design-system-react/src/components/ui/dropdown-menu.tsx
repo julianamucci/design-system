@@ -17,11 +17,14 @@ type DropdownMenuTriggerProps = MenuPrimitive.Trigger.Props & {
   children?: React.ReactNode
 }
 function DropdownMenuTrigger({ asChild, children, ...props }: DropdownMenuTriggerProps) {
+  // Sem `nativeButton={false}`: todos os call sites passam <Button>, que é um
+  // <button> nativo. Declarar o contrário faz o Base UI logar console.error em
+  // dev e aplicar role="button" + handlers de teclado redundantes. A prop só
+  // cabe quando o render é outro elemento — ver pagination.tsx, que renderiza <a>.
   if (asChild && React.isValidElement(children)) {
     return (
       <MenuPrimitive.Trigger
         data-slot="dropdown-menu-trigger"
-        nativeButton={false}
         render={children as React.ReactElement}
         {...(props as MenuPrimitive.Trigger.Props)}
       />
