@@ -17,7 +17,17 @@ defineProps<{
 }>();
 
 function scrollTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  // Sem mover o foco o leitor de tela não continua a leitura a partir da seção
+  // e o Tab seguinte volta para o próximo item do menu. tabindex="-1" aplicado
+  // no clique deixa o HTML das seções intacto; preventScroll deixa a rolagem
+  // suave acontecer enquanto o foco já se move.
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  target.focus({ preventScroll: true });
 }
 </script>
 

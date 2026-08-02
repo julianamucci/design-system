@@ -41,7 +41,12 @@ defineProps<{
       class="nds-stack"
       data-spacing="sm"
     >
-      <h1 class="nds-text-h1 nds-text-foreground">
+      <!-- id estável: o <main> do DocsPageLayout aponta para cá via
+           aria-labelledby, então o leitor anuncia "principal, <título>". -->
+      <h1
+        id="docs-page-title"
+        class="nds-text-h1 nds-text-foreground"
+      >
         {{ title }}
       </h1>
       <p class="nds-text-lead nds-text-muted-foreground nds-max-w-prose">

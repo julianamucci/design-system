@@ -651,14 +651,18 @@ const compositionItems = computed(() => [
               <SidebarTrigger @click.capture="markToggleSource('button')" />
               <span class="nds-text-body nds-text-muted-foreground">{{ tContent('demonstration.labels.dashboard') }}</span>
             </header>
-            <main
+            <!-- <div>, não <main>: a docs page já tem o landmark principal
+                 (DocsPageLayout) e dois <main> violam landmark-no-duplicate-main.
+                 No app real este slot é um <main> — é o que o snippet abaixo
+                 (codeVariantSidebar) documenta. -->
+            <div
               id="main-content"
               class="nds-p-4"
             >
               <p class="nds-text-body">
                 {{ tContent('description') }}
               </p>
-            </main>
+            </div>
           </SidebarInset>
         </SidebarProvider>
       </div>
