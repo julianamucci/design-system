@@ -137,7 +137,9 @@ export const Open: Story = {
 
     await step('Diálogo já nasce aberto e com foco no Cancel', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      await waitFor(() => expect(dialog).toBeVisible());
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await waitFor(() => expect(cancel).toHaveFocus());
     });
@@ -158,7 +160,7 @@ export const Open: Story = {
     await step('Space no Cancel também ativa o botão e fecha o diálogo', async () => {
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      await waitFor(() => expect(dialog).toBeVisible());
 
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await waitFor(() => expect(cancel).toHaveFocus());
@@ -171,7 +173,7 @@ export const Open: Story = {
     await step('Reabre para deixar o estado aberto na captura visual', async () => {
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     // O overlay do alertdialog é inerte por decisão de acessibilidade (WAI-ARIA
@@ -182,7 +184,8 @@ export const Open: Story = {
       const overlay = document.querySelector<HTMLElement>('[data-slot="alert-dialog-overlay"]');
       await expect(overlay).toBeInTheDocument();
       await userEvent.click(overlay!);
-      await expect(await body.findByRole('alertdialog')).toBeVisible();
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
     });
   },
 };
@@ -224,7 +227,9 @@ export const Confirmed: Story = {
 
     await step('Diálogo começa aberto', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     await step('Clique em Excluir dispara o handler do consumidor', async () => {
@@ -280,7 +285,9 @@ export const Cancelled: Story = {
 
     await step('Diálogo começa aberto', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     await step('Clique em Cancelar dispara só o handler de cancelamento', async () => {
@@ -351,7 +358,9 @@ export const Controlled: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      await waitFor(() => expect(dialog).toBeVisible());
     });
 
     await step('Escape emite a mudança de estado e o pai fecha o diálogo', async () => {

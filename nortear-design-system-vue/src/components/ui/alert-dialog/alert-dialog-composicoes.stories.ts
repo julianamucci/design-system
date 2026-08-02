@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -82,7 +82,9 @@ export const Destrutiva: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+    // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+    await waitFor(() => expect(dialog).toBeVisible());
 
     const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
     await expect(action).toHaveClass('nds-button-destructive');
@@ -129,10 +131,12 @@ export const Neutra: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+    // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+    await waitFor(() => expect(dialog).toBeVisible());
 
     const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
-    await expect(action).toBeVisible();
+    await waitFor(() => expect(action).toBeVisible());
     // A severidade vem do Button: na composição neutra o Action não pode
     // herdar os tokens destrutivos.
     await expect(action).not.toHaveClass('nds-button-destructive');

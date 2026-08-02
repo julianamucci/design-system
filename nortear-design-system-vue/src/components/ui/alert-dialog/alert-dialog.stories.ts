@@ -118,7 +118,9 @@ export const Playground: Story = {
     await step('Diálogo abre ao clicar no trigger, com role alertdialog', async () => {
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
+      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(dialog).toHaveAttribute('role', 'alertdialog');
     });
 
