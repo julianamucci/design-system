@@ -87,7 +87,9 @@
         </div>
       </div>
 
-      <h1 class="nds-text-h1 nds-text-foreground">
+      <!-- id estável: alvo do aria-labelledby do <main> abaixo, mesmo id usado
+           pelo DocsHeader nas docs pages de componente. -->
+      <h1 id="docs-page-title" class="nds-text-h1 nds-text-foreground">
         {$tStore('title')}
       </h1>
 
@@ -96,13 +98,26 @@
       </p>
     </header>
 
-    {@render extra?.()}
+    <!-- Landmark de conteúdo: as páginas de Foundations não usam o
+         DocsPageLayout, então o <main> precisa vir daqui. tabindex="-1"
+         permite foco programático sem entrar na ordem de tabulação;
+         aria-labelledby aponta para o <h1> acima. As classes de stack
+         repetem as do container para o espaçamento não mudar. -->
+    <main
+      id="docs-main-content"
+      tabindex="-1"
+      aria-labelledby="docs-page-title"
+      class="ds-docs nds-stack"
+      data-spacing="xl"
+    >
+      {@render extra?.()}
 
-    {#each sections as [key, value] (key)}
-      <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-        <FoundationSection node={value} level={2} />
-      </section>
-    {/each}
+      {#each sections as [key, value] (key)}
+        <section class="nds-stack nds-docs-section-divider" data-spacing="md">
+          <FoundationSection node={value} level={2} />
+        </section>
+      {/each}
+    </main>
 
   </div>
 </div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { deriveSlugFromUrl } from '@/lib/docs-tracking';
+
   export interface DocsNavSection {
     id: string;
     label: string;
@@ -17,6 +19,14 @@
   }
 
   const { groups, activeSection, componentSlug }: Props = $props();
+
+  /**
+   * `componentSlug` é opcional por contrato: quando a página não o passa, o
+   * observer (`mountDocsTracking`) deriva o slug do `?id=` do iframe. O nav usa
+   * a MESMA derivação para nunca emitir `data-track-id` ausente — sem ele o
+   * `docs_nav_click` sairia com `section_id` vazio nas páginas que omitem o slug.
+   */
+  const slug = $derived(componentSlug ?? deriveSlugFromUrl());
 
   /**
    * Rola até a seção *e* move o foco para ela. Sem o focus() o cursor de
@@ -47,7 +57,7 @@
               class="nds-docs-nav-button"
               aria-current={activeSection === section.id ? 'location' : undefined}
               data-track="nav"
-              data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
+              data-track-id={`${slug}:nav:${section.id}`}
               data-track-label={section.label}
               onclick={() => goToSection(section.id)}
             >
