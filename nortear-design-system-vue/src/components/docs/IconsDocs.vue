@@ -118,10 +118,15 @@ onUnmounted(() => {
     class="sb-unstyled nds-flex-1 nds-w-full ds-docs"
     style="height: 100%; overflow: auto"
   >
-    <div
+    <!-- Landmark de conteúdo (mesmo padrão do DocsPageLayout): esta página monta
+         layout próprio, então o <main> é este wrapper — mesmas classes e mesma
+         posição na árvore, sem mudança visual. -->
+    <main
       class="nds-p-8 nds-stack"
       data-spacing="xl"
       style="max-width: 72rem; margin-inline: auto"
+      tabindex="-1"
+      aria-labelledby="docs-page-title"
     >
       <!-- ── Header ──────────────────────────────────────────────────────── -->
       <header
@@ -150,7 +155,11 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <h1 class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+        <!-- id estável: o <main> acima aponta para cá via aria-labelledby. -->
+        <h1
+          id="docs-page-title"
+          class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
+        >
           {{ t('title') }}
         </h1>
 
@@ -381,6 +390,6 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
           </button>
         </li>
       </ul>
-    </div>
+    </main>
   </div>
 </template>
