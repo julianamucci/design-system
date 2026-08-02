@@ -134,6 +134,30 @@ Após coletar, **não releia** nada nos passos seguintes.
 - Sub-stories (estados, modos, composições): no mínimo um teste de "renderiza e responde a interação básica"
 - Composições com ícones/badges: testar acessibilidade via `getByRole("button", { name: /text/ })` (validando que o texto, não o ícone, é a label acessível)
 
+**2e2. A asserção pode estar guardando o BUG.** Uma story verde não prova que o
+comportamento está certo — pode estar afirmando o defeito. Rejeite:
+- asserção que passa **por causa** da falha (ex.: verificar que o diálogo
+  continua no DOM depois de confirmar);
+- comentário documentando limitação de lib como se fosse contrato — limitação
+  aceita em silêncio vira contrato por omissão. Se existir, exija item
+  correspondente no `FIXES-NEEDED.md`;
+- spy (`fn()`) criado **dentro** do `render`: é inalcançável pelo `play` e
+  deixa a aba Actions vazia. Tem que ser de escopo de módulo;
+- story cujo propósito é um estado visual e cuja `play` termina em outro
+  estado — o Chromatic fotografa o final (ex.: `Open` que fecha no fim).
+
+**2e3. Confira o comportamento na FONTE da lib, não na documentação.** Quando
+o texto e a implementação divergirem, a implementação costuma estar certa e o
+texto desatualizado. Verifique no `node_modules` antes de "corrigir" o código —
+e antes de propor mudança no conteúdo compartilhado, confirme se a afirmação é
+falsa nas 4 stacks ou se é divergência idiomática de uma lib (aí o texto vira
+API-neutro, não é apagado).
+
+**2e4. Animação nos testes.** O browser dos testes emula
+`prefers-reduced-motion` — animações não rodam. Asserção de visibilidade ou de
+remoção em elemento animado usa `waitFor`; medir no primeiro quadro é racy em
+qualquer browser.
+
 **2f. Cobertura equivalente entre as 4 stacks**:
 Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:
 
@@ -206,6 +230,14 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 - Links externos: `target="_blank" rel="noopener noreferrer"`
 - Toda âncora do `DocsNav` tem `<section id="...">`
 
+**3e2. Leitor de tela** — nada aqui falha em teste ou axe; só aparece no NVDA:
+- Um `<main tabindex="-1" aria-labelledby="<id do h1>">` por página, inclusive
+  nas de layout próprio (foundations, catálogos). Zero `<main>` aninhado.
+- Nenhuma live region (`role="alert"`, `aria-live`) em conteúdo estático.
+- Clicar num item do `DocsNav` move o foco para a seção, não só rola.
+- Snippet renderizado como HTML não pode virar controle real: procure
+  `<select>`/`<textarea>`/`<input>` vindos de string de código ou de prosa.
+
 **3f. Tokenização** (do Grep do Passo 1): zero `h-5` a `h-12` / `size-5` a `size-10` em UI primitives. Exceções: `[&_svg]:size-4`, `min-h-16`, `px/gap/py-*`. Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
 **3g. Tipografia + tabelas** (do Grep do Passo 1): zero `text-[9px]`/`text-[10px]` em corpo, zero tabelas dentro de `<ComponentDemo>`, zero wrappers com `overflow-hidden` (correto: `border rounded-xl overflow-x-auto p-4 shadow-sm`).
@@ -224,6 +256,13 @@ Nenhum check anterior ligava os dois artefatos, e eles divergiram em silêncio: 
 ### Passo 4 — Identificar gaps + corrigir
 
 Para gaps diretos (adicionar play function, corrigir classe): corrija. Para gaps de criação inteira: descreva e crie se for parte do escopo do `stack`.
+
+**Ao corrigir texto compartilhado**: varra TODAS as chaves pela afirmação
+errada e confira **quais o container realmente renderiza** — chave não
+consumida é correção que não chega ao usuário. Inclua `seo.*` na varredura.
+
+**Story nova quebra paridade**: criar story só numa stack gera
+`coverage_divergence`. Ou nasce nas 4, ou vira item do `FIXES-NEEDED.md`.
 
 ---
 
