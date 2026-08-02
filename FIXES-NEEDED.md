@@ -556,3 +556,58 @@ Referência aprovada pela dona: animação do popover do animate-ui
 - react `alert-dialog`: console avisa `<button> cannot contain a nested
   <button>` e prop `asChild` vazando para o DOM. Não quebra teste, mas
   `asChild` inerte é o mesmo bug já varrido no svelte — candidato a lote.
+
+## Lote alert-dialog (2026-08-01) — dois bugs reportados pela dona
+
+`292c033e` react · `97456749` vue · `05332985` svelte · `b38d0582` react extra.
+
+### 1. React: botão sem estilo por fora do botão correto
+
+`AlertDialogTrigger` declarava `asChild?: boolean` e **nunca usava a prop** —
+repassava tudo ao Base UI, que renderizava o próprio `<button>` envolvendo o
+nosso, e ainda vazava `asChild` como atributo no DOM. Varredura achou **3
+primitivos com o mesmo defeito**: `alert-dialog`, `dialog`, `collapsible`
+(corretos: `popover`, `dropdown-menu`, `hover-card`).
+
+**Resolveu dívida axe já catalogada**: as páginas alert-dialog e collapsible
+tinham `nested-interactive` E `target-size` no modo todo — as duas rules eram
+o mesmo bug (botão dentro de botão; o botão fantasma era pequeno demais).
+**As duas viraram portão de axe.**
+
+Achado adicional: `popover.tsx` e `dropdown-menu.tsx` passavam
+`nativeButton={false}` com todos os 31 call sites usando `<Button>` nativo —
+o Base UI logava `console.error` em dev e aplicava `role="button"` + handlers
+de teclado redundantes. Removido. `pagination.tsx` mantém a prop: lá o render
+é um `<a>`, que é o caso legítimo dela.
+
+### 2. Vue e Svelte: dialogs abrindo sozinhos no load
+
+Previews da docs page usavam `default-open` (vue, 6×) e `<AlertDialog open>`
+(svelte, 6×). Como o componente renderiza em portal com overlay modal, cada
+preview aberto cobria a página e eles empilhavam. React e Vanilla nunca
+tiveram o problema porque seus previews mostram o **gatilho fechado**.
+Convergido: vue ganhou `AlertDialogDemo.vue` (equivalente ao
+`buildAlertDialogDemo` do vanilla) e svelte reusou o `AlertDialogStory.svelte`
+que já existia.
+
+### 3. `nds-bg-destructive` é inerte sobre botões (achado do lote)
+
+`.nds-bg-destructive` (colors.css) e `.nds-button-default` (button.css) têm a
+MESMA especificidade, e `button.css` é importado depois no `index.css` — a
+variante do botão vence. O `AlertDialogAction class="nds-bg-destructive"` das
+docs pages renderizava com fundo primary. Corrigido em react e vue com
+`variant="destructive"` (inclusive nos snippets, que ensinavam a classe morta).
+
+- [ ] **Pendente**: a mesma classe é usada em `ContextMenuDocs`, `SidebarDocs`
+  e no container `DocsDoDont` de várias stacks. Sobre elemento que NÃO é botão
+  a classe funciona — cada uso precisa ser verificado antes de trocar.
+
+### Falhas pré-existentes confirmadas por stash (não regressões)
+
+- react `dialog-composicoes > Profile Edit`: `input` presente mas não visível.
+  **Provável mesma causa raiz da animação congelada em headless** — o
+  `nds-dialog-zoom-in` anima opacidade 0 → 1 e trava no quadro zero, então o
+  conteúdo do dialog nunca fica "visível" para o jest-dom. Fix provável:
+  `waitFor` na asserção, como foi feito no alert.
+- react `dropdown-menu-composicoes`: 4 falhas (Com Label, Com Checkbox Items,
+  Com Radio Group) idênticas com o primitivo em stash.
