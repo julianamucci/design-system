@@ -699,3 +699,71 @@ determinístico e ainda exercita o caminho de quem pede menos movimento.
   stacks rodam em paralelo (é o caso do CI). Virtualizar/paginar o grid
   resolveria de vez — e destravaria também o axe, hoje desligado nessa página
   no react.
+
+## /quality alert-dialog (2026-08-02) — audit zerado, 4 stacks
+
+`867cc2a5` vanilla · `70d0cf6c` vue · `a6b801ea` react · `969aef01` svelte
+(auditoria) + `2888ffd3` `71369a7b` `3d5c4f39` (paridade das 2 stories novas).
+
+10 stories por stack (paridade), 100% com play, `audit.mjs --category
+quality` retorna `[]`. Asserções do componente: ~70 → ~180.
+
+### Bug real encontrado — teclado inoperante no Svelte
+
+`Enter` e `Espaço` **não ativavam** Action/Cancel: o `DialogCloseState` do
+bits-ui trata as teclas no próprio `onkeydown`, fecha direto e **nunca emite
+`click`** — o callback do consumidor só rodava com mouse. Confirmação
+inoperável por teclado (WCAG 2.1.1), invisível para o axe. Corrigido com
+ponte keydown→onclick nos dois primitivos. **Só apareceu porque a skill exige
+verificar tecla a tecla** — a lista documentada tinha 5 teclas e só `Escape`
+era testada nas 4 stacks.
+
+### Padrões que se repetiram nas 4
+
+- `fn()` criado dentro do `render`: invisível para a play E para a aba
+  Actions. Vira spy de módulo.
+- ARIA documentado mas verificado só por `toHaveAccessibleName` (indireto):
+  agora resolve os ids e compara com o texto real.
+- vue: a story `Open` **fechava o diálogo no fim da play** — o Chromatic
+  fotografava o estado fechado justamente na story do estado aberto.
+
+### PENDENTE — conteúdo compartilhado contradiz as 4 implementações
+
+Cada stack verificou na fonte da sua lib. Precisa de decisão (recomendação:
+**corrigir o texto, não o código** — a implementação está certa nos 4 casos):
+
+- [ ] **"Clique no overlay fecha"** (`functional.item6`, `accessibility.item5`,
+  `states.cancelled.trigger`) — falso nas 4. react:
+  `disablePointerDismissal = isAlertDialog || prop` · vue:
+  `withModifiers(..., ['prevent'])` · svelte: `interactOutsideBehavior =
+  "ignore"` · vanilla: decisão comentada na factory. É o comportamento
+  CORRETO por WAI-ARIA APG (alert dialog exige escolha explícita).
+- [ ] **`aria-modal` documentado** — o Base UI não emite; isola o fundo com
+  `aria-hidden` + `data-base-ui-inert` nos irmãos.
+- [ ] **"Foco inicial em Cancelar"** (`functional.item1`, `states.open.behavior`,
+  `accessibility.item3`, `notes.tip1`) — as libs focam o painel
+  (`tabindex=-1`); o primeiro Tab leva ao Cancelar.
+- [ ] **`defaultOpen` na tabela de props** — não existe no bits-ui
+  (`DialogRootProps` = open/onOpenChange/onOpenChangeComplete/children).
+
+Conduta a uniformizar junto: vanilla, react e svelte **codificaram** o
+comportamento real em asserção; o vue deixou sem, para não cristalizar a
+contradição antes da decisão.
+
+### Outras pendências levantadas (menores)
+
+- [ ] `docs/shared/styles/nds/alert-dialog.css` (cabeçalho) diz "sem
+  Escape-to-close" — obsoleto, a factory fecha com Escape.
+- [ ] Vanilla não emite `data-slot` na descrição (só header/footer/content):
+  seletor que funciona em 3 stacks falha na 4ª.
+- [ ] Rótulos das composições divergem entre stories e docs page nas 4
+  stacks (stories: "Excluir sua conta?" / "Publicar agora"; docs page:
+  "Excluir conta" / "Sair da conta"). O react alinhou os dele à docs page;
+  as outras 3 mantiveram os próprios. Mexe em baseline do Chromatic.
+- [ ] Tabela de tokens lista utilitários Tailwind mortos (`bg-black/80`,
+  `bg-background`, `border`, `sm:rounded-lg`) — resíduo da migração `.nds-*`,
+  idêntico nas 4.
+- [ ] `accessibility.aria.*` e `accessibility.screenReader.*` do JSON são
+  conteúdo morto: o container `DocsAccessibility` só aceita
+  `title/summary/items/keyboardTitle/keyboardItems`. Afeta todas as docs
+  pages, não só esta.
