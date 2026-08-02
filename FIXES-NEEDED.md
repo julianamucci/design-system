@@ -869,3 +869,61 @@ o bug 1 continua: "Ir para o conteúdo" não tem alvo nessas páginas.
 - [ ] `AccordionDocs` (vue, e provavelmente outras) não passa `componentSlug`
   ao `DocsPageLayout` — os botões do nav ficam sem `data-track-id`, então a
   navegação por seção não é rastreada nessas páginas.
+
+## Foundations com landmark + rastreio de navegação — RESOLVIDO (2026-08-02)
+
+`01c09bda` vanilla · `4b1bf502` svelte · `d97a44ea` vue · `4ee26e55` react.
+
+### A. `<main>` nas Foundations (16/16 por stack)
+
+Fecha a pendência do lote anterior. Descoberta comum às 4: as Foundations não
+são um caminho só — o renderer cobre 14 páginas, e **`IconsDocs` e
+`ThemeColorsDocs` montam layout próprio**. Corrigir só o renderer deixaria 2
+páginas sem landmark; as 4 stacks varreram e pegaram as três formas.
+
+Diferença de árvore registrada pelo vanilla: nas Foundations o `<header>` fica
+DENTRO do `<main>` (no `DocsPageLayout` é irmão). Válido, e evita reordenar o
+DOM só para criar o landmark.
+
+### B. BUG DE ANALYTICS — `docs_nav_click` reportava sempre `section_id: 'nav'`
+
+Encontrado ao medir o escopo dos slugs, não pelo sintoma. O contrato do id é
+`{component}:{section}:{element}` e o exemplo canônico é `alert:nav:anatomia`
+— o destino está no 3º segmento. Mas o `docs-tracking.ts` das 4 fazia:
+
+```ts
+const section = parts[1] ?? '';           // 'nav'
+case 'nav': section_id: section || element
+```
+
+Ou seja, **todo evento de navegação reportava `'nav'`**. O evento disparava,
+nada falhava, e o relatório era inútil: não dava para saber para qual seção o
+usuário foi. Corrigido para `element || section` nas 4.
+
+### B2. Nav sem `data-track-id` — corrigido SEM editar 108 páginas
+
+Medição: 24 páginas em react, 20 em vue, 21 em svelte e 44 em vanilla não
+passam `componentSlug` ao `DocsPageLayout`. A correção mecânica (editar as
+108) seria ERRADA: a arquitetura define o slug como opcional e derivado do
+`?id=` do iframe. O `DocsNav` passou a usar a mesma derivação
+(`deriveSlugFromUrl`, agora exportada) como fallback e emite `data-track-id`
+sempre.
+
+**Armadilha de medição** (errei e corrijo aqui): o agent do react reportou "só
+4 páginas sem slug" — falso. `componentSlug` aparece em quase toda página, mas
+no `useSeoEffect` e nos section components (`DocsVariants`,
+`DocsCompositions`), **não** no layout. O vue achou o mesmo na `AccordionDocs`.
+Contar ocorrência no arquivo dá número errado; é preciso olhar a invocação do
+layout.
+
+### Provas novas (por stack, em `docs-nav-foco/focus.stories.*`)
+
+As 4 chegaram independentemente à mesma ideia: **substituir o `gtag` por um
+coletor** e provar que o `docs_nav_click` sai com o destino real, não com
+`'nav'`. Não é asserção de atributo — é do evento que chegaria ao GA4. Como
+nenhuma stack tem teste unitário de `docs-tracking`, essa é a única trava.
+Também cobrem: um `<main>` nomeado nas Foundations e nas 2 de layout próprio,
+e id de 3 partes em página que NÃO passa slug.
+
+docs-smoke: vanilla 64/64 · react 63/63 · svelte 62/62 · vue 62/63 (Icons por
+timeout sob carga — passa isolada em 64,7s). svelte-check 351 (baseline).
