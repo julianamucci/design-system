@@ -87,5 +87,8 @@ export const Neutra: Story = {
     await expect(dialog).toBeVisible();
     const action = await body.findByRole('button', { name: /^Publicar$/i });
     await expect(action).toBeVisible();
+    // O ponto da variante neutra: a confirmação NÃO herda a severidade destrutiva.
+    await expect(action).not.toHaveClass('nds-button-destructive');
+    await expect(dialog).toHaveAccessibleName(/Publicar este conteúdo/i);
   },
 };

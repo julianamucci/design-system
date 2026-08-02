@@ -25,6 +25,7 @@
     tone?: Tone;
     onConfirm?: () => void;
     onCancel?: () => void;
+    onOpenChange?: (open: boolean) => void;
   }
 
   let {
@@ -38,6 +39,7 @@
     tone = 'destructive',
     onConfirm,
     onCancel,
+    onOpenChange,
   }: Props = $props();
 
   // Variante do Button, não classe de fundo crua: bg-destructive e
@@ -45,7 +47,7 @@
   const actionVariant = $derived(tone === 'destructive' ? 'destructive' : 'default');
 </script>
 
-<AlertDialog bind:open>
+<AlertDialog bind:open {onOpenChange}>
   <AlertDialogTrigger>
     {#snippet child({ props })}
       <Button {...props} variant={triggerVariant}>{triggerLabel}</Button>

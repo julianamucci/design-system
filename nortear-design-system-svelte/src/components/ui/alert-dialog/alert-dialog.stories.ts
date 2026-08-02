@@ -25,26 +25,35 @@ const meta = {
     onOpenChange: {
       control: false,
       description: 'Callback disparado quando o diálogo abre ou fecha.',
-      table: { type: { summary: '(open: boolean) => void' } },
+      table: { type: { summary: '(open: boolean) => void' }, defaultValue: { summary: '—' } },
     },
     onOpenChangeComplete: {
       control: false,
       description: 'Callback disparado quando a transição de abertura ou fechamento termina.',
-      table: { type: { summary: '(open: boolean) => void' } },
+      table: { type: { summary: '(open: boolean) => void' }, defaultValue: { summary: '—' } },
     },
     children: {
       control: false,
       description: 'Snippet de composição: Trigger, Content, Header, Footer, Cancel e Action.',
-      table: { type: { summary: 'Snippet' } },
+      table: { type: { summary: 'Snippet' }, defaultValue: { summary: '—' } },
     },
   },
   args: {
     open: false,
+    // Único callback da raiz que o wrapper da story encaminha — popula a aba
+    // Actions e permite asseverar a notificação de mudança no play.
+    onOpenChange: fn(),
   },
 } satisfies Meta<typeof AlertDialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// Handlers do wrapper (não são props da raiz, logo ficam fora de `args`/`argTypes`
+// para não poluir a aba API Reference). No escopo do módulo para não recriar
+// spies a cada re-render disparado pelos controls.
+const playgroundConfirm = fn();
+const playgroundCancel = fn();
 
 export const Playground: Story = {
   // Sem docgen, o gerador de source monta a tag a partir do nome interno da
@@ -97,11 +106,12 @@ export const Playground: Story = {
     Component: AlertDialogStory,
     props: {
       open: args.open,
-      onConfirm: fn(),
-      onCancel: fn(),
+      onOpenChange: args.onOpenChange,
+      onConfirm: playgroundConfirm,
+      onCancel: playgroundCancel,
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
@@ -110,34 +120,67 @@ export const Playground: Story = {
       await expect(trigger).toBeInTheDocument();
     });
 
-    await step('Diálogo abre ao clicar no trigger', async () => {
+    await step('Diálogo abre ao clicar no trigger e notifica a mudança', async () => {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toBeVisible();
+      await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 
-    await step('Diálogo tem role alertdialog', async () => {
+    await step('Content expõe role alertdialog e aria-modal', async () => {
       const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toHaveAttribute('role', 'alertdialog');
+      await expect(dialog).toHaveAttribute('aria-modal', 'true');
     });
 
-    await step('Título e descrição são acessíveis', async () => {
+    await step('aria-labelledby e aria-describedby apontam para Title e Description', async () => {
       const dialog = await body.findByRole('alertdialog');
+      const labelledBy = dialog.getAttribute('aria-labelledby');
+      const describedBy = dialog.getAttribute('aria-describedby');
+      await expect(labelledBy).toBeTruthy();
+      await expect(describedBy).toBeTruthy();
+      await expect(document.getElementById(labelledBy!)).toHaveTextContent(/Excluir sua conta/i);
+      await expect(document.getElementById(describedBy!)).toHaveTextContent(
+        /Essa ação é permanente/i
+      );
       await expect(dialog).toHaveAccessibleName(/Excluir sua conta/i);
     });
 
-    await step('Escape fecha o diálogo', async () => {
+    await step('Foco inicial fica no painel do diálogo', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toHaveFocus());
+    });
+
+    await step('Tab percorre Cancelar e depois a ação de confirmação', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const scope = within(dialog);
+      await userEvent.tab();
+      await expect(scope.getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+      await userEvent.tab();
+      await expect(scope.getByRole('button', { name: /Excluir conta/i })).toHaveFocus();
+    });
+
+    await step('Shift+Tab devolve o foco ao Cancelar', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await userEvent.tab({ shift: true });
+      await expect(within(dialog).getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+    });
+
+    await step('Focus trap: Tab repetido nunca sai do diálogo', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      for (let i = 0; i < 4; i += 1) {
+        await userEvent.tab();
+        await expect(dialog.contains(document.activeElement)).toBe(true);
+      }
+    });
+
+    await step('Escape fecha o diálogo e devolve o foco ao trigger', async () => {
       await userEvent.keyboard('{Escape}');
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('alertdialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('dialog still open');
-          }
-        },
-        { timeout: 500 }
-      );
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
+      await expect(args.onOpenChange).toHaveBeenCalledWith(false);
+      const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };

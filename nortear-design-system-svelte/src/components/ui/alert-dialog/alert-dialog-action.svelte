@@ -15,11 +15,29 @@
 		class: className,
 		variant = "default",
 		size = "default",
+		onclick,
+		onkeydown,
 		...restProps
 	}: AlertDialogPrimitive.ActionProps & {
 		variant?: ButtonVariant;
 		size?: ButtonSize;
 	} = $props();
+
+	// O `DialogCloseState` do bits-ui trata Enter/Espaço no próprio `onkeydown`:
+	// dá `preventDefault()` e fecha direto, sem emitir `click`. Sem esta ponte o
+	// `onclick` do consumidor só rodava com mouse — a confirmação era inoperável
+	// por teclado (WCAG 2.1.1) mesmo com o diálogo fechando.
+	//
+	// A ordem espelha o caminho do clique: handler do consumidor primeiro,
+	// fechamento depois; `preventDefault()` no handler mantém o diálogo aberto.
+	function handleKeydown(
+		event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }
+	) {
+		onkeydown?.(event);
+		if (event.defaultPrevented) return;
+		if (event.key !== "Enter" && event.key !== " ") return;
+		onclick?.(event as unknown as MouseEvent & { currentTarget: EventTarget & HTMLButtonElement });
+	}
 </script>
 
 <!--
@@ -39,5 +57,7 @@
 	bind:ref
 	data-slot="alert-dialog-action"
 	class={cn(buttonVariants({ variant, size }), "cn-alert-dialog-action", className)}
+	{onclick}
+	onkeydown={handleKeydown}
 	{...restProps}
 />
