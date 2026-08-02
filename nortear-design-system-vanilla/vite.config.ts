@@ -38,15 +38,10 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
-            // reducedMotion: em Chromium headless as animações de opacity e
-            // transform NÃO avançam — ficam presas no quadro zero com
-            // playState "running". Qualquer elemento que entre animando fica
-            // em opacity: 0 para sempre e o teste o considera invisível
-            // (medido: alert-dialog e dialog falhavam por isso). Emulando
-            // reduced-motion, o bloco @media já existente no CSS desliga as
-            // animações e o teste vira determinístico — e de quebra exercita
-            // o caminho que usuários com essa preferência realmente veem.
+            // Sem emulação de prefers-reduced-motion: as animações rodam de
+            // verdade, como para a maioria dos usuários. Asserção de abertura
+            // de portal usa waitForPortal() (src/lib/wait-for-portal.ts).
+            provider: playwright({}),
             instances: [{ browser: 'chromium' }],
           },
         },

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
@@ -102,7 +103,7 @@ export const Playground: Story = {
         const trigger = canvas.getByRole('button', { name: new RegExp(args.triggerLabel, 'i') });
         await userEvent.hover(trigger);
         await waitForOpen();
-        const tip = await body.findByRole('tooltip');
+        const tip = await waitForPortal('tooltip');
         await expect(tip).toBeVisible();
         await expect(tip.textContent).toMatch(new RegExp(args.content.slice(0, 6), 'i'));
       });

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 
@@ -79,8 +80,7 @@ export const Destrutiva: Story = {
       tone: 'destructive',
     }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
+    const dialog = await waitForPortal('alertdialog');
     // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
     // no DOM mas ainda conta como invisível. waitFor passa no primeiro tick
     // quando não há animação, então serve aos dois ambientes.
@@ -112,8 +112,7 @@ export const Neutra: Story = {
       tone: 'default',
     }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
+    const dialog = await waitForPortal('alertdialog');
     // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
     // no DOM mas ainda conta como invisível.
     await waitFor(() => expect(dialog).toBeVisible());
@@ -146,8 +145,7 @@ export const DescricaoLonga: Story = {
       tone: 'destructive',
     }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
+    const dialog = await waitForPortal('alertdialog');
 
     // A factory não emite data-slot na descrição: a classe é o gancho estável.
     const description = dialog.querySelector<HTMLElement>('.nds-alert-dialog-description');
@@ -189,8 +187,7 @@ export const Responsivo: Story = {
       tone: 'destructive',
     }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
+    const dialog = await waitForPortal('alertdialog');
 
     const footer = dialog.querySelector<HTMLElement>('[data-slot="alert-dialog-footer"]');
     await expect(footer).not.toBeNull();

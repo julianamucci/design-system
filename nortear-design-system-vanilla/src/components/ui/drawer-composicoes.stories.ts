@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
 import { createButton } from './button';
 
@@ -94,9 +95,8 @@ export const ComFormulario: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Drawer com formulário visível', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       const input = within(dialog).getByDisplayValue(/maria souza/i);
       await expect(input).toBeVisible();
     });
@@ -132,9 +132,8 @@ export const ComConfirmacao: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Drawer com action destrutiva', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       const action = within(dialog).getByRole('button', { name: /^Remover$/i });
       await expect(action).toHaveClass(/destructive/);
     });
@@ -177,9 +176,8 @@ export const ComScroll: Story = {
     return buildWrapper(drawer);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Drawer com scroll interno renderizado', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       const scrollEl = dialog.querySelector('.overflow-y-auto');
       await expect(scrollEl).toBeTruthy();
     });

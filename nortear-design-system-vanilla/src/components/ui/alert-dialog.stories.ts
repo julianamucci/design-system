@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
@@ -172,7 +173,7 @@ export const Playground: Story = {
     await step('Diálogo abre ao clicar no trigger e reporta a abertura', async () => {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
       // está no DOM mas ainda conta como invisível. waitFor passa no primeiro
       // tick quando não há animação, então serve aos dois ambientes.
@@ -181,13 +182,13 @@ export const Playground: Story = {
     });
 
     await step('Diálogo tem role alertdialog e aria-modal', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       await expect(dialog).toHaveAttribute('role', 'alertdialog');
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
     });
 
     await step('aria-labelledby aponta o título e aria-describedby a descrição', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const titleId = dialog.getAttribute('aria-labelledby');
       const descId = dialog.getAttribute('aria-describedby');
       await expect(document.getElementById(titleId ?? '')).toHaveTextContent(args.title);
@@ -197,13 +198,13 @@ export const Playground: Story = {
     });
 
     await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await waitFor(() => expect(cancel).toHaveFocus());
     });
 
     await step('Tab e Shift+Tab ficam presos entre Cancelar e a ação', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
 
@@ -226,7 +227,7 @@ export const Playground: Story = {
     });
 
     await step('Clique em Cancelar fecha e devolve o foco ao trigger', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
       // A saída também é animada: o painel só sai do DOM depois do animationend

@@ -7,10 +7,10 @@ import { createButton } from './button';
  * `utilities.css` e servem a qualquer componente que apareça/suma em runtime.
  *
  * O timeout NÃO é redundância defensiva genérica: sem ele o alert nunca sai da
- * tela em dois cenários reais — `prefers-reduced-motion`, onde a animação é
- * suprimida e `animationend` jamais dispara, e ambiente sem composição de
- * quadros (Chromium headless dos testes), onde a animação fica presa no
- * primeiro quadro. Quem vencer a corrida remove o nó; `done` roda uma vez só.
+ * tela quando a animação não chega a existir — `prefers-reduced-motion` a
+ * suprime e `animationend` jamais dispara — nem quando o nó é escondido
+ * (display/visibility, aba em background) antes de a animação completar. Quem
+ * vencer a corrida remove o nó; `done` roda uma vez só.
  */
 const EXIT_FALLBACK_MS = 300;  // --duration-base (200ms) + folga
 const ENTER_FALLBACK_MS = 450; // --duration-spring (400ms) + folga

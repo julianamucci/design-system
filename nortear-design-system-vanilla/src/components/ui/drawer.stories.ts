@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
 import { createSheet, type SheetSide } from './sheet';
 import { createButton } from './button';
@@ -136,12 +137,12 @@ export const Playground: Story = {
       await step('Abre ao clicar no trigger', async () => {
         const trigger = canvas.getByRole('button', { name: triggerRe });
         await userEvent.click(trigger);
-        const dialog = await body.findByRole('dialog');
+        const dialog = await waitForPortal('dialog');
         await expect(dialog).toHaveAttribute('aria-modal', 'true');
       });
     } else {
       await step('Renderiza aberto via defaultOpen', async () => {
-        const dialog = await body.findByRole('dialog');
+        const dialog = await waitForPortal('dialog');
         await expect(dialog).toBeVisible();
       });
     }

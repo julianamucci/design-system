@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 
@@ -194,8 +195,7 @@ export const WithDestructiveAction: Story = {
     return dialog;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     const action = within(dialog).getByRole('button', { name: /^Remover$/i });
     await expect(action).toHaveClass(/destructive/);
   },

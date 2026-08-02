@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
 
@@ -82,10 +83,9 @@ export const Aberto: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Tooltip visível com role=tooltip + aria-describedby', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip).toBeVisible();
 
       const trigger = canvas.getByRole('button', { name: /salvar/i });
@@ -106,13 +106,12 @@ export const FocoTeclado: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Tab foca trigger e abre tooltip (WCAG 1.4.13)', async () => {
       await userEvent.tab();
       const trigger = canvas.getByRole('button', { name: /salvar/i });
       await expect(trigger).toHaveFocus();
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip).toBeVisible();
     });
     await step('Cleanup', async () => { await cleanupPortal(); });

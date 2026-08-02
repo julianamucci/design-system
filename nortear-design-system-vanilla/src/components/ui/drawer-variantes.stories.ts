@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, expect } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
 import { createSheet, type SheetSide } from './sheet';
 import { createButton } from './button';
@@ -58,8 +59,7 @@ function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTM
 }
 
 async function expectDirection(side: SheetSide, step: (name: string, fn: () => Promise<void> | void) => Promise<void> | void) {
-  const body = within(document.body);
-  const dialog = await body.findByRole('dialog');
+  const dialog = await waitForPortal('dialog');
   await step(`Renderiza com direção ${side}`, async () => {
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');

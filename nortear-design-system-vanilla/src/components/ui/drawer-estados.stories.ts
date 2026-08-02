@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
 import { createButton } from './button';
 
@@ -93,7 +94,7 @@ export const Aberto: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step('Drawer renderiza visível com role=dialog', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute('aria-modal', 'true');
     });
@@ -161,7 +162,7 @@ export const Controlado: Story = {
     await step('Click externo abre o drawer', async () => {
       const trigger = canvas.getByRole('button', { name: /open programmatically/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
     });
 
@@ -195,7 +196,7 @@ export const NaoDismissible: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     await step('Drawer aberto com Title/Description', async () => {
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await expect(dialog).toHaveAccessibleName(/confirmação obrigatória/i);
     });
     await step('Limpa via ESC', async () => {

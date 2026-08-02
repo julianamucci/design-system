@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { createButton } from './button';
 
@@ -90,8 +91,7 @@ export const Open: Story = {
     openInitially: true,
   }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
     await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);

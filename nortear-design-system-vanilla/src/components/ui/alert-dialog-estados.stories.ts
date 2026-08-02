@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 
@@ -126,10 +127,9 @@ export const Open: Story = {
       openInitially: true,
     }),
   play: async ({ step }) => {
-    const body = within(document.body);
 
     await step('Conteúdo aberto traz título e descrição', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
       // está no DOM mas ainda conta como invisível. waitFor passa no primeiro
       // tick quando não há animação, então serve aos dois ambientes.
@@ -141,7 +141,7 @@ export const Open: Story = {
     });
 
     await step('Foco inicial no Cancelar', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       await waitFor(() =>
         expect(within(dialog).getByRole('button', { name: /Cancelar/i })).toHaveFocus(),
       );
@@ -173,7 +173,7 @@ export const Confirmed: Story = {
 
     await step('Clique em Excluir dispara a ação e fecha o diálogo', async () => {
       // Trigger e action têm rótulo "Excluir" — desambigua via scope do dialog.
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
       await expect(onConfirmSpy).toHaveBeenCalledTimes(1);
@@ -188,7 +188,7 @@ export const Confirmed: Story = {
       const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(trigger);
 
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       // Foco entra em Cancelar; Tab leva ao Action.
       await userEvent.tab();
@@ -239,7 +239,7 @@ export const Cancelled: Story = {
       const trigger = canvas.getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(trigger);
 
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await waitFor(() => expect(cancel).toHaveFocus());
 
@@ -294,7 +294,7 @@ export const Controlled: Story = {
     await step('Clique no trigger externo abre o diálogo e reporta a abertura', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await waitForPortal('alertdialog');
       // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
       // está no DOM mas ainda conta como invisível.
       await waitFor(() => expect(dialog).toBeVisible());

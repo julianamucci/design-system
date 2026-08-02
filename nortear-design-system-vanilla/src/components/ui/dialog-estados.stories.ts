@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 
@@ -92,8 +93,7 @@ export const Open: Story = {
       openInitially: true,
     }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await waitFor(() => expect(dialog).toBeVisible());
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
   },
@@ -118,7 +118,7 @@ export const WithCloseButtonHidden: Story = {
     }),
   play: async () => {
     const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     // Não deve haver botão com aria-label="Close"
     await expect(within(dialog).queryByLabelText('Close')).not.toBeInTheDocument();
     // Escape ainda fecha
@@ -189,7 +189,7 @@ export const Controlled: Story = {
     await step('Clique no trigger externo abre o diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Open programmatically/i });
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('dialog');
+      const dialog = await waitForPortal('dialog');
       await waitFor(() => expect(dialog).toBeVisible());
     });
 

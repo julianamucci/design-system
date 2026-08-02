@@ -146,8 +146,9 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
     // Remove só depois da animação de saída. NUNCA depender só do
     // animationend: com prefers-reduced-motion a animação não existe e o
-    // evento nunca dispara; em ambiente sem composição de quadros (Chromium
-    // headless dos testes) ela fica presa. O timeout garante a remoção.
+    // evento nunca dispara; e se o nó for escondido (display/visibility, aba
+    // em background) antes de completar, ela também não. O timeout garante a
+    // remoção.
     let removido = false;
     const remover = (event?: Event) => {
       if (event && !saindo.includes(event.target as HTMLElement)) return;

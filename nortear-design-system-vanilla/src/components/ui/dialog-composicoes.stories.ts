@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDialog } from './dialog';
 import { createButton } from './button';
 
@@ -93,8 +94,7 @@ export const ConfirmEmail: Story = {
     return dialog;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(dialog).toHaveAccessibleName(/Confirmar e-mail/i);
   },
 };
@@ -128,8 +128,7 @@ export const ProfileEdit: Story = {
     return dialog;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await waitFor(() =>
       expect(within(dialog).getByText(/Nome de exibição/i)).toBeVisible(),
     );
@@ -162,8 +161,7 @@ export const MediaPreview: Story = {
     return dialog;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('dialog');
+    const dialog = await waitForPortal('dialog');
     await expect(within(dialog).getByLabelText('Close')).toBeInTheDocument();
   },
 };

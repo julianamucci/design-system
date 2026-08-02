@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton, createButtonIcon } from './button';
 
@@ -77,12 +78,11 @@ export const IconButtonComAtalho: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     await step('Botão icon-only mantém aria-label próprio + tooltip complementar', async () => {
       const trigger = canvas.getByRole('button', { name: /salvar/i });
       await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip.textContent).toMatch(/Ctrl\+S/);
     });
     await step('Cleanup', async () => { await cleanupPortal(); });
@@ -134,10 +134,9 @@ export const CamposDeForm: Story = {
     return wrap(root);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Tooltip de ajuda explica o campo', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip.textContent).toMatch(/Configuracoes/);
     });
     await step('Cleanup', async () => { await cleanupPortal(); });
@@ -185,10 +184,9 @@ export const DescricaoDeMetrica: Story = {
     return wrap(root);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Tooltip explica métrica LCP', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip.textContent).toMatch(/Largest Contentful Paint/);
     });
     await step('Cleanup', async () => { await cleanupPortal(); });

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
 
@@ -66,10 +67,9 @@ export const Default: Story = {
     return wrap(el);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Tooltip default mostra texto curto', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip).toBeVisible();
       await expect(tip.textContent).toMatch(/Salvar/);
     });
@@ -88,10 +88,9 @@ export const ComAtalho: Story = {
     return wrap(el);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Tooltip mostra texto + atalho de teclado', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip.textContent).toMatch(/Ctrl\+S/);
     });
     await step('Cleanup', async () => { await cleanupPortal(); });
@@ -112,10 +111,9 @@ export const TextoLongo: Story = {
     return wrap(el);
   },
   play: async ({ step }) => {
-    const body = within(document.body);
     await step('Tooltip permite texto longo com max-w-xs', async () => {
       await waitForOpen();
-      const tip = await body.findByRole('tooltip');
+      const tip = await waitForPortal('tooltip');
       await expect(tip).toHaveClass(/max-w-xs/);
       await expect(tip.textContent).toMatch(/sincroniza/);
     });
