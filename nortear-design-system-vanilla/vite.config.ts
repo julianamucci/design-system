@@ -32,11 +32,21 @@ export default defineConfig({
           // rende o catálogo lucide inteiro (~2000 ícones) — o scan do axe
           // leva ~20s e estoura o default de 15s. addon-vitest não expõe
           // timeout por story.
-          testTimeout: 45_000,
+          // 120s como nas outras stacks: a 45s a página Icons encostava no
+          // limite (~47s medidos) e falhava conforme a carga da máquina.
+          testTimeout: 120_000,
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
+            // reducedMotion: em Chromium headless as animações de opacity e
+            // transform NÃO avançam — ficam presas no quadro zero com
+            // playState "running". Qualquer elemento que entre animando fica
+            // em opacity: 0 para sempre e o teste o considera invisível
+            // (medido: alert-dialog e dialog falhavam por isso). Emulando
+            // reduced-motion, o bloco @media já existente no CSS desliga as
+            // animações e o teste vira determinístico — e de quebra exercita
+            // o caminho que usuários com essa preferência realmente veem.
             instances: [{ browser: 'chromium' }],
           },
         },

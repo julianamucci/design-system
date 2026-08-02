@@ -105,12 +105,59 @@
  * (ícone), e footer em grid de 2 colunas no tamanho sm.
  */
 
-.nds-alert-dialog-overlay[data-closed] {
-  animation: nds-dialog-fade-out var(--duration-fast) var(--ease-exit);
+/*
+ * Entrada e saída — mesmo movimento do alert dismissible (utilities.css:
+ * nds-animate-in/out, ajuste numérico do spring de referência).
+ *
+ * Cada lib marca o estado do seu jeito e antes só havia `[data-closed]`, que é
+ * a convenção do base-ui: a animação de saída nunca rodou em Vue, Svelte nem
+ * Vanilla. Aqui as três convenções estão cobertas.
+ *
+ * O OVERLAY só faz fade. Escalar um backdrop `position: fixed; inset: 0`
+ * encolheria a cortina e mostraria a página por baixo nas bordas — o efeito de
+ * escala pertence ao painel, que é o objeto que "chega". É assim na referência
+ * de animação adotada (popover: painel escala, cortina só esmaece).
+ *
+ * O painel reusa as MESMAS keyframes do alert (`nds-animate-in/out`), então o
+ * sistema tem um movimento de entrada só, definido num lugar só. A escala
+ * compõe com o `translate: -50% -50%` da centralização porque `translate` e
+ * `transform` são propriedades distintas — não se sobrescrevem.
+ */
+.nds-alert-dialog-overlay[data-open],
+.nds-alert-dialog-overlay[data-state="open"] {
+  animation: nds-dialog-fade-in var(--duration-spring) var(--ease-spring);
 }
 
-.nds-alert-dialog-content[data-closed] {
-  animation: nds-dialog-zoom-out var(--duration-fast) var(--ease-exit);
+.nds-alert-dialog-overlay[data-closed],
+.nds-alert-dialog-overlay[data-ending-style],
+.nds-alert-dialog-overlay[data-state="closed"] {
+  animation: nds-dialog-fade-out var(--duration-base) var(--ease-exit);
+}
+
+.nds-alert-dialog-content[data-open],
+.nds-alert-dialog-content[data-state="open"] {
+  animation: nds-animate-in var(--duration-spring) var(--ease-spring);
+}
+
+.nds-alert-dialog-content[data-closed],
+.nds-alert-dialog-content[data-ending-style],
+.nds-alert-dialog-content[data-state="closed"] {
+  animation: nds-animate-out var(--duration-base) var(--ease-exit);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-alert-dialog-overlay[data-open],
+  .nds-alert-dialog-overlay[data-state="open"],
+  .nds-alert-dialog-overlay[data-closed],
+  .nds-alert-dialog-overlay[data-ending-style],
+  .nds-alert-dialog-overlay[data-state="closed"],
+  .nds-alert-dialog-content[data-open],
+  .nds-alert-dialog-content[data-state="open"],
+  .nds-alert-dialog-content[data-closed],
+  .nds-alert-dialog-content[data-ending-style],
+  .nds-alert-dialog-content[data-state="closed"] {
+    animation: none;
+  }
 }
 
 /* Tamanho compacto */

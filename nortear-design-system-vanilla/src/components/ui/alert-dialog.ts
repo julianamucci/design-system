@@ -8,6 +8,9 @@
 //   - MutationObserver fecha o dialog quando o wrapper é removido do DOM
 //     (Storybook remount entre stories).
 
+/** `--duration-base` (200ms, a saída em alert-dialog.css) + folga. */
+const EXIT_FALLBACK_MS = 300;
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type AlertDialogOptions = {
@@ -64,9 +67,14 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     overlayEl = document.createElement('div');
     overlayEl.className = 'nds-alert-dialog-overlay';
     overlayEl.dataset.slot = 'alert-dialog-overlay';
+    // data-state: é o gancho das animações em alert-dialog.css. As libs
+    // headless das outras 3 stacks emitem esse atributo sozinhas; aqui a
+    // factory precisa emitir. Sem ele o overlay/painel aparecia e sumia seco.
+    overlayEl.dataset.state = 'open';
 
     panelEl = document.createElement('div');
     panelEl.className = 'nds-alert-dialog-content';
+    panelEl.dataset.state = 'open';
     if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.setAttribute('role', 'alertdialog');
     panelEl.setAttribute('aria-modal', 'true');
@@ -113,13 +121,46 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   }
 
   function close(): void {
-    overlayEl?.remove();
-    panelEl?.remove();
+    const saindo = [overlayEl, panelEl].filter((el): el is HTMLElement => el !== null);
+    // Solta as referências já: um segundo close() (ESC durante a saída, por
+    // exemplo) não deve reagendar a remoção nem chamar onOpenChange de novo.
     overlayEl = null;
     panelEl = null;
+
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();
     onOpenChange?.(false);
+
+    if (saindo.length === 0) return;
+    saindo.forEach((el) => { el.dataset.state = 'closed'; });
+
+    // Sem animação de saída (prefers-reduced-motion, ou ambiente que não
+    // anima), remove na hora: esperar um timeout que nunca vai ser encurtado
+    // por animationend só atrasaria o fechamento para quem pediu menos
+    // movimento. getComputedStyle força o recálculo antes de perguntar.
+    void getComputedStyle(saindo[0]).animationName;
+    if (saindo.every((el) => el.getAnimations().length === 0)) {
+      saindo.forEach((el) => el.remove());
+      return;
+    }
+
+    // Remove só depois da animação de saída. NUNCA depender só do
+    // animationend: com prefers-reduced-motion a animação não existe e o
+    // evento nunca dispara; em ambiente sem composição de quadros (Chromium
+    // headless dos testes) ela fica presa. O timeout garante a remoção.
+    let removido = false;
+    const remover = (event?: Event) => {
+      if (event && !saindo.includes(event.target as HTMLElement)) return;
+      if (removido) return;
+      removido = true;
+      window.clearTimeout(timer);
+      saindo.forEach((el) => {
+        el.removeEventListener('animationend', remover);
+        el.remove();
+      });
+    };
+    saindo.forEach((el) => el.addEventListener('animationend', remover));
+    const timer = window.setTimeout(remover, EXIT_FALLBACK_MS);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
