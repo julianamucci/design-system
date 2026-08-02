@@ -611,3 +611,43 @@ docs pages renderizava com fundo primary. Corrigido em react e vue com
   `waitFor` na asserção, como foi feito no alert.
 - react `dropdown-menu-composicoes`: 4 falhas (Com Label, Com Checkbox Items,
   Com Radio Group) idênticas com o primitivo em stash.
+
+## AlertDialog: confirmar não fechava (2026-08-01)
+
+`8e2028af` react · `02a18c99` svelte. Vue e Vanilla nunca tiveram o bug.
+
+Causa diferente em cada stack, mesmo sintoma:
+- **react**: `AlertDialogAction` renderizava um `<Button>` puro, sem envolver
+  `AlertDialogPrimitive.Close` — o `AlertDialogCancel`, no mesmo arquivo, já
+  fazia certo. Corrigido espelhando o Cancel.
+- **svelte**: o `AlertDialogPrimitive.Action` do bits-ui **não fecha** — a
+  classe `DialogActionState` só expõe id e atributos; quem fecha é a
+  `DialogCloseState`. Corrigido renderizando `Dialog.Close` (e não
+  `AlertDialog.Cancel`, que sequestraria o `cancelNode` do root — marcação de
+  foco inicial de alert dialog).
+
+Em ambos, verificado na fonte da lib que o `onClick`/`onclick` do consumidor
+continua disparando ANTES do fechamento (mergeProps encadeia handlers), então
+o `track('dialog_confirm', …)` das docs pages segue intacto.
+
+### O que deixou o bug passar: dois testes que codificavam o defeito
+
+As duas stacks TINHAM story `Confirmed`, e as duas afirmavam o comportamento
+errado:
+- react: clicava e asseverava `toBeInTheDocument()` — ou seja, passava
+  justamente por o diálogo continuar aberto. O spy do callback era criado
+  dentro do `render`, inacessível ao `play`, então a confirmação nunca era
+  checada.
+- svelte: o comentário da story dizia explicitamente "bits-ui 2.18:
+  AlertDialogAction não fecha automaticamente… validamos apenas que o handler
+  foi disparado" — a limitação da lib foi documentada como se fosse contrato.
+
+**Regra**: quando uma story documenta uma limitação de lib, ela precisa vir
+com o item correspondente aqui no FIXES-NEEDED. Limitação aceita em silêncio
+vira contrato por omissão.
+
+Ambas reescritas: abrem, confirmam, e provam callback disparado + diálogo
+fora do DOM (com `waitFor`, por causa do congelamento de animação no headless).
+
+**Chromatic**: o snapshot da story `Confirmed` muda nas 2 stacks — o diálogo
+agora fecha. A cobertura visual do aberto continua na story `Open`.
