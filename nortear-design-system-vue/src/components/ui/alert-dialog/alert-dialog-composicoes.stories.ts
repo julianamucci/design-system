@@ -82,8 +82,15 @@ export const Destrutiva: Story = {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /Excluir conta/i });
+
+    const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
     await expect(action).toHaveClass('nds-button-destructive');
+
+    // Guideline: Cancel sempre antes de Action no DOM.
+    const labels = within(dialog)
+      .getAllByRole('button')
+      .map((b) => b.textContent?.trim());
+    await expect(labels).toEqual(['Cancelar', 'Excluir conta']);
   },
 };
 
@@ -122,7 +129,16 @@ export const Neutra: Story = {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /^Publicar$/i });
+
+    const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
     await expect(action).toBeVisible();
+    // A severidade vem do Button: na composição neutra o Action não pode
+    // herdar os tokens destrutivos.
+    await expect(action).not.toHaveClass('nds-button-destructive');
+
+    const labels = within(dialog)
+      .getAllByRole('button')
+      .map((b) => b.textContent?.trim());
+    await expect(labels).toEqual(['Voltar', 'Publicar']);
   },
 };

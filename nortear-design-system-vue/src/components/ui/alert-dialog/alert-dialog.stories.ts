@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect, fn } from 'storybook/test';
+import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -107,32 +107,67 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    // Guardado como nó: com o diálogo aberto o conteúdo externo recebe
+    // aria-hidden/inert, então uma nova query por role não o encontraria.
+    const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
 
     await step('Trigger está presente no DOM', async () => {
-      const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await expect(trigger).toBeInTheDocument();
     });
 
-    await step('Diálogo abre ao clicar no trigger', async () => {
-      const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
+    await step('Diálogo abre ao clicar no trigger, com role alertdialog', async () => {
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toBeVisible();
-    });
-
-    await step('Diálogo tem role alertdialog', async () => {
-      const dialog = await body.findByRole('alertdialog');
       await expect(dialog).toHaveAttribute('role', 'alertdialog');
     });
 
-    await step('Título e descrição são acessíveis', async () => {
+    await step('Foco inicial vai para o AlertDialogCancel', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toHaveAccessibleName(/Excluir sua conta/i);
+      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
+      await waitFor(() => expect(cancel).toHaveFocus());
     });
 
-    await step('Escape fecha o diálogo', async () => {
+    await step('aria-labelledby aponta para o AlertDialogTitle', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).toHaveAccessibleName(/Excluir sua conta/i);
+      const labelledBy = dialog.getAttribute('aria-labelledby');
+      await expect(document.getElementById(labelledBy ?? '')).toHaveTextContent(
+        /Excluir sua conta\?/i,
+      );
+    });
+
+    await step('aria-describedby aponta para a AlertDialogDescription', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const describedBy = dialog.getAttribute('aria-describedby');
+      await expect(document.getElementById(describedBy ?? '')).toHaveTextContent(
+        /Essa ação é permanente/i,
+      );
+    });
+
+    await step('Tab e Shift+Tab circulam apenas dentro do diálogo', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
+      const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
+
+      await userEvent.tab();
+      await expect(action).toHaveFocus();
+
+      await userEvent.tab({ shift: true });
+      await expect(cancel).toHaveFocus();
+
+      // Focus trap: por mais que se avance, o foco nunca sai do diálogo.
+      await userEvent.tab();
+      await userEvent.tab();
+      await expect(dialog).toContainElement(document.activeElement as HTMLElement);
+    });
+
+    await step('Escape fecha o diálogo e devolve o foco ao trigger', async () => {
       await userEvent.keyboard('{Escape}');
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
