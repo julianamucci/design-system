@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 
@@ -81,7 +81,10 @@ export const Destrutiva: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
+    // no DOM mas ainda conta como invisível. waitFor passa no primeiro tick
+    // quando não há animação, então serve aos dois ambientes.
+    await waitFor(() => expect(dialog).toBeVisible());
     // Trigger e action têm o mesmo rótulo — o action fica dentro do dialog.
     const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
     await expect(action).toHaveClass('nds-button-destructive');
@@ -111,9 +114,11 @@ export const Neutra: Story = {
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
-    await expect(dialog).toBeVisible();
+    // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
+    // no DOM mas ainda conta como invisível.
+    await waitFor(() => expect(dialog).toBeVisible());
     const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
-    await expect(action).toBeVisible();
+    await waitFor(() => expect(action).toBeVisible());
     // Confirmação não destrutiva: a ação usa a variante default do Button.
     await expect(action).toHaveClass('nds-button-default');
   },

@@ -130,7 +130,10 @@ export const Open: Story = {
 
     await step('Conteúdo aberto traz título e descrição', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
+      // está no DOM mas ainda conta como invisível. waitFor passa no primeiro
+      // tick quando não há animação, então serve aos dois ambientes.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(dialog).toHaveTextContent('Excluir item permanentemente?');
       await expect(dialog).toHaveTextContent(
         'O item será removido de forma definitiva e não poderá ser recuperado.',
@@ -139,7 +142,9 @@ export const Open: Story = {
 
     await step('Foco inicial no Cancelar', async () => {
       const dialog = await body.findByRole('alertdialog');
-      await expect(within(dialog).getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+      await waitFor(() =>
+        expect(within(dialog).getByRole('button', { name: /Cancelar/i })).toHaveFocus(),
+      );
     });
   },
 };
@@ -172,7 +177,9 @@ export const Confirmed: Story = {
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
       await expect(onConfirmSpy).toHaveBeenCalledTimes(1);
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      // A saída também é animada: o painel só sai do DOM depois do animationend
+      // (ou do fallback de tempo), não no clique.
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
     });
 
     await step('Enter no Action confirma pelo teclado e devolve o foco ao trigger', async () => {
@@ -189,7 +196,7 @@ export const Confirmed: Story = {
 
       await userEvent.keyboard('{Enter}');
       await expect(onConfirmSpy).toHaveBeenCalledTimes(2);
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(trigger).toHaveFocus();
     });
   },
@@ -223,7 +230,9 @@ export const Cancelled: Story = {
       await userEvent.click(cancel);
       await expect(onCancelSpy).toHaveBeenCalledTimes(1);
       await expect(onConfirmSpy).not.toHaveBeenCalled();
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      // A saída também é animada: o painel só sai do DOM depois do animationend
+      // (ou do fallback de tempo), não no clique.
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
     });
 
     await step('Space no Cancelar focado cancela pelo teclado', async () => {
@@ -232,12 +241,12 @@ export const Cancelled: Story = {
 
       const dialog = await body.findByRole('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await expect(cancel).toHaveFocus();
+      await waitFor(() => expect(cancel).toHaveFocus());
 
       await userEvent.keyboard(' ');
       await expect(onCancelSpy).toHaveBeenCalledTimes(2);
       await expect(onConfirmSpy).not.toHaveBeenCalled();
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(trigger).toHaveFocus();
     });
   },
@@ -286,7 +295,9 @@ export const Controlled: Story = {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
+      // está no DOM mas ainda conta como invisível.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(onOpenChangeSpy).toHaveBeenCalledWith(true);
     });
 

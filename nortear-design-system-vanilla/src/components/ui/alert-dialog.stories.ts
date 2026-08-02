@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createAlertDialog } from './alert-dialog';
 import { createButton } from './button';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
@@ -173,7 +173,10 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).toBeVisible();
+      // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
+      // está no DOM mas ainda conta como invisível. waitFor passa no primeiro
+      // tick quando não há animação, então serve aos dois ambientes.
+      await waitFor(() => expect(dialog).toBeVisible());
       await expect(onOpenChange).toHaveBeenCalledWith(true);
     });
 
@@ -196,7 +199,7 @@ export const Playground: Story = {
     await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
       const dialog = await body.findByRole('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await expect(cancel).toHaveFocus();
+      await waitFor(() => expect(cancel).toHaveFocus());
     });
 
     await step('Tab e Shift+Tab ficam presos entre Cancelar e a ação', async () => {
@@ -226,7 +229,9 @@ export const Playground: Story = {
       const dialog = await body.findByRole('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
-      await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
+      // A saída também é animada: o painel só sai do DOM depois do animationend
+      // (ou do fallback de tempo), não no clique.
+      await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(canvas.getByRole('button', { name: /Excluir conta/i })).toHaveFocus();
       await expect(onOpenChange).toHaveBeenCalledWith(false);
     });
