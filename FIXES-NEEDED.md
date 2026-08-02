@@ -484,13 +484,17 @@ montou").
 
 ### Divergências cross-stack abertas (decisão da dona)
 
-- [ ] **Ação do alert: texto × comportamento.** `variants.compositions.
-  withAction.description` diz que a ação fica "alinhada à direita", mas o
-  snippet que a página ensina produz o botão numa LINHA ABAIXO, alinhado ao
-  início — `.nds-alert-description` vence `.nds-cluster` no `display` porque
-  `alert.css` é importado depois de `layout.css`. As 4 stacks foram
-  convergidas para o comportamento real do snippet. Decidir: corrigir o texto
-  (3 locales) ou alinhar o snippet à direita de fato.
+- ~~Ação do alert: texto × comportamento~~ — **RESOLVIDO (2026-08-01)**:
+  `1106b591` vanilla · `6347fa8a` svelte · `6d01486c` vue · `b6f2a73b` react.
+  Não havia conflito: o texto ("alinhada à direita") sempre esteve certo. O
+  componente tem o slot `AlertAction` (`.nds-alert-action` é
+  `position: absolute; top; right`, e o próprio CSS documenta "quem precisa de
+  ação usa a composição AlertAction"), e a story `ComAcao` sempre o usou. O
+  erro foi meu: instruí os agents a empilhar o botão dentro da descrição, e as
+  4 docs pages passaram a ensinar markup que quebra linha. Corrigido na demo e
+  na composição (preview E snippet) das 4.
+  **Lição**: quando story e docs page divergem, a story pode ser a certa —
+  conferir qual das duas usa a API real do componente antes de "convergir".
 - [ ] **`AlertDescription` do Svelte renderiza `<section>`**, enquanto o
   vanilla (referência) usa `<div>`. Não há justificativa semântica para
   `<section>` dentro de um alert. Primitivo — ficou fora do escopo do lote.
@@ -534,3 +538,21 @@ Referência aprovada pela dona: animação do popover do animate-ui
   já têm keyframes com exatamente o mesmo desenho (opacidade + escala 0.95).
   Podem migrar para as classes compartilhadas e eliminar a duplicação.
 - [ ] Documentar as duas classes na foundation page de Motion das 4 stacks.
+
+### Cobertura removida a pedido (2026-08-01)
+
+- **Story `TokenIndivisivel`** saiu de `alert-composicoes.stories.ts` (vanilla)
+  — a dona apontou, com razão, que não é composição. Mas era o **único guard**
+  contra uma regressão real: sem o reset global de `box-sizing`, o
+  `width: 100%` do `.nds-alert` media só a caixa de conteúdo e os 32px de
+  padding-inline + 2px de borda saíam por fora, deixando o card 34px mais
+  largo que o container e gerando rolagem horizontal (visível nas docs pages,
+  onde o alert ocupa a largura toda). Como o CSS é compartilhado, a story
+  guardava as 4 stacks. Se a cobertura importar, o lugar natural é
+  `alert-estados` ou um teste de layout dedicado.
+
+### Ruído pré-existente notado (fora de escopo, não tocado)
+
+- react `alert-dialog`: console avisa `<button> cannot contain a nested
+  <button>` e prop `asChild` vazando para o DOM. Não quebra teste, mas
+  `asChild` inerte é o mesmo bug já varrido no svelte — candidato a lote.
