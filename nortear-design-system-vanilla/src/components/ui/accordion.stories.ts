@@ -177,6 +177,22 @@ document.querySelector('#app')?.append(accordion);`;
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
+    await step('Trigger e painel se apontam (aria-controls / role=region + aria-labelledby)', async () => {
+      // Documentado em accessibility.aria.* como automático — esta asserção é o
+      // que impede a docs page de afirmar o que a factory não faz.
+      // Medido com o item ABERTO: onde o painel desmonta ao fechar, apontar
+      // aria-controls para id ausente seria ARIA inválido.
+      const trigger = triggers[0];
+      await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+      const contentId = trigger.getAttribute('aria-controls');
+      await expect(contentId).toBeTruthy();
+      const panel = canvasElement.querySelector(`#${CSS.escape(contentId!)}`);
+      await expect(panel).toHaveAttribute('role', 'region');
+      await expect(panel).toHaveAttribute('aria-labelledby', trigger.id);
+      await expect(trigger.id).toBeTruthy();
+    });
+
     await step('Setas movem o foco entre triggers (com loop) e Home/End vão às pontas', async () => {
       triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');

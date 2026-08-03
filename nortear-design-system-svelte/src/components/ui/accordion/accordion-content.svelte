@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { Accordion as AccordionPrimitive } from "bits-ui";
+	import { getContext } from "svelte";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
+	import { ACCORDION_ITEM_IDS, type AccordionItemIds } from "./accordion-a11y.js";
+
+	const ids = getContext<AccordionItemIds | undefined>(ACCORDION_ITEM_IDS);
 
 	let {
 		ref = $bindable(null),
@@ -15,6 +19,9 @@
 	data-slot="accordion-content"
 	class="nds-accordion-content"
 	{...restProps}
+	id={ids?.contentId}
+	role="region"
+	aria-labelledby={ids?.triggerId}
 >
 	<div
 		class={cn(
