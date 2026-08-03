@@ -462,6 +462,18 @@ heading-order, listitem, aria-allowed-attr.
   sustentam. Fechado por ausência de defeito, não por correção.
   **Lição de método**: três diagnósticos sucessivos sem reproduzir de forma
   controlada. O correto teria sido isolar a story antes de teorizar.
+  **QUARTO diagnóstico — 2026-08-02, este correto e com medição.** O
+  "fechado por ausência de defeito" também estava errado: o defeito existe e é
+  uma **corrida**, não contraste. A play `mounted` do docs-smoke retornava no
+  mesmo quadro da montagem e o axe (postVisit) media enquanto os elementos
+  ainda estavam em `opacity: 0` — daí `1.01 (#fdfdfd sobre #ffffff)`. Passava
+  por sorte, e por isso "não reproduzia": dependia do tempo de render das
+  páginas anteriores da suíte. Medido em par: árvore em `HEAD~1` 63/63, árvore
+  com a seção de leitor de tela 62/63, mesma máquina, falha determinística.
+  Corrigido em `256af081` com uma play `settled` que só devolve quando nenhum
+  elemento resta com `opacity` inline < 1. **Lição**: "não reproduz" sob uma
+  suíte compartilhada não é ausência de defeito — é ausência de controle sobre
+  o tempo. Teste racy fecha como corrigido, nunca como inexistente.
 - svelte: 15 falhas de interação em stories de pagination/navigation-menu/
   sidebar (backlog dos 50/180).
 - vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.
@@ -763,10 +775,14 @@ contradição antes da decisão.
 - [ ] Tabela de tokens lista utilitários Tailwind mortos (`bg-black/80`,
   `bg-background`, `border`, `sm:rounded-lg`) — resíduo da migração `.nds-*`,
   idêntico nas 4.
-- [ ] `accessibility.aria.*` e `accessibility.screenReader.*` do JSON são
-  conteúdo morto: o container `DocsAccessibility` só aceita
-  `title/summary/items/keyboardTitle/keyboardItems`. Afeta todas as docs
-  pages, não só esta.
+- [x] ~~`accessibility.aria.*` e `accessibility.screenReader.*` do JSON são
+  conteúdo morto~~ — RESOLVIDO (2026-08-02). `aria.*` já era renderizado como
+  `items`; o morto era `screenReader.*` (44 de 50 componentes) e `contrast`
+  (só accordion). `DocsAccessibility` ganhou `screenReaderTitle`,
+  `screenReaderItems` e `contrast` opcionais nas 4 stacks; 172 call sites
+  fiados por script com dry-run. As chaves de `screenReader` não têm formato
+  comum entre componentes, então o container recebe `Object.values(...)`.
+  Sem a chave no JSON: avatar, badge, dialog (4 stacks) e form (vanilla).
 
 ## NVDA pulava para "Notas de Implementação" — RESOLVIDO (2026-08-02)
 
