@@ -530,5 +530,150 @@
         "hex": "#186adc"
       }
     }
+  },
+  "codigo": {
+    "code-token-comment": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.34,
+          0.34,
+          0.34
+        ],
+        "alpha": 1,
+        "hex": "#575757"
+      }
+    },
+    "code-token-string": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0874,
+          0.3726,
+          0.206233
+        ],
+        "alpha": 1,
+        "hex": "#165f35"
+      }
+    },
+    "code-token-number": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5264,
+          0.238933,
+          0.0336
+        ],
+        "alpha": 1,
+        "hex": "#863d09"
+      }
+    },
+    "code-token-keyword": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.366267,
+          0.1476,
+          0.6724
+        ],
+        "alpha": 1,
+        "hex": "#5d26ab"
+      }
+    },
+    "code-token-builtin": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.039,
+          0.333667,
+          0.481
+        ],
+        "alpha": 1,
+        "hex": "#0a557b"
+      }
+    },
+    "code-token-function": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0952,
+          0.2992,
+          0.5848
+        ],
+        "alpha": 1,
+        "hex": "#184c95"
+      }
+    },
+    "code-token-tag": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6192,
+          0.1008,
+          0.1872
+        ],
+        "alpha": 1,
+        "hex": "#9e1a30"
+      }
+    },
+    "code-token-attr": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.47232,
+          0.1728,
+          0.5472
+        ],
+        "alpha": 1,
+        "hex": "#782c8c"
+      }
+    },
+    "code-token-property": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0276,
+          0.364933,
+          0.4324
+        ],
+        "alpha": 1,
+        "hex": "#075d6e"
+      }
+    },
+    "code-token-operator": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.26,
+          0.26,
+          0.26
+        ],
+        "alpha": 1,
+        "hex": "#424242"
+      }
+    },
+    "code-token-punctuation": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.34,
+          0.34,
+          0.34
+        ],
+        "alpha": 1,
+        "hex": "#575757"
+      }
+    }
   }
 }

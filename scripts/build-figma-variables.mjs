@@ -52,6 +52,11 @@ const SOURCES = [
   'docs/shared/themes/cold.css',
   'docs/shared/themes/densities.css',
   'docs/shared/themes/typescale.css',
+  'docs/shared/themes/fonts.css',
+  // Único componente que declara COR CRUA própria, em vez de consumir os
+  // tokens de tema. Ficou de fora da primeira versão e as 11 cores de sintaxe
+  // não chegaram ao Figma.
+  'docs/shared/styles/nds/code-block.css',
 ];
 
 // ─── Leitura do CSS ──────────────────────────────────────────────────────────
@@ -84,7 +89,10 @@ function readBlocks(files) {
 
 // ─── Conversores ─────────────────────────────────────────────────────────────
 
-const HSL = /^(-?[\d.]+)\s+([\d.]+)%\s+([\d.]+)%$/;
+// Os tokens de tema são triplet cru (`0 0% 100%`); os do code-block vêm com o
+// wrapper (`hsl(145 62% 23%)`). Aceita os dois. `hsl(var(--x))` não casa — é
+// alias, e alias resolvido viraria valor duplicado no Figma.
+const HSL = /^(?:hsl\(\s*)?(-?[\d.]+)\s+([\d.]+)%\s+([\d.]+)%\s*\)?$/;
 
 /**
  * Valor de cor no formato que o import NATIVO de variáveis do Figma exige:
@@ -223,6 +231,19 @@ for (const tema of TEMAS) {
     corModes[modo] = tree;
   }
 
+  // Cores de sintaxe do code-block: variam com claro/escuro, não com a marca —
+  // então o mesmo par de valores entra nos 3 temas, sob o grupo `codigo/`.
+  const codeLight = get('.nds-code-block-root');
+  const codeDark = layer('.nds-code-block-root', '.dark .nds-code-block-root');
+  for (const [modo, decls] of [[`${tema}-light`, codeLight], [`${tema}-dark`, codeDark]]) {
+    for (const [token, raw] of Object.entries(decls)) {
+      if (!token.startsWith('--code-token-')) continue;   // --code-block-* é alias ou dimensão
+      const cor = hslToDtcg(raw);
+      if (!cor) continue;                                  // hsl(var(--foreground)) é alias
+      put(corModes[modo], `codigo/${token.slice(2)}`, { $type: 'color', $value: cor });
+    }
+  }
+
   // Token de cor que existe no claro e some no escuro seria buraco de modo.
   const claras = Object.keys(light).filter((t) => hslToDtcg(light[t]));
   const escuras = new Set(Object.keys(layer(':root', `.tema-${tema}`, '.dark', `.dark.tema-${tema}`)));
@@ -298,6 +319,27 @@ for (const escala of ESCALAS) {
   tipoModes[escala] = tree;
 }
 
+// ── Coleção: Fonte (modos = as famílias do seletor do Storybook) ─────────────
+// Faltou na primeira versão: fonts.css nem estava nas fontes do gerador.
+// O Figma quer a família sozinha, não a pilha CSS — `'Inter', sans-serif` não
+// resolve para uma fonte instalável.
+const FONTES = [
+  ['default', '.fonte-default'],
+  ['lexend', '.fonte-lexend'],
+  ['pt-serif', '.fonte-pt-serif'],
+  ['lxgw-wenkai', '.fonte-lxgw-wenkai'],
+];
+const fonteModes = {};
+for (const [modo, sel] of FONTES) {
+  const decls = layer(':root', sel);
+  const pilha = decls['--font-family-active'];
+  if (!pilha) continue;
+  const familia = pilha.split(',')[0].trim().replace(/^['"]|['"]$/g, '');
+  const tree = {};
+  put(tree, 'font-family-active', { $type: 'string', $value: familia });
+  fonteModes[modo] = tree;
+}
+
 // ── Coleção: Movimento ───────────────────────────────────────────────────────
 
 const motion = get(':root');
@@ -348,6 +390,7 @@ const doc = {
   Dimensao: { modes: dimModes },
   Raio: { modes: { default: raioTree } },
   Tipografia: { modes: tipoModes },
+  Fonte: { modes: fonteModes },
   Movimento: { modes: { default: motionTree } },
   Elevacao: { modes: elevModes },
   Camada: { modes: { default: camadaTree } },
